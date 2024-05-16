@@ -102,39 +102,39 @@ namespace Gs2::Account::Result
             return nullptr;
         }
         return MakeShared<FAuthenticationResult>()
-            ->WithItem(Data->HasField("item") ? [Data]() -> Model::FAccountPtr
+            ->WithItem(Data->HasField(ANSI_TO_TCHAR("item")) ? [Data]() -> Model::FAccountPtr
                  {
-                    if (Data->HasTypedField<EJson::Null>("item"))
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("item")))
                     {
                         return nullptr;
                     }
-                    return Model::FAccount::FromJson(Data->GetObjectField("item"));
+                    return Model::FAccount::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("item")));
                  }() : nullptr)
-            ->WithBanStatuses(Data->HasField("banStatuses") ? [Data]() -> TSharedPtr<TArray<Model::FBanStatusPtr>>
+            ->WithBanStatuses(Data->HasField(ANSI_TO_TCHAR("banStatuses")) ? [Data]() -> TSharedPtr<TArray<Model::FBanStatusPtr>>
                  {
                     auto v = MakeShared<TArray<Model::FBanStatusPtr>>();
-                    if (!Data->HasTypedField<EJson::Null>("banStatuses") && Data->HasTypedField<EJson::Array>("banStatuses"))
+                    if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("banStatuses")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("banStatuses")))
                     {
-                        for (auto JsonObjectValue : Data->GetArrayField("banStatuses"))
+                        for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("banStatuses")))
                         {
                             v->Add(Model::FBanStatus::FromJson(JsonObjectValue->AsObject()));
                         }
                     }
                     return v;
                  }() : MakeShared<TArray<Model::FBanStatusPtr>>())
-            ->WithBody(Data->HasField("body") ? [Data]() -> TOptional<FString>
+            ->WithBody(Data->HasField(ANSI_TO_TCHAR("body")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("body", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("body"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithSignature(Data->HasField("signature") ? [Data]() -> TOptional<FString>
+            ->WithSignature(Data->HasField(ANSI_TO_TCHAR("signature")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("signature", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("signature"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }

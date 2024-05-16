@@ -120,44 +120,44 @@ namespace Gs2::Guild::Request
             return nullptr;
         }
         return MakeShared<FDeleteMemberByGuildNameRequest>()
-            ->WithContextStack(Data->HasField("contextStack") ? TOptional<FString>(Data->GetStringField("contextStack")) : TOptional<FString>())
-            ->WithNamespaceName(Data->HasField("namespaceName") ? [Data]() -> TOptional<FString>
+            ->WithContextStack(Data->HasField(ANSI_TO_TCHAR("contextStack")) ? TOptional<FString>(Data->GetStringField(ANSI_TO_TCHAR("contextStack"))) : TOptional<FString>())
+            ->WithNamespaceName(Data->HasField(ANSI_TO_TCHAR("namespaceName")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
-                    if (Data->TryGetStringField("namespaceName", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("namespaceName"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
-            ->WithGuildModelName(Data->HasField("guildModelName") ? [Data]() -> TOptional<FString>
+            ->WithGuildModelName(Data->HasField(ANSI_TO_TCHAR("guildModelName")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
-                    if (Data->TryGetStringField("guildModelName", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("guildModelName"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
-            ->WithGuildName(Data->HasField("guildName") ? [Data]() -> TOptional<FString>
+            ->WithGuildName(Data->HasField(ANSI_TO_TCHAR("guildName")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
-                    if (Data->TryGetStringField("guildName", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("guildName"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
-            ->WithTargetUserId(Data->HasField("targetUserId") ? [Data]() -> TOptional<FString>
+            ->WithTargetUserId(Data->HasField(ANSI_TO_TCHAR("targetUserId")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
-                    if (Data->TryGetStringField("targetUserId", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("targetUserId"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
-          ->WithDuplicationAvoider(Data->HasField("duplicationAvoider") ? TOptional<FString>(Data->GetStringField("duplicationAvoider")) : TOptional<FString>());
+          ->WithDuplicationAvoider(Data->HasField(ANSI_TO_TCHAR("duplicationAvoider")) ? TOptional<FString>(Data->GetStringField(ANSI_TO_TCHAR("duplicationAvoider"))) : TOptional<FString>());
     }
 
     TSharedPtr<FJsonObject> FDeleteMemberByGuildNameRequest::ToJson() const

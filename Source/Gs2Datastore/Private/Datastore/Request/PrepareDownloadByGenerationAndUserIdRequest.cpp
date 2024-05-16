@@ -135,53 +135,53 @@ namespace Gs2::Datastore::Request
             return nullptr;
         }
         return MakeShared<FPrepareDownloadByGenerationAndUserIdRequest>()
-            ->WithContextStack(Data->HasField("contextStack") ? TOptional<FString>(Data->GetStringField("contextStack")) : TOptional<FString>())
-            ->WithNamespaceName(Data->HasField("namespaceName") ? [Data]() -> TOptional<FString>
+            ->WithContextStack(Data->HasField(ANSI_TO_TCHAR("contextStack")) ? TOptional<FString>(Data->GetStringField(ANSI_TO_TCHAR("contextStack"))) : TOptional<FString>())
+            ->WithNamespaceName(Data->HasField(ANSI_TO_TCHAR("namespaceName")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
-                    if (Data->TryGetStringField("namespaceName", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("namespaceName"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
-            ->WithUserId(Data->HasField("userId") ? [Data]() -> TOptional<FString>
+            ->WithUserId(Data->HasField(ANSI_TO_TCHAR("userId")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
-                    if (Data->TryGetStringField("userId", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("userId"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
-            ->WithDataObjectId(Data->HasField("dataObjectId") ? [Data]() -> TOptional<FString>
+            ->WithDataObjectId(Data->HasField(ANSI_TO_TCHAR("dataObjectId")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
-                    if (Data->TryGetStringField("dataObjectId", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("dataObjectId"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
-            ->WithGeneration(Data->HasField("generation") ? [Data]() -> TOptional<FString>
+            ->WithGeneration(Data->HasField(ANSI_TO_TCHAR("generation")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
-                    if (Data->TryGetStringField("generation", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("generation"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
-            ->WithTimeOffsetToken(Data->HasField("timeOffsetToken") ? [Data]() -> TOptional<FString>
+            ->WithTimeOffsetToken(Data->HasField(ANSI_TO_TCHAR("timeOffsetToken")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
-                    if (Data->TryGetStringField("timeOffsetToken", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("timeOffsetToken"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
-          ->WithDuplicationAvoider(Data->HasField("duplicationAvoider") ? TOptional<FString>(Data->GetStringField("duplicationAvoider")) : TOptional<FString>());
+          ->WithDuplicationAvoider(Data->HasField(ANSI_TO_TCHAR("duplicationAvoider")) ? TOptional<FString>(Data->GetStringField(ANSI_TO_TCHAR("duplicationAvoider"))) : TOptional<FString>());
     }
 
     TSharedPtr<FJsonObject> FPrepareDownloadByGenerationAndUserIdRequest::ToJson() const

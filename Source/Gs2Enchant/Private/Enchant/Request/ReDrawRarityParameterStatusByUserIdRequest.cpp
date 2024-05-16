@@ -154,65 +154,65 @@ namespace Gs2::Enchant::Request
             return nullptr;
         }
         return MakeShared<FReDrawRarityParameterStatusByUserIdRequest>()
-            ->WithContextStack(Data->HasField("contextStack") ? TOptional<FString>(Data->GetStringField("contextStack")) : TOptional<FString>())
-            ->WithNamespaceName(Data->HasField("namespaceName") ? [Data]() -> TOptional<FString>
+            ->WithContextStack(Data->HasField(ANSI_TO_TCHAR("contextStack")) ? TOptional<FString>(Data->GetStringField(ANSI_TO_TCHAR("contextStack"))) : TOptional<FString>())
+            ->WithNamespaceName(Data->HasField(ANSI_TO_TCHAR("namespaceName")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
-                    if (Data->TryGetStringField("namespaceName", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("namespaceName"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
-            ->WithUserId(Data->HasField("userId") ? [Data]() -> TOptional<FString>
+            ->WithUserId(Data->HasField(ANSI_TO_TCHAR("userId")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
-                    if (Data->TryGetStringField("userId", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("userId"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
-            ->WithParameterName(Data->HasField("parameterName") ? [Data]() -> TOptional<FString>
+            ->WithParameterName(Data->HasField(ANSI_TO_TCHAR("parameterName")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
-                    if (Data->TryGetStringField("parameterName", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("parameterName"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
-            ->WithPropertyId(Data->HasField("propertyId") ? [Data]() -> TOptional<FString>
+            ->WithPropertyId(Data->HasField(ANSI_TO_TCHAR("propertyId")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
-                    if (Data->TryGetStringField("propertyId", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("propertyId"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
-          ->WithFixedParameterNames(Data->HasField("fixedParameterNames") ? [Data]() -> TSharedPtr<TArray<FString>>
+          ->WithFixedParameterNames(Data->HasField(ANSI_TO_TCHAR("fixedParameterNames")) ? [Data]() -> TSharedPtr<TArray<FString>>
               {
                   auto v = MakeShared<TArray<FString>>();
-                  if (!Data->HasTypedField<EJson::Null>("fixedParameterNames") && Data->HasTypedField<EJson::Array>("fixedParameterNames"))
+                  if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("fixedParameterNames")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("fixedParameterNames")))
                   {
-                      for (auto JsonObjectValue : Data->GetArrayField("fixedParameterNames"))
+                      for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("fixedParameterNames")))
                       {
                           v->Add(JsonObjectValue->AsString());
                       }
                   }
                   return v;
               }() : MakeShared<TArray<FString>>())
-            ->WithTimeOffsetToken(Data->HasField("timeOffsetToken") ? [Data]() -> TOptional<FString>
+            ->WithTimeOffsetToken(Data->HasField(ANSI_TO_TCHAR("timeOffsetToken")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
-                    if (Data->TryGetStringField("timeOffsetToken", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("timeOffsetToken"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
-          ->WithDuplicationAvoider(Data->HasField("duplicationAvoider") ? TOptional<FString>(Data->GetStringField("duplicationAvoider")) : TOptional<FString>());
+          ->WithDuplicationAvoider(Data->HasField(ANSI_TO_TCHAR("duplicationAvoider")) ? TOptional<FString>(Data->GetStringField(ANSI_TO_TCHAR("duplicationAvoider"))) : TOptional<FString>());
     }
 
     TSharedPtr<FJsonObject> FReDrawRarityParameterStatusByUserIdRequest::ToJson() const

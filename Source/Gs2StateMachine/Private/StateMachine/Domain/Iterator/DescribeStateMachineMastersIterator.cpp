@@ -28,6 +28,8 @@
 #include "StateMachine/Domain/Model/StateMachineMaster.h"
 #include "StateMachine/Domain/Model/Namespace.h"
 
+#include "Core/Domain/Gs2.h"
+
 namespace Gs2::StateMachine::Domain::Iterator
 {
 

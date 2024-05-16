@@ -110,41 +110,41 @@ namespace Gs2::Inventory::Result
             return nullptr;
         }
         return MakeShared<FDescribeReferenceOfResult>()
-            ->WithItems(Data->HasField("items") ? [Data]() -> TSharedPtr<TArray<FString>>
+            ->WithItems(Data->HasField(ANSI_TO_TCHAR("items")) ? [Data]() -> TSharedPtr<TArray<FString>>
                  {
                     auto v = MakeShared<TArray<FString>>();
-                    if (!Data->HasTypedField<EJson::Null>("items") && Data->HasTypedField<EJson::Array>("items"))
+                    if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("items")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("items")))
                     {
-                        for (auto JsonObjectValue : Data->GetArrayField("items"))
+                        for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("items")))
                         {
                             v->Add(JsonObjectValue->AsString());
                         }
                     }
                     return v;
                  }() : MakeShared<TArray<FString>>())
-            ->WithItemSet(Data->HasField("itemSet") ? [Data]() -> Model::FItemSetPtr
+            ->WithItemSet(Data->HasField(ANSI_TO_TCHAR("itemSet")) ? [Data]() -> Model::FItemSetPtr
                  {
-                    if (Data->HasTypedField<EJson::Null>("itemSet"))
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("itemSet")))
                     {
                         return nullptr;
                     }
-                    return Model::FItemSet::FromJson(Data->GetObjectField("itemSet"));
+                    return Model::FItemSet::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("itemSet")));
                  }() : nullptr)
-            ->WithItemModel(Data->HasField("itemModel") ? [Data]() -> Model::FItemModelPtr
+            ->WithItemModel(Data->HasField(ANSI_TO_TCHAR("itemModel")) ? [Data]() -> Model::FItemModelPtr
                  {
-                    if (Data->HasTypedField<EJson::Null>("itemModel"))
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("itemModel")))
                     {
                         return nullptr;
                     }
-                    return Model::FItemModel::FromJson(Data->GetObjectField("itemModel"));
+                    return Model::FItemModel::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("itemModel")));
                  }() : nullptr)
-            ->WithInventory(Data->HasField("inventory") ? [Data]() -> Model::FInventoryPtr
+            ->WithInventory(Data->HasField(ANSI_TO_TCHAR("inventory")) ? [Data]() -> Model::FInventoryPtr
                  {
-                    if (Data->HasTypedField<EJson::Null>("inventory"))
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("inventory")))
                     {
                         return nullptr;
                     }
-                    return Model::FInventory::FromJson(Data->GetObjectField("inventory"));
+                    return Model::FInventory::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("inventory")));
                  }() : nullptr);
     }
 

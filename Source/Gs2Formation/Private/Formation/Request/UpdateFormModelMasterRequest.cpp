@@ -126,49 +126,49 @@ namespace Gs2::Formation::Request
             return nullptr;
         }
         return MakeShared<FUpdateFormModelMasterRequest>()
-            ->WithContextStack(Data->HasField("contextStack") ? TOptional<FString>(Data->GetStringField("contextStack")) : TOptional<FString>())
-            ->WithNamespaceName(Data->HasField("namespaceName") ? [Data]() -> TOptional<FString>
+            ->WithContextStack(Data->HasField(ANSI_TO_TCHAR("contextStack")) ? TOptional<FString>(Data->GetStringField(ANSI_TO_TCHAR("contextStack"))) : TOptional<FString>())
+            ->WithNamespaceName(Data->HasField(ANSI_TO_TCHAR("namespaceName")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
-                    if (Data->TryGetStringField("namespaceName", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("namespaceName"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
-            ->WithFormModelName(Data->HasField("formModelName") ? [Data]() -> TOptional<FString>
+            ->WithFormModelName(Data->HasField(ANSI_TO_TCHAR("formModelName")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
-                    if (Data->TryGetStringField("formModelName", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("formModelName"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
-            ->WithDescription(Data->HasField("description") ? [Data]() -> TOptional<FString>
+            ->WithDescription(Data->HasField(ANSI_TO_TCHAR("description")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
-                    if (Data->TryGetStringField("description", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("description"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
-            ->WithMetadata(Data->HasField("metadata") ? [Data]() -> TOptional<FString>
+            ->WithMetadata(Data->HasField(ANSI_TO_TCHAR("metadata")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
-                    if (Data->TryGetStringField("metadata", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("metadata"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
-          ->WithSlots(Data->HasField("slots") ? [Data]() -> TSharedPtr<TArray<Model::FSlotModelPtr>>
+          ->WithSlots(Data->HasField(ANSI_TO_TCHAR("slots")) ? [Data]() -> TSharedPtr<TArray<Model::FSlotModelPtr>>
               {
                   auto v = MakeShared<TArray<Model::FSlotModelPtr>>();
-                  if (!Data->HasTypedField<EJson::Null>("slots") && Data->HasTypedField<EJson::Array>("slots"))
+                  if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("slots")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("slots")))
                   {
-                      for (auto JsonObjectValue : Data->GetArrayField("slots"))
+                      for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("slots")))
                       {
                           v->Add(Model::FSlotModel::FromJson(JsonObjectValue->AsObject()));
                       }

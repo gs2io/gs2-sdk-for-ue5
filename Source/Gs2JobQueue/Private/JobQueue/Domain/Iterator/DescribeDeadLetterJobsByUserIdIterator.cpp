@@ -28,6 +28,8 @@
 #include "JobQueue/Domain/Model/DeadLetterJob.h"
 #include "JobQueue/Domain/Model/User.h"
 
+#include "Core/Domain/Gs2.h"
+
 namespace Gs2::JobQueue::Domain::Iterator
 {
 

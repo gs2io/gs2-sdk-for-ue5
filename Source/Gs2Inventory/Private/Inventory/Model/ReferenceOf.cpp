@@ -150,19 +150,19 @@ namespace Gs2::Inventory::Model
             return nullptr;
         }
         return MakeShared<FReferenceOf>()
-            ->WithReferenceOfId(Data->HasField("referenceOfId") ? [Data]() -> TOptional<FString>
+            ->WithReferenceOfId(Data->HasField(ANSI_TO_TCHAR("referenceOfId")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("referenceOfId", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("referenceOfId"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithName(Data->HasField("name") ? [Data]() -> TOptional<FString>
+            ->WithName(Data->HasField(ANSI_TO_TCHAR("name")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("name", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("name"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }

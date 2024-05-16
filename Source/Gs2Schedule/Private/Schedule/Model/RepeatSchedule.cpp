@@ -149,46 +149,46 @@ namespace Gs2::Schedule::Model
             return nullptr;
         }
         return MakeShared<FRepeatSchedule>()
-            ->WithRepeatCount(Data->HasField("repeatCount") ? [Data]() -> TOptional<int32>
+            ->WithRepeatCount(Data->HasField(ANSI_TO_TCHAR("repeatCount")) ? [Data]() -> TOptional<int32>
                 {
                     int32 v;
-                    if (Data->TryGetNumberField("repeatCount", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("repeatCount"), v))
                     {
                         return TOptional(v);
                     }
                     return TOptional<int32>();
                 }() : TOptional<int32>())
-            ->WithCurrentRepeatStartAt(Data->HasField("currentRepeatStartAt") ? [Data]() -> TOptional<int64>
+            ->WithCurrentRepeatStartAt(Data->HasField(ANSI_TO_TCHAR("currentRepeatStartAt")) ? [Data]() -> TOptional<int64>
                 {
                     int64 v;
-                    if (Data->TryGetNumberField("currentRepeatStartAt", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("currentRepeatStartAt"), v))
                     {
                         return TOptional(v);
                     }
                     return TOptional<int64>();
                 }() : TOptional<int64>())
-            ->WithCurrentRepeatEndAt(Data->HasField("currentRepeatEndAt") ? [Data]() -> TOptional<int64>
+            ->WithCurrentRepeatEndAt(Data->HasField(ANSI_TO_TCHAR("currentRepeatEndAt")) ? [Data]() -> TOptional<int64>
                 {
                     int64 v;
-                    if (Data->TryGetNumberField("currentRepeatEndAt", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("currentRepeatEndAt"), v))
                     {
                         return TOptional(v);
                     }
                     return TOptional<int64>();
                 }() : TOptional<int64>())
-            ->WithLastRepeatEndAt(Data->HasField("lastRepeatEndAt") ? [Data]() -> TOptional<int64>
+            ->WithLastRepeatEndAt(Data->HasField(ANSI_TO_TCHAR("lastRepeatEndAt")) ? [Data]() -> TOptional<int64>
                 {
                     int64 v;
-                    if (Data->TryGetNumberField("lastRepeatEndAt", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("lastRepeatEndAt"), v))
                     {
                         return TOptional(v);
                     }
                     return TOptional<int64>();
                 }() : TOptional<int64>())
-            ->WithNextRepeatStartAt(Data->HasField("nextRepeatStartAt") ? [Data]() -> TOptional<int64>
+            ->WithNextRepeatStartAt(Data->HasField(ANSI_TO_TCHAR("nextRepeatStartAt")) ? [Data]() -> TOptional<int64>
                 {
                     int64 v;
-                    if (Data->TryGetNumberField("nextRepeatStartAt", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("nextRepeatStartAt"), v))
                     {
                         return TOptional(v);
                     }

@@ -88,28 +88,28 @@ namespace Gs2::Auth::Result
             return nullptr;
         }
         return MakeShared<FFederationResult>()
-            ->WithToken(Data->HasField("token") ? [Data]() -> TOptional<FString>
+            ->WithToken(Data->HasField(ANSI_TO_TCHAR("token")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("token", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("token"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithUserId(Data->HasField("userId") ? [Data]() -> TOptional<FString>
+            ->WithUserId(Data->HasField(ANSI_TO_TCHAR("userId")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("userId", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("userId"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithExpire(Data->HasField("expire") ? [Data]() -> TOptional<int64>
+            ->WithExpire(Data->HasField(ANSI_TO_TCHAR("expire")) ? [Data]() -> TOptional<int64>
                 {
                     int64 v;
-                    if (Data->TryGetNumberField("expire", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("expire"), v))
                     {
                         return TOptional(v);
                     }

@@ -411,163 +411,163 @@ namespace Gs2::Schedule::Model
             return nullptr;
         }
         return MakeShared<FEventMaster>()
-            ->WithEventId(Data->HasField("eventId") ? [Data]() -> TOptional<FString>
+            ->WithEventId(Data->HasField(ANSI_TO_TCHAR("eventId")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("eventId", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("eventId"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithName(Data->HasField("name") ? [Data]() -> TOptional<FString>
+            ->WithName(Data->HasField(ANSI_TO_TCHAR("name")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("name", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("name"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithDescription(Data->HasField("description") ? [Data]() -> TOptional<FString>
+            ->WithDescription(Data->HasField(ANSI_TO_TCHAR("description")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("description", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("description"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithMetadata(Data->HasField("metadata") ? [Data]() -> TOptional<FString>
+            ->WithMetadata(Data->HasField(ANSI_TO_TCHAR("metadata")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("metadata", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("metadata"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithScheduleType(Data->HasField("scheduleType") ? [Data]() -> TOptional<FString>
+            ->WithScheduleType(Data->HasField(ANSI_TO_TCHAR("scheduleType")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("scheduleType", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("scheduleType"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithRepeatType(Data->HasField("repeatType") ? [Data]() -> TOptional<FString>
+            ->WithRepeatType(Data->HasField(ANSI_TO_TCHAR("repeatType")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("repeatType", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("repeatType"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithAbsoluteBegin(Data->HasField("absoluteBegin") ? [Data]() -> TOptional<int64>
+            ->WithAbsoluteBegin(Data->HasField(ANSI_TO_TCHAR("absoluteBegin")) ? [Data]() -> TOptional<int64>
                 {
                     int64 v;
-                    if (Data->TryGetNumberField("absoluteBegin", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("absoluteBegin"), v))
                     {
                         return TOptional(v);
                     }
                     return TOptional<int64>();
                 }() : TOptional<int64>())
-            ->WithAbsoluteEnd(Data->HasField("absoluteEnd") ? [Data]() -> TOptional<int64>
+            ->WithAbsoluteEnd(Data->HasField(ANSI_TO_TCHAR("absoluteEnd")) ? [Data]() -> TOptional<int64>
                 {
                     int64 v;
-                    if (Data->TryGetNumberField("absoluteEnd", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("absoluteEnd"), v))
                     {
                         return TOptional(v);
                     }
                     return TOptional<int64>();
                 }() : TOptional<int64>())
-            ->WithRepeatBeginDayOfMonth(Data->HasField("repeatBeginDayOfMonth") ? [Data]() -> TOptional<int32>
+            ->WithRepeatBeginDayOfMonth(Data->HasField(ANSI_TO_TCHAR("repeatBeginDayOfMonth")) ? [Data]() -> TOptional<int32>
                 {
                     int32 v;
-                    if (Data->TryGetNumberField("repeatBeginDayOfMonth", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("repeatBeginDayOfMonth"), v))
                     {
                         return TOptional(v);
                     }
                     return TOptional<int32>();
                 }() : TOptional<int32>())
-            ->WithRepeatEndDayOfMonth(Data->HasField("repeatEndDayOfMonth") ? [Data]() -> TOptional<int32>
+            ->WithRepeatEndDayOfMonth(Data->HasField(ANSI_TO_TCHAR("repeatEndDayOfMonth")) ? [Data]() -> TOptional<int32>
                 {
                     int32 v;
-                    if (Data->TryGetNumberField("repeatEndDayOfMonth", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("repeatEndDayOfMonth"), v))
                     {
                         return TOptional(v);
                     }
                     return TOptional<int32>();
                 }() : TOptional<int32>())
-            ->WithRepeatBeginDayOfWeek(Data->HasField("repeatBeginDayOfWeek") ? [Data]() -> TOptional<FString>
+            ->WithRepeatBeginDayOfWeek(Data->HasField(ANSI_TO_TCHAR("repeatBeginDayOfWeek")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("repeatBeginDayOfWeek", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("repeatBeginDayOfWeek"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithRepeatEndDayOfWeek(Data->HasField("repeatEndDayOfWeek") ? [Data]() -> TOptional<FString>
+            ->WithRepeatEndDayOfWeek(Data->HasField(ANSI_TO_TCHAR("repeatEndDayOfWeek")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("repeatEndDayOfWeek", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("repeatEndDayOfWeek"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithRepeatBeginHour(Data->HasField("repeatBeginHour") ? [Data]() -> TOptional<int32>
+            ->WithRepeatBeginHour(Data->HasField(ANSI_TO_TCHAR("repeatBeginHour")) ? [Data]() -> TOptional<int32>
                 {
                     int32 v;
-                    if (Data->TryGetNumberField("repeatBeginHour", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("repeatBeginHour"), v))
                     {
                         return TOptional(v);
                     }
                     return TOptional<int32>();
                 }() : TOptional<int32>())
-            ->WithRepeatEndHour(Data->HasField("repeatEndHour") ? [Data]() -> TOptional<int32>
+            ->WithRepeatEndHour(Data->HasField(ANSI_TO_TCHAR("repeatEndHour")) ? [Data]() -> TOptional<int32>
                 {
                     int32 v;
-                    if (Data->TryGetNumberField("repeatEndHour", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("repeatEndHour"), v))
                     {
                         return TOptional(v);
                     }
                     return TOptional<int32>();
                 }() : TOptional<int32>())
-            ->WithRelativeTriggerName(Data->HasField("relativeTriggerName") ? [Data]() -> TOptional<FString>
+            ->WithRelativeTriggerName(Data->HasField(ANSI_TO_TCHAR("relativeTriggerName")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("relativeTriggerName", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("relativeTriggerName"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithCreatedAt(Data->HasField("createdAt") ? [Data]() -> TOptional<int64>
+            ->WithCreatedAt(Data->HasField(ANSI_TO_TCHAR("createdAt")) ? [Data]() -> TOptional<int64>
                 {
                     int64 v;
-                    if (Data->TryGetNumberField("createdAt", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("createdAt"), v))
                     {
                         return TOptional(v);
                     }
                     return TOptional<int64>();
                 }() : TOptional<int64>())
-            ->WithUpdatedAt(Data->HasField("updatedAt") ? [Data]() -> TOptional<int64>
+            ->WithUpdatedAt(Data->HasField(ANSI_TO_TCHAR("updatedAt")) ? [Data]() -> TOptional<int64>
                 {
                     int64 v;
-                    if (Data->TryGetNumberField("updatedAt", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("updatedAt"), v))
                     {
                         return TOptional(v);
                     }
                     return TOptional<int64>();
                 }() : TOptional<int64>())
-            ->WithRevision(Data->HasField("revision") ? [Data]() -> TOptional<int64>
+            ->WithRevision(Data->HasField(ANSI_TO_TCHAR("revision")) ? [Data]() -> TOptional<int64>
                 {
                     int64 v;
-                    if (Data->TryGetNumberField("revision", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("revision"), v))
                     {
                         return TOptional(v);
                     }

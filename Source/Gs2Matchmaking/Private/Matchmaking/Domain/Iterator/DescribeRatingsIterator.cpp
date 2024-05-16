@@ -28,6 +28,8 @@
 #include "Matchmaking/Domain/Model/Rating.h"
 #include "Matchmaking/Domain/Model/User.h"
 
+#include "Core/Domain/Gs2.h"
+
 namespace Gs2::Matchmaking::Domain::Iterator
 {
 

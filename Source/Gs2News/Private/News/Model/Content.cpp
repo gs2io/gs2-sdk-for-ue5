@@ -76,28 +76,28 @@ namespace Gs2::News::Model
             return nullptr;
         }
         return MakeShared<FContent>()
-            ->WithSection(Data->HasField("section") ? [Data]() -> TOptional<FString>
+            ->WithSection(Data->HasField(ANSI_TO_TCHAR("section")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("section", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("section"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithContent(Data->HasField("content") ? [Data]() -> TOptional<FString>
+            ->WithContent(Data->HasField(ANSI_TO_TCHAR("content")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("content", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("content"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithFrontMatter(Data->HasField("frontMatter") ? [Data]() -> TOptional<FString>
+            ->WithFrontMatter(Data->HasField(ANSI_TO_TCHAR("frontMatter")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("frontMatter", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("frontMatter"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }

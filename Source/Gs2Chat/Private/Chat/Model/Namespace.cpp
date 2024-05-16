@@ -299,120 +299,120 @@ namespace Gs2::Chat::Model
             return nullptr;
         }
         return MakeShared<FNamespace>()
-            ->WithNamespaceId(Data->HasField("namespaceId") ? [Data]() -> TOptional<FString>
+            ->WithNamespaceId(Data->HasField(ANSI_TO_TCHAR("namespaceId")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("namespaceId", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("namespaceId"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithName(Data->HasField("name") ? [Data]() -> TOptional<FString>
+            ->WithName(Data->HasField(ANSI_TO_TCHAR("name")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("name", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("name"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithDescription(Data->HasField("description") ? [Data]() -> TOptional<FString>
+            ->WithDescription(Data->HasField(ANSI_TO_TCHAR("description")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("description", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("description"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithAllowCreateRoom(Data->HasField("allowCreateRoom") ? [Data]() -> TOptional<bool>
+            ->WithAllowCreateRoom(Data->HasField(ANSI_TO_TCHAR("allowCreateRoom")) ? [Data]() -> TOptional<bool>
                 {
                     bool v;
-                    if (Data->TryGetBoolField("allowCreateRoom", v))
+                    if (Data->TryGetBoolField(ANSI_TO_TCHAR("allowCreateRoom"), v))
                     {
                         return TOptional(v);
                     }
                     return TOptional<bool>();
                 }() : TOptional<bool>())
-            ->WithPostMessageScript(Data->HasField("postMessageScript") ? [Data]() -> Model::FScriptSettingPtr
+            ->WithPostMessageScript(Data->HasField(ANSI_TO_TCHAR("postMessageScript")) ? [Data]() -> Model::FScriptSettingPtr
                 {
-                    if (Data->HasTypedField<EJson::Null>("postMessageScript"))
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("postMessageScript")))
                     {
                         return nullptr;
                     }
-                    return Model::FScriptSetting::FromJson(Data->GetObjectField("postMessageScript"));
+                    return Model::FScriptSetting::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("postMessageScript")));
                  }() : nullptr)
-            ->WithCreateRoomScript(Data->HasField("createRoomScript") ? [Data]() -> Model::FScriptSettingPtr
+            ->WithCreateRoomScript(Data->HasField(ANSI_TO_TCHAR("createRoomScript")) ? [Data]() -> Model::FScriptSettingPtr
                 {
-                    if (Data->HasTypedField<EJson::Null>("createRoomScript"))
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("createRoomScript")))
                     {
                         return nullptr;
                     }
-                    return Model::FScriptSetting::FromJson(Data->GetObjectField("createRoomScript"));
+                    return Model::FScriptSetting::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("createRoomScript")));
                  }() : nullptr)
-            ->WithDeleteRoomScript(Data->HasField("deleteRoomScript") ? [Data]() -> Model::FScriptSettingPtr
+            ->WithDeleteRoomScript(Data->HasField(ANSI_TO_TCHAR("deleteRoomScript")) ? [Data]() -> Model::FScriptSettingPtr
                 {
-                    if (Data->HasTypedField<EJson::Null>("deleteRoomScript"))
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("deleteRoomScript")))
                     {
                         return nullptr;
                     }
-                    return Model::FScriptSetting::FromJson(Data->GetObjectField("deleteRoomScript"));
+                    return Model::FScriptSetting::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("deleteRoomScript")));
                  }() : nullptr)
-            ->WithSubscribeRoomScript(Data->HasField("subscribeRoomScript") ? [Data]() -> Model::FScriptSettingPtr
+            ->WithSubscribeRoomScript(Data->HasField(ANSI_TO_TCHAR("subscribeRoomScript")) ? [Data]() -> Model::FScriptSettingPtr
                 {
-                    if (Data->HasTypedField<EJson::Null>("subscribeRoomScript"))
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("subscribeRoomScript")))
                     {
                         return nullptr;
                     }
-                    return Model::FScriptSetting::FromJson(Data->GetObjectField("subscribeRoomScript"));
+                    return Model::FScriptSetting::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("subscribeRoomScript")));
                  }() : nullptr)
-            ->WithUnsubscribeRoomScript(Data->HasField("unsubscribeRoomScript") ? [Data]() -> Model::FScriptSettingPtr
+            ->WithUnsubscribeRoomScript(Data->HasField(ANSI_TO_TCHAR("unsubscribeRoomScript")) ? [Data]() -> Model::FScriptSettingPtr
                 {
-                    if (Data->HasTypedField<EJson::Null>("unsubscribeRoomScript"))
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("unsubscribeRoomScript")))
                     {
                         return nullptr;
                     }
-                    return Model::FScriptSetting::FromJson(Data->GetObjectField("unsubscribeRoomScript"));
+                    return Model::FScriptSetting::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("unsubscribeRoomScript")));
                  }() : nullptr)
-            ->WithPostNotification(Data->HasField("postNotification") ? [Data]() -> Model::FNotificationSettingPtr
+            ->WithPostNotification(Data->HasField(ANSI_TO_TCHAR("postNotification")) ? [Data]() -> Model::FNotificationSettingPtr
                 {
-                    if (Data->HasTypedField<EJson::Null>("postNotification"))
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("postNotification")))
                     {
                         return nullptr;
                     }
-                    return Model::FNotificationSetting::FromJson(Data->GetObjectField("postNotification"));
+                    return Model::FNotificationSetting::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("postNotification")));
                  }() : nullptr)
-            ->WithLogSetting(Data->HasField("logSetting") ? [Data]() -> Model::FLogSettingPtr
+            ->WithLogSetting(Data->HasField(ANSI_TO_TCHAR("logSetting")) ? [Data]() -> Model::FLogSettingPtr
                 {
-                    if (Data->HasTypedField<EJson::Null>("logSetting"))
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("logSetting")))
                     {
                         return nullptr;
                     }
-                    return Model::FLogSetting::FromJson(Data->GetObjectField("logSetting"));
+                    return Model::FLogSetting::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("logSetting")));
                  }() : nullptr)
-            ->WithCreatedAt(Data->HasField("createdAt") ? [Data]() -> TOptional<int64>
+            ->WithCreatedAt(Data->HasField(ANSI_TO_TCHAR("createdAt")) ? [Data]() -> TOptional<int64>
                 {
                     int64 v;
-                    if (Data->TryGetNumberField("createdAt", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("createdAt"), v))
                     {
                         return TOptional(v);
                     }
                     return TOptional<int64>();
                 }() : TOptional<int64>())
-            ->WithUpdatedAt(Data->HasField("updatedAt") ? [Data]() -> TOptional<int64>
+            ->WithUpdatedAt(Data->HasField(ANSI_TO_TCHAR("updatedAt")) ? [Data]() -> TOptional<int64>
                 {
                     int64 v;
-                    if (Data->TryGetNumberField("updatedAt", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("updatedAt"), v))
                     {
                         return TOptional(v);
                     }
                     return TOptional<int64>();
                 }() : TOptional<int64>())
-            ->WithRevision(Data->HasField("revision") ? [Data]() -> TOptional<int64>
+            ->WithRevision(Data->HasField(ANSI_TO_TCHAR("revision")) ? [Data]() -> TOptional<int64>
                 {
                     int64 v;
-                    if (Data->TryGetNumberField("revision", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("revision"), v))
                     {
                         return TOptional(v);
                     }

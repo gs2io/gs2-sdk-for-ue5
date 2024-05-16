@@ -27,6 +27,8 @@
 #include "Schedule/Domain/Iterator/DescribeNamespacesIterator.h"
 #include "Schedule/Domain/Model/Namespace.h"
 
+#include "Core/Domain/Gs2.h"
+
 namespace Gs2::Schedule::Domain::Iterator
 {
 

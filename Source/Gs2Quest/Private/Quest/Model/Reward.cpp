@@ -99,37 +99,37 @@ namespace Gs2::Quest::Model
             return nullptr;
         }
         return MakeShared<FReward>()
-            ->WithAction(Data->HasField("action") ? [Data]() -> TOptional<FString>
+            ->WithAction(Data->HasField(ANSI_TO_TCHAR("action")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("action", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("action"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithRequest(Data->HasField("request") ? [Data]() -> TOptional<FString>
+            ->WithRequest(Data->HasField(ANSI_TO_TCHAR("request")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("request", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("request"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithItemId(Data->HasField("itemId") ? [Data]() -> TOptional<FString>
+            ->WithItemId(Data->HasField(ANSI_TO_TCHAR("itemId")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("itemId", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("itemId"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithValue(Data->HasField("value") ? [Data]() -> TOptional<int32>
+            ->WithValue(Data->HasField(ANSI_TO_TCHAR("value")) ? [Data]() -> TOptional<int32>
                 {
                     int32 v;
-                    if (Data->TryGetNumberField("value", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("value"), v))
                     {
                         return TOptional(v);
                     }

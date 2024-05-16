@@ -71,19 +71,19 @@ namespace Gs2::Enhance::Model
             return nullptr;
         }
         return MakeShared<FMaterial>()
-            ->WithMaterialItemSetId(Data->HasField("materialItemSetId") ? [Data]() -> TOptional<FString>
+            ->WithMaterialItemSetId(Data->HasField(ANSI_TO_TCHAR("materialItemSetId")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("materialItemSetId", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("materialItemSetId"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithCount(Data->HasField("count") ? [Data]() -> TOptional<int32>
+            ->WithCount(Data->HasField(ANSI_TO_TCHAR("count")) ? [Data]() -> TOptional<int32>
                 {
                     int32 v;
-                    if (Data->TryGetNumberField("count", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("count"), v))
                     {
                         return TOptional(v);
                     }

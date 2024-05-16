@@ -228,73 +228,73 @@ namespace Gs2::Chat::Model
             return nullptr;
         }
         return MakeShared<FMessage>()
-            ->WithMessageId(Data->HasField("messageId") ? [Data]() -> TOptional<FString>
+            ->WithMessageId(Data->HasField(ANSI_TO_TCHAR("messageId")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("messageId", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("messageId"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithRoomName(Data->HasField("roomName") ? [Data]() -> TOptional<FString>
+            ->WithRoomName(Data->HasField(ANSI_TO_TCHAR("roomName")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("roomName", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("roomName"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithName(Data->HasField("name") ? [Data]() -> TOptional<FString>
+            ->WithName(Data->HasField(ANSI_TO_TCHAR("name")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("name", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("name"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithUserId(Data->HasField("userId") ? [Data]() -> TOptional<FString>
+            ->WithUserId(Data->HasField(ANSI_TO_TCHAR("userId")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("userId", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("userId"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithCategory(Data->HasField("category") ? [Data]() -> TOptional<int32>
+            ->WithCategory(Data->HasField(ANSI_TO_TCHAR("category")) ? [Data]() -> TOptional<int32>
                 {
                     int32 v;
-                    if (Data->TryGetNumberField("category", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("category"), v))
                     {
                         return TOptional(v);
                     }
                     return TOptional<int32>();
                 }() : TOptional<int32>())
-            ->WithMetadata(Data->HasField("metadata") ? [Data]() -> TOptional<FString>
+            ->WithMetadata(Data->HasField(ANSI_TO_TCHAR("metadata")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("metadata", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("metadata"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithCreatedAt(Data->HasField("createdAt") ? [Data]() -> TOptional<int64>
+            ->WithCreatedAt(Data->HasField(ANSI_TO_TCHAR("createdAt")) ? [Data]() -> TOptional<int64>
                 {
                     int64 v;
-                    if (Data->TryGetNumberField("createdAt", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("createdAt"), v))
                     {
                         return TOptional(v);
                     }
                     return TOptional<int64>();
                 }() : TOptional<int64>())
-            ->WithRevision(Data->HasField("revision") ? [Data]() -> TOptional<int64>
+            ->WithRevision(Data->HasField(ANSI_TO_TCHAR("revision")) ? [Data]() -> TOptional<int64>
                 {
                     int64 v;
-                    if (Data->TryGetNumberField("revision", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("revision"), v))
                     {
                         return TOptional(v);
                     }

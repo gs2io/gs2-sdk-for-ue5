@@ -388,170 +388,170 @@ namespace Gs2::Ranking::Request
             return nullptr;
         }
         return MakeShared<FCreateCategoryModelMasterRequest>()
-            ->WithContextStack(Data->HasField("contextStack") ? TOptional<FString>(Data->GetStringField("contextStack")) : TOptional<FString>())
-            ->WithNamespaceName(Data->HasField("namespaceName") ? [Data]() -> TOptional<FString>
+            ->WithContextStack(Data->HasField(ANSI_TO_TCHAR("contextStack")) ? TOptional<FString>(Data->GetStringField(ANSI_TO_TCHAR("contextStack"))) : TOptional<FString>())
+            ->WithNamespaceName(Data->HasField(ANSI_TO_TCHAR("namespaceName")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
-                    if (Data->TryGetStringField("namespaceName", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("namespaceName"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
-            ->WithName(Data->HasField("name") ? [Data]() -> TOptional<FString>
+            ->WithName(Data->HasField(ANSI_TO_TCHAR("name")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
-                    if (Data->TryGetStringField("name", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("name"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
-            ->WithDescription(Data->HasField("description") ? [Data]() -> TOptional<FString>
+            ->WithDescription(Data->HasField(ANSI_TO_TCHAR("description")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
-                    if (Data->TryGetStringField("description", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("description"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
-            ->WithMetadata(Data->HasField("metadata") ? [Data]() -> TOptional<FString>
+            ->WithMetadata(Data->HasField(ANSI_TO_TCHAR("metadata")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
-                    if (Data->TryGetStringField("metadata", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("metadata"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
-            ->WithMinimumValue(Data->HasField("minimumValue") ? [Data]() -> TOptional<int64>
+            ->WithMinimumValue(Data->HasField(ANSI_TO_TCHAR("minimumValue")) ? [Data]() -> TOptional<int64>
               {
                   int64 v;
-                    if (Data->TryGetNumberField("minimumValue", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("minimumValue"), v))
                   {
                         return TOptional(v);
                   }
                   return TOptional<int64>();
               }() : TOptional<int64>())
-            ->WithMaximumValue(Data->HasField("maximumValue") ? [Data]() -> TOptional<int64>
+            ->WithMaximumValue(Data->HasField(ANSI_TO_TCHAR("maximumValue")) ? [Data]() -> TOptional<int64>
               {
                   int64 v;
-                    if (Data->TryGetNumberField("maximumValue", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("maximumValue"), v))
                   {
                         return TOptional(v);
                   }
                   return TOptional<int64>();
               }() : TOptional<int64>())
-            ->WithOrderDirection(Data->HasField("orderDirection") ? [Data]() -> TOptional<FString>
+            ->WithOrderDirection(Data->HasField(ANSI_TO_TCHAR("orderDirection")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
-                    if (Data->TryGetStringField("orderDirection", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("orderDirection"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
-            ->WithScope(Data->HasField("scope") ? [Data]() -> TOptional<FString>
+            ->WithScope(Data->HasField(ANSI_TO_TCHAR("scope")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
-                    if (Data->TryGetStringField("scope", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("scope"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
-            ->WithUniqueByUserId(Data->HasField("uniqueByUserId") ? [Data]() -> TOptional<bool>
+            ->WithUniqueByUserId(Data->HasField(ANSI_TO_TCHAR("uniqueByUserId")) ? [Data]() -> TOptional<bool>
               {
                   bool v;
-                    if (Data->TryGetBoolField("uniqueByUserId", v))
+                    if (Data->TryGetBoolField(ANSI_TO_TCHAR("uniqueByUserId"), v))
                   {
                         return TOptional(v);
                   }
                   return TOptional<bool>();
               }() : TOptional<bool>())
-            ->WithSum(Data->HasField("sum") ? [Data]() -> TOptional<bool>
+            ->WithSum(Data->HasField(ANSI_TO_TCHAR("sum")) ? [Data]() -> TOptional<bool>
               {
                   bool v;
-                    if (Data->TryGetBoolField("sum", v))
+                    if (Data->TryGetBoolField(ANSI_TO_TCHAR("sum"), v))
                   {
                         return TOptional(v);
                   }
                   return TOptional<bool>();
               }() : TOptional<bool>())
-            ->WithCalculateFixedTimingHour(Data->HasField("calculateFixedTimingHour") ? [Data]() -> TOptional<int32>
+            ->WithCalculateFixedTimingHour(Data->HasField(ANSI_TO_TCHAR("calculateFixedTimingHour")) ? [Data]() -> TOptional<int32>
               {
                   int32 v;
-                    if (Data->TryGetNumberField("calculateFixedTimingHour", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("calculateFixedTimingHour"), v))
                   {
                         return TOptional(v);
                   }
                   return TOptional<int32>();
               }() : TOptional<int32>())
-            ->WithCalculateFixedTimingMinute(Data->HasField("calculateFixedTimingMinute") ? [Data]() -> TOptional<int32>
+            ->WithCalculateFixedTimingMinute(Data->HasField(ANSI_TO_TCHAR("calculateFixedTimingMinute")) ? [Data]() -> TOptional<int32>
               {
                   int32 v;
-                    if (Data->TryGetNumberField("calculateFixedTimingMinute", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("calculateFixedTimingMinute"), v))
                   {
                         return TOptional(v);
                   }
                   return TOptional<int32>();
               }() : TOptional<int32>())
-            ->WithCalculateIntervalMinutes(Data->HasField("calculateIntervalMinutes") ? [Data]() -> TOptional<int32>
+            ->WithCalculateIntervalMinutes(Data->HasField(ANSI_TO_TCHAR("calculateIntervalMinutes")) ? [Data]() -> TOptional<int32>
               {
                   int32 v;
-                    if (Data->TryGetNumberField("calculateIntervalMinutes", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("calculateIntervalMinutes"), v))
                   {
                         return TOptional(v);
                   }
                   return TOptional<int32>();
               }() : TOptional<int32>())
-          ->WithAdditionalScopes(Data->HasField("additionalScopes") ? [Data]() -> TSharedPtr<TArray<Model::FScopePtr>>
+          ->WithAdditionalScopes(Data->HasField(ANSI_TO_TCHAR("additionalScopes")) ? [Data]() -> TSharedPtr<TArray<Model::FScopePtr>>
               {
                   auto v = MakeShared<TArray<Model::FScopePtr>>();
-                  if (!Data->HasTypedField<EJson::Null>("additionalScopes") && Data->HasTypedField<EJson::Array>("additionalScopes"))
+                  if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("additionalScopes")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("additionalScopes")))
                   {
-                      for (auto JsonObjectValue : Data->GetArrayField("additionalScopes"))
+                      for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("additionalScopes")))
                       {
                           v->Add(Model::FScope::FromJson(JsonObjectValue->AsObject()));
                       }
                   }
                   return v;
               }() : MakeShared<TArray<Model::FScopePtr>>())
-            ->WithEntryPeriodEventId(Data->HasField("entryPeriodEventId") ? [Data]() -> TOptional<FString>
+            ->WithEntryPeriodEventId(Data->HasField(ANSI_TO_TCHAR("entryPeriodEventId")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
-                    if (Data->TryGetStringField("entryPeriodEventId", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("entryPeriodEventId"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
-            ->WithAccessPeriodEventId(Data->HasField("accessPeriodEventId") ? [Data]() -> TOptional<FString>
+            ->WithAccessPeriodEventId(Data->HasField(ANSI_TO_TCHAR("accessPeriodEventId")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
-                    if (Data->TryGetStringField("accessPeriodEventId", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("accessPeriodEventId"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
-          ->WithIgnoreUserIds(Data->HasField("ignoreUserIds") ? [Data]() -> TSharedPtr<TArray<FString>>
+          ->WithIgnoreUserIds(Data->HasField(ANSI_TO_TCHAR("ignoreUserIds")) ? [Data]() -> TSharedPtr<TArray<FString>>
               {
                   auto v = MakeShared<TArray<FString>>();
-                  if (!Data->HasTypedField<EJson::Null>("ignoreUserIds") && Data->HasTypedField<EJson::Array>("ignoreUserIds"))
+                  if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("ignoreUserIds")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("ignoreUserIds")))
                   {
-                      for (auto JsonObjectValue : Data->GetArrayField("ignoreUserIds"))
+                      for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("ignoreUserIds")))
                       {
                           v->Add(JsonObjectValue->AsString());
                       }
                   }
                   return v;
               }() : MakeShared<TArray<FString>>())
-            ->WithGeneration(Data->HasField("generation") ? [Data]() -> TOptional<FString>
+            ->WithGeneration(Data->HasField(ANSI_TO_TCHAR("generation")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
-                    if (Data->TryGetStringField("generation", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("generation"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }

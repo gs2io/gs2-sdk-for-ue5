@@ -80,19 +80,19 @@ namespace Gs2::Enhance::Model
             return nullptr;
         }
         return MakeShared<FUnleashRateEntryModel>()
-            ->WithGradeValue(Data->HasField("gradeValue") ? [Data]() -> TOptional<int64>
+            ->WithGradeValue(Data->HasField(ANSI_TO_TCHAR("gradeValue")) ? [Data]() -> TOptional<int64>
                 {
                     int64 v;
-                    if (Data->TryGetNumberField("gradeValue", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("gradeValue"), v))
                     {
                         return TOptional(v);
                     }
                     return TOptional<int64>();
                 }() : TOptional<int64>())
-            ->WithNeedCount(Data->HasField("needCount") ? [Data]() -> TOptional<int32>
+            ->WithNeedCount(Data->HasField(ANSI_TO_TCHAR("needCount")) ? [Data]() -> TOptional<int32>
                 {
                     int32 v;
-                    if (Data->TryGetNumberField("needCount", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("needCount"), v))
                     {
                         return TOptional(v);
                     }

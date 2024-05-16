@@ -28,6 +28,8 @@
 #include "Version/Domain/Model/VersionModelMaster.h"
 #include "Version/Domain/Model/Namespace.h"
 
+#include "Core/Domain/Gs2.h"
+
 namespace Gs2::Version::Domain::Iterator
 {
 

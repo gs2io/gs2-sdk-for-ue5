@@ -53,13 +53,13 @@ namespace Gs2::SeasonRating::Result
             return nullptr;
         }
         return MakeShared<FGetMatchSessionResult>()
-            ->WithItem(Data->HasField("item") ? [Data]() -> Model::FMatchSessionPtr
+            ->WithItem(Data->HasField(ANSI_TO_TCHAR("item")) ? [Data]() -> Model::FMatchSessionPtr
                  {
-                    if (Data->HasTypedField<EJson::Null>("item"))
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("item")))
                     {
                         return nullptr;
                     }
-                    return Model::FMatchSession::FromJson(Data->GetObjectField("item"));
+                    return Model::FMatchSession::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("item")));
                  }() : nullptr);
     }
 

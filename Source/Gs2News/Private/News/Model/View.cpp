@@ -62,24 +62,24 @@ namespace Gs2::News::Model
             return nullptr;
         }
         return MakeShared<FView>()
-            ->WithContents(Data->HasField("contents") ? [Data]() -> TSharedPtr<TArray<Model::FContentPtr>>
+            ->WithContents(Data->HasField(ANSI_TO_TCHAR("contents")) ? [Data]() -> TSharedPtr<TArray<Model::FContentPtr>>
                 {
                     auto v = MakeShared<TArray<Model::FContentPtr>>();
-                    if (!Data->HasTypedField<EJson::Null>("contents") && Data->HasTypedField<EJson::Array>("contents"))
+                    if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("contents")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("contents")))
                     {
-                        for (auto JsonObjectValue : Data->GetArrayField("contents"))
+                        for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("contents")))
                         {
                             v->Add(Model::FContent::FromJson(JsonObjectValue->AsObject()));
                         }
                     }
                     return v;
                  }() : MakeShared<TArray<Model::FContentPtr>>())
-            ->WithRemoveContents(Data->HasField("removeContents") ? [Data]() -> TSharedPtr<TArray<Model::FContentPtr>>
+            ->WithRemoveContents(Data->HasField(ANSI_TO_TCHAR("removeContents")) ? [Data]() -> TSharedPtr<TArray<Model::FContentPtr>>
                 {
                     auto v = MakeShared<TArray<Model::FContentPtr>>();
-                    if (!Data->HasTypedField<EJson::Null>("removeContents") && Data->HasTypedField<EJson::Array>("removeContents"))
+                    if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("removeContents")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("removeContents")))
                     {
-                        for (auto JsonObjectValue : Data->GetArrayField("removeContents"))
+                        for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("removeContents")))
                         {
                             v->Add(Model::FContent::FromJson(JsonObjectValue->AsObject()));
                         }

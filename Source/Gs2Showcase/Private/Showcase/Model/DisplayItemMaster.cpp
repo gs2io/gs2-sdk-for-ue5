@@ -127,55 +127,55 @@ namespace Gs2::Showcase::Model
             return nullptr;
         }
         return MakeShared<FDisplayItemMaster>()
-            ->WithDisplayItemId(Data->HasField("displayItemId") ? [Data]() -> TOptional<FString>
+            ->WithDisplayItemId(Data->HasField(ANSI_TO_TCHAR("displayItemId")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("displayItemId", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("displayItemId"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithType(Data->HasField("type") ? [Data]() -> TOptional<FString>
+            ->WithType(Data->HasField(ANSI_TO_TCHAR("type")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("type", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("type"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithSalesItemName(Data->HasField("salesItemName") ? [Data]() -> TOptional<FString>
+            ->WithSalesItemName(Data->HasField(ANSI_TO_TCHAR("salesItemName")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("salesItemName", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("salesItemName"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithSalesItemGroupName(Data->HasField("salesItemGroupName") ? [Data]() -> TOptional<FString>
+            ->WithSalesItemGroupName(Data->HasField(ANSI_TO_TCHAR("salesItemGroupName")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("salesItemGroupName", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("salesItemGroupName"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithSalesPeriodEventId(Data->HasField("salesPeriodEventId") ? [Data]() -> TOptional<FString>
+            ->WithSalesPeriodEventId(Data->HasField(ANSI_TO_TCHAR("salesPeriodEventId")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("salesPeriodEventId", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("salesPeriodEventId"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithRevision(Data->HasField("revision") ? [Data]() -> TOptional<int64>
+            ->WithRevision(Data->HasField(ANSI_TO_TCHAR("revision")) ? [Data]() -> TOptional<int64>
                 {
                     int64 v;
-                    if (Data->TryGetNumberField("revision", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("revision"), v))
                     {
                         return TOptional(v);
                     }

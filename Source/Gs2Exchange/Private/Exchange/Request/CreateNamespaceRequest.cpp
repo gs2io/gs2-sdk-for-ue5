@@ -231,88 +231,88 @@ namespace Gs2::Exchange::Request
             return nullptr;
         }
         return MakeShared<FCreateNamespaceRequest>()
-            ->WithContextStack(Data->HasField("contextStack") ? TOptional<FString>(Data->GetStringField("contextStack")) : TOptional<FString>())
-            ->WithName(Data->HasField("name") ? [Data]() -> TOptional<FString>
+            ->WithContextStack(Data->HasField(ANSI_TO_TCHAR("contextStack")) ? TOptional<FString>(Data->GetStringField(ANSI_TO_TCHAR("contextStack"))) : TOptional<FString>())
+            ->WithName(Data->HasField(ANSI_TO_TCHAR("name")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
-                    if (Data->TryGetStringField("name", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("name"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
-            ->WithDescription(Data->HasField("description") ? [Data]() -> TOptional<FString>
+            ->WithDescription(Data->HasField(ANSI_TO_TCHAR("description")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
-                    if (Data->TryGetStringField("description", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("description"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
-            ->WithEnableAwaitExchange(Data->HasField("enableAwaitExchange") ? [Data]() -> TOptional<bool>
+            ->WithEnableAwaitExchange(Data->HasField(ANSI_TO_TCHAR("enableAwaitExchange")) ? [Data]() -> TOptional<bool>
               {
                   bool v;
-                    if (Data->TryGetBoolField("enableAwaitExchange", v))
+                    if (Data->TryGetBoolField(ANSI_TO_TCHAR("enableAwaitExchange"), v))
                   {
                         return TOptional(v);
                   }
                   return TOptional<bool>();
               }() : TOptional<bool>())
-            ->WithEnableDirectExchange(Data->HasField("enableDirectExchange") ? [Data]() -> TOptional<bool>
+            ->WithEnableDirectExchange(Data->HasField(ANSI_TO_TCHAR("enableDirectExchange")) ? [Data]() -> TOptional<bool>
               {
                   bool v;
-                    if (Data->TryGetBoolField("enableDirectExchange", v))
+                    if (Data->TryGetBoolField(ANSI_TO_TCHAR("enableDirectExchange"), v))
                   {
                         return TOptional(v);
                   }
                   return TOptional<bool>();
               }() : TOptional<bool>())
-          ->WithTransactionSetting(Data->HasField("transactionSetting") ? [Data]() -> Model::FTransactionSettingPtr
+          ->WithTransactionSetting(Data->HasField(ANSI_TO_TCHAR("transactionSetting")) ? [Data]() -> Model::FTransactionSettingPtr
               {
-                  if (Data->HasTypedField<EJson::Null>("transactionSetting"))
+                  if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("transactionSetting")))
                   {
                       return nullptr;
                   }
-                  return Model::FTransactionSetting::FromJson(Data->GetObjectField("transactionSetting"));
+                  return Model::FTransactionSetting::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("transactionSetting")));
               }() : nullptr)
-          ->WithExchangeScript(Data->HasField("exchangeScript") ? [Data]() -> Model::FScriptSettingPtr
+          ->WithExchangeScript(Data->HasField(ANSI_TO_TCHAR("exchangeScript")) ? [Data]() -> Model::FScriptSettingPtr
               {
-                  if (Data->HasTypedField<EJson::Null>("exchangeScript"))
+                  if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("exchangeScript")))
                   {
                       return nullptr;
                   }
-                  return Model::FScriptSetting::FromJson(Data->GetObjectField("exchangeScript"));
+                  return Model::FScriptSetting::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("exchangeScript")));
               }() : nullptr)
-          ->WithIncrementalExchangeScript(Data->HasField("incrementalExchangeScript") ? [Data]() -> Model::FScriptSettingPtr
+          ->WithIncrementalExchangeScript(Data->HasField(ANSI_TO_TCHAR("incrementalExchangeScript")) ? [Data]() -> Model::FScriptSettingPtr
               {
-                  if (Data->HasTypedField<EJson::Null>("incrementalExchangeScript"))
+                  if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("incrementalExchangeScript")))
                   {
                       return nullptr;
                   }
-                  return Model::FScriptSetting::FromJson(Data->GetObjectField("incrementalExchangeScript"));
+                  return Model::FScriptSetting::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("incrementalExchangeScript")));
               }() : nullptr)
-          ->WithLogSetting(Data->HasField("logSetting") ? [Data]() -> Model::FLogSettingPtr
+          ->WithLogSetting(Data->HasField(ANSI_TO_TCHAR("logSetting")) ? [Data]() -> Model::FLogSettingPtr
               {
-                  if (Data->HasTypedField<EJson::Null>("logSetting"))
+                  if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("logSetting")))
                   {
                       return nullptr;
                   }
-                  return Model::FLogSetting::FromJson(Data->GetObjectField("logSetting"));
+                  return Model::FLogSetting::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("logSetting")));
               }() : nullptr)
-            ->WithQueueNamespaceId(Data->HasField("queueNamespaceId") ? [Data]() -> TOptional<FString>
+            ->WithQueueNamespaceId(Data->HasField(ANSI_TO_TCHAR("queueNamespaceId")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
-                    if (Data->TryGetStringField("queueNamespaceId", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("queueNamespaceId"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
-            ->WithKeyId(Data->HasField("keyId") ? [Data]() -> TOptional<FString>
+            ->WithKeyId(Data->HasField(ANSI_TO_TCHAR("keyId")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
-                    if (Data->TryGetStringField("keyId", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("keyId"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }

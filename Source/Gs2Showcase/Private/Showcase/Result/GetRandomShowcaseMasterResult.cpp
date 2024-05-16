@@ -53,13 +53,13 @@ namespace Gs2::Showcase::Result
             return nullptr;
         }
         return MakeShared<FGetRandomShowcaseMasterResult>()
-            ->WithItem(Data->HasField("item") ? [Data]() -> Model::FRandomShowcaseMasterPtr
+            ->WithItem(Data->HasField(ANSI_TO_TCHAR("item")) ? [Data]() -> Model::FRandomShowcaseMasterPtr
                  {
-                    if (Data->HasTypedField<EJson::Null>("item"))
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("item")))
                     {
                         return nullptr;
                     }
-                    return Model::FRandomShowcaseMaster::FromJson(Data->GetObjectField("item"));
+                    return Model::FRandomShowcaseMaster::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("item")));
                  }() : nullptr);
     }
 

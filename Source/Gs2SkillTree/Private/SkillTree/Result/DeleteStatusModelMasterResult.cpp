@@ -53,13 +53,13 @@ namespace Gs2::SkillTree::Result
             return nullptr;
         }
         return MakeShared<FDeleteStatusModelMasterResult>()
-            ->WithItem(Data->HasField("item") ? [Data]() -> Model::FNodeModelMasterPtr
+            ->WithItem(Data->HasField(ANSI_TO_TCHAR("item")) ? [Data]() -> Model::FNodeModelMasterPtr
                  {
-                    if (Data->HasTypedField<EJson::Null>("item"))
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("item")))
                     {
                         return nullptr;
                     }
-                    return Model::FNodeModelMaster::FromJson(Data->GetObjectField("item"));
+                    return Model::FNodeModelMaster::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("item")));
                  }() : nullptr);
     }
 

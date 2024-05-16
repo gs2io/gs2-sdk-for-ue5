@@ -120,28 +120,28 @@ namespace Gs2::Dictionary::Model
             return nullptr;
         }
         return MakeShared<FEntryModel>()
-            ->WithEntryModelId(Data->HasField("entryModelId") ? [Data]() -> TOptional<FString>
+            ->WithEntryModelId(Data->HasField(ANSI_TO_TCHAR("entryModelId")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("entryModelId", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("entryModelId"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithName(Data->HasField("name") ? [Data]() -> TOptional<FString>
+            ->WithName(Data->HasField(ANSI_TO_TCHAR("name")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("name", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("name"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithMetadata(Data->HasField("metadata") ? [Data]() -> TOptional<FString>
+            ->WithMetadata(Data->HasField(ANSI_TO_TCHAR("metadata")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("metadata", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("metadata"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }

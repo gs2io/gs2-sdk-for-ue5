@@ -53,13 +53,13 @@ namespace Gs2::SerialKey::Result
             return nullptr;
         }
         return MakeShared<FGetCurrentCampaignMasterResult>()
-            ->WithItem(Data->HasField("item") ? [Data]() -> Model::FCurrentCampaignMasterPtr
+            ->WithItem(Data->HasField(ANSI_TO_TCHAR("item")) ? [Data]() -> Model::FCurrentCampaignMasterPtr
                  {
-                    if (Data->HasTypedField<EJson::Null>("item"))
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("item")))
                     {
                         return nullptr;
                     }
-                    return Model::FCurrentCampaignMaster::FromJson(Data->GetObjectField("item"));
+                    return Model::FCurrentCampaignMaster::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("item")));
                  }() : nullptr);
     }
 

@@ -72,21 +72,21 @@ namespace Gs2::Inventory::Result
             return nullptr;
         }
         return MakeShared<FGetSimpleItemResult>()
-            ->WithItem(Data->HasField("item") ? [Data]() -> Model::FSimpleItemPtr
+            ->WithItem(Data->HasField(ANSI_TO_TCHAR("item")) ? [Data]() -> Model::FSimpleItemPtr
                  {
-                    if (Data->HasTypedField<EJson::Null>("item"))
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("item")))
                     {
                         return nullptr;
                     }
-                    return Model::FSimpleItem::FromJson(Data->GetObjectField("item"));
+                    return Model::FSimpleItem::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("item")));
                  }() : nullptr)
-            ->WithItemModel(Data->HasField("itemModel") ? [Data]() -> Model::FSimpleItemModelPtr
+            ->WithItemModel(Data->HasField(ANSI_TO_TCHAR("itemModel")) ? [Data]() -> Model::FSimpleItemModelPtr
                  {
-                    if (Data->HasTypedField<EJson::Null>("itemModel"))
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("itemModel")))
                     {
                         return nullptr;
                     }
-                    return Model::FSimpleItemModel::FromJson(Data->GetObjectField("itemModel"));
+                    return Model::FSimpleItemModel::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("itemModel")));
                  }() : nullptr);
     }
 

@@ -307,121 +307,121 @@ namespace Gs2::Mission::Model
             return nullptr;
         }
         return MakeShared<FMissionTaskModelMaster>()
-            ->WithMissionTaskId(Data->HasField("missionTaskId") ? [Data]() -> TOptional<FString>
+            ->WithMissionTaskId(Data->HasField(ANSI_TO_TCHAR("missionTaskId")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("missionTaskId", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("missionTaskId"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithName(Data->HasField("name") ? [Data]() -> TOptional<FString>
+            ->WithName(Data->HasField(ANSI_TO_TCHAR("name")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("name", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("name"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithMetadata(Data->HasField("metadata") ? [Data]() -> TOptional<FString>
+            ->WithMetadata(Data->HasField(ANSI_TO_TCHAR("metadata")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("metadata", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("metadata"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithDescription(Data->HasField("description") ? [Data]() -> TOptional<FString>
+            ->WithDescription(Data->HasField(ANSI_TO_TCHAR("description")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("description", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("description"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithCounterName(Data->HasField("counterName") ? [Data]() -> TOptional<FString>
+            ->WithCounterName(Data->HasField(ANSI_TO_TCHAR("counterName")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("counterName", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("counterName"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithTargetResetType(Data->HasField("targetResetType") ? [Data]() -> TOptional<FString>
+            ->WithTargetResetType(Data->HasField(ANSI_TO_TCHAR("targetResetType")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("targetResetType", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("targetResetType"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithTargetValue(Data->HasField("targetValue") ? [Data]() -> TOptional<int64>
+            ->WithTargetValue(Data->HasField(ANSI_TO_TCHAR("targetValue")) ? [Data]() -> TOptional<int64>
                 {
                     int64 v;
-                    if (Data->TryGetNumberField("targetValue", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("targetValue"), v))
                     {
                         return TOptional(v);
                     }
                     return TOptional<int64>();
                 }() : TOptional<int64>())
-            ->WithCompleteAcquireActions(Data->HasField("completeAcquireActions") ? [Data]() -> TSharedPtr<TArray<Model::FAcquireActionPtr>>
+            ->WithCompleteAcquireActions(Data->HasField(ANSI_TO_TCHAR("completeAcquireActions")) ? [Data]() -> TSharedPtr<TArray<Model::FAcquireActionPtr>>
                 {
                     auto v = MakeShared<TArray<Model::FAcquireActionPtr>>();
-                    if (!Data->HasTypedField<EJson::Null>("completeAcquireActions") && Data->HasTypedField<EJson::Array>("completeAcquireActions"))
+                    if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("completeAcquireActions")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("completeAcquireActions")))
                     {
-                        for (auto JsonObjectValue : Data->GetArrayField("completeAcquireActions"))
+                        for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("completeAcquireActions")))
                         {
                             v->Add(Model::FAcquireAction::FromJson(JsonObjectValue->AsObject()));
                         }
                     }
                     return v;
                  }() : MakeShared<TArray<Model::FAcquireActionPtr>>())
-            ->WithChallengePeriodEventId(Data->HasField("challengePeriodEventId") ? [Data]() -> TOptional<FString>
+            ->WithChallengePeriodEventId(Data->HasField(ANSI_TO_TCHAR("challengePeriodEventId")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("challengePeriodEventId", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("challengePeriodEventId"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithPremiseMissionTaskName(Data->HasField("premiseMissionTaskName") ? [Data]() -> TOptional<FString>
+            ->WithPremiseMissionTaskName(Data->HasField(ANSI_TO_TCHAR("premiseMissionTaskName")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("premiseMissionTaskName", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("premiseMissionTaskName"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithCreatedAt(Data->HasField("createdAt") ? [Data]() -> TOptional<int64>
+            ->WithCreatedAt(Data->HasField(ANSI_TO_TCHAR("createdAt")) ? [Data]() -> TOptional<int64>
                 {
                     int64 v;
-                    if (Data->TryGetNumberField("createdAt", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("createdAt"), v))
                     {
                         return TOptional(v);
                     }
                     return TOptional<int64>();
                 }() : TOptional<int64>())
-            ->WithUpdatedAt(Data->HasField("updatedAt") ? [Data]() -> TOptional<int64>
+            ->WithUpdatedAt(Data->HasField(ANSI_TO_TCHAR("updatedAt")) ? [Data]() -> TOptional<int64>
                 {
                     int64 v;
-                    if (Data->TryGetNumberField("updatedAt", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("updatedAt"), v))
                     {
                         return TOptional(v);
                     }
                     return TOptional<int64>();
                 }() : TOptional<int64>())
-            ->WithRevision(Data->HasField("revision") ? [Data]() -> TOptional<int64>
+            ->WithRevision(Data->HasField(ANSI_TO_TCHAR("revision")) ? [Data]() -> TOptional<int64>
                 {
                     int64 v;
-                    if (Data->TryGetNumberField("revision", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("revision"), v))
                     {
                         return TOptional(v);
                     }

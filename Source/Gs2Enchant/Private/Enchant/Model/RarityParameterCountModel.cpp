@@ -80,19 +80,19 @@ namespace Gs2::Enchant::Model
             return nullptr;
         }
         return MakeShared<FRarityParameterCountModel>()
-            ->WithCount(Data->HasField("count") ? [Data]() -> TOptional<int32>
+            ->WithCount(Data->HasField(ANSI_TO_TCHAR("count")) ? [Data]() -> TOptional<int32>
                 {
                     int32 v;
-                    if (Data->TryGetNumberField("count", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("count"), v))
                     {
                         return TOptional(v);
                     }
                     return TOptional<int32>();
                 }() : TOptional<int32>())
-            ->WithWeight(Data->HasField("weight") ? [Data]() -> TOptional<int32>
+            ->WithWeight(Data->HasField(ANSI_TO_TCHAR("weight")) ? [Data]() -> TOptional<int32>
                 {
                     int32 v;
-                    if (Data->TryGetNumberField("weight", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("weight"), v))
                     {
                         return TOptional(v);
                     }

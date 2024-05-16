@@ -53,13 +53,13 @@ namespace Gs2::Showcase::Result
             return nullptr;
         }
         return MakeShared<FUpdateSalesItemMasterResult>()
-            ->WithItem(Data->HasField("item") ? [Data]() -> Model::FSalesItemMasterPtr
+            ->WithItem(Data->HasField(ANSI_TO_TCHAR("item")) ? [Data]() -> Model::FSalesItemMasterPtr
                  {
-                    if (Data->HasTypedField<EJson::Null>("item"))
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("item")))
                     {
                         return nullptr;
                     }
-                    return Model::FSalesItemMaster::FromJson(Data->GetObjectField("item"));
+                    return Model::FSalesItemMaster::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("item")));
                  }() : nullptr);
     }
 

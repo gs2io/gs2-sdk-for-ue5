@@ -62,20 +62,20 @@ namespace Gs2::Matchmaking::Model
             return nullptr;
         }
         return MakeShared<FWrittenBallot>()
-            ->WithBallot(Data->HasField("ballot") ? [Data]() -> Model::FBallotPtr
+            ->WithBallot(Data->HasField(ANSI_TO_TCHAR("ballot")) ? [Data]() -> Model::FBallotPtr
                 {
-                    if (Data->HasTypedField<EJson::Null>("ballot"))
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("ballot")))
                     {
                         return nullptr;
                     }
-                    return Model::FBallot::FromJson(Data->GetObjectField("ballot"));
+                    return Model::FBallot::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("ballot")));
                  }() : nullptr)
-            ->WithGameResults(Data->HasField("gameResults") ? [Data]() -> TSharedPtr<TArray<Model::FGameResultPtr>>
+            ->WithGameResults(Data->HasField(ANSI_TO_TCHAR("gameResults")) ? [Data]() -> TSharedPtr<TArray<Model::FGameResultPtr>>
                 {
                     auto v = MakeShared<TArray<Model::FGameResultPtr>>();
-                    if (!Data->HasTypedField<EJson::Null>("gameResults") && Data->HasTypedField<EJson::Array>("gameResults"))
+                    if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("gameResults")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("gameResults")))
                     {
-                        for (auto JsonObjectValue : Data->GetArrayField("gameResults"))
+                        for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("gameResults")))
                         {
                             v->Add(Model::FGameResult::FromJson(JsonObjectValue->AsObject()));
                         }

@@ -346,151 +346,151 @@ namespace Gs2::Friend::Model
             return nullptr;
         }
         return MakeShared<FNamespace>()
-            ->WithNamespaceId(Data->HasField("namespaceId") ? [Data]() -> TOptional<FString>
+            ->WithNamespaceId(Data->HasField(ANSI_TO_TCHAR("namespaceId")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("namespaceId", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("namespaceId"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithName(Data->HasField("name") ? [Data]() -> TOptional<FString>
+            ->WithName(Data->HasField(ANSI_TO_TCHAR("name")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("name", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("name"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithDescription(Data->HasField("description") ? [Data]() -> TOptional<FString>
+            ->WithDescription(Data->HasField(ANSI_TO_TCHAR("description")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("description", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("description"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithFollowScript(Data->HasField("followScript") ? [Data]() -> Model::FScriptSettingPtr
+            ->WithFollowScript(Data->HasField(ANSI_TO_TCHAR("followScript")) ? [Data]() -> Model::FScriptSettingPtr
                 {
-                    if (Data->HasTypedField<EJson::Null>("followScript"))
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("followScript")))
                     {
                         return nullptr;
                     }
-                    return Model::FScriptSetting::FromJson(Data->GetObjectField("followScript"));
+                    return Model::FScriptSetting::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("followScript")));
                  }() : nullptr)
-            ->WithUnfollowScript(Data->HasField("unfollowScript") ? [Data]() -> Model::FScriptSettingPtr
+            ->WithUnfollowScript(Data->HasField(ANSI_TO_TCHAR("unfollowScript")) ? [Data]() -> Model::FScriptSettingPtr
                 {
-                    if (Data->HasTypedField<EJson::Null>("unfollowScript"))
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("unfollowScript")))
                     {
                         return nullptr;
                     }
-                    return Model::FScriptSetting::FromJson(Data->GetObjectField("unfollowScript"));
+                    return Model::FScriptSetting::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("unfollowScript")));
                  }() : nullptr)
-            ->WithSendRequestScript(Data->HasField("sendRequestScript") ? [Data]() -> Model::FScriptSettingPtr
+            ->WithSendRequestScript(Data->HasField(ANSI_TO_TCHAR("sendRequestScript")) ? [Data]() -> Model::FScriptSettingPtr
                 {
-                    if (Data->HasTypedField<EJson::Null>("sendRequestScript"))
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("sendRequestScript")))
                     {
                         return nullptr;
                     }
-                    return Model::FScriptSetting::FromJson(Data->GetObjectField("sendRequestScript"));
+                    return Model::FScriptSetting::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("sendRequestScript")));
                  }() : nullptr)
-            ->WithCancelRequestScript(Data->HasField("cancelRequestScript") ? [Data]() -> Model::FScriptSettingPtr
+            ->WithCancelRequestScript(Data->HasField(ANSI_TO_TCHAR("cancelRequestScript")) ? [Data]() -> Model::FScriptSettingPtr
                 {
-                    if (Data->HasTypedField<EJson::Null>("cancelRequestScript"))
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("cancelRequestScript")))
                     {
                         return nullptr;
                     }
-                    return Model::FScriptSetting::FromJson(Data->GetObjectField("cancelRequestScript"));
+                    return Model::FScriptSetting::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("cancelRequestScript")));
                  }() : nullptr)
-            ->WithAcceptRequestScript(Data->HasField("acceptRequestScript") ? [Data]() -> Model::FScriptSettingPtr
+            ->WithAcceptRequestScript(Data->HasField(ANSI_TO_TCHAR("acceptRequestScript")) ? [Data]() -> Model::FScriptSettingPtr
                 {
-                    if (Data->HasTypedField<EJson::Null>("acceptRequestScript"))
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("acceptRequestScript")))
                     {
                         return nullptr;
                     }
-                    return Model::FScriptSetting::FromJson(Data->GetObjectField("acceptRequestScript"));
+                    return Model::FScriptSetting::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("acceptRequestScript")));
                  }() : nullptr)
-            ->WithRejectRequestScript(Data->HasField("rejectRequestScript") ? [Data]() -> Model::FScriptSettingPtr
+            ->WithRejectRequestScript(Data->HasField(ANSI_TO_TCHAR("rejectRequestScript")) ? [Data]() -> Model::FScriptSettingPtr
                 {
-                    if (Data->HasTypedField<EJson::Null>("rejectRequestScript"))
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("rejectRequestScript")))
                     {
                         return nullptr;
                     }
-                    return Model::FScriptSetting::FromJson(Data->GetObjectField("rejectRequestScript"));
+                    return Model::FScriptSetting::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("rejectRequestScript")));
                  }() : nullptr)
-            ->WithDeleteFriendScript(Data->HasField("deleteFriendScript") ? [Data]() -> Model::FScriptSettingPtr
+            ->WithDeleteFriendScript(Data->HasField(ANSI_TO_TCHAR("deleteFriendScript")) ? [Data]() -> Model::FScriptSettingPtr
                 {
-                    if (Data->HasTypedField<EJson::Null>("deleteFriendScript"))
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("deleteFriendScript")))
                     {
                         return nullptr;
                     }
-                    return Model::FScriptSetting::FromJson(Data->GetObjectField("deleteFriendScript"));
+                    return Model::FScriptSetting::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("deleteFriendScript")));
                  }() : nullptr)
-            ->WithUpdateProfileScript(Data->HasField("updateProfileScript") ? [Data]() -> Model::FScriptSettingPtr
+            ->WithUpdateProfileScript(Data->HasField(ANSI_TO_TCHAR("updateProfileScript")) ? [Data]() -> Model::FScriptSettingPtr
                 {
-                    if (Data->HasTypedField<EJson::Null>("updateProfileScript"))
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("updateProfileScript")))
                     {
                         return nullptr;
                     }
-                    return Model::FScriptSetting::FromJson(Data->GetObjectField("updateProfileScript"));
+                    return Model::FScriptSetting::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("updateProfileScript")));
                  }() : nullptr)
-            ->WithFollowNotification(Data->HasField("followNotification") ? [Data]() -> Model::FNotificationSettingPtr
+            ->WithFollowNotification(Data->HasField(ANSI_TO_TCHAR("followNotification")) ? [Data]() -> Model::FNotificationSettingPtr
                 {
-                    if (Data->HasTypedField<EJson::Null>("followNotification"))
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("followNotification")))
                     {
                         return nullptr;
                     }
-                    return Model::FNotificationSetting::FromJson(Data->GetObjectField("followNotification"));
+                    return Model::FNotificationSetting::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("followNotification")));
                  }() : nullptr)
-            ->WithReceiveRequestNotification(Data->HasField("receiveRequestNotification") ? [Data]() -> Model::FNotificationSettingPtr
+            ->WithReceiveRequestNotification(Data->HasField(ANSI_TO_TCHAR("receiveRequestNotification")) ? [Data]() -> Model::FNotificationSettingPtr
                 {
-                    if (Data->HasTypedField<EJson::Null>("receiveRequestNotification"))
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("receiveRequestNotification")))
                     {
                         return nullptr;
                     }
-                    return Model::FNotificationSetting::FromJson(Data->GetObjectField("receiveRequestNotification"));
+                    return Model::FNotificationSetting::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("receiveRequestNotification")));
                  }() : nullptr)
-            ->WithAcceptRequestNotification(Data->HasField("acceptRequestNotification") ? [Data]() -> Model::FNotificationSettingPtr
+            ->WithAcceptRequestNotification(Data->HasField(ANSI_TO_TCHAR("acceptRequestNotification")) ? [Data]() -> Model::FNotificationSettingPtr
                 {
-                    if (Data->HasTypedField<EJson::Null>("acceptRequestNotification"))
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("acceptRequestNotification")))
                     {
                         return nullptr;
                     }
-                    return Model::FNotificationSetting::FromJson(Data->GetObjectField("acceptRequestNotification"));
+                    return Model::FNotificationSetting::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("acceptRequestNotification")));
                  }() : nullptr)
-            ->WithLogSetting(Data->HasField("logSetting") ? [Data]() -> Model::FLogSettingPtr
+            ->WithLogSetting(Data->HasField(ANSI_TO_TCHAR("logSetting")) ? [Data]() -> Model::FLogSettingPtr
                 {
-                    if (Data->HasTypedField<EJson::Null>("logSetting"))
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("logSetting")))
                     {
                         return nullptr;
                     }
-                    return Model::FLogSetting::FromJson(Data->GetObjectField("logSetting"));
+                    return Model::FLogSetting::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("logSetting")));
                  }() : nullptr)
-            ->WithCreatedAt(Data->HasField("createdAt") ? [Data]() -> TOptional<int64>
+            ->WithCreatedAt(Data->HasField(ANSI_TO_TCHAR("createdAt")) ? [Data]() -> TOptional<int64>
                 {
                     int64 v;
-                    if (Data->TryGetNumberField("createdAt", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("createdAt"), v))
                     {
                         return TOptional(v);
                     }
                     return TOptional<int64>();
                 }() : TOptional<int64>())
-            ->WithUpdatedAt(Data->HasField("updatedAt") ? [Data]() -> TOptional<int64>
+            ->WithUpdatedAt(Data->HasField(ANSI_TO_TCHAR("updatedAt")) ? [Data]() -> TOptional<int64>
                 {
                     int64 v;
-                    if (Data->TryGetNumberField("updatedAt", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("updatedAt"), v))
                     {
                         return TOptional(v);
                     }
                     return TOptional<int64>();
                 }() : TOptional<int64>())
-            ->WithRevision(Data->HasField("revision") ? [Data]() -> TOptional<int64>
+            ->WithRevision(Data->HasField(ANSI_TO_TCHAR("revision")) ? [Data]() -> TOptional<int64>
                 {
                     int64 v;
-                    if (Data->TryGetNumberField("revision", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("revision"), v))
                     {
                         return TOptional(v);
                     }

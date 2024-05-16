@@ -108,37 +108,37 @@ namespace Gs2::AdReward::Model
             return nullptr;
         }
         return MakeShared<FHistory>()
-            ->WithProvider(Data->HasField("provider") ? [Data]() -> TOptional<FString>
+            ->WithProvider(Data->HasField(ANSI_TO_TCHAR("provider")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("provider", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("provider"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithTransactionId(Data->HasField("transactionId") ? [Data]() -> TOptional<FString>
+            ->WithTransactionId(Data->HasField(ANSI_TO_TCHAR("transactionId")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("transactionId", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("transactionId"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithCreatedAt(Data->HasField("createdAt") ? [Data]() -> TOptional<int64>
+            ->WithCreatedAt(Data->HasField(ANSI_TO_TCHAR("createdAt")) ? [Data]() -> TOptional<int64>
                 {
                     int64 v;
-                    if (Data->TryGetNumberField("createdAt", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("createdAt"), v))
                     {
                         return TOptional(v);
                     }
                     return TOptional<int64>();
                 }() : TOptional<int64>())
-            ->WithRevision(Data->HasField("revision") ? [Data]() -> TOptional<int64>
+            ->WithRevision(Data->HasField(ANSI_TO_TCHAR("revision")) ? [Data]() -> TOptional<int64>
                 {
                     int64 v;
-                    if (Data->TryGetNumberField("revision", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("revision"), v))
                     {
                         return TOptional(v);
                     }
@@ -151,19 +151,19 @@ namespace Gs2::AdReward::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (ProviderValue.IsSet())
         {
-            JsonRootObject->SetStringField("provider", ProviderValue.GetValue());
+            JsonRootObject->SetStringField(ANSI_TO_TCHAR("provider"), ProviderValue.GetValue());
         }
         if (TransactionIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("transactionId", TransactionIdValue.GetValue());
+            JsonRootObject->SetStringField(ANSI_TO_TCHAR("transactionId"), TransactionIdValue.GetValue());
         }
         if (CreatedAtValue.IsSet())
         {
-            JsonRootObject->SetStringField("createdAt", FString::Printf(TEXT("%lld"), CreatedAtValue.GetValue()));
+            JsonRootObject->SetStringField(ANSI_TO_TCHAR("createdAt"), FString::Printf(TEXT("%lld"), CreatedAtValue.GetValue()));
         }
         if (RevisionValue.IsSet())
         {
-            JsonRootObject->SetStringField("revision", FString::Printf(TEXT("%lld"), RevisionValue.GetValue()));
+            JsonRootObject->SetStringField(ANSI_TO_TCHAR("revision"), FString::Printf(TEXT("%lld"), RevisionValue.GetValue()));
         }
         return JsonRootObject;
     }

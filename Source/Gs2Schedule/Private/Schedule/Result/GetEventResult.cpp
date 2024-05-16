@@ -144,48 +144,48 @@ namespace Gs2::Schedule::Result
             return nullptr;
         }
         return MakeShared<FGetEventResult>()
-            ->WithItem(Data->HasField("item") ? [Data]() -> Model::FEventPtr
+            ->WithItem(Data->HasField(ANSI_TO_TCHAR("item")) ? [Data]() -> Model::FEventPtr
                  {
-                    if (Data->HasTypedField<EJson::Null>("item"))
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("item")))
                     {
                         return nullptr;
                     }
-                    return Model::FEvent::FromJson(Data->GetObjectField("item"));
+                    return Model::FEvent::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("item")));
                  }() : nullptr)
-            ->WithInSchedule(Data->HasField("inSchedule") ? [Data]() -> TOptional<bool>
+            ->WithInSchedule(Data->HasField(ANSI_TO_TCHAR("inSchedule")) ? [Data]() -> TOptional<bool>
                 {
                     bool v;
-                    if (Data->TryGetBoolField("inSchedule", v))
+                    if (Data->TryGetBoolField(ANSI_TO_TCHAR("inSchedule"), v))
                     {
                         return TOptional(v);
                     }
                     return TOptional<bool>();
                 }() : TOptional<bool>())
-            ->WithScheduleStartAt(Data->HasField("scheduleStartAt") ? [Data]() -> TOptional<int64>
+            ->WithScheduleStartAt(Data->HasField(ANSI_TO_TCHAR("scheduleStartAt")) ? [Data]() -> TOptional<int64>
                 {
                     int64 v;
-                    if (Data->TryGetNumberField("scheduleStartAt", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("scheduleStartAt"), v))
                     {
                         return TOptional(v);
                     }
                     return TOptional<int64>();
                 }() : TOptional<int64>())
-            ->WithScheduleEndAt(Data->HasField("scheduleEndAt") ? [Data]() -> TOptional<int64>
+            ->WithScheduleEndAt(Data->HasField(ANSI_TO_TCHAR("scheduleEndAt")) ? [Data]() -> TOptional<int64>
                 {
                     int64 v;
-                    if (Data->TryGetNumberField("scheduleEndAt", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("scheduleEndAt"), v))
                     {
                         return TOptional(v);
                     }
                     return TOptional<int64>();
                 }() : TOptional<int64>())
-            ->WithRepeatSchedule(Data->HasField("repeatSchedule") ? [Data]() -> Model::FRepeatSchedulePtr
+            ->WithRepeatSchedule(Data->HasField(ANSI_TO_TCHAR("repeatSchedule")) ? [Data]() -> Model::FRepeatSchedulePtr
                  {
-                    if (Data->HasTypedField<EJson::Null>("repeatSchedule"))
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("repeatSchedule")))
                     {
                         return nullptr;
                     }
-                    return Model::FRepeatSchedule::FromJson(Data->GetObjectField("repeatSchedule"));
+                    return Model::FRepeatSchedule::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("repeatSchedule")));
                  }() : nullptr);
     }
 

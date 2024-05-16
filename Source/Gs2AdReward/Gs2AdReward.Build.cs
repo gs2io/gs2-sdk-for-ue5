@@ -18,11 +18,12 @@ public class Gs2AdReward : ModuleRules
 			"JsonUtilities",
 			"Gs2Core",
 			"Gs2Auth",
-			"Gs2JobQueue"
+			"Gs2Distributor",
+			"Gs2JobQueue",
 		});
 		PublicDependencyModuleNames.AddRange(new string[] {
 			"Core",
-			"Gs2Core"
+			"Gs2Core",
 		});
 	}
 }

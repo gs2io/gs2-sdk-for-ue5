@@ -134,39 +134,39 @@ namespace Gs2::Formation::Model
             return nullptr;
         }
         return MakeShared<FPropertyFormModel>()
-            ->WithPropertyFormModelId(Data->HasField("propertyFormModelId") ? [Data]() -> TOptional<FString>
+            ->WithPropertyFormModelId(Data->HasField(ANSI_TO_TCHAR("propertyFormModelId")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("propertyFormModelId", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("propertyFormModelId"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithName(Data->HasField("name") ? [Data]() -> TOptional<FString>
+            ->WithName(Data->HasField(ANSI_TO_TCHAR("name")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("name", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("name"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithMetadata(Data->HasField("metadata") ? [Data]() -> TOptional<FString>
+            ->WithMetadata(Data->HasField(ANSI_TO_TCHAR("metadata")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("metadata", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("metadata"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithSlots(Data->HasField("slots") ? [Data]() -> TSharedPtr<TArray<Model::FSlotModelPtr>>
+            ->WithSlots(Data->HasField(ANSI_TO_TCHAR("slots")) ? [Data]() -> TSharedPtr<TArray<Model::FSlotModelPtr>>
                 {
                     auto v = MakeShared<TArray<Model::FSlotModelPtr>>();
-                    if (!Data->HasTypedField<EJson::Null>("slots") && Data->HasTypedField<EJson::Array>("slots"))
+                    if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("slots")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("slots")))
                     {
-                        for (auto JsonObjectValue : Data->GetArrayField("slots"))
+                        for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("slots")))
                         {
                             v->Add(Model::FSlotModel::FromJson(JsonObjectValue->AsObject()));
                         }

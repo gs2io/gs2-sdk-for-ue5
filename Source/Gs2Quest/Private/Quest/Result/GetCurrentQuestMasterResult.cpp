@@ -53,13 +53,13 @@ namespace Gs2::Quest::Result
             return nullptr;
         }
         return MakeShared<FGetCurrentQuestMasterResult>()
-            ->WithItem(Data->HasField("item") ? [Data]() -> Model::FCurrentQuestMasterPtr
+            ->WithItem(Data->HasField(ANSI_TO_TCHAR("item")) ? [Data]() -> Model::FCurrentQuestMasterPtr
                  {
-                    if (Data->HasTypedField<EJson::Null>("item"))
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("item")))
                     {
                         return nullptr;
                     }
-                    return Model::FCurrentQuestMaster::FromJson(Data->GetObjectField("item"));
+                    return Model::FCurrentQuestMaster::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("item")));
                  }() : nullptr);
     }
 

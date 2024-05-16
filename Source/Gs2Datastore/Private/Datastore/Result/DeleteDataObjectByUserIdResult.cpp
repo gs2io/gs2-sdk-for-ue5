@@ -53,13 +53,13 @@ namespace Gs2::Datastore::Result
             return nullptr;
         }
         return MakeShared<FDeleteDataObjectByUserIdResult>()
-            ->WithItem(Data->HasField("item") ? [Data]() -> Model::FDataObjectPtr
+            ->WithItem(Data->HasField(ANSI_TO_TCHAR("item")) ? [Data]() -> Model::FDataObjectPtr
                  {
-                    if (Data->HasTypedField<EJson::Null>("item"))
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("item")))
                     {
                         return nullptr;
                     }
-                    return Model::FDataObject::FromJson(Data->GetObjectField("item"));
+                    return Model::FDataObject::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("item")));
                  }() : nullptr);
     }
 

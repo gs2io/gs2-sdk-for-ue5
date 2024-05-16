@@ -156,6 +156,7 @@ namespace Gs2::Buff::Domain::Model
                 FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
             );
         }
+        Self->NewContextStack = *ResultModel->GetNewContextStack();
         *Result = Domain;
         return nullptr;
     }

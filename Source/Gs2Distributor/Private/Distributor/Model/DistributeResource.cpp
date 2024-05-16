@@ -62,19 +62,19 @@ namespace Gs2::Distributor::Model
             return nullptr;
         }
         return MakeShared<FDistributeResource>()
-            ->WithAction(Data->HasField("action") ? [Data]() -> TOptional<FString>
+            ->WithAction(Data->HasField(ANSI_TO_TCHAR("action")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("action", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("action"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithRequest(Data->HasField("request") ? [Data]() -> TOptional<FString>
+            ->WithRequest(Data->HasField(ANSI_TO_TCHAR("request")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("request", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("request"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }

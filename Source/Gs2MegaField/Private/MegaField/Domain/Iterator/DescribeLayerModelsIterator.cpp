@@ -28,6 +28,8 @@
 #include "MegaField/Domain/Model/LayerModel.h"
 #include "MegaField/Domain/Model/AreaModel.h"
 
+#include "Core/Domain/Gs2.h"
+
 namespace Gs2::MegaField::Domain::Iterator
 {
 

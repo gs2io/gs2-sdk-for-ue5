@@ -48,12 +48,12 @@ namespace Gs2::AdReward::Model
             return nullptr;
         }
         return MakeShared<FUnityAd>()
-            ->WithKeys(Data->HasField("keys") ? [Data]() -> TSharedPtr<TArray<FString>>
+            ->WithKeys(Data->HasField(ANSI_TO_TCHAR("keys")) ? [Data]() -> TSharedPtr<TArray<FString>>
                 {
                     auto v = MakeShared<TArray<FString>>();
-                    if (!Data->HasTypedField<EJson::Null>("keys") && Data->HasTypedField<EJson::Array>("keys"))
+                    if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("keys")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("keys")))
                     {
-                        for (auto JsonObjectValue : Data->GetArrayField("keys"))
+                        for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("keys")))
                         {
                             v->Add(JsonObjectValue->AsString());
                         }

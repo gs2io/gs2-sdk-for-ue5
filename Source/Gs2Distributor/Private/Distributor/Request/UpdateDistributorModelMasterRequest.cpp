@@ -141,58 +141,58 @@ namespace Gs2::Distributor::Request
             return nullptr;
         }
         return MakeShared<FUpdateDistributorModelMasterRequest>()
-            ->WithContextStack(Data->HasField("contextStack") ? TOptional<FString>(Data->GetStringField("contextStack")) : TOptional<FString>())
-            ->WithNamespaceName(Data->HasField("namespaceName") ? [Data]() -> TOptional<FString>
+            ->WithContextStack(Data->HasField(ANSI_TO_TCHAR("contextStack")) ? TOptional<FString>(Data->GetStringField(ANSI_TO_TCHAR("contextStack"))) : TOptional<FString>())
+            ->WithNamespaceName(Data->HasField(ANSI_TO_TCHAR("namespaceName")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
-                    if (Data->TryGetStringField("namespaceName", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("namespaceName"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
-            ->WithDistributorName(Data->HasField("distributorName") ? [Data]() -> TOptional<FString>
+            ->WithDistributorName(Data->HasField(ANSI_TO_TCHAR("distributorName")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
-                    if (Data->TryGetStringField("distributorName", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("distributorName"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
-            ->WithDescription(Data->HasField("description") ? [Data]() -> TOptional<FString>
+            ->WithDescription(Data->HasField(ANSI_TO_TCHAR("description")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
-                    if (Data->TryGetStringField("description", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("description"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
-            ->WithMetadata(Data->HasField("metadata") ? [Data]() -> TOptional<FString>
+            ->WithMetadata(Data->HasField(ANSI_TO_TCHAR("metadata")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
-                    if (Data->TryGetStringField("metadata", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("metadata"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
-            ->WithInboxNamespaceId(Data->HasField("inboxNamespaceId") ? [Data]() -> TOptional<FString>
+            ->WithInboxNamespaceId(Data->HasField(ANSI_TO_TCHAR("inboxNamespaceId")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
-                    if (Data->TryGetStringField("inboxNamespaceId", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("inboxNamespaceId"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
-          ->WithWhiteListTargetIds(Data->HasField("whiteListTargetIds") ? [Data]() -> TSharedPtr<TArray<FString>>
+          ->WithWhiteListTargetIds(Data->HasField(ANSI_TO_TCHAR("whiteListTargetIds")) ? [Data]() -> TSharedPtr<TArray<FString>>
               {
                   auto v = MakeShared<TArray<FString>>();
-                  if (!Data->HasTypedField<EJson::Null>("whiteListTargetIds") && Data->HasTypedField<EJson::Array>("whiteListTargetIds"))
+                  if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("whiteListTargetIds")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("whiteListTargetIds")))
                   {
-                      for (auto JsonObjectValue : Data->GetArrayField("whiteListTargetIds"))
+                      for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("whiteListTargetIds")))
                       {
                           v->Add(JsonObjectValue->AsString());
                       }

@@ -28,6 +28,8 @@
 #include "Mission/Domain/Model/MissionGroupModel.h"
 #include "Mission/Domain/Model/Namespace.h"
 
+#include "Core/Domain/Gs2.h"
+
 namespace Gs2::Mission::Domain::Iterator
 {
 

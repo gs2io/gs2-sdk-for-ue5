@@ -28,6 +28,8 @@
 #include "Formation/Domain/Model/Form.h"
 #include "Formation/Domain/Model/Mold.h"
 
+#include "Core/Domain/Gs2.h"
+
 namespace Gs2::Formation::Domain::Iterator
 {
 

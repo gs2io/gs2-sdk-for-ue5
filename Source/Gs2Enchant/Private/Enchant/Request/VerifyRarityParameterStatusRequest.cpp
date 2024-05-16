@@ -198,80 +198,80 @@ namespace Gs2::Enchant::Request
             return nullptr;
         }
         return MakeShared<FVerifyRarityParameterStatusRequest>()
-            ->WithContextStack(Data->HasField("contextStack") ? TOptional<FString>(Data->GetStringField("contextStack")) : TOptional<FString>())
-            ->WithNamespaceName(Data->HasField("namespaceName") ? [Data]() -> TOptional<FString>
+            ->WithContextStack(Data->HasField(ANSI_TO_TCHAR("contextStack")) ? TOptional<FString>(Data->GetStringField(ANSI_TO_TCHAR("contextStack"))) : TOptional<FString>())
+            ->WithNamespaceName(Data->HasField(ANSI_TO_TCHAR("namespaceName")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
-                    if (Data->TryGetStringField("namespaceName", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("namespaceName"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
-            ->WithParameterName(Data->HasField("parameterName") ? [Data]() -> TOptional<FString>
+            ->WithParameterName(Data->HasField(ANSI_TO_TCHAR("parameterName")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
-                    if (Data->TryGetStringField("parameterName", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("parameterName"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
-            ->WithAccessToken(Data->HasField("xGs2AccessToken") ? [Data]() -> TOptional<FString>
+            ->WithAccessToken(Data->HasField(ANSI_TO_TCHAR("xGs2AccessToken")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
-                    if (Data->TryGetStringField("xGs2AccessToken", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("xGs2AccessToken"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
-            ->WithPropertyId(Data->HasField("propertyId") ? [Data]() -> TOptional<FString>
+            ->WithPropertyId(Data->HasField(ANSI_TO_TCHAR("propertyId")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
-                    if (Data->TryGetStringField("propertyId", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("propertyId"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
-            ->WithVerifyType(Data->HasField("verifyType") ? [Data]() -> TOptional<FString>
+            ->WithVerifyType(Data->HasField(ANSI_TO_TCHAR("verifyType")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
-                    if (Data->TryGetStringField("verifyType", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("verifyType"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
-            ->WithParameterValueName(Data->HasField("parameterValueName") ? [Data]() -> TOptional<FString>
+            ->WithParameterValueName(Data->HasField(ANSI_TO_TCHAR("parameterValueName")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
-                    if (Data->TryGetStringField("parameterValueName", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("parameterValueName"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
-            ->WithParameterCount(Data->HasField("parameterCount") ? [Data]() -> TOptional<int32>
+            ->WithParameterCount(Data->HasField(ANSI_TO_TCHAR("parameterCount")) ? [Data]() -> TOptional<int32>
               {
                   int32 v;
-                    if (Data->TryGetNumberField("parameterCount", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("parameterCount"), v))
                   {
                         return TOptional(v);
                   }
                   return TOptional<int32>();
               }() : TOptional<int32>())
-            ->WithMultiplyValueSpecifyingQuantity(Data->HasField("multiplyValueSpecifyingQuantity") ? [Data]() -> TOptional<bool>
+            ->WithMultiplyValueSpecifyingQuantity(Data->HasField(ANSI_TO_TCHAR("multiplyValueSpecifyingQuantity")) ? [Data]() -> TOptional<bool>
               {
                   bool v;
-                    if (Data->TryGetBoolField("multiplyValueSpecifyingQuantity", v))
+                    if (Data->TryGetBoolField(ANSI_TO_TCHAR("multiplyValueSpecifyingQuantity"), v))
                   {
                         return TOptional(v);
                   }
                   return TOptional<bool>();
               }() : TOptional<bool>())
-          ->WithDuplicationAvoider(Data->HasField("duplicationAvoider") ? TOptional<FString>(Data->GetStringField("duplicationAvoider")) : TOptional<FString>());
+          ->WithDuplicationAvoider(Data->HasField(ANSI_TO_TCHAR("duplicationAvoider")) ? TOptional<FString>(Data->GetStringField(ANSI_TO_TCHAR("duplicationAvoider"))) : TOptional<FString>());
     }
 
     TSharedPtr<FJsonObject> FVerifyRarityParameterStatusRequest::ToJson() const

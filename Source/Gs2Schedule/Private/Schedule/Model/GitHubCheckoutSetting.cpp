@@ -132,64 +132,64 @@ namespace Gs2::Schedule::Model
             return nullptr;
         }
         return MakeShared<FGitHubCheckoutSetting>()
-            ->WithApiKeyId(Data->HasField("apiKeyId") ? [Data]() -> TOptional<FString>
+            ->WithApiKeyId(Data->HasField(ANSI_TO_TCHAR("apiKeyId")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("apiKeyId", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("apiKeyId"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithRepositoryName(Data->HasField("repositoryName") ? [Data]() -> TOptional<FString>
+            ->WithRepositoryName(Data->HasField(ANSI_TO_TCHAR("repositoryName")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("repositoryName", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("repositoryName"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithSourcePath(Data->HasField("sourcePath") ? [Data]() -> TOptional<FString>
+            ->WithSourcePath(Data->HasField(ANSI_TO_TCHAR("sourcePath")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("sourcePath", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("sourcePath"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithReferenceType(Data->HasField("referenceType") ? [Data]() -> TOptional<FString>
+            ->WithReferenceType(Data->HasField(ANSI_TO_TCHAR("referenceType")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("referenceType", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("referenceType"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithCommitHash(Data->HasField("commitHash") ? [Data]() -> TOptional<FString>
+            ->WithCommitHash(Data->HasField(ANSI_TO_TCHAR("commitHash")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("commitHash", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("commitHash"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithBranchName(Data->HasField("branchName") ? [Data]() -> TOptional<FString>
+            ->WithBranchName(Data->HasField(ANSI_TO_TCHAR("branchName")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("branchName", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("branchName"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithTagName(Data->HasField("tagName") ? [Data]() -> TOptional<FString>
+            ->WithTagName(Data->HasField(ANSI_TO_TCHAR("tagName")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("tagName", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("tagName"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }

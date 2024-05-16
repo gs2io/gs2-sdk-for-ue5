@@ -156,68 +156,68 @@ namespace Gs2::SeasonRating::Request
             return nullptr;
         }
         return MakeShared<FUpdateSeasonModelMasterRequest>()
-            ->WithContextStack(Data->HasField("contextStack") ? TOptional<FString>(Data->GetStringField("contextStack")) : TOptional<FString>())
-            ->WithNamespaceName(Data->HasField("namespaceName") ? [Data]() -> TOptional<FString>
+            ->WithContextStack(Data->HasField(ANSI_TO_TCHAR("contextStack")) ? TOptional<FString>(Data->GetStringField(ANSI_TO_TCHAR("contextStack"))) : TOptional<FString>())
+            ->WithNamespaceName(Data->HasField(ANSI_TO_TCHAR("namespaceName")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
-                    if (Data->TryGetStringField("namespaceName", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("namespaceName"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
-            ->WithSeasonName(Data->HasField("seasonName") ? [Data]() -> TOptional<FString>
+            ->WithSeasonName(Data->HasField(ANSI_TO_TCHAR("seasonName")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
-                    if (Data->TryGetStringField("seasonName", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("seasonName"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
-            ->WithDescription(Data->HasField("description") ? [Data]() -> TOptional<FString>
+            ->WithDescription(Data->HasField(ANSI_TO_TCHAR("description")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
-                    if (Data->TryGetStringField("description", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("description"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
-            ->WithMetadata(Data->HasField("metadata") ? [Data]() -> TOptional<FString>
+            ->WithMetadata(Data->HasField(ANSI_TO_TCHAR("metadata")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
-                    if (Data->TryGetStringField("metadata", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("metadata"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
-          ->WithTiers(Data->HasField("tiers") ? [Data]() -> TSharedPtr<TArray<Model::FTierModelPtr>>
+          ->WithTiers(Data->HasField(ANSI_TO_TCHAR("tiers")) ? [Data]() -> TSharedPtr<TArray<Model::FTierModelPtr>>
               {
                   auto v = MakeShared<TArray<Model::FTierModelPtr>>();
-                  if (!Data->HasTypedField<EJson::Null>("tiers") && Data->HasTypedField<EJson::Array>("tiers"))
+                  if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("tiers")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("tiers")))
                   {
-                      for (auto JsonObjectValue : Data->GetArrayField("tiers"))
+                      for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("tiers")))
                       {
                           v->Add(Model::FTierModel::FromJson(JsonObjectValue->AsObject()));
                       }
                   }
                   return v;
               }() : MakeShared<TArray<Model::FTierModelPtr>>())
-            ->WithExperienceModelId(Data->HasField("experienceModelId") ? [Data]() -> TOptional<FString>
+            ->WithExperienceModelId(Data->HasField(ANSI_TO_TCHAR("experienceModelId")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
-                    if (Data->TryGetStringField("experienceModelId", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("experienceModelId"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
-            ->WithChallengePeriodEventId(Data->HasField("challengePeriodEventId") ? [Data]() -> TOptional<FString>
+            ->WithChallengePeriodEventId(Data->HasField(ANSI_TO_TCHAR("challengePeriodEventId")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
-                    if (Data->TryGetStringField("challengePeriodEventId", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("challengePeriodEventId"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }

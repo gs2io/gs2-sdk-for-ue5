@@ -28,6 +28,8 @@
 #include "Limit/Domain/Model/Counter.h"
 #include "Limit/Domain/Model/User.h"
 
+#include "Core/Domain/Gs2.h"
+
 namespace Gs2::Limit::Domain::Iterator
 {
 

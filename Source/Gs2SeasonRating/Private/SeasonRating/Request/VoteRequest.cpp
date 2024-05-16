@@ -126,50 +126,50 @@ namespace Gs2::SeasonRating::Request
             return nullptr;
         }
         return MakeShared<FVoteRequest>()
-            ->WithContextStack(Data->HasField("contextStack") ? TOptional<FString>(Data->GetStringField("contextStack")) : TOptional<FString>())
-            ->WithNamespaceName(Data->HasField("namespaceName") ? [Data]() -> TOptional<FString>
+            ->WithContextStack(Data->HasField(ANSI_TO_TCHAR("contextStack")) ? TOptional<FString>(Data->GetStringField(ANSI_TO_TCHAR("contextStack"))) : TOptional<FString>())
+            ->WithNamespaceName(Data->HasField(ANSI_TO_TCHAR("namespaceName")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
-                    if (Data->TryGetStringField("namespaceName", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("namespaceName"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
-            ->WithBallotBody(Data->HasField("ballotBody") ? [Data]() -> TOptional<FString>
+            ->WithBallotBody(Data->HasField(ANSI_TO_TCHAR("ballotBody")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
-                    if (Data->TryGetStringField("ballotBody", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("ballotBody"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
-            ->WithBallotSignature(Data->HasField("ballotSignature") ? [Data]() -> TOptional<FString>
+            ->WithBallotSignature(Data->HasField(ANSI_TO_TCHAR("ballotSignature")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
-                    if (Data->TryGetStringField("ballotSignature", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("ballotSignature"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
-          ->WithGameResults(Data->HasField("gameResults") ? [Data]() -> TSharedPtr<TArray<Model::FGameResultPtr>>
+          ->WithGameResults(Data->HasField(ANSI_TO_TCHAR("gameResults")) ? [Data]() -> TSharedPtr<TArray<Model::FGameResultPtr>>
               {
                   auto v = MakeShared<TArray<Model::FGameResultPtr>>();
-                  if (!Data->HasTypedField<EJson::Null>("gameResults") && Data->HasTypedField<EJson::Array>("gameResults"))
+                  if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("gameResults")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("gameResults")))
                   {
-                      for (auto JsonObjectValue : Data->GetArrayField("gameResults"))
+                      for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("gameResults")))
                       {
                           v->Add(Model::FGameResult::FromJson(JsonObjectValue->AsObject()));
                       }
                   }
                   return v;
               }() : MakeShared<TArray<Model::FGameResultPtr>>())
-            ->WithKeyId(Data->HasField("keyId") ? [Data]() -> TOptional<FString>
+            ->WithKeyId(Data->HasField(ANSI_TO_TCHAR("keyId")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
-                    if (Data->TryGetStringField("keyId", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("keyId"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }

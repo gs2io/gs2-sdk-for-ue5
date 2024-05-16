@@ -53,13 +53,13 @@ namespace Gs2::SerialKey::Result
             return nullptr;
         }
         return MakeShared<FGetIssueJobResult>()
-            ->WithItem(Data->HasField("item") ? [Data]() -> Model::FIssueJobPtr
+            ->WithItem(Data->HasField(ANSI_TO_TCHAR("item")) ? [Data]() -> Model::FIssueJobPtr
                  {
-                    if (Data->HasTypedField<EJson::Null>("item"))
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("item")))
                     {
                         return nullptr;
                     }
-                    return Model::FIssueJob::FromJson(Data->GetObjectField("item"));
+                    return Model::FIssueJob::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("item")));
                  }() : nullptr);
     }
 

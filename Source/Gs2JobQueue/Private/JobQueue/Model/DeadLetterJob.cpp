@@ -219,76 +219,76 @@ namespace Gs2::JobQueue::Model
             return nullptr;
         }
         return MakeShared<FDeadLetterJob>()
-            ->WithDeadLetterJobId(Data->HasField("deadLetterJobId") ? [Data]() -> TOptional<FString>
+            ->WithDeadLetterJobId(Data->HasField(ANSI_TO_TCHAR("deadLetterJobId")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("deadLetterJobId", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("deadLetterJobId"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithName(Data->HasField("name") ? [Data]() -> TOptional<FString>
+            ->WithName(Data->HasField(ANSI_TO_TCHAR("name")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("name", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("name"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithUserId(Data->HasField("userId") ? [Data]() -> TOptional<FString>
+            ->WithUserId(Data->HasField(ANSI_TO_TCHAR("userId")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("userId", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("userId"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithScriptId(Data->HasField("scriptId") ? [Data]() -> TOptional<FString>
+            ->WithScriptId(Data->HasField(ANSI_TO_TCHAR("scriptId")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("scriptId", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("scriptId"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithArgs(Data->HasField("args") ? [Data]() -> TOptional<FString>
+            ->WithArgs(Data->HasField(ANSI_TO_TCHAR("args")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("args", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("args"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithResult(Data->HasField("result") ? [Data]() -> TSharedPtr<TArray<Model::FJobResultBodyPtr>>
+            ->WithResult(Data->HasField(ANSI_TO_TCHAR("result")) ? [Data]() -> TSharedPtr<TArray<Model::FJobResultBodyPtr>>
                 {
                     auto v = MakeShared<TArray<Model::FJobResultBodyPtr>>();
-                    if (!Data->HasTypedField<EJson::Null>("result") && Data->HasTypedField<EJson::Array>("result"))
+                    if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("result")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("result")))
                     {
-                        for (auto JsonObjectValue : Data->GetArrayField("result"))
+                        for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("result")))
                         {
                             v->Add(Model::FJobResultBody::FromJson(JsonObjectValue->AsObject()));
                         }
                     }
                     return v;
                  }() : MakeShared<TArray<Model::FJobResultBodyPtr>>())
-            ->WithCreatedAt(Data->HasField("createdAt") ? [Data]() -> TOptional<int64>
+            ->WithCreatedAt(Data->HasField(ANSI_TO_TCHAR("createdAt")) ? [Data]() -> TOptional<int64>
                 {
                     int64 v;
-                    if (Data->TryGetNumberField("createdAt", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("createdAt"), v))
                     {
                         return TOptional(v);
                     }
                     return TOptional<int64>();
                 }() : TOptional<int64>())
-            ->WithUpdatedAt(Data->HasField("updatedAt") ? [Data]() -> TOptional<int64>
+            ->WithUpdatedAt(Data->HasField(ANSI_TO_TCHAR("updatedAt")) ? [Data]() -> TOptional<int64>
                 {
                     int64 v;
-                    if (Data->TryGetNumberField("updatedAt", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("updatedAt"), v))
                     {
                         return TOptional(v);
                     }

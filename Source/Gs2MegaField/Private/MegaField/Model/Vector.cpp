@@ -103,28 +103,28 @@ namespace Gs2::MegaField::Model
             return nullptr;
         }
         return MakeShared<FVector>()
-            ->WithX(Data->HasField("x") ? [Data]() -> TOptional<float>
+            ->WithX(Data->HasField(ANSI_TO_TCHAR("x")) ? [Data]() -> TOptional<float>
                 {
                     float v;
-                    if (Data->TryGetNumberField("x", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("x"), v))
                     {
                         return TOptional(v);
                     }
                     return TOptional<float>();
                 }() : TOptional<float>())
-            ->WithY(Data->HasField("y") ? [Data]() -> TOptional<float>
+            ->WithY(Data->HasField(ANSI_TO_TCHAR("y")) ? [Data]() -> TOptional<float>
                 {
                     float v;
-                    if (Data->TryGetNumberField("y", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("y"), v))
                     {
                         return TOptional(v);
                     }
                     return TOptional<float>();
                 }() : TOptional<float>())
-            ->WithZ(Data->HasField("z") ? [Data]() -> TOptional<float>
+            ->WithZ(Data->HasField(ANSI_TO_TCHAR("z")) ? [Data]() -> TOptional<float>
                 {
                     float v;
-                    if (Data->TryGetNumberField("z", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("z"), v))
                     {
                         return TOptional(v);
                     }

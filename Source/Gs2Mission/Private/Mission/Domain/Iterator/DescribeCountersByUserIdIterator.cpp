@@ -28,6 +28,8 @@
 #include "Mission/Domain/Model/Counter.h"
 #include "Mission/Domain/Model/User.h"
 
+#include "Core/Domain/Gs2.h"
+
 namespace Gs2::Mission::Domain::Iterator
 {
 

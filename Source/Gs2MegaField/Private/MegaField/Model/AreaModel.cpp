@@ -134,39 +134,39 @@ namespace Gs2::MegaField::Model
             return nullptr;
         }
         return MakeShared<FAreaModel>()
-            ->WithAreaModelId(Data->HasField("areaModelId") ? [Data]() -> TOptional<FString>
+            ->WithAreaModelId(Data->HasField(ANSI_TO_TCHAR("areaModelId")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("areaModelId", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("areaModelId"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithName(Data->HasField("name") ? [Data]() -> TOptional<FString>
+            ->WithName(Data->HasField(ANSI_TO_TCHAR("name")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("name", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("name"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithMetadata(Data->HasField("metadata") ? [Data]() -> TOptional<FString>
+            ->WithMetadata(Data->HasField(ANSI_TO_TCHAR("metadata")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("metadata", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("metadata"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithLayerModels(Data->HasField("layerModels") ? [Data]() -> TSharedPtr<TArray<Model::FLayerModelPtr>>
+            ->WithLayerModels(Data->HasField(ANSI_TO_TCHAR("layerModels")) ? [Data]() -> TSharedPtr<TArray<Model::FLayerModelPtr>>
                 {
                     auto v = MakeShared<TArray<Model::FLayerModelPtr>>();
-                    if (!Data->HasTypedField<EJson::Null>("layerModels") && Data->HasTypedField<EJson::Array>("layerModels"))
+                    if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("layerModels")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("layerModels")))
                     {
-                        for (auto JsonObjectValue : Data->GetArrayField("layerModels"))
+                        for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("layerModels")))
                         {
                             v->Add(Model::FLayerModel::FromJson(JsonObjectValue->AsObject()));
                         }

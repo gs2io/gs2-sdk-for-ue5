@@ -72,21 +72,21 @@ namespace Gs2::Formation::Result
             return nullptr;
         }
         return MakeShared<FDeletePropertyFormResult>()
-            ->WithItem(Data->HasField("item") ? [Data]() -> Model::FPropertyFormPtr
+            ->WithItem(Data->HasField(ANSI_TO_TCHAR("item")) ? [Data]() -> Model::FPropertyFormPtr
                  {
-                    if (Data->HasTypedField<EJson::Null>("item"))
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("item")))
                     {
                         return nullptr;
                     }
-                    return Model::FPropertyForm::FromJson(Data->GetObjectField("item"));
+                    return Model::FPropertyForm::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("item")));
                  }() : nullptr)
-            ->WithPropertyFormModel(Data->HasField("propertyFormModel") ? [Data]() -> Model::FPropertyFormModelPtr
+            ->WithPropertyFormModel(Data->HasField(ANSI_TO_TCHAR("propertyFormModel")) ? [Data]() -> Model::FPropertyFormModelPtr
                  {
-                    if (Data->HasTypedField<EJson::Null>("propertyFormModel"))
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("propertyFormModel")))
                     {
                         return nullptr;
                     }
-                    return Model::FPropertyFormModel::FromJson(Data->GetObjectField("propertyFormModel"));
+                    return Model::FPropertyFormModel::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("propertyFormModel")));
                  }() : nullptr);
     }
 

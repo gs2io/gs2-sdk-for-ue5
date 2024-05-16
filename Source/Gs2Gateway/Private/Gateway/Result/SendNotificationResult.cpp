@@ -49,10 +49,10 @@ namespace Gs2::Gateway::Result
             return nullptr;
         }
         return MakeShared<FSendNotificationResult>()
-            ->WithProtocol(Data->HasField("protocol") ? [Data]() -> TOptional<FString>
+            ->WithProtocol(Data->HasField(ANSI_TO_TCHAR("protocol")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("protocol", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("protocol"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }

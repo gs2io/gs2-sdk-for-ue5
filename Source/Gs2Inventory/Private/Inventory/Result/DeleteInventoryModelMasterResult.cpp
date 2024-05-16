@@ -53,13 +53,13 @@ namespace Gs2::Inventory::Result
             return nullptr;
         }
         return MakeShared<FDeleteInventoryModelMasterResult>()
-            ->WithItem(Data->HasField("item") ? [Data]() -> Model::FInventoryModelMasterPtr
+            ->WithItem(Data->HasField(ANSI_TO_TCHAR("item")) ? [Data]() -> Model::FInventoryModelMasterPtr
                  {
-                    if (Data->HasTypedField<EJson::Null>("item"))
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("item")))
                     {
                         return nullptr;
                     }
-                    return Model::FInventoryModelMaster::FromJson(Data->GetObjectField("item"));
+                    return Model::FInventoryModelMaster::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("item")));
                  }() : nullptr);
     }
 

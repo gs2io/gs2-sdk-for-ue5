@@ -321,132 +321,132 @@ namespace Gs2::StateMachine::Model
             return nullptr;
         }
         return MakeShared<FStatus>()
-            ->WithStatusId(Data->HasField("statusId") ? [Data]() -> TOptional<FString>
+            ->WithStatusId(Data->HasField(ANSI_TO_TCHAR("statusId")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("statusId", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("statusId"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithUserId(Data->HasField("userId") ? [Data]() -> TOptional<FString>
+            ->WithUserId(Data->HasField(ANSI_TO_TCHAR("userId")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("userId", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("userId"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithName(Data->HasField("name") ? [Data]() -> TOptional<FString>
+            ->WithName(Data->HasField(ANSI_TO_TCHAR("name")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("name", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("name"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithStateMachineVersion(Data->HasField("stateMachineVersion") ? [Data]() -> TOptional<int64>
+            ->WithStateMachineVersion(Data->HasField(ANSI_TO_TCHAR("stateMachineVersion")) ? [Data]() -> TOptional<int64>
                 {
                     int64 v;
-                    if (Data->TryGetNumberField("stateMachineVersion", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("stateMachineVersion"), v))
                     {
                         return TOptional(v);
                     }
                     return TOptional<int64>();
                 }() : TOptional<int64>())
-            ->WithEnableSpeculativeExecution(Data->HasField("enableSpeculativeExecution") ? [Data]() -> TOptional<FString>
+            ->WithEnableSpeculativeExecution(Data->HasField(ANSI_TO_TCHAR("enableSpeculativeExecution")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("enableSpeculativeExecution", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("enableSpeculativeExecution"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithStateMachineDefinition(Data->HasField("stateMachineDefinition") ? [Data]() -> TOptional<FString>
+            ->WithStateMachineDefinition(Data->HasField(ANSI_TO_TCHAR("stateMachineDefinition")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("stateMachineDefinition", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("stateMachineDefinition"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithRandomStatus(Data->HasField("randomStatus") ? [Data]() -> Model::FRandomStatusPtr
+            ->WithRandomStatus(Data->HasField(ANSI_TO_TCHAR("randomStatus")) ? [Data]() -> Model::FRandomStatusPtr
                 {
-                    if (Data->HasTypedField<EJson::Null>("randomStatus"))
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("randomStatus")))
                     {
                         return nullptr;
                     }
-                    return Model::FRandomStatus::FromJson(Data->GetObjectField("randomStatus"));
+                    return Model::FRandomStatus::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("randomStatus")));
                  }() : nullptr)
-            ->WithStacks(Data->HasField("stacks") ? [Data]() -> TSharedPtr<TArray<Model::FStackEntryPtr>>
+            ->WithStacks(Data->HasField(ANSI_TO_TCHAR("stacks")) ? [Data]() -> TSharedPtr<TArray<Model::FStackEntryPtr>>
                 {
                     auto v = MakeShared<TArray<Model::FStackEntryPtr>>();
-                    if (!Data->HasTypedField<EJson::Null>("stacks") && Data->HasTypedField<EJson::Array>("stacks"))
+                    if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("stacks")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("stacks")))
                     {
-                        for (auto JsonObjectValue : Data->GetArrayField("stacks"))
+                        for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("stacks")))
                         {
                             v->Add(Model::FStackEntry::FromJson(JsonObjectValue->AsObject()));
                         }
                     }
                     return v;
                  }() : MakeShared<TArray<Model::FStackEntryPtr>>())
-            ->WithVariables(Data->HasField("variables") ? [Data]() -> TSharedPtr<TArray<Model::FVariablePtr>>
+            ->WithVariables(Data->HasField(ANSI_TO_TCHAR("variables")) ? [Data]() -> TSharedPtr<TArray<Model::FVariablePtr>>
                 {
                     auto v = MakeShared<TArray<Model::FVariablePtr>>();
-                    if (!Data->HasTypedField<EJson::Null>("variables") && Data->HasTypedField<EJson::Array>("variables"))
+                    if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("variables")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("variables")))
                     {
-                        for (auto JsonObjectValue : Data->GetArrayField("variables"))
+                        for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("variables")))
                         {
                             v->Add(Model::FVariable::FromJson(JsonObjectValue->AsObject()));
                         }
                     }
                     return v;
                  }() : MakeShared<TArray<Model::FVariablePtr>>())
-            ->WithStatus(Data->HasField("status") ? [Data]() -> TOptional<FString>
+            ->WithStatus(Data->HasField(ANSI_TO_TCHAR("status")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("status", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("status"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithLastError(Data->HasField("lastError") ? [Data]() -> TOptional<FString>
+            ->WithLastError(Data->HasField(ANSI_TO_TCHAR("lastError")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("lastError", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("lastError"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithTransitionCount(Data->HasField("transitionCount") ? [Data]() -> TOptional<int32>
+            ->WithTransitionCount(Data->HasField(ANSI_TO_TCHAR("transitionCount")) ? [Data]() -> TOptional<int32>
                 {
                     int32 v;
-                    if (Data->TryGetNumberField("transitionCount", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("transitionCount"), v))
                     {
                         return TOptional(v);
                     }
                     return TOptional<int32>();
                 }() : TOptional<int32>())
-            ->WithCreatedAt(Data->HasField("createdAt") ? [Data]() -> TOptional<int64>
+            ->WithCreatedAt(Data->HasField(ANSI_TO_TCHAR("createdAt")) ? [Data]() -> TOptional<int64>
                 {
                     int64 v;
-                    if (Data->TryGetNumberField("createdAt", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("createdAt"), v))
                     {
                         return TOptional(v);
                     }
                     return TOptional<int64>();
                 }() : TOptional<int64>())
-            ->WithUpdatedAt(Data->HasField("updatedAt") ? [Data]() -> TOptional<int64>
+            ->WithUpdatedAt(Data->HasField(ANSI_TO_TCHAR("updatedAt")) ? [Data]() -> TOptional<int64>
                 {
                     int64 v;
-                    if (Data->TryGetNumberField("updatedAt", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("updatedAt"), v))
                     {
                         return TOptional(v);
                     }

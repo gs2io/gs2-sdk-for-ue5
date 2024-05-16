@@ -180,58 +180,58 @@ namespace Gs2::Formation::Model
             return nullptr;
         }
         return MakeShared<FMoldModel>()
-            ->WithMoldModelId(Data->HasField("moldModelId") ? [Data]() -> TOptional<FString>
+            ->WithMoldModelId(Data->HasField(ANSI_TO_TCHAR("moldModelId")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("moldModelId", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("moldModelId"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithName(Data->HasField("name") ? [Data]() -> TOptional<FString>
+            ->WithName(Data->HasField(ANSI_TO_TCHAR("name")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("name", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("name"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithMetadata(Data->HasField("metadata") ? [Data]() -> TOptional<FString>
+            ->WithMetadata(Data->HasField(ANSI_TO_TCHAR("metadata")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("metadata", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("metadata"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithInitialMaxCapacity(Data->HasField("initialMaxCapacity") ? [Data]() -> TOptional<int32>
+            ->WithInitialMaxCapacity(Data->HasField(ANSI_TO_TCHAR("initialMaxCapacity")) ? [Data]() -> TOptional<int32>
                 {
                     int32 v;
-                    if (Data->TryGetNumberField("initialMaxCapacity", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("initialMaxCapacity"), v))
                     {
                         return TOptional(v);
                     }
                     return TOptional<int32>();
                 }() : TOptional<int32>())
-            ->WithMaxCapacity(Data->HasField("maxCapacity") ? [Data]() -> TOptional<int32>
+            ->WithMaxCapacity(Data->HasField(ANSI_TO_TCHAR("maxCapacity")) ? [Data]() -> TOptional<int32>
                 {
                     int32 v;
-                    if (Data->TryGetNumberField("maxCapacity", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("maxCapacity"), v))
                     {
                         return TOptional(v);
                     }
                     return TOptional<int32>();
                 }() : TOptional<int32>())
-            ->WithFormModel(Data->HasField("formModel") ? [Data]() -> Model::FFormModelPtr
+            ->WithFormModel(Data->HasField(ANSI_TO_TCHAR("formModel")) ? [Data]() -> Model::FFormModelPtr
                 {
-                    if (Data->HasTypedField<EJson::Null>("formModel"))
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("formModel")))
                     {
                         return nullptr;
                     }
-                    return Model::FFormModel::FromJson(Data->GetObjectField("formModel"));
+                    return Model::FFormModel::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("formModel")));
                  }() : nullptr);
     }
 

@@ -64,19 +64,19 @@ namespace Gs2::News::Result
             return nullptr;
         }
         return MakeShared<FPrepareUpdateCurrentNewsMasterResult>()
-            ->WithUploadToken(Data->HasField("uploadToken") ? [Data]() -> TOptional<FString>
+            ->WithUploadToken(Data->HasField(ANSI_TO_TCHAR("uploadToken")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("uploadToken", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("uploadToken"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithTemplateUploadUrl(Data->HasField("templateUploadUrl") ? [Data]() -> TOptional<FString>
+            ->WithTemplateUploadUrl(Data->HasField(ANSI_TO_TCHAR("templateUploadUrl")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("templateUploadUrl", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("templateUploadUrl"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }

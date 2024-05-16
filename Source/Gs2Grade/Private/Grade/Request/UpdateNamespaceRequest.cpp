@@ -134,48 +134,48 @@ namespace Gs2::Grade::Request
             return nullptr;
         }
         return MakeShared<FUpdateNamespaceRequest>()
-            ->WithContextStack(Data->HasField("contextStack") ? TOptional<FString>(Data->GetStringField("contextStack")) : TOptional<FString>())
-            ->WithNamespaceName(Data->HasField("namespaceName") ? [Data]() -> TOptional<FString>
+            ->WithContextStack(Data->HasField(ANSI_TO_TCHAR("contextStack")) ? TOptional<FString>(Data->GetStringField(ANSI_TO_TCHAR("contextStack"))) : TOptional<FString>())
+            ->WithNamespaceName(Data->HasField(ANSI_TO_TCHAR("namespaceName")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
-                    if (Data->TryGetStringField("namespaceName", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("namespaceName"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
-            ->WithDescription(Data->HasField("description") ? [Data]() -> TOptional<FString>
+            ->WithDescription(Data->HasField(ANSI_TO_TCHAR("description")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
-                    if (Data->TryGetStringField("description", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("description"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
-          ->WithTransactionSetting(Data->HasField("transactionSetting") ? [Data]() -> Model::FTransactionSettingPtr
+          ->WithTransactionSetting(Data->HasField(ANSI_TO_TCHAR("transactionSetting")) ? [Data]() -> Model::FTransactionSettingPtr
               {
-                  if (Data->HasTypedField<EJson::Null>("transactionSetting"))
+                  if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("transactionSetting")))
                   {
                       return nullptr;
                   }
-                  return Model::FTransactionSetting::FromJson(Data->GetObjectField("transactionSetting"));
+                  return Model::FTransactionSetting::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("transactionSetting")));
               }() : nullptr)
-          ->WithChangeGradeScript(Data->HasField("changeGradeScript") ? [Data]() -> Model::FScriptSettingPtr
+          ->WithChangeGradeScript(Data->HasField(ANSI_TO_TCHAR("changeGradeScript")) ? [Data]() -> Model::FScriptSettingPtr
               {
-                  if (Data->HasTypedField<EJson::Null>("changeGradeScript"))
+                  if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("changeGradeScript")))
                   {
                       return nullptr;
                   }
-                  return Model::FScriptSetting::FromJson(Data->GetObjectField("changeGradeScript"));
+                  return Model::FScriptSetting::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("changeGradeScript")));
               }() : nullptr)
-          ->WithLogSetting(Data->HasField("logSetting") ? [Data]() -> Model::FLogSettingPtr
+          ->WithLogSetting(Data->HasField(ANSI_TO_TCHAR("logSetting")) ? [Data]() -> Model::FLogSettingPtr
               {
-                  if (Data->HasTypedField<EJson::Null>("logSetting"))
+                  if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("logSetting")))
                   {
                       return nullptr;
                   }
-                  return Model::FLogSetting::FromJson(Data->GetObjectField("logSetting"));
+                  return Model::FLogSetting::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("logSetting")));
               }() : nullptr);
     }
 

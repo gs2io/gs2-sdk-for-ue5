@@ -53,13 +53,13 @@ namespace Gs2::Lottery::Result
             return nullptr;
         }
         return MakeShared<FExportMasterResult>()
-            ->WithItem(Data->HasField("item") ? [Data]() -> Model::FCurrentLotteryMasterPtr
+            ->WithItem(Data->HasField(ANSI_TO_TCHAR("item")) ? [Data]() -> Model::FCurrentLotteryMasterPtr
                  {
-                    if (Data->HasTypedField<EJson::Null>("item"))
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("item")))
                     {
                         return nullptr;
                     }
-                    return Model::FCurrentLotteryMaster::FromJson(Data->GetObjectField("item"));
+                    return Model::FCurrentLotteryMaster::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("item")));
                  }() : nullptr);
     }
 

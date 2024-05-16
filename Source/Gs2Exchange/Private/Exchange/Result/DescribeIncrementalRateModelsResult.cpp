@@ -53,12 +53,12 @@ namespace Gs2::Exchange::Result
             return nullptr;
         }
         return MakeShared<FDescribeIncrementalRateModelsResult>()
-            ->WithItems(Data->HasField("items") ? [Data]() -> TSharedPtr<TArray<Model::FIncrementalRateModelPtr>>
+            ->WithItems(Data->HasField(ANSI_TO_TCHAR("items")) ? [Data]() -> TSharedPtr<TArray<Model::FIncrementalRateModelPtr>>
                  {
                     auto v = MakeShared<TArray<Model::FIncrementalRateModelPtr>>();
-                    if (!Data->HasTypedField<EJson::Null>("items") && Data->HasTypedField<EJson::Array>("items"))
+                    if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("items")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("items")))
                     {
-                        for (auto JsonObjectValue : Data->GetArrayField("items"))
+                        for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("items")))
                         {
                             v->Add(Model::FIncrementalRateModel::FromJson(JsonObjectValue->AsObject()));
                         }

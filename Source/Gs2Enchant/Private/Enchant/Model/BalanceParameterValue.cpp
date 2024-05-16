@@ -71,19 +71,19 @@ namespace Gs2::Enchant::Model
             return nullptr;
         }
         return MakeShared<FBalanceParameterValue>()
-            ->WithName(Data->HasField("name") ? [Data]() -> TOptional<FString>
+            ->WithName(Data->HasField(ANSI_TO_TCHAR("name")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("name", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("name"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithValue(Data->HasField("value") ? [Data]() -> TOptional<int64>
+            ->WithValue(Data->HasField(ANSI_TO_TCHAR("value")) ? [Data]() -> TOptional<int64>
                 {
                     int64 v;
-                    if (Data->TryGetNumberField("value", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("value"), v))
                     {
                         return TOptional(v);
                     }

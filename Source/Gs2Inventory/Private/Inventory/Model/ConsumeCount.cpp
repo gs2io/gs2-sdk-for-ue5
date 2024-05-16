@@ -71,19 +71,19 @@ namespace Gs2::Inventory::Model
             return nullptr;
         }
         return MakeShared<FConsumeCount>()
-            ->WithItemName(Data->HasField("itemName") ? [Data]() -> TOptional<FString>
+            ->WithItemName(Data->HasField(ANSI_TO_TCHAR("itemName")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("itemName", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("itemName"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithCount(Data->HasField("count") ? [Data]() -> TOptional<int64>
+            ->WithCount(Data->HasField(ANSI_TO_TCHAR("count")) ? [Data]() -> TOptional<int64>
                 {
                     int64 v;
-                    if (Data->TryGetNumberField("count", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("count"), v))
                     {
                         return TOptional(v);
                     }

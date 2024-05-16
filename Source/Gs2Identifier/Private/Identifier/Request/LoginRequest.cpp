@@ -79,20 +79,20 @@ namespace Gs2::Identifier::Request
             return nullptr;
         }
         return (new FLoginRequest())
-            ->WithContextStack(Data->HasField("contextStack") ? TOptional<FString>(Data->GetStringField("contextStack")) : TOptional<FString>())
-            ->WithClientId(Data->HasField("client_id") ? [Data]() -> TOptional<FString>
+            ->WithContextStack(Data->HasField(ANSI_TO_TCHAR("contextStack")) ? TOptional<FString>(Data->GetStringField(ANSI_TO_TCHAR("contextStack"))) : TOptional<FString>())
+            ->WithClientId(Data->HasField(ANSI_TO_TCHAR("client_id")) ? [Data]() -> TOptional<FString>
               {
                   FString v;
-                  if (Data->TryGetStringField("client_id", v))
+                  if (Data->TryGetStringField(ANSI_TO_TCHAR("client_id"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
-            ->WithClientSecret(Data->HasField("client_secret") ? [Data]() -> TOptional<FString>
+            ->WithClientSecret(Data->HasField(ANSI_TO_TCHAR("client_secret")) ? [Data]() -> TOptional<FString>
               {
                   FString v;
-                  if (Data->TryGetStringField("client_secret", v))
+                  if (Data->TryGetStringField(ANSI_TO_TCHAR("client_secret"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }

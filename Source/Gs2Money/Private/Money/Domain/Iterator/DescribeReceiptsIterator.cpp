@@ -28,6 +28,8 @@
 #include "Money/Domain/Model/Receipt.h"
 #include "Money/Domain/Model/User.h"
 
+#include "Core/Domain/Gs2.h"
+
 namespace Gs2::Money::Domain::Iterator
 {
 

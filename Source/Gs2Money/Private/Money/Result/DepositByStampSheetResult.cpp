@@ -53,13 +53,13 @@ namespace Gs2::Money::Result
             return nullptr;
         }
         return MakeShared<FDepositByStampSheetResult>()
-            ->WithItem(Data->HasField("item") ? [Data]() -> Model::FWalletPtr
+            ->WithItem(Data->HasField(ANSI_TO_TCHAR("item")) ? [Data]() -> Model::FWalletPtr
                  {
-                    if (Data->HasTypedField<EJson::Null>("item"))
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("item")))
                     {
                         return nullptr;
                     }
-                    return Model::FWallet::FromJson(Data->GetObjectField("item"));
+                    return Model::FWallet::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("item")));
                  }() : nullptr);
     }
 

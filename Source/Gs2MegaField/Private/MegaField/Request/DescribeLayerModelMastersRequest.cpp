@@ -116,38 +116,38 @@ namespace Gs2::MegaField::Request
             return nullptr;
         }
         return MakeShared<FDescribeLayerModelMastersRequest>()
-            ->WithContextStack(Data->HasField("contextStack") ? TOptional<FString>(Data->GetStringField("contextStack")) : TOptional<FString>())
-            ->WithNamespaceName(Data->HasField("namespaceName") ? [Data]() -> TOptional<FString>
+            ->WithContextStack(Data->HasField(ANSI_TO_TCHAR("contextStack")) ? TOptional<FString>(Data->GetStringField(ANSI_TO_TCHAR("contextStack"))) : TOptional<FString>())
+            ->WithNamespaceName(Data->HasField(ANSI_TO_TCHAR("namespaceName")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
-                    if (Data->TryGetStringField("namespaceName", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("namespaceName"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
-            ->WithAreaModelName(Data->HasField("areaModelName") ? [Data]() -> TOptional<FString>
+            ->WithAreaModelName(Data->HasField(ANSI_TO_TCHAR("areaModelName")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
-                    if (Data->TryGetStringField("areaModelName", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("areaModelName"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
-            ->WithPageToken(Data->HasField("pageToken") ? [Data]() -> TOptional<FString>
+            ->WithPageToken(Data->HasField(ANSI_TO_TCHAR("pageToken")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
-                    if (Data->TryGetStringField("pageToken", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("pageToken"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
-            ->WithLimit(Data->HasField("limit") ? [Data]() -> TOptional<int32>
+            ->WithLimit(Data->HasField(ANSI_TO_TCHAR("limit")) ? [Data]() -> TOptional<int32>
               {
                   int32 v;
-                    if (Data->TryGetNumberField("limit", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("limit"), v))
                   {
                         return TOptional(v);
                   }

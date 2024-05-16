@@ -53,13 +53,13 @@ namespace Gs2::StateMachine::Result
             return nullptr;
         }
         return MakeShared<FUpdateStateMachineMasterResult>()
-            ->WithItem(Data->HasField("item") ? [Data]() -> Model::FStateMachineMasterPtr
+            ->WithItem(Data->HasField(ANSI_TO_TCHAR("item")) ? [Data]() -> Model::FStateMachineMasterPtr
                  {
-                    if (Data->HasTypedField<EJson::Null>("item"))
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("item")))
                     {
                         return nullptr;
                     }
-                    return Model::FStateMachineMaster::FromJson(Data->GetObjectField("item"));
+                    return Model::FStateMachineMaster::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("item")));
                  }() : nullptr);
     }
 

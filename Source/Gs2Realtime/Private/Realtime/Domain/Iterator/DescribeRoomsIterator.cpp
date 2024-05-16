@@ -28,6 +28,8 @@
 #include "Realtime/Domain/Model/Room.h"
 #include "Realtime/Domain/Model/Namespace.h"
 
+#include "Core/Domain/Gs2.h"
+
 namespace Gs2::Realtime::Domain::Iterator
 {
 

@@ -53,13 +53,13 @@ namespace Gs2::Stamina::Result
             return nullptr;
         }
         return MakeShared<FDeleteStaminaByUserIdResult>()
-            ->WithItem(Data->HasField("item") ? [Data]() -> Model::FStaminaPtr
+            ->WithItem(Data->HasField(ANSI_TO_TCHAR("item")) ? [Data]() -> Model::FStaminaPtr
                  {
-                    if (Data->HasTypedField<EJson::Null>("item"))
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("item")))
                     {
                         return nullptr;
                     }
-                    return Model::FStamina::FromJson(Data->GetObjectField("item"));
+                    return Model::FStamina::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("item")));
                  }() : nullptr);
     }
 

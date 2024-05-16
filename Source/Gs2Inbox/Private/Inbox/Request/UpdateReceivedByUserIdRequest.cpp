@@ -124,47 +124,47 @@ namespace Gs2::Inbox::Request
             return nullptr;
         }
         return MakeShared<FUpdateReceivedByUserIdRequest>()
-            ->WithContextStack(Data->HasField("contextStack") ? TOptional<FString>(Data->GetStringField("contextStack")) : TOptional<FString>())
-            ->WithNamespaceName(Data->HasField("namespaceName") ? [Data]() -> TOptional<FString>
+            ->WithContextStack(Data->HasField(ANSI_TO_TCHAR("contextStack")) ? TOptional<FString>(Data->GetStringField(ANSI_TO_TCHAR("contextStack"))) : TOptional<FString>())
+            ->WithNamespaceName(Data->HasField(ANSI_TO_TCHAR("namespaceName")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
-                    if (Data->TryGetStringField("namespaceName", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("namespaceName"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
-            ->WithUserId(Data->HasField("userId") ? [Data]() -> TOptional<FString>
+            ->WithUserId(Data->HasField(ANSI_TO_TCHAR("userId")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
-                    if (Data->TryGetStringField("userId", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("userId"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
-          ->WithReceivedGlobalMessageNames(Data->HasField("receivedGlobalMessageNames") ? [Data]() -> TSharedPtr<TArray<FString>>
+          ->WithReceivedGlobalMessageNames(Data->HasField(ANSI_TO_TCHAR("receivedGlobalMessageNames")) ? [Data]() -> TSharedPtr<TArray<FString>>
               {
                   auto v = MakeShared<TArray<FString>>();
-                  if (!Data->HasTypedField<EJson::Null>("receivedGlobalMessageNames") && Data->HasTypedField<EJson::Array>("receivedGlobalMessageNames"))
+                  if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("receivedGlobalMessageNames")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("receivedGlobalMessageNames")))
                   {
-                      for (auto JsonObjectValue : Data->GetArrayField("receivedGlobalMessageNames"))
+                      for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("receivedGlobalMessageNames")))
                       {
                           v->Add(JsonObjectValue->AsString());
                       }
                   }
                   return v;
               }() : MakeShared<TArray<FString>>())
-            ->WithTimeOffsetToken(Data->HasField("timeOffsetToken") ? [Data]() -> TOptional<FString>
+            ->WithTimeOffsetToken(Data->HasField(ANSI_TO_TCHAR("timeOffsetToken")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
-                    if (Data->TryGetStringField("timeOffsetToken", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("timeOffsetToken"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
-          ->WithDuplicationAvoider(Data->HasField("duplicationAvoider") ? TOptional<FString>(Data->GetStringField("duplicationAvoider")) : TOptional<FString>());
+          ->WithDuplicationAvoider(Data->HasField(ANSI_TO_TCHAR("duplicationAvoider")) ? TOptional<FString>(Data->GetStringField(ANSI_TO_TCHAR("duplicationAvoider"))) : TOptional<FString>());
     }
 
     TSharedPtr<FJsonObject> FUpdateReceivedByUserIdRequest::ToJson() const

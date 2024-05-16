@@ -71,19 +71,19 @@ namespace Gs2::Grade::Model
             return nullptr;
         }
         return MakeShared<FDefaultGradeModel>()
-            ->WithPropertyIdRegex(Data->HasField("propertyIdRegex") ? [Data]() -> TOptional<FString>
+            ->WithPropertyIdRegex(Data->HasField(ANSI_TO_TCHAR("propertyIdRegex")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("propertyIdRegex", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("propertyIdRegex"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithDefaultGradeValue(Data->HasField("defaultGradeValue") ? [Data]() -> TOptional<int64>
+            ->WithDefaultGradeValue(Data->HasField(ANSI_TO_TCHAR("defaultGradeValue")) ? [Data]() -> TOptional<int64>
                 {
                     int64 v;
-                    if (Data->TryGetNumberField("defaultGradeValue", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("defaultGradeValue"), v))
                     {
                         return TOptional(v);
                     }

@@ -92,29 +92,29 @@ namespace Gs2::Key::Request
             return nullptr;
         }
         return MakeShared<FEncryptRequest>()
-            ->WithContextStack(Data->HasField("contextStack") ? TOptional<FString>(Data->GetStringField("contextStack")) : TOptional<FString>())
-            ->WithNamespaceName(Data->HasField("namespaceName") ? [Data]() -> TOptional<FString>
+            ->WithContextStack(Data->HasField(ANSI_TO_TCHAR("contextStack")) ? TOptional<FString>(Data->GetStringField(ANSI_TO_TCHAR("contextStack"))) : TOptional<FString>())
+            ->WithNamespaceName(Data->HasField(ANSI_TO_TCHAR("namespaceName")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
-                    if (Data->TryGetStringField("namespaceName", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("namespaceName"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
-            ->WithKeyName(Data->HasField("keyName") ? [Data]() -> TOptional<FString>
+            ->WithKeyName(Data->HasField(ANSI_TO_TCHAR("keyName")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
-                    if (Data->TryGetStringField("keyName", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("keyName"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
-            ->WithData(Data->HasField("data") ? [Data]() -> TOptional<FString>
+            ->WithData(Data->HasField(ANSI_TO_TCHAR("data")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
-                    if (Data->TryGetStringField("data", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("data"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }

@@ -99,37 +99,37 @@ namespace Gs2::SeasonRating::Model
             return nullptr;
         }
         return MakeShared<FBallot>()
-            ->WithUserId(Data->HasField("userId") ? [Data]() -> TOptional<FString>
+            ->WithUserId(Data->HasField(ANSI_TO_TCHAR("userId")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("userId", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("userId"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithSeasonName(Data->HasField("seasonName") ? [Data]() -> TOptional<FString>
+            ->WithSeasonName(Data->HasField(ANSI_TO_TCHAR("seasonName")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("seasonName", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("seasonName"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithSessionName(Data->HasField("sessionName") ? [Data]() -> TOptional<FString>
+            ->WithSessionName(Data->HasField(ANSI_TO_TCHAR("sessionName")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("sessionName", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("sessionName"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithNumberOfPlayer(Data->HasField("numberOfPlayer") ? [Data]() -> TOptional<int32>
+            ->WithNumberOfPlayer(Data->HasField(ANSI_TO_TCHAR("numberOfPlayer")) ? [Data]() -> TOptional<int32>
                 {
                     int32 v;
-                    if (Data->TryGetNumberField("numberOfPlayer", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("numberOfPlayer"), v))
                     {
                         return TOptional(v);
                     }

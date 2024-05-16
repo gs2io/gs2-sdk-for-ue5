@@ -53,13 +53,13 @@ namespace Gs2::Grade::Result
             return nullptr;
         }
         return MakeShared<FExportMasterResult>()
-            ->WithItem(Data->HasField("item") ? [Data]() -> Model::FCurrentGradeMasterPtr
+            ->WithItem(Data->HasField(ANSI_TO_TCHAR("item")) ? [Data]() -> Model::FCurrentGradeMasterPtr
                  {
-                    if (Data->HasTypedField<EJson::Null>("item"))
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("item")))
                     {
                         return nullptr;
                     }
-                    return Model::FCurrentGradeMaster::FromJson(Data->GetObjectField("item"));
+                    return Model::FCurrentGradeMaster::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("item")));
                  }() : nullptr);
     }
 

@@ -193,83 +193,83 @@ namespace Gs2::Datastore::Request
             return nullptr;
         }
         return MakeShared<FPrepareUploadByUserIdRequest>()
-            ->WithContextStack(Data->HasField("contextStack") ? TOptional<FString>(Data->GetStringField("contextStack")) : TOptional<FString>())
-            ->WithNamespaceName(Data->HasField("namespaceName") ? [Data]() -> TOptional<FString>
+            ->WithContextStack(Data->HasField(ANSI_TO_TCHAR("contextStack")) ? TOptional<FString>(Data->GetStringField(ANSI_TO_TCHAR("contextStack"))) : TOptional<FString>())
+            ->WithNamespaceName(Data->HasField(ANSI_TO_TCHAR("namespaceName")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
-                    if (Data->TryGetStringField("namespaceName", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("namespaceName"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
-            ->WithUserId(Data->HasField("userId") ? [Data]() -> TOptional<FString>
+            ->WithUserId(Data->HasField(ANSI_TO_TCHAR("userId")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
-                    if (Data->TryGetStringField("userId", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("userId"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
-            ->WithName(Data->HasField("name") ? [Data]() -> TOptional<FString>
+            ->WithName(Data->HasField(ANSI_TO_TCHAR("name")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
-                    if (Data->TryGetStringField("name", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("name"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
-            ->WithContentType(Data->HasField("contentType") ? [Data]() -> TOptional<FString>
+            ->WithContentType(Data->HasField(ANSI_TO_TCHAR("contentType")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
-                    if (Data->TryGetStringField("contentType", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("contentType"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
-            ->WithScope(Data->HasField("scope") ? [Data]() -> TOptional<FString>
+            ->WithScope(Data->HasField(ANSI_TO_TCHAR("scope")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
-                    if (Data->TryGetStringField("scope", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("scope"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
-          ->WithAllowUserIds(Data->HasField("allowUserIds") ? [Data]() -> TSharedPtr<TArray<FString>>
+          ->WithAllowUserIds(Data->HasField(ANSI_TO_TCHAR("allowUserIds")) ? [Data]() -> TSharedPtr<TArray<FString>>
               {
                   auto v = MakeShared<TArray<FString>>();
-                  if (!Data->HasTypedField<EJson::Null>("allowUserIds") && Data->HasTypedField<EJson::Array>("allowUserIds"))
+                  if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("allowUserIds")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("allowUserIds")))
                   {
-                      for (auto JsonObjectValue : Data->GetArrayField("allowUserIds"))
+                      for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("allowUserIds")))
                       {
                           v->Add(JsonObjectValue->AsString());
                       }
                   }
                   return v;
               }() : MakeShared<TArray<FString>>())
-            ->WithUpdateIfExists(Data->HasField("updateIfExists") ? [Data]() -> TOptional<bool>
+            ->WithUpdateIfExists(Data->HasField(ANSI_TO_TCHAR("updateIfExists")) ? [Data]() -> TOptional<bool>
               {
                   bool v;
-                    if (Data->TryGetBoolField("updateIfExists", v))
+                    if (Data->TryGetBoolField(ANSI_TO_TCHAR("updateIfExists"), v))
                   {
                         return TOptional(v);
                   }
                   return TOptional<bool>();
               }() : TOptional<bool>())
-            ->WithTimeOffsetToken(Data->HasField("timeOffsetToken") ? [Data]() -> TOptional<FString>
+            ->WithTimeOffsetToken(Data->HasField(ANSI_TO_TCHAR("timeOffsetToken")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
-                    if (Data->TryGetStringField("timeOffsetToken", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("timeOffsetToken"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
-          ->WithDuplicationAvoider(Data->HasField("duplicationAvoider") ? TOptional<FString>(Data->GetStringField("duplicationAvoider")) : TOptional<FString>());
+          ->WithDuplicationAvoider(Data->HasField(ANSI_TO_TCHAR("duplicationAvoider")) ? TOptional<FString>(Data->GetStringField(ANSI_TO_TCHAR("duplicationAvoider"))) : TOptional<FString>());
     }
 
     TSharedPtr<FJsonObject> FPrepareUploadByUserIdRequest::ToJson() const

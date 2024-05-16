@@ -85,28 +85,28 @@ namespace Gs2::Inbox::Model
             return nullptr;
         }
         return MakeShared<FNotificationSetting>()
-            ->WithGatewayNamespaceId(Data->HasField("gatewayNamespaceId") ? [Data]() -> TOptional<FString>
+            ->WithGatewayNamespaceId(Data->HasField(ANSI_TO_TCHAR("gatewayNamespaceId")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("gatewayNamespaceId", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("gatewayNamespaceId"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithEnableTransferMobileNotification(Data->HasField("enableTransferMobileNotification") ? [Data]() -> TOptional<bool>
+            ->WithEnableTransferMobileNotification(Data->HasField(ANSI_TO_TCHAR("enableTransferMobileNotification")) ? [Data]() -> TOptional<bool>
                 {
                     bool v;
-                    if (Data->TryGetBoolField("enableTransferMobileNotification", v))
+                    if (Data->TryGetBoolField(ANSI_TO_TCHAR("enableTransferMobileNotification"), v))
                     {
                         return TOptional(v);
                     }
                     return TOptional<bool>();
                 }() : TOptional<bool>())
-            ->WithSound(Data->HasField("sound") ? [Data]() -> TOptional<FString>
+            ->WithSound(Data->HasField(ANSI_TO_TCHAR("sound")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("sound", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("sound"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }

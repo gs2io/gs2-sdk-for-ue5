@@ -71,19 +71,19 @@ namespace Gs2::Showcase::Model
             return nullptr;
         }
         return MakeShared<FPurchaseCount>()
-            ->WithName(Data->HasField("name") ? [Data]() -> TOptional<FString>
+            ->WithName(Data->HasField(ANSI_TO_TCHAR("name")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("name", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("name"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithCount(Data->HasField("count") ? [Data]() -> TOptional<int32>
+            ->WithCount(Data->HasField(ANSI_TO_TCHAR("count")) ? [Data]() -> TOptional<int32>
                 {
                     int32 v;
-                    if (Data->TryGetNumberField("count", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("count"), v))
                     {
                         return TOptional(v);
                     }

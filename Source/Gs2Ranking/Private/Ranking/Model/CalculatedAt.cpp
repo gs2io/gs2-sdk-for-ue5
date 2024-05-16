@@ -71,19 +71,19 @@ namespace Gs2::Ranking::Model
             return nullptr;
         }
         return MakeShared<FCalculatedAt>()
-            ->WithCategoryName(Data->HasField("categoryName") ? [Data]() -> TOptional<FString>
+            ->WithCategoryName(Data->HasField(ANSI_TO_TCHAR("categoryName")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("categoryName", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("categoryName"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithCalculatedAt(Data->HasField("calculatedAt") ? [Data]() -> TOptional<int64>
+            ->WithCalculatedAt(Data->HasField(ANSI_TO_TCHAR("calculatedAt")) ? [Data]() -> TOptional<int64>
                 {
                     int64 v;
-                    if (Data->TryGetNumberField("calculatedAt", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("calculatedAt"), v))
                     {
                         return TOptional(v);
                     }

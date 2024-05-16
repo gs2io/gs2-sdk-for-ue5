@@ -27,6 +27,8 @@
 #include "Grade/Domain/Iterator/DescribeNamespacesIterator.h"
 #include "Grade/Domain/Model/Namespace.h"
 
+#include "Core/Domain/Gs2.h"
+
 namespace Gs2::Grade::Domain::Iterator
 {
 

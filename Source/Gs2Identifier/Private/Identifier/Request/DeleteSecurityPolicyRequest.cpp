@@ -62,11 +62,11 @@ namespace Gs2::Identifier::Request
             return nullptr;
         }
         return MakeShared<FDeleteSecurityPolicyRequest>()
-            ->WithContextStack(Data->HasField("contextStack") ? TOptional<FString>(Data->GetStringField("contextStack")) : TOptional<FString>())
-            ->WithSecurityPolicyName(Data->HasField("securityPolicyName") ? [Data]() -> TOptional<FString>
+            ->WithContextStack(Data->HasField(ANSI_TO_TCHAR("contextStack")) ? TOptional<FString>(Data->GetStringField(ANSI_TO_TCHAR("contextStack"))) : TOptional<FString>())
+            ->WithSecurityPolicyName(Data->HasField(ANSI_TO_TCHAR("securityPolicyName")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
-                    if (Data->TryGetStringField("securityPolicyName", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("securityPolicyName"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }

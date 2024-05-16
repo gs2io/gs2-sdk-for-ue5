@@ -53,13 +53,13 @@ namespace Gs2::Key::Result
             return nullptr;
         }
         return MakeShared<FUpdateKeyResult>()
-            ->WithItem(Data->HasField("item") ? [Data]() -> Model::FKeyPtr
+            ->WithItem(Data->HasField(ANSI_TO_TCHAR("item")) ? [Data]() -> Model::FKeyPtr
                  {
-                    if (Data->HasTypedField<EJson::Null>("item"))
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("item")))
                     {
                         return nullptr;
                     }
-                    return Model::FKey::FromJson(Data->GetObjectField("item"));
+                    return Model::FKey::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("item")));
                  }() : nullptr);
     }
 

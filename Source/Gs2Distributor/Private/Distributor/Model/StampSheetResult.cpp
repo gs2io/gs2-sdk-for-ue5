@@ -284,117 +284,117 @@ namespace Gs2::Distributor::Model
             return nullptr;
         }
         return MakeShared<FStampSheetResult>()
-            ->WithStampSheetResultId(Data->HasField("stampSheetResultId") ? [Data]() -> TOptional<FString>
+            ->WithStampSheetResultId(Data->HasField(ANSI_TO_TCHAR("stampSheetResultId")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("stampSheetResultId", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("stampSheetResultId"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithUserId(Data->HasField("userId") ? [Data]() -> TOptional<FString>
+            ->WithUserId(Data->HasField(ANSI_TO_TCHAR("userId")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("userId", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("userId"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithTransactionId(Data->HasField("transactionId") ? [Data]() -> TOptional<FString>
+            ->WithTransactionId(Data->HasField(ANSI_TO_TCHAR("transactionId")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("transactionId", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("transactionId"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithTaskRequests(Data->HasField("taskRequests") ? [Data]() -> TSharedPtr<TArray<Model::FConsumeActionPtr>>
+            ->WithTaskRequests(Data->HasField(ANSI_TO_TCHAR("taskRequests")) ? [Data]() -> TSharedPtr<TArray<Model::FConsumeActionPtr>>
                 {
                     auto v = MakeShared<TArray<Model::FConsumeActionPtr>>();
-                    if (!Data->HasTypedField<EJson::Null>("taskRequests") && Data->HasTypedField<EJson::Array>("taskRequests"))
+                    if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("taskRequests")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("taskRequests")))
                     {
-                        for (auto JsonObjectValue : Data->GetArrayField("taskRequests"))
+                        for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("taskRequests")))
                         {
                             v->Add(Model::FConsumeAction::FromJson(JsonObjectValue->AsObject()));
                         }
                     }
                     return v;
                  }() : MakeShared<TArray<Model::FConsumeActionPtr>>())
-            ->WithSheetRequest(Data->HasField("sheetRequest") ? [Data]() -> Model::FAcquireActionPtr
+            ->WithSheetRequest(Data->HasField(ANSI_TO_TCHAR("sheetRequest")) ? [Data]() -> Model::FAcquireActionPtr
                 {
-                    if (Data->HasTypedField<EJson::Null>("sheetRequest"))
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("sheetRequest")))
                     {
                         return nullptr;
                     }
-                    return Model::FAcquireAction::FromJson(Data->GetObjectField("sheetRequest"));
+                    return Model::FAcquireAction::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("sheetRequest")));
                  }() : nullptr)
-            ->WithTaskResultCodes(Data->HasField("taskResultCodes") ? [Data]() -> TSharedPtr<TArray<int32>>
+            ->WithTaskResultCodes(Data->HasField(ANSI_TO_TCHAR("taskResultCodes")) ? [Data]() -> TSharedPtr<TArray<int32>>
                 {
                     auto v = MakeShared<TArray<int32>>();
-                    if (!Data->HasTypedField<EJson::Null>("taskResultCodes") && Data->HasTypedField<EJson::Array>("taskResultCodes"))
+                    if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("taskResultCodes")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("taskResultCodes")))
                     {
-                        for (auto JsonObjectValue : Data->GetArrayField("taskResultCodes"))
+                        for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("taskResultCodes")))
                         {
                             v->Add(JsonObjectValue->AsNumber());
                         }
                     }
                     return v;
                  }() : MakeShared<TArray<int32>>())
-            ->WithTaskResults(Data->HasField("taskResults") ? [Data]() -> TSharedPtr<TArray<FString>>
+            ->WithTaskResults(Data->HasField(ANSI_TO_TCHAR("taskResults")) ? [Data]() -> TSharedPtr<TArray<FString>>
                 {
                     auto v = MakeShared<TArray<FString>>();
-                    if (!Data->HasTypedField<EJson::Null>("taskResults") && Data->HasTypedField<EJson::Array>("taskResults"))
+                    if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("taskResults")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("taskResults")))
                     {
-                        for (auto JsonObjectValue : Data->GetArrayField("taskResults"))
+                        for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("taskResults")))
                         {
                             v->Add(JsonObjectValue->AsString());
                         }
                     }
                     return v;
                  }() : MakeShared<TArray<FString>>())
-            ->WithSheetResultCode(Data->HasField("sheetResultCode") ? [Data]() -> TOptional<int32>
+            ->WithSheetResultCode(Data->HasField(ANSI_TO_TCHAR("sheetResultCode")) ? [Data]() -> TOptional<int32>
                 {
                     int32 v;
-                    if (Data->TryGetNumberField("sheetResultCode", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("sheetResultCode"), v))
                     {
                         return TOptional(v);
                     }
                     return TOptional<int32>();
                 }() : TOptional<int32>())
-            ->WithSheetResult(Data->HasField("sheetResult") ? [Data]() -> TOptional<FString>
+            ->WithSheetResult(Data->HasField(ANSI_TO_TCHAR("sheetResult")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("sheetResult", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("sheetResult"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithNextTransactionId(Data->HasField("nextTransactionId") ? [Data]() -> TOptional<FString>
+            ->WithNextTransactionId(Data->HasField(ANSI_TO_TCHAR("nextTransactionId")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("nextTransactionId", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("nextTransactionId"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithCreatedAt(Data->HasField("createdAt") ? [Data]() -> TOptional<int64>
+            ->WithCreatedAt(Data->HasField(ANSI_TO_TCHAR("createdAt")) ? [Data]() -> TOptional<int64>
                 {
                     int64 v;
-                    if (Data->TryGetNumberField("createdAt", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("createdAt"), v))
                     {
                         return TOptional(v);
                     }
                     return TOptional<int64>();
                 }() : TOptional<int64>())
-            ->WithRevision(Data->HasField("revision") ? [Data]() -> TOptional<int64>
+            ->WithRevision(Data->HasField(ANSI_TO_TCHAR("revision")) ? [Data]() -> TOptional<int64>
                 {
                     int64 v;
-                    if (Data->TryGetNumberField("revision", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("revision"), v))
                     {
                         return TOptional(v);
                     }

@@ -96,32 +96,32 @@ namespace Gs2::Deploy::Request
             return nullptr;
         }
         return MakeShared<FUpdateStackFromGitHubRequest>()
-            ->WithContextStack(Data->HasField("contextStack") ? TOptional<FString>(Data->GetStringField("contextStack")) : TOptional<FString>())
-            ->WithStackName(Data->HasField("stackName") ? [Data]() -> TOptional<FString>
+            ->WithContextStack(Data->HasField(ANSI_TO_TCHAR("contextStack")) ? TOptional<FString>(Data->GetStringField(ANSI_TO_TCHAR("contextStack"))) : TOptional<FString>())
+            ->WithStackName(Data->HasField(ANSI_TO_TCHAR("stackName")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
-                    if (Data->TryGetStringField("stackName", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("stackName"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
-            ->WithDescription(Data->HasField("description") ? [Data]() -> TOptional<FString>
+            ->WithDescription(Data->HasField(ANSI_TO_TCHAR("description")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
-                    if (Data->TryGetStringField("description", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("description"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
-          ->WithCheckoutSetting(Data->HasField("checkoutSetting") ? [Data]() -> Model::FGitHubCheckoutSettingPtr
+          ->WithCheckoutSetting(Data->HasField(ANSI_TO_TCHAR("checkoutSetting")) ? [Data]() -> Model::FGitHubCheckoutSettingPtr
               {
-                  if (Data->HasTypedField<EJson::Null>("checkoutSetting"))
+                  if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("checkoutSetting")))
                   {
                       return nullptr;
                   }
-                  return Model::FGitHubCheckoutSetting::FromJson(Data->GetObjectField("checkoutSetting"));
+                  return Model::FGitHubCheckoutSetting::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("checkoutSetting")));
               }() : nullptr);
     }
 

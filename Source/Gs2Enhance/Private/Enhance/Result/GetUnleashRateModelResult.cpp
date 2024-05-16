@@ -53,13 +53,13 @@ namespace Gs2::Enhance::Result
             return nullptr;
         }
         return MakeShared<FGetUnleashRateModelResult>()
-            ->WithItem(Data->HasField("item") ? [Data]() -> Model::FUnleashRateModelPtr
+            ->WithItem(Data->HasField(ANSI_TO_TCHAR("item")) ? [Data]() -> Model::FUnleashRateModelPtr
                  {
-                    if (Data->HasTypedField<EJson::Null>("item"))
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("item")))
                     {
                         return nullptr;
                     }
-                    return Model::FUnleashRateModel::FromJson(Data->GetObjectField("item"));
+                    return Model::FUnleashRateModel::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("item")));
                  }() : nullptr);
     }
 

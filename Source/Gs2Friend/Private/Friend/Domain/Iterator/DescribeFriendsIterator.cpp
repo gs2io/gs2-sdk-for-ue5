@@ -28,6 +28,8 @@
 #include "Friend/Domain/Model/Friend.h"
 #include "Friend/Domain/Model/User.h"
 
+#include "Core/Domain/Gs2.h"
+
 namespace Gs2::Friend::Domain::Iterator
 {
 

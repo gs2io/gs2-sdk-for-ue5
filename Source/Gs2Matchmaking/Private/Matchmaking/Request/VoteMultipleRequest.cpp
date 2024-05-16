@@ -115,44 +115,44 @@ namespace Gs2::Matchmaking::Request
             return nullptr;
         }
         return MakeShared<FVoteMultipleRequest>()
-            ->WithContextStack(Data->HasField("contextStack") ? TOptional<FString>(Data->GetStringField("contextStack")) : TOptional<FString>())
-            ->WithNamespaceName(Data->HasField("namespaceName") ? [Data]() -> TOptional<FString>
+            ->WithContextStack(Data->HasField(ANSI_TO_TCHAR("contextStack")) ? TOptional<FString>(Data->GetStringField(ANSI_TO_TCHAR("contextStack"))) : TOptional<FString>())
+            ->WithNamespaceName(Data->HasField(ANSI_TO_TCHAR("namespaceName")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
-                    if (Data->TryGetStringField("namespaceName", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("namespaceName"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
-          ->WithSignedBallots(Data->HasField("signedBallots") ? [Data]() -> TSharedPtr<TArray<Model::FSignedBallotPtr>>
+          ->WithSignedBallots(Data->HasField(ANSI_TO_TCHAR("signedBallots")) ? [Data]() -> TSharedPtr<TArray<Model::FSignedBallotPtr>>
               {
                   auto v = MakeShared<TArray<Model::FSignedBallotPtr>>();
-                  if (!Data->HasTypedField<EJson::Null>("signedBallots") && Data->HasTypedField<EJson::Array>("signedBallots"))
+                  if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("signedBallots")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("signedBallots")))
                   {
-                      for (auto JsonObjectValue : Data->GetArrayField("signedBallots"))
+                      for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("signedBallots")))
                       {
                           v->Add(Model::FSignedBallot::FromJson(JsonObjectValue->AsObject()));
                       }
                   }
                   return v;
               }() : MakeShared<TArray<Model::FSignedBallotPtr>>())
-          ->WithGameResults(Data->HasField("gameResults") ? [Data]() -> TSharedPtr<TArray<Model::FGameResultPtr>>
+          ->WithGameResults(Data->HasField(ANSI_TO_TCHAR("gameResults")) ? [Data]() -> TSharedPtr<TArray<Model::FGameResultPtr>>
               {
                   auto v = MakeShared<TArray<Model::FGameResultPtr>>();
-                  if (!Data->HasTypedField<EJson::Null>("gameResults") && Data->HasTypedField<EJson::Array>("gameResults"))
+                  if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("gameResults")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("gameResults")))
                   {
-                      for (auto JsonObjectValue : Data->GetArrayField("gameResults"))
+                      for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("gameResults")))
                       {
                           v->Add(Model::FGameResult::FromJson(JsonObjectValue->AsObject()));
                       }
                   }
                   return v;
               }() : MakeShared<TArray<Model::FGameResultPtr>>())
-            ->WithKeyId(Data->HasField("keyId") ? [Data]() -> TOptional<FString>
+            ->WithKeyId(Data->HasField(ANSI_TO_TCHAR("keyId")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
-                    if (Data->TryGetStringField("keyId", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("keyId"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }

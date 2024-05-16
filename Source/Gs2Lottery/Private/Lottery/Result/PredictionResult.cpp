@@ -53,12 +53,12 @@ namespace Gs2::Lottery::Result
             return nullptr;
         }
         return MakeShared<FPredictionResult>()
-            ->WithItems(Data->HasField("items") ? [Data]() -> TSharedPtr<TArray<Model::FDrawnPrizePtr>>
+            ->WithItems(Data->HasField(ANSI_TO_TCHAR("items")) ? [Data]() -> TSharedPtr<TArray<Model::FDrawnPrizePtr>>
                  {
                     auto v = MakeShared<TArray<Model::FDrawnPrizePtr>>();
-                    if (!Data->HasTypedField<EJson::Null>("items") && Data->HasTypedField<EJson::Array>("items"))
+                    if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("items")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("items")))
                     {
-                        for (auto JsonObjectValue : Data->GetArrayField("items"))
+                        for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("items")))
                         {
                             v->Add(Model::FDrawnPrize::FromJson(JsonObjectValue->AsObject()));
                         }

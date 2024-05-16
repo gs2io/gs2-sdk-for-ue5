@@ -28,6 +28,8 @@
 #include "SerialKey/Domain/Model/SerialKey.h"
 #include "SerialKey/Domain/Model/User.h"
 
+#include "Core/Domain/Gs2.h"
+
 namespace Gs2::SerialKey::Domain::Iterator
 {
 

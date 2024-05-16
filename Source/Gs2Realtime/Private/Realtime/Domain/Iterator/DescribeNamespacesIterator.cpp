@@ -27,6 +27,8 @@
 #include "Realtime/Domain/Iterator/DescribeNamespacesIterator.h"
 #include "Realtime/Domain/Model/Namespace.h"
 
+#include "Core/Domain/Gs2.h"
+
 namespace Gs2::Realtime::Domain::Iterator
 {
 

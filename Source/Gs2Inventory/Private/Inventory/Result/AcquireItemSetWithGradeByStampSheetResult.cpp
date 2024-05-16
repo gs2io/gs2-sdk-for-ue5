@@ -134,42 +134,42 @@ namespace Gs2::Inventory::Result
             return nullptr;
         }
         return MakeShared<FAcquireItemSetWithGradeByStampSheetResult>()
-            ->WithItem(Data->HasField("item") ? [Data]() -> Model::FItemSetPtr
+            ->WithItem(Data->HasField(ANSI_TO_TCHAR("item")) ? [Data]() -> Model::FItemSetPtr
                  {
-                    if (Data->HasTypedField<EJson::Null>("item"))
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("item")))
                     {
                         return nullptr;
                     }
-                    return Model::FItemSet::FromJson(Data->GetObjectField("item"));
+                    return Model::FItemSet::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("item")));
                  }() : nullptr)
-            ->WithStatus(Data->HasField("status") ? [Data]() -> Gs2::Grade::Model::FStatusPtr
+            ->WithStatus(Data->HasField(ANSI_TO_TCHAR("status")) ? [Data]() -> Gs2::Grade::Model::FStatusPtr
                  {
-                    if (Data->HasTypedField<EJson::Null>("status"))
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("status")))
                     {
                         return nullptr;
                     }
-                    return Gs2::Grade::Model::FStatus::FromJson(Data->GetObjectField("status"));
+                    return Gs2::Grade::Model::FStatus::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("status")));
                  }() : nullptr)
-            ->WithItemModel(Data->HasField("itemModel") ? [Data]() -> Model::FItemModelPtr
+            ->WithItemModel(Data->HasField(ANSI_TO_TCHAR("itemModel")) ? [Data]() -> Model::FItemModelPtr
                  {
-                    if (Data->HasTypedField<EJson::Null>("itemModel"))
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("itemModel")))
                     {
                         return nullptr;
                     }
-                    return Model::FItemModel::FromJson(Data->GetObjectField("itemModel"));
+                    return Model::FItemModel::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("itemModel")));
                  }() : nullptr)
-            ->WithInventory(Data->HasField("inventory") ? [Data]() -> Model::FInventoryPtr
+            ->WithInventory(Data->HasField(ANSI_TO_TCHAR("inventory")) ? [Data]() -> Model::FInventoryPtr
                  {
-                    if (Data->HasTypedField<EJson::Null>("inventory"))
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("inventory")))
                     {
                         return nullptr;
                     }
-                    return Model::FInventory::FromJson(Data->GetObjectField("inventory"));
+                    return Model::FInventory::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("inventory")));
                  }() : nullptr)
-            ->WithOverflowCount(Data->HasField("overflowCount") ? [Data]() -> TOptional<int64>
+            ->WithOverflowCount(Data->HasField(ANSI_TO_TCHAR("overflowCount")) ? [Data]() -> TOptional<int64>
                 {
                     int64 v;
-                    if (Data->TryGetNumberField("overflowCount", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("overflowCount"), v))
                     {
                         return TOptional(v);
                     }

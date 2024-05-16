@@ -48,12 +48,12 @@ namespace Gs2::AdReward::Model
             return nullptr;
         }
         return MakeShared<FAdMob>()
-            ->WithAllowAdUnitIds(Data->HasField("allowAdUnitIds") ? [Data]() -> TSharedPtr<TArray<FString>>
+            ->WithAllowAdUnitIds(Data->HasField(ANSI_TO_TCHAR("allowAdUnitIds")) ? [Data]() -> TSharedPtr<TArray<FString>>
                 {
                     auto v = MakeShared<TArray<FString>>();
-                    if (!Data->HasTypedField<EJson::Null>("allowAdUnitIds") && Data->HasTypedField<EJson::Array>("allowAdUnitIds"))
+                    if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("allowAdUnitIds")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("allowAdUnitIds")))
                     {
-                        for (auto JsonObjectValue : Data->GetArrayField("allowAdUnitIds"))
+                        for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("allowAdUnitIds")))
                         {
                             v->Add(JsonObjectValue->AsString());
                         }

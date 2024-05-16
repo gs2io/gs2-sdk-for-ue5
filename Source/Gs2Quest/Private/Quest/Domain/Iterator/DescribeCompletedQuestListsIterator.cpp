@@ -28,6 +28,8 @@
 #include "Quest/Domain/Model/CompletedQuestList.h"
 #include "Quest/Domain/Model/User.h"
 
+#include "Core/Domain/Gs2.h"
+
 namespace Gs2::Quest::Domain::Iterator
 {
 

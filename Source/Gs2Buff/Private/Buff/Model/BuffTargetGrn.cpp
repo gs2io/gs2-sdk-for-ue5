@@ -62,19 +62,19 @@ namespace Gs2::Buff::Model
             return nullptr;
         }
         return MakeShared<FBuffTargetGrn>()
-            ->WithTargetModelName(Data->HasField("targetModelName") ? [Data]() -> TOptional<FString>
+            ->WithTargetModelName(Data->HasField(ANSI_TO_TCHAR("targetModelName")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("targetModelName", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("targetModelName"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithTargetGrn(Data->HasField("targetGrn") ? [Data]() -> TOptional<FString>
+            ->WithTargetGrn(Data->HasField(ANSI_TO_TCHAR("targetGrn")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("targetGrn", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("targetGrn"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }

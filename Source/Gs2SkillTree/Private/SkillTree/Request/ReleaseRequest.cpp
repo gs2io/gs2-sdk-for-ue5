@@ -143,59 +143,59 @@ namespace Gs2::SkillTree::Request
             return nullptr;
         }
         return MakeShared<FReleaseRequest>()
-            ->WithContextStack(Data->HasField("contextStack") ? TOptional<FString>(Data->GetStringField("contextStack")) : TOptional<FString>())
-            ->WithNamespaceName(Data->HasField("namespaceName") ? [Data]() -> TOptional<FString>
+            ->WithContextStack(Data->HasField(ANSI_TO_TCHAR("contextStack")) ? TOptional<FString>(Data->GetStringField(ANSI_TO_TCHAR("contextStack"))) : TOptional<FString>())
+            ->WithNamespaceName(Data->HasField(ANSI_TO_TCHAR("namespaceName")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
-                    if (Data->TryGetStringField("namespaceName", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("namespaceName"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
-            ->WithAccessToken(Data->HasField("xGs2AccessToken") ? [Data]() -> TOptional<FString>
+            ->WithAccessToken(Data->HasField(ANSI_TO_TCHAR("xGs2AccessToken")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
-                    if (Data->TryGetStringField("xGs2AccessToken", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("xGs2AccessToken"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
-            ->WithPropertyId(Data->HasField("propertyId") ? [Data]() -> TOptional<FString>
+            ->WithPropertyId(Data->HasField(ANSI_TO_TCHAR("propertyId")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
-                    if (Data->TryGetStringField("propertyId", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("propertyId"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
-          ->WithNodeModelNames(Data->HasField("nodeModelNames") ? [Data]() -> TSharedPtr<TArray<FString>>
+          ->WithNodeModelNames(Data->HasField(ANSI_TO_TCHAR("nodeModelNames")) ? [Data]() -> TSharedPtr<TArray<FString>>
               {
                   auto v = MakeShared<TArray<FString>>();
-                  if (!Data->HasTypedField<EJson::Null>("nodeModelNames") && Data->HasTypedField<EJson::Array>("nodeModelNames"))
+                  if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("nodeModelNames")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("nodeModelNames")))
                   {
-                      for (auto JsonObjectValue : Data->GetArrayField("nodeModelNames"))
+                      for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("nodeModelNames")))
                       {
                           v->Add(JsonObjectValue->AsString());
                       }
                   }
                   return v;
               }() : MakeShared<TArray<FString>>())
-          ->WithConfig(Data->HasField("config") ? [Data]() -> TSharedPtr<TArray<Model::FConfigPtr>>
+          ->WithConfig(Data->HasField(ANSI_TO_TCHAR("config")) ? [Data]() -> TSharedPtr<TArray<Model::FConfigPtr>>
               {
                   auto v = MakeShared<TArray<Model::FConfigPtr>>();
-                  if (!Data->HasTypedField<EJson::Null>("config") && Data->HasTypedField<EJson::Array>("config"))
+                  if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("config")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("config")))
                   {
-                      for (auto JsonObjectValue : Data->GetArrayField("config"))
+                      for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("config")))
                       {
                           v->Add(Model::FConfig::FromJson(JsonObjectValue->AsObject()));
                       }
                   }
                   return v;
               }() : MakeShared<TArray<Model::FConfigPtr>>())
-          ->WithDuplicationAvoider(Data->HasField("duplicationAvoider") ? TOptional<FString>(Data->GetStringField("duplicationAvoider")) : TOptional<FString>());
+          ->WithDuplicationAvoider(Data->HasField(ANSI_TO_TCHAR("duplicationAvoider")) ? TOptional<FString>(Data->GetStringField(ANSI_TO_TCHAR("duplicationAvoider"))) : TOptional<FString>());
     }
 
     TSharedPtr<FJsonObject> FReleaseRequest::ToJson() const

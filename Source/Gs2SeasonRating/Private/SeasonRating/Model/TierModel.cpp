@@ -140,46 +140,46 @@ namespace Gs2::SeasonRating::Model
             return nullptr;
         }
         return MakeShared<FTierModel>()
-            ->WithMetadata(Data->HasField("metadata") ? [Data]() -> TOptional<FString>
+            ->WithMetadata(Data->HasField(ANSI_TO_TCHAR("metadata")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("metadata", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("metadata"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithRaiseRankBonus(Data->HasField("raiseRankBonus") ? [Data]() -> TOptional<int32>
+            ->WithRaiseRankBonus(Data->HasField(ANSI_TO_TCHAR("raiseRankBonus")) ? [Data]() -> TOptional<int32>
                 {
                     int32 v;
-                    if (Data->TryGetNumberField("raiseRankBonus", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("raiseRankBonus"), v))
                     {
                         return TOptional(v);
                     }
                     return TOptional<int32>();
                 }() : TOptional<int32>())
-            ->WithEntryFee(Data->HasField("entryFee") ? [Data]() -> TOptional<int32>
+            ->WithEntryFee(Data->HasField(ANSI_TO_TCHAR("entryFee")) ? [Data]() -> TOptional<int32>
                 {
                     int32 v;
-                    if (Data->TryGetNumberField("entryFee", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("entryFee"), v))
                     {
                         return TOptional(v);
                     }
                     return TOptional<int32>();
                 }() : TOptional<int32>())
-            ->WithMinimumChangePoint(Data->HasField("minimumChangePoint") ? [Data]() -> TOptional<int32>
+            ->WithMinimumChangePoint(Data->HasField(ANSI_TO_TCHAR("minimumChangePoint")) ? [Data]() -> TOptional<int32>
                 {
                     int32 v;
-                    if (Data->TryGetNumberField("minimumChangePoint", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("minimumChangePoint"), v))
                     {
                         return TOptional(v);
                     }
                     return TOptional<int32>();
                 }() : TOptional<int32>())
-            ->WithMaximumChangePoint(Data->HasField("maximumChangePoint") ? [Data]() -> TOptional<int32>
+            ->WithMaximumChangePoint(Data->HasField(ANSI_TO_TCHAR("maximumChangePoint")) ? [Data]() -> TOptional<int32>
                 {
                     int32 v;
-                    if (Data->TryGetNumberField("maximumChangePoint", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("maximumChangePoint"), v))
                     {
                         return TOptional(v);
                     }

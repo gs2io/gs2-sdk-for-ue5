@@ -53,13 +53,13 @@ namespace Gs2::Account::Result
             return nullptr;
         }
         return MakeShared<FCreateTakeOverResult>()
-            ->WithItem(Data->HasField("item") ? [Data]() -> Model::FTakeOverPtr
+            ->WithItem(Data->HasField(ANSI_TO_TCHAR("item")) ? [Data]() -> Model::FTakeOverPtr
                  {
-                    if (Data->HasTypedField<EJson::Null>("item"))
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("item")))
                     {
                         return nullptr;
                     }
-                    return Model::FTakeOver::FromJson(Data->GetObjectField("item"));
+                    return Model::FTakeOver::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("item")));
                  }() : nullptr);
     }
 

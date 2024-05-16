@@ -53,13 +53,13 @@ namespace Gs2::Guild::Result
             return nullptr;
         }
         return MakeShared<FDeleteRequestByUserIdResult>()
-            ->WithItem(Data->HasField("item") ? [Data]() -> Model::FSendMemberRequestPtr
+            ->WithItem(Data->HasField(ANSI_TO_TCHAR("item")) ? [Data]() -> Model::FSendMemberRequestPtr
                  {
-                    if (Data->HasTypedField<EJson::Null>("item"))
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("item")))
                     {
                         return nullptr;
                     }
-                    return Model::FSendMemberRequest::FromJson(Data->GetObjectField("item"));
+                    return Model::FSendMemberRequest::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("item")));
                  }() : nullptr);
     }
 

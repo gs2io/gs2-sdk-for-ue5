@@ -541,7 +541,7 @@ namespace Gs2::JobQueue::Domain
                 }
             }
             const auto Notification = MakeShared<Gs2::JobQueue::Model::FPushNotification>()
-                    ->WithNamespaceName(RequestModelJson->GetStringField("namespaceName"));
+                    ->WithNamespaceName(RequestModelJson->GetStringField(ANSI_TO_TCHAR("namespaceName")));
             PushNotificationEvent.Broadcast(Notification);
         }
     }
@@ -631,7 +631,7 @@ namespace Gs2::JobQueue::Domain
                 }
             }
             const auto Notification = MakeShared<Gs2::JobQueue::Model::FPushNotification>()
-                    ->WithNamespaceName(RequestModelJson->GetStringField("namespaceName"));
+                    ->WithNamespaceName(RequestModelJson->GetStringField(ANSI_TO_TCHAR("namespaceName")));
             PushNotificationEvent.Broadcast(Notification);
         }
     }
@@ -684,7 +684,7 @@ namespace Gs2::JobQueue::Domain
     }
 
     Gs2::Core::Model::FGs2ErrorPtr FGs2JobQueueDomain::FDispatchTask::Action(
-        TSharedPtr<TSharedPtr<void*>> Result
+        TSharedPtr<TSharedPtr<FGs2JobQueueDomain>> Result
     )
     {
         if (Self->CopiedCompletedJobsMutex->TryLock())
@@ -780,7 +780,7 @@ namespace Gs2::JobQueue::Domain
     }
 
     Gs2::Core::Model::FGs2ErrorPtr FGs2JobQueueDomain::FDispatchByUserIdTask::Action(
-        TSharedPtr<TSharedPtr<void*>> Result
+        TSharedPtr<TSharedPtr<FGs2JobQueueDomain>> Result
     )
     {
         if (Self->CopiedCompletedJobsMutex->TryLock())

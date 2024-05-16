@@ -53,12 +53,12 @@ namespace Gs2::Mission::Result
             return nullptr;
         }
         return MakeShared<FDescribeCounterModelsResult>()
-            ->WithItems(Data->HasField("items") ? [Data]() -> TSharedPtr<TArray<Model::FCounterModelPtr>>
+            ->WithItems(Data->HasField(ANSI_TO_TCHAR("items")) ? [Data]() -> TSharedPtr<TArray<Model::FCounterModelPtr>>
                  {
                     auto v = MakeShared<TArray<Model::FCounterModelPtr>>();
-                    if (!Data->HasTypedField<EJson::Null>("items") && Data->HasTypedField<EJson::Array>("items"))
+                    if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("items")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("items")))
                     {
-                        for (auto JsonObjectValue : Data->GetArrayField("items"))
+                        for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("items")))
                         {
                             v->Add(Model::FCounterModel::FromJson(JsonObjectValue->AsObject()));
                         }

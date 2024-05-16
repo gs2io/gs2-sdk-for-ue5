@@ -53,13 +53,13 @@ namespace Gs2::Ranking::Result
             return nullptr;
         }
         return MakeShared<FExportMasterResult>()
-            ->WithItem(Data->HasField("item") ? [Data]() -> Model::FCurrentRankingMasterPtr
+            ->WithItem(Data->HasField(ANSI_TO_TCHAR("item")) ? [Data]() -> Model::FCurrentRankingMasterPtr
                  {
-                    if (Data->HasTypedField<EJson::Null>("item"))
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("item")))
                     {
                         return nullptr;
                     }
-                    return Model::FCurrentRankingMaster::FromJson(Data->GetObjectField("item"));
+                    return Model::FCurrentRankingMaster::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("item")));
                  }() : nullptr);
     }
 

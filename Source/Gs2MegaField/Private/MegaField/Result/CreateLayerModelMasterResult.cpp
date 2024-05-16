@@ -53,13 +53,13 @@ namespace Gs2::MegaField::Result
             return nullptr;
         }
         return MakeShared<FCreateLayerModelMasterResult>()
-            ->WithItem(Data->HasField("item") ? [Data]() -> Model::FLayerModelMasterPtr
+            ->WithItem(Data->HasField(ANSI_TO_TCHAR("item")) ? [Data]() -> Model::FLayerModelMasterPtr
                  {
-                    if (Data->HasTypedField<EJson::Null>("item"))
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("item")))
                     {
                         return nullptr;
                     }
-                    return Model::FLayerModelMaster::FromJson(Data->GetObjectField("item"));
+                    return Model::FLayerModelMaster::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("item")));
                  }() : nullptr);
     }
 

@@ -53,13 +53,13 @@ namespace Gs2::Buff::Result
             return nullptr;
         }
         return MakeShared<FDeleteBuffEntryModelMasterResult>()
-            ->WithItem(Data->HasField("item") ? [Data]() -> Model::FBuffEntryModelMasterPtr
+            ->WithItem(Data->HasField(ANSI_TO_TCHAR("item")) ? [Data]() -> Model::FBuffEntryModelMasterPtr
                  {
-                    if (Data->HasTypedField<EJson::Null>("item"))
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("item")))
                     {
                         return nullptr;
                     }
-                    return Model::FBuffEntryModelMaster::FromJson(Data->GetObjectField("item"));
+                    return Model::FBuffEntryModelMaster::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("item")));
                  }() : nullptr);
     }
 

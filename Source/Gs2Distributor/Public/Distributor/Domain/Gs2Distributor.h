@@ -144,7 +144,7 @@ namespace Gs2::Distributor::Domain
         );
 
         class GS2DISTRIBUTOR_API FDispatchTask final :
-            public Gs2::Core::Util::TGs2Future<void*>,
+            public Gs2::Core::Util::TGs2Future<FGs2DistributorDomain>,
             public TSharedFromThis<FDispatchTask>
         {
             const TSharedPtr<FGs2DistributorDomain> Self;
@@ -156,7 +156,7 @@ namespace Gs2::Distributor::Domain
             );
 
             virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-                TSharedPtr<TSharedPtr<void*>> Result
+                TSharedPtr<TSharedPtr<FGs2DistributorDomain>> Result
             ) override;
         };
         friend FDispatchTask;
@@ -166,7 +166,7 @@ namespace Gs2::Distributor::Domain
         );
 
         class GS2DISTRIBUTOR_API FDispatchByUserIdTask final :
-            public Gs2::Core::Util::TGs2Future<void*>,
+            public Gs2::Core::Util::TGs2Future<FGs2DistributorDomain>,
             public TSharedFromThis<FDispatchByUserIdTask>
         {
             const TSharedPtr<FGs2DistributorDomain> Self;
@@ -178,7 +178,7 @@ namespace Gs2::Distributor::Domain
             );
 
             virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-                TSharedPtr<TSharedPtr<void*>> Result
+                TSharedPtr<TSharedPtr<FGs2DistributorDomain>> Result
             ) override;
         };
         friend FDispatchByUserIdTask;

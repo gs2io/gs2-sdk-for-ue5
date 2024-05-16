@@ -137,7 +137,7 @@ namespace Gs2::UE5::Core::Domain
     }
 
     Gs2::Core::Model::FGs2ErrorPtr FGs2Domain::FDispatchTask::Action(
-        TSharedPtr<TSharedPtr<void*>> Result
+        TSharedPtr<TSharedPtr<void>> Result
     )
     {
         const auto Future = Self->Super->Dispatch(GameSession->AccessToken()->ToModel());
@@ -163,7 +163,7 @@ namespace Gs2::UE5::Core::Domain
     {
     }
 
-    Gs2::Core::Model::FGs2ErrorPtr FGs2Domain::FDisconnectTask::Action(TSharedPtr<TSharedPtr<void*>> Result)
+    Gs2::Core::Model::FGs2ErrorPtr FGs2Domain::FDisconnectTask::Action(TSharedPtr<TSharedPtr<void>> Result)
     {
         const auto Future = Self->Connection->Disconnect();
         Future->StartSynchronousTask();

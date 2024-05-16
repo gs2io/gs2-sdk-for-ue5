@@ -221,86 +221,86 @@ namespace Gs2::Mission::Request
             return nullptr;
         }
         return MakeShared<FCreateNamespaceRequest>()
-            ->WithContextStack(Data->HasField("contextStack") ? TOptional<FString>(Data->GetStringField("contextStack")) : TOptional<FString>())
-            ->WithName(Data->HasField("name") ? [Data]() -> TOptional<FString>
+            ->WithContextStack(Data->HasField(ANSI_TO_TCHAR("contextStack")) ? TOptional<FString>(Data->GetStringField(ANSI_TO_TCHAR("contextStack"))) : TOptional<FString>())
+            ->WithName(Data->HasField(ANSI_TO_TCHAR("name")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
-                    if (Data->TryGetStringField("name", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("name"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
-            ->WithDescription(Data->HasField("description") ? [Data]() -> TOptional<FString>
+            ->WithDescription(Data->HasField(ANSI_TO_TCHAR("description")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
-                    if (Data->TryGetStringField("description", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("description"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
-          ->WithTransactionSetting(Data->HasField("transactionSetting") ? [Data]() -> Model::FTransactionSettingPtr
+          ->WithTransactionSetting(Data->HasField(ANSI_TO_TCHAR("transactionSetting")) ? [Data]() -> Model::FTransactionSettingPtr
               {
-                  if (Data->HasTypedField<EJson::Null>("transactionSetting"))
+                  if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("transactionSetting")))
                   {
                       return nullptr;
                   }
-                  return Model::FTransactionSetting::FromJson(Data->GetObjectField("transactionSetting"));
+                  return Model::FTransactionSetting::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("transactionSetting")));
               }() : nullptr)
-          ->WithMissionCompleteScript(Data->HasField("missionCompleteScript") ? [Data]() -> Model::FScriptSettingPtr
+          ->WithMissionCompleteScript(Data->HasField(ANSI_TO_TCHAR("missionCompleteScript")) ? [Data]() -> Model::FScriptSettingPtr
               {
-                  if (Data->HasTypedField<EJson::Null>("missionCompleteScript"))
+                  if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("missionCompleteScript")))
                   {
                       return nullptr;
                   }
-                  return Model::FScriptSetting::FromJson(Data->GetObjectField("missionCompleteScript"));
+                  return Model::FScriptSetting::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("missionCompleteScript")));
               }() : nullptr)
-          ->WithCounterIncrementScript(Data->HasField("counterIncrementScript") ? [Data]() -> Model::FScriptSettingPtr
+          ->WithCounterIncrementScript(Data->HasField(ANSI_TO_TCHAR("counterIncrementScript")) ? [Data]() -> Model::FScriptSettingPtr
               {
-                  if (Data->HasTypedField<EJson::Null>("counterIncrementScript"))
+                  if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("counterIncrementScript")))
                   {
                       return nullptr;
                   }
-                  return Model::FScriptSetting::FromJson(Data->GetObjectField("counterIncrementScript"));
+                  return Model::FScriptSetting::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("counterIncrementScript")));
               }() : nullptr)
-          ->WithReceiveRewardsScript(Data->HasField("receiveRewardsScript") ? [Data]() -> Model::FScriptSettingPtr
+          ->WithReceiveRewardsScript(Data->HasField(ANSI_TO_TCHAR("receiveRewardsScript")) ? [Data]() -> Model::FScriptSettingPtr
               {
-                  if (Data->HasTypedField<EJson::Null>("receiveRewardsScript"))
+                  if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("receiveRewardsScript")))
                   {
                       return nullptr;
                   }
-                  return Model::FScriptSetting::FromJson(Data->GetObjectField("receiveRewardsScript"));
+                  return Model::FScriptSetting::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("receiveRewardsScript")));
               }() : nullptr)
-          ->WithCompleteNotification(Data->HasField("completeNotification") ? [Data]() -> Model::FNotificationSettingPtr
+          ->WithCompleteNotification(Data->HasField(ANSI_TO_TCHAR("completeNotification")) ? [Data]() -> Model::FNotificationSettingPtr
               {
-                  if (Data->HasTypedField<EJson::Null>("completeNotification"))
+                  if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("completeNotification")))
                   {
                       return nullptr;
                   }
-                  return Model::FNotificationSetting::FromJson(Data->GetObjectField("completeNotification"));
+                  return Model::FNotificationSetting::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("completeNotification")));
               }() : nullptr)
-          ->WithLogSetting(Data->HasField("logSetting") ? [Data]() -> Model::FLogSettingPtr
+          ->WithLogSetting(Data->HasField(ANSI_TO_TCHAR("logSetting")) ? [Data]() -> Model::FLogSettingPtr
               {
-                  if (Data->HasTypedField<EJson::Null>("logSetting"))
+                  if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("logSetting")))
                   {
                       return nullptr;
                   }
-                  return Model::FLogSetting::FromJson(Data->GetObjectField("logSetting"));
+                  return Model::FLogSetting::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("logSetting")));
               }() : nullptr)
-            ->WithQueueNamespaceId(Data->HasField("queueNamespaceId") ? [Data]() -> TOptional<FString>
+            ->WithQueueNamespaceId(Data->HasField(ANSI_TO_TCHAR("queueNamespaceId")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
-                    if (Data->TryGetStringField("queueNamespaceId", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("queueNamespaceId"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
-            ->WithKeyId(Data->HasField("keyId") ? [Data]() -> TOptional<FString>
+            ->WithKeyId(Data->HasField(ANSI_TO_TCHAR("keyId")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
-                    if (Data->TryGetStringField("keyId", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("keyId"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }

@@ -170,65 +170,65 @@ namespace Gs2::Ranking::Request
             return nullptr;
         }
         return MakeShared<FDescribeRankingsRequest>()
-            ->WithContextStack(Data->HasField("contextStack") ? TOptional<FString>(Data->GetStringField("contextStack")) : TOptional<FString>())
-            ->WithNamespaceName(Data->HasField("namespaceName") ? [Data]() -> TOptional<FString>
+            ->WithContextStack(Data->HasField(ANSI_TO_TCHAR("contextStack")) ? TOptional<FString>(Data->GetStringField(ANSI_TO_TCHAR("contextStack"))) : TOptional<FString>())
+            ->WithNamespaceName(Data->HasField(ANSI_TO_TCHAR("namespaceName")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
-                    if (Data->TryGetStringField("namespaceName", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("namespaceName"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
-            ->WithCategoryName(Data->HasField("categoryName") ? [Data]() -> TOptional<FString>
+            ->WithCategoryName(Data->HasField(ANSI_TO_TCHAR("categoryName")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
-                    if (Data->TryGetStringField("categoryName", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("categoryName"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
-            ->WithAccessToken(Data->HasField("xGs2AccessToken") ? [Data]() -> TOptional<FString>
+            ->WithAccessToken(Data->HasField(ANSI_TO_TCHAR("xGs2AccessToken")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
-                    if (Data->TryGetStringField("xGs2AccessToken", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("xGs2AccessToken"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
-            ->WithAdditionalScopeName(Data->HasField("additionalScopeName") ? [Data]() -> TOptional<FString>
+            ->WithAdditionalScopeName(Data->HasField(ANSI_TO_TCHAR("additionalScopeName")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
-                    if (Data->TryGetStringField("additionalScopeName", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("additionalScopeName"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
-            ->WithStartIndex(Data->HasField("startIndex") ? [Data]() -> TOptional<int64>
+            ->WithStartIndex(Data->HasField(ANSI_TO_TCHAR("startIndex")) ? [Data]() -> TOptional<int64>
               {
                   int64 v;
-                    if (Data->TryGetNumberField("startIndex", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("startIndex"), v))
                   {
                         return TOptional(v);
                   }
                   return TOptional<int64>();
               }() : TOptional<int64>())
-            ->WithPageToken(Data->HasField("pageToken") ? [Data]() -> TOptional<FString>
+            ->WithPageToken(Data->HasField(ANSI_TO_TCHAR("pageToken")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
-                    if (Data->TryGetStringField("pageToken", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("pageToken"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
-            ->WithLimit(Data->HasField("limit") ? [Data]() -> TOptional<int32>
+            ->WithLimit(Data->HasField(ANSI_TO_TCHAR("limit")) ? [Data]() -> TOptional<int32>
               {
                   int32 v;
-                    if (Data->TryGetNumberField("limit", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("limit"), v))
                   {
                         return TOptional(v);
                   }

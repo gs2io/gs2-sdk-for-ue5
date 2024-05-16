@@ -28,6 +28,8 @@
 #include "Friend/Domain/Model/FollowUser.h"
 #include "Friend/Domain/Model/Follow.h"
 
+#include "Core/Domain/Gs2.h"
+
 namespace Gs2::Friend::Domain::Iterator
 {
 

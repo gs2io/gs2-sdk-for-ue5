@@ -53,13 +53,13 @@ namespace Gs2::Realtime::Result
             return nullptr;
         }
         return MakeShared<FGetRoomResult>()
-            ->WithItem(Data->HasField("item") ? [Data]() -> Model::FRoomPtr
+            ->WithItem(Data->HasField(ANSI_TO_TCHAR("item")) ? [Data]() -> Model::FRoomPtr
                  {
-                    if (Data->HasTypedField<EJson::Null>("item"))
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("item")))
                     {
                         return nullptr;
                     }
-                    return Model::FRoom::FromJson(Data->GetObjectField("item"));
+                    return Model::FRoom::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("item")));
                  }() : nullptr);
     }
 

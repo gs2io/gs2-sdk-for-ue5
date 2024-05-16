@@ -28,6 +28,8 @@
 #include "Identifier/Domain/Model/Identifier.h"
 #include "Identifier/Domain/Model/User.h"
 
+#include "Core/Domain/Gs2.h"
+
 namespace Gs2::Identifier::Domain::Iterator
 {
 

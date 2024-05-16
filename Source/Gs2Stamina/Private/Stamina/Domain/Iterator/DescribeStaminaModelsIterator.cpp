@@ -28,6 +28,8 @@
 #include "Stamina/Domain/Model/StaminaModel.h"
 #include "Stamina/Domain/Model/Namespace.h"
 
+#include "Core/Domain/Gs2.h"
+
 namespace Gs2::Stamina::Domain::Iterator
 {
 

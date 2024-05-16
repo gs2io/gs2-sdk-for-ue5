@@ -90,34 +90,34 @@ namespace Gs2::Version::Model
             return nullptr;
         }
         return MakeShared<FScheduleVersion>()
-            ->WithCurrentVersion(Data->HasField("currentVersion") ? [Data]() -> Model::FVersionPtr
+            ->WithCurrentVersion(Data->HasField(ANSI_TO_TCHAR("currentVersion")) ? [Data]() -> Model::FVersionPtr
                 {
-                    if (Data->HasTypedField<EJson::Null>("currentVersion"))
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("currentVersion")))
                     {
                         return nullptr;
                     }
-                    return Model::FVersion::FromJson(Data->GetObjectField("currentVersion"));
+                    return Model::FVersion::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("currentVersion")));
                  }() : nullptr)
-            ->WithWarningVersion(Data->HasField("warningVersion") ? [Data]() -> Model::FVersionPtr
+            ->WithWarningVersion(Data->HasField(ANSI_TO_TCHAR("warningVersion")) ? [Data]() -> Model::FVersionPtr
                 {
-                    if (Data->HasTypedField<EJson::Null>("warningVersion"))
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("warningVersion")))
                     {
                         return nullptr;
                     }
-                    return Model::FVersion::FromJson(Data->GetObjectField("warningVersion"));
+                    return Model::FVersion::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("warningVersion")));
                  }() : nullptr)
-            ->WithErrorVersion(Data->HasField("errorVersion") ? [Data]() -> Model::FVersionPtr
+            ->WithErrorVersion(Data->HasField(ANSI_TO_TCHAR("errorVersion")) ? [Data]() -> Model::FVersionPtr
                 {
-                    if (Data->HasTypedField<EJson::Null>("errorVersion"))
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("errorVersion")))
                     {
                         return nullptr;
                     }
-                    return Model::FVersion::FromJson(Data->GetObjectField("errorVersion"));
+                    return Model::FVersion::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("errorVersion")));
                  }() : nullptr)
-            ->WithScheduleEventId(Data->HasField("scheduleEventId") ? [Data]() -> TOptional<FString>
+            ->WithScheduleEventId(Data->HasField(ANSI_TO_TCHAR("scheduleEventId")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("scheduleEventId", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("scheduleEventId"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }

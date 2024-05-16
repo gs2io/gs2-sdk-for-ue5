@@ -204,86 +204,86 @@ namespace Gs2::Idle::Request
             return nullptr;
         }
         return MakeShared<FUpdateCategoryModelMasterRequest>()
-            ->WithContextStack(Data->HasField("contextStack") ? TOptional<FString>(Data->GetStringField("contextStack")) : TOptional<FString>())
-            ->WithNamespaceName(Data->HasField("namespaceName") ? [Data]() -> TOptional<FString>
+            ->WithContextStack(Data->HasField(ANSI_TO_TCHAR("contextStack")) ? TOptional<FString>(Data->GetStringField(ANSI_TO_TCHAR("contextStack"))) : TOptional<FString>())
+            ->WithNamespaceName(Data->HasField(ANSI_TO_TCHAR("namespaceName")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
-                    if (Data->TryGetStringField("namespaceName", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("namespaceName"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
-            ->WithCategoryName(Data->HasField("categoryName") ? [Data]() -> TOptional<FString>
+            ->WithCategoryName(Data->HasField(ANSI_TO_TCHAR("categoryName")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
-                    if (Data->TryGetStringField("categoryName", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("categoryName"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
-            ->WithDescription(Data->HasField("description") ? [Data]() -> TOptional<FString>
+            ->WithDescription(Data->HasField(ANSI_TO_TCHAR("description")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
-                    if (Data->TryGetStringField("description", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("description"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
-            ->WithMetadata(Data->HasField("metadata") ? [Data]() -> TOptional<FString>
+            ->WithMetadata(Data->HasField(ANSI_TO_TCHAR("metadata")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
-                    if (Data->TryGetStringField("metadata", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("metadata"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
-            ->WithRewardIntervalMinutes(Data->HasField("rewardIntervalMinutes") ? [Data]() -> TOptional<int32>
+            ->WithRewardIntervalMinutes(Data->HasField(ANSI_TO_TCHAR("rewardIntervalMinutes")) ? [Data]() -> TOptional<int32>
               {
                   int32 v;
-                    if (Data->TryGetNumberField("rewardIntervalMinutes", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("rewardIntervalMinutes"), v))
                   {
                         return TOptional(v);
                   }
                   return TOptional<int32>();
               }() : TOptional<int32>())
-            ->WithDefaultMaximumIdleMinutes(Data->HasField("defaultMaximumIdleMinutes") ? [Data]() -> TOptional<int32>
+            ->WithDefaultMaximumIdleMinutes(Data->HasField(ANSI_TO_TCHAR("defaultMaximumIdleMinutes")) ? [Data]() -> TOptional<int32>
               {
                   int32 v;
-                    if (Data->TryGetNumberField("defaultMaximumIdleMinutes", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("defaultMaximumIdleMinutes"), v))
                   {
                         return TOptional(v);
                   }
                   return TOptional<int32>();
               }() : TOptional<int32>())
-          ->WithAcquireActions(Data->HasField("acquireActions") ? [Data]() -> TSharedPtr<TArray<Model::FAcquireActionListPtr>>
+          ->WithAcquireActions(Data->HasField(ANSI_TO_TCHAR("acquireActions")) ? [Data]() -> TSharedPtr<TArray<Model::FAcquireActionListPtr>>
               {
                   auto v = MakeShared<TArray<Model::FAcquireActionListPtr>>();
-                  if (!Data->HasTypedField<EJson::Null>("acquireActions") && Data->HasTypedField<EJson::Array>("acquireActions"))
+                  if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("acquireActions")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("acquireActions")))
                   {
-                      for (auto JsonObjectValue : Data->GetArrayField("acquireActions"))
+                      for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("acquireActions")))
                       {
                           v->Add(Model::FAcquireActionList::FromJson(JsonObjectValue->AsObject()));
                       }
                   }
                   return v;
               }() : MakeShared<TArray<Model::FAcquireActionListPtr>>())
-            ->WithIdlePeriodScheduleId(Data->HasField("idlePeriodScheduleId") ? [Data]() -> TOptional<FString>
+            ->WithIdlePeriodScheduleId(Data->HasField(ANSI_TO_TCHAR("idlePeriodScheduleId")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
-                    if (Data->TryGetStringField("idlePeriodScheduleId", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("idlePeriodScheduleId"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
-            ->WithReceivePeriodScheduleId(Data->HasField("receivePeriodScheduleId") ? [Data]() -> TOptional<FString>
+            ->WithReceivePeriodScheduleId(Data->HasField(ANSI_TO_TCHAR("receivePeriodScheduleId")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
-                    if (Data->TryGetStringField("receivePeriodScheduleId", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("receivePeriodScheduleId"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }

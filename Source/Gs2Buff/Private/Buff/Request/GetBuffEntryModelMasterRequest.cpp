@@ -77,20 +77,20 @@ namespace Gs2::Buff::Request
             return nullptr;
         }
         return MakeShared<FGetBuffEntryModelMasterRequest>()
-            ->WithContextStack(Data->HasField("contextStack") ? TOptional<FString>(Data->GetStringField("contextStack")) : TOptional<FString>())
-            ->WithNamespaceName(Data->HasField("namespaceName") ? [Data]() -> TOptional<FString>
+            ->WithContextStack(Data->HasField(ANSI_TO_TCHAR("contextStack")) ? TOptional<FString>(Data->GetStringField(ANSI_TO_TCHAR("contextStack"))) : TOptional<FString>())
+            ->WithNamespaceName(Data->HasField(ANSI_TO_TCHAR("namespaceName")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
-                    if (Data->TryGetStringField("namespaceName", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("namespaceName"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
-            ->WithBuffEntryName(Data->HasField("buffEntryName") ? [Data]() -> TOptional<FString>
+            ->WithBuffEntryName(Data->HasField(ANSI_TO_TCHAR("buffEntryName")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
-                    if (Data->TryGetStringField("buffEntryName", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("buffEntryName"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }

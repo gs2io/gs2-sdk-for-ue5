@@ -53,13 +53,13 @@ namespace Gs2::Inventory::Result
             return nullptr;
         }
         return MakeShared<FGetBigItemModelResult>()
-            ->WithItem(Data->HasField("item") ? [Data]() -> Model::FBigItemModelPtr
+            ->WithItem(Data->HasField(ANSI_TO_TCHAR("item")) ? [Data]() -> Model::FBigItemModelPtr
                  {
-                    if (Data->HasTypedField<EJson::Null>("item"))
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("item")))
                     {
                         return nullptr;
                     }
-                    return Model::FBigItemModel::FromJson(Data->GetObjectField("item"));
+                    return Model::FBigItemModel::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("item")));
                  }() : nullptr);
     }
 

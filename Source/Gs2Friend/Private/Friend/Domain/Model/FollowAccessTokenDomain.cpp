@@ -151,7 +151,7 @@ namespace Gs2::Friend::Domain::Model
             Self->Service,
             Request->GetNamespaceName(),
             Self->AccessToken,
-            false,
+            Self->WithProfile,
             Request->GetTargetUserId()
         );
 

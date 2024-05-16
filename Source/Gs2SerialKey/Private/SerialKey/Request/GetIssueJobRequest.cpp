@@ -92,29 +92,29 @@ namespace Gs2::SerialKey::Request
             return nullptr;
         }
         return MakeShared<FGetIssueJobRequest>()
-            ->WithContextStack(Data->HasField("contextStack") ? TOptional<FString>(Data->GetStringField("contextStack")) : TOptional<FString>())
-            ->WithNamespaceName(Data->HasField("namespaceName") ? [Data]() -> TOptional<FString>
+            ->WithContextStack(Data->HasField(ANSI_TO_TCHAR("contextStack")) ? TOptional<FString>(Data->GetStringField(ANSI_TO_TCHAR("contextStack"))) : TOptional<FString>())
+            ->WithNamespaceName(Data->HasField(ANSI_TO_TCHAR("namespaceName")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
-                    if (Data->TryGetStringField("namespaceName", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("namespaceName"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
-            ->WithCampaignModelName(Data->HasField("campaignModelName") ? [Data]() -> TOptional<FString>
+            ->WithCampaignModelName(Data->HasField(ANSI_TO_TCHAR("campaignModelName")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
-                    if (Data->TryGetStringField("campaignModelName", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("campaignModelName"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
-            ->WithIssueJobName(Data->HasField("issueJobName") ? [Data]() -> TOptional<FString>
+            ->WithIssueJobName(Data->HasField(ANSI_TO_TCHAR("issueJobName")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
-                    if (Data->TryGetStringField("issueJobName", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("issueJobName"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }

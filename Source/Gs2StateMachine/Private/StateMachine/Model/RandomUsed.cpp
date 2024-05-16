@@ -80,19 +80,19 @@ namespace Gs2::StateMachine::Model
             return nullptr;
         }
         return MakeShared<FRandomUsed>()
-            ->WithCategory(Data->HasField("category") ? [Data]() -> TOptional<int64>
+            ->WithCategory(Data->HasField(ANSI_TO_TCHAR("category")) ? [Data]() -> TOptional<int64>
                 {
                     int64 v;
-                    if (Data->TryGetNumberField("category", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("category"), v))
                     {
                         return TOptional(v);
                     }
                     return TOptional<int64>();
                 }() : TOptional<int64>())
-            ->WithUsed(Data->HasField("used") ? [Data]() -> TOptional<int64>
+            ->WithUsed(Data->HasField(ANSI_TO_TCHAR("used")) ? [Data]() -> TOptional<int64>
                 {
                     int64 v;
-                    if (Data->TryGetNumberField("used", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("used"), v))
                     {
                         return TOptional(v);
                     }

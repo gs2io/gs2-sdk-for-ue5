@@ -76,30 +76,30 @@ namespace Gs2::StateMachine::Model
             return nullptr;
         }
         return MakeShared<FEvent>()
-            ->WithEventType(Data->HasField("eventType") ? [Data]() -> TOptional<FString>
+            ->WithEventType(Data->HasField(ANSI_TO_TCHAR("eventType")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("eventType", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("eventType"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithChangeStateEvent(Data->HasField("changeStateEvent") ? [Data]() -> Model::FChangeStateEventPtr
+            ->WithChangeStateEvent(Data->HasField(ANSI_TO_TCHAR("changeStateEvent")) ? [Data]() -> Model::FChangeStateEventPtr
                 {
-                    if (Data->HasTypedField<EJson::Null>("changeStateEvent"))
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("changeStateEvent")))
                     {
                         return nullptr;
                     }
-                    return Model::FChangeStateEvent::FromJson(Data->GetObjectField("changeStateEvent"));
+                    return Model::FChangeStateEvent::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("changeStateEvent")));
                  }() : nullptr)
-            ->WithEmitEvent(Data->HasField("emitEvent") ? [Data]() -> Model::FEmitEventPtr
+            ->WithEmitEvent(Data->HasField(ANSI_TO_TCHAR("emitEvent")) ? [Data]() -> Model::FEmitEventPtr
                 {
-                    if (Data->HasTypedField<EJson::Null>("emitEvent"))
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("emitEvent")))
                     {
                         return nullptr;
                     }
-                    return Model::FEmitEvent::FromJson(Data->GetObjectField("emitEvent"));
+                    return Model::FEmitEvent::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("emitEvent")));
                  }() : nullptr);
     }
 

@@ -9,22 +9,18 @@ public class Gs2Distributor : ModuleRules
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 
 		PrivateDependencyModuleNames.AddRange(new[]
-		{
-			"Core",
-			"CoreUObject",
-			"Engine",
-			"HTTP",
-			"WebSockets",
-			"Json",
-			"JsonUtilities",
-			"Gs2Core",
-			"Gs2Auth",
-		});
-
-		PublicDependencyModuleNames.AddRange(new string[] {
-			"Core",
-			"Gs2Core",
-			"Gs2JobQueue",
-		});
+			{
+				"Core",
+				"CoreUObject",
+				"Engine",
+				"HTTP",
+				"WebSockets",
+				"Json",
+				"JsonUtilities",
+				"Gs2Core",
+				"Gs2Auth",
+				"Gs2JobQueue"
+			}
+		);
 	}
 }

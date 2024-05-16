@@ -53,13 +53,13 @@ namespace Gs2::Ranking::Result
             return nullptr;
         }
         return MakeShared<FGetScoreByUserIdResult>()
-            ->WithItem(Data->HasField("item") ? [Data]() -> Model::FScorePtr
+            ->WithItem(Data->HasField(ANSI_TO_TCHAR("item")) ? [Data]() -> Model::FScorePtr
                  {
-                    if (Data->HasTypedField<EJson::Null>("item"))
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("item")))
                     {
                         return nullptr;
                     }
-                    return Model::FScore::FromJson(Data->GetObjectField("item"));
+                    return Model::FScore::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("item")));
                  }() : nullptr);
     }
 

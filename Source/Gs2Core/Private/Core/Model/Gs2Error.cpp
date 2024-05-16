@@ -86,7 +86,7 @@ namespace Gs2::Core::Model
         if (TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Response);
             FJsonSerializer::Deserialize(JsonReader, JsonRootObject))
         {
-            const auto Message = JsonRootObject->GetStringField("message");
+            const auto Message = JsonRootObject->GetStringField(ANSI_TO_TCHAR("message"));
             TSharedPtr<FJsonValue> JsonRootObject2;
             if (JsonReader = TJsonReaderFactory<>::Create(Message);
                 FJsonSerializer::Deserialize(JsonReader, JsonRootObject2))
@@ -101,9 +101,9 @@ namespace Gs2::Core::Model
     TSharedPtr<FGs2ErrorDetail> FGs2ErrorDetail::FromJson(TSharedPtr<FJsonValue> Object)
     {
         return MakeShared<FGs2ErrorDetail>(
-            Object->AsObject()->GetStringField("component"),
-            Object->AsObject()->GetStringField("message"),
-            Object->AsObject()->GetStringField("code")
+            Object->AsObject()->GetStringField(ANSI_TO_TCHAR("component")),
+            Object->AsObject()->GetStringField(ANSI_TO_TCHAR("message")),
+            Object->AsObject()->GetStringField(ANSI_TO_TCHAR("code"))
         );
     }
 

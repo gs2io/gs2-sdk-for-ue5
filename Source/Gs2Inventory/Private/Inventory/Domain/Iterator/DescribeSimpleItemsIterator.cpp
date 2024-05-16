@@ -28,6 +28,8 @@
 #include "Inventory/Domain/Model/SimpleItem.h"
 #include "Inventory/Domain/Model/SimpleInventory.h"
 
+#include "Core/Domain/Gs2.h"
+
 namespace Gs2::Inventory::Domain::Iterator
 {
 

@@ -62,21 +62,21 @@ namespace Gs2::Formation::Model
             return nullptr;
         }
         return MakeShared<FAcquireActionConfig>()
-            ->WithName(Data->HasField("name") ? [Data]() -> TOptional<FString>
+            ->WithName(Data->HasField(ANSI_TO_TCHAR("name")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("name", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("name"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithConfig(Data->HasField("config") ? [Data]() -> TSharedPtr<TArray<Model::FConfigPtr>>
+            ->WithConfig(Data->HasField(ANSI_TO_TCHAR("config")) ? [Data]() -> TSharedPtr<TArray<Model::FConfigPtr>>
                 {
                     auto v = MakeShared<TArray<Model::FConfigPtr>>();
-                    if (!Data->HasTypedField<EJson::Null>("config") && Data->HasTypedField<EJson::Array>("config"))
+                    if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("config")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("config")))
                     {
-                        for (auto JsonObjectValue : Data->GetArrayField("config"))
+                        for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("config")))
                         {
                             v->Add(Model::FConfig::FromJson(JsonObjectValue->AsObject()));
                         }

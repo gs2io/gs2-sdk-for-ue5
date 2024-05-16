@@ -53,13 +53,13 @@ namespace Gs2::Lottery::Result
             return nullptr;
         }
         return MakeShared<FGetPrizeLimitResult>()
-            ->WithItem(Data->HasField("item") ? [Data]() -> Model::FPrizeLimitPtr
+            ->WithItem(Data->HasField(ANSI_TO_TCHAR("item")) ? [Data]() -> Model::FPrizeLimitPtr
                  {
-                    if (Data->HasTypedField<EJson::Null>("item"))
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("item")))
                     {
                         return nullptr;
                     }
-                    return Model::FPrizeLimit::FromJson(Data->GetObjectField("item"));
+                    return Model::FPrizeLimit::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("item")));
                  }() : nullptr);
     }
 

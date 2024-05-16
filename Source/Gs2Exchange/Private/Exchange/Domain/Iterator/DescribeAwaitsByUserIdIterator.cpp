@@ -28,6 +28,8 @@
 #include "Exchange/Domain/Model/Await.h"
 #include "Exchange/Domain/Model/User.h"
 
+#include "Core/Domain/Gs2.h"
+
 namespace Gs2::Exchange::Domain::Iterator
 {
 

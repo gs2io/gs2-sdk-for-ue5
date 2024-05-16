@@ -28,6 +28,8 @@
 #include "Showcase/Domain/Model/RandomDisplayItem.h"
 #include "Showcase/Domain/Model/RandomShowcase.h"
 
+#include "Core/Domain/Gs2.h"
+
 namespace Gs2::Showcase::Domain::Iterator
 {
 

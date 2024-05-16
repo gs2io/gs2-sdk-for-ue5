@@ -58,10 +58,10 @@ namespace Gs2::Ranking::Result
             return nullptr;
         }
         return MakeShared<FCalcRankingResult>()
-            ->WithProcessing(Data->HasField("processing") ? [Data]() -> TOptional<bool>
+            ->WithProcessing(Data->HasField(ANSI_TO_TCHAR("processing")) ? [Data]() -> TOptional<bool>
                 {
                     bool v;
-                    if (Data->TryGetBoolField("processing", v))
+                    if (Data->TryGetBoolField(ANSI_TO_TCHAR("processing"), v))
                     {
                         return TOptional(v);
                     }

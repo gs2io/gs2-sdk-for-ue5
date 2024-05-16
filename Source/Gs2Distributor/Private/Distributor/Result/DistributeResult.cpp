@@ -83,27 +83,27 @@ namespace Gs2::Distributor::Result
             return nullptr;
         }
         return MakeShared<FDistributeResult>()
-            ->WithDistributeResource(Data->HasField("distributeResource") ? [Data]() -> Model::FDistributeResourcePtr
+            ->WithDistributeResource(Data->HasField(ANSI_TO_TCHAR("distributeResource")) ? [Data]() -> Model::FDistributeResourcePtr
                  {
-                    if (Data->HasTypedField<EJson::Null>("distributeResource"))
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("distributeResource")))
                     {
                         return nullptr;
                     }
-                    return Model::FDistributeResource::FromJson(Data->GetObjectField("distributeResource"));
+                    return Model::FDistributeResource::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("distributeResource")));
                  }() : nullptr)
-            ->WithInboxNamespaceId(Data->HasField("inboxNamespaceId") ? [Data]() -> TOptional<FString>
+            ->WithInboxNamespaceId(Data->HasField(ANSI_TO_TCHAR("inboxNamespaceId")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("inboxNamespaceId", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("inboxNamespaceId"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithResult(Data->HasField("result") ? [Data]() -> TOptional<FString>
+            ->WithResult(Data->HasField(ANSI_TO_TCHAR("result")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("result", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("result"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }

@@ -229,88 +229,88 @@ namespace Gs2::Inventory::Request
             return nullptr;
         }
         return MakeShared<FUpdateNamespaceRequest>()
-            ->WithContextStack(Data->HasField("contextStack") ? TOptional<FString>(Data->GetStringField("contextStack")) : TOptional<FString>())
-            ->WithNamespaceName(Data->HasField("namespaceName") ? [Data]() -> TOptional<FString>
+            ->WithContextStack(Data->HasField(ANSI_TO_TCHAR("contextStack")) ? TOptional<FString>(Data->GetStringField(ANSI_TO_TCHAR("contextStack"))) : TOptional<FString>())
+            ->WithNamespaceName(Data->HasField(ANSI_TO_TCHAR("namespaceName")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
-                    if (Data->TryGetStringField("namespaceName", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("namespaceName"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
-            ->WithDescription(Data->HasField("description") ? [Data]() -> TOptional<FString>
+            ->WithDescription(Data->HasField(ANSI_TO_TCHAR("description")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
-                    if (Data->TryGetStringField("description", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("description"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
-          ->WithAcquireScript(Data->HasField("acquireScript") ? [Data]() -> Model::FScriptSettingPtr
+          ->WithAcquireScript(Data->HasField(ANSI_TO_TCHAR("acquireScript")) ? [Data]() -> Model::FScriptSettingPtr
               {
-                  if (Data->HasTypedField<EJson::Null>("acquireScript"))
+                  if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("acquireScript")))
                   {
                       return nullptr;
                   }
-                  return Model::FScriptSetting::FromJson(Data->GetObjectField("acquireScript"));
+                  return Model::FScriptSetting::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("acquireScript")));
               }() : nullptr)
-          ->WithOverflowScript(Data->HasField("overflowScript") ? [Data]() -> Model::FScriptSettingPtr
+          ->WithOverflowScript(Data->HasField(ANSI_TO_TCHAR("overflowScript")) ? [Data]() -> Model::FScriptSettingPtr
               {
-                  if (Data->HasTypedField<EJson::Null>("overflowScript"))
+                  if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("overflowScript")))
                   {
                       return nullptr;
                   }
-                  return Model::FScriptSetting::FromJson(Data->GetObjectField("overflowScript"));
+                  return Model::FScriptSetting::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("overflowScript")));
               }() : nullptr)
-          ->WithConsumeScript(Data->HasField("consumeScript") ? [Data]() -> Model::FScriptSettingPtr
+          ->WithConsumeScript(Data->HasField(ANSI_TO_TCHAR("consumeScript")) ? [Data]() -> Model::FScriptSettingPtr
               {
-                  if (Data->HasTypedField<EJson::Null>("consumeScript"))
+                  if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("consumeScript")))
                   {
                       return nullptr;
                   }
-                  return Model::FScriptSetting::FromJson(Data->GetObjectField("consumeScript"));
+                  return Model::FScriptSetting::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("consumeScript")));
               }() : nullptr)
-          ->WithSimpleItemAcquireScript(Data->HasField("simpleItemAcquireScript") ? [Data]() -> Model::FScriptSettingPtr
+          ->WithSimpleItemAcquireScript(Data->HasField(ANSI_TO_TCHAR("simpleItemAcquireScript")) ? [Data]() -> Model::FScriptSettingPtr
               {
-                  if (Data->HasTypedField<EJson::Null>("simpleItemAcquireScript"))
+                  if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("simpleItemAcquireScript")))
                   {
                       return nullptr;
                   }
-                  return Model::FScriptSetting::FromJson(Data->GetObjectField("simpleItemAcquireScript"));
+                  return Model::FScriptSetting::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("simpleItemAcquireScript")));
               }() : nullptr)
-          ->WithSimpleItemConsumeScript(Data->HasField("simpleItemConsumeScript") ? [Data]() -> Model::FScriptSettingPtr
+          ->WithSimpleItemConsumeScript(Data->HasField(ANSI_TO_TCHAR("simpleItemConsumeScript")) ? [Data]() -> Model::FScriptSettingPtr
               {
-                  if (Data->HasTypedField<EJson::Null>("simpleItemConsumeScript"))
+                  if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("simpleItemConsumeScript")))
                   {
                       return nullptr;
                   }
-                  return Model::FScriptSetting::FromJson(Data->GetObjectField("simpleItemConsumeScript"));
+                  return Model::FScriptSetting::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("simpleItemConsumeScript")));
               }() : nullptr)
-          ->WithBigItemAcquireScript(Data->HasField("bigItemAcquireScript") ? [Data]() -> Model::FScriptSettingPtr
+          ->WithBigItemAcquireScript(Data->HasField(ANSI_TO_TCHAR("bigItemAcquireScript")) ? [Data]() -> Model::FScriptSettingPtr
               {
-                  if (Data->HasTypedField<EJson::Null>("bigItemAcquireScript"))
+                  if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("bigItemAcquireScript")))
                   {
                       return nullptr;
                   }
-                  return Model::FScriptSetting::FromJson(Data->GetObjectField("bigItemAcquireScript"));
+                  return Model::FScriptSetting::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("bigItemAcquireScript")));
               }() : nullptr)
-          ->WithBigItemConsumeScript(Data->HasField("bigItemConsumeScript") ? [Data]() -> Model::FScriptSettingPtr
+          ->WithBigItemConsumeScript(Data->HasField(ANSI_TO_TCHAR("bigItemConsumeScript")) ? [Data]() -> Model::FScriptSettingPtr
               {
-                  if (Data->HasTypedField<EJson::Null>("bigItemConsumeScript"))
+                  if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("bigItemConsumeScript")))
                   {
                       return nullptr;
                   }
-                  return Model::FScriptSetting::FromJson(Data->GetObjectField("bigItemConsumeScript"));
+                  return Model::FScriptSetting::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("bigItemConsumeScript")));
               }() : nullptr)
-          ->WithLogSetting(Data->HasField("logSetting") ? [Data]() -> Model::FLogSettingPtr
+          ->WithLogSetting(Data->HasField(ANSI_TO_TCHAR("logSetting")) ? [Data]() -> Model::FLogSettingPtr
               {
-                  if (Data->HasTypedField<EJson::Null>("logSetting"))
+                  if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("logSetting")))
                   {
                       return nullptr;
                   }
-                  return Model::FLogSetting::FromJson(Data->GetObjectField("logSetting"));
+                  return Model::FLogSetting::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("logSetting")));
               }() : nullptr);
     }
 

@@ -196,73 +196,73 @@ namespace Gs2::Account::Request
             return nullptr;
         }
         return MakeShared<FUpdateNamespaceRequest>()
-            ->WithContextStack(Data->HasField("contextStack") ? TOptional<FString>(Data->GetStringField("contextStack")) : TOptional<FString>())
-            ->WithNamespaceName(Data->HasField("namespaceName") ? [Data]() -> TOptional<FString>
+            ->WithContextStack(Data->HasField(ANSI_TO_TCHAR("contextStack")) ? TOptional<FString>(Data->GetStringField(ANSI_TO_TCHAR("contextStack"))) : TOptional<FString>())
+            ->WithNamespaceName(Data->HasField(ANSI_TO_TCHAR("namespaceName")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
-                    if (Data->TryGetStringField("namespaceName", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("namespaceName"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
-            ->WithDescription(Data->HasField("description") ? [Data]() -> TOptional<FString>
+            ->WithDescription(Data->HasField(ANSI_TO_TCHAR("description")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
-                    if (Data->TryGetStringField("description", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("description"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
-            ->WithChangePasswordIfTakeOver(Data->HasField("changePasswordIfTakeOver") ? [Data]() -> TOptional<bool>
+            ->WithChangePasswordIfTakeOver(Data->HasField(ANSI_TO_TCHAR("changePasswordIfTakeOver")) ? [Data]() -> TOptional<bool>
               {
                   bool v;
-                    if (Data->TryGetBoolField("changePasswordIfTakeOver", v))
+                    if (Data->TryGetBoolField(ANSI_TO_TCHAR("changePasswordIfTakeOver"), v))
                   {
                         return TOptional(v);
                   }
                   return TOptional<bool>();
               }() : TOptional<bool>())
-          ->WithCreateAccountScript(Data->HasField("createAccountScript") ? [Data]() -> Model::FScriptSettingPtr
+          ->WithCreateAccountScript(Data->HasField(ANSI_TO_TCHAR("createAccountScript")) ? [Data]() -> Model::FScriptSettingPtr
               {
-                  if (Data->HasTypedField<EJson::Null>("createAccountScript"))
+                  if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("createAccountScript")))
                   {
                       return nullptr;
                   }
-                  return Model::FScriptSetting::FromJson(Data->GetObjectField("createAccountScript"));
+                  return Model::FScriptSetting::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("createAccountScript")));
               }() : nullptr)
-          ->WithAuthenticationScript(Data->HasField("authenticationScript") ? [Data]() -> Model::FScriptSettingPtr
+          ->WithAuthenticationScript(Data->HasField(ANSI_TO_TCHAR("authenticationScript")) ? [Data]() -> Model::FScriptSettingPtr
               {
-                  if (Data->HasTypedField<EJson::Null>("authenticationScript"))
+                  if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("authenticationScript")))
                   {
                       return nullptr;
                   }
-                  return Model::FScriptSetting::FromJson(Data->GetObjectField("authenticationScript"));
+                  return Model::FScriptSetting::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("authenticationScript")));
               }() : nullptr)
-          ->WithCreateTakeOverScript(Data->HasField("createTakeOverScript") ? [Data]() -> Model::FScriptSettingPtr
+          ->WithCreateTakeOverScript(Data->HasField(ANSI_TO_TCHAR("createTakeOverScript")) ? [Data]() -> Model::FScriptSettingPtr
               {
-                  if (Data->HasTypedField<EJson::Null>("createTakeOverScript"))
+                  if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("createTakeOverScript")))
                   {
                       return nullptr;
                   }
-                  return Model::FScriptSetting::FromJson(Data->GetObjectField("createTakeOverScript"));
+                  return Model::FScriptSetting::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("createTakeOverScript")));
               }() : nullptr)
-          ->WithDoTakeOverScript(Data->HasField("doTakeOverScript") ? [Data]() -> Model::FScriptSettingPtr
+          ->WithDoTakeOverScript(Data->HasField(ANSI_TO_TCHAR("doTakeOverScript")) ? [Data]() -> Model::FScriptSettingPtr
               {
-                  if (Data->HasTypedField<EJson::Null>("doTakeOverScript"))
+                  if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("doTakeOverScript")))
                   {
                       return nullptr;
                   }
-                  return Model::FScriptSetting::FromJson(Data->GetObjectField("doTakeOverScript"));
+                  return Model::FScriptSetting::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("doTakeOverScript")));
               }() : nullptr)
-          ->WithLogSetting(Data->HasField("logSetting") ? [Data]() -> Model::FLogSettingPtr
+          ->WithLogSetting(Data->HasField(ANSI_TO_TCHAR("logSetting")) ? [Data]() -> Model::FLogSettingPtr
               {
-                  if (Data->HasTypedField<EJson::Null>("logSetting"))
+                  if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("logSetting")))
                   {
                       return nullptr;
                   }
-                  return Model::FLogSetting::FromJson(Data->GetObjectField("logSetting"));
+                  return Model::FLogSetting::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("logSetting")));
               }() : nullptr);
     }
 

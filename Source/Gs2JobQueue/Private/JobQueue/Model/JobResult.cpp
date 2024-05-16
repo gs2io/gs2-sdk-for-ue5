@@ -239,73 +239,73 @@ namespace Gs2::JobQueue::Model
             return nullptr;
         }
         return MakeShared<FJobResult>()
-            ->WithJobResultId(Data->HasField("jobResultId") ? [Data]() -> TOptional<FString>
+            ->WithJobResultId(Data->HasField(ANSI_TO_TCHAR("jobResultId")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("jobResultId", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("jobResultId"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithJobId(Data->HasField("jobId") ? [Data]() -> TOptional<FString>
+            ->WithJobId(Data->HasField(ANSI_TO_TCHAR("jobId")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("jobId", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("jobId"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithScriptId(Data->HasField("scriptId") ? [Data]() -> TOptional<FString>
+            ->WithScriptId(Data->HasField(ANSI_TO_TCHAR("scriptId")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("scriptId", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("scriptId"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithArgs(Data->HasField("args") ? [Data]() -> TOptional<FString>
+            ->WithArgs(Data->HasField(ANSI_TO_TCHAR("args")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("args", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("args"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithTryNumber(Data->HasField("tryNumber") ? [Data]() -> TOptional<int32>
+            ->WithTryNumber(Data->HasField(ANSI_TO_TCHAR("tryNumber")) ? [Data]() -> TOptional<int32>
                 {
                     int32 v;
-                    if (Data->TryGetNumberField("tryNumber", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("tryNumber"), v))
                     {
                         return TOptional(v);
                     }
                     return TOptional<int32>();
                 }() : TOptional<int32>())
-            ->WithStatusCode(Data->HasField("statusCode") ? [Data]() -> TOptional<int32>
+            ->WithStatusCode(Data->HasField(ANSI_TO_TCHAR("statusCode")) ? [Data]() -> TOptional<int32>
                 {
                     int32 v;
-                    if (Data->TryGetNumberField("statusCode", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("statusCode"), v))
                     {
                         return TOptional(v);
                     }
                     return TOptional<int32>();
                 }() : TOptional<int32>())
-            ->WithResult(Data->HasField("result") ? [Data]() -> TOptional<FString>
+            ->WithResult(Data->HasField(ANSI_TO_TCHAR("result")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("result", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("result"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithTryAt(Data->HasField("tryAt") ? [Data]() -> TOptional<int64>
+            ->WithTryAt(Data->HasField(ANSI_TO_TCHAR("tryAt")) ? [Data]() -> TOptional<int64>
                 {
                     int64 v;
-                    if (Data->TryGetNumberField("tryAt", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("tryAt"), v))
                     {
                         return TOptional(v);
                     }

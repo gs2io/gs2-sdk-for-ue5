@@ -143,37 +143,37 @@ namespace Gs2::SerialKey::Model
             return nullptr;
         }
         return MakeShared<FCampaignModel>()
-            ->WithCampaignId(Data->HasField("campaignId") ? [Data]() -> TOptional<FString>
+            ->WithCampaignId(Data->HasField(ANSI_TO_TCHAR("campaignId")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("campaignId", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("campaignId"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithName(Data->HasField("name") ? [Data]() -> TOptional<FString>
+            ->WithName(Data->HasField(ANSI_TO_TCHAR("name")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("name", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("name"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithMetadata(Data->HasField("metadata") ? [Data]() -> TOptional<FString>
+            ->WithMetadata(Data->HasField(ANSI_TO_TCHAR("metadata")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("metadata", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("metadata"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithEnableCampaignCode(Data->HasField("enableCampaignCode") ? [Data]() -> TOptional<bool>
+            ->WithEnableCampaignCode(Data->HasField(ANSI_TO_TCHAR("enableCampaignCode")) ? [Data]() -> TOptional<bool>
                 {
                     bool v;
-                    if (Data->TryGetBoolField("enableCampaignCode", v))
+                    if (Data->TryGetBoolField(ANSI_TO_TCHAR("enableCampaignCode"), v))
                     {
                         return TOptional(v);
                     }

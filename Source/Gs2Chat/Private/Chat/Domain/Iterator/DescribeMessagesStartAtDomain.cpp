@@ -17,6 +17,8 @@
 
 #include "DescribeMessagesStartAt.h"
 
+#include "Core/Domain/Gs2.h"
+
 namespace Gs2::Chat::Domain::Iterator
 {
     FDescribeMessagesStartAt::FDescribeMessagesStartAt(

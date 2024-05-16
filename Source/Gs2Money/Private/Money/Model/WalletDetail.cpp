@@ -80,19 +80,19 @@ namespace Gs2::Money::Model
             return nullptr;
         }
         return MakeShared<FWalletDetail>()
-            ->WithPrice(Data->HasField("price") ? [Data]() -> TOptional<float>
+            ->WithPrice(Data->HasField(ANSI_TO_TCHAR("price")) ? [Data]() -> TOptional<float>
                 {
                     float v;
-                    if (Data->TryGetNumberField("price", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("price"), v))
                     {
                         return TOptional(v);
                     }
                     return TOptional<float>();
                 }() : TOptional<float>())
-            ->WithCount(Data->HasField("count") ? [Data]() -> TOptional<int32>
+            ->WithCount(Data->HasField(ANSI_TO_TCHAR("count")) ? [Data]() -> TOptional<int32>
                 {
                     int32 v;
-                    if (Data->TryGetNumberField("count", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("count"), v))
                     {
                         return TOptional(v);
                     }

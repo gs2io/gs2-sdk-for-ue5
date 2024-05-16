@@ -96,26 +96,26 @@ namespace Gs2::JobQueue::Result
             return nullptr;
         }
         return MakeShared<FRunByUserIdResult>()
-            ->WithItem(Data->HasField("item") ? [Data]() -> Model::FJobPtr
+            ->WithItem(Data->HasField(ANSI_TO_TCHAR("item")) ? [Data]() -> Model::FJobPtr
                  {
-                    if (Data->HasTypedField<EJson::Null>("item"))
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("item")))
                     {
                         return nullptr;
                     }
-                    return Model::FJob::FromJson(Data->GetObjectField("item"));
+                    return Model::FJob::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("item")));
                  }() : nullptr)
-            ->WithResult(Data->HasField("result") ? [Data]() -> Model::FJobResultBodyPtr
+            ->WithResult(Data->HasField(ANSI_TO_TCHAR("result")) ? [Data]() -> Model::FJobResultBodyPtr
                  {
-                    if (Data->HasTypedField<EJson::Null>("result"))
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("result")))
                     {
                         return nullptr;
                     }
-                    return Model::FJobResultBody::FromJson(Data->GetObjectField("result"));
+                    return Model::FJobResultBody::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("result")));
                  }() : nullptr)
-            ->WithIsLastJob(Data->HasField("isLastJob") ? [Data]() -> TOptional<bool>
+            ->WithIsLastJob(Data->HasField(ANSI_TO_TCHAR("isLastJob")) ? [Data]() -> TOptional<bool>
                 {
                     bool v;
-                    if (Data->TryGetBoolField("isLastJob", v))
+                    if (Data->TryGetBoolField(ANSI_TO_TCHAR("isLastJob"), v))
                     {
                         return TOptional(v);
                     }

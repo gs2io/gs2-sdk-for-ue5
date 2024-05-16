@@ -53,13 +53,13 @@ namespace Gs2::Enhance::Result
             return nullptr;
         }
         return MakeShared<FUpdateRateModelMasterResult>()
-            ->WithItem(Data->HasField("item") ? [Data]() -> Model::FRateModelMasterPtr
+            ->WithItem(Data->HasField(ANSI_TO_TCHAR("item")) ? [Data]() -> Model::FRateModelMasterPtr
                  {
-                    if (Data->HasTypedField<EJson::Null>("item"))
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("item")))
                     {
                         return nullptr;
                     }
-                    return Model::FRateModelMaster::FromJson(Data->GetObjectField("item"));
+                    return Model::FRateModelMaster::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("item")));
                  }() : nullptr);
     }
 

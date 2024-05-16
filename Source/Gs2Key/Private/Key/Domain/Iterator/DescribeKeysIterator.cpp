@@ -28,6 +28,8 @@
 #include "Key/Domain/Model/Key.h"
 #include "Key/Domain/Model/Namespace.h"
 
+#include "Core/Domain/Gs2.h"
+
 namespace Gs2::Key::Domain::Iterator
 {
 

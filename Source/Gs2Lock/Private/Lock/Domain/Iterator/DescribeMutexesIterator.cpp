@@ -28,6 +28,8 @@
 #include "Lock/Domain/Model/Mutex.h"
 #include "Lock/Domain/Model/User.h"
 
+#include "Core/Domain/Gs2.h"
+
 namespace Gs2::Lock::Domain::Iterator
 {
 

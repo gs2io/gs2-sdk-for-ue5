@@ -104,44 +104,44 @@ namespace Gs2::Showcase::Model
             return nullptr;
         }
         return MakeShared<FDisplayItem>()
-            ->WithDisplayItemId(Data->HasField("displayItemId") ? [Data]() -> TOptional<FString>
+            ->WithDisplayItemId(Data->HasField(ANSI_TO_TCHAR("displayItemId")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("displayItemId", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("displayItemId"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithType(Data->HasField("type") ? [Data]() -> TOptional<FString>
+            ->WithType(Data->HasField(ANSI_TO_TCHAR("type")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("type", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("type"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithSalesItem(Data->HasField("salesItem") ? [Data]() -> Model::FSalesItemPtr
+            ->WithSalesItem(Data->HasField(ANSI_TO_TCHAR("salesItem")) ? [Data]() -> Model::FSalesItemPtr
                 {
-                    if (Data->HasTypedField<EJson::Null>("salesItem"))
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("salesItem")))
                     {
                         return nullptr;
                     }
-                    return Model::FSalesItem::FromJson(Data->GetObjectField("salesItem"));
+                    return Model::FSalesItem::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("salesItem")));
                  }() : nullptr)
-            ->WithSalesItemGroup(Data->HasField("salesItemGroup") ? [Data]() -> Model::FSalesItemGroupPtr
+            ->WithSalesItemGroup(Data->HasField(ANSI_TO_TCHAR("salesItemGroup")) ? [Data]() -> Model::FSalesItemGroupPtr
                 {
-                    if (Data->HasTypedField<EJson::Null>("salesItemGroup"))
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("salesItemGroup")))
                     {
                         return nullptr;
                     }
-                    return Model::FSalesItemGroup::FromJson(Data->GetObjectField("salesItemGroup"));
+                    return Model::FSalesItemGroup::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("salesItemGroup")));
                  }() : nullptr)
-            ->WithSalesPeriodEventId(Data->HasField("salesPeriodEventId") ? [Data]() -> TOptional<FString>
+            ->WithSalesPeriodEventId(Data->HasField(ANSI_TO_TCHAR("salesPeriodEventId")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("salesPeriodEventId", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("salesPeriodEventId"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }

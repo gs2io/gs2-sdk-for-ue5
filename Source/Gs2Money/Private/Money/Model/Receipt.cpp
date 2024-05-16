@@ -334,118 +334,118 @@ namespace Gs2::Money::Model
             return nullptr;
         }
         return MakeShared<FReceipt>()
-            ->WithReceiptId(Data->HasField("receiptId") ? [Data]() -> TOptional<FString>
+            ->WithReceiptId(Data->HasField(ANSI_TO_TCHAR("receiptId")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("receiptId", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("receiptId"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithTransactionId(Data->HasField("transactionId") ? [Data]() -> TOptional<FString>
+            ->WithTransactionId(Data->HasField(ANSI_TO_TCHAR("transactionId")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("transactionId", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("transactionId"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithPurchaseToken(Data->HasField("purchaseToken") ? [Data]() -> TOptional<FString>
+            ->WithPurchaseToken(Data->HasField(ANSI_TO_TCHAR("purchaseToken")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("purchaseToken", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("purchaseToken"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithUserId(Data->HasField("userId") ? [Data]() -> TOptional<FString>
+            ->WithUserId(Data->HasField(ANSI_TO_TCHAR("userId")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("userId", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("userId"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithType(Data->HasField("type") ? [Data]() -> TOptional<FString>
+            ->WithType(Data->HasField(ANSI_TO_TCHAR("type")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("type", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("type"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithSlot(Data->HasField("slot") ? [Data]() -> TOptional<int32>
+            ->WithSlot(Data->HasField(ANSI_TO_TCHAR("slot")) ? [Data]() -> TOptional<int32>
                 {
                     int32 v;
-                    if (Data->TryGetNumberField("slot", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("slot"), v))
                     {
                         return TOptional(v);
                     }
                     return TOptional<int32>();
                 }() : TOptional<int32>())
-            ->WithPrice(Data->HasField("price") ? [Data]() -> TOptional<float>
+            ->WithPrice(Data->HasField(ANSI_TO_TCHAR("price")) ? [Data]() -> TOptional<float>
                 {
                     float v;
-                    if (Data->TryGetNumberField("price", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("price"), v))
                     {
                         return TOptional(v);
                     }
                     return TOptional<float>();
                 }() : TOptional<float>())
-            ->WithPaid(Data->HasField("paid") ? [Data]() -> TOptional<int32>
+            ->WithPaid(Data->HasField(ANSI_TO_TCHAR("paid")) ? [Data]() -> TOptional<int32>
                 {
                     int32 v;
-                    if (Data->TryGetNumberField("paid", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("paid"), v))
                     {
                         return TOptional(v);
                     }
                     return TOptional<int32>();
                 }() : TOptional<int32>())
-            ->WithFree(Data->HasField("free") ? [Data]() -> TOptional<int32>
+            ->WithFree(Data->HasField(ANSI_TO_TCHAR("free")) ? [Data]() -> TOptional<int32>
                 {
                     int32 v;
-                    if (Data->TryGetNumberField("free", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("free"), v))
                     {
                         return TOptional(v);
                     }
                     return TOptional<int32>();
                 }() : TOptional<int32>())
-            ->WithTotal(Data->HasField("total") ? [Data]() -> TOptional<int32>
+            ->WithTotal(Data->HasField(ANSI_TO_TCHAR("total")) ? [Data]() -> TOptional<int32>
                 {
                     int32 v;
-                    if (Data->TryGetNumberField("total", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("total"), v))
                     {
                         return TOptional(v);
                     }
                     return TOptional<int32>();
                 }() : TOptional<int32>())
-            ->WithContentsId(Data->HasField("contentsId") ? [Data]() -> TOptional<FString>
+            ->WithContentsId(Data->HasField(ANSI_TO_TCHAR("contentsId")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("contentsId", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("contentsId"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithCreatedAt(Data->HasField("createdAt") ? [Data]() -> TOptional<int64>
+            ->WithCreatedAt(Data->HasField(ANSI_TO_TCHAR("createdAt")) ? [Data]() -> TOptional<int64>
                 {
                     int64 v;
-                    if (Data->TryGetNumberField("createdAt", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("createdAt"), v))
                     {
                         return TOptional(v);
                     }
                     return TOptional<int64>();
                 }() : TOptional<int64>())
-            ->WithRevision(Data->HasField("revision") ? [Data]() -> TOptional<int64>
+            ->WithRevision(Data->HasField(ANSI_TO_TCHAR("revision")) ? [Data]() -> TOptional<int64>
                 {
                     int64 v;
-                    if (Data->TryGetNumberField("revision", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("revision"), v))
                     {
                         return TOptional(v);
                     }

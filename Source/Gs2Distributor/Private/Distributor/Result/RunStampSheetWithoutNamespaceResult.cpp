@@ -73,19 +73,19 @@ namespace Gs2::Distributor::Result
             return nullptr;
         }
         return MakeShared<FRunStampSheetWithoutNamespaceResult>()
-            ->WithStatusCode(Data->HasField("statusCode") ? [Data]() -> TOptional<int32>
+            ->WithStatusCode(Data->HasField(ANSI_TO_TCHAR("statusCode")) ? [Data]() -> TOptional<int32>
                 {
                     int32 v;
-                    if (Data->TryGetNumberField("statusCode", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("statusCode"), v))
                     {
                         return TOptional(v);
                     }
                     return TOptional<int32>();
                 }() : TOptional<int32>())
-            ->WithResult(Data->HasField("result") ? [Data]() -> TOptional<FString>
+            ->WithResult(Data->HasField(ANSI_TO_TCHAR("result")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("result", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("result"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }

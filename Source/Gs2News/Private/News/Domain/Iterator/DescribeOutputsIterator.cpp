@@ -28,6 +28,8 @@
 #include "News/Domain/Model/Output.h"
 #include "News/Domain/Model/Progress.h"
 
+#include "Core/Domain/Gs2.h"
+
 namespace Gs2::News::Domain::Iterator
 {
 

@@ -194,64 +194,64 @@ namespace Gs2::Deploy::Model
             return nullptr;
         }
         return MakeShared<FEvent>()
-            ->WithEventId(Data->HasField("eventId") ? [Data]() -> TOptional<FString>
+            ->WithEventId(Data->HasField(ANSI_TO_TCHAR("eventId")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("eventId", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("eventId"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithName(Data->HasField("name") ? [Data]() -> TOptional<FString>
+            ->WithName(Data->HasField(ANSI_TO_TCHAR("name")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("name", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("name"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithResourceName(Data->HasField("resourceName") ? [Data]() -> TOptional<FString>
+            ->WithResourceName(Data->HasField(ANSI_TO_TCHAR("resourceName")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("resourceName", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("resourceName"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithType(Data->HasField("type") ? [Data]() -> TOptional<FString>
+            ->WithType(Data->HasField(ANSI_TO_TCHAR("type")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("type", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("type"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithMessage(Data->HasField("message") ? [Data]() -> TOptional<FString>
+            ->WithMessage(Data->HasField(ANSI_TO_TCHAR("message")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("message", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("message"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithEventAt(Data->HasField("eventAt") ? [Data]() -> TOptional<int64>
+            ->WithEventAt(Data->HasField(ANSI_TO_TCHAR("eventAt")) ? [Data]() -> TOptional<int64>
                 {
                     int64 v;
-                    if (Data->TryGetNumberField("eventAt", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("eventAt"), v))
                     {
                         return TOptional(v);
                     }
                     return TOptional<int64>();
                 }() : TOptional<int64>())
-            ->WithRevision(Data->HasField("revision") ? [Data]() -> TOptional<int64>
+            ->WithRevision(Data->HasField(ANSI_TO_TCHAR("revision")) ? [Data]() -> TOptional<int64>
                 {
                     int64 v;
-                    if (Data->TryGetNumberField("revision", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("revision"), v))
                     {
                         return TOptional(v);
                     }

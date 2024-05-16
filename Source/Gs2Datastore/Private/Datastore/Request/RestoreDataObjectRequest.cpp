@@ -77,20 +77,20 @@ namespace Gs2::Datastore::Request
             return nullptr;
         }
         return MakeShared<FRestoreDataObjectRequest>()
-            ->WithContextStack(Data->HasField("contextStack") ? TOptional<FString>(Data->GetStringField("contextStack")) : TOptional<FString>())
-            ->WithNamespaceName(Data->HasField("namespaceName") ? [Data]() -> TOptional<FString>
+            ->WithContextStack(Data->HasField(ANSI_TO_TCHAR("contextStack")) ? TOptional<FString>(Data->GetStringField(ANSI_TO_TCHAR("contextStack"))) : TOptional<FString>())
+            ->WithNamespaceName(Data->HasField(ANSI_TO_TCHAR("namespaceName")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
-                    if (Data->TryGetStringField("namespaceName", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("namespaceName"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
-            ->WithDataObjectId(Data->HasField("dataObjectId") ? [Data]() -> TOptional<FString>
+            ->WithDataObjectId(Data->HasField(ANSI_TO_TCHAR("dataObjectId")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
-                    if (Data->TryGetStringField("dataObjectId", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("dataObjectId"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }

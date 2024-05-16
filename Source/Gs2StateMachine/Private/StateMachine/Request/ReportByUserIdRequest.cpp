@@ -139,56 +139,56 @@ namespace Gs2::StateMachine::Request
             return nullptr;
         }
         return MakeShared<FReportByUserIdRequest>()
-            ->WithContextStack(Data->HasField("contextStack") ? TOptional<FString>(Data->GetStringField("contextStack")) : TOptional<FString>())
-            ->WithNamespaceName(Data->HasField("namespaceName") ? [Data]() -> TOptional<FString>
+            ->WithContextStack(Data->HasField(ANSI_TO_TCHAR("contextStack")) ? TOptional<FString>(Data->GetStringField(ANSI_TO_TCHAR("contextStack"))) : TOptional<FString>())
+            ->WithNamespaceName(Data->HasField(ANSI_TO_TCHAR("namespaceName")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
-                    if (Data->TryGetStringField("namespaceName", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("namespaceName"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
-            ->WithUserId(Data->HasField("userId") ? [Data]() -> TOptional<FString>
+            ->WithUserId(Data->HasField(ANSI_TO_TCHAR("userId")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
-                    if (Data->TryGetStringField("userId", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("userId"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
-            ->WithStatusName(Data->HasField("statusName") ? [Data]() -> TOptional<FString>
+            ->WithStatusName(Data->HasField(ANSI_TO_TCHAR("statusName")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
-                    if (Data->TryGetStringField("statusName", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("statusName"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
-          ->WithEvents(Data->HasField("events") ? [Data]() -> TSharedPtr<TArray<Model::FEventPtr>>
+          ->WithEvents(Data->HasField(ANSI_TO_TCHAR("events")) ? [Data]() -> TSharedPtr<TArray<Model::FEventPtr>>
               {
                   auto v = MakeShared<TArray<Model::FEventPtr>>();
-                  if (!Data->HasTypedField<EJson::Null>("events") && Data->HasTypedField<EJson::Array>("events"))
+                  if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("events")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("events")))
                   {
-                      for (auto JsonObjectValue : Data->GetArrayField("events"))
+                      for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("events")))
                       {
                           v->Add(Model::FEvent::FromJson(JsonObjectValue->AsObject()));
                       }
                   }
                   return v;
               }() : MakeShared<TArray<Model::FEventPtr>>())
-            ->WithTimeOffsetToken(Data->HasField("timeOffsetToken") ? [Data]() -> TOptional<FString>
+            ->WithTimeOffsetToken(Data->HasField(ANSI_TO_TCHAR("timeOffsetToken")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
-                    if (Data->TryGetStringField("timeOffsetToken", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("timeOffsetToken"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
-          ->WithDuplicationAvoider(Data->HasField("duplicationAvoider") ? TOptional<FString>(Data->GetStringField("duplicationAvoider")) : TOptional<FString>());
+          ->WithDuplicationAvoider(Data->HasField(ANSI_TO_TCHAR("duplicationAvoider")) ? TOptional<FString>(Data->GetStringField(ANSI_TO_TCHAR("duplicationAvoider"))) : TOptional<FString>());
     }
 
     TSharedPtr<FJsonObject> FReportByUserIdRequest::ToJson() const

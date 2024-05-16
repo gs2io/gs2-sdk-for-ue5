@@ -156,7 +156,7 @@ namespace Gs2::UE5::Core::Domain
             );
 
         class EZGS2_API FDispatchTask final :
-            public Gs2::Core::Util::TGs2Future<void*>,
+            public Gs2::Core::Util::TGs2Future<void>,
             public TSharedFromThis<FDispatchTask>
         {
             const TSharedPtr<FGs2Domain> Self;
@@ -168,7 +168,7 @@ namespace Gs2::UE5::Core::Domain
             );
 
             virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-                TSharedPtr<TSharedPtr<void*>> Result
+                TSharedPtr<TSharedPtr<void>> Result
             ) override;
         };
         friend FDispatchTask;
@@ -178,7 +178,7 @@ namespace Gs2::UE5::Core::Domain
             );
 
         class EZGS2_API FDisconnectTask final :
-            public Gs2::Core::Util::TGs2Future<void*>,
+            public Gs2::Core::Util::TGs2Future<void>,
             public TSharedFromThis<FDisconnectTask>
         {
             const TSharedPtr<FGs2Domain> Self;
@@ -188,7 +188,7 @@ namespace Gs2::UE5::Core::Domain
             );
 
             virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-                TSharedPtr<TSharedPtr<void*>> Result
+                TSharedPtr<TSharedPtr<void>> Result
             ) override;
         };
         friend FDisconnectTask;

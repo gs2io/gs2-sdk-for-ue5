@@ -53,13 +53,13 @@ namespace Gs2::Quest::Result
             return nullptr;
         }
         return MakeShared<FGetCompletedQuestListByUserIdResult>()
-            ->WithItem(Data->HasField("item") ? [Data]() -> Model::FCompletedQuestListPtr
+            ->WithItem(Data->HasField(ANSI_TO_TCHAR("item")) ? [Data]() -> Model::FCompletedQuestListPtr
                  {
-                    if (Data->HasTypedField<EJson::Null>("item"))
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("item")))
                     {
                         return nullptr;
                     }
-                    return Model::FCompletedQuestList::FromJson(Data->GetObjectField("item"));
+                    return Model::FCompletedQuestList::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("item")));
                  }() : nullptr);
     }
 

@@ -83,31 +83,31 @@ namespace Gs2::News::Result
             return nullptr;
         }
         return MakeShared<FWantGrantByUserIdResult>()
-            ->WithItems(Data->HasField("items") ? [Data]() -> TSharedPtr<TArray<Model::FSetCookieRequestEntryPtr>>
+            ->WithItems(Data->HasField(ANSI_TO_TCHAR("items")) ? [Data]() -> TSharedPtr<TArray<Model::FSetCookieRequestEntryPtr>>
                  {
                     auto v = MakeShared<TArray<Model::FSetCookieRequestEntryPtr>>();
-                    if (!Data->HasTypedField<EJson::Null>("items") && Data->HasTypedField<EJson::Array>("items"))
+                    if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("items")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("items")))
                     {
-                        for (auto JsonObjectValue : Data->GetArrayField("items"))
+                        for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("items")))
                         {
                             v->Add(Model::FSetCookieRequestEntry::FromJson(JsonObjectValue->AsObject()));
                         }
                     }
                     return v;
                  }() : MakeShared<TArray<Model::FSetCookieRequestEntryPtr>>())
-            ->WithBrowserUrl(Data->HasField("browserUrl") ? [Data]() -> TOptional<FString>
+            ->WithBrowserUrl(Data->HasField(ANSI_TO_TCHAR("browserUrl")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("browserUrl", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("browserUrl"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithZipUrl(Data->HasField("zipUrl") ? [Data]() -> TOptional<FString>
+            ->WithZipUrl(Data->HasField(ANSI_TO_TCHAR("zipUrl")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("zipUrl", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("zipUrl"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }

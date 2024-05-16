@@ -268,106 +268,106 @@ namespace Gs2::Quest::Model
             return nullptr;
         }
         return MakeShared<FProgress>()
-            ->WithProgressId(Data->HasField("progressId") ? [Data]() -> TOptional<FString>
+            ->WithProgressId(Data->HasField(ANSI_TO_TCHAR("progressId")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("progressId", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("progressId"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithUserId(Data->HasField("userId") ? [Data]() -> TOptional<FString>
+            ->WithUserId(Data->HasField(ANSI_TO_TCHAR("userId")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("userId", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("userId"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithTransactionId(Data->HasField("transactionId") ? [Data]() -> TOptional<FString>
+            ->WithTransactionId(Data->HasField(ANSI_TO_TCHAR("transactionId")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("transactionId", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("transactionId"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithQuestModelId(Data->HasField("questModelId") ? [Data]() -> TOptional<FString>
+            ->WithQuestModelId(Data->HasField(ANSI_TO_TCHAR("questModelId")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("questModelId", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("questModelId"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithRandomSeed(Data->HasField("randomSeed") ? [Data]() -> TOptional<int64>
+            ->WithRandomSeed(Data->HasField(ANSI_TO_TCHAR("randomSeed")) ? [Data]() -> TOptional<int64>
                 {
                     int64 v;
-                    if (Data->TryGetNumberField("randomSeed", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("randomSeed"), v))
                     {
                         return TOptional(v);
                     }
                     return TOptional<int64>();
                 }() : TOptional<int64>())
-            ->WithRewards(Data->HasField("rewards") ? [Data]() -> TSharedPtr<TArray<Model::FRewardPtr>>
+            ->WithRewards(Data->HasField(ANSI_TO_TCHAR("rewards")) ? [Data]() -> TSharedPtr<TArray<Model::FRewardPtr>>
                 {
                     auto v = MakeShared<TArray<Model::FRewardPtr>>();
-                    if (!Data->HasTypedField<EJson::Null>("rewards") && Data->HasTypedField<EJson::Array>("rewards"))
+                    if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("rewards")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("rewards")))
                     {
-                        for (auto JsonObjectValue : Data->GetArrayField("rewards"))
+                        for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("rewards")))
                         {
                             v->Add(Model::FReward::FromJson(JsonObjectValue->AsObject()));
                         }
                     }
                     return v;
                  }() : MakeShared<TArray<Model::FRewardPtr>>())
-            ->WithFailedRewards(Data->HasField("failedRewards") ? [Data]() -> TSharedPtr<TArray<Model::FRewardPtr>>
+            ->WithFailedRewards(Data->HasField(ANSI_TO_TCHAR("failedRewards")) ? [Data]() -> TSharedPtr<TArray<Model::FRewardPtr>>
                 {
                     auto v = MakeShared<TArray<Model::FRewardPtr>>();
-                    if (!Data->HasTypedField<EJson::Null>("failedRewards") && Data->HasTypedField<EJson::Array>("failedRewards"))
+                    if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("failedRewards")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("failedRewards")))
                     {
-                        for (auto JsonObjectValue : Data->GetArrayField("failedRewards"))
+                        for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("failedRewards")))
                         {
                             v->Add(Model::FReward::FromJson(JsonObjectValue->AsObject()));
                         }
                     }
                     return v;
                  }() : MakeShared<TArray<Model::FRewardPtr>>())
-            ->WithMetadata(Data->HasField("metadata") ? [Data]() -> TOptional<FString>
+            ->WithMetadata(Data->HasField(ANSI_TO_TCHAR("metadata")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("metadata", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("metadata"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithCreatedAt(Data->HasField("createdAt") ? [Data]() -> TOptional<int64>
+            ->WithCreatedAt(Data->HasField(ANSI_TO_TCHAR("createdAt")) ? [Data]() -> TOptional<int64>
                 {
                     int64 v;
-                    if (Data->TryGetNumberField("createdAt", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("createdAt"), v))
                     {
                         return TOptional(v);
                     }
                     return TOptional<int64>();
                 }() : TOptional<int64>())
-            ->WithUpdatedAt(Data->HasField("updatedAt") ? [Data]() -> TOptional<int64>
+            ->WithUpdatedAt(Data->HasField(ANSI_TO_TCHAR("updatedAt")) ? [Data]() -> TOptional<int64>
                 {
                     int64 v;
-                    if (Data->TryGetNumberField("updatedAt", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("updatedAt"), v))
                     {
                         return TOptional(v);
                     }
                     return TOptional<int64>();
                 }() : TOptional<int64>())
-            ->WithRevision(Data->HasField("revision") ? [Data]() -> TOptional<int64>
+            ->WithRevision(Data->HasField(ANSI_TO_TCHAR("revision")) ? [Data]() -> TOptional<int64>
                 {
                     int64 v;
-                    if (Data->TryGetNumberField("revision", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("revision"), v))
                     {
                         return TOptional(v);
                     }

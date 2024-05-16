@@ -53,13 +53,13 @@ namespace Gs2::Stamina::Result
             return nullptr;
         }
         return MakeShared<FUpdateRecoverIntervalTableMasterResult>()
-            ->WithItem(Data->HasField("item") ? [Data]() -> Model::FRecoverIntervalTableMasterPtr
+            ->WithItem(Data->HasField(ANSI_TO_TCHAR("item")) ? [Data]() -> Model::FRecoverIntervalTableMasterPtr
                  {
-                    if (Data->HasTypedField<EJson::Null>("item"))
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("item")))
                     {
                         return nullptr;
                     }
-                    return Model::FRecoverIntervalTableMaster::FromJson(Data->GetObjectField("item"));
+                    return Model::FRecoverIntervalTableMaster::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("item")));
                  }() : nullptr);
     }
 

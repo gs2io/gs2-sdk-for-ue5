@@ -90,40 +90,40 @@ namespace Gs2::Version::Model
             return nullptr;
         }
         return MakeShared<FTargetVersion>()
-            ->WithVersionName(Data->HasField("versionName") ? [Data]() -> TOptional<FString>
+            ->WithVersionName(Data->HasField(ANSI_TO_TCHAR("versionName")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("versionName", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("versionName"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithBody(Data->HasField("body") ? [Data]() -> TOptional<FString>
+            ->WithBody(Data->HasField(ANSI_TO_TCHAR("body")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("body", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("body"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithSignature(Data->HasField("signature") ? [Data]() -> TOptional<FString>
+            ->WithSignature(Data->HasField(ANSI_TO_TCHAR("signature")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("signature", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("signature"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithVersion(Data->HasField("version") ? [Data]() -> Model::FVersionPtr
+            ->WithVersion(Data->HasField(ANSI_TO_TCHAR("version")) ? [Data]() -> Model::FVersionPtr
                 {
-                    if (Data->HasTypedField<EJson::Null>("version"))
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("version")))
                     {
                         return nullptr;
                     }
-                    return Model::FVersion::FromJson(Data->GetObjectField("version"));
+                    return Model::FVersion::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("version")));
                  }() : nullptr);
     }
 

@@ -87,30 +87,30 @@ namespace Gs2::Grade::Result
             return nullptr;
         }
         return MakeShared<FApplyRankCapResult>()
-            ->WithItem(Data->HasField("item") ? [Data]() -> Model::FStatusPtr
+            ->WithItem(Data->HasField(ANSI_TO_TCHAR("item")) ? [Data]() -> Model::FStatusPtr
                  {
-                    if (Data->HasTypedField<EJson::Null>("item"))
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("item")))
                     {
                         return nullptr;
                     }
-                    return Model::FStatus::FromJson(Data->GetObjectField("item"));
+                    return Model::FStatus::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("item")));
                  }() : nullptr)
-            ->WithExperienceNamespaceName(Data->HasField("experienceNamespaceName") ? [Data]() -> TOptional<FString>
+            ->WithExperienceNamespaceName(Data->HasField(ANSI_TO_TCHAR("experienceNamespaceName")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("experienceNamespaceName", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("experienceNamespaceName"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithExperienceStatus(Data->HasField("experienceStatus") ? [Data]() -> Gs2::Experience::Model::FStatusPtr
+            ->WithExperienceStatus(Data->HasField(ANSI_TO_TCHAR("experienceStatus")) ? [Data]() -> Gs2::Experience::Model::FStatusPtr
                  {
-                    if (Data->HasTypedField<EJson::Null>("experienceStatus"))
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("experienceStatus")))
                     {
                         return nullptr;
                     }
-                    return Gs2::Experience::Model::FStatus::FromJson(Data->GetObjectField("experienceStatus"));
+                    return Gs2::Experience::Model::FStatus::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("experienceStatus")));
                  }() : nullptr);
     }
 

@@ -240,85 +240,85 @@ namespace Gs2::Realtime::Model
             return nullptr;
         }
         return MakeShared<FRoom>()
-            ->WithRoomId(Data->HasField("roomId") ? [Data]() -> TOptional<FString>
+            ->WithRoomId(Data->HasField(ANSI_TO_TCHAR("roomId")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("roomId", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("roomId"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithName(Data->HasField("name") ? [Data]() -> TOptional<FString>
+            ->WithName(Data->HasField(ANSI_TO_TCHAR("name")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("name", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("name"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithIpAddress(Data->HasField("ipAddress") ? [Data]() -> TOptional<FString>
+            ->WithIpAddress(Data->HasField(ANSI_TO_TCHAR("ipAddress")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("ipAddress", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("ipAddress"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithPort(Data->HasField("port") ? [Data]() -> TOptional<int32>
+            ->WithPort(Data->HasField(ANSI_TO_TCHAR("port")) ? [Data]() -> TOptional<int32>
                 {
                     int32 v;
-                    if (Data->TryGetNumberField("port", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("port"), v))
                     {
                         return TOptional(v);
                     }
                     return TOptional<int32>();
                 }() : TOptional<int32>())
-            ->WithEncryptionKey(Data->HasField("encryptionKey") ? [Data]() -> TOptional<FString>
+            ->WithEncryptionKey(Data->HasField(ANSI_TO_TCHAR("encryptionKey")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("encryptionKey", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("encryptionKey"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithNotificationUserIds(Data->HasField("notificationUserIds") ? [Data]() -> TSharedPtr<TArray<FString>>
+            ->WithNotificationUserIds(Data->HasField(ANSI_TO_TCHAR("notificationUserIds")) ? [Data]() -> TSharedPtr<TArray<FString>>
                 {
                     auto v = MakeShared<TArray<FString>>();
-                    if (!Data->HasTypedField<EJson::Null>("notificationUserIds") && Data->HasTypedField<EJson::Array>("notificationUserIds"))
+                    if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("notificationUserIds")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("notificationUserIds")))
                     {
-                        for (auto JsonObjectValue : Data->GetArrayField("notificationUserIds"))
+                        for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("notificationUserIds")))
                         {
                             v->Add(JsonObjectValue->AsString());
                         }
                     }
                     return v;
                  }() : MakeShared<TArray<FString>>())
-            ->WithCreatedAt(Data->HasField("createdAt") ? [Data]() -> TOptional<int64>
+            ->WithCreatedAt(Data->HasField(ANSI_TO_TCHAR("createdAt")) ? [Data]() -> TOptional<int64>
                 {
                     int64 v;
-                    if (Data->TryGetNumberField("createdAt", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("createdAt"), v))
                     {
                         return TOptional(v);
                     }
                     return TOptional<int64>();
                 }() : TOptional<int64>())
-            ->WithUpdatedAt(Data->HasField("updatedAt") ? [Data]() -> TOptional<int64>
+            ->WithUpdatedAt(Data->HasField(ANSI_TO_TCHAR("updatedAt")) ? [Data]() -> TOptional<int64>
                 {
                     int64 v;
-                    if (Data->TryGetNumberField("updatedAt", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("updatedAt"), v))
                     {
                         return TOptional(v);
                     }
                     return TOptional<int64>();
                 }() : TOptional<int64>())
-            ->WithRevision(Data->HasField("revision") ? [Data]() -> TOptional<int64>
+            ->WithRevision(Data->HasField(ANSI_TO_TCHAR("revision")) ? [Data]() -> TOptional<int64>
                 {
                     int64 v;
-                    if (Data->TryGetNumberField("revision", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("revision"), v))
                     {
                         return TOptional(v);
                     }

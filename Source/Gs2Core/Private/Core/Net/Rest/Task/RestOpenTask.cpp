@@ -102,9 +102,9 @@ namespace Gs2::Core::Net::Rest::Task
             if (TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(ResponseBody);
                 FJsonSerializer::Deserialize(JsonReader, JsonRootObject))
             {
-                const auto Token = JsonRootObject->GetStringField("access_token");
+                const auto Token = JsonRootObject->GetStringField(ANSI_TO_TCHAR("access_token"));
                 Session->Credential()->UpdateProjectToken(Token);
-                Session->SetOwnerId(JsonRootObject->GetStringField("owner_id"));
+                Session->SetOwnerId(JsonRootObject->GetStringField(ANSI_TO_TCHAR("owner_id")));
             }
             auto Details = TArray<TSharedPtr<Model::FGs2ErrorDetail>>();
             *Result = MakeShared<Result::FOpenTaskResult>();

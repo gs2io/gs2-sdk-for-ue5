@@ -28,6 +28,8 @@
 #include "Schedule/Domain/Model/Trigger.h"
 #include "Schedule/Domain/Model/User.h"
 
+#include "Core/Domain/Gs2.h"
+
 namespace Gs2::Schedule::Domain::Iterator
 {
 

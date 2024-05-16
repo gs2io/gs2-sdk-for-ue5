@@ -53,13 +53,13 @@ namespace Gs2::Lottery::Result
             return nullptr;
         }
         return MakeShared<FDeleteLotteryModelMasterResult>()
-            ->WithItem(Data->HasField("item") ? [Data]() -> Model::FLotteryModelMasterPtr
+            ->WithItem(Data->HasField(ANSI_TO_TCHAR("item")) ? [Data]() -> Model::FLotteryModelMasterPtr
                  {
-                    if (Data->HasTypedField<EJson::Null>("item"))
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("item")))
                     {
                         return nullptr;
                     }
-                    return Model::FLotteryModelMaster::FromJson(Data->GetObjectField("item"));
+                    return Model::FLotteryModelMaster::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("item")));
                  }() : nullptr);
     }
 

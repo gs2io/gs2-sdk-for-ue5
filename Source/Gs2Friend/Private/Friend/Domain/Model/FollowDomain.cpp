@@ -150,7 +150,7 @@ namespace Gs2::Friend::Domain::Model
             Self->Service,
             Request->GetNamespaceName(),
             ResultModel->GetItem()->GetUserId(),
-            false,
+            Self->WithProfile,
             Request->GetTargetUserId()
         );
 

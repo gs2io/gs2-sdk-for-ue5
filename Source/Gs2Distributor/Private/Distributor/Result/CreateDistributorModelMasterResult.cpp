@@ -53,13 +53,13 @@ namespace Gs2::Distributor::Result
             return nullptr;
         }
         return MakeShared<FCreateDistributorModelMasterResult>()
-            ->WithItem(Data->HasField("item") ? [Data]() -> Model::FDistributorModelMasterPtr
+            ->WithItem(Data->HasField(ANSI_TO_TCHAR("item")) ? [Data]() -> Model::FDistributorModelMasterPtr
                  {
-                    if (Data->HasTypedField<EJson::Null>("item"))
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("item")))
                     {
                         return nullptr;
                     }
-                    return Model::FDistributorModelMaster::FromJson(Data->GetObjectField("item"));
+                    return Model::FDistributorModelMaster::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("item")));
                  }() : nullptr);
     }
 

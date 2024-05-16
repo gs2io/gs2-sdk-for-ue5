@@ -116,38 +116,38 @@ namespace Gs2::Ranking::Request
             return nullptr;
         }
         return MakeShared<FDescribeNearRankingsRequest>()
-            ->WithContextStack(Data->HasField("contextStack") ? TOptional<FString>(Data->GetStringField("contextStack")) : TOptional<FString>())
-            ->WithNamespaceName(Data->HasField("namespaceName") ? [Data]() -> TOptional<FString>
+            ->WithContextStack(Data->HasField(ANSI_TO_TCHAR("contextStack")) ? TOptional<FString>(Data->GetStringField(ANSI_TO_TCHAR("contextStack"))) : TOptional<FString>())
+            ->WithNamespaceName(Data->HasField(ANSI_TO_TCHAR("namespaceName")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
-                    if (Data->TryGetStringField("namespaceName", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("namespaceName"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
-            ->WithCategoryName(Data->HasField("categoryName") ? [Data]() -> TOptional<FString>
+            ->WithCategoryName(Data->HasField(ANSI_TO_TCHAR("categoryName")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
-                    if (Data->TryGetStringField("categoryName", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("categoryName"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
-            ->WithAdditionalScopeName(Data->HasField("additionalScopeName") ? [Data]() -> TOptional<FString>
+            ->WithAdditionalScopeName(Data->HasField(ANSI_TO_TCHAR("additionalScopeName")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
-                    if (Data->TryGetStringField("additionalScopeName", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("additionalScopeName"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
-            ->WithScore(Data->HasField("score") ? [Data]() -> TOptional<int64>
+            ->WithScore(Data->HasField(ANSI_TO_TCHAR("score")) ? [Data]() -> TOptional<int64>
               {
                   int64 v;
-                    if (Data->TryGetNumberField("score", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("score"), v))
                   {
                         return TOptional(v);
                   }

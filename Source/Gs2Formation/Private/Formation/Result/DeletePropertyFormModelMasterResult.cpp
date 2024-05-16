@@ -53,13 +53,13 @@ namespace Gs2::Formation::Result
             return nullptr;
         }
         return MakeShared<FDeletePropertyFormModelMasterResult>()
-            ->WithItem(Data->HasField("item") ? [Data]() -> Model::FPropertyFormModelMasterPtr
+            ->WithItem(Data->HasField(ANSI_TO_TCHAR("item")) ? [Data]() -> Model::FPropertyFormModelMasterPtr
                  {
-                    if (Data->HasTypedField<EJson::Null>("item"))
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("item")))
                     {
                         return nullptr;
                     }
-                    return Model::FPropertyFormModelMaster::FromJson(Data->GetObjectField("item"));
+                    return Model::FPropertyFormModelMaster::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("item")));
                  }() : nullptr);
     }
 

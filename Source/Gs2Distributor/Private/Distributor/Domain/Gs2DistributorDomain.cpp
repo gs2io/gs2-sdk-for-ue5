@@ -225,7 +225,7 @@ namespace Gs2::Distributor::Domain
     }
 
     Gs2::Core::Model::FGs2ErrorPtr FGs2DistributorDomain::FDispatchTask::Action(
-        TSharedPtr<TSharedPtr<void*>> Result
+        TSharedPtr<TSharedPtr<FGs2DistributorDomain>> Result
     )
     {
         if (Self->CompletedStampSheetsMutex->TryLock())
@@ -314,7 +314,7 @@ namespace Gs2::Distributor::Domain
     }
 
     Gs2::Core::Model::FGs2ErrorPtr FGs2DistributorDomain::FDispatchByUserIdTask::Action(
-        TSharedPtr<TSharedPtr<void*>> Result
+        TSharedPtr<TSharedPtr<FGs2DistributorDomain>> Result
     )
     {
         if (Self->CompletedStampSheetsMutex->TryLock())

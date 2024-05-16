@@ -191,58 +191,58 @@ namespace Gs2::Matchmaking::Model
             return nullptr;
         }
         return MakeShared<FVote>()
-            ->WithVoteId(Data->HasField("voteId") ? [Data]() -> TOptional<FString>
+            ->WithVoteId(Data->HasField(ANSI_TO_TCHAR("voteId")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("voteId", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("voteId"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithRatingName(Data->HasField("ratingName") ? [Data]() -> TOptional<FString>
+            ->WithRatingName(Data->HasField(ANSI_TO_TCHAR("ratingName")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("ratingName", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("ratingName"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithGatheringName(Data->HasField("gatheringName") ? [Data]() -> TOptional<FString>
+            ->WithGatheringName(Data->HasField(ANSI_TO_TCHAR("gatheringName")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("gatheringName", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("gatheringName"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithWrittenBallots(Data->HasField("writtenBallots") ? [Data]() -> TSharedPtr<TArray<Model::FWrittenBallotPtr>>
+            ->WithWrittenBallots(Data->HasField(ANSI_TO_TCHAR("writtenBallots")) ? [Data]() -> TSharedPtr<TArray<Model::FWrittenBallotPtr>>
                 {
                     auto v = MakeShared<TArray<Model::FWrittenBallotPtr>>();
-                    if (!Data->HasTypedField<EJson::Null>("writtenBallots") && Data->HasTypedField<EJson::Array>("writtenBallots"))
+                    if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("writtenBallots")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("writtenBallots")))
                     {
-                        for (auto JsonObjectValue : Data->GetArrayField("writtenBallots"))
+                        for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("writtenBallots")))
                         {
                             v->Add(Model::FWrittenBallot::FromJson(JsonObjectValue->AsObject()));
                         }
                     }
                     return v;
                  }() : MakeShared<TArray<Model::FWrittenBallotPtr>>())
-            ->WithCreatedAt(Data->HasField("createdAt") ? [Data]() -> TOptional<int64>
+            ->WithCreatedAt(Data->HasField(ANSI_TO_TCHAR("createdAt")) ? [Data]() -> TOptional<int64>
                 {
                     int64 v;
-                    if (Data->TryGetNumberField("createdAt", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("createdAt"), v))
                     {
                         return TOptional(v);
                     }
                     return TOptional<int64>();
                 }() : TOptional<int64>())
-            ->WithUpdatedAt(Data->HasField("updatedAt") ? [Data]() -> TOptional<int64>
+            ->WithUpdatedAt(Data->HasField(ANSI_TO_TCHAR("updatedAt")) ? [Data]() -> TOptional<int64>
                 {
                     int64 v;
-                    if (Data->TryGetNumberField("updatedAt", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("updatedAt"), v))
                     {
                         return TOptional(v);
                     }

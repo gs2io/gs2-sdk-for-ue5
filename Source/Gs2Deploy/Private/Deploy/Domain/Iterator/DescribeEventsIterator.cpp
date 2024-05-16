@@ -28,6 +28,8 @@
 #include "Deploy/Domain/Model/Event.h"
 #include "Deploy/Domain/Model/Stack.h"
 
+#include "Core/Domain/Gs2.h"
+
 namespace Gs2::Deploy::Domain::Iterator
 {
 

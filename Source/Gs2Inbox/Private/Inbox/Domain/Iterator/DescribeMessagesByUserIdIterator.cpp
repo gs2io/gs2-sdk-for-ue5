@@ -28,6 +28,8 @@
 #include "Inbox/Domain/Model/Message.h"
 #include "Inbox/Domain/Model/User.h"
 
+#include "Core/Domain/Gs2.h"
+
 namespace Gs2::Inbox::Domain::Iterator
 {
 

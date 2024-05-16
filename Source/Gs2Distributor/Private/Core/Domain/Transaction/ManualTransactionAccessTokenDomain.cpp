@@ -35,12 +35,12 @@ namespace Gs2::Core::Domain
 				));
 			}
 
-			if (ResultJson->HasField("autoRunStampSheet")) {
+			if (ResultJson->HasField(ANSI_TO_TCHAR("autoRunStampSheet"))) {
 				NextTransactions->Add(NewTransactionDomain(
-					ResultJson->HasField("autoRunStampSheet") && ResultJson->GetBoolField("autoRunStampSheet"),
-					ResultJson->HasField("transactionId") ? ResultJson->GetStringField("transactionId") : FString(""),
-                    ResultJson->HasField("stampSheet") ? ResultJson->GetStringField("stampSheet") : FString(""),
-                    ResultJson->HasField("stampSheetEncryptionKeyId") ? ResultJson->GetStringField("stampSheetEncryptionKeyId") : FString("")
+					ResultJson->HasField(ANSI_TO_TCHAR("autoRunStampSheet")) && ResultJson->GetBoolField(ANSI_TO_TCHAR("autoRunStampSheet")),
+					ResultJson->HasField(ANSI_TO_TCHAR("transactionId")) ? ResultJson->GetStringField(ANSI_TO_TCHAR("transactionId")) : FString(""),
+                    ResultJson->HasField(ANSI_TO_TCHAR("stampSheet")) ? ResultJson->GetStringField(ANSI_TO_TCHAR("stampSheet")) : FString(""),
+                    ResultJson->HasField(ANSI_TO_TCHAR("stampSheetEncryptionKeyId")) ? ResultJson->GetStringField(ANSI_TO_TCHAR("stampSheetEncryptionKeyId")) : FString("")
 				));
 			}
 			if (NextTransactions->Num() > 0) {
@@ -116,14 +116,14 @@ namespace Gs2::Core::Domain
 		{
 			return nullptr;
 		}
-		auto StampSheetPayload = StampSheetJson->GetStringField("body");
+		auto StampSheetPayload = StampSheetJson->GetStringField(ANSI_TO_TCHAR("body"));
 		TSharedPtr<FJsonObject> StampSheetPayloadJson;
 		if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(StampSheetPayload);
 			!FJsonSerializer::Deserialize(JsonReader, StampSheetPayloadJson))
 		{
 			return nullptr;
 		}
-        auto StampTasks = StampSheetPayloadJson->GetArrayField("tasks");
+        auto StampTasks = StampSheetPayloadJson->GetArrayField(ANSI_TO_TCHAR("tasks"));
         TOptional<FString> contextStack;
         for (auto i = 0; i < StampTasks.Num(); i++)
         {
@@ -134,7 +134,7 @@ namespace Gs2::Core::Domain
         	{
         		return nullptr;
         	}
-        	auto StampTaskPayload = stampTaskJson->GetStringField("body");
+        	auto StampTaskPayload = stampTaskJson->GetStringField(ANSI_TO_TCHAR("body"));
         	TSharedPtr<FJsonObject> stampTaskPayloadJson;
         	if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(StampTaskPayload);
 				!FJsonSerializer::Deserialize(JsonReader, stampTaskPayloadJson))
@@ -157,8 +157,8 @@ namespace Gs2::Core::Domain
             	const auto FutureResult = Future->GetTask().Result();
                 contextStack = FutureResult->GetContextStack();
                 Gs2->TransactionConfiguration->StampTaskEventHandler(
-                    stampTaskPayloadJson->GetStringField("action"),
-                    stampTaskPayloadJson->GetStringField("args"),
+                    stampTaskPayloadJson->GetStringField(ANSI_TO_TCHAR("action")),
+                    stampTaskPayloadJson->GetStringField(ANSI_TO_TCHAR("args")),
                     *FutureResult->GetResult()
                 );
             }
@@ -193,8 +193,8 @@ namespace Gs2::Core::Domain
                 auto FutureResult = Future->GetTask().Result();
                 contextStack = FutureResult->GetContextStack();
                 Gs2->TransactionConfiguration->StampTaskEventHandler(
-                    stampTaskPayloadJson->GetStringField("action"),
-                    stampTaskPayloadJson->GetStringField("args"),
+                    stampTaskPayloadJson->GetStringField(ANSI_TO_TCHAR("action")),
+                    stampTaskPayloadJson->GetStringField(ANSI_TO_TCHAR("args")),
                     *FutureResult->GetResult()
                 );
             }
@@ -217,11 +217,11 @@ namespace Gs2::Core::Domain
         	}
         	const auto FutureResult = Future->GetTask().Result();
             Gs2->TransactionConfiguration->StampSheetEventHandler(
-                StampSheetPayloadJson->GetStringField("action"),
-                StampSheetPayloadJson->GetStringField("args"),
+                StampSheetPayloadJson->GetStringField(ANSI_TO_TCHAR("action")),
+                StampSheetPayloadJson->GetStringField(ANSI_TO_TCHAR("args")),
                 *FutureResult->GetResult()
             );
-        	action = StampSheetPayloadJson->GetStringField("action");
+        	action = StampSheetPayloadJson->GetStringField(ANSI_TO_TCHAR("action"));
         	if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(FutureResult->GetResult().IsSet() ? *FutureResult->GetResult() : "{}");
 				!FJsonSerializer::Deserialize(JsonReader, resultJson))
         	{
@@ -258,11 +258,11 @@ namespace Gs2::Core::Domain
         	}
             auto FutureResult = Future->GetTask().Result();
             Gs2->TransactionConfiguration->StampSheetEventHandler(
-                StampSheetPayloadJson->GetStringField("action"),
-                StampSheetPayloadJson->GetStringField("args"),
+                StampSheetPayloadJson->GetStringField(ANSI_TO_TCHAR("action")),
+                StampSheetPayloadJson->GetStringField(ANSI_TO_TCHAR("args")),
                 *FutureResult->GetResult()
             );
-        	action = StampSheetPayloadJson->GetStringField("action");
+        	action = StampSheetPayloadJson->GetStringField(ANSI_TO_TCHAR("action"));
         	if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(FutureResult->GetResult().IsSet() ? *FutureResult->GetResult() : "{}");
 				!FJsonSerializer::Deserialize(JsonReader, resultJson))
         	{

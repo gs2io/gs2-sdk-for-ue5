@@ -96,28 +96,28 @@ namespace Gs2::Matchmaking::Request
             return nullptr;
         }
         return MakeShared<FDoMatchmakingByPlayerRequest>()
-            ->WithContextStack(Data->HasField("contextStack") ? TOptional<FString>(Data->GetStringField("contextStack")) : TOptional<FString>())
-            ->WithNamespaceName(Data->HasField("namespaceName") ? [Data]() -> TOptional<FString>
+            ->WithContextStack(Data->HasField(ANSI_TO_TCHAR("contextStack")) ? TOptional<FString>(Data->GetStringField(ANSI_TO_TCHAR("contextStack"))) : TOptional<FString>())
+            ->WithNamespaceName(Data->HasField(ANSI_TO_TCHAR("namespaceName")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
-                    if (Data->TryGetStringField("namespaceName", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("namespaceName"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
-          ->WithPlayer(Data->HasField("player") ? [Data]() -> Model::FPlayerPtr
+          ->WithPlayer(Data->HasField(ANSI_TO_TCHAR("player")) ? [Data]() -> Model::FPlayerPtr
               {
-                  if (Data->HasTypedField<EJson::Null>("player"))
+                  if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("player")))
                   {
                       return nullptr;
                   }
-                  return Model::FPlayer::FromJson(Data->GetObjectField("player"));
+                  return Model::FPlayer::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("player")));
               }() : nullptr)
-            ->WithMatchmakingContextToken(Data->HasField("matchmakingContextToken") ? [Data]() -> TOptional<FString>
+            ->WithMatchmakingContextToken(Data->HasField(ANSI_TO_TCHAR("matchmakingContextToken")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
-                    if (Data->TryGetStringField("matchmakingContextToken", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("matchmakingContextToken"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }

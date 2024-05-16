@@ -99,40 +99,40 @@ namespace Gs2::Buff::Model
             return nullptr;
         }
         return MakeShared<FBuffTargetAction>()
-            ->WithTargetActionName(Data->HasField("targetActionName") ? [Data]() -> TOptional<FString>
+            ->WithTargetActionName(Data->HasField(ANSI_TO_TCHAR("targetActionName")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("targetActionName", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("targetActionName"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithTargetFieldName(Data->HasField("targetFieldName") ? [Data]() -> TOptional<FString>
+            ->WithTargetFieldName(Data->HasField(ANSI_TO_TCHAR("targetFieldName")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("targetFieldName", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("targetFieldName"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithConditionGrns(Data->HasField("conditionGrns") ? [Data]() -> TSharedPtr<TArray<Model::FBuffTargetGrnPtr>>
+            ->WithConditionGrns(Data->HasField(ANSI_TO_TCHAR("conditionGrns")) ? [Data]() -> TSharedPtr<TArray<Model::FBuffTargetGrnPtr>>
                 {
                     auto v = MakeShared<TArray<Model::FBuffTargetGrnPtr>>();
-                    if (!Data->HasTypedField<EJson::Null>("conditionGrns") && Data->HasTypedField<EJson::Array>("conditionGrns"))
+                    if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("conditionGrns")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("conditionGrns")))
                     {
-                        for (auto JsonObjectValue : Data->GetArrayField("conditionGrns"))
+                        for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("conditionGrns")))
                         {
                             v->Add(Model::FBuffTargetGrn::FromJson(JsonObjectValue->AsObject()));
                         }
                     }
                     return v;
                  }() : MakeShared<TArray<Model::FBuffTargetGrnPtr>>())
-            ->WithRate(Data->HasField("rate") ? [Data]() -> TOptional<float>
+            ->WithRate(Data->HasField(ANSI_TO_TCHAR("rate")) ? [Data]() -> TOptional<float>
                 {
                     float v;
-                    if (Data->TryGetNumberField("rate", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("rate"), v))
                     {
                         return TOptional(v);
                     }

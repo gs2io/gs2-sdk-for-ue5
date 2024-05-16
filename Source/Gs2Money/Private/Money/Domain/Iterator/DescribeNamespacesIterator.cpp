@@ -27,6 +27,8 @@
 #include "Money/Domain/Iterator/DescribeNamespacesIterator.h"
 #include "Money/Domain/Model/Namespace.h"
 
+#include "Core/Domain/Gs2.h"
+
 namespace Gs2::Money::Domain::Iterator
 {
 

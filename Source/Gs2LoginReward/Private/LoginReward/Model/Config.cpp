@@ -62,19 +62,19 @@ namespace Gs2::LoginReward::Model
             return nullptr;
         }
         return MakeShared<FConfig>()
-            ->WithKey(Data->HasField("key") ? [Data]() -> TOptional<FString>
+            ->WithKey(Data->HasField(ANSI_TO_TCHAR("key")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("key", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("key"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithValue(Data->HasField("value") ? [Data]() -> TOptional<FString>
+            ->WithValue(Data->HasField(ANSI_TO_TCHAR("value")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("value", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("value"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }

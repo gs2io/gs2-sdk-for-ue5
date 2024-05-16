@@ -191,58 +191,58 @@ namespace Gs2::Chat::Model
             return nullptr;
         }
         return MakeShared<FSubscribe>()
-            ->WithSubscribeId(Data->HasField("subscribeId") ? [Data]() -> TOptional<FString>
+            ->WithSubscribeId(Data->HasField(ANSI_TO_TCHAR("subscribeId")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("subscribeId", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("subscribeId"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithUserId(Data->HasField("userId") ? [Data]() -> TOptional<FString>
+            ->WithUserId(Data->HasField(ANSI_TO_TCHAR("userId")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("userId", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("userId"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithRoomName(Data->HasField("roomName") ? [Data]() -> TOptional<FString>
+            ->WithRoomName(Data->HasField(ANSI_TO_TCHAR("roomName")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("roomName", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("roomName"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithNotificationTypes(Data->HasField("notificationTypes") ? [Data]() -> TSharedPtr<TArray<Model::FNotificationTypePtr>>
+            ->WithNotificationTypes(Data->HasField(ANSI_TO_TCHAR("notificationTypes")) ? [Data]() -> TSharedPtr<TArray<Model::FNotificationTypePtr>>
                 {
                     auto v = MakeShared<TArray<Model::FNotificationTypePtr>>();
-                    if (!Data->HasTypedField<EJson::Null>("notificationTypes") && Data->HasTypedField<EJson::Array>("notificationTypes"))
+                    if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("notificationTypes")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("notificationTypes")))
                     {
-                        for (auto JsonObjectValue : Data->GetArrayField("notificationTypes"))
+                        for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("notificationTypes")))
                         {
                             v->Add(Model::FNotificationType::FromJson(JsonObjectValue->AsObject()));
                         }
                     }
                     return v;
                  }() : MakeShared<TArray<Model::FNotificationTypePtr>>())
-            ->WithCreatedAt(Data->HasField("createdAt") ? [Data]() -> TOptional<int64>
+            ->WithCreatedAt(Data->HasField(ANSI_TO_TCHAR("createdAt")) ? [Data]() -> TOptional<int64>
                 {
                     int64 v;
-                    if (Data->TryGetNumberField("createdAt", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("createdAt"), v))
                     {
                         return TOptional(v);
                     }
                     return TOptional<int64>();
                 }() : TOptional<int64>())
-            ->WithRevision(Data->HasField("revision") ? [Data]() -> TOptional<int64>
+            ->WithRevision(Data->HasField(ANSI_TO_TCHAR("revision")) ? [Data]() -> TOptional<int64>
                 {
                     int64 v;
-                    if (Data->TryGetNumberField("revision", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("revision"), v))
                     {
                         return TOptional(v);
                     }

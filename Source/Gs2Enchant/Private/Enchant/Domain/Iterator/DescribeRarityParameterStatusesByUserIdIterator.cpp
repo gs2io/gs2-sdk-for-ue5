@@ -28,6 +28,8 @@
 #include "Enchant/Domain/Model/RarityParameterStatus.h"
 #include "Enchant/Domain/Model/User.h"
 
+#include "Core/Domain/Gs2.h"
+
 namespace Gs2::Enchant::Domain::Iterator
 {
 

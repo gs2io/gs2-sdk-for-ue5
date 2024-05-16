@@ -202,82 +202,82 @@ namespace Gs2::Experience::Request
             return nullptr;
         }
         return MakeShared<FCreateNamespaceRequest>()
-            ->WithContextStack(Data->HasField("contextStack") ? TOptional<FString>(Data->GetStringField("contextStack")) : TOptional<FString>())
-            ->WithName(Data->HasField("name") ? [Data]() -> TOptional<FString>
+            ->WithContextStack(Data->HasField(ANSI_TO_TCHAR("contextStack")) ? TOptional<FString>(Data->GetStringField(ANSI_TO_TCHAR("contextStack"))) : TOptional<FString>())
+            ->WithName(Data->HasField(ANSI_TO_TCHAR("name")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
-                    if (Data->TryGetStringField("name", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("name"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
-            ->WithDescription(Data->HasField("description") ? [Data]() -> TOptional<FString>
+            ->WithDescription(Data->HasField(ANSI_TO_TCHAR("description")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
-                    if (Data->TryGetStringField("description", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("description"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
-          ->WithTransactionSetting(Data->HasField("transactionSetting") ? [Data]() -> Model::FTransactionSettingPtr
+          ->WithTransactionSetting(Data->HasField(ANSI_TO_TCHAR("transactionSetting")) ? [Data]() -> Model::FTransactionSettingPtr
               {
-                  if (Data->HasTypedField<EJson::Null>("transactionSetting"))
+                  if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("transactionSetting")))
                   {
                       return nullptr;
                   }
-                  return Model::FTransactionSetting::FromJson(Data->GetObjectField("transactionSetting"));
+                  return Model::FTransactionSetting::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("transactionSetting")));
               }() : nullptr)
-            ->WithRankCapScriptId(Data->HasField("rankCapScriptId") ? [Data]() -> TOptional<FString>
+            ->WithRankCapScriptId(Data->HasField(ANSI_TO_TCHAR("rankCapScriptId")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
-                    if (Data->TryGetStringField("rankCapScriptId", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("rankCapScriptId"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
-          ->WithChangeExperienceScript(Data->HasField("changeExperienceScript") ? [Data]() -> Model::FScriptSettingPtr
+          ->WithChangeExperienceScript(Data->HasField(ANSI_TO_TCHAR("changeExperienceScript")) ? [Data]() -> Model::FScriptSettingPtr
               {
-                  if (Data->HasTypedField<EJson::Null>("changeExperienceScript"))
+                  if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("changeExperienceScript")))
                   {
                       return nullptr;
                   }
-                  return Model::FScriptSetting::FromJson(Data->GetObjectField("changeExperienceScript"));
+                  return Model::FScriptSetting::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("changeExperienceScript")));
               }() : nullptr)
-          ->WithChangeRankScript(Data->HasField("changeRankScript") ? [Data]() -> Model::FScriptSettingPtr
+          ->WithChangeRankScript(Data->HasField(ANSI_TO_TCHAR("changeRankScript")) ? [Data]() -> Model::FScriptSettingPtr
               {
-                  if (Data->HasTypedField<EJson::Null>("changeRankScript"))
+                  if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("changeRankScript")))
                   {
                       return nullptr;
                   }
-                  return Model::FScriptSetting::FromJson(Data->GetObjectField("changeRankScript"));
+                  return Model::FScriptSetting::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("changeRankScript")));
               }() : nullptr)
-          ->WithChangeRankCapScript(Data->HasField("changeRankCapScript") ? [Data]() -> Model::FScriptSettingPtr
+          ->WithChangeRankCapScript(Data->HasField(ANSI_TO_TCHAR("changeRankCapScript")) ? [Data]() -> Model::FScriptSettingPtr
               {
-                  if (Data->HasTypedField<EJson::Null>("changeRankCapScript"))
+                  if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("changeRankCapScript")))
                   {
                       return nullptr;
                   }
-                  return Model::FScriptSetting::FromJson(Data->GetObjectField("changeRankCapScript"));
+                  return Model::FScriptSetting::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("changeRankCapScript")));
               }() : nullptr)
-            ->WithOverflowExperienceScript(Data->HasField("overflowExperienceScript") ? [Data]() -> TOptional<FString>
+            ->WithOverflowExperienceScript(Data->HasField(ANSI_TO_TCHAR("overflowExperienceScript")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
-                    if (Data->TryGetStringField("overflowExperienceScript", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("overflowExperienceScript"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
-          ->WithLogSetting(Data->HasField("logSetting") ? [Data]() -> Model::FLogSettingPtr
+          ->WithLogSetting(Data->HasField(ANSI_TO_TCHAR("logSetting")) ? [Data]() -> Model::FLogSettingPtr
               {
-                  if (Data->HasTypedField<EJson::Null>("logSetting"))
+                  if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("logSetting")))
                   {
                       return nullptr;
                   }
-                  return Model::FLogSetting::FromJson(Data->GetObjectField("logSetting"));
+                  return Model::FLogSetting::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("logSetting")));
               }() : nullptr);
     }
 

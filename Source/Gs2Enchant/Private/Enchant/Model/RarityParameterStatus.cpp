@@ -239,76 +239,76 @@ namespace Gs2::Enchant::Model
             return nullptr;
         }
         return MakeShared<FRarityParameterStatus>()
-            ->WithRarityParameterStatusId(Data->HasField("rarityParameterStatusId") ? [Data]() -> TOptional<FString>
+            ->WithRarityParameterStatusId(Data->HasField(ANSI_TO_TCHAR("rarityParameterStatusId")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("rarityParameterStatusId", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("rarityParameterStatusId"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithUserId(Data->HasField("userId") ? [Data]() -> TOptional<FString>
+            ->WithUserId(Data->HasField(ANSI_TO_TCHAR("userId")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("userId", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("userId"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithParameterName(Data->HasField("parameterName") ? [Data]() -> TOptional<FString>
+            ->WithParameterName(Data->HasField(ANSI_TO_TCHAR("parameterName")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("parameterName", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("parameterName"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithPropertyId(Data->HasField("propertyId") ? [Data]() -> TOptional<FString>
+            ->WithPropertyId(Data->HasField(ANSI_TO_TCHAR("propertyId")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("propertyId", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("propertyId"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithParameterValues(Data->HasField("parameterValues") ? [Data]() -> TSharedPtr<TArray<Model::FRarityParameterValuePtr>>
+            ->WithParameterValues(Data->HasField(ANSI_TO_TCHAR("parameterValues")) ? [Data]() -> TSharedPtr<TArray<Model::FRarityParameterValuePtr>>
                 {
                     auto v = MakeShared<TArray<Model::FRarityParameterValuePtr>>();
-                    if (!Data->HasTypedField<EJson::Null>("parameterValues") && Data->HasTypedField<EJson::Array>("parameterValues"))
+                    if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("parameterValues")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("parameterValues")))
                     {
-                        for (auto JsonObjectValue : Data->GetArrayField("parameterValues"))
+                        for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("parameterValues")))
                         {
                             v->Add(Model::FRarityParameterValue::FromJson(JsonObjectValue->AsObject()));
                         }
                     }
                     return v;
                  }() : MakeShared<TArray<Model::FRarityParameterValuePtr>>())
-            ->WithCreatedAt(Data->HasField("createdAt") ? [Data]() -> TOptional<int64>
+            ->WithCreatedAt(Data->HasField(ANSI_TO_TCHAR("createdAt")) ? [Data]() -> TOptional<int64>
                 {
                     int64 v;
-                    if (Data->TryGetNumberField("createdAt", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("createdAt"), v))
                     {
                         return TOptional(v);
                     }
                     return TOptional<int64>();
                 }() : TOptional<int64>())
-            ->WithUpdatedAt(Data->HasField("updatedAt") ? [Data]() -> TOptional<int64>
+            ->WithUpdatedAt(Data->HasField(ANSI_TO_TCHAR("updatedAt")) ? [Data]() -> TOptional<int64>
                 {
                     int64 v;
-                    if (Data->TryGetNumberField("updatedAt", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("updatedAt"), v))
                     {
                         return TOptional(v);
                     }
                     return TOptional<int64>();
                 }() : TOptional<int64>())
-            ->WithRevision(Data->HasField("revision") ? [Data]() -> TOptional<int64>
+            ->WithRevision(Data->HasField(ANSI_TO_TCHAR("revision")) ? [Data]() -> TOptional<int64>
                 {
                     int64 v;
-                    if (Data->TryGetNumberField("revision", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("revision"), v))
                     {
                         return TOptional(v);
                     }

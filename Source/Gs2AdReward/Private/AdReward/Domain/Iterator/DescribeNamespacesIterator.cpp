@@ -27,6 +27,8 @@
 #include "AdReward/Domain/Iterator/DescribeNamespacesIterator.h"
 #include "AdReward/Domain/Model/Namespace.h"
 
+#include "Core/Domain/Gs2.h"
+
 namespace Gs2::AdReward::Domain::Iterator
 {
 

@@ -91,29 +91,29 @@ namespace Gs2::Quest::Result
             return nullptr;
         }
         return MakeShared<FGetProgressByUserIdResult>()
-            ->WithItem(Data->HasField("item") ? [Data]() -> Model::FProgressPtr
+            ->WithItem(Data->HasField(ANSI_TO_TCHAR("item")) ? [Data]() -> Model::FProgressPtr
                  {
-                    if (Data->HasTypedField<EJson::Null>("item"))
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("item")))
                     {
                         return nullptr;
                     }
-                    return Model::FProgress::FromJson(Data->GetObjectField("item"));
+                    return Model::FProgress::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("item")));
                  }() : nullptr)
-            ->WithQuestGroup(Data->HasField("questGroup") ? [Data]() -> Model::FQuestGroupModelPtr
+            ->WithQuestGroup(Data->HasField(ANSI_TO_TCHAR("questGroup")) ? [Data]() -> Model::FQuestGroupModelPtr
                  {
-                    if (Data->HasTypedField<EJson::Null>("questGroup"))
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("questGroup")))
                     {
                         return nullptr;
                     }
-                    return Model::FQuestGroupModel::FromJson(Data->GetObjectField("questGroup"));
+                    return Model::FQuestGroupModel::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("questGroup")));
                  }() : nullptr)
-            ->WithQuest(Data->HasField("quest") ? [Data]() -> Model::FQuestModelPtr
+            ->WithQuest(Data->HasField(ANSI_TO_TCHAR("quest")) ? [Data]() -> Model::FQuestModelPtr
                  {
-                    if (Data->HasTypedField<EJson::Null>("quest"))
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("quest")))
                     {
                         return nullptr;
                     }
-                    return Model::FQuestModel::FromJson(Data->GetObjectField("quest"));
+                    return Model::FQuestModel::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("quest")));
                  }() : nullptr);
     }
 

@@ -85,31 +85,31 @@ namespace Gs2::Quest::Model
             return nullptr;
         }
         return MakeShared<FContents>()
-            ->WithMetadata(Data->HasField("metadata") ? [Data]() -> TOptional<FString>
+            ->WithMetadata(Data->HasField(ANSI_TO_TCHAR("metadata")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("metadata", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("metadata"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithCompleteAcquireActions(Data->HasField("completeAcquireActions") ? [Data]() -> TSharedPtr<TArray<Model::FAcquireActionPtr>>
+            ->WithCompleteAcquireActions(Data->HasField(ANSI_TO_TCHAR("completeAcquireActions")) ? [Data]() -> TSharedPtr<TArray<Model::FAcquireActionPtr>>
                 {
                     auto v = MakeShared<TArray<Model::FAcquireActionPtr>>();
-                    if (!Data->HasTypedField<EJson::Null>("completeAcquireActions") && Data->HasTypedField<EJson::Array>("completeAcquireActions"))
+                    if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("completeAcquireActions")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("completeAcquireActions")))
                     {
-                        for (auto JsonObjectValue : Data->GetArrayField("completeAcquireActions"))
+                        for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("completeAcquireActions")))
                         {
                             v->Add(Model::FAcquireAction::FromJson(JsonObjectValue->AsObject()));
                         }
                     }
                     return v;
                  }() : MakeShared<TArray<Model::FAcquireActionPtr>>())
-            ->WithWeight(Data->HasField("weight") ? [Data]() -> TOptional<int32>
+            ->WithWeight(Data->HasField(ANSI_TO_TCHAR("weight")) ? [Data]() -> TOptional<int32>
                 {
                     int32 v;
-                    if (Data->TryGetNumberField("weight", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("weight"), v))
                     {
                         return TOptional(v);
                     }

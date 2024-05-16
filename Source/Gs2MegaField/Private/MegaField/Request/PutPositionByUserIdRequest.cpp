@@ -197,78 +197,78 @@ namespace Gs2::MegaField::Request
             return nullptr;
         }
         return MakeShared<FPutPositionByUserIdRequest>()
-            ->WithContextStack(Data->HasField("contextStack") ? TOptional<FString>(Data->GetStringField("contextStack")) : TOptional<FString>())
-            ->WithNamespaceName(Data->HasField("namespaceName") ? [Data]() -> TOptional<FString>
+            ->WithContextStack(Data->HasField(ANSI_TO_TCHAR("contextStack")) ? TOptional<FString>(Data->GetStringField(ANSI_TO_TCHAR("contextStack"))) : TOptional<FString>())
+            ->WithNamespaceName(Data->HasField(ANSI_TO_TCHAR("namespaceName")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
-                    if (Data->TryGetStringField("namespaceName", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("namespaceName"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
-            ->WithUserId(Data->HasField("userId") ? [Data]() -> TOptional<FString>
+            ->WithUserId(Data->HasField(ANSI_TO_TCHAR("userId")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
-                    if (Data->TryGetStringField("userId", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("userId"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
-            ->WithAreaModelName(Data->HasField("areaModelName") ? [Data]() -> TOptional<FString>
+            ->WithAreaModelName(Data->HasField(ANSI_TO_TCHAR("areaModelName")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
-                    if (Data->TryGetStringField("areaModelName", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("areaModelName"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
-            ->WithLayerModelName(Data->HasField("layerModelName") ? [Data]() -> TOptional<FString>
+            ->WithLayerModelName(Data->HasField(ANSI_TO_TCHAR("layerModelName")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
-                    if (Data->TryGetStringField("layerModelName", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("layerModelName"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
-          ->WithPosition(Data->HasField("position") ? [Data]() -> Model::FPositionPtr
+          ->WithPosition(Data->HasField(ANSI_TO_TCHAR("position")) ? [Data]() -> Model::FPositionPtr
               {
-                  if (Data->HasTypedField<EJson::Null>("position"))
+                  if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("position")))
                   {
                       return nullptr;
                   }
-                  return Model::FPosition::FromJson(Data->GetObjectField("position"));
+                  return Model::FPosition::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("position")));
               }() : nullptr)
-          ->WithVector(Data->HasField("vector") ? [Data]() -> Model::FVectorPtr
+          ->WithVector(Data->HasField(ANSI_TO_TCHAR("vector")) ? [Data]() -> Model::FVectorPtr
               {
-                  if (Data->HasTypedField<EJson::Null>("vector"))
+                  if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("vector")))
                   {
                       return nullptr;
                   }
-                  return Model::FVector::FromJson(Data->GetObjectField("vector"));
+                  return Model::FVector::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("vector")));
               }() : nullptr)
-            ->WithR(Data->HasField("r") ? [Data]() -> TOptional<float>
+            ->WithR(Data->HasField(ANSI_TO_TCHAR("r")) ? [Data]() -> TOptional<float>
               {
                   float v;
-                    if (Data->TryGetNumberField("r", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("r"), v))
                   {
                         return TOptional(v);
                   }
                   return TOptional<float>();
               }() : TOptional<float>())
-            ->WithTimeOffsetToken(Data->HasField("timeOffsetToken") ? [Data]() -> TOptional<FString>
+            ->WithTimeOffsetToken(Data->HasField(ANSI_TO_TCHAR("timeOffsetToken")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
-                    if (Data->TryGetStringField("timeOffsetToken", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("timeOffsetToken"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
-          ->WithDuplicationAvoider(Data->HasField("duplicationAvoider") ? TOptional<FString>(Data->GetStringField("duplicationAvoider")) : TOptional<FString>());
+          ->WithDuplicationAvoider(Data->HasField(ANSI_TO_TCHAR("duplicationAvoider")) ? TOptional<FString>(Data->GetStringField(ANSI_TO_TCHAR("duplicationAvoider"))) : TOptional<FString>());
     }
 
     TSharedPtr<FJsonObject> FPutPositionByUserIdRequest::ToJson() const

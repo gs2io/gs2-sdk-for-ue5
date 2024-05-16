@@ -53,13 +53,13 @@ namespace Gs2::Limit::Result
             return nullptr;
         }
         return MakeShared<FGetLimitModelResult>()
-            ->WithItem(Data->HasField("item") ? [Data]() -> Model::FLimitModelPtr
+            ->WithItem(Data->HasField(ANSI_TO_TCHAR("item")) ? [Data]() -> Model::FLimitModelPtr
                  {
-                    if (Data->HasTypedField<EJson::Null>("item"))
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("item")))
                     {
                         return nullptr;
                     }
-                    return Model::FLimitModel::FromJson(Data->GetObjectField("item"));
+                    return Model::FLimitModel::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("item")));
                  }() : nullptr);
     }
 

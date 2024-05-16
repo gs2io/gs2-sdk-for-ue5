@@ -103,28 +103,28 @@ namespace Gs2::Matchmaking::Model
             return nullptr;
         }
         return MakeShared<FTimeSpan>()
-            ->WithDays(Data->HasField("days") ? [Data]() -> TOptional<int32>
+            ->WithDays(Data->HasField(ANSI_TO_TCHAR("days")) ? [Data]() -> TOptional<int32>
                 {
                     int32 v;
-                    if (Data->TryGetNumberField("days", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("days"), v))
                     {
                         return TOptional(v);
                     }
                     return TOptional<int32>();
                 }() : TOptional<int32>())
-            ->WithHours(Data->HasField("hours") ? [Data]() -> TOptional<int32>
+            ->WithHours(Data->HasField(ANSI_TO_TCHAR("hours")) ? [Data]() -> TOptional<int32>
                 {
                     int32 v;
-                    if (Data->TryGetNumberField("hours", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("hours"), v))
                     {
                         return TOptional(v);
                     }
                     return TOptional<int32>();
                 }() : TOptional<int32>())
-            ->WithMinutes(Data->HasField("minutes") ? [Data]() -> TOptional<int32>
+            ->WithMinutes(Data->HasField(ANSI_TO_TCHAR("minutes")) ? [Data]() -> TOptional<int32>
                 {
                     int32 v;
-                    if (Data->TryGetNumberField("minutes", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("minutes"), v))
                     {
                         return TOptional(v);
                     }

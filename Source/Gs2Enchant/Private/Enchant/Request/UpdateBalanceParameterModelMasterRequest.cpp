@@ -165,67 +165,67 @@ namespace Gs2::Enchant::Request
             return nullptr;
         }
         return MakeShared<FUpdateBalanceParameterModelMasterRequest>()
-            ->WithContextStack(Data->HasField("contextStack") ? TOptional<FString>(Data->GetStringField("contextStack")) : TOptional<FString>())
-            ->WithNamespaceName(Data->HasField("namespaceName") ? [Data]() -> TOptional<FString>
+            ->WithContextStack(Data->HasField(ANSI_TO_TCHAR("contextStack")) ? TOptional<FString>(Data->GetStringField(ANSI_TO_TCHAR("contextStack"))) : TOptional<FString>())
+            ->WithNamespaceName(Data->HasField(ANSI_TO_TCHAR("namespaceName")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
-                    if (Data->TryGetStringField("namespaceName", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("namespaceName"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
-            ->WithParameterName(Data->HasField("parameterName") ? [Data]() -> TOptional<FString>
+            ->WithParameterName(Data->HasField(ANSI_TO_TCHAR("parameterName")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
-                    if (Data->TryGetStringField("parameterName", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("parameterName"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
-            ->WithDescription(Data->HasField("description") ? [Data]() -> TOptional<FString>
+            ->WithDescription(Data->HasField(ANSI_TO_TCHAR("description")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
-                    if (Data->TryGetStringField("description", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("description"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
-            ->WithMetadata(Data->HasField("metadata") ? [Data]() -> TOptional<FString>
+            ->WithMetadata(Data->HasField(ANSI_TO_TCHAR("metadata")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
-                    if (Data->TryGetStringField("metadata", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("metadata"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
-            ->WithTotalValue(Data->HasField("totalValue") ? [Data]() -> TOptional<int64>
+            ->WithTotalValue(Data->HasField(ANSI_TO_TCHAR("totalValue")) ? [Data]() -> TOptional<int64>
               {
                   int64 v;
-                    if (Data->TryGetNumberField("totalValue", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("totalValue"), v))
                   {
                         return TOptional(v);
                   }
                   return TOptional<int64>();
               }() : TOptional<int64>())
-            ->WithInitialValueStrategy(Data->HasField("initialValueStrategy") ? [Data]() -> TOptional<FString>
+            ->WithInitialValueStrategy(Data->HasField(ANSI_TO_TCHAR("initialValueStrategy")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
-                    if (Data->TryGetStringField("initialValueStrategy", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("initialValueStrategy"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
-          ->WithParameters(Data->HasField("parameters") ? [Data]() -> TSharedPtr<TArray<Model::FBalanceParameterValueModelPtr>>
+          ->WithParameters(Data->HasField(ANSI_TO_TCHAR("parameters")) ? [Data]() -> TSharedPtr<TArray<Model::FBalanceParameterValueModelPtr>>
               {
                   auto v = MakeShared<TArray<Model::FBalanceParameterValueModelPtr>>();
-                  if (!Data->HasTypedField<EJson::Null>("parameters") && Data->HasTypedField<EJson::Array>("parameters"))
+                  if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("parameters")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("parameters")))
                   {
-                      for (auto JsonObjectValue : Data->GetArrayField("parameters"))
+                      for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("parameters")))
                       {
                           v->Add(Model::FBalanceParameterValueModel::FromJson(JsonObjectValue->AsObject()));
                       }

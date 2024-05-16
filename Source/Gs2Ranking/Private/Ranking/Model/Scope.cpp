@@ -71,19 +71,19 @@ namespace Gs2::Ranking::Model
             return nullptr;
         }
         return MakeShared<FScope>()
-            ->WithName(Data->HasField("name") ? [Data]() -> TOptional<FString>
+            ->WithName(Data->HasField(ANSI_TO_TCHAR("name")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("name", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("name"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithTargetDays(Data->HasField("targetDays") ? [Data]() -> TOptional<int64>
+            ->WithTargetDays(Data->HasField(ANSI_TO_TCHAR("targetDays")) ? [Data]() -> TOptional<int64>
                 {
                     int64 v;
-                    if (Data->TryGetNumberField("targetDays", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("targetDays"), v))
                     {
                         return TOptional(v);
                     }

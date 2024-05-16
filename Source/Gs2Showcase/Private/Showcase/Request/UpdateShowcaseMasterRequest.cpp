@@ -141,59 +141,59 @@ namespace Gs2::Showcase::Request
             return nullptr;
         }
         return MakeShared<FUpdateShowcaseMasterRequest>()
-            ->WithContextStack(Data->HasField("contextStack") ? TOptional<FString>(Data->GetStringField("contextStack")) : TOptional<FString>())
-            ->WithNamespaceName(Data->HasField("namespaceName") ? [Data]() -> TOptional<FString>
+            ->WithContextStack(Data->HasField(ANSI_TO_TCHAR("contextStack")) ? TOptional<FString>(Data->GetStringField(ANSI_TO_TCHAR("contextStack"))) : TOptional<FString>())
+            ->WithNamespaceName(Data->HasField(ANSI_TO_TCHAR("namespaceName")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
-                    if (Data->TryGetStringField("namespaceName", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("namespaceName"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
-            ->WithShowcaseName(Data->HasField("showcaseName") ? [Data]() -> TOptional<FString>
+            ->WithShowcaseName(Data->HasField(ANSI_TO_TCHAR("showcaseName")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
-                    if (Data->TryGetStringField("showcaseName", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("showcaseName"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
-            ->WithDescription(Data->HasField("description") ? [Data]() -> TOptional<FString>
+            ->WithDescription(Data->HasField(ANSI_TO_TCHAR("description")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
-                    if (Data->TryGetStringField("description", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("description"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
-            ->WithMetadata(Data->HasField("metadata") ? [Data]() -> TOptional<FString>
+            ->WithMetadata(Data->HasField(ANSI_TO_TCHAR("metadata")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
-                    if (Data->TryGetStringField("metadata", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("metadata"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
-          ->WithDisplayItems(Data->HasField("displayItems") ? [Data]() -> TSharedPtr<TArray<Model::FDisplayItemMasterPtr>>
+          ->WithDisplayItems(Data->HasField(ANSI_TO_TCHAR("displayItems")) ? [Data]() -> TSharedPtr<TArray<Model::FDisplayItemMasterPtr>>
               {
                   auto v = MakeShared<TArray<Model::FDisplayItemMasterPtr>>();
-                  if (!Data->HasTypedField<EJson::Null>("displayItems") && Data->HasTypedField<EJson::Array>("displayItems"))
+                  if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("displayItems")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("displayItems")))
                   {
-                      for (auto JsonObjectValue : Data->GetArrayField("displayItems"))
+                      for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("displayItems")))
                       {
                           v->Add(Model::FDisplayItemMaster::FromJson(JsonObjectValue->AsObject()));
                       }
                   }
                   return v;
               }() : MakeShared<TArray<Model::FDisplayItemMasterPtr>>())
-            ->WithSalesPeriodEventId(Data->HasField("salesPeriodEventId") ? [Data]() -> TOptional<FString>
+            ->WithSalesPeriodEventId(Data->HasField(ANSI_TO_TCHAR("salesPeriodEventId")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
-                    if (Data->TryGetStringField("salesPeriodEventId", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("salesPeriodEventId"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }

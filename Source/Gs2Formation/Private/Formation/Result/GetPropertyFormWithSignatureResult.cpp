@@ -102,39 +102,39 @@ namespace Gs2::Formation::Result
             return nullptr;
         }
         return MakeShared<FGetPropertyFormWithSignatureResult>()
-            ->WithItem(Data->HasField("item") ? [Data]() -> Model::FPropertyFormPtr
+            ->WithItem(Data->HasField(ANSI_TO_TCHAR("item")) ? [Data]() -> Model::FPropertyFormPtr
                  {
-                    if (Data->HasTypedField<EJson::Null>("item"))
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("item")))
                     {
                         return nullptr;
                     }
-                    return Model::FPropertyForm::FromJson(Data->GetObjectField("item"));
+                    return Model::FPropertyForm::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("item")));
                  }() : nullptr)
-            ->WithBody(Data->HasField("body") ? [Data]() -> TOptional<FString>
+            ->WithBody(Data->HasField(ANSI_TO_TCHAR("body")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("body", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("body"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithSignature(Data->HasField("signature") ? [Data]() -> TOptional<FString>
+            ->WithSignature(Data->HasField(ANSI_TO_TCHAR("signature")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("signature", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("signature"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithPropertyFormModel(Data->HasField("propertyFormModel") ? [Data]() -> Model::FPropertyFormModelPtr
+            ->WithPropertyFormModel(Data->HasField(ANSI_TO_TCHAR("propertyFormModel")) ? [Data]() -> Model::FPropertyFormModelPtr
                  {
-                    if (Data->HasTypedField<EJson::Null>("propertyFormModel"))
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("propertyFormModel")))
                     {
                         return nullptr;
                     }
-                    return Model::FPropertyFormModel::FromJson(Data->GetObjectField("propertyFormModel"));
+                    return Model::FPropertyFormModel::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("propertyFormModel")));
                  }() : nullptr);
     }
 

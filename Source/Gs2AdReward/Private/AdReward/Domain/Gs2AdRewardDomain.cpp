@@ -625,8 +625,8 @@ namespace Gs2::AdReward::Domain
                 return;
             }
             const auto ParentKey = Gs2::AdReward::Domain::Model::FUserDomain::CreateCacheParentKey(
-                PayloadJson->GetStringField("namespaceName"),
-                PayloadJson->GetStringField("userId"),
+                PayloadJson->GetStringField(ANSI_TO_TCHAR("namespaceName")),
+                PayloadJson->GetStringField(ANSI_TO_TCHAR("userId")),
                 "Point"
             );
             const auto Key = Gs2::AdReward::Domain::Model::FPointDomain::CreateCacheKey(

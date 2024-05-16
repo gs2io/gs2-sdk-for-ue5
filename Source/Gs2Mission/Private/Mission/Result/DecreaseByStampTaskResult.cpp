@@ -87,30 +87,30 @@ namespace Gs2::Mission::Result
             return nullptr;
         }
         return MakeShared<FDecreaseByStampTaskResult>()
-            ->WithItem(Data->HasField("item") ? [Data]() -> Model::FCounterPtr
+            ->WithItem(Data->HasField(ANSI_TO_TCHAR("item")) ? [Data]() -> Model::FCounterPtr
                  {
-                    if (Data->HasTypedField<EJson::Null>("item"))
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("item")))
                     {
                         return nullptr;
                     }
-                    return Model::FCounter::FromJson(Data->GetObjectField("item"));
+                    return Model::FCounter::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("item")));
                  }() : nullptr)
-            ->WithChangedCompletes(Data->HasField("changedCompletes") ? [Data]() -> TSharedPtr<TArray<Model::FCompletePtr>>
+            ->WithChangedCompletes(Data->HasField(ANSI_TO_TCHAR("changedCompletes")) ? [Data]() -> TSharedPtr<TArray<Model::FCompletePtr>>
                  {
                     auto v = MakeShared<TArray<Model::FCompletePtr>>();
-                    if (!Data->HasTypedField<EJson::Null>("changedCompletes") && Data->HasTypedField<EJson::Array>("changedCompletes"))
+                    if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("changedCompletes")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("changedCompletes")))
                     {
-                        for (auto JsonObjectValue : Data->GetArrayField("changedCompletes"))
+                        for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("changedCompletes")))
                         {
                             v->Add(Model::FComplete::FromJson(JsonObjectValue->AsObject()));
                         }
                     }
                     return v;
                  }() : MakeShared<TArray<Model::FCompletePtr>>())
-            ->WithNewContextStack(Data->HasField("newContextStack") ? [Data]() -> TOptional<FString>
+            ->WithNewContextStack(Data->HasField(ANSI_TO_TCHAR("newContextStack")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("newContextStack", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("newContextStack"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }

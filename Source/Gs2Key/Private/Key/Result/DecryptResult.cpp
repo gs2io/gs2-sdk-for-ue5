@@ -49,10 +49,10 @@ namespace Gs2::Key::Result
             return nullptr;
         }
         return MakeShared<FDecryptResult>()
-            ->WithData(Data->HasField("data") ? [Data]() -> TOptional<FString>
+            ->WithData(Data->HasField(ANSI_TO_TCHAR("data")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("data", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("data"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }

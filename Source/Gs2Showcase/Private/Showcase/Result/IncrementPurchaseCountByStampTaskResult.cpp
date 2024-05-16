@@ -68,18 +68,18 @@ namespace Gs2::Showcase::Result
             return nullptr;
         }
         return MakeShared<FIncrementPurchaseCountByStampTaskResult>()
-            ->WithItem(Data->HasField("item") ? [Data]() -> Model::FRandomDisplayItemPtr
+            ->WithItem(Data->HasField(ANSI_TO_TCHAR("item")) ? [Data]() -> Model::FRandomDisplayItemPtr
                  {
-                    if (Data->HasTypedField<EJson::Null>("item"))
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("item")))
                     {
                         return nullptr;
                     }
-                    return Model::FRandomDisplayItem::FromJson(Data->GetObjectField("item"));
+                    return Model::FRandomDisplayItem::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("item")));
                  }() : nullptr)
-            ->WithNewContextStack(Data->HasField("newContextStack") ? [Data]() -> TOptional<FString>
+            ->WithNewContextStack(Data->HasField(ANSI_TO_TCHAR("newContextStack")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("newContextStack", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("newContextStack"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }

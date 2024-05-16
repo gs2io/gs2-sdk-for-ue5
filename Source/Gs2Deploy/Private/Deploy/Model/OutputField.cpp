@@ -62,19 +62,19 @@ namespace Gs2::Deploy::Model
             return nullptr;
         }
         return MakeShared<FOutputField>()
-            ->WithName(Data->HasField("name") ? [Data]() -> TOptional<FString>
+            ->WithName(Data->HasField(ANSI_TO_TCHAR("name")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("name", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("name"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithFieldName(Data->HasField("fieldName") ? [Data]() -> TOptional<FString>
+            ->WithFieldName(Data->HasField(ANSI_TO_TCHAR("fieldName")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("fieldName", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("fieldName"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }

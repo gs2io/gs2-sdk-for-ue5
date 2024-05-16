@@ -76,28 +76,28 @@ namespace Gs2::Deploy::Model
             return nullptr;
         }
         return MakeShared<FChangeSet>()
-            ->WithResourceName(Data->HasField("resourceName") ? [Data]() -> TOptional<FString>
+            ->WithResourceName(Data->HasField(ANSI_TO_TCHAR("resourceName")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("resourceName", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("resourceName"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithResourceType(Data->HasField("resourceType") ? [Data]() -> TOptional<FString>
+            ->WithResourceType(Data->HasField(ANSI_TO_TCHAR("resourceType")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("resourceType", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("resourceType"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithOperation(Data->HasField("operation") ? [Data]() -> TOptional<FString>
+            ->WithOperation(Data->HasField(ANSI_TO_TCHAR("operation")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("operation", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("operation"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }

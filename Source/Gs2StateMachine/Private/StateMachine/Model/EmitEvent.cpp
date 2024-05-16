@@ -85,28 +85,28 @@ namespace Gs2::StateMachine::Model
             return nullptr;
         }
         return MakeShared<FEmitEvent>()
-            ->WithEvent(Data->HasField("event") ? [Data]() -> TOptional<FString>
+            ->WithEvent(Data->HasField(ANSI_TO_TCHAR("event")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("event", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("event"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithParameters(Data->HasField("parameters") ? [Data]() -> TOptional<FString>
+            ->WithParameters(Data->HasField(ANSI_TO_TCHAR("parameters")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("parameters", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("parameters"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithTimestamp(Data->HasField("timestamp") ? [Data]() -> TOptional<int64>
+            ->WithTimestamp(Data->HasField(ANSI_TO_TCHAR("timestamp")) ? [Data]() -> TOptional<int64>
                 {
                     int64 v;
-                    if (Data->TryGetNumberField("timestamp", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("timestamp"), v))
                     {
                         return TOptional(v);
                     }

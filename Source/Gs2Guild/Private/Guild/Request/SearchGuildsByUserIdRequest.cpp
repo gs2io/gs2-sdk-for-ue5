@@ -312,152 +312,152 @@ namespace Gs2::Guild::Request
             return nullptr;
         }
         return MakeShared<FSearchGuildsByUserIdRequest>()
-            ->WithContextStack(Data->HasField("contextStack") ? TOptional<FString>(Data->GetStringField("contextStack")) : TOptional<FString>())
-            ->WithNamespaceName(Data->HasField("namespaceName") ? [Data]() -> TOptional<FString>
+            ->WithContextStack(Data->HasField(ANSI_TO_TCHAR("contextStack")) ? TOptional<FString>(Data->GetStringField(ANSI_TO_TCHAR("contextStack"))) : TOptional<FString>())
+            ->WithNamespaceName(Data->HasField(ANSI_TO_TCHAR("namespaceName")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
-                    if (Data->TryGetStringField("namespaceName", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("namespaceName"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
-            ->WithGuildModelName(Data->HasField("guildModelName") ? [Data]() -> TOptional<FString>
+            ->WithGuildModelName(Data->HasField(ANSI_TO_TCHAR("guildModelName")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
-                    if (Data->TryGetStringField("guildModelName", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("guildModelName"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
-            ->WithUserId(Data->HasField("userId") ? [Data]() -> TOptional<FString>
+            ->WithUserId(Data->HasField(ANSI_TO_TCHAR("userId")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
-                    if (Data->TryGetStringField("userId", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("userId"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
-            ->WithDisplayName(Data->HasField("displayName") ? [Data]() -> TOptional<FString>
+            ->WithDisplayName(Data->HasField(ANSI_TO_TCHAR("displayName")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
-                    if (Data->TryGetStringField("displayName", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("displayName"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
-          ->WithAttributes1(Data->HasField("attributes1") ? [Data]() -> TSharedPtr<TArray<int32>>
+          ->WithAttributes1(Data->HasField(ANSI_TO_TCHAR("attributes1")) ? [Data]() -> TSharedPtr<TArray<int32>>
               {
                   auto v = MakeShared<TArray<int32>>();
-                  if (!Data->HasTypedField<EJson::Null>("attributes1") && Data->HasTypedField<EJson::Array>("attributes1"))
+                  if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("attributes1")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("attributes1")))
                   {
-                      for (auto JsonObjectValue : Data->GetArrayField("attributes1"))
+                      for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("attributes1")))
                       {
                           v->Add(JsonObjectValue->AsNumber());
                       }
                   }
                   return v;
               }() : MakeShared<TArray<int32>>())
-          ->WithAttributes2(Data->HasField("attributes2") ? [Data]() -> TSharedPtr<TArray<int32>>
+          ->WithAttributes2(Data->HasField(ANSI_TO_TCHAR("attributes2")) ? [Data]() -> TSharedPtr<TArray<int32>>
               {
                   auto v = MakeShared<TArray<int32>>();
-                  if (!Data->HasTypedField<EJson::Null>("attributes2") && Data->HasTypedField<EJson::Array>("attributes2"))
+                  if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("attributes2")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("attributes2")))
                   {
-                      for (auto JsonObjectValue : Data->GetArrayField("attributes2"))
+                      for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("attributes2")))
                       {
                           v->Add(JsonObjectValue->AsNumber());
                       }
                   }
                   return v;
               }() : MakeShared<TArray<int32>>())
-          ->WithAttributes3(Data->HasField("attributes3") ? [Data]() -> TSharedPtr<TArray<int32>>
+          ->WithAttributes3(Data->HasField(ANSI_TO_TCHAR("attributes3")) ? [Data]() -> TSharedPtr<TArray<int32>>
               {
                   auto v = MakeShared<TArray<int32>>();
-                  if (!Data->HasTypedField<EJson::Null>("attributes3") && Data->HasTypedField<EJson::Array>("attributes3"))
+                  if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("attributes3")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("attributes3")))
                   {
-                      for (auto JsonObjectValue : Data->GetArrayField("attributes3"))
+                      for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("attributes3")))
                       {
                           v->Add(JsonObjectValue->AsNumber());
                       }
                   }
                   return v;
               }() : MakeShared<TArray<int32>>())
-          ->WithAttributes4(Data->HasField("attributes4") ? [Data]() -> TSharedPtr<TArray<int32>>
+          ->WithAttributes4(Data->HasField(ANSI_TO_TCHAR("attributes4")) ? [Data]() -> TSharedPtr<TArray<int32>>
               {
                   auto v = MakeShared<TArray<int32>>();
-                  if (!Data->HasTypedField<EJson::Null>("attributes4") && Data->HasTypedField<EJson::Array>("attributes4"))
+                  if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("attributes4")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("attributes4")))
                   {
-                      for (auto JsonObjectValue : Data->GetArrayField("attributes4"))
+                      for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("attributes4")))
                       {
                           v->Add(JsonObjectValue->AsNumber());
                       }
                   }
                   return v;
               }() : MakeShared<TArray<int32>>())
-          ->WithAttributes5(Data->HasField("attributes5") ? [Data]() -> TSharedPtr<TArray<int32>>
+          ->WithAttributes5(Data->HasField(ANSI_TO_TCHAR("attributes5")) ? [Data]() -> TSharedPtr<TArray<int32>>
               {
                   auto v = MakeShared<TArray<int32>>();
-                  if (!Data->HasTypedField<EJson::Null>("attributes5") && Data->HasTypedField<EJson::Array>("attributes5"))
+                  if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("attributes5")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("attributes5")))
                   {
-                      for (auto JsonObjectValue : Data->GetArrayField("attributes5"))
+                      for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("attributes5")))
                       {
                           v->Add(JsonObjectValue->AsNumber());
                       }
                   }
                   return v;
               }() : MakeShared<TArray<int32>>())
-          ->WithJoinPolicies(Data->HasField("joinPolicies") ? [Data]() -> TSharedPtr<TArray<FString>>
+          ->WithJoinPolicies(Data->HasField(ANSI_TO_TCHAR("joinPolicies")) ? [Data]() -> TSharedPtr<TArray<FString>>
               {
                   auto v = MakeShared<TArray<FString>>();
-                  if (!Data->HasTypedField<EJson::Null>("joinPolicies") && Data->HasTypedField<EJson::Array>("joinPolicies"))
+                  if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("joinPolicies")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("joinPolicies")))
                   {
-                      for (auto JsonObjectValue : Data->GetArrayField("joinPolicies"))
+                      for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("joinPolicies")))
                       {
                           v->Add(JsonObjectValue->AsString());
                       }
                   }
                   return v;
               }() : MakeShared<TArray<FString>>())
-            ->WithIncludeFullMembersGuild(Data->HasField("includeFullMembersGuild") ? [Data]() -> TOptional<bool>
+            ->WithIncludeFullMembersGuild(Data->HasField(ANSI_TO_TCHAR("includeFullMembersGuild")) ? [Data]() -> TOptional<bool>
               {
                   bool v;
-                    if (Data->TryGetBoolField("includeFullMembersGuild", v))
+                    if (Data->TryGetBoolField(ANSI_TO_TCHAR("includeFullMembersGuild"), v))
                   {
                         return TOptional(v);
                   }
                   return TOptional<bool>();
               }() : TOptional<bool>())
-            ->WithPageToken(Data->HasField("pageToken") ? [Data]() -> TOptional<FString>
+            ->WithPageToken(Data->HasField(ANSI_TO_TCHAR("pageToken")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
-                    if (Data->TryGetStringField("pageToken", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("pageToken"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
-            ->WithLimit(Data->HasField("limit") ? [Data]() -> TOptional<int32>
+            ->WithLimit(Data->HasField(ANSI_TO_TCHAR("limit")) ? [Data]() -> TOptional<int32>
               {
                   int32 v;
-                    if (Data->TryGetNumberField("limit", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("limit"), v))
                   {
                         return TOptional(v);
                   }
                   return TOptional<int32>();
               }() : TOptional<int32>())
-            ->WithTimeOffsetToken(Data->HasField("timeOffsetToken") ? [Data]() -> TOptional<FString>
+            ->WithTimeOffsetToken(Data->HasField(ANSI_TO_TCHAR("timeOffsetToken")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
-                    if (Data->TryGetStringField("timeOffsetToken", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("timeOffsetToken"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
-          ->WithDuplicationAvoider(Data->HasField("duplicationAvoider") ? TOptional<FString>(Data->GetStringField("duplicationAvoider")) : TOptional<FString>());
+          ->WithDuplicationAvoider(Data->HasField(ANSI_TO_TCHAR("duplicationAvoider")) ? TOptional<FString>(Data->GetStringField(ANSI_TO_TCHAR("duplicationAvoider"))) : TOptional<FString>());
     }
 
     TSharedPtr<FJsonObject> FSearchGuildsByUserIdRequest::ToJson() const

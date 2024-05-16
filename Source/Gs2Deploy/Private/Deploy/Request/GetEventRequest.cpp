@@ -77,20 +77,20 @@ namespace Gs2::Deploy::Request
             return nullptr;
         }
         return MakeShared<FGetEventRequest>()
-            ->WithContextStack(Data->HasField("contextStack") ? TOptional<FString>(Data->GetStringField("contextStack")) : TOptional<FString>())
-            ->WithStackName(Data->HasField("stackName") ? [Data]() -> TOptional<FString>
+            ->WithContextStack(Data->HasField(ANSI_TO_TCHAR("contextStack")) ? TOptional<FString>(Data->GetStringField(ANSI_TO_TCHAR("contextStack"))) : TOptional<FString>())
+            ->WithStackName(Data->HasField(ANSI_TO_TCHAR("stackName")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
-                    if (Data->TryGetStringField("stackName", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("stackName"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
-            ->WithEventName(Data->HasField("eventName") ? [Data]() -> TOptional<FString>
+            ->WithEventName(Data->HasField(ANSI_TO_TCHAR("eventName")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
-                    if (Data->TryGetStringField("eventName", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("eventName"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }

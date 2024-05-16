@@ -76,28 +76,28 @@ namespace Gs2::Guild::Model
             return nullptr;
         }
         return MakeShared<FRoleModel>()
-            ->WithName(Data->HasField("name") ? [Data]() -> TOptional<FString>
+            ->WithName(Data->HasField(ANSI_TO_TCHAR("name")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("name", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("name"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithMetadata(Data->HasField("metadata") ? [Data]() -> TOptional<FString>
+            ->WithMetadata(Data->HasField(ANSI_TO_TCHAR("metadata")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("metadata", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("metadata"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithPolicyDocument(Data->HasField("policyDocument") ? [Data]() -> TOptional<FString>
+            ->WithPolicyDocument(Data->HasField(ANSI_TO_TCHAR("policyDocument")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("policyDocument", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("policyDocument"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }

@@ -179,82 +179,82 @@ namespace Gs2::Grade::Request
             return nullptr;
         }
         return MakeShared<FUpdateGradeModelMasterRequest>()
-            ->WithContextStack(Data->HasField("contextStack") ? TOptional<FString>(Data->GetStringField("contextStack")) : TOptional<FString>())
-            ->WithNamespaceName(Data->HasField("namespaceName") ? [Data]() -> TOptional<FString>
+            ->WithContextStack(Data->HasField(ANSI_TO_TCHAR("contextStack")) ? TOptional<FString>(Data->GetStringField(ANSI_TO_TCHAR("contextStack"))) : TOptional<FString>())
+            ->WithNamespaceName(Data->HasField(ANSI_TO_TCHAR("namespaceName")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
-                    if (Data->TryGetStringField("namespaceName", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("namespaceName"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
-            ->WithGradeName(Data->HasField("gradeName") ? [Data]() -> TOptional<FString>
+            ->WithGradeName(Data->HasField(ANSI_TO_TCHAR("gradeName")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
-                    if (Data->TryGetStringField("gradeName", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("gradeName"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
-            ->WithDescription(Data->HasField("description") ? [Data]() -> TOptional<FString>
+            ->WithDescription(Data->HasField(ANSI_TO_TCHAR("description")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
-                    if (Data->TryGetStringField("description", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("description"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
-            ->WithMetadata(Data->HasField("metadata") ? [Data]() -> TOptional<FString>
+            ->WithMetadata(Data->HasField(ANSI_TO_TCHAR("metadata")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
-                    if (Data->TryGetStringField("metadata", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("metadata"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
-          ->WithDefaultGrades(Data->HasField("defaultGrades") ? [Data]() -> TSharedPtr<TArray<Model::FDefaultGradeModelPtr>>
+          ->WithDefaultGrades(Data->HasField(ANSI_TO_TCHAR("defaultGrades")) ? [Data]() -> TSharedPtr<TArray<Model::FDefaultGradeModelPtr>>
               {
                   auto v = MakeShared<TArray<Model::FDefaultGradeModelPtr>>();
-                  if (!Data->HasTypedField<EJson::Null>("defaultGrades") && Data->HasTypedField<EJson::Array>("defaultGrades"))
+                  if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("defaultGrades")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("defaultGrades")))
                   {
-                      for (auto JsonObjectValue : Data->GetArrayField("defaultGrades"))
+                      for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("defaultGrades")))
                       {
                           v->Add(Model::FDefaultGradeModel::FromJson(JsonObjectValue->AsObject()));
                       }
                   }
                   return v;
               }() : MakeShared<TArray<Model::FDefaultGradeModelPtr>>())
-            ->WithExperienceModelId(Data->HasField("experienceModelId") ? [Data]() -> TOptional<FString>
+            ->WithExperienceModelId(Data->HasField(ANSI_TO_TCHAR("experienceModelId")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
-                    if (Data->TryGetStringField("experienceModelId", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("experienceModelId"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
-          ->WithGradeEntries(Data->HasField("gradeEntries") ? [Data]() -> TSharedPtr<TArray<Model::FGradeEntryModelPtr>>
+          ->WithGradeEntries(Data->HasField(ANSI_TO_TCHAR("gradeEntries")) ? [Data]() -> TSharedPtr<TArray<Model::FGradeEntryModelPtr>>
               {
                   auto v = MakeShared<TArray<Model::FGradeEntryModelPtr>>();
-                  if (!Data->HasTypedField<EJson::Null>("gradeEntries") && Data->HasTypedField<EJson::Array>("gradeEntries"))
+                  if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("gradeEntries")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("gradeEntries")))
                   {
-                      for (auto JsonObjectValue : Data->GetArrayField("gradeEntries"))
+                      for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("gradeEntries")))
                       {
                           v->Add(Model::FGradeEntryModel::FromJson(JsonObjectValue->AsObject()));
                       }
                   }
                   return v;
               }() : MakeShared<TArray<Model::FGradeEntryModelPtr>>())
-          ->WithAcquireActionRates(Data->HasField("acquireActionRates") ? [Data]() -> TSharedPtr<TArray<Model::FAcquireActionRatePtr>>
+          ->WithAcquireActionRates(Data->HasField(ANSI_TO_TCHAR("acquireActionRates")) ? [Data]() -> TSharedPtr<TArray<Model::FAcquireActionRatePtr>>
               {
                   auto v = MakeShared<TArray<Model::FAcquireActionRatePtr>>();
-                  if (!Data->HasTypedField<EJson::Null>("acquireActionRates") && Data->HasTypedField<EJson::Array>("acquireActionRates"))
+                  if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("acquireActionRates")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("acquireActionRates")))
                   {
-                      for (auto JsonObjectValue : Data->GetArrayField("acquireActionRates"))
+                      for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("acquireActionRates")))
                       {
                           v->Add(Model::FAcquireActionRate::FromJson(JsonObjectValue->AsObject()));
                       }

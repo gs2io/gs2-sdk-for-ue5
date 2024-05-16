@@ -53,13 +53,13 @@ namespace Gs2::Schedule::Result
             return nullptr;
         }
         return MakeShared<FUpdateCurrentEventMasterFromGitHubResult>()
-            ->WithItem(Data->HasField("item") ? [Data]() -> Model::FCurrentEventMasterPtr
+            ->WithItem(Data->HasField(ANSI_TO_TCHAR("item")) ? [Data]() -> Model::FCurrentEventMasterPtr
                  {
-                    if (Data->HasTypedField<EJson::Null>("item"))
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("item")))
                     {
                         return nullptr;
                     }
-                    return Model::FCurrentEventMaster::FromJson(Data->GetObjectField("item"));
+                    return Model::FCurrentEventMaster::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("item")));
                  }() : nullptr);
     }
 

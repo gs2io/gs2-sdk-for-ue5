@@ -99,37 +99,37 @@ namespace Gs2::Lottery::Model
             return nullptr;
         }
         return MakeShared<FTransactionSetting>()
-            ->WithEnableAutoRun(Data->HasField("enableAutoRun") ? [Data]() -> TOptional<bool>
+            ->WithEnableAutoRun(Data->HasField(ANSI_TO_TCHAR("enableAutoRun")) ? [Data]() -> TOptional<bool>
                 {
                     bool v;
-                    if (Data->TryGetBoolField("enableAutoRun", v))
+                    if (Data->TryGetBoolField(ANSI_TO_TCHAR("enableAutoRun"), v))
                     {
                         return TOptional(v);
                     }
                     return TOptional<bool>();
                 }() : TOptional<bool>())
-            ->WithDistributorNamespaceId(Data->HasField("distributorNamespaceId") ? [Data]() -> TOptional<FString>
+            ->WithDistributorNamespaceId(Data->HasField(ANSI_TO_TCHAR("distributorNamespaceId")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("distributorNamespaceId", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("distributorNamespaceId"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithKeyId(Data->HasField("keyId") ? [Data]() -> TOptional<FString>
+            ->WithKeyId(Data->HasField(ANSI_TO_TCHAR("keyId")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("keyId", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("keyId"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithQueueNamespaceId(Data->HasField("queueNamespaceId") ? [Data]() -> TOptional<FString>
+            ->WithQueueNamespaceId(Data->HasField(ANSI_TO_TCHAR("queueNamespaceId")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("queueNamespaceId", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("queueNamespaceId"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }

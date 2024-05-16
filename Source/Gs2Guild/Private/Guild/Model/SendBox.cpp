@@ -214,67 +214,67 @@ namespace Gs2::Guild::Model
             return nullptr;
         }
         return MakeShared<FSendBox>()
-            ->WithSendBoxId(Data->HasField("sendBoxId") ? [Data]() -> TOptional<FString>
+            ->WithSendBoxId(Data->HasField(ANSI_TO_TCHAR("sendBoxId")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("sendBoxId", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("sendBoxId"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithUserId(Data->HasField("userId") ? [Data]() -> TOptional<FString>
+            ->WithUserId(Data->HasField(ANSI_TO_TCHAR("userId")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("userId", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("userId"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithGuildModelName(Data->HasField("guildModelName") ? [Data]() -> TOptional<FString>
+            ->WithGuildModelName(Data->HasField(ANSI_TO_TCHAR("guildModelName")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("guildModelName", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("guildModelName"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithTargetGuildNames(Data->HasField("targetGuildNames") ? [Data]() -> TSharedPtr<TArray<FString>>
+            ->WithTargetGuildNames(Data->HasField(ANSI_TO_TCHAR("targetGuildNames")) ? [Data]() -> TSharedPtr<TArray<FString>>
                 {
                     auto v = MakeShared<TArray<FString>>();
-                    if (!Data->HasTypedField<EJson::Null>("targetGuildNames") && Data->HasTypedField<EJson::Array>("targetGuildNames"))
+                    if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("targetGuildNames")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("targetGuildNames")))
                     {
-                        for (auto JsonObjectValue : Data->GetArrayField("targetGuildNames"))
+                        for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("targetGuildNames")))
                         {
                             v->Add(JsonObjectValue->AsString());
                         }
                     }
                     return v;
                  }() : MakeShared<TArray<FString>>())
-            ->WithCreatedAt(Data->HasField("createdAt") ? [Data]() -> TOptional<int64>
+            ->WithCreatedAt(Data->HasField(ANSI_TO_TCHAR("createdAt")) ? [Data]() -> TOptional<int64>
                 {
                     int64 v;
-                    if (Data->TryGetNumberField("createdAt", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("createdAt"), v))
                     {
                         return TOptional(v);
                     }
                     return TOptional<int64>();
                 }() : TOptional<int64>())
-            ->WithUpdatedAt(Data->HasField("updatedAt") ? [Data]() -> TOptional<int64>
+            ->WithUpdatedAt(Data->HasField(ANSI_TO_TCHAR("updatedAt")) ? [Data]() -> TOptional<int64>
                 {
                     int64 v;
-                    if (Data->TryGetNumberField("updatedAt", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("updatedAt"), v))
                     {
                         return TOptional(v);
                     }
                     return TOptional<int64>();
                 }() : TOptional<int64>())
-            ->WithRevision(Data->HasField("revision") ? [Data]() -> TOptional<int64>
+            ->WithRevision(Data->HasField(ANSI_TO_TCHAR("revision")) ? [Data]() -> TOptional<int64>
                 {
                     int64 v;
-                    if (Data->TryGetNumberField("revision", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("revision"), v))
                     {
                         return TOptional(v);
                     }

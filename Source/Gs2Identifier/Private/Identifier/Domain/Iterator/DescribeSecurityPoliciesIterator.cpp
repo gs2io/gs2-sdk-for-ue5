@@ -27,6 +27,8 @@
 #include "Identifier/Domain/Iterator/DescribeSecurityPoliciesIterator.h"
 #include "Identifier/Domain/Model/SecurityPolicy.h"
 
+#include "Core/Domain/Gs2.h"
+
 namespace Gs2::Identifier::Domain::Iterator
 {
 

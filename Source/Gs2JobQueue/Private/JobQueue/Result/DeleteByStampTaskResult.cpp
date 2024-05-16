@@ -68,18 +68,18 @@ namespace Gs2::JobQueue::Result
             return nullptr;
         }
         return MakeShared<FDeleteByStampTaskResult>()
-            ->WithItem(Data->HasField("item") ? [Data]() -> Model::FJobPtr
+            ->WithItem(Data->HasField(ANSI_TO_TCHAR("item")) ? [Data]() -> Model::FJobPtr
                  {
-                    if (Data->HasTypedField<EJson::Null>("item"))
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("item")))
                     {
                         return nullptr;
                     }
-                    return Model::FJob::FromJson(Data->GetObjectField("item"));
+                    return Model::FJob::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("item")));
                  }() : nullptr)
-            ->WithNewContextStack(Data->HasField("newContextStack") ? [Data]() -> TOptional<FString>
+            ->WithNewContextStack(Data->HasField(ANSI_TO_TCHAR("newContextStack")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("newContextStack", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("newContextStack"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }

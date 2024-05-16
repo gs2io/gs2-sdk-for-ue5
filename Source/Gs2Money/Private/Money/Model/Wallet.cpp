@@ -292,94 +292,94 @@ namespace Gs2::Money::Model
             return nullptr;
         }
         return MakeShared<FWallet>()
-            ->WithWalletId(Data->HasField("walletId") ? [Data]() -> TOptional<FString>
+            ->WithWalletId(Data->HasField(ANSI_TO_TCHAR("walletId")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("walletId", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("walletId"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithUserId(Data->HasField("userId") ? [Data]() -> TOptional<FString>
+            ->WithUserId(Data->HasField(ANSI_TO_TCHAR("userId")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("userId", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("userId"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithSlot(Data->HasField("slot") ? [Data]() -> TOptional<int32>
+            ->WithSlot(Data->HasField(ANSI_TO_TCHAR("slot")) ? [Data]() -> TOptional<int32>
                 {
                     int32 v;
-                    if (Data->TryGetNumberField("slot", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("slot"), v))
                     {
                         return TOptional(v);
                     }
                     return TOptional<int32>();
                 }() : TOptional<int32>())
-            ->WithPaid(Data->HasField("paid") ? [Data]() -> TOptional<int32>
+            ->WithPaid(Data->HasField(ANSI_TO_TCHAR("paid")) ? [Data]() -> TOptional<int32>
                 {
                     int32 v;
-                    if (Data->TryGetNumberField("paid", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("paid"), v))
                     {
                         return TOptional(v);
                     }
                     return TOptional<int32>();
                 }() : TOptional<int32>())
-            ->WithFree(Data->HasField("free") ? [Data]() -> TOptional<int32>
+            ->WithFree(Data->HasField(ANSI_TO_TCHAR("free")) ? [Data]() -> TOptional<int32>
                 {
                     int32 v;
-                    if (Data->TryGetNumberField("free", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("free"), v))
                     {
                         return TOptional(v);
                     }
                     return TOptional<int32>();
                 }() : TOptional<int32>())
-            ->WithDetail(Data->HasField("detail") ? [Data]() -> TSharedPtr<TArray<Model::FWalletDetailPtr>>
+            ->WithDetail(Data->HasField(ANSI_TO_TCHAR("detail")) ? [Data]() -> TSharedPtr<TArray<Model::FWalletDetailPtr>>
                 {
                     auto v = MakeShared<TArray<Model::FWalletDetailPtr>>();
-                    if (!Data->HasTypedField<EJson::Null>("detail") && Data->HasTypedField<EJson::Array>("detail"))
+                    if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("detail")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("detail")))
                     {
-                        for (auto JsonObjectValue : Data->GetArrayField("detail"))
+                        for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("detail")))
                         {
                             v->Add(Model::FWalletDetail::FromJson(JsonObjectValue->AsObject()));
                         }
                     }
                     return v;
                  }() : MakeShared<TArray<Model::FWalletDetailPtr>>())
-            ->WithShareFree(Data->HasField("shareFree") ? [Data]() -> TOptional<bool>
+            ->WithShareFree(Data->HasField(ANSI_TO_TCHAR("shareFree")) ? [Data]() -> TOptional<bool>
                 {
                     bool v;
-                    if (Data->TryGetBoolField("shareFree", v))
+                    if (Data->TryGetBoolField(ANSI_TO_TCHAR("shareFree"), v))
                     {
                         return TOptional(v);
                     }
                     return TOptional<bool>();
                 }() : TOptional<bool>())
-            ->WithCreatedAt(Data->HasField("createdAt") ? [Data]() -> TOptional<int64>
+            ->WithCreatedAt(Data->HasField(ANSI_TO_TCHAR("createdAt")) ? [Data]() -> TOptional<int64>
                 {
                     int64 v;
-                    if (Data->TryGetNumberField("createdAt", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("createdAt"), v))
                     {
                         return TOptional(v);
                     }
                     return TOptional<int64>();
                 }() : TOptional<int64>())
-            ->WithUpdatedAt(Data->HasField("updatedAt") ? [Data]() -> TOptional<int64>
+            ->WithUpdatedAt(Data->HasField(ANSI_TO_TCHAR("updatedAt")) ? [Data]() -> TOptional<int64>
                 {
                     int64 v;
-                    if (Data->TryGetNumberField("updatedAt", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("updatedAt"), v))
                     {
                         return TOptional(v);
                     }
                     return TOptional<int64>();
                 }() : TOptional<int64>())
-            ->WithRevision(Data->HasField("revision") ? [Data]() -> TOptional<int64>
+            ->WithRevision(Data->HasField(ANSI_TO_TCHAR("revision")) ? [Data]() -> TOptional<int64>
                 {
                     int64 v;
-                    if (Data->TryGetNumberField("revision", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("revision"), v))
                     {
                         return TOptional(v);
                     }

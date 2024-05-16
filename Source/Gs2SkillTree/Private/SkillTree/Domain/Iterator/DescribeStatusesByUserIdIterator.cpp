@@ -28,6 +28,8 @@
 #include "SkillTree/Domain/Model/Status.h"
 #include "SkillTree/Domain/Model/User.h"
 
+#include "Core/Domain/Gs2.h"
+
 namespace Gs2::SkillTree::Domain::Iterator
 {
 

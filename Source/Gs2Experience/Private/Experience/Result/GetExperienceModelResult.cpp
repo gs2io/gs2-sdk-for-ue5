@@ -53,13 +53,13 @@ namespace Gs2::Experience::Result
             return nullptr;
         }
         return MakeShared<FGetExperienceModelResult>()
-            ->WithItem(Data->HasField("item") ? [Data]() -> Model::FExperienceModelPtr
+            ->WithItem(Data->HasField(ANSI_TO_TCHAR("item")) ? [Data]() -> Model::FExperienceModelPtr
                  {
-                    if (Data->HasTypedField<EJson::Null>("item"))
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("item")))
                     {
                         return nullptr;
                     }
-                    return Model::FExperienceModel::FromJson(Data->GetObjectField("item"));
+                    return Model::FExperienceModel::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("item")));
                  }() : nullptr);
     }
 

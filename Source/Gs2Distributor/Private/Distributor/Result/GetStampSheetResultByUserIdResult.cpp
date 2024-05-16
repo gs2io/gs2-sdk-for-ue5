@@ -53,13 +53,13 @@ namespace Gs2::Distributor::Result
             return nullptr;
         }
         return MakeShared<FGetStampSheetResultByUserIdResult>()
-            ->WithItem(Data->HasField("item") ? [Data]() -> Model::FStampSheetResultPtr
+            ->WithItem(Data->HasField(ANSI_TO_TCHAR("item")) ? [Data]() -> Model::FStampSheetResultPtr
                  {
-                    if (Data->HasTypedField<EJson::Null>("item"))
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("item")))
                     {
                         return nullptr;
                     }
-                    return Model::FStampSheetResult::FromJson(Data->GetObjectField("item"));
+                    return Model::FStampSheetResult::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("item")));
                  }() : nullptr);
     }
 

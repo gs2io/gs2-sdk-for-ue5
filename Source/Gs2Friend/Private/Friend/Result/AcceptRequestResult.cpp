@@ -53,13 +53,13 @@ namespace Gs2::Friend::Result
             return nullptr;
         }
         return MakeShared<FAcceptRequestResult>()
-            ->WithItem(Data->HasField("item") ? [Data]() -> Model::FFriendRequestPtr
+            ->WithItem(Data->HasField(ANSI_TO_TCHAR("item")) ? [Data]() -> Model::FFriendRequestPtr
                  {
-                    if (Data->HasTypedField<EJson::Null>("item"))
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("item")))
                     {
                         return nullptr;
                     }
-                    return Model::FFriendRequest::FromJson(Data->GetObjectField("item"));
+                    return Model::FFriendRequest::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("item")));
                  }() : nullptr);
     }
 

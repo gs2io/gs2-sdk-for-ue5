@@ -68,18 +68,18 @@ namespace Gs2::Inbox::Result
             return nullptr;
         }
         return MakeShared<FDeleteMessageByStampTaskResult>()
-            ->WithItem(Data->HasField("item") ? [Data]() -> Model::FMessagePtr
+            ->WithItem(Data->HasField(ANSI_TO_TCHAR("item")) ? [Data]() -> Model::FMessagePtr
                  {
-                    if (Data->HasTypedField<EJson::Null>("item"))
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("item")))
                     {
                         return nullptr;
                     }
-                    return Model::FMessage::FromJson(Data->GetObjectField("item"));
+                    return Model::FMessage::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("item")));
                  }() : nullptr)
-            ->WithNewContextStack(Data->HasField("newContextStack") ? [Data]() -> TOptional<FString>
+            ->WithNewContextStack(Data->HasField(ANSI_TO_TCHAR("newContextStack")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("newContextStack", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("newContextStack"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }

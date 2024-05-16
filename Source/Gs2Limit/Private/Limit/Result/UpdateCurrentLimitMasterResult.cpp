@@ -53,13 +53,13 @@ namespace Gs2::Limit::Result
             return nullptr;
         }
         return MakeShared<FUpdateCurrentLimitMasterResult>()
-            ->WithItem(Data->HasField("item") ? [Data]() -> Model::FCurrentLimitMasterPtr
+            ->WithItem(Data->HasField(ANSI_TO_TCHAR("item")) ? [Data]() -> Model::FCurrentLimitMasterPtr
                  {
-                    if (Data->HasTypedField<EJson::Null>("item"))
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("item")))
                     {
                         return nullptr;
                     }
-                    return Model::FCurrentLimitMaster::FromJson(Data->GetObjectField("item"));
+                    return Model::FCurrentLimitMaster::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("item")));
                  }() : nullptr);
     }
 

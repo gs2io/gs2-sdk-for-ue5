@@ -105,37 +105,37 @@ namespace Gs2::Identifier::Result
             return nullptr;
         }
         return MakeShared<FLoginResult>()
-            ->WithAccessToken(Data->HasField("access_token") ? [Data]() -> TOptional<FString>
+            ->WithAccessToken(Data->HasField(ANSI_TO_TCHAR("access_token")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("access_token", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("access_token"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithTokenType(Data->HasField("token_type") ? [Data]() -> TOptional<FString>
+            ->WithTokenType(Data->HasField(ANSI_TO_TCHAR("token_type")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("token_type", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("token_type"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithExpiresIn(Data->HasField("expires_in") ? [Data]() -> TOptional<int32>
+            ->WithExpiresIn(Data->HasField(ANSI_TO_TCHAR("expires_in")) ? [Data]() -> TOptional<int32>
                 {
                     int32 v;
-                    if (Data->TryGetNumberField("expires_in", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("expires_in"), v))
                     {
                         return TOptional(v);
                     }
                     return TOptional<int32>();
                 }() : TOptional<int32>())
-            ->WithOwnerId(Data->HasField("owner_id") ? [Data]() -> TOptional<FString>
+            ->WithOwnerId(Data->HasField(ANSI_TO_TCHAR("owner_id")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("owner_id", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("owner_id"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }

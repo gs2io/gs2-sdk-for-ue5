@@ -17,7 +17,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Core/Util/Gs2Future.h"
 #include "Auth/Model/AccessToken.h"
 
 namespace Gs2::JobQueue::Model

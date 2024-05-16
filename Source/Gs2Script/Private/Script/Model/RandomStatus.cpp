@@ -71,21 +71,21 @@ namespace Gs2::Script::Model
             return nullptr;
         }
         return MakeShared<FRandomStatus>()
-            ->WithSeed(Data->HasField("seed") ? [Data]() -> TOptional<int64>
+            ->WithSeed(Data->HasField(ANSI_TO_TCHAR("seed")) ? [Data]() -> TOptional<int64>
                 {
                     int64 v;
-                    if (Data->TryGetNumberField("seed", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("seed"), v))
                     {
                         return TOptional(v);
                     }
                     return TOptional<int64>();
                 }() : TOptional<int64>())
-            ->WithUsed(Data->HasField("used") ? [Data]() -> TSharedPtr<TArray<Model::FRandomUsedPtr>>
+            ->WithUsed(Data->HasField(ANSI_TO_TCHAR("used")) ? [Data]() -> TSharedPtr<TArray<Model::FRandomUsedPtr>>
                 {
                     auto v = MakeShared<TArray<Model::FRandomUsedPtr>>();
-                    if (!Data->HasTypedField<EJson::Null>("used") && Data->HasTypedField<EJson::Array>("used"))
+                    if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("used")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("used")))
                     {
-                        for (auto JsonObjectValue : Data->GetArrayField("used"))
+                        for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("used")))
                         {
                             v->Add(Model::FRandomUsed::FromJson(JsonObjectValue->AsObject()));
                         }

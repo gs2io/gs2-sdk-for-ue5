@@ -92,27 +92,27 @@ namespace Gs2::Money::Result
             return nullptr;
         }
         return MakeShared<FWithdrawByStampTaskResult>()
-            ->WithItem(Data->HasField("item") ? [Data]() -> Model::FWalletPtr
+            ->WithItem(Data->HasField(ANSI_TO_TCHAR("item")) ? [Data]() -> Model::FWalletPtr
                  {
-                    if (Data->HasTypedField<EJson::Null>("item"))
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("item")))
                     {
                         return nullptr;
                     }
-                    return Model::FWallet::FromJson(Data->GetObjectField("item"));
+                    return Model::FWallet::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("item")));
                  }() : nullptr)
-            ->WithPrice(Data->HasField("price") ? [Data]() -> TOptional<float>
+            ->WithPrice(Data->HasField(ANSI_TO_TCHAR("price")) ? [Data]() -> TOptional<float>
                 {
                     float v;
-                    if (Data->TryGetNumberField("price", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("price"), v))
                     {
                         return TOptional(v);
                     }
                     return TOptional<float>();
                 }() : TOptional<float>())
-            ->WithNewContextStack(Data->HasField("newContextStack") ? [Data]() -> TOptional<FString>
+            ->WithNewContextStack(Data->HasField(ANSI_TO_TCHAR("newContextStack")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("newContextStack", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("newContextStack"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }

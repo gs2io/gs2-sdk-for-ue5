@@ -27,6 +27,8 @@
 #include "MegaField/Domain/Iterator/DescribeNamespacesIterator.h"
 #include "MegaField/Domain/Model/Namespace.h"
 
+#include "Core/Domain/Gs2.h"
+
 namespace Gs2::MegaField::Domain::Iterator
 {
 

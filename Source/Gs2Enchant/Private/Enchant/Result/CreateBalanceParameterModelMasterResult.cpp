@@ -53,13 +53,13 @@ namespace Gs2::Enchant::Result
             return nullptr;
         }
         return MakeShared<FCreateBalanceParameterModelMasterResult>()
-            ->WithItem(Data->HasField("item") ? [Data]() -> Model::FBalanceParameterModelMasterPtr
+            ->WithItem(Data->HasField(ANSI_TO_TCHAR("item")) ? [Data]() -> Model::FBalanceParameterModelMasterPtr
                  {
-                    if (Data->HasTypedField<EJson::Null>("item"))
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("item")))
                     {
                         return nullptr;
                     }
-                    return Model::FBalanceParameterModelMaster::FromJson(Data->GetObjectField("item"));
+                    return Model::FBalanceParameterModelMaster::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("item")));
                  }() : nullptr);
     }
 

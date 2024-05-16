@@ -47,19 +47,19 @@ namespace Gs2::Friend::Model
             return nullptr;
         }
         return MakeShared<FAcceptRequestNotification>()
-            ->WithNamespaceName(Data->HasField("namespaceName") ? [Data]() -> TOptional<FString>
+            ->WithNamespaceName(Data->HasField(ANSI_TO_TCHAR("namespaceName")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("namespaceName", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("namespaceName"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithTargetUserId(Data->HasField("targetUserId") ? [Data]() -> TOptional<FString>
+            ->WithTargetUserId(Data->HasField(ANSI_TO_TCHAR("targetUserId")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("targetUserId", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("targetUserId"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }

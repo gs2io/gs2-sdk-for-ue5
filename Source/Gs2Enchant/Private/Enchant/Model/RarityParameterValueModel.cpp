@@ -122,46 +122,46 @@ namespace Gs2::Enchant::Model
             return nullptr;
         }
         return MakeShared<FRarityParameterValueModel>()
-            ->WithName(Data->HasField("name") ? [Data]() -> TOptional<FString>
+            ->WithName(Data->HasField(ANSI_TO_TCHAR("name")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("name", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("name"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithMetadata(Data->HasField("metadata") ? [Data]() -> TOptional<FString>
+            ->WithMetadata(Data->HasField(ANSI_TO_TCHAR("metadata")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("metadata", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("metadata"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithResourceName(Data->HasField("resourceName") ? [Data]() -> TOptional<FString>
+            ->WithResourceName(Data->HasField(ANSI_TO_TCHAR("resourceName")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("resourceName", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("resourceName"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithResourceValue(Data->HasField("resourceValue") ? [Data]() -> TOptional<int64>
+            ->WithResourceValue(Data->HasField(ANSI_TO_TCHAR("resourceValue")) ? [Data]() -> TOptional<int64>
                 {
                     int64 v;
-                    if (Data->TryGetNumberField("resourceValue", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("resourceValue"), v))
                     {
                         return TOptional(v);
                     }
                     return TOptional<int64>();
                 }() : TOptional<int64>())
-            ->WithWeight(Data->HasField("weight") ? [Data]() -> TOptional<int32>
+            ->WithWeight(Data->HasField(ANSI_TO_TCHAR("weight")) ? [Data]() -> TOptional<int32>
                 {
                     int32 v;
-                    if (Data->TryGetNumberField("weight", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("weight"), v))
                     {
                         return TOptional(v);
                     }

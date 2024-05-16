@@ -62,21 +62,21 @@ namespace Gs2::Version::Model
             return nullptr;
         }
         return MakeShared<FStatus>()
-            ->WithVersionModel(Data->HasField("versionModel") ? [Data]() -> Model::FVersionModelPtr
+            ->WithVersionModel(Data->HasField(ANSI_TO_TCHAR("versionModel")) ? [Data]() -> Model::FVersionModelPtr
                 {
-                    if (Data->HasTypedField<EJson::Null>("versionModel"))
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("versionModel")))
                     {
                         return nullptr;
                     }
-                    return Model::FVersionModel::FromJson(Data->GetObjectField("versionModel"));
+                    return Model::FVersionModel::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("versionModel")));
                  }() : nullptr)
-            ->WithCurrentVersion(Data->HasField("currentVersion") ? [Data]() -> Model::FVersionPtr
+            ->WithCurrentVersion(Data->HasField(ANSI_TO_TCHAR("currentVersion")) ? [Data]() -> Model::FVersionPtr
                 {
-                    if (Data->HasTypedField<EJson::Null>("currentVersion"))
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("currentVersion")))
                     {
                         return nullptr;
                     }
-                    return Model::FVersion::FromJson(Data->GetObjectField("currentVersion"));
+                    return Model::FVersion::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("currentVersion")));
                  }() : nullptr);
     }
 

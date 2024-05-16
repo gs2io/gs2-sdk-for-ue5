@@ -110,37 +110,37 @@ namespace Gs2::Formation::Result
             return nullptr;
         }
         return MakeShared<FGetFormByUserIdResult>()
-            ->WithItem(Data->HasField("item") ? [Data]() -> Model::FFormPtr
+            ->WithItem(Data->HasField(ANSI_TO_TCHAR("item")) ? [Data]() -> Model::FFormPtr
                  {
-                    if (Data->HasTypedField<EJson::Null>("item"))
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("item")))
                     {
                         return nullptr;
                     }
-                    return Model::FForm::FromJson(Data->GetObjectField("item"));
+                    return Model::FForm::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("item")));
                  }() : nullptr)
-            ->WithMold(Data->HasField("mold") ? [Data]() -> Model::FMoldPtr
+            ->WithMold(Data->HasField(ANSI_TO_TCHAR("mold")) ? [Data]() -> Model::FMoldPtr
                  {
-                    if (Data->HasTypedField<EJson::Null>("mold"))
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("mold")))
                     {
                         return nullptr;
                     }
-                    return Model::FMold::FromJson(Data->GetObjectField("mold"));
+                    return Model::FMold::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("mold")));
                  }() : nullptr)
-            ->WithMoldModel(Data->HasField("moldModel") ? [Data]() -> Model::FMoldModelPtr
+            ->WithMoldModel(Data->HasField(ANSI_TO_TCHAR("moldModel")) ? [Data]() -> Model::FMoldModelPtr
                  {
-                    if (Data->HasTypedField<EJson::Null>("moldModel"))
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("moldModel")))
                     {
                         return nullptr;
                     }
-                    return Model::FMoldModel::FromJson(Data->GetObjectField("moldModel"));
+                    return Model::FMoldModel::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("moldModel")));
                  }() : nullptr)
-            ->WithFormModel(Data->HasField("formModel") ? [Data]() -> Model::FFormModelPtr
+            ->WithFormModel(Data->HasField(ANSI_TO_TCHAR("formModel")) ? [Data]() -> Model::FFormModelPtr
                  {
-                    if (Data->HasTypedField<EJson::Null>("formModel"))
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("formModel")))
                     {
                         return nullptr;
                     }
-                    return Model::FFormModel::FromJson(Data->GetObjectField("formModel"));
+                    return Model::FFormModel::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("formModel")));
                  }() : nullptr);
     }
 

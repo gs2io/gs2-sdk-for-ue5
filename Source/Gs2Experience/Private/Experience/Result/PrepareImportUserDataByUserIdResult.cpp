@@ -64,19 +64,19 @@ namespace Gs2::Experience::Result
             return nullptr;
         }
         return MakeShared<FPrepareImportUserDataByUserIdResult>()
-            ->WithUploadToken(Data->HasField("uploadToken") ? [Data]() -> TOptional<FString>
+            ->WithUploadToken(Data->HasField(ANSI_TO_TCHAR("uploadToken")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("uploadToken", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("uploadToken"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithUploadUrl(Data->HasField("uploadUrl") ? [Data]() -> TOptional<FString>
+            ->WithUploadUrl(Data->HasField(ANSI_TO_TCHAR("uploadUrl")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("uploadUrl", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("uploadUrl"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }

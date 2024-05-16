@@ -48,10 +48,10 @@ namespace Gs2::Identifier::Model
             return nullptr;
         }
         return MakeShared<FProjectToken>()
-            ->WithToken(Data->HasField("token") ? [Data]() -> TOptional<FString>
+            ->WithToken(Data->HasField(ANSI_TO_TCHAR("token")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("token", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("token"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }

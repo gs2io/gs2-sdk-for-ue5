@@ -28,6 +28,8 @@
 #include "Distributor/Domain/Model/DistributorModelMaster.h"
 #include "Distributor/Domain/Model/Namespace.h"
 
+#include "Core/Domain/Gs2.h"
+
 namespace Gs2::Distributor::Domain::Iterator
 {
 

@@ -96,26 +96,26 @@ namespace Gs2::Stamina::Result
             return nullptr;
         }
         return MakeShared<FRecoverStaminaByUserIdResult>()
-            ->WithItem(Data->HasField("item") ? [Data]() -> Model::FStaminaPtr
+            ->WithItem(Data->HasField(ANSI_TO_TCHAR("item")) ? [Data]() -> Model::FStaminaPtr
                  {
-                    if (Data->HasTypedField<EJson::Null>("item"))
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("item")))
                     {
                         return nullptr;
                     }
-                    return Model::FStamina::FromJson(Data->GetObjectField("item"));
+                    return Model::FStamina::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("item")));
                  }() : nullptr)
-            ->WithStaminaModel(Data->HasField("staminaModel") ? [Data]() -> Model::FStaminaModelPtr
+            ->WithStaminaModel(Data->HasField(ANSI_TO_TCHAR("staminaModel")) ? [Data]() -> Model::FStaminaModelPtr
                  {
-                    if (Data->HasTypedField<EJson::Null>("staminaModel"))
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("staminaModel")))
                     {
                         return nullptr;
                     }
-                    return Model::FStaminaModel::FromJson(Data->GetObjectField("staminaModel"));
+                    return Model::FStaminaModel::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("staminaModel")));
                  }() : nullptr)
-            ->WithOverflowValue(Data->HasField("overflowValue") ? [Data]() -> TOptional<int32>
+            ->WithOverflowValue(Data->HasField(ANSI_TO_TCHAR("overflowValue")) ? [Data]() -> TOptional<int32>
                 {
                     int32 v;
-                    if (Data->TryGetNumberField("overflowValue", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("overflowValue"), v))
                     {
                         return TOptional(v);
                     }

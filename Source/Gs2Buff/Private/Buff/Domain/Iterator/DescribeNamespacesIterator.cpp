@@ -27,6 +27,8 @@
 #include "Buff/Domain/Iterator/DescribeNamespacesIterator.h"
 #include "Buff/Domain/Model/Namespace.h"
 
+#include "Core/Domain/Gs2.h"
+
 namespace Gs2::Buff::Domain::Iterator
 {
 

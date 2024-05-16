@@ -27,6 +27,8 @@
 #include "Limit/Domain/Iterator/DescribeNamespacesIterator.h"
 #include "Limit/Domain/Model/Namespace.h"
 
+#include "Core/Domain/Gs2.h"
+
 namespace Gs2::Limit::Domain::Iterator
 {
 

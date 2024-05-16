@@ -28,6 +28,8 @@
 #include "Grade/Domain/Model/Status.h"
 #include "Grade/Domain/Model/User.h"
 
+#include "Core/Domain/Gs2.h"
+
 namespace Gs2::Grade::Domain::Iterator
 {
 

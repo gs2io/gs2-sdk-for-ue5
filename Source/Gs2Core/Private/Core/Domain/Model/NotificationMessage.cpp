@@ -77,28 +77,28 @@ namespace Gs2::Core::Domain::Model
             return nullptr;
         }
         return MakeShared<FNotificationMessage>()
-            ->WithIssuer(Data->HasField("issuer") ? [Data]() -> TOptional<FString>
+            ->WithIssuer(Data->HasField(ANSI_TO_TCHAR("issuer")) ? [Data]() -> TOptional<FString>
                 {
                     FString v;
-                    if (Data->TryGetStringField("issuer", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("issuer"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithSubject(Data->HasField("subject") ? [Data]() -> TOptional<FString>
+            ->WithSubject(Data->HasField(ANSI_TO_TCHAR("subject")) ? [Data]() -> TOptional<FString>
                 {
                     FString v;
-                    if (Data->TryGetStringField("subject", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("subject"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithPayload(Data->HasField("payload") ? [Data]() -> TOptional<FString>
+            ->WithPayload(Data->HasField(ANSI_TO_TCHAR("payload")) ? [Data]() -> TOptional<FString>
                 {
                     FString v;
-                    if (Data->TryGetStringField("payload", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("payload"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }

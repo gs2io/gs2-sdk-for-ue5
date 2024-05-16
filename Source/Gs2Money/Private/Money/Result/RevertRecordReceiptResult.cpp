@@ -53,13 +53,13 @@ namespace Gs2::Money::Result
             return nullptr;
         }
         return MakeShared<FRevertRecordReceiptResult>()
-            ->WithItem(Data->HasField("item") ? [Data]() -> Model::FReceiptPtr
+            ->WithItem(Data->HasField(ANSI_TO_TCHAR("item")) ? [Data]() -> Model::FReceiptPtr
                  {
-                    if (Data->HasTypedField<EJson::Null>("item"))
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("item")))
                     {
                         return nullptr;
                     }
-                    return Model::FReceipt::FromJson(Data->GetObjectField("item"));
+                    return Model::FReceipt::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("item")));
                  }() : nullptr);
     }
 

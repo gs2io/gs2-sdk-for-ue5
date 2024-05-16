@@ -53,13 +53,13 @@ namespace Gs2::Identifier::Result
             return nullptr;
         }
         return MakeShared<FLoginByUserResult>()
-            ->WithItem(Data->HasField("item") ? [Data]() -> Model::FProjectTokenPtr
+            ->WithItem(Data->HasField(ANSI_TO_TCHAR("item")) ? [Data]() -> Model::FProjectTokenPtr
                  {
-                    if (Data->HasTypedField<EJson::Null>("item"))
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("item")))
                     {
                         return nullptr;
                     }
-                    return Model::FProjectToken::FromJson(Data->GetObjectField("item"));
+                    return Model::FProjectToken::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("item")));
                  }() : nullptr);
     }
 

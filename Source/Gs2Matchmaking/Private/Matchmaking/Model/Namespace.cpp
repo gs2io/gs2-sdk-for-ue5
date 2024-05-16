@@ -420,193 +420,193 @@ namespace Gs2::Matchmaking::Model
             return nullptr;
         }
         return MakeShared<FNamespace>()
-            ->WithNamespaceId(Data->HasField("namespaceId") ? [Data]() -> TOptional<FString>
+            ->WithNamespaceId(Data->HasField(ANSI_TO_TCHAR("namespaceId")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("namespaceId", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("namespaceId"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithName(Data->HasField("name") ? [Data]() -> TOptional<FString>
+            ->WithName(Data->HasField(ANSI_TO_TCHAR("name")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("name", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("name"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithDescription(Data->HasField("description") ? [Data]() -> TOptional<FString>
+            ->WithDescription(Data->HasField(ANSI_TO_TCHAR("description")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("description", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("description"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithEnableRating(Data->HasField("enableRating") ? [Data]() -> TOptional<bool>
+            ->WithEnableRating(Data->HasField(ANSI_TO_TCHAR("enableRating")) ? [Data]() -> TOptional<bool>
                 {
                     bool v;
-                    if (Data->TryGetBoolField("enableRating", v))
+                    if (Data->TryGetBoolField(ANSI_TO_TCHAR("enableRating"), v))
                     {
                         return TOptional(v);
                     }
                     return TOptional<bool>();
                 }() : TOptional<bool>())
-            ->WithCreateGatheringTriggerType(Data->HasField("createGatheringTriggerType") ? [Data]() -> TOptional<FString>
+            ->WithCreateGatheringTriggerType(Data->HasField(ANSI_TO_TCHAR("createGatheringTriggerType")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("createGatheringTriggerType", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("createGatheringTriggerType"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithCreateGatheringTriggerRealtimeNamespaceId(Data->HasField("createGatheringTriggerRealtimeNamespaceId") ? [Data]() -> TOptional<FString>
+            ->WithCreateGatheringTriggerRealtimeNamespaceId(Data->HasField(ANSI_TO_TCHAR("createGatheringTriggerRealtimeNamespaceId")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("createGatheringTriggerRealtimeNamespaceId", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("createGatheringTriggerRealtimeNamespaceId"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithCreateGatheringTriggerScriptId(Data->HasField("createGatheringTriggerScriptId") ? [Data]() -> TOptional<FString>
+            ->WithCreateGatheringTriggerScriptId(Data->HasField(ANSI_TO_TCHAR("createGatheringTriggerScriptId")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("createGatheringTriggerScriptId", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("createGatheringTriggerScriptId"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithCompleteMatchmakingTriggerType(Data->HasField("completeMatchmakingTriggerType") ? [Data]() -> TOptional<FString>
+            ->WithCompleteMatchmakingTriggerType(Data->HasField(ANSI_TO_TCHAR("completeMatchmakingTriggerType")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("completeMatchmakingTriggerType", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("completeMatchmakingTriggerType"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithCompleteMatchmakingTriggerRealtimeNamespaceId(Data->HasField("completeMatchmakingTriggerRealtimeNamespaceId") ? [Data]() -> TOptional<FString>
+            ->WithCompleteMatchmakingTriggerRealtimeNamespaceId(Data->HasField(ANSI_TO_TCHAR("completeMatchmakingTriggerRealtimeNamespaceId")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("completeMatchmakingTriggerRealtimeNamespaceId", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("completeMatchmakingTriggerRealtimeNamespaceId"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithCompleteMatchmakingTriggerScriptId(Data->HasField("completeMatchmakingTriggerScriptId") ? [Data]() -> TOptional<FString>
+            ->WithCompleteMatchmakingTriggerScriptId(Data->HasField(ANSI_TO_TCHAR("completeMatchmakingTriggerScriptId")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("completeMatchmakingTriggerScriptId", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("completeMatchmakingTriggerScriptId"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithEnableCollaborateSeasonRating(Data->HasField("enableCollaborateSeasonRating") ? [Data]() -> TOptional<FString>
+            ->WithEnableCollaborateSeasonRating(Data->HasField(ANSI_TO_TCHAR("enableCollaborateSeasonRating")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("enableCollaborateSeasonRating", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("enableCollaborateSeasonRating"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithCollaborateSeasonRatingNamespaceId(Data->HasField("collaborateSeasonRatingNamespaceId") ? [Data]() -> TOptional<FString>
+            ->WithCollaborateSeasonRatingNamespaceId(Data->HasField(ANSI_TO_TCHAR("collaborateSeasonRatingNamespaceId")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("collaborateSeasonRatingNamespaceId", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("collaborateSeasonRatingNamespaceId"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithCollaborateSeasonRatingTtl(Data->HasField("collaborateSeasonRatingTtl") ? [Data]() -> TOptional<int32>
+            ->WithCollaborateSeasonRatingTtl(Data->HasField(ANSI_TO_TCHAR("collaborateSeasonRatingTtl")) ? [Data]() -> TOptional<int32>
                 {
                     int32 v;
-                    if (Data->TryGetNumberField("collaborateSeasonRatingTtl", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("collaborateSeasonRatingTtl"), v))
                     {
                         return TOptional(v);
                     }
                     return TOptional<int32>();
                 }() : TOptional<int32>())
-            ->WithChangeRatingScript(Data->HasField("changeRatingScript") ? [Data]() -> Model::FScriptSettingPtr
+            ->WithChangeRatingScript(Data->HasField(ANSI_TO_TCHAR("changeRatingScript")) ? [Data]() -> Model::FScriptSettingPtr
                 {
-                    if (Data->HasTypedField<EJson::Null>("changeRatingScript"))
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("changeRatingScript")))
                     {
                         return nullptr;
                     }
-                    return Model::FScriptSetting::FromJson(Data->GetObjectField("changeRatingScript"));
+                    return Model::FScriptSetting::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("changeRatingScript")));
                  }() : nullptr)
-            ->WithJoinNotification(Data->HasField("joinNotification") ? [Data]() -> Model::FNotificationSettingPtr
+            ->WithJoinNotification(Data->HasField(ANSI_TO_TCHAR("joinNotification")) ? [Data]() -> Model::FNotificationSettingPtr
                 {
-                    if (Data->HasTypedField<EJson::Null>("joinNotification"))
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("joinNotification")))
                     {
                         return nullptr;
                     }
-                    return Model::FNotificationSetting::FromJson(Data->GetObjectField("joinNotification"));
+                    return Model::FNotificationSetting::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("joinNotification")));
                  }() : nullptr)
-            ->WithLeaveNotification(Data->HasField("leaveNotification") ? [Data]() -> Model::FNotificationSettingPtr
+            ->WithLeaveNotification(Data->HasField(ANSI_TO_TCHAR("leaveNotification")) ? [Data]() -> Model::FNotificationSettingPtr
                 {
-                    if (Data->HasTypedField<EJson::Null>("leaveNotification"))
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("leaveNotification")))
                     {
                         return nullptr;
                     }
-                    return Model::FNotificationSetting::FromJson(Data->GetObjectField("leaveNotification"));
+                    return Model::FNotificationSetting::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("leaveNotification")));
                  }() : nullptr)
-            ->WithCompleteNotification(Data->HasField("completeNotification") ? [Data]() -> Model::FNotificationSettingPtr
+            ->WithCompleteNotification(Data->HasField(ANSI_TO_TCHAR("completeNotification")) ? [Data]() -> Model::FNotificationSettingPtr
                 {
-                    if (Data->HasTypedField<EJson::Null>("completeNotification"))
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("completeNotification")))
                     {
                         return nullptr;
                     }
-                    return Model::FNotificationSetting::FromJson(Data->GetObjectField("completeNotification"));
+                    return Model::FNotificationSetting::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("completeNotification")));
                  }() : nullptr)
-            ->WithChangeRatingNotification(Data->HasField("changeRatingNotification") ? [Data]() -> Model::FNotificationSettingPtr
+            ->WithChangeRatingNotification(Data->HasField(ANSI_TO_TCHAR("changeRatingNotification")) ? [Data]() -> Model::FNotificationSettingPtr
                 {
-                    if (Data->HasTypedField<EJson::Null>("changeRatingNotification"))
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("changeRatingNotification")))
                     {
                         return nullptr;
                     }
-                    return Model::FNotificationSetting::FromJson(Data->GetObjectField("changeRatingNotification"));
+                    return Model::FNotificationSetting::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("changeRatingNotification")));
                  }() : nullptr)
-            ->WithLogSetting(Data->HasField("logSetting") ? [Data]() -> Model::FLogSettingPtr
+            ->WithLogSetting(Data->HasField(ANSI_TO_TCHAR("logSetting")) ? [Data]() -> Model::FLogSettingPtr
                 {
-                    if (Data->HasTypedField<EJson::Null>("logSetting"))
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("logSetting")))
                     {
                         return nullptr;
                     }
-                    return Model::FLogSetting::FromJson(Data->GetObjectField("logSetting"));
+                    return Model::FLogSetting::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("logSetting")));
                  }() : nullptr)
-            ->WithCreatedAt(Data->HasField("createdAt") ? [Data]() -> TOptional<int64>
+            ->WithCreatedAt(Data->HasField(ANSI_TO_TCHAR("createdAt")) ? [Data]() -> TOptional<int64>
                 {
                     int64 v;
-                    if (Data->TryGetNumberField("createdAt", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("createdAt"), v))
                     {
                         return TOptional(v);
                     }
                     return TOptional<int64>();
                 }() : TOptional<int64>())
-            ->WithUpdatedAt(Data->HasField("updatedAt") ? [Data]() -> TOptional<int64>
+            ->WithUpdatedAt(Data->HasField(ANSI_TO_TCHAR("updatedAt")) ? [Data]() -> TOptional<int64>
                 {
                     int64 v;
-                    if (Data->TryGetNumberField("updatedAt", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("updatedAt"), v))
                     {
                         return TOptional(v);
                     }
                     return TOptional<int64>();
                 }() : TOptional<int64>())
-            ->WithRevision(Data->HasField("revision") ? [Data]() -> TOptional<int64>
+            ->WithRevision(Data->HasField(ANSI_TO_TCHAR("revision")) ? [Data]() -> TOptional<int64>
                 {
                     int64 v;
-                    if (Data->TryGetNumberField("revision", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("revision"), v))
                     {
                         return TOptional(v);
                     }

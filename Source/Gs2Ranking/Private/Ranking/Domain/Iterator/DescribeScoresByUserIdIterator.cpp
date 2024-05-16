@@ -28,6 +28,8 @@
 #include "Ranking/Domain/Model/Score.h"
 #include "Ranking/Domain/Model/User.h"
 
+#include "Core/Domain/Gs2.h"
+
 namespace Gs2::Ranking::Domain::Iterator
 {
 

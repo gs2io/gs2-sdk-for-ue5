@@ -249,85 +249,85 @@ namespace Gs2::Account::Model
             return nullptr;
         }
         return MakeShared<FAccount>()
-            ->WithAccountId(Data->HasField("accountId") ? [Data]() -> TOptional<FString>
+            ->WithAccountId(Data->HasField(ANSI_TO_TCHAR("accountId")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("accountId", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("accountId"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithUserId(Data->HasField("userId") ? [Data]() -> TOptional<FString>
+            ->WithUserId(Data->HasField(ANSI_TO_TCHAR("userId")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("userId", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("userId"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithPassword(Data->HasField("password") ? [Data]() -> TOptional<FString>
+            ->WithPassword(Data->HasField(ANSI_TO_TCHAR("password")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("password", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("password"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithTimeOffset(Data->HasField("timeOffset") ? [Data]() -> TOptional<int32>
+            ->WithTimeOffset(Data->HasField(ANSI_TO_TCHAR("timeOffset")) ? [Data]() -> TOptional<int32>
                 {
                     int32 v;
-                    if (Data->TryGetNumberField("timeOffset", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("timeOffset"), v))
                     {
                         return TOptional(v);
                     }
                     return TOptional<int32>();
                 }() : TOptional<int32>())
-            ->WithBanStatuses(Data->HasField("banStatuses") ? [Data]() -> TSharedPtr<TArray<Model::FBanStatusPtr>>
+            ->WithBanStatuses(Data->HasField(ANSI_TO_TCHAR("banStatuses")) ? [Data]() -> TSharedPtr<TArray<Model::FBanStatusPtr>>
                 {
                     auto v = MakeShared<TArray<Model::FBanStatusPtr>>();
-                    if (!Data->HasTypedField<EJson::Null>("banStatuses") && Data->HasTypedField<EJson::Array>("banStatuses"))
+                    if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("banStatuses")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("banStatuses")))
                     {
-                        for (auto JsonObjectValue : Data->GetArrayField("banStatuses"))
+                        for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("banStatuses")))
                         {
                             v->Add(Model::FBanStatus::FromJson(JsonObjectValue->AsObject()));
                         }
                     }
                     return v;
                  }() : MakeShared<TArray<Model::FBanStatusPtr>>())
-            ->WithBanned(Data->HasField("banned") ? [Data]() -> TOptional<bool>
+            ->WithBanned(Data->HasField(ANSI_TO_TCHAR("banned")) ? [Data]() -> TOptional<bool>
                 {
                     bool v;
-                    if (Data->TryGetBoolField("banned", v))
+                    if (Data->TryGetBoolField(ANSI_TO_TCHAR("banned"), v))
                     {
                         return TOptional(v);
                     }
                     return TOptional<bool>();
                 }() : TOptional<bool>())
-            ->WithLastAuthenticatedAt(Data->HasField("lastAuthenticatedAt") ? [Data]() -> TOptional<int64>
+            ->WithLastAuthenticatedAt(Data->HasField(ANSI_TO_TCHAR("lastAuthenticatedAt")) ? [Data]() -> TOptional<int64>
                 {
                     int64 v;
-                    if (Data->TryGetNumberField("lastAuthenticatedAt", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("lastAuthenticatedAt"), v))
                     {
                         return TOptional(v);
                     }
                     return TOptional<int64>();
                 }() : TOptional<int64>())
-            ->WithCreatedAt(Data->HasField("createdAt") ? [Data]() -> TOptional<int64>
+            ->WithCreatedAt(Data->HasField(ANSI_TO_TCHAR("createdAt")) ? [Data]() -> TOptional<int64>
                 {
                     int64 v;
-                    if (Data->TryGetNumberField("createdAt", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("createdAt"), v))
                     {
                         return TOptional(v);
                     }
                     return TOptional<int64>();
                 }() : TOptional<int64>())
-            ->WithRevision(Data->HasField("revision") ? [Data]() -> TOptional<int64>
+            ->WithRevision(Data->HasField(ANSI_TO_TCHAR("revision")) ? [Data]() -> TOptional<int64>
                 {
                     int64 v;
-                    if (Data->TryGetNumberField("revision", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("revision"), v))
                     {
                         return TOptional(v);
                     }

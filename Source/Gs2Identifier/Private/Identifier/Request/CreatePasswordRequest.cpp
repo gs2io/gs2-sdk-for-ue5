@@ -77,20 +77,20 @@ namespace Gs2::Identifier::Request
             return nullptr;
         }
         return MakeShared<FCreatePasswordRequest>()
-            ->WithContextStack(Data->HasField("contextStack") ? TOptional<FString>(Data->GetStringField("contextStack")) : TOptional<FString>())
-            ->WithUserName(Data->HasField("userName") ? [Data]() -> TOptional<FString>
+            ->WithContextStack(Data->HasField(ANSI_TO_TCHAR("contextStack")) ? TOptional<FString>(Data->GetStringField(ANSI_TO_TCHAR("contextStack"))) : TOptional<FString>())
+            ->WithUserName(Data->HasField(ANSI_TO_TCHAR("userName")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
-                    if (Data->TryGetStringField("userName", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("userName"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
-            ->WithPassword(Data->HasField("password") ? [Data]() -> TOptional<FString>
+            ->WithPassword(Data->HasField(ANSI_TO_TCHAR("password")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
-                    if (Data->TryGetStringField("password", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("password"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }

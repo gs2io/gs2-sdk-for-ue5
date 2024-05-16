@@ -28,6 +28,8 @@
 #include "Account/Domain/Model/Account.h"
 #include "Account/Domain/Model/Namespace.h"
 
+#include "Core/Domain/Gs2.h"
+
 namespace Gs2::Account::Domain::Iterator
 {
 

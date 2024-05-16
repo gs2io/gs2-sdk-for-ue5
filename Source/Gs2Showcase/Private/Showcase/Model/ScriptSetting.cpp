@@ -90,37 +90,37 @@ namespace Gs2::Showcase::Model
             return nullptr;
         }
         return MakeShared<FScriptSetting>()
-            ->WithTriggerScriptId(Data->HasField("triggerScriptId") ? [Data]() -> TOptional<FString>
+            ->WithTriggerScriptId(Data->HasField(ANSI_TO_TCHAR("triggerScriptId")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("triggerScriptId", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("triggerScriptId"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithDoneTriggerTargetType(Data->HasField("doneTriggerTargetType") ? [Data]() -> TOptional<FString>
+            ->WithDoneTriggerTargetType(Data->HasField(ANSI_TO_TCHAR("doneTriggerTargetType")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("doneTriggerTargetType", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("doneTriggerTargetType"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithDoneTriggerScriptId(Data->HasField("doneTriggerScriptId") ? [Data]() -> TOptional<FString>
+            ->WithDoneTriggerScriptId(Data->HasField(ANSI_TO_TCHAR("doneTriggerScriptId")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("doneTriggerScriptId", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("doneTriggerScriptId"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithDoneTriggerQueueNamespaceId(Data->HasField("doneTriggerQueueNamespaceId") ? [Data]() -> TOptional<FString>
+            ->WithDoneTriggerQueueNamespaceId(Data->HasField(ANSI_TO_TCHAR("doneTriggerQueueNamespaceId")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("doneTriggerQueueNamespaceId", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("doneTriggerQueueNamespaceId"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }

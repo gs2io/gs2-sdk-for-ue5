@@ -85,26 +85,26 @@ namespace Gs2::MegaField::Model
             return nullptr;
         }
         return MakeShared<FMyPosition>()
-            ->WithPosition(Data->HasField("position") ? [Data]() -> Model::FPositionPtr
+            ->WithPosition(Data->HasField(ANSI_TO_TCHAR("position")) ? [Data]() -> Model::FPositionPtr
                 {
-                    if (Data->HasTypedField<EJson::Null>("position"))
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("position")))
                     {
                         return nullptr;
                     }
-                    return Model::FPosition::FromJson(Data->GetObjectField("position"));
+                    return Model::FPosition::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("position")));
                  }() : nullptr)
-            ->WithVector(Data->HasField("vector") ? [Data]() -> Model::FVectorPtr
+            ->WithVector(Data->HasField(ANSI_TO_TCHAR("vector")) ? [Data]() -> Model::FVectorPtr
                 {
-                    if (Data->HasTypedField<EJson::Null>("vector"))
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("vector")))
                     {
                         return nullptr;
                     }
-                    return Model::FVector::FromJson(Data->GetObjectField("vector"));
+                    return Model::FVector::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("vector")));
                  }() : nullptr)
-            ->WithR(Data->HasField("r") ? [Data]() -> TOptional<float>
+            ->WithR(Data->HasField(ANSI_TO_TCHAR("r")) ? [Data]() -> TOptional<float>
                 {
                     float v;
-                    if (Data->TryGetNumberField("r", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("r"), v))
                     {
                         return TOptional(v);
                     }

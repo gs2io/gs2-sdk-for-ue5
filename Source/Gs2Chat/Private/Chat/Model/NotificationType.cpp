@@ -80,19 +80,19 @@ namespace Gs2::Chat::Model
             return nullptr;
         }
         return MakeShared<FNotificationType>()
-            ->WithCategory(Data->HasField("category") ? [Data]() -> TOptional<int32>
+            ->WithCategory(Data->HasField(ANSI_TO_TCHAR("category")) ? [Data]() -> TOptional<int32>
                 {
                     int32 v;
-                    if (Data->TryGetNumberField("category", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("category"), v))
                     {
                         return TOptional(v);
                     }
                     return TOptional<int32>();
                 }() : TOptional<int32>())
-            ->WithEnableTransferMobilePushNotification(Data->HasField("enableTransferMobilePushNotification") ? [Data]() -> TOptional<bool>
+            ->WithEnableTransferMobilePushNotification(Data->HasField(ANSI_TO_TCHAR("enableTransferMobilePushNotification")) ? [Data]() -> TOptional<bool>
                 {
                     bool v;
-                    if (Data->TryGetBoolField("enableTransferMobilePushNotification", v))
+                    if (Data->TryGetBoolField(ANSI_TO_TCHAR("enableTransferMobilePushNotification"), v))
                     {
                         return TOptional(v);
                     }

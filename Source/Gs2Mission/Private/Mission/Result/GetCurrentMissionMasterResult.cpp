@@ -53,13 +53,13 @@ namespace Gs2::Mission::Result
             return nullptr;
         }
         return MakeShared<FGetCurrentMissionMasterResult>()
-            ->WithItem(Data->HasField("item") ? [Data]() -> Model::FCurrentMissionMasterPtr
+            ->WithItem(Data->HasField(ANSI_TO_TCHAR("item")) ? [Data]() -> Model::FCurrentMissionMasterPtr
                  {
-                    if (Data->HasTypedField<EJson::Null>("item"))
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("item")))
                     {
                         return nullptr;
                     }
-                    return Model::FCurrentMissionMaster::FromJson(Data->GetObjectField("item"));
+                    return Model::FCurrentMissionMaster::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("item")));
                  }() : nullptr);
     }
 

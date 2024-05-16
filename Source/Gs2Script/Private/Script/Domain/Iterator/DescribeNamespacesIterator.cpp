@@ -27,6 +27,8 @@
 #include "Script/Domain/Iterator/DescribeNamespacesIterator.h"
 #include "Script/Domain/Model/Namespace.h"
 
+#include "Core/Domain/Gs2.h"
+
 namespace Gs2::Script::Domain::Iterator
 {
 

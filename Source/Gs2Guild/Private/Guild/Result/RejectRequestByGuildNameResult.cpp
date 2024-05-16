@@ -53,13 +53,13 @@ namespace Gs2::Guild::Result
             return nullptr;
         }
         return MakeShared<FRejectRequestByGuildNameResult>()
-            ->WithItem(Data->HasField("item") ? [Data]() -> Model::FReceiveMemberRequestPtr
+            ->WithItem(Data->HasField(ANSI_TO_TCHAR("item")) ? [Data]() -> Model::FReceiveMemberRequestPtr
                  {
-                    if (Data->HasTypedField<EJson::Null>("item"))
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("item")))
                     {
                         return nullptr;
                     }
-                    return Model::FReceiveMemberRequest::FromJson(Data->GetObjectField("item"));
+                    return Model::FReceiveMemberRequest::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("item")));
                  }() : nullptr);
     }
 

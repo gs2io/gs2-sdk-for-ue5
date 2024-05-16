@@ -53,13 +53,13 @@ namespace Gs2::Identifier::Result
             return nullptr;
         }
         return MakeShared<FDeleteIdentifierResult>()
-            ->WithItem(Data->HasField("item") ? [Data]() -> Model::FIdentifierPtr
+            ->WithItem(Data->HasField(ANSI_TO_TCHAR("item")) ? [Data]() -> Model::FIdentifierPtr
                  {
-                    if (Data->HasTypedField<EJson::Null>("item"))
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("item")))
                     {
                         return nullptr;
                     }
-                    return Model::FIdentifier::FromJson(Data->GetObjectField("item"));
+                    return Model::FIdentifier::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("item")));
                  }() : nullptr);
     }
 

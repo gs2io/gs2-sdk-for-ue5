@@ -27,6 +27,8 @@
 #include "Inbox/Domain/Iterator/DescribeNamespacesIterator.h"
 #include "Inbox/Domain/Model/Namespace.h"
 
+#include "Core/Domain/Gs2.h"
+
 namespace Gs2::Inbox::Domain::Iterator
 {
 

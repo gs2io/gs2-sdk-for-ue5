@@ -28,6 +28,8 @@
 #include "Quest/Domain/Model/QuestModel.h"
 #include "Quest/Domain/Model/QuestGroupModel.h"
 
+#include "Core/Domain/Gs2.h"
+
 namespace Gs2::Quest::Domain::Iterator
 {
 

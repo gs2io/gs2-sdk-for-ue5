@@ -53,13 +53,13 @@ namespace Gs2::MegaField::Result
             return nullptr;
         }
         return MakeShared<FGetAreaModelResult>()
-            ->WithItem(Data->HasField("item") ? [Data]() -> Model::FAreaModelPtr
+            ->WithItem(Data->HasField(ANSI_TO_TCHAR("item")) ? [Data]() -> Model::FAreaModelPtr
                  {
-                    if (Data->HasTypedField<EJson::Null>("item"))
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("item")))
                     {
                         return nullptr;
                     }
-                    return Model::FAreaModel::FromJson(Data->GetObjectField("item"));
+                    return Model::FAreaModel::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("item")));
                  }() : nullptr);
     }
 

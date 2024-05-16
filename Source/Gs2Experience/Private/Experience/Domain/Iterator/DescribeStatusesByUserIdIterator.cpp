@@ -28,6 +28,8 @@
 #include "Experience/Domain/Model/Status.h"
 #include "Experience/Domain/Model/User.h"
 
+#include "Core/Domain/Gs2.h"
+
 namespace Gs2::Experience::Domain::Iterator
 {
 

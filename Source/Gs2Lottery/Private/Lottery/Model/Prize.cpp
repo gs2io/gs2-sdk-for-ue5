@@ -150,67 +150,67 @@ namespace Gs2::Lottery::Model
             return nullptr;
         }
         return MakeShared<FPrize>()
-            ->WithPrizeId(Data->HasField("prizeId") ? [Data]() -> TOptional<FString>
+            ->WithPrizeId(Data->HasField(ANSI_TO_TCHAR("prizeId")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("prizeId", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("prizeId"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithType(Data->HasField("type") ? [Data]() -> TOptional<FString>
+            ->WithType(Data->HasField(ANSI_TO_TCHAR("type")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("type", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("type"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithAcquireActions(Data->HasField("acquireActions") ? [Data]() -> TSharedPtr<TArray<Model::FAcquireActionPtr>>
+            ->WithAcquireActions(Data->HasField(ANSI_TO_TCHAR("acquireActions")) ? [Data]() -> TSharedPtr<TArray<Model::FAcquireActionPtr>>
                 {
                     auto v = MakeShared<TArray<Model::FAcquireActionPtr>>();
-                    if (!Data->HasTypedField<EJson::Null>("acquireActions") && Data->HasTypedField<EJson::Array>("acquireActions"))
+                    if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("acquireActions")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("acquireActions")))
                     {
-                        for (auto JsonObjectValue : Data->GetArrayField("acquireActions"))
+                        for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("acquireActions")))
                         {
                             v->Add(Model::FAcquireAction::FromJson(JsonObjectValue->AsObject()));
                         }
                     }
                     return v;
                  }() : MakeShared<TArray<Model::FAcquireActionPtr>>())
-            ->WithDrawnLimit(Data->HasField("drawnLimit") ? [Data]() -> TOptional<int32>
+            ->WithDrawnLimit(Data->HasField(ANSI_TO_TCHAR("drawnLimit")) ? [Data]() -> TOptional<int32>
                 {
                     int32 v;
-                    if (Data->TryGetNumberField("drawnLimit", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("drawnLimit"), v))
                     {
                         return TOptional(v);
                     }
                     return TOptional<int32>();
                 }() : TOptional<int32>())
-            ->WithLimitFailOverPrizeId(Data->HasField("limitFailOverPrizeId") ? [Data]() -> TOptional<FString>
+            ->WithLimitFailOverPrizeId(Data->HasField(ANSI_TO_TCHAR("limitFailOverPrizeId")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("limitFailOverPrizeId", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("limitFailOverPrizeId"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithPrizeTableName(Data->HasField("prizeTableName") ? [Data]() -> TOptional<FString>
+            ->WithPrizeTableName(Data->HasField(ANSI_TO_TCHAR("prizeTableName")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("prizeTableName", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("prizeTableName"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithWeight(Data->HasField("weight") ? [Data]() -> TOptional<int32>
+            ->WithWeight(Data->HasField(ANSI_TO_TCHAR("weight")) ? [Data]() -> TOptional<int32>
                 {
                     int32 v;
-                    if (Data->TryGetNumberField("weight", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("weight"), v))
                     {
                         return TOptional(v);
                     }

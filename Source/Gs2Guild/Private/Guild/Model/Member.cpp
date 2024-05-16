@@ -85,28 +85,28 @@ namespace Gs2::Guild::Model
             return nullptr;
         }
         return MakeShared<FMember>()
-            ->WithUserId(Data->HasField("userId") ? [Data]() -> TOptional<FString>
+            ->WithUserId(Data->HasField(ANSI_TO_TCHAR("userId")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("userId", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("userId"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithRoleName(Data->HasField("roleName") ? [Data]() -> TOptional<FString>
+            ->WithRoleName(Data->HasField(ANSI_TO_TCHAR("roleName")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("roleName", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("roleName"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithJoinedAt(Data->HasField("joinedAt") ? [Data]() -> TOptional<int64>
+            ->WithJoinedAt(Data->HasField(ANSI_TO_TCHAR("joinedAt")) ? [Data]() -> TOptional<int64>
                 {
                     int64 v;
-                    if (Data->TryGetNumberField("joinedAt", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("joinedAt"), v))
                     {
                         return TOptional(v);
                     }

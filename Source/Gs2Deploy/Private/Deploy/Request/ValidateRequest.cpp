@@ -62,11 +62,11 @@ namespace Gs2::Deploy::Request
             return nullptr;
         }
         return MakeShared<FValidateRequest>()
-            ->WithContextStack(Data->HasField("contextStack") ? TOptional<FString>(Data->GetStringField("contextStack")) : TOptional<FString>())
-            ->WithTemplate(Data->HasField("template") ? [Data]() -> TOptional<FString>
+            ->WithContextStack(Data->HasField(ANSI_TO_TCHAR("contextStack")) ? TOptional<FString>(Data->GetStringField(ANSI_TO_TCHAR("contextStack"))) : TOptional<FString>())
+            ->WithTemplate(Data->HasField(ANSI_TO_TCHAR("template")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
-                    if (Data->TryGetStringField("template", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("template"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }

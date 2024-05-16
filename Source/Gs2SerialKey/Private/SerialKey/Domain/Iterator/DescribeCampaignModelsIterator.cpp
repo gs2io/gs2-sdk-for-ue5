@@ -28,6 +28,8 @@
 #include "SerialKey/Domain/Model/CampaignModel.h"
 #include "SerialKey/Domain/Model/Namespace.h"
 
+#include "Core/Domain/Gs2.h"
+
 namespace Gs2::SerialKey::Domain::Iterator
 {
 

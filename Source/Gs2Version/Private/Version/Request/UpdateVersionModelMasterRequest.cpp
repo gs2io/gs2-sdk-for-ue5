@@ -252,110 +252,110 @@ namespace Gs2::Version::Request
             return nullptr;
         }
         return MakeShared<FUpdateVersionModelMasterRequest>()
-            ->WithContextStack(Data->HasField("contextStack") ? TOptional<FString>(Data->GetStringField("contextStack")) : TOptional<FString>())
-            ->WithNamespaceName(Data->HasField("namespaceName") ? [Data]() -> TOptional<FString>
+            ->WithContextStack(Data->HasField(ANSI_TO_TCHAR("contextStack")) ? TOptional<FString>(Data->GetStringField(ANSI_TO_TCHAR("contextStack"))) : TOptional<FString>())
+            ->WithNamespaceName(Data->HasField(ANSI_TO_TCHAR("namespaceName")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
-                    if (Data->TryGetStringField("namespaceName", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("namespaceName"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
-            ->WithVersionName(Data->HasField("versionName") ? [Data]() -> TOptional<FString>
+            ->WithVersionName(Data->HasField(ANSI_TO_TCHAR("versionName")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
-                    if (Data->TryGetStringField("versionName", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("versionName"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
-            ->WithDescription(Data->HasField("description") ? [Data]() -> TOptional<FString>
+            ->WithDescription(Data->HasField(ANSI_TO_TCHAR("description")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
-                    if (Data->TryGetStringField("description", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("description"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
-            ->WithMetadata(Data->HasField("metadata") ? [Data]() -> TOptional<FString>
+            ->WithMetadata(Data->HasField(ANSI_TO_TCHAR("metadata")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
-                    if (Data->TryGetStringField("metadata", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("metadata"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
-            ->WithScope(Data->HasField("scope") ? [Data]() -> TOptional<FString>
+            ->WithScope(Data->HasField(ANSI_TO_TCHAR("scope")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
-                    if (Data->TryGetStringField("scope", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("scope"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
-            ->WithType(Data->HasField("type") ? [Data]() -> TOptional<FString>
+            ->WithType(Data->HasField(ANSI_TO_TCHAR("type")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
-                    if (Data->TryGetStringField("type", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("type"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
-          ->WithCurrentVersion(Data->HasField("currentVersion") ? [Data]() -> Model::FVersionPtr
+          ->WithCurrentVersion(Data->HasField(ANSI_TO_TCHAR("currentVersion")) ? [Data]() -> Model::FVersionPtr
               {
-                  if (Data->HasTypedField<EJson::Null>("currentVersion"))
+                  if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("currentVersion")))
                   {
                       return nullptr;
                   }
-                  return Model::FVersion::FromJson(Data->GetObjectField("currentVersion"));
+                  return Model::FVersion::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("currentVersion")));
               }() : nullptr)
-          ->WithWarningVersion(Data->HasField("warningVersion") ? [Data]() -> Model::FVersionPtr
+          ->WithWarningVersion(Data->HasField(ANSI_TO_TCHAR("warningVersion")) ? [Data]() -> Model::FVersionPtr
               {
-                  if (Data->HasTypedField<EJson::Null>("warningVersion"))
+                  if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("warningVersion")))
                   {
                       return nullptr;
                   }
-                  return Model::FVersion::FromJson(Data->GetObjectField("warningVersion"));
+                  return Model::FVersion::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("warningVersion")));
               }() : nullptr)
-          ->WithErrorVersion(Data->HasField("errorVersion") ? [Data]() -> Model::FVersionPtr
+          ->WithErrorVersion(Data->HasField(ANSI_TO_TCHAR("errorVersion")) ? [Data]() -> Model::FVersionPtr
               {
-                  if (Data->HasTypedField<EJson::Null>("errorVersion"))
+                  if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("errorVersion")))
                   {
                       return nullptr;
                   }
-                  return Model::FVersion::FromJson(Data->GetObjectField("errorVersion"));
+                  return Model::FVersion::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("errorVersion")));
               }() : nullptr)
-          ->WithScheduleVersions(Data->HasField("scheduleVersions") ? [Data]() -> TSharedPtr<TArray<Model::FScheduleVersionPtr>>
+          ->WithScheduleVersions(Data->HasField(ANSI_TO_TCHAR("scheduleVersions")) ? [Data]() -> TSharedPtr<TArray<Model::FScheduleVersionPtr>>
               {
                   auto v = MakeShared<TArray<Model::FScheduleVersionPtr>>();
-                  if (!Data->HasTypedField<EJson::Null>("scheduleVersions") && Data->HasTypedField<EJson::Array>("scheduleVersions"))
+                  if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("scheduleVersions")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("scheduleVersions")))
                   {
-                      for (auto JsonObjectValue : Data->GetArrayField("scheduleVersions"))
+                      for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("scheduleVersions")))
                       {
                           v->Add(Model::FScheduleVersion::FromJson(JsonObjectValue->AsObject()));
                       }
                   }
                   return v;
               }() : MakeShared<TArray<Model::FScheduleVersionPtr>>())
-            ->WithNeedSignature(Data->HasField("needSignature") ? [Data]() -> TOptional<bool>
+            ->WithNeedSignature(Data->HasField(ANSI_TO_TCHAR("needSignature")) ? [Data]() -> TOptional<bool>
               {
                   bool v;
-                    if (Data->TryGetBoolField("needSignature", v))
+                    if (Data->TryGetBoolField(ANSI_TO_TCHAR("needSignature"), v))
                   {
                         return TOptional(v);
                   }
                   return TOptional<bool>();
               }() : TOptional<bool>())
-            ->WithSignatureKeyId(Data->HasField("signatureKeyId") ? [Data]() -> TOptional<FString>
+            ->WithSignatureKeyId(Data->HasField(ANSI_TO_TCHAR("signatureKeyId")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
-                    if (Data->TryGetStringField("signatureKeyId", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("signatureKeyId"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }

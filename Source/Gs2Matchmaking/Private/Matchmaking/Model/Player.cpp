@@ -90,42 +90,42 @@ namespace Gs2::Matchmaking::Model
             return nullptr;
         }
         return MakeShared<FPlayer>()
-            ->WithUserId(Data->HasField("userId") ? [Data]() -> TOptional<FString>
+            ->WithUserId(Data->HasField(ANSI_TO_TCHAR("userId")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("userId", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("userId"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithAttributes(Data->HasField("attributes") ? [Data]() -> TSharedPtr<TArray<Model::FAttributePtr>>
+            ->WithAttributes(Data->HasField(ANSI_TO_TCHAR("attributes")) ? [Data]() -> TSharedPtr<TArray<Model::FAttributePtr>>
                 {
                     auto v = MakeShared<TArray<Model::FAttributePtr>>();
-                    if (!Data->HasTypedField<EJson::Null>("attributes") && Data->HasTypedField<EJson::Array>("attributes"))
+                    if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("attributes")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("attributes")))
                     {
-                        for (auto JsonObjectValue : Data->GetArrayField("attributes"))
+                        for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("attributes")))
                         {
                             v->Add(Model::FAttribute::FromJson(JsonObjectValue->AsObject()));
                         }
                     }
                     return v;
                  }() : MakeShared<TArray<Model::FAttributePtr>>())
-            ->WithRoleName(Data->HasField("roleName") ? [Data]() -> TOptional<FString>
+            ->WithRoleName(Data->HasField(ANSI_TO_TCHAR("roleName")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("roleName", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("roleName"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithDenyUserIds(Data->HasField("denyUserIds") ? [Data]() -> TSharedPtr<TArray<FString>>
+            ->WithDenyUserIds(Data->HasField(ANSI_TO_TCHAR("denyUserIds")) ? [Data]() -> TSharedPtr<TArray<FString>>
                 {
                     auto v = MakeShared<TArray<FString>>();
-                    if (!Data->HasTypedField<EJson::Null>("denyUserIds") && Data->HasTypedField<EJson::Array>("denyUserIds"))
+                    if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("denyUserIds")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("denyUserIds")))
                     {
-                        for (auto JsonObjectValue : Data->GetArrayField("denyUserIds"))
+                        for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("denyUserIds")))
                         {
                             v->Add(JsonObjectValue->AsString());
                         }

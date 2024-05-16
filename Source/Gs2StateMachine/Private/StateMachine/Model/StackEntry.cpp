@@ -62,19 +62,19 @@ namespace Gs2::StateMachine::Model
             return nullptr;
         }
         return MakeShared<FStackEntry>()
-            ->WithStateMachineName(Data->HasField("stateMachineName") ? [Data]() -> TOptional<FString>
+            ->WithStateMachineName(Data->HasField(ANSI_TO_TCHAR("stateMachineName")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("stateMachineName", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("stateMachineName"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithTaskName(Data->HasField("taskName") ? [Data]() -> TOptional<FString>
+            ->WithTaskName(Data->HasField(ANSI_TO_TCHAR("taskName")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("taskName", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("taskName"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }

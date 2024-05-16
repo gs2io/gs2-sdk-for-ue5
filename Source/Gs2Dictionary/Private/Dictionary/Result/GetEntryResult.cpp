@@ -53,13 +53,13 @@ namespace Gs2::Dictionary::Result
             return nullptr;
         }
         return MakeShared<FGetEntryResult>()
-            ->WithItem(Data->HasField("item") ? [Data]() -> Model::FEntryPtr
+            ->WithItem(Data->HasField(ANSI_TO_TCHAR("item")) ? [Data]() -> Model::FEntryPtr
                  {
-                    if (Data->HasTypedField<EJson::Null>("item"))
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("item")))
                     {
                         return nullptr;
                     }
-                    return Model::FEntry::FromJson(Data->GetObjectField("item"));
+                    return Model::FEntry::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("item")));
                  }() : nullptr);
     }
 

@@ -27,6 +27,7 @@
 #include "Inventory/Domain/SpeculativeExecutor/Acquire/DeleteReferenceOfByUserIdSpeculativeExecutor.h"
 
 #include "Core/Domain/Gs2.h"
+#include "Inventory/Domain/Model/ReferenceOf.h"
 
 namespace Gs2::Inventory::Domain::SpeculativeExecutor
 {

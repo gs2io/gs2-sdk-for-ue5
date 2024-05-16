@@ -28,6 +28,8 @@
 #include "SeasonRating/Domain/Model/SeasonModel.h"
 #include "SeasonRating/Domain/Model/Namespace.h"
 
+#include "Core/Domain/Gs2.h"
+
 namespace Gs2::SeasonRating::Domain::Iterator
 {
 

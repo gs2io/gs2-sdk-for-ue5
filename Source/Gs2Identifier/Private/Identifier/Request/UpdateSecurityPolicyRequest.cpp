@@ -92,29 +92,29 @@ namespace Gs2::Identifier::Request
             return nullptr;
         }
         return MakeShared<FUpdateSecurityPolicyRequest>()
-            ->WithContextStack(Data->HasField("contextStack") ? TOptional<FString>(Data->GetStringField("contextStack")) : TOptional<FString>())
-            ->WithSecurityPolicyName(Data->HasField("securityPolicyName") ? [Data]() -> TOptional<FString>
+            ->WithContextStack(Data->HasField(ANSI_TO_TCHAR("contextStack")) ? TOptional<FString>(Data->GetStringField(ANSI_TO_TCHAR("contextStack"))) : TOptional<FString>())
+            ->WithSecurityPolicyName(Data->HasField(ANSI_TO_TCHAR("securityPolicyName")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
-                    if (Data->TryGetStringField("securityPolicyName", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("securityPolicyName"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
-            ->WithDescription(Data->HasField("description") ? [Data]() -> TOptional<FString>
+            ->WithDescription(Data->HasField(ANSI_TO_TCHAR("description")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
-                    if (Data->TryGetStringField("description", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("description"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
-            ->WithPolicy(Data->HasField("policy") ? [Data]() -> TOptional<FString>
+            ->WithPolicy(Data->HasField(ANSI_TO_TCHAR("policy")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
-                    if (Data->TryGetStringField("policy", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("policy"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }

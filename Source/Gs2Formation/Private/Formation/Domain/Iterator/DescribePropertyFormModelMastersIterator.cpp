@@ -28,6 +28,8 @@
 #include "Formation/Domain/Model/PropertyFormModelMaster.h"
 #include "Formation/Domain/Model/Namespace.h"
 
+#include "Core/Domain/Gs2.h"
+
 namespace Gs2::Formation::Domain::Iterator
 {
 

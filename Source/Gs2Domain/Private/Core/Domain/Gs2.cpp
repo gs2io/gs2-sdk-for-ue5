@@ -1088,7 +1088,7 @@ namespace Gs2::Core::Domain
     }
 
     Gs2::Core::Model::FGs2ErrorPtr FGs2::FDispatchTask::Action(
-        TSharedPtr<TSharedPtr<void*>> Result
+        TSharedPtr<TSharedPtr<void>> Result
     )
     {
         {
@@ -1131,7 +1131,7 @@ namespace Gs2::Core::Domain
     }
 
     Gs2::Core::Model::FGs2ErrorPtr FGs2::FDispatchByUserIdTask::Action(
-        TSharedPtr<TSharedPtr<void*>> Result
+        TSharedPtr<TSharedPtr<void>> Result
     )
     {
         {

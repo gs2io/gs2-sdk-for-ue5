@@ -53,13 +53,13 @@ namespace Gs2::AdReward::Result
             return nullptr;
         }
         return MakeShared<FConsumePointResult>()
-            ->WithItem(Data->HasField("item") ? [Data]() -> Model::FPointPtr
+            ->WithItem(Data->HasField(ANSI_TO_TCHAR("item")) ? [Data]() -> Model::FPointPtr
                  {
-                    if (Data->HasTypedField<EJson::Null>("item"))
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("item")))
                     {
                         return nullptr;
                     }
-                    return Model::FPoint::FromJson(Data->GetObjectField("item"));
+                    return Model::FPoint::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("item")));
                  }() : nullptr);
     }
 

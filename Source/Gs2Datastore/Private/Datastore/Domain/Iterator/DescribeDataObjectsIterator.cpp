@@ -28,6 +28,8 @@
 #include "Datastore/Domain/Model/DataObject.h"
 #include "Datastore/Domain/Model/User.h"
 
+#include "Core/Domain/Gs2.h"
+
 namespace Gs2::Datastore::Domain::Iterator
 {
 

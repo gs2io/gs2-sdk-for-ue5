@@ -85,28 +85,28 @@ namespace Gs2::StateMachine::Model
             return nullptr;
         }
         return MakeShared<FChangeStateEvent>()
-            ->WithTaskName(Data->HasField("taskName") ? [Data]() -> TOptional<FString>
+            ->WithTaskName(Data->HasField(ANSI_TO_TCHAR("taskName")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("taskName", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("taskName"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithHash(Data->HasField("hash") ? [Data]() -> TOptional<FString>
+            ->WithHash(Data->HasField(ANSI_TO_TCHAR("hash")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("hash", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("hash"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithTimestamp(Data->HasField("timestamp") ? [Data]() -> TOptional<int64>
+            ->WithTimestamp(Data->HasField(ANSI_TO_TCHAR("timestamp")) ? [Data]() -> TOptional<int64>
                 {
                     int64 v;
-                    if (Data->TryGetNumberField("timestamp", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("timestamp"), v))
                     {
                         return TOptional(v);
                     }

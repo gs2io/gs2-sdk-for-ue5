@@ -53,13 +53,13 @@ namespace Gs2::LoginReward::Result
             return nullptr;
         }
         return MakeShared<FUpdateCurrentBonusMasterFromGitHubResult>()
-            ->WithItem(Data->HasField("item") ? [Data]() -> Model::FCurrentBonusMasterPtr
+            ->WithItem(Data->HasField(ANSI_TO_TCHAR("item")) ? [Data]() -> Model::FCurrentBonusMasterPtr
                  {
-                    if (Data->HasTypedField<EJson::Null>("item"))
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("item")))
                     {
                         return nullptr;
                     }
-                    return Model::FCurrentBonusMaster::FromJson(Data->GetObjectField("item"));
+                    return Model::FCurrentBonusMaster::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("item")));
                  }() : nullptr);
     }
 

@@ -27,6 +27,8 @@
 #include "Friend/Domain/Iterator/DescribeNamespacesIterator.h"
 #include "Friend/Domain/Model/Namespace.h"
 
+#include "Core/Domain/Gs2.h"
+
 namespace Gs2::Friend::Domain::Iterator
 {
 

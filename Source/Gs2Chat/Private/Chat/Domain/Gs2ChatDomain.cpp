@@ -517,9 +517,9 @@ namespace Gs2::Chat::Domain
                 return;
             }
             const auto ListParentKey = Gs2::Chat::Domain::Model::FRoomDomain::CreateCacheParentKey(
-                PayloadJson->GetStringField("namespaceName"),
+                PayloadJson->GetStringField(ANSI_TO_TCHAR("namespaceName")),
                 TOptional<FString>("Singleton"),
-                PayloadJson->GetStringField("roomName"),
+                PayloadJson->GetStringField(ANSI_TO_TCHAR("roomName")),
                 "Message"
             );
             Gs2->Cache->ClearListCache(Gs2::Chat::Model::FMessage::TypeName, ListParentKey);

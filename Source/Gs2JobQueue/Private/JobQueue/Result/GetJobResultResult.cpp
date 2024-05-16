@@ -53,13 +53,13 @@ namespace Gs2::JobQueue::Result
             return nullptr;
         }
         return MakeShared<FGetJobResultResult>()
-            ->WithItem(Data->HasField("item") ? [Data]() -> Model::FJobResultPtr
+            ->WithItem(Data->HasField(ANSI_TO_TCHAR("item")) ? [Data]() -> Model::FJobResultPtr
                  {
-                    if (Data->HasTypedField<EJson::Null>("item"))
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("item")))
                     {
                         return nullptr;
                     }
-                    return Model::FJobResult::FromJson(Data->GetObjectField("item"));
+                    return Model::FJobResult::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("item")));
                  }() : nullptr);
     }
 

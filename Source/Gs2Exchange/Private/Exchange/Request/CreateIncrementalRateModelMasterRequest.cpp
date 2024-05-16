@@ -262,111 +262,111 @@ namespace Gs2::Exchange::Request
             return nullptr;
         }
         return MakeShared<FCreateIncrementalRateModelMasterRequest>()
-            ->WithContextStack(Data->HasField("contextStack") ? TOptional<FString>(Data->GetStringField("contextStack")) : TOptional<FString>())
-            ->WithNamespaceName(Data->HasField("namespaceName") ? [Data]() -> TOptional<FString>
+            ->WithContextStack(Data->HasField(ANSI_TO_TCHAR("contextStack")) ? TOptional<FString>(Data->GetStringField(ANSI_TO_TCHAR("contextStack"))) : TOptional<FString>())
+            ->WithNamespaceName(Data->HasField(ANSI_TO_TCHAR("namespaceName")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
-                    if (Data->TryGetStringField("namespaceName", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("namespaceName"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
-            ->WithName(Data->HasField("name") ? [Data]() -> TOptional<FString>
+            ->WithName(Data->HasField(ANSI_TO_TCHAR("name")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
-                    if (Data->TryGetStringField("name", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("name"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
-            ->WithDescription(Data->HasField("description") ? [Data]() -> TOptional<FString>
+            ->WithDescription(Data->HasField(ANSI_TO_TCHAR("description")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
-                    if (Data->TryGetStringField("description", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("description"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
-            ->WithMetadata(Data->HasField("metadata") ? [Data]() -> TOptional<FString>
+            ->WithMetadata(Data->HasField(ANSI_TO_TCHAR("metadata")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
-                    if (Data->TryGetStringField("metadata", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("metadata"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
-          ->WithConsumeAction(Data->HasField("consumeAction") ? [Data]() -> Model::FConsumeActionPtr
+          ->WithConsumeAction(Data->HasField(ANSI_TO_TCHAR("consumeAction")) ? [Data]() -> Model::FConsumeActionPtr
               {
-                  if (Data->HasTypedField<EJson::Null>("consumeAction"))
+                  if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("consumeAction")))
                   {
                       return nullptr;
                   }
-                  return Model::FConsumeAction::FromJson(Data->GetObjectField("consumeAction"));
+                  return Model::FConsumeAction::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("consumeAction")));
               }() : nullptr)
-            ->WithCalculateType(Data->HasField("calculateType") ? [Data]() -> TOptional<FString>
+            ->WithCalculateType(Data->HasField(ANSI_TO_TCHAR("calculateType")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
-                    if (Data->TryGetStringField("calculateType", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("calculateType"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
-            ->WithBaseValue(Data->HasField("baseValue") ? [Data]() -> TOptional<int64>
+            ->WithBaseValue(Data->HasField(ANSI_TO_TCHAR("baseValue")) ? [Data]() -> TOptional<int64>
               {
                   int64 v;
-                    if (Data->TryGetNumberField("baseValue", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("baseValue"), v))
                   {
                         return TOptional(v);
                   }
                   return TOptional<int64>();
               }() : TOptional<int64>())
-            ->WithCoefficientValue(Data->HasField("coefficientValue") ? [Data]() -> TOptional<int64>
+            ->WithCoefficientValue(Data->HasField(ANSI_TO_TCHAR("coefficientValue")) ? [Data]() -> TOptional<int64>
               {
                   int64 v;
-                    if (Data->TryGetNumberField("coefficientValue", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("coefficientValue"), v))
                   {
                         return TOptional(v);
                   }
                   return TOptional<int64>();
               }() : TOptional<int64>())
-            ->WithCalculateScriptId(Data->HasField("calculateScriptId") ? [Data]() -> TOptional<FString>
+            ->WithCalculateScriptId(Data->HasField(ANSI_TO_TCHAR("calculateScriptId")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
-                    if (Data->TryGetStringField("calculateScriptId", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("calculateScriptId"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
-            ->WithExchangeCountId(Data->HasField("exchangeCountId") ? [Data]() -> TOptional<FString>
+            ->WithExchangeCountId(Data->HasField(ANSI_TO_TCHAR("exchangeCountId")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
-                    if (Data->TryGetStringField("exchangeCountId", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("exchangeCountId"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
-            ->WithMaximumExchangeCount(Data->HasField("maximumExchangeCount") ? [Data]() -> TOptional<int32>
+            ->WithMaximumExchangeCount(Data->HasField(ANSI_TO_TCHAR("maximumExchangeCount")) ? [Data]() -> TOptional<int32>
               {
                   int32 v;
-                    if (Data->TryGetNumberField("maximumExchangeCount", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("maximumExchangeCount"), v))
                   {
                         return TOptional(v);
                   }
                   return TOptional<int32>();
               }() : TOptional<int32>())
-          ->WithAcquireActions(Data->HasField("acquireActions") ? [Data]() -> TSharedPtr<TArray<Model::FAcquireActionPtr>>
+          ->WithAcquireActions(Data->HasField(ANSI_TO_TCHAR("acquireActions")) ? [Data]() -> TSharedPtr<TArray<Model::FAcquireActionPtr>>
               {
                   auto v = MakeShared<TArray<Model::FAcquireActionPtr>>();
-                  if (!Data->HasTypedField<EJson::Null>("acquireActions") && Data->HasTypedField<EJson::Array>("acquireActions"))
+                  if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("acquireActions")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("acquireActions")))
                   {
-                      for (auto JsonObjectValue : Data->GetArrayField("acquireActions"))
+                      for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("acquireActions")))
                       {
                           v->Add(Model::FAcquireAction::FromJson(JsonObjectValue->AsObject()));
                       }

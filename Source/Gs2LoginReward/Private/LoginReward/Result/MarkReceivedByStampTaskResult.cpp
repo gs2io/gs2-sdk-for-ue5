@@ -87,26 +87,26 @@ namespace Gs2::LoginReward::Result
             return nullptr;
         }
         return MakeShared<FMarkReceivedByStampTaskResult>()
-            ->WithItem(Data->HasField("item") ? [Data]() -> Model::FReceiveStatusPtr
+            ->WithItem(Data->HasField(ANSI_TO_TCHAR("item")) ? [Data]() -> Model::FReceiveStatusPtr
                  {
-                    if (Data->HasTypedField<EJson::Null>("item"))
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("item")))
                     {
                         return nullptr;
                     }
-                    return Model::FReceiveStatus::FromJson(Data->GetObjectField("item"));
+                    return Model::FReceiveStatus::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("item")));
                  }() : nullptr)
-            ->WithBonusModel(Data->HasField("bonusModel") ? [Data]() -> Model::FBonusModelPtr
+            ->WithBonusModel(Data->HasField(ANSI_TO_TCHAR("bonusModel")) ? [Data]() -> Model::FBonusModelPtr
                  {
-                    if (Data->HasTypedField<EJson::Null>("bonusModel"))
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("bonusModel")))
                     {
                         return nullptr;
                     }
-                    return Model::FBonusModel::FromJson(Data->GetObjectField("bonusModel"));
+                    return Model::FBonusModel::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("bonusModel")));
                  }() : nullptr)
-            ->WithNewContextStack(Data->HasField("newContextStack") ? [Data]() -> TOptional<FString>
+            ->WithNewContextStack(Data->HasField(ANSI_TO_TCHAR("newContextStack")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("newContextStack", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("newContextStack"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }

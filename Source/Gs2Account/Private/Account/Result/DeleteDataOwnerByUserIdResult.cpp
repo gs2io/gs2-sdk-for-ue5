@@ -53,13 +53,13 @@ namespace Gs2::Account::Result
             return nullptr;
         }
         return MakeShared<FDeleteDataOwnerByUserIdResult>()
-            ->WithItem(Data->HasField("item") ? [Data]() -> Model::FDataOwnerPtr
+            ->WithItem(Data->HasField(ANSI_TO_TCHAR("item")) ? [Data]() -> Model::FDataOwnerPtr
                  {
-                    if (Data->HasTypedField<EJson::Null>("item"))
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("item")))
                     {
                         return nullptr;
                     }
-                    return Model::FDataOwner::FromJson(Data->GetObjectField("item"));
+                    return Model::FDataOwner::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("item")));
                  }() : nullptr);
     }
 

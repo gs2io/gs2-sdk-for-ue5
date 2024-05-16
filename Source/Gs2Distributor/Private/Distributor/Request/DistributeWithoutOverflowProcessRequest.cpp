@@ -96,28 +96,28 @@ namespace Gs2::Distributor::Request
             return nullptr;
         }
         return MakeShared<FDistributeWithoutOverflowProcessRequest>()
-            ->WithContextStack(Data->HasField("contextStack") ? TOptional<FString>(Data->GetStringField("contextStack")) : TOptional<FString>())
-            ->WithUserId(Data->HasField("userId") ? [Data]() -> TOptional<FString>
+            ->WithContextStack(Data->HasField(ANSI_TO_TCHAR("contextStack")) ? TOptional<FString>(Data->GetStringField(ANSI_TO_TCHAR("contextStack"))) : TOptional<FString>())
+            ->WithUserId(Data->HasField(ANSI_TO_TCHAR("userId")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
-                    if (Data->TryGetStringField("userId", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("userId"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
-          ->WithDistributeResource(Data->HasField("distributeResource") ? [Data]() -> Model::FDistributeResourcePtr
+          ->WithDistributeResource(Data->HasField(ANSI_TO_TCHAR("distributeResource")) ? [Data]() -> Model::FDistributeResourcePtr
               {
-                  if (Data->HasTypedField<EJson::Null>("distributeResource"))
+                  if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("distributeResource")))
                   {
                       return nullptr;
                   }
-                  return Model::FDistributeResource::FromJson(Data->GetObjectField("distributeResource"));
+                  return Model::FDistributeResource::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("distributeResource")));
               }() : nullptr)
-            ->WithTimeOffsetToken(Data->HasField("timeOffsetToken") ? [Data]() -> TOptional<FString>
+            ->WithTimeOffsetToken(Data->HasField(ANSI_TO_TCHAR("timeOffsetToken")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
-                    if (Data->TryGetStringField("timeOffsetToken", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("timeOffsetToken"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }

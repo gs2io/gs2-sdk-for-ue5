@@ -261,110 +261,110 @@ namespace Gs2::Money::Request
             return nullptr;
         }
         return MakeShared<FCreateNamespaceRequest>()
-            ->WithContextStack(Data->HasField("contextStack") ? TOptional<FString>(Data->GetStringField("contextStack")) : TOptional<FString>())
-            ->WithName(Data->HasField("name") ? [Data]() -> TOptional<FString>
+            ->WithContextStack(Data->HasField(ANSI_TO_TCHAR("contextStack")) ? TOptional<FString>(Data->GetStringField(ANSI_TO_TCHAR("contextStack"))) : TOptional<FString>())
+            ->WithName(Data->HasField(ANSI_TO_TCHAR("name")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
-                    if (Data->TryGetStringField("name", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("name"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
-            ->WithDescription(Data->HasField("description") ? [Data]() -> TOptional<FString>
+            ->WithDescription(Data->HasField(ANSI_TO_TCHAR("description")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
-                    if (Data->TryGetStringField("description", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("description"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
-            ->WithPriority(Data->HasField("priority") ? [Data]() -> TOptional<FString>
+            ->WithPriority(Data->HasField(ANSI_TO_TCHAR("priority")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
-                    if (Data->TryGetStringField("priority", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("priority"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
-            ->WithShareFree(Data->HasField("shareFree") ? [Data]() -> TOptional<bool>
+            ->WithShareFree(Data->HasField(ANSI_TO_TCHAR("shareFree")) ? [Data]() -> TOptional<bool>
               {
                   bool v;
-                    if (Data->TryGetBoolField("shareFree", v))
+                    if (Data->TryGetBoolField(ANSI_TO_TCHAR("shareFree"), v))
                   {
                         return TOptional(v);
                   }
                   return TOptional<bool>();
               }() : TOptional<bool>())
-            ->WithCurrency(Data->HasField("currency") ? [Data]() -> TOptional<FString>
+            ->WithCurrency(Data->HasField(ANSI_TO_TCHAR("currency")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
-                    if (Data->TryGetStringField("currency", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("currency"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
-            ->WithAppleKey(Data->HasField("appleKey") ? [Data]() -> TOptional<FString>
+            ->WithAppleKey(Data->HasField(ANSI_TO_TCHAR("appleKey")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
-                    if (Data->TryGetStringField("appleKey", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("appleKey"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
-            ->WithGoogleKey(Data->HasField("googleKey") ? [Data]() -> TOptional<FString>
+            ->WithGoogleKey(Data->HasField(ANSI_TO_TCHAR("googleKey")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
-                    if (Data->TryGetStringField("googleKey", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("googleKey"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
-            ->WithEnableFakeReceipt(Data->HasField("enableFakeReceipt") ? [Data]() -> TOptional<bool>
+            ->WithEnableFakeReceipt(Data->HasField(ANSI_TO_TCHAR("enableFakeReceipt")) ? [Data]() -> TOptional<bool>
               {
                   bool v;
-                    if (Data->TryGetBoolField("enableFakeReceipt", v))
+                    if (Data->TryGetBoolField(ANSI_TO_TCHAR("enableFakeReceipt"), v))
                   {
                         return TOptional(v);
                   }
                   return TOptional<bool>();
               }() : TOptional<bool>())
-          ->WithCreateWalletScript(Data->HasField("createWalletScript") ? [Data]() -> Model::FScriptSettingPtr
+          ->WithCreateWalletScript(Data->HasField(ANSI_TO_TCHAR("createWalletScript")) ? [Data]() -> Model::FScriptSettingPtr
               {
-                  if (Data->HasTypedField<EJson::Null>("createWalletScript"))
+                  if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("createWalletScript")))
                   {
                       return nullptr;
                   }
-                  return Model::FScriptSetting::FromJson(Data->GetObjectField("createWalletScript"));
+                  return Model::FScriptSetting::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("createWalletScript")));
               }() : nullptr)
-          ->WithDepositScript(Data->HasField("depositScript") ? [Data]() -> Model::FScriptSettingPtr
+          ->WithDepositScript(Data->HasField(ANSI_TO_TCHAR("depositScript")) ? [Data]() -> Model::FScriptSettingPtr
               {
-                  if (Data->HasTypedField<EJson::Null>("depositScript"))
+                  if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("depositScript")))
                   {
                       return nullptr;
                   }
-                  return Model::FScriptSetting::FromJson(Data->GetObjectField("depositScript"));
+                  return Model::FScriptSetting::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("depositScript")));
               }() : nullptr)
-          ->WithWithdrawScript(Data->HasField("withdrawScript") ? [Data]() -> Model::FScriptSettingPtr
+          ->WithWithdrawScript(Data->HasField(ANSI_TO_TCHAR("withdrawScript")) ? [Data]() -> Model::FScriptSettingPtr
               {
-                  if (Data->HasTypedField<EJson::Null>("withdrawScript"))
+                  if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("withdrawScript")))
                   {
                       return nullptr;
                   }
-                  return Model::FScriptSetting::FromJson(Data->GetObjectField("withdrawScript"));
+                  return Model::FScriptSetting::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("withdrawScript")));
               }() : nullptr)
-          ->WithLogSetting(Data->HasField("logSetting") ? [Data]() -> Model::FLogSettingPtr
+          ->WithLogSetting(Data->HasField(ANSI_TO_TCHAR("logSetting")) ? [Data]() -> Model::FLogSettingPtr
               {
-                  if (Data->HasTypedField<EJson::Null>("logSetting"))
+                  if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("logSetting")))
                   {
                       return nullptr;
                   }
-                  return Model::FLogSetting::FromJson(Data->GetObjectField("logSetting"));
+                  return Model::FLogSetting::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("logSetting")));
               }() : nullptr);
     }
 

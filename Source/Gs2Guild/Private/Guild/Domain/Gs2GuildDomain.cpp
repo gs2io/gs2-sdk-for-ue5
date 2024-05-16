@@ -712,9 +712,9 @@ namespace Gs2::Guild::Domain
                 return;
             }
             const auto ListParentKey = Gs2::Guild::Domain::Model::FGuildDomain::CreateCacheParentKey(
-                PayloadJson->GetStringField("namespaceName"),
-                PayloadJson->GetStringField("guildModelName"),
-                PayloadJson->GetStringField("guildName"),
+                PayloadJson->GetStringField(ANSI_TO_TCHAR("namespaceName")),
+                PayloadJson->GetStringField(ANSI_TO_TCHAR("guildModelName")),
+                PayloadJson->GetStringField(ANSI_TO_TCHAR("guildName")),
                 "ReceiveMemberRequest"
             );
             Gs2->Cache->ClearListCache(Gs2::Guild::Model::FReceiveMemberRequest::TypeName, ListParentKey);
@@ -729,25 +729,25 @@ namespace Gs2::Guild::Domain
             }
             {
                 const auto ParentKey = Gs2::Guild::Domain::Model::FGuildDomain::CreateCacheParentKey(
-                    PayloadJson->GetStringField("namespaceName"),
-                    PayloadJson->GetStringField("guildModelName"),
-                    PayloadJson->GetStringField("guildName"),
+                    PayloadJson->GetStringField(ANSI_TO_TCHAR("namespaceName")),
+                    PayloadJson->GetStringField(ANSI_TO_TCHAR("guildModelName")),
+                    PayloadJson->GetStringField(ANSI_TO_TCHAR("guildName")),
                     "ReceiveMemberRequest"
                 );
                 const auto Key = Gs2::Guild::Domain::Model::FReceiveMemberRequestDomain::CreateCacheKey(
-                    PayloadJson->GetStringField("fromUserId")
+                    PayloadJson->GetStringField(ANSI_TO_TCHAR("fromUserId"))
                 );
                 Gs2->Cache->ClearListCache(Gs2::Guild::Model::FReceiveMemberRequest::TypeName, ParentKey);
                 Gs2->Cache->Delete(Gs2::Guild::Model::FReceiveMemberRequest::TypeName, ParentKey, Key);
             }
             {
                 const auto ParentKey = Gs2::Guild::Domain::Model::FUserDomain::CreateCacheParentKey(
-                    PayloadJson->GetStringField("namespaceName"),
-                    PayloadJson->GetStringField("fromUserId"),
-                    "SendMemberRequest::" + PayloadJson->GetStringField("guildModelName")
+                    PayloadJson->GetStringField(ANSI_TO_TCHAR("namespaceName")),
+                    PayloadJson->GetStringField(ANSI_TO_TCHAR("fromUserId")),
+                    "SendMemberRequest::" + PayloadJson->GetStringField(ANSI_TO_TCHAR("guildModelName"))
                 );
                 const auto Key = Gs2::Guild::Domain::Model::FSendMemberRequestDomain::CreateCacheKey(
-                    PayloadJson->GetStringField("guildName")
+                    PayloadJson->GetStringField(ANSI_TO_TCHAR("guildName"))
                 );
                 Gs2->Cache->ClearListCache(Gs2::Guild::Model::FSendMemberRequest::TypeName, ParentKey);
                 Gs2->Cache->Delete(Gs2::Guild::Model::FSendMemberRequest::TypeName, ParentKey, Key);
@@ -763,12 +763,12 @@ namespace Gs2::Guild::Domain
             }
             {
                 const auto ParentKey = Gs2::Guild::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
-                    PayloadJson->GetStringField("namespaceName"),
+                    PayloadJson->GetStringField(ANSI_TO_TCHAR("namespaceName")),
                     "Guild"
                 );
                 const auto Key = Gs2::Guild::Domain::Model::FGuildDomain::CreateCacheKey(
-                    PayloadJson->GetStringField("guildModelName"),
-                    PayloadJson->GetStringField("guildName")
+                    PayloadJson->GetStringField(ANSI_TO_TCHAR("guildModelName")),
+                    PayloadJson->GetStringField(ANSI_TO_TCHAR("guildName"))
                 );
                 Gs2->Cache->Delete(Gs2::Guild::Model::FGuild::TypeName, ParentKey, Key);
             }
@@ -783,12 +783,12 @@ namespace Gs2::Guild::Domain
             }
             {
                 const auto ParentKey = Gs2::Guild::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
-                    PayloadJson->GetStringField("namespaceName"),
+                    PayloadJson->GetStringField(ANSI_TO_TCHAR("namespaceName")),
                     "Guild"
                 );
                 const auto Key = Gs2::Guild::Domain::Model::FGuildDomain::CreateCacheKey(
-                    PayloadJson->GetStringField("guildModelName"),
-                    PayloadJson->GetStringField("guildName")
+                    PayloadJson->GetStringField(ANSI_TO_TCHAR("guildModelName")),
+                    PayloadJson->GetStringField(ANSI_TO_TCHAR("guildName"))
                 );
                 Gs2->Cache->Delete(Gs2::Guild::Model::FGuild::TypeName, ParentKey, Key);
             }
@@ -803,12 +803,12 @@ namespace Gs2::Guild::Domain
             }
             {
                 const auto ParentKey = Gs2::Guild::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
-                    PayloadJson->GetStringField("namespaceName"),
+                    PayloadJson->GetStringField(ANSI_TO_TCHAR("namespaceName")),
                     "Guild"
                 );
                 const auto Key = Gs2::Guild::Domain::Model::FGuildDomain::CreateCacheKey(
-                    PayloadJson->GetStringField("guildModelName"),
-                    PayloadJson->GetStringField("guildName")
+                    PayloadJson->GetStringField(ANSI_TO_TCHAR("guildModelName")),
+                    PayloadJson->GetStringField(ANSI_TO_TCHAR("guildName"))
                 );
                 Gs2->Cache->Delete(Gs2::Guild::Model::FGuild::TypeName, ParentKey, Key);
             }

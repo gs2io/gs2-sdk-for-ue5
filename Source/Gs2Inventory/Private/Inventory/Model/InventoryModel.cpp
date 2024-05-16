@@ -203,66 +203,66 @@ namespace Gs2::Inventory::Model
             return nullptr;
         }
         return MakeShared<FInventoryModel>()
-            ->WithInventoryModelId(Data->HasField("inventoryModelId") ? [Data]() -> TOptional<FString>
+            ->WithInventoryModelId(Data->HasField(ANSI_TO_TCHAR("inventoryModelId")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("inventoryModelId", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("inventoryModelId"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithName(Data->HasField("name") ? [Data]() -> TOptional<FString>
+            ->WithName(Data->HasField(ANSI_TO_TCHAR("name")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("name", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("name"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithMetadata(Data->HasField("metadata") ? [Data]() -> TOptional<FString>
+            ->WithMetadata(Data->HasField(ANSI_TO_TCHAR("metadata")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("metadata", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("metadata"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithInitialCapacity(Data->HasField("initialCapacity") ? [Data]() -> TOptional<int32>
+            ->WithInitialCapacity(Data->HasField(ANSI_TO_TCHAR("initialCapacity")) ? [Data]() -> TOptional<int32>
                 {
                     int32 v;
-                    if (Data->TryGetNumberField("initialCapacity", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("initialCapacity"), v))
                     {
                         return TOptional(v);
                     }
                     return TOptional<int32>();
                 }() : TOptional<int32>())
-            ->WithMaxCapacity(Data->HasField("maxCapacity") ? [Data]() -> TOptional<int32>
+            ->WithMaxCapacity(Data->HasField(ANSI_TO_TCHAR("maxCapacity")) ? [Data]() -> TOptional<int32>
                 {
                     int32 v;
-                    if (Data->TryGetNumberField("maxCapacity", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("maxCapacity"), v))
                     {
                         return TOptional(v);
                     }
                     return TOptional<int32>();
                 }() : TOptional<int32>())
-            ->WithProtectReferencedItem(Data->HasField("protectReferencedItem") ? [Data]() -> TOptional<bool>
+            ->WithProtectReferencedItem(Data->HasField(ANSI_TO_TCHAR("protectReferencedItem")) ? [Data]() -> TOptional<bool>
                 {
                     bool v;
-                    if (Data->TryGetBoolField("protectReferencedItem", v))
+                    if (Data->TryGetBoolField(ANSI_TO_TCHAR("protectReferencedItem"), v))
                     {
                         return TOptional(v);
                     }
                     return TOptional<bool>();
                 }() : TOptional<bool>())
-            ->WithItemModels(Data->HasField("itemModels") ? [Data]() -> TSharedPtr<TArray<Model::FItemModelPtr>>
+            ->WithItemModels(Data->HasField(ANSI_TO_TCHAR("itemModels")) ? [Data]() -> TSharedPtr<TArray<Model::FItemModelPtr>>
                 {
                     auto v = MakeShared<TArray<Model::FItemModelPtr>>();
-                    if (!Data->HasTypedField<EJson::Null>("itemModels") && Data->HasTypedField<EJson::Array>("itemModels"))
+                    if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("itemModels")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("itemModels")))
                     {
-                        for (auto JsonObjectValue : Data->GetArrayField("itemModels"))
+                        for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("itemModels")))
                         {
                             v->Add(Model::FItemModel::FromJson(JsonObjectValue->AsObject()));
                         }

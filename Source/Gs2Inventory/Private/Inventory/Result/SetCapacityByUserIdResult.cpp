@@ -72,21 +72,21 @@ namespace Gs2::Inventory::Result
             return nullptr;
         }
         return MakeShared<FSetCapacityByUserIdResult>()
-            ->WithItem(Data->HasField("item") ? [Data]() -> Model::FInventoryPtr
+            ->WithItem(Data->HasField(ANSI_TO_TCHAR("item")) ? [Data]() -> Model::FInventoryPtr
                  {
-                    if (Data->HasTypedField<EJson::Null>("item"))
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("item")))
                     {
                         return nullptr;
                     }
-                    return Model::FInventory::FromJson(Data->GetObjectField("item"));
+                    return Model::FInventory::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("item")));
                  }() : nullptr)
-            ->WithOld(Data->HasField("old") ? [Data]() -> Model::FInventoryPtr
+            ->WithOld(Data->HasField(ANSI_TO_TCHAR("old")) ? [Data]() -> Model::FInventoryPtr
                  {
-                    if (Data->HasTypedField<EJson::Null>("old"))
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("old")))
                     {
                         return nullptr;
                     }
-                    return Model::FInventory::FromJson(Data->GetObjectField("old"));
+                    return Model::FInventory::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("old")));
                  }() : nullptr);
     }
 

@@ -205,70 +205,70 @@ namespace Gs2::Ranking::Model
             return nullptr;
         }
         return MakeShared<FSubscribe>()
-            ->WithSubscribeId(Data->HasField("subscribeId") ? [Data]() -> TOptional<FString>
+            ->WithSubscribeId(Data->HasField(ANSI_TO_TCHAR("subscribeId")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("subscribeId", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("subscribeId"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithCategoryName(Data->HasField("categoryName") ? [Data]() -> TOptional<FString>
+            ->WithCategoryName(Data->HasField(ANSI_TO_TCHAR("categoryName")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("categoryName", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("categoryName"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithUserId(Data->HasField("userId") ? [Data]() -> TOptional<FString>
+            ->WithUserId(Data->HasField(ANSI_TO_TCHAR("userId")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("userId", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("userId"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithTargetUserIds(Data->HasField("targetUserIds") ? [Data]() -> TSharedPtr<TArray<FString>>
+            ->WithTargetUserIds(Data->HasField(ANSI_TO_TCHAR("targetUserIds")) ? [Data]() -> TSharedPtr<TArray<FString>>
                 {
                     auto v = MakeShared<TArray<FString>>();
-                    if (!Data->HasTypedField<EJson::Null>("targetUserIds") && Data->HasTypedField<EJson::Array>("targetUserIds"))
+                    if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("targetUserIds")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("targetUserIds")))
                     {
-                        for (auto JsonObjectValue : Data->GetArrayField("targetUserIds"))
+                        for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("targetUserIds")))
                         {
                             v->Add(JsonObjectValue->AsString());
                         }
                     }
                     return v;
                  }() : MakeShared<TArray<FString>>())
-            ->WithSubscribedUserIds(Data->HasField("subscribedUserIds") ? [Data]() -> TSharedPtr<TArray<FString>>
+            ->WithSubscribedUserIds(Data->HasField(ANSI_TO_TCHAR("subscribedUserIds")) ? [Data]() -> TSharedPtr<TArray<FString>>
                 {
                     auto v = MakeShared<TArray<FString>>();
-                    if (!Data->HasTypedField<EJson::Null>("subscribedUserIds") && Data->HasTypedField<EJson::Array>("subscribedUserIds"))
+                    if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("subscribedUserIds")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("subscribedUserIds")))
                     {
-                        for (auto JsonObjectValue : Data->GetArrayField("subscribedUserIds"))
+                        for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("subscribedUserIds")))
                         {
                             v->Add(JsonObjectValue->AsString());
                         }
                     }
                     return v;
                  }() : MakeShared<TArray<FString>>())
-            ->WithCreatedAt(Data->HasField("createdAt") ? [Data]() -> TOptional<int64>
+            ->WithCreatedAt(Data->HasField(ANSI_TO_TCHAR("createdAt")) ? [Data]() -> TOptional<int64>
                 {
                     int64 v;
-                    if (Data->TryGetNumberField("createdAt", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("createdAt"), v))
                     {
                         return TOptional(v);
                     }
                     return TOptional<int64>();
                 }() : TOptional<int64>())
-            ->WithRevision(Data->HasField("revision") ? [Data]() -> TOptional<int64>
+            ->WithRevision(Data->HasField(ANSI_TO_TCHAR("revision")) ? [Data]() -> TOptional<int64>
                 {
                     int64 v;
-                    if (Data->TryGetNumberField("revision", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("revision"), v))
                     {
                         return TOptional(v);
                     }

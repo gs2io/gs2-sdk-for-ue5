@@ -53,13 +53,13 @@ namespace Gs2::Formation::Result
             return nullptr;
         }
         return MakeShared<FUpdateMoldModelMasterResult>()
-            ->WithItem(Data->HasField("item") ? [Data]() -> Model::FMoldModelMasterPtr
+            ->WithItem(Data->HasField(ANSI_TO_TCHAR("item")) ? [Data]() -> Model::FMoldModelMasterPtr
                  {
-                    if (Data->HasTypedField<EJson::Null>("item"))
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("item")))
                     {
                         return nullptr;
                     }
-                    return Model::FMoldModelMaster::FromJson(Data->GetObjectField("item"));
+                    return Model::FMoldModelMaster::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("item")));
                  }() : nullptr);
     }
 

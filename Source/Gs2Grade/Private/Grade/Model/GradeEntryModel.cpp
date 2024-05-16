@@ -99,37 +99,37 @@ namespace Gs2::Grade::Model
             return nullptr;
         }
         return MakeShared<FGradeEntryModel>()
-            ->WithMetadata(Data->HasField("metadata") ? [Data]() -> TOptional<FString>
+            ->WithMetadata(Data->HasField(ANSI_TO_TCHAR("metadata")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("metadata", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("metadata"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithRankCapValue(Data->HasField("rankCapValue") ? [Data]() -> TOptional<int64>
+            ->WithRankCapValue(Data->HasField(ANSI_TO_TCHAR("rankCapValue")) ? [Data]() -> TOptional<int64>
                 {
                     int64 v;
-                    if (Data->TryGetNumberField("rankCapValue", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("rankCapValue"), v))
                     {
                         return TOptional(v);
                     }
                     return TOptional<int64>();
                 }() : TOptional<int64>())
-            ->WithPropertyIdRegex(Data->HasField("propertyIdRegex") ? [Data]() -> TOptional<FString>
+            ->WithPropertyIdRegex(Data->HasField(ANSI_TO_TCHAR("propertyIdRegex")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("propertyIdRegex", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("propertyIdRegex"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithGradeUpPropertyIdRegex(Data->HasField("gradeUpPropertyIdRegex") ? [Data]() -> TOptional<FString>
+            ->WithGradeUpPropertyIdRegex(Data->HasField(ANSI_TO_TCHAR("gradeUpPropertyIdRegex")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("gradeUpPropertyIdRegex", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("gradeUpPropertyIdRegex"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }

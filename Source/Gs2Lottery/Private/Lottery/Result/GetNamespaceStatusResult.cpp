@@ -49,10 +49,10 @@ namespace Gs2::Lottery::Result
             return nullptr;
         }
         return MakeShared<FGetNamespaceStatusResult>()
-            ->WithStatus(Data->HasField("status") ? [Data]() -> TOptional<FString>
+            ->WithStatus(Data->HasField(ANSI_TO_TCHAR("status")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("status", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("status"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }

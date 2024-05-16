@@ -95,19 +95,19 @@ namespace Gs2::Mission::Model
             return nullptr;
         }
         return MakeShared<FCurrentMissionMaster>()
-            ->WithNamespaceId(Data->HasField("namespaceId") ? [Data]() -> TOptional<FString>
+            ->WithNamespaceId(Data->HasField(ANSI_TO_TCHAR("namespaceId")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("namespaceId", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("namespaceId"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithSettings(Data->HasField("settings") ? [Data]() -> TOptional<FString>
+            ->WithSettings(Data->HasField(ANSI_TO_TCHAR("settings")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("settings", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("settings"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }

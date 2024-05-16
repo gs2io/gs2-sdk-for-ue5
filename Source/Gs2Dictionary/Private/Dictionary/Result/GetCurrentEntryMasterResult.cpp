@@ -53,13 +53,13 @@ namespace Gs2::Dictionary::Result
             return nullptr;
         }
         return MakeShared<FGetCurrentEntryMasterResult>()
-            ->WithItem(Data->HasField("item") ? [Data]() -> Model::FCurrentEntryMasterPtr
+            ->WithItem(Data->HasField(ANSI_TO_TCHAR("item")) ? [Data]() -> Model::FCurrentEntryMasterPtr
                  {
-                    if (Data->HasTypedField<EJson::Null>("item"))
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("item")))
                     {
                         return nullptr;
                     }
-                    return Model::FCurrentEntryMaster::FromJson(Data->GetObjectField("item"));
+                    return Model::FCurrentEntryMaster::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("item")));
                  }() : nullptr);
     }
 

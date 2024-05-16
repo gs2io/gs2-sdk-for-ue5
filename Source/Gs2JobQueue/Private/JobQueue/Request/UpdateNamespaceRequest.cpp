@@ -158,57 +158,57 @@ namespace Gs2::JobQueue::Request
             return nullptr;
         }
         return MakeShared<FUpdateNamespaceRequest>()
-            ->WithContextStack(Data->HasField("contextStack") ? TOptional<FString>(Data->GetStringField("contextStack")) : TOptional<FString>())
-            ->WithNamespaceName(Data->HasField("namespaceName") ? [Data]() -> TOptional<FString>
+            ->WithContextStack(Data->HasField(ANSI_TO_TCHAR("contextStack")) ? TOptional<FString>(Data->GetStringField(ANSI_TO_TCHAR("contextStack"))) : TOptional<FString>())
+            ->WithNamespaceName(Data->HasField(ANSI_TO_TCHAR("namespaceName")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
-                    if (Data->TryGetStringField("namespaceName", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("namespaceName"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
-            ->WithDescription(Data->HasField("description") ? [Data]() -> TOptional<FString>
+            ->WithDescription(Data->HasField(ANSI_TO_TCHAR("description")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
-                    if (Data->TryGetStringField("description", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("description"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
-            ->WithEnableAutoRun(Data->HasField("enableAutoRun") ? [Data]() -> TOptional<bool>
+            ->WithEnableAutoRun(Data->HasField(ANSI_TO_TCHAR("enableAutoRun")) ? [Data]() -> TOptional<bool>
               {
                   bool v;
-                    if (Data->TryGetBoolField("enableAutoRun", v))
+                    if (Data->TryGetBoolField(ANSI_TO_TCHAR("enableAutoRun"), v))
                   {
                         return TOptional(v);
                   }
                   return TOptional<bool>();
               }() : TOptional<bool>())
-          ->WithPushNotification(Data->HasField("pushNotification") ? [Data]() -> Model::FNotificationSettingPtr
+          ->WithPushNotification(Data->HasField(ANSI_TO_TCHAR("pushNotification")) ? [Data]() -> Model::FNotificationSettingPtr
               {
-                  if (Data->HasTypedField<EJson::Null>("pushNotification"))
+                  if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("pushNotification")))
                   {
                       return nullptr;
                   }
-                  return Model::FNotificationSetting::FromJson(Data->GetObjectField("pushNotification"));
+                  return Model::FNotificationSetting::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("pushNotification")));
               }() : nullptr)
-          ->WithRunNotification(Data->HasField("runNotification") ? [Data]() -> Model::FNotificationSettingPtr
+          ->WithRunNotification(Data->HasField(ANSI_TO_TCHAR("runNotification")) ? [Data]() -> Model::FNotificationSettingPtr
               {
-                  if (Data->HasTypedField<EJson::Null>("runNotification"))
+                  if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("runNotification")))
                   {
                       return nullptr;
                   }
-                  return Model::FNotificationSetting::FromJson(Data->GetObjectField("runNotification"));
+                  return Model::FNotificationSetting::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("runNotification")));
               }() : nullptr)
-          ->WithLogSetting(Data->HasField("logSetting") ? [Data]() -> Model::FLogSettingPtr
+          ->WithLogSetting(Data->HasField(ANSI_TO_TCHAR("logSetting")) ? [Data]() -> Model::FLogSettingPtr
               {
-                  if (Data->HasTypedField<EJson::Null>("logSetting"))
+                  if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("logSetting")))
                   {
                       return nullptr;
                   }
-                  return Model::FLogSetting::FromJson(Data->GetObjectField("logSetting"));
+                  return Model::FLogSetting::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("logSetting")));
               }() : nullptr);
     }
 

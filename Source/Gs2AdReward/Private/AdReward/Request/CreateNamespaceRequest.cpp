@@ -172,68 +172,68 @@ namespace Gs2::AdReward::Request
             return nullptr;
         }
         return MakeShared<FCreateNamespaceRequest>()
-            ->WithContextStack(Data->HasField("contextStack") ? TOptional<FString>(Data->GetStringField("contextStack")) : TOptional<FString>())
-            ->WithName(Data->HasField("name") ? [Data]() -> TOptional<FString>
+            ->WithContextStack(Data->HasField(ANSI_TO_TCHAR("contextStack")) ? TOptional<FString>(Data->GetStringField(ANSI_TO_TCHAR("contextStack"))) : TOptional<FString>())
+            ->WithName(Data->HasField(ANSI_TO_TCHAR("name")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
-                    if (Data->TryGetStringField("name", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("name"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
-          ->WithAdmob(Data->HasField("admob") ? [Data]() -> Model::FAdMobPtr
+          ->WithAdmob(Data->HasField(ANSI_TO_TCHAR("admob")) ? [Data]() -> Model::FAdMobPtr
               {
-                  if (Data->HasTypedField<EJson::Null>("admob"))
+                  if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("admob")))
                   {
                       return nullptr;
                   }
-                  return Model::FAdMob::FromJson(Data->GetObjectField("admob"));
+                  return Model::FAdMob::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("admob")));
               }() : nullptr)
-          ->WithUnityAd(Data->HasField("unityAd") ? [Data]() -> Model::FUnityAdPtr
+          ->WithUnityAd(Data->HasField(ANSI_TO_TCHAR("unityAd")) ? [Data]() -> Model::FUnityAdPtr
               {
-                  if (Data->HasTypedField<EJson::Null>("unityAd"))
+                  if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("unityAd")))
                   {
                       return nullptr;
                   }
-                  return Model::FUnityAd::FromJson(Data->GetObjectField("unityAd"));
+                  return Model::FUnityAd::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("unityAd")));
               }() : nullptr)
-          ->WithAppLovinMaxes(Data->HasField("appLovinMaxes") ? [Data]() -> TSharedPtr<TArray<Model::FAppLovinMaxPtr>>
+          ->WithAppLovinMaxes(Data->HasField(ANSI_TO_TCHAR("appLovinMaxes")) ? [Data]() -> TSharedPtr<TArray<Model::FAppLovinMaxPtr>>
               {
                   auto v = MakeShared<TArray<Model::FAppLovinMaxPtr>>();
-                  if (!Data->HasTypedField<EJson::Null>("appLovinMaxes") && Data->HasTypedField<EJson::Array>("appLovinMaxes"))
+                  if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("appLovinMaxes")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("appLovinMaxes")))
                   {
-                      for (auto JsonObjectValue : Data->GetArrayField("appLovinMaxes"))
+                      for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("appLovinMaxes")))
                       {
                           v->Add(Model::FAppLovinMax::FromJson(JsonObjectValue->AsObject()));
                       }
                   }
                   return v;
               }() : MakeShared<TArray<Model::FAppLovinMaxPtr>>())
-            ->WithDescription(Data->HasField("description") ? [Data]() -> TOptional<FString>
+            ->WithDescription(Data->HasField(ANSI_TO_TCHAR("description")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
-                    if (Data->TryGetStringField("description", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("description"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
-          ->WithChangePointNotification(Data->HasField("changePointNotification") ? [Data]() -> Model::FNotificationSettingPtr
+          ->WithChangePointNotification(Data->HasField(ANSI_TO_TCHAR("changePointNotification")) ? [Data]() -> Model::FNotificationSettingPtr
               {
-                  if (Data->HasTypedField<EJson::Null>("changePointNotification"))
+                  if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("changePointNotification")))
                   {
                       return nullptr;
                   }
-                  return Model::FNotificationSetting::FromJson(Data->GetObjectField("changePointNotification"));
+                  return Model::FNotificationSetting::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("changePointNotification")));
               }() : nullptr)
-          ->WithLogSetting(Data->HasField("logSetting") ? [Data]() -> Model::FLogSettingPtr
+          ->WithLogSetting(Data->HasField(ANSI_TO_TCHAR("logSetting")) ? [Data]() -> Model::FLogSettingPtr
               {
-                  if (Data->HasTypedField<EJson::Null>("logSetting"))
+                  if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("logSetting")))
                   {
                       return nullptr;
                   }
-                  return Model::FLogSetting::FromJson(Data->GetObjectField("logSetting"));
+                  return Model::FLogSetting::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("logSetting")));
               }() : nullptr);
     }
 

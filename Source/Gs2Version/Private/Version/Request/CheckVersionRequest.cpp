@@ -109,38 +109,38 @@ namespace Gs2::Version::Request
             return nullptr;
         }
         return MakeShared<FCheckVersionRequest>()
-            ->WithContextStack(Data->HasField("contextStack") ? TOptional<FString>(Data->GetStringField("contextStack")) : TOptional<FString>())
-            ->WithNamespaceName(Data->HasField("namespaceName") ? [Data]() -> TOptional<FString>
+            ->WithContextStack(Data->HasField(ANSI_TO_TCHAR("contextStack")) ? TOptional<FString>(Data->GetStringField(ANSI_TO_TCHAR("contextStack"))) : TOptional<FString>())
+            ->WithNamespaceName(Data->HasField(ANSI_TO_TCHAR("namespaceName")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
-                    if (Data->TryGetStringField("namespaceName", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("namespaceName"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
-            ->WithAccessToken(Data->HasField("xGs2AccessToken") ? [Data]() -> TOptional<FString>
+            ->WithAccessToken(Data->HasField(ANSI_TO_TCHAR("xGs2AccessToken")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
-                    if (Data->TryGetStringField("xGs2AccessToken", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("xGs2AccessToken"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
-          ->WithTargetVersions(Data->HasField("targetVersions") ? [Data]() -> TSharedPtr<TArray<Model::FTargetVersionPtr>>
+          ->WithTargetVersions(Data->HasField(ANSI_TO_TCHAR("targetVersions")) ? [Data]() -> TSharedPtr<TArray<Model::FTargetVersionPtr>>
               {
                   auto v = MakeShared<TArray<Model::FTargetVersionPtr>>();
-                  if (!Data->HasTypedField<EJson::Null>("targetVersions") && Data->HasTypedField<EJson::Array>("targetVersions"))
+                  if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("targetVersions")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("targetVersions")))
                   {
-                      for (auto JsonObjectValue : Data->GetArrayField("targetVersions"))
+                      for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("targetVersions")))
                       {
                           v->Add(Model::FTargetVersion::FromJson(JsonObjectValue->AsObject()));
                       }
                   }
                   return v;
               }() : MakeShared<TArray<Model::FTargetVersionPtr>>())
-          ->WithDuplicationAvoider(Data->HasField("duplicationAvoider") ? TOptional<FString>(Data->GetStringField("duplicationAvoider")) : TOptional<FString>());
+          ->WithDuplicationAvoider(Data->HasField(ANSI_TO_TCHAR("duplicationAvoider")) ? TOptional<FString>(Data->GetStringField(ANSI_TO_TCHAR("duplicationAvoider"))) : TOptional<FString>());
     }
 
     TSharedPtr<FJsonObject> FCheckVersionRequest::ToJson() const

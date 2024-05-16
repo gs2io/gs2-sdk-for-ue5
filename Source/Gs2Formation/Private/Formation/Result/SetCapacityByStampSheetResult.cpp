@@ -91,29 +91,29 @@ namespace Gs2::Formation::Result
             return nullptr;
         }
         return MakeShared<FSetCapacityByStampSheetResult>()
-            ->WithItem(Data->HasField("item") ? [Data]() -> Model::FMoldPtr
+            ->WithItem(Data->HasField(ANSI_TO_TCHAR("item")) ? [Data]() -> Model::FMoldPtr
                  {
-                    if (Data->HasTypedField<EJson::Null>("item"))
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("item")))
                     {
                         return nullptr;
                     }
-                    return Model::FMold::FromJson(Data->GetObjectField("item"));
+                    return Model::FMold::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("item")));
                  }() : nullptr)
-            ->WithOld(Data->HasField("old") ? [Data]() -> Model::FMoldPtr
+            ->WithOld(Data->HasField(ANSI_TO_TCHAR("old")) ? [Data]() -> Model::FMoldPtr
                  {
-                    if (Data->HasTypedField<EJson::Null>("old"))
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("old")))
                     {
                         return nullptr;
                     }
-                    return Model::FMold::FromJson(Data->GetObjectField("old"));
+                    return Model::FMold::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("old")));
                  }() : nullptr)
-            ->WithMoldModel(Data->HasField("moldModel") ? [Data]() -> Model::FMoldModelPtr
+            ->WithMoldModel(Data->HasField(ANSI_TO_TCHAR("moldModel")) ? [Data]() -> Model::FMoldModelPtr
                  {
-                    if (Data->HasTypedField<EJson::Null>("moldModel"))
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("moldModel")))
                     {
                         return nullptr;
                     }
-                    return Model::FMoldModel::FromJson(Data->GetObjectField("moldModel"));
+                    return Model::FMoldModel::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("moldModel")));
                  }() : nullptr);
     }
 

@@ -185,72 +185,72 @@ namespace Gs2::SkillTree::Model
             return nullptr;
         }
         return MakeShared<FNodeModel>()
-            ->WithNodeModelId(Data->HasField("nodeModelId") ? [Data]() -> TOptional<FString>
+            ->WithNodeModelId(Data->HasField(ANSI_TO_TCHAR("nodeModelId")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("nodeModelId", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("nodeModelId"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithName(Data->HasField("name") ? [Data]() -> TOptional<FString>
+            ->WithName(Data->HasField(ANSI_TO_TCHAR("name")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("name", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("name"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithMetadata(Data->HasField("metadata") ? [Data]() -> TOptional<FString>
+            ->WithMetadata(Data->HasField(ANSI_TO_TCHAR("metadata")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("metadata", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("metadata"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithReleaseConsumeActions(Data->HasField("releaseConsumeActions") ? [Data]() -> TSharedPtr<TArray<Model::FConsumeActionPtr>>
+            ->WithReleaseConsumeActions(Data->HasField(ANSI_TO_TCHAR("releaseConsumeActions")) ? [Data]() -> TSharedPtr<TArray<Model::FConsumeActionPtr>>
                 {
                     auto v = MakeShared<TArray<Model::FConsumeActionPtr>>();
-                    if (!Data->HasTypedField<EJson::Null>("releaseConsumeActions") && Data->HasTypedField<EJson::Array>("releaseConsumeActions"))
+                    if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("releaseConsumeActions")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("releaseConsumeActions")))
                     {
-                        for (auto JsonObjectValue : Data->GetArrayField("releaseConsumeActions"))
+                        for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("releaseConsumeActions")))
                         {
                             v->Add(Model::FConsumeAction::FromJson(JsonObjectValue->AsObject()));
                         }
                     }
                     return v;
                  }() : MakeShared<TArray<Model::FConsumeActionPtr>>())
-            ->WithReturnAcquireActions(Data->HasField("returnAcquireActions") ? [Data]() -> TSharedPtr<TArray<Model::FAcquireActionPtr>>
+            ->WithReturnAcquireActions(Data->HasField(ANSI_TO_TCHAR("returnAcquireActions")) ? [Data]() -> TSharedPtr<TArray<Model::FAcquireActionPtr>>
                 {
                     auto v = MakeShared<TArray<Model::FAcquireActionPtr>>();
-                    if (!Data->HasTypedField<EJson::Null>("returnAcquireActions") && Data->HasTypedField<EJson::Array>("returnAcquireActions"))
+                    if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("returnAcquireActions")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("returnAcquireActions")))
                     {
-                        for (auto JsonObjectValue : Data->GetArrayField("returnAcquireActions"))
+                        for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("returnAcquireActions")))
                         {
                             v->Add(Model::FAcquireAction::FromJson(JsonObjectValue->AsObject()));
                         }
                     }
                     return v;
                  }() : MakeShared<TArray<Model::FAcquireActionPtr>>())
-            ->WithRestrainReturnRate(Data->HasField("restrainReturnRate") ? [Data]() -> TOptional<float>
+            ->WithRestrainReturnRate(Data->HasField(ANSI_TO_TCHAR("restrainReturnRate")) ? [Data]() -> TOptional<float>
                 {
                     float v;
-                    if (Data->TryGetNumberField("restrainReturnRate", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("restrainReturnRate"), v))
                     {
                         return TOptional(v);
                     }
                     return TOptional<float>();
                 }() : TOptional<float>())
-            ->WithPremiseNodeNames(Data->HasField("premiseNodeNames") ? [Data]() -> TSharedPtr<TArray<FString>>
+            ->WithPremiseNodeNames(Data->HasField(ANSI_TO_TCHAR("premiseNodeNames")) ? [Data]() -> TSharedPtr<TArray<FString>>
                 {
                     auto v = MakeShared<TArray<FString>>();
-                    if (!Data->HasTypedField<EJson::Null>("premiseNodeNames") && Data->HasTypedField<EJson::Array>("premiseNodeNames"))
+                    if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("premiseNodeNames")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("premiseNodeNames")))
                     {
-                        for (auto JsonObjectValue : Data->GetArrayField("premiseNodeNames"))
+                        for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("premiseNodeNames")))
                         {
                             v->Add(JsonObjectValue->AsString());
                         }

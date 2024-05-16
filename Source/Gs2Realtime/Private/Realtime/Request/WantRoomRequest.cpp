@@ -96,31 +96,31 @@ namespace Gs2::Realtime::Request
             return nullptr;
         }
         return MakeShared<FWantRoomRequest>()
-            ->WithContextStack(Data->HasField("contextStack") ? TOptional<FString>(Data->GetStringField("contextStack")) : TOptional<FString>())
-            ->WithNamespaceName(Data->HasField("namespaceName") ? [Data]() -> TOptional<FString>
+            ->WithContextStack(Data->HasField(ANSI_TO_TCHAR("contextStack")) ? TOptional<FString>(Data->GetStringField(ANSI_TO_TCHAR("contextStack"))) : TOptional<FString>())
+            ->WithNamespaceName(Data->HasField(ANSI_TO_TCHAR("namespaceName")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
-                    if (Data->TryGetStringField("namespaceName", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("namespaceName"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
-            ->WithName(Data->HasField("name") ? [Data]() -> TOptional<FString>
+            ->WithName(Data->HasField(ANSI_TO_TCHAR("name")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
-                    if (Data->TryGetStringField("name", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("name"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
-          ->WithNotificationUserIds(Data->HasField("notificationUserIds") ? [Data]() -> TSharedPtr<TArray<FString>>
+          ->WithNotificationUserIds(Data->HasField(ANSI_TO_TCHAR("notificationUserIds")) ? [Data]() -> TSharedPtr<TArray<FString>>
               {
                   auto v = MakeShared<TArray<FString>>();
-                  if (!Data->HasTypedField<EJson::Null>("notificationUserIds") && Data->HasTypedField<EJson::Array>("notificationUserIds"))
+                  if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("notificationUserIds")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("notificationUserIds")))
                   {
-                      for (auto JsonObjectValue : Data->GetArrayField("notificationUserIds"))
+                      for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("notificationUserIds")))
                       {
                           v->Add(JsonObjectValue->AsString());
                       }

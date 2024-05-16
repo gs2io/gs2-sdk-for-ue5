@@ -53,13 +53,13 @@ namespace Gs2::Identifier::Result
             return nullptr;
         }
         return MakeShared<FCreateSecurityPolicyResult>()
-            ->WithItem(Data->HasField("item") ? [Data]() -> Model::FSecurityPolicyPtr
+            ->WithItem(Data->HasField(ANSI_TO_TCHAR("item")) ? [Data]() -> Model::FSecurityPolicyPtr
                  {
-                    if (Data->HasTypedField<EJson::Null>("item"))
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("item")))
                     {
                         return nullptr;
                     }
-                    return Model::FSecurityPolicy::FromJson(Data->GetObjectField("item"));
+                    return Model::FSecurityPolicy::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("item")));
                  }() : nullptr);
     }
 

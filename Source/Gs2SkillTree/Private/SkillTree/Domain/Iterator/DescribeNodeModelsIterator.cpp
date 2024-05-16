@@ -28,6 +28,8 @@
 #include "SkillTree/Domain/Model/NodeModel.h"
 #include "SkillTree/Domain/Model/Namespace.h"
 
+#include "Core/Domain/Gs2.h"
+
 namespace Gs2::SkillTree::Domain::Iterator
 {
 

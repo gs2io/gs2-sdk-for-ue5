@@ -200,58 +200,58 @@ namespace Gs2::Guild::Model
             return nullptr;
         }
         return MakeShared<FInbox>()
-            ->WithInboxId(Data->HasField("inboxId") ? [Data]() -> TOptional<FString>
+            ->WithInboxId(Data->HasField(ANSI_TO_TCHAR("inboxId")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("inboxId", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("inboxId"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithGuildName(Data->HasField("guildName") ? [Data]() -> TOptional<FString>
+            ->WithGuildName(Data->HasField(ANSI_TO_TCHAR("guildName")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("guildName", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("guildName"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithFromUserIds(Data->HasField("fromUserIds") ? [Data]() -> TSharedPtr<TArray<FString>>
+            ->WithFromUserIds(Data->HasField(ANSI_TO_TCHAR("fromUserIds")) ? [Data]() -> TSharedPtr<TArray<FString>>
                 {
                     auto v = MakeShared<TArray<FString>>();
-                    if (!Data->HasTypedField<EJson::Null>("fromUserIds") && Data->HasTypedField<EJson::Array>("fromUserIds"))
+                    if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("fromUserIds")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("fromUserIds")))
                     {
-                        for (auto JsonObjectValue : Data->GetArrayField("fromUserIds"))
+                        for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("fromUserIds")))
                         {
                             v->Add(JsonObjectValue->AsString());
                         }
                     }
                     return v;
                  }() : MakeShared<TArray<FString>>())
-            ->WithCreatedAt(Data->HasField("createdAt") ? [Data]() -> TOptional<int64>
+            ->WithCreatedAt(Data->HasField(ANSI_TO_TCHAR("createdAt")) ? [Data]() -> TOptional<int64>
                 {
                     int64 v;
-                    if (Data->TryGetNumberField("createdAt", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("createdAt"), v))
                     {
                         return TOptional(v);
                     }
                     return TOptional<int64>();
                 }() : TOptional<int64>())
-            ->WithUpdatedAt(Data->HasField("updatedAt") ? [Data]() -> TOptional<int64>
+            ->WithUpdatedAt(Data->HasField(ANSI_TO_TCHAR("updatedAt")) ? [Data]() -> TOptional<int64>
                 {
                     int64 v;
-                    if (Data->TryGetNumberField("updatedAt", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("updatedAt"), v))
                     {
                         return TOptional(v);
                     }
                     return TOptional<int64>();
                 }() : TOptional<int64>())
-            ->WithRevision(Data->HasField("revision") ? [Data]() -> TOptional<int64>
+            ->WithRevision(Data->HasField(ANSI_TO_TCHAR("revision")) ? [Data]() -> TOptional<int64>
                 {
                     int64 v;
-                    if (Data->TryGetNumberField("revision", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("revision"), v))
                     {
                         return TOptional(v);
                     }

@@ -68,18 +68,18 @@ namespace Gs2::Datastore::Result
             return nullptr;
         }
         return MakeShared<FPrepareUploadResult>()
-            ->WithItem(Data->HasField("item") ? [Data]() -> Model::FDataObjectPtr
+            ->WithItem(Data->HasField(ANSI_TO_TCHAR("item")) ? [Data]() -> Model::FDataObjectPtr
                  {
-                    if (Data->HasTypedField<EJson::Null>("item"))
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("item")))
                     {
                         return nullptr;
                     }
-                    return Model::FDataObject::FromJson(Data->GetObjectField("item"));
+                    return Model::FDataObject::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("item")));
                  }() : nullptr)
-            ->WithUploadUrl(Data->HasField("uploadUrl") ? [Data]() -> TOptional<FString>
+            ->WithUploadUrl(Data->HasField(ANSI_TO_TCHAR("uploadUrl")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("uploadUrl", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("uploadUrl"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }

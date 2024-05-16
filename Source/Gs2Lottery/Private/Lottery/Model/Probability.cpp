@@ -71,18 +71,18 @@ namespace Gs2::Lottery::Model
             return nullptr;
         }
         return MakeShared<FProbability>()
-            ->WithPrize(Data->HasField("prize") ? [Data]() -> Model::FDrawnPrizePtr
+            ->WithPrize(Data->HasField(ANSI_TO_TCHAR("prize")) ? [Data]() -> Model::FDrawnPrizePtr
                 {
-                    if (Data->HasTypedField<EJson::Null>("prize"))
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("prize")))
                     {
                         return nullptr;
                     }
-                    return Model::FDrawnPrize::FromJson(Data->GetObjectField("prize"));
+                    return Model::FDrawnPrize::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("prize")));
                  }() : nullptr)
-            ->WithRate(Data->HasField("rate") ? [Data]() -> TOptional<float>
+            ->WithRate(Data->HasField(ANSI_TO_TCHAR("rate")) ? [Data]() -> TOptional<float>
                 {
                     float v;
-                    if (Data->TryGetNumberField("rate", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("rate"), v))
                     {
                         return TOptional(v);
                     }

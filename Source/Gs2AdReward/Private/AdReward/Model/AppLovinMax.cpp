@@ -62,19 +62,19 @@ namespace Gs2::AdReward::Model
             return nullptr;
         }
         return MakeShared<FAppLovinMax>()
-            ->WithAllowAdUnitId(Data->HasField("allowAdUnitId") ? [Data]() -> TOptional<FString>
+            ->WithAllowAdUnitId(Data->HasField(ANSI_TO_TCHAR("allowAdUnitId")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("allowAdUnitId", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("allowAdUnitId"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithEventKey(Data->HasField("eventKey") ? [Data]() -> TOptional<FString>
+            ->WithEventKey(Data->HasField(ANSI_TO_TCHAR("eventKey")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("eventKey", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("eventKey"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }

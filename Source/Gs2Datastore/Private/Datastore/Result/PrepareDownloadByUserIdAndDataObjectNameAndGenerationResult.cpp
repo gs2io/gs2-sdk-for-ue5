@@ -92,27 +92,27 @@ namespace Gs2::Datastore::Result
             return nullptr;
         }
         return MakeShared<FPrepareDownloadByUserIdAndDataObjectNameAndGenerationResult>()
-            ->WithItem(Data->HasField("item") ? [Data]() -> Model::FDataObjectPtr
+            ->WithItem(Data->HasField(ANSI_TO_TCHAR("item")) ? [Data]() -> Model::FDataObjectPtr
                  {
-                    if (Data->HasTypedField<EJson::Null>("item"))
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("item")))
                     {
                         return nullptr;
                     }
-                    return Model::FDataObject::FromJson(Data->GetObjectField("item"));
+                    return Model::FDataObject::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("item")));
                  }() : nullptr)
-            ->WithFileUrl(Data->HasField("fileUrl") ? [Data]() -> TOptional<FString>
+            ->WithFileUrl(Data->HasField(ANSI_TO_TCHAR("fileUrl")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("fileUrl", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("fileUrl"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithContentLength(Data->HasField("contentLength") ? [Data]() -> TOptional<int64>
+            ->WithContentLength(Data->HasField(ANSI_TO_TCHAR("contentLength")) ? [Data]() -> TOptional<int64>
                 {
                     int64 v;
-                    if (Data->TryGetNumberField("contentLength", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("contentLength"), v))
                     {
                         return TOptional(v);
                     }

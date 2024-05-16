@@ -129,11 +129,11 @@ namespace Gs2::Core::Net::WebSocket
                     {
                         if (!Response->IsError())
                         {
-                            if (Response->Body()->HasField("access_token"))
+                            if (Response->Body()->HasField(ANSI_TO_TCHAR("access_token")))
                             {
-                                const auto Token = Response->Body()->GetStringField("access_token");
+                                const auto Token = Response->Body()->GetStringField(ANSI_TO_TCHAR("access_token"));
                                 Credential()->UpdateProjectToken(Token);
-                                OwnerIdValue = Response->Body()->GetStringField("owner_id");
+                                OwnerIdValue = Response->Body()->GetStringField(ANSI_TO_TCHAR("owner_id"));
                             }
                         }
                         Processing = false;

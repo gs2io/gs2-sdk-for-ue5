@@ -28,6 +28,8 @@
 #include "Idle/Domain/Model/CategoryModel.h"
 #include "Idle/Domain/Model/Namespace.h"
 
+#include "Core/Domain/Gs2.h"
+
 namespace Gs2::Idle::Domain::Iterator
 {
 

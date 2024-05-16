@@ -254,100 +254,100 @@ namespace Gs2::Matchmaking::Model
             return nullptr;
         }
         return MakeShared<FGathering>()
-            ->WithGatheringId(Data->HasField("gatheringId") ? [Data]() -> TOptional<FString>
+            ->WithGatheringId(Data->HasField(ANSI_TO_TCHAR("gatheringId")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("gatheringId", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("gatheringId"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithName(Data->HasField("name") ? [Data]() -> TOptional<FString>
+            ->WithName(Data->HasField(ANSI_TO_TCHAR("name")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("name", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("name"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithAttributeRanges(Data->HasField("attributeRanges") ? [Data]() -> TSharedPtr<TArray<Model::FAttributeRangePtr>>
+            ->WithAttributeRanges(Data->HasField(ANSI_TO_TCHAR("attributeRanges")) ? [Data]() -> TSharedPtr<TArray<Model::FAttributeRangePtr>>
                 {
                     auto v = MakeShared<TArray<Model::FAttributeRangePtr>>();
-                    if (!Data->HasTypedField<EJson::Null>("attributeRanges") && Data->HasTypedField<EJson::Array>("attributeRanges"))
+                    if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("attributeRanges")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("attributeRanges")))
                     {
-                        for (auto JsonObjectValue : Data->GetArrayField("attributeRanges"))
+                        for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("attributeRanges")))
                         {
                             v->Add(Model::FAttributeRange::FromJson(JsonObjectValue->AsObject()));
                         }
                     }
                     return v;
                  }() : MakeShared<TArray<Model::FAttributeRangePtr>>())
-            ->WithCapacityOfRoles(Data->HasField("capacityOfRoles") ? [Data]() -> TSharedPtr<TArray<Model::FCapacityOfRolePtr>>
+            ->WithCapacityOfRoles(Data->HasField(ANSI_TO_TCHAR("capacityOfRoles")) ? [Data]() -> TSharedPtr<TArray<Model::FCapacityOfRolePtr>>
                 {
                     auto v = MakeShared<TArray<Model::FCapacityOfRolePtr>>();
-                    if (!Data->HasTypedField<EJson::Null>("capacityOfRoles") && Data->HasTypedField<EJson::Array>("capacityOfRoles"))
+                    if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("capacityOfRoles")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("capacityOfRoles")))
                     {
-                        for (auto JsonObjectValue : Data->GetArrayField("capacityOfRoles"))
+                        for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("capacityOfRoles")))
                         {
                             v->Add(Model::FCapacityOfRole::FromJson(JsonObjectValue->AsObject()));
                         }
                     }
                     return v;
                  }() : MakeShared<TArray<Model::FCapacityOfRolePtr>>())
-            ->WithAllowUserIds(Data->HasField("allowUserIds") ? [Data]() -> TSharedPtr<TArray<FString>>
+            ->WithAllowUserIds(Data->HasField(ANSI_TO_TCHAR("allowUserIds")) ? [Data]() -> TSharedPtr<TArray<FString>>
                 {
                     auto v = MakeShared<TArray<FString>>();
-                    if (!Data->HasTypedField<EJson::Null>("allowUserIds") && Data->HasTypedField<EJson::Array>("allowUserIds"))
+                    if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("allowUserIds")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("allowUserIds")))
                     {
-                        for (auto JsonObjectValue : Data->GetArrayField("allowUserIds"))
+                        for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("allowUserIds")))
                         {
                             v->Add(JsonObjectValue->AsString());
                         }
                     }
                     return v;
                  }() : MakeShared<TArray<FString>>())
-            ->WithMetadata(Data->HasField("metadata") ? [Data]() -> TOptional<FString>
+            ->WithMetadata(Data->HasField(ANSI_TO_TCHAR("metadata")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("metadata", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("metadata"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithExpiresAt(Data->HasField("expiresAt") ? [Data]() -> TOptional<int64>
+            ->WithExpiresAt(Data->HasField(ANSI_TO_TCHAR("expiresAt")) ? [Data]() -> TOptional<int64>
                 {
                     int64 v;
-                    if (Data->TryGetNumberField("expiresAt", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("expiresAt"), v))
                     {
                         return TOptional(v);
                     }
                     return TOptional<int64>();
                 }() : TOptional<int64>())
-            ->WithCreatedAt(Data->HasField("createdAt") ? [Data]() -> TOptional<int64>
+            ->WithCreatedAt(Data->HasField(ANSI_TO_TCHAR("createdAt")) ? [Data]() -> TOptional<int64>
                 {
                     int64 v;
-                    if (Data->TryGetNumberField("createdAt", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("createdAt"), v))
                     {
                         return TOptional(v);
                     }
                     return TOptional<int64>();
                 }() : TOptional<int64>())
-            ->WithUpdatedAt(Data->HasField("updatedAt") ? [Data]() -> TOptional<int64>
+            ->WithUpdatedAt(Data->HasField(ANSI_TO_TCHAR("updatedAt")) ? [Data]() -> TOptional<int64>
                 {
                     int64 v;
-                    if (Data->TryGetNumberField("updatedAt", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("updatedAt"), v))
                     {
                         return TOptional(v);
                     }
                     return TOptional<int64>();
                 }() : TOptional<int64>())
-            ->WithRevision(Data->HasField("revision") ? [Data]() -> TOptional<int64>
+            ->WithRevision(Data->HasField(ANSI_TO_TCHAR("revision")) ? [Data]() -> TOptional<int64>
                 {
                     int64 v;
-                    if (Data->TryGetNumberField("revision", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("revision"), v))
                     {
                         return TOptional(v);
                     }

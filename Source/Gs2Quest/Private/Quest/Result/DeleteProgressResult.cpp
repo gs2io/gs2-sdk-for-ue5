@@ -53,13 +53,13 @@ namespace Gs2::Quest::Result
             return nullptr;
         }
         return MakeShared<FDeleteProgressResult>()
-            ->WithItem(Data->HasField("item") ? [Data]() -> Model::FProgressPtr
+            ->WithItem(Data->HasField(ANSI_TO_TCHAR("item")) ? [Data]() -> Model::FProgressPtr
                  {
-                    if (Data->HasTypedField<EJson::Null>("item"))
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("item")))
                     {
                         return nullptr;
                     }
-                    return Model::FProgress::FromJson(Data->GetObjectField("item"));
+                    return Model::FProgress::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("item")));
                  }() : nullptr);
     }
 

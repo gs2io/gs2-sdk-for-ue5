@@ -130,40 +130,40 @@ namespace Gs2::Identifier::Model
             return nullptr;
         }
         return MakeShared<FAttachSecurityPolicy>()
-            ->WithUserId(Data->HasField("userId") ? [Data]() -> TOptional<FString>
+            ->WithUserId(Data->HasField(ANSI_TO_TCHAR("userId")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("userId", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("userId"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithSecurityPolicyIds(Data->HasField("securityPolicyIds") ? [Data]() -> TSharedPtr<TArray<FString>>
+            ->WithSecurityPolicyIds(Data->HasField(ANSI_TO_TCHAR("securityPolicyIds")) ? [Data]() -> TSharedPtr<TArray<FString>>
                 {
                     auto v = MakeShared<TArray<FString>>();
-                    if (!Data->HasTypedField<EJson::Null>("securityPolicyIds") && Data->HasTypedField<EJson::Array>("securityPolicyIds"))
+                    if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("securityPolicyIds")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("securityPolicyIds")))
                     {
-                        for (auto JsonObjectValue : Data->GetArrayField("securityPolicyIds"))
+                        for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("securityPolicyIds")))
                         {
                             v->Add(JsonObjectValue->AsString());
                         }
                     }
                     return v;
                  }() : MakeShared<TArray<FString>>())
-            ->WithAttachedAt(Data->HasField("attachedAt") ? [Data]() -> TOptional<int64>
+            ->WithAttachedAt(Data->HasField(ANSI_TO_TCHAR("attachedAt")) ? [Data]() -> TOptional<int64>
                 {
                     int64 v;
-                    if (Data->TryGetNumberField("attachedAt", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("attachedAt"), v))
                     {
                         return TOptional(v);
                     }
                     return TOptional<int64>();
                 }() : TOptional<int64>())
-            ->WithRevision(Data->HasField("revision") ? [Data]() -> TOptional<int64>
+            ->WithRevision(Data->HasField(ANSI_TO_TCHAR("revision")) ? [Data]() -> TOptional<int64>
                 {
                     int64 v;
-                    if (Data->TryGetNumberField("revision", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("revision"), v))
                     {
                         return TOptional(v);
                     }

@@ -85,28 +85,28 @@ namespace Gs2::JobQueue::Model
             return nullptr;
         }
         return MakeShared<FJobEntry>()
-            ->WithScriptId(Data->HasField("scriptId") ? [Data]() -> TOptional<FString>
+            ->WithScriptId(Data->HasField(ANSI_TO_TCHAR("scriptId")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("scriptId", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("scriptId"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithArgs(Data->HasField("args") ? [Data]() -> TOptional<FString>
+            ->WithArgs(Data->HasField(ANSI_TO_TCHAR("args")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("args", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("args"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithMaxTryCount(Data->HasField("maxTryCount") ? [Data]() -> TOptional<int32>
+            ->WithMaxTryCount(Data->HasField(ANSI_TO_TCHAR("maxTryCount")) ? [Data]() -> TOptional<int32>
                 {
                     int32 v;
-                    if (Data->TryGetNumberField("maxTryCount", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("maxTryCount"), v))
                     {
                         return TOptional(v);
                     }

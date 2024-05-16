@@ -20,14 +20,5 @@ public class Gs2JobQueue : ModuleRules
 			"Gs2Core",
 			"Gs2Auth",
 		});
-		if (Target.Platform == UnrealTargetPlatform.Win64)
-		{
-			PrivateDependencyModuleNames.Add("Gs2Distributor");
-		}
-
-		PublicDependencyModuleNames.AddRange(new string[] {
-			"Core",
-			"Gs2Core",
-		});
 	}
 }

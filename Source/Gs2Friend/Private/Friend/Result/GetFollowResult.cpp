@@ -53,13 +53,13 @@ namespace Gs2::Friend::Result
             return nullptr;
         }
         return MakeShared<FGetFollowResult>()
-            ->WithItem(Data->HasField("item") ? [Data]() -> Model::FFollowUserPtr
+            ->WithItem(Data->HasField(ANSI_TO_TCHAR("item")) ? [Data]() -> Model::FFollowUserPtr
                  {
-                    if (Data->HasTypedField<EJson::Null>("item"))
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("item")))
                     {
                         return nullptr;
                     }
-                    return Model::FFollowUser::FromJson(Data->GetObjectField("item"));
+                    return Model::FFollowUser::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("item")));
                  }() : nullptr);
     }
 

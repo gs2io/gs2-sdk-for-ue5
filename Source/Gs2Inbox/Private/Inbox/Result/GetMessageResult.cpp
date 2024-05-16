@@ -53,13 +53,13 @@ namespace Gs2::Inbox::Result
             return nullptr;
         }
         return MakeShared<FGetMessageResult>()
-            ->WithItem(Data->HasField("item") ? [Data]() -> Model::FMessagePtr
+            ->WithItem(Data->HasField(ANSI_TO_TCHAR("item")) ? [Data]() -> Model::FMessagePtr
                  {
-                    if (Data->HasTypedField<EJson::Null>("item"))
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("item")))
                     {
                         return nullptr;
                     }
-                    return Model::FMessage::FromJson(Data->GetObjectField("item"));
+                    return Model::FMessage::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("item")));
                  }() : nullptr);
     }
 

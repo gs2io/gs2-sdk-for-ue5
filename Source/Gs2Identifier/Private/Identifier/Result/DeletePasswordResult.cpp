@@ -53,13 +53,13 @@ namespace Gs2::Identifier::Result
             return nullptr;
         }
         return MakeShared<FDeletePasswordResult>()
-            ->WithItem(Data->HasField("item") ? [Data]() -> Model::FPasswordPtr
+            ->WithItem(Data->HasField(ANSI_TO_TCHAR("item")) ? [Data]() -> Model::FPasswordPtr
                  {
-                    if (Data->HasTypedField<EJson::Null>("item"))
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("item")))
                     {
                         return nullptr;
                     }
-                    return Model::FPassword::FromJson(Data->GetObjectField("item"));
+                    return Model::FPassword::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("item")));
                  }() : nullptr);
     }
 

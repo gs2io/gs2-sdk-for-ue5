@@ -72,25 +72,25 @@ namespace Gs2::Idle::Result
             return nullptr;
         }
         return MakeShared<FPredictionByUserIdResult>()
-            ->WithItems(Data->HasField("items") ? [Data]() -> TSharedPtr<TArray<Model::FAcquireActionPtr>>
+            ->WithItems(Data->HasField(ANSI_TO_TCHAR("items")) ? [Data]() -> TSharedPtr<TArray<Model::FAcquireActionPtr>>
                  {
                     auto v = MakeShared<TArray<Model::FAcquireActionPtr>>();
-                    if (!Data->HasTypedField<EJson::Null>("items") && Data->HasTypedField<EJson::Array>("items"))
+                    if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("items")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("items")))
                     {
-                        for (auto JsonObjectValue : Data->GetArrayField("items"))
+                        for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("items")))
                         {
                             v->Add(Model::FAcquireAction::FromJson(JsonObjectValue->AsObject()));
                         }
                     }
                     return v;
                  }() : MakeShared<TArray<Model::FAcquireActionPtr>>())
-            ->WithStatus(Data->HasField("status") ? [Data]() -> Model::FStatusPtr
+            ->WithStatus(Data->HasField(ANSI_TO_TCHAR("status")) ? [Data]() -> Model::FStatusPtr
                  {
-                    if (Data->HasTypedField<EJson::Null>("status"))
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("status")))
                     {
                         return nullptr;
                     }
-                    return Model::FStatus::FromJson(Data->GetObjectField("status"));
+                    return Model::FStatus::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("status")));
                  }() : nullptr);
     }
 

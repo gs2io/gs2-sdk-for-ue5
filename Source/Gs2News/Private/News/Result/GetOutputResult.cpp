@@ -53,13 +53,13 @@ namespace Gs2::News::Result
             return nullptr;
         }
         return MakeShared<FGetOutputResult>()
-            ->WithItem(Data->HasField("item") ? [Data]() -> Model::FOutputPtr
+            ->WithItem(Data->HasField(ANSI_TO_TCHAR("item")) ? [Data]() -> Model::FOutputPtr
                  {
-                    if (Data->HasTypedField<EJson::Null>("item"))
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("item")))
                     {
                         return nullptr;
                     }
-                    return Model::FOutput::FromJson(Data->GetObjectField("item"));
+                    return Model::FOutput::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("item")));
                  }() : nullptr);
     }
 

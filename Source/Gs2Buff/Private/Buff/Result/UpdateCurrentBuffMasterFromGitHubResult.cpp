@@ -53,13 +53,13 @@ namespace Gs2::Buff::Result
             return nullptr;
         }
         return MakeShared<FUpdateCurrentBuffMasterFromGitHubResult>()
-            ->WithItem(Data->HasField("item") ? [Data]() -> Model::FCurrentBuffMasterPtr
+            ->WithItem(Data->HasField(ANSI_TO_TCHAR("item")) ? [Data]() -> Model::FCurrentBuffMasterPtr
                  {
-                    if (Data->HasTypedField<EJson::Null>("item"))
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("item")))
                     {
                         return nullptr;
                     }
-                    return Model::FCurrentBuffMaster::FromJson(Data->GetObjectField("item"));
+                    return Model::FCurrentBuffMaster::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("item")));
                  }() : nullptr);
     }
 

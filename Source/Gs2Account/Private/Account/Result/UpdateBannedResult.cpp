@@ -53,13 +53,13 @@ namespace Gs2::Account::Result
             return nullptr;
         }
         return MakeShared<FUpdateBannedResult>()
-            ->WithItem(Data->HasField("item") ? [Data]() -> Model::FAccountPtr
+            ->WithItem(Data->HasField(ANSI_TO_TCHAR("item")) ? [Data]() -> Model::FAccountPtr
                  {
-                    if (Data->HasTypedField<EJson::Null>("item"))
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("item")))
                     {
                         return nullptr;
                     }
-                    return Model::FAccount::FromJson(Data->GetObjectField("item"));
+                    return Model::FAccount::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("item")));
                  }() : nullptr);
     }
 

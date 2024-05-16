@@ -30,6 +30,8 @@
 #include "Chat/Domain/Model/Message.h"
 #include "Chat/Domain/Model/Room.h"
 
+#include "Core/Domain/Gs2.h"
+
 namespace Gs2::Chat::Domain::Iterator
 {
     class FDescribeMessagesStartAt : public Gs2Object

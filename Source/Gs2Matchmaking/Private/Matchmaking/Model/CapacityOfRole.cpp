@@ -99,42 +99,42 @@ namespace Gs2::Matchmaking::Model
             return nullptr;
         }
         return MakeShared<FCapacityOfRole>()
-            ->WithRoleName(Data->HasField("roleName") ? [Data]() -> TOptional<FString>
+            ->WithRoleName(Data->HasField(ANSI_TO_TCHAR("roleName")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("roleName", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("roleName"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithRoleAliases(Data->HasField("roleAliases") ? [Data]() -> TSharedPtr<TArray<FString>>
+            ->WithRoleAliases(Data->HasField(ANSI_TO_TCHAR("roleAliases")) ? [Data]() -> TSharedPtr<TArray<FString>>
                 {
                     auto v = MakeShared<TArray<FString>>();
-                    if (!Data->HasTypedField<EJson::Null>("roleAliases") && Data->HasTypedField<EJson::Array>("roleAliases"))
+                    if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("roleAliases")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("roleAliases")))
                     {
-                        for (auto JsonObjectValue : Data->GetArrayField("roleAliases"))
+                        for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("roleAliases")))
                         {
                             v->Add(JsonObjectValue->AsString());
                         }
                     }
                     return v;
                  }() : MakeShared<TArray<FString>>())
-            ->WithCapacity(Data->HasField("capacity") ? [Data]() -> TOptional<int32>
+            ->WithCapacity(Data->HasField(ANSI_TO_TCHAR("capacity")) ? [Data]() -> TOptional<int32>
                 {
                     int32 v;
-                    if (Data->TryGetNumberField("capacity", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("capacity"), v))
                     {
                         return TOptional(v);
                     }
                     return TOptional<int32>();
                 }() : TOptional<int32>())
-            ->WithParticipants(Data->HasField("participants") ? [Data]() -> TSharedPtr<TArray<Model::FPlayerPtr>>
+            ->WithParticipants(Data->HasField(ANSI_TO_TCHAR("participants")) ? [Data]() -> TSharedPtr<TArray<Model::FPlayerPtr>>
                 {
                     auto v = MakeShared<TArray<Model::FPlayerPtr>>();
-                    if (!Data->HasTypedField<EJson::Null>("participants") && Data->HasTypedField<EJson::Array>("participants"))
+                    if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("participants")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("participants")))
                     {
-                        for (auto JsonObjectValue : Data->GetArrayField("participants"))
+                        for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("participants")))
                         {
                             v->Add(Model::FPlayer::FromJson(JsonObjectValue->AsObject()));
                         }

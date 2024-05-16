@@ -55,12 +55,12 @@ namespace Gs2::Core::Domain
 			));
 		}
             
-		if (ResultModelJson->HasField("autoRunStampSheet")) {
+		if (ResultModelJson->HasField(ANSI_TO_TCHAR("autoRunStampSheet"))) {
 			NextTransactions->Add(NewTransactionDomain(
-				ResultModelJson->HasField("autoRunStampSheet") && ResultModelJson->GetBoolField("autoRunStampSheet"),
-				ResultModelJson->HasField("transactionId") ? ResultModelJson->GetStringField("transactionId") : FString(""),
-				ResultModelJson->HasField("stampSheet") ? ResultModelJson->GetStringField("stampSheet") : FString(""),
-				ResultModelJson->HasField("stampSheetEncryptionKeyId") ? ResultModelJson->GetStringField("stampSheetEncryptionKeyId") : FString("")
+				ResultModelJson->HasField(ANSI_TO_TCHAR("autoRunStampSheet")) && ResultModelJson->GetBoolField(ANSI_TO_TCHAR("autoRunStampSheet")),
+				ResultModelJson->HasField(ANSI_TO_TCHAR("transactionId")) ? ResultModelJson->GetStringField(ANSI_TO_TCHAR("transactionId")) : FString(""),
+				ResultModelJson->HasField(ANSI_TO_TCHAR("stampSheet")) ? ResultModelJson->GetStringField(ANSI_TO_TCHAR("stampSheet")) : FString(""),
+				ResultModelJson->HasField(ANSI_TO_TCHAR("stampSheetEncryptionKeyId")) ? ResultModelJson->GetStringField(ANSI_TO_TCHAR("stampSheetEncryptionKeyId")) : FString("")
 			));
 		}
 

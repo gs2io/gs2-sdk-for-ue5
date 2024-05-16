@@ -148,49 +148,49 @@ namespace Gs2::Quest::Model
             return nullptr;
         }
         return MakeShared<FQuestGroupModel>()
-            ->WithQuestGroupModelId(Data->HasField("questGroupModelId") ? [Data]() -> TOptional<FString>
+            ->WithQuestGroupModelId(Data->HasField(ANSI_TO_TCHAR("questGroupModelId")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("questGroupModelId", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("questGroupModelId"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithName(Data->HasField("name") ? [Data]() -> TOptional<FString>
+            ->WithName(Data->HasField(ANSI_TO_TCHAR("name")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("name", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("name"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithMetadata(Data->HasField("metadata") ? [Data]() -> TOptional<FString>
+            ->WithMetadata(Data->HasField(ANSI_TO_TCHAR("metadata")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("metadata", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("metadata"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithQuests(Data->HasField("quests") ? [Data]() -> TSharedPtr<TArray<Model::FQuestModelPtr>>
+            ->WithQuests(Data->HasField(ANSI_TO_TCHAR("quests")) ? [Data]() -> TSharedPtr<TArray<Model::FQuestModelPtr>>
                 {
                     auto v = MakeShared<TArray<Model::FQuestModelPtr>>();
-                    if (!Data->HasTypedField<EJson::Null>("quests") && Data->HasTypedField<EJson::Array>("quests"))
+                    if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("quests")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("quests")))
                     {
-                        for (auto JsonObjectValue : Data->GetArrayField("quests"))
+                        for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("quests")))
                         {
                             v->Add(Model::FQuestModel::FromJson(JsonObjectValue->AsObject()));
                         }
                     }
                     return v;
                  }() : MakeShared<TArray<Model::FQuestModelPtr>>())
-            ->WithChallengePeriodEventId(Data->HasField("challengePeriodEventId") ? [Data]() -> TOptional<FString>
+            ->WithChallengePeriodEventId(Data->HasField(ANSI_TO_TCHAR("challengePeriodEventId")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("challengePeriodEventId", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("challengePeriodEventId"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }

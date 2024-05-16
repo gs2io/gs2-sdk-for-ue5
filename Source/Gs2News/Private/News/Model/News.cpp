@@ -127,55 +127,55 @@ namespace Gs2::News::Model
             return nullptr;
         }
         return MakeShared<FNews>()
-            ->WithSection(Data->HasField("section") ? [Data]() -> TOptional<FString>
+            ->WithSection(Data->HasField(ANSI_TO_TCHAR("section")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("section", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("section"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithContent(Data->HasField("content") ? [Data]() -> TOptional<FString>
+            ->WithContent(Data->HasField(ANSI_TO_TCHAR("content")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("content", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("content"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithTitle(Data->HasField("title") ? [Data]() -> TOptional<FString>
+            ->WithTitle(Data->HasField(ANSI_TO_TCHAR("title")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("title", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("title"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithScheduleEventId(Data->HasField("scheduleEventId") ? [Data]() -> TOptional<FString>
+            ->WithScheduleEventId(Data->HasField(ANSI_TO_TCHAR("scheduleEventId")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("scheduleEventId", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("scheduleEventId"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithTimestamp(Data->HasField("timestamp") ? [Data]() -> TOptional<int64>
+            ->WithTimestamp(Data->HasField(ANSI_TO_TCHAR("timestamp")) ? [Data]() -> TOptional<int64>
                 {
                     int64 v;
-                    if (Data->TryGetNumberField("timestamp", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("timestamp"), v))
                     {
                         return TOptional(v);
                     }
                     return TOptional<int64>();
                 }() : TOptional<int64>())
-            ->WithFrontMatter(Data->HasField("frontMatter") ? [Data]() -> TOptional<FString>
+            ->WithFrontMatter(Data->HasField(ANSI_TO_TCHAR("frontMatter")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("frontMatter", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("frontMatter"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }

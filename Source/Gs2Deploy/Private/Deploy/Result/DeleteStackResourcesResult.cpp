@@ -53,13 +53,13 @@ namespace Gs2::Deploy::Result
             return nullptr;
         }
         return MakeShared<FDeleteStackResourcesResult>()
-            ->WithItem(Data->HasField("item") ? [Data]() -> Model::FStackPtr
+            ->WithItem(Data->HasField(ANSI_TO_TCHAR("item")) ? [Data]() -> Model::FStackPtr
                  {
-                    if (Data->HasTypedField<EJson::Null>("item"))
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("item")))
                     {
                         return nullptr;
                     }
-                    return Model::FStack::FromJson(Data->GetObjectField("item"));
+                    return Model::FStack::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("item")));
                  }() : nullptr);
     }
 

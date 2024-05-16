@@ -178,64 +178,64 @@ namespace Gs2::Script::Result
             return nullptr;
         }
         return MakeShared<FInvokeScriptResult>()
-            ->WithCode(Data->HasField("code") ? [Data]() -> TOptional<int32>
+            ->WithCode(Data->HasField(ANSI_TO_TCHAR("code")) ? [Data]() -> TOptional<int32>
                 {
                     int32 v;
-                    if (Data->TryGetNumberField("code", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("code"), v))
                     {
                         return TOptional(v);
                     }
                     return TOptional<int32>();
                 }() : TOptional<int32>())
-            ->WithResult(Data->HasField("result") ? [Data]() -> TOptional<FString>
+            ->WithResult(Data->HasField(ANSI_TO_TCHAR("result")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("result", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("result"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithTransaction(Data->HasField("transaction") ? [Data]() -> Model::FTransactionPtr
+            ->WithTransaction(Data->HasField(ANSI_TO_TCHAR("transaction")) ? [Data]() -> Model::FTransactionPtr
                  {
-                    if (Data->HasTypedField<EJson::Null>("transaction"))
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("transaction")))
                     {
                         return nullptr;
                     }
-                    return Model::FTransaction::FromJson(Data->GetObjectField("transaction"));
+                    return Model::FTransaction::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("transaction")));
                  }() : nullptr)
-            ->WithRandomStatus(Data->HasField("randomStatus") ? [Data]() -> Model::FRandomStatusPtr
+            ->WithRandomStatus(Data->HasField(ANSI_TO_TCHAR("randomStatus")) ? [Data]() -> Model::FRandomStatusPtr
                  {
-                    if (Data->HasTypedField<EJson::Null>("randomStatus"))
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("randomStatus")))
                     {
                         return nullptr;
                     }
-                    return Model::FRandomStatus::FromJson(Data->GetObjectField("randomStatus"));
+                    return Model::FRandomStatus::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("randomStatus")));
                  }() : nullptr)
-            ->WithExecuteTime(Data->HasField("executeTime") ? [Data]() -> TOptional<int32>
+            ->WithExecuteTime(Data->HasField(ANSI_TO_TCHAR("executeTime")) ? [Data]() -> TOptional<int32>
                 {
                     int32 v;
-                    if (Data->TryGetNumberField("executeTime", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("executeTime"), v))
                     {
                         return TOptional(v);
                     }
                     return TOptional<int32>();
                 }() : TOptional<int32>())
-            ->WithCharged(Data->HasField("charged") ? [Data]() -> TOptional<int32>
+            ->WithCharged(Data->HasField(ANSI_TO_TCHAR("charged")) ? [Data]() -> TOptional<int32>
                 {
                     int32 v;
-                    if (Data->TryGetNumberField("charged", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("charged"), v))
                     {
                         return TOptional(v);
                     }
                     return TOptional<int32>();
                 }() : TOptional<int32>())
-            ->WithOutput(Data->HasField("output") ? [Data]() -> TSharedPtr<TArray<FString>>
+            ->WithOutput(Data->HasField(ANSI_TO_TCHAR("output")) ? [Data]() -> TSharedPtr<TArray<FString>>
                  {
                     auto v = MakeShared<TArray<FString>>();
-                    if (!Data->HasTypedField<EJson::Null>("output") && Data->HasTypedField<EJson::Array>("output"))
+                    if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("output")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("output")))
                     {
-                        for (auto JsonObjectValue : Data->GetArrayField("output"))
+                        for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("output")))
                         {
                             v->Add(JsonObjectValue->AsString());
                         }

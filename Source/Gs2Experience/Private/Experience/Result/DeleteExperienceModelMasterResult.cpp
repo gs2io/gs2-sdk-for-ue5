@@ -53,13 +53,13 @@ namespace Gs2::Experience::Result
             return nullptr;
         }
         return MakeShared<FDeleteExperienceModelMasterResult>()
-            ->WithItem(Data->HasField("item") ? [Data]() -> Model::FExperienceModelMasterPtr
+            ->WithItem(Data->HasField(ANSI_TO_TCHAR("item")) ? [Data]() -> Model::FExperienceModelMasterPtr
                  {
-                    if (Data->HasTypedField<EJson::Null>("item"))
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("item")))
                     {
                         return nullptr;
                     }
-                    return Model::FExperienceModelMaster::FromJson(Data->GetObjectField("item"));
+                    return Model::FExperienceModelMaster::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("item")));
                  }() : nullptr);
     }
 

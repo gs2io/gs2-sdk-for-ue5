@@ -53,13 +53,13 @@ namespace Gs2::Matchmaking::Result
             return nullptr;
         }
         return MakeShared<FUpdateCurrentRatingModelMasterFromGitHubResult>()
-            ->WithItem(Data->HasField("item") ? [Data]() -> Model::FCurrentRatingModelMasterPtr
+            ->WithItem(Data->HasField(ANSI_TO_TCHAR("item")) ? [Data]() -> Model::FCurrentRatingModelMasterPtr
                  {
-                    if (Data->HasTypedField<EJson::Null>("item"))
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("item")))
                     {
                         return nullptr;
                     }
-                    return Model::FCurrentRatingModelMaster::FromJson(Data->GetObjectField("item"));
+                    return Model::FCurrentRatingModelMaster::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("item")));
                  }() : nullptr);
     }
 

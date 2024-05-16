@@ -68,18 +68,18 @@ namespace Gs2::Matchmaking::Result
             return nullptr;
         }
         return MakeShared<FDoMatchmakingByUserIdResult>()
-            ->WithItem(Data->HasField("item") ? [Data]() -> Model::FGatheringPtr
+            ->WithItem(Data->HasField(ANSI_TO_TCHAR("item")) ? [Data]() -> Model::FGatheringPtr
                  {
-                    if (Data->HasTypedField<EJson::Null>("item"))
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("item")))
                     {
                         return nullptr;
                     }
-                    return Model::FGathering::FromJson(Data->GetObjectField("item"));
+                    return Model::FGathering::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("item")));
                  }() : nullptr)
-            ->WithMatchmakingContextToken(Data->HasField("matchmakingContextToken") ? [Data]() -> TOptional<FString>
+            ->WithMatchmakingContextToken(Data->HasField(ANSI_TO_TCHAR("matchmakingContextToken")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("matchmakingContextToken", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("matchmakingContextToken"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }

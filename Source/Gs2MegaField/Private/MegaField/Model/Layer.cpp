@@ -200,55 +200,55 @@ namespace Gs2::MegaField::Model
             return nullptr;
         }
         return MakeShared<FLayer>()
-            ->WithLayerId(Data->HasField("layerId") ? [Data]() -> TOptional<FString>
+            ->WithLayerId(Data->HasField(ANSI_TO_TCHAR("layerId")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("layerId", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("layerId"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithAreaModelName(Data->HasField("areaModelName") ? [Data]() -> TOptional<FString>
+            ->WithAreaModelName(Data->HasField(ANSI_TO_TCHAR("areaModelName")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("areaModelName", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("areaModelName"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithLayerModelName(Data->HasField("layerModelName") ? [Data]() -> TOptional<FString>
+            ->WithLayerModelName(Data->HasField(ANSI_TO_TCHAR("layerModelName")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("layerModelName", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("layerModelName"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithNumberOfMinEntries(Data->HasField("numberOfMinEntries") ? [Data]() -> TOptional<int32>
+            ->WithNumberOfMinEntries(Data->HasField(ANSI_TO_TCHAR("numberOfMinEntries")) ? [Data]() -> TOptional<int32>
                 {
                     int32 v;
-                    if (Data->TryGetNumberField("numberOfMinEntries", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("numberOfMinEntries"), v))
                     {
                         return TOptional(v);
                     }
                     return TOptional<int32>();
                 }() : TOptional<int32>())
-            ->WithNumberOfMaxEntries(Data->HasField("numberOfMaxEntries") ? [Data]() -> TOptional<int32>
+            ->WithNumberOfMaxEntries(Data->HasField(ANSI_TO_TCHAR("numberOfMaxEntries")) ? [Data]() -> TOptional<int32>
                 {
                     int32 v;
-                    if (Data->TryGetNumberField("numberOfMaxEntries", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("numberOfMaxEntries"), v))
                     {
                         return TOptional(v);
                     }
                     return TOptional<int32>();
                 }() : TOptional<int32>())
-            ->WithCreatedAt(Data->HasField("createdAt") ? [Data]() -> TOptional<int64>
+            ->WithCreatedAt(Data->HasField(ANSI_TO_TCHAR("createdAt")) ? [Data]() -> TOptional<int64>
                 {
                     int64 v;
-                    if (Data->TryGetNumberField("createdAt", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("createdAt"), v))
                     {
                         return TOptional(v);
                     }

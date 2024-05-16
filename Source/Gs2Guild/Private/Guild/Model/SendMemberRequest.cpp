@@ -62,19 +62,19 @@ namespace Gs2::Guild::Model
             return nullptr;
         }
         return MakeShared<FSendMemberRequest>()
-            ->WithUserId(Data->HasField("userId") ? [Data]() -> TOptional<FString>
+            ->WithUserId(Data->HasField(ANSI_TO_TCHAR("userId")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("userId", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("userId"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithTargetGuildName(Data->HasField("targetGuildName") ? [Data]() -> TOptional<FString>
+            ->WithTargetGuildName(Data->HasField(ANSI_TO_TCHAR("targetGuildName")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("targetGuildName", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("targetGuildName"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }

@@ -108,40 +108,40 @@ namespace Gs2::Lottery::Model
             return nullptr;
         }
         return MakeShared<FBoxItem>()
-            ->WithPrizeId(Data->HasField("prizeId") ? [Data]() -> TOptional<FString>
+            ->WithPrizeId(Data->HasField(ANSI_TO_TCHAR("prizeId")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("prizeId", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("prizeId"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithAcquireActions(Data->HasField("acquireActions") ? [Data]() -> TSharedPtr<TArray<Model::FAcquireActionPtr>>
+            ->WithAcquireActions(Data->HasField(ANSI_TO_TCHAR("acquireActions")) ? [Data]() -> TSharedPtr<TArray<Model::FAcquireActionPtr>>
                 {
                     auto v = MakeShared<TArray<Model::FAcquireActionPtr>>();
-                    if (!Data->HasTypedField<EJson::Null>("acquireActions") && Data->HasTypedField<EJson::Array>("acquireActions"))
+                    if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("acquireActions")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("acquireActions")))
                     {
-                        for (auto JsonObjectValue : Data->GetArrayField("acquireActions"))
+                        for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("acquireActions")))
                         {
                             v->Add(Model::FAcquireAction::FromJson(JsonObjectValue->AsObject()));
                         }
                     }
                     return v;
                  }() : MakeShared<TArray<Model::FAcquireActionPtr>>())
-            ->WithRemaining(Data->HasField("remaining") ? [Data]() -> TOptional<int32>
+            ->WithRemaining(Data->HasField(ANSI_TO_TCHAR("remaining")) ? [Data]() -> TOptional<int32>
                 {
                     int32 v;
-                    if (Data->TryGetNumberField("remaining", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("remaining"), v))
                     {
                         return TOptional(v);
                     }
                     return TOptional<int32>();
                 }() : TOptional<int32>())
-            ->WithInitial(Data->HasField("initial") ? [Data]() -> TOptional<int32>
+            ->WithInitial(Data->HasField(ANSI_TO_TCHAR("initial")) ? [Data]() -> TOptional<int32>
                 {
                     int32 v;
-                    if (Data->TryGetNumberField("initial", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("initial"), v))
                     {
                         return TOptional(v);
                     }

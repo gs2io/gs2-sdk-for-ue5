@@ -28,6 +28,8 @@
 #include "Showcase/Domain/Model/Showcase.h"
 #include "Showcase/Domain/Model/User.h"
 
+#include "Core/Domain/Gs2.h"
+
 namespace Gs2::Showcase::Domain::Iterator
 {
 

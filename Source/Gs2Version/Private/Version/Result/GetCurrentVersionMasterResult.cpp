@@ -53,13 +53,13 @@ namespace Gs2::Version::Result
             return nullptr;
         }
         return MakeShared<FGetCurrentVersionMasterResult>()
-            ->WithItem(Data->HasField("item") ? [Data]() -> Model::FCurrentVersionMasterPtr
+            ->WithItem(Data->HasField(ANSI_TO_TCHAR("item")) ? [Data]() -> Model::FCurrentVersionMasterPtr
                  {
-                    if (Data->HasTypedField<EJson::Null>("item"))
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("item")))
                     {
                         return nullptr;
                     }
-                    return Model::FCurrentVersionMaster::FromJson(Data->GetObjectField("item"));
+                    return Model::FCurrentVersionMaster::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("item")));
                  }() : nullptr);
     }
 

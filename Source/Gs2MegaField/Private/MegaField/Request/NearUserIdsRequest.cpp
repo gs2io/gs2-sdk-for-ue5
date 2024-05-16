@@ -187,70 +187,70 @@ namespace Gs2::MegaField::Request
             return nullptr;
         }
         return MakeShared<FNearUserIdsRequest>()
-            ->WithContextStack(Data->HasField("contextStack") ? TOptional<FString>(Data->GetStringField("contextStack")) : TOptional<FString>())
-            ->WithNamespaceName(Data->HasField("namespaceName") ? [Data]() -> TOptional<FString>
+            ->WithContextStack(Data->HasField(ANSI_TO_TCHAR("contextStack")) ? TOptional<FString>(Data->GetStringField(ANSI_TO_TCHAR("contextStack"))) : TOptional<FString>())
+            ->WithNamespaceName(Data->HasField(ANSI_TO_TCHAR("namespaceName")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
-                    if (Data->TryGetStringField("namespaceName", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("namespaceName"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
-            ->WithAccessToken(Data->HasField("xGs2AccessToken") ? [Data]() -> TOptional<FString>
+            ->WithAccessToken(Data->HasField(ANSI_TO_TCHAR("xGs2AccessToken")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
-                    if (Data->TryGetStringField("xGs2AccessToken", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("xGs2AccessToken"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
-            ->WithAreaModelName(Data->HasField("areaModelName") ? [Data]() -> TOptional<FString>
+            ->WithAreaModelName(Data->HasField(ANSI_TO_TCHAR("areaModelName")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
-                    if (Data->TryGetStringField("areaModelName", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("areaModelName"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
-            ->WithLayerModelName(Data->HasField("layerModelName") ? [Data]() -> TOptional<FString>
+            ->WithLayerModelName(Data->HasField(ANSI_TO_TCHAR("layerModelName")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
-                    if (Data->TryGetStringField("layerModelName", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("layerModelName"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
-          ->WithPoint(Data->HasField("point") ? [Data]() -> Model::FPositionPtr
+          ->WithPoint(Data->HasField(ANSI_TO_TCHAR("point")) ? [Data]() -> Model::FPositionPtr
               {
-                  if (Data->HasTypedField<EJson::Null>("point"))
+                  if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("point")))
                   {
                       return nullptr;
                   }
-                  return Model::FPosition::FromJson(Data->GetObjectField("point"));
+                  return Model::FPosition::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("point")));
               }() : nullptr)
-            ->WithR(Data->HasField("r") ? [Data]() -> TOptional<float>
+            ->WithR(Data->HasField(ANSI_TO_TCHAR("r")) ? [Data]() -> TOptional<float>
               {
                   float v;
-                    if (Data->TryGetNumberField("r", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("r"), v))
                   {
                         return TOptional(v);
                   }
                   return TOptional<float>();
               }() : TOptional<float>())
-            ->WithLimit(Data->HasField("limit") ? [Data]() -> TOptional<int32>
+            ->WithLimit(Data->HasField(ANSI_TO_TCHAR("limit")) ? [Data]() -> TOptional<int32>
               {
                   int32 v;
-                    if (Data->TryGetNumberField("limit", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("limit"), v))
                   {
                         return TOptional(v);
                   }
                   return TOptional<int32>();
               }() : TOptional<int32>())
-          ->WithDuplicationAvoider(Data->HasField("duplicationAvoider") ? TOptional<FString>(Data->GetStringField("duplicationAvoider")) : TOptional<FString>());
+          ->WithDuplicationAvoider(Data->HasField(ANSI_TO_TCHAR("duplicationAvoider")) ? TOptional<FString>(Data->GetStringField(ANSI_TO_TCHAR("duplicationAvoider"))) : TOptional<FString>());
     }
 
     TSharedPtr<FJsonObject> FNearUserIdsRequest::ToJson() const

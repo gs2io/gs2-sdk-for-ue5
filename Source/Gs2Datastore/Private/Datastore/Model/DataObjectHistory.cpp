@@ -211,55 +211,55 @@ namespace Gs2::Datastore::Model
             return nullptr;
         }
         return MakeShared<FDataObjectHistory>()
-            ->WithDataObjectHistoryId(Data->HasField("dataObjectHistoryId") ? [Data]() -> TOptional<FString>
+            ->WithDataObjectHistoryId(Data->HasField(ANSI_TO_TCHAR("dataObjectHistoryId")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("dataObjectHistoryId", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("dataObjectHistoryId"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithDataObjectName(Data->HasField("dataObjectName") ? [Data]() -> TOptional<FString>
+            ->WithDataObjectName(Data->HasField(ANSI_TO_TCHAR("dataObjectName")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("dataObjectName", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("dataObjectName"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithGeneration(Data->HasField("generation") ? [Data]() -> TOptional<FString>
+            ->WithGeneration(Data->HasField(ANSI_TO_TCHAR("generation")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("generation", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("generation"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithContentLength(Data->HasField("contentLength") ? [Data]() -> TOptional<int64>
+            ->WithContentLength(Data->HasField(ANSI_TO_TCHAR("contentLength")) ? [Data]() -> TOptional<int64>
                 {
                     int64 v;
-                    if (Data->TryGetNumberField("contentLength", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("contentLength"), v))
                     {
                         return TOptional(v);
                     }
                     return TOptional<int64>();
                 }() : TOptional<int64>())
-            ->WithCreatedAt(Data->HasField("createdAt") ? [Data]() -> TOptional<int64>
+            ->WithCreatedAt(Data->HasField(ANSI_TO_TCHAR("createdAt")) ? [Data]() -> TOptional<int64>
                 {
                     int64 v;
-                    if (Data->TryGetNumberField("createdAt", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("createdAt"), v))
                     {
                         return TOptional(v);
                     }
                     return TOptional<int64>();
                 }() : TOptional<int64>())
-            ->WithRevision(Data->HasField("revision") ? [Data]() -> TOptional<int64>
+            ->WithRevision(Data->HasField(ANSI_TO_TCHAR("revision")) ? [Data]() -> TOptional<int64>
                 {
                     int64 v;
-                    if (Data->TryGetNumberField("revision", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("revision"), v))
                     {
                         return TOptional(v);
                     }

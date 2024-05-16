@@ -53,13 +53,13 @@ namespace Gs2::Matchmaking::Result
             return nullptr;
         }
         return MakeShared<FCancelMatchmakingResult>()
-            ->WithItem(Data->HasField("item") ? [Data]() -> Model::FGatheringPtr
+            ->WithItem(Data->HasField(ANSI_TO_TCHAR("item")) ? [Data]() -> Model::FGatheringPtr
                  {
-                    if (Data->HasTypedField<EJson::Null>("item"))
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("item")))
                     {
                         return nullptr;
                     }
-                    return Model::FGathering::FromJson(Data->GetObjectField("item"));
+                    return Model::FGathering::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("item")));
                  }() : nullptr);
     }
 

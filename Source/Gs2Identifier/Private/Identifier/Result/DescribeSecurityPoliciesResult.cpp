@@ -68,22 +68,22 @@ namespace Gs2::Identifier::Result
             return nullptr;
         }
         return MakeShared<FDescribeSecurityPoliciesResult>()
-            ->WithItems(Data->HasField("items") ? [Data]() -> TSharedPtr<TArray<Model::FSecurityPolicyPtr>>
+            ->WithItems(Data->HasField(ANSI_TO_TCHAR("items")) ? [Data]() -> TSharedPtr<TArray<Model::FSecurityPolicyPtr>>
                  {
                     auto v = MakeShared<TArray<Model::FSecurityPolicyPtr>>();
-                    if (!Data->HasTypedField<EJson::Null>("items") && Data->HasTypedField<EJson::Array>("items"))
+                    if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("items")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("items")))
                     {
-                        for (auto JsonObjectValue : Data->GetArrayField("items"))
+                        for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("items")))
                         {
                             v->Add(Model::FSecurityPolicy::FromJson(JsonObjectValue->AsObject()));
                         }
                     }
                     return v;
                  }() : MakeShared<TArray<Model::FSecurityPolicyPtr>>())
-            ->WithNextPageToken(Data->HasField("nextPageToken") ? [Data]() -> TOptional<FString>
+            ->WithNextPageToken(Data->HasField(ANSI_TO_TCHAR("nextPageToken")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("nextPageToken", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("nextPageToken"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }

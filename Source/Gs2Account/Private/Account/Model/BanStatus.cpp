@@ -85,28 +85,28 @@ namespace Gs2::Account::Model
             return nullptr;
         }
         return MakeShared<FBanStatus>()
-            ->WithName(Data->HasField("name") ? [Data]() -> TOptional<FString>
+            ->WithName(Data->HasField(ANSI_TO_TCHAR("name")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("name", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("name"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithReason(Data->HasField("reason") ? [Data]() -> TOptional<FString>
+            ->WithReason(Data->HasField(ANSI_TO_TCHAR("reason")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("reason", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("reason"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithReleaseTimestamp(Data->HasField("releaseTimestamp") ? [Data]() -> TOptional<int64>
+            ->WithReleaseTimestamp(Data->HasField(ANSI_TO_TCHAR("releaseTimestamp")) ? [Data]() -> TOptional<int64>
                 {
                     int64 v;
-                    if (Data->TryGetNumberField("releaseTimestamp", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("releaseTimestamp"), v))
                     {
                         return TOptional(v);
                     }

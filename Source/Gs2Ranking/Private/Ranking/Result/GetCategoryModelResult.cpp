@@ -53,13 +53,13 @@ namespace Gs2::Ranking::Result
             return nullptr;
         }
         return MakeShared<FGetCategoryModelResult>()
-            ->WithItem(Data->HasField("item") ? [Data]() -> Model::FCategoryModelPtr
+            ->WithItem(Data->HasField(ANSI_TO_TCHAR("item")) ? [Data]() -> Model::FCategoryModelPtr
                  {
-                    if (Data->HasTypedField<EJson::Null>("item"))
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("item")))
                     {
                         return nullptr;
                     }
-                    return Model::FCategoryModel::FromJson(Data->GetObjectField("item"));
+                    return Model::FCategoryModel::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("item")));
                  }() : nullptr);
     }
 

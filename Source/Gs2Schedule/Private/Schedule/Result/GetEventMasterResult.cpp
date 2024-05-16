@@ -53,13 +53,13 @@ namespace Gs2::Schedule::Result
             return nullptr;
         }
         return MakeShared<FGetEventMasterResult>()
-            ->WithItem(Data->HasField("item") ? [Data]() -> Model::FEventMasterPtr
+            ->WithItem(Data->HasField(ANSI_TO_TCHAR("item")) ? [Data]() -> Model::FEventMasterPtr
                  {
-                    if (Data->HasTypedField<EJson::Null>("item"))
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("item")))
                     {
                         return nullptr;
                     }
-                    return Model::FEventMaster::FromJson(Data->GetObjectField("item"));
+                    return Model::FEventMaster::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("item")));
                  }() : nullptr);
     }
 

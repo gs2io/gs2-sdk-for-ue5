@@ -78,10 +78,10 @@ namespace Gs2::Core::Net::WebSocket::Task
             return nullptr;
         }
 
-        auto Type = Data->HasField("type") ? Data->GetStringField("type") : "";
-        auto RequestId = Data->HasField("requestId") ? Data->GetStringField("requestId") : "";
-        int16 Status = Data->HasField("status") ? static_cast<int16>(Data->GetIntegerField("status")) : 200;
-        auto Body = Data->HasField("body") ? Data->GetObjectField("body") : nullptr;
+        auto Type = Data->HasField(ANSI_TO_TCHAR("type")) ? Data->GetStringField(ANSI_TO_TCHAR("type")) : "";
+        auto RequestId = Data->HasField(ANSI_TO_TCHAR("requestId")) ? Data->GetStringField(ANSI_TO_TCHAR("requestId")) : "";
+        int16 Status = Data->HasField(ANSI_TO_TCHAR("status")) ? static_cast<int16>(Data->GetIntegerField(ANSI_TO_TCHAR("status"))) : 200;
+        auto Body = Data->HasField(ANSI_TO_TCHAR("body")) ? Data->GetObjectField(ANSI_TO_TCHAR("body")) : nullptr;
 
         if (Status / 100 == 2)
         {
@@ -91,7 +91,7 @@ namespace Gs2::Core::Net::WebSocket::Task
                 Body
             );
         }
-        const auto Message = Body->HasField("message") ? Body->GetStringField("message") : "";
+        const auto Message = Body->HasField(ANSI_TO_TCHAR("message")) ? Body->GetStringField(ANSI_TO_TCHAR("message")) : "";
         if (Message != "")
         {
             TArray<TSharedPtr<FJsonValue>> JsonRootObject;

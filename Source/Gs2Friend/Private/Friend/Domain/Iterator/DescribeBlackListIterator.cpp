@@ -30,6 +30,8 @@
 #include "Friend/Domain/Model/BlackList.h"
 #include "Friend/Domain/Model/User.h"
 
+#include "Core/Domain/Gs2.h"
+
 namespace Gs2::Friend::Domain::Iterator
 {
 

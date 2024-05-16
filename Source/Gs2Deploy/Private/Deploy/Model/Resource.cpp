@@ -241,106 +241,106 @@ namespace Gs2::Deploy::Model
             return nullptr;
         }
         return MakeShared<FResource>()
-            ->WithResourceId(Data->HasField("resourceId") ? [Data]() -> TOptional<FString>
+            ->WithResourceId(Data->HasField(ANSI_TO_TCHAR("resourceId")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("resourceId", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("resourceId"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithType(Data->HasField("type") ? [Data]() -> TOptional<FString>
+            ->WithType(Data->HasField(ANSI_TO_TCHAR("type")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("type", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("type"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithName(Data->HasField("name") ? [Data]() -> TOptional<FString>
+            ->WithName(Data->HasField(ANSI_TO_TCHAR("name")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("name", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("name"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithRequest(Data->HasField("request") ? [Data]() -> TOptional<FString>
+            ->WithRequest(Data->HasField(ANSI_TO_TCHAR("request")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("request", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("request"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithResponse(Data->HasField("response") ? [Data]() -> TOptional<FString>
+            ->WithResponse(Data->HasField(ANSI_TO_TCHAR("response")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("response", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("response"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithRollbackContext(Data->HasField("rollbackContext") ? [Data]() -> TOptional<FString>
+            ->WithRollbackContext(Data->HasField(ANSI_TO_TCHAR("rollbackContext")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("rollbackContext", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("rollbackContext"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithRollbackRequest(Data->HasField("rollbackRequest") ? [Data]() -> TOptional<FString>
+            ->WithRollbackRequest(Data->HasField(ANSI_TO_TCHAR("rollbackRequest")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("rollbackRequest", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("rollbackRequest"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithRollbackAfter(Data->HasField("rollbackAfter") ? [Data]() -> TSharedPtr<TArray<FString>>
+            ->WithRollbackAfter(Data->HasField(ANSI_TO_TCHAR("rollbackAfter")) ? [Data]() -> TSharedPtr<TArray<FString>>
                 {
                     auto v = MakeShared<TArray<FString>>();
-                    if (!Data->HasTypedField<EJson::Null>("rollbackAfter") && Data->HasTypedField<EJson::Array>("rollbackAfter"))
+                    if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("rollbackAfter")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("rollbackAfter")))
                     {
-                        for (auto JsonObjectValue : Data->GetArrayField("rollbackAfter"))
+                        for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("rollbackAfter")))
                         {
                             v->Add(JsonObjectValue->AsString());
                         }
                     }
                     return v;
                  }() : MakeShared<TArray<FString>>())
-            ->WithOutputFields(Data->HasField("outputFields") ? [Data]() -> TSharedPtr<TArray<Model::FOutputFieldPtr>>
+            ->WithOutputFields(Data->HasField(ANSI_TO_TCHAR("outputFields")) ? [Data]() -> TSharedPtr<TArray<Model::FOutputFieldPtr>>
                 {
                     auto v = MakeShared<TArray<Model::FOutputFieldPtr>>();
-                    if (!Data->HasTypedField<EJson::Null>("outputFields") && Data->HasTypedField<EJson::Array>("outputFields"))
+                    if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("outputFields")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("outputFields")))
                     {
-                        for (auto JsonObjectValue : Data->GetArrayField("outputFields"))
+                        for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("outputFields")))
                         {
                             v->Add(Model::FOutputField::FromJson(JsonObjectValue->AsObject()));
                         }
                     }
                     return v;
                  }() : MakeShared<TArray<Model::FOutputFieldPtr>>())
-            ->WithWorkId(Data->HasField("workId") ? [Data]() -> TOptional<FString>
+            ->WithWorkId(Data->HasField(ANSI_TO_TCHAR("workId")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("workId", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("workId"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithCreatedAt(Data->HasField("createdAt") ? [Data]() -> TOptional<int64>
+            ->WithCreatedAt(Data->HasField(ANSI_TO_TCHAR("createdAt")) ? [Data]() -> TOptional<int64>
                 {
                     int64 v;
-                    if (Data->TryGetNumberField("createdAt", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("createdAt"), v))
                     {
                         return TOptional(v);
                     }

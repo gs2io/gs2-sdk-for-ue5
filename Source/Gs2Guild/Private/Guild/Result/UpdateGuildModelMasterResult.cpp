@@ -53,13 +53,13 @@ namespace Gs2::Guild::Result
             return nullptr;
         }
         return MakeShared<FUpdateGuildModelMasterResult>()
-            ->WithItem(Data->HasField("item") ? [Data]() -> Model::FGuildModelMasterPtr
+            ->WithItem(Data->HasField(ANSI_TO_TCHAR("item")) ? [Data]() -> Model::FGuildModelMasterPtr
                  {
-                    if (Data->HasTypedField<EJson::Null>("item"))
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("item")))
                     {
                         return nullptr;
                     }
-                    return Model::FGuildModelMaster::FromJson(Data->GetObjectField("item"));
+                    return Model::FGuildModelMaster::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("item")));
                  }() : nullptr);
     }
 

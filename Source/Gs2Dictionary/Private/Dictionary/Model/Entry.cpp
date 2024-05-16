@@ -154,37 +154,37 @@ namespace Gs2::Dictionary::Model
             return nullptr;
         }
         return MakeShared<FEntry>()
-            ->WithEntryId(Data->HasField("entryId") ? [Data]() -> TOptional<FString>
+            ->WithEntryId(Data->HasField(ANSI_TO_TCHAR("entryId")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("entryId", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("entryId"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithUserId(Data->HasField("userId") ? [Data]() -> TOptional<FString>
+            ->WithUserId(Data->HasField(ANSI_TO_TCHAR("userId")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("userId", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("userId"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithName(Data->HasField("name") ? [Data]() -> TOptional<FString>
+            ->WithName(Data->HasField(ANSI_TO_TCHAR("name")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("name", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("name"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithAcquiredAt(Data->HasField("acquiredAt") ? [Data]() -> TOptional<int64>
+            ->WithAcquiredAt(Data->HasField(ANSI_TO_TCHAR("acquiredAt")) ? [Data]() -> TOptional<int64>
                 {
                     int64 v;
-                    if (Data->TryGetNumberField("acquiredAt", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("acquiredAt"), v))
                     {
                         return TOptional(v);
                     }

@@ -83,27 +83,27 @@ namespace Gs2::SeasonRating::Result
             return nullptr;
         }
         return MakeShared<FGetBallotByUserIdResult>()
-            ->WithItem(Data->HasField("item") ? [Data]() -> Model::FBallotPtr
+            ->WithItem(Data->HasField(ANSI_TO_TCHAR("item")) ? [Data]() -> Model::FBallotPtr
                  {
-                    if (Data->HasTypedField<EJson::Null>("item"))
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("item")))
                     {
                         return nullptr;
                     }
-                    return Model::FBallot::FromJson(Data->GetObjectField("item"));
+                    return Model::FBallot::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("item")));
                  }() : nullptr)
-            ->WithBody(Data->HasField("body") ? [Data]() -> TOptional<FString>
+            ->WithBody(Data->HasField(ANSI_TO_TCHAR("body")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("body", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("body"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithSignature(Data->HasField("signature") ? [Data]() -> TOptional<FString>
+            ->WithSignature(Data->HasField(ANSI_TO_TCHAR("signature")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("signature", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("signature"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }

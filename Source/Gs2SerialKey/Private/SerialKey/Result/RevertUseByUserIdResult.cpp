@@ -72,21 +72,21 @@ namespace Gs2::SerialKey::Result
             return nullptr;
         }
         return MakeShared<FRevertUseByUserIdResult>()
-            ->WithItem(Data->HasField("item") ? [Data]() -> Model::FSerialKeyPtr
+            ->WithItem(Data->HasField(ANSI_TO_TCHAR("item")) ? [Data]() -> Model::FSerialKeyPtr
                  {
-                    if (Data->HasTypedField<EJson::Null>("item"))
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("item")))
                     {
                         return nullptr;
                     }
-                    return Model::FSerialKey::FromJson(Data->GetObjectField("item"));
+                    return Model::FSerialKey::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("item")));
                  }() : nullptr)
-            ->WithCampaignModel(Data->HasField("campaignModel") ? [Data]() -> Model::FCampaignModelPtr
+            ->WithCampaignModel(Data->HasField(ANSI_TO_TCHAR("campaignModel")) ? [Data]() -> Model::FCampaignModelPtr
                  {
-                    if (Data->HasTypedField<EJson::Null>("campaignModel"))
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("campaignModel")))
                     {
                         return nullptr;
                     }
-                    return Model::FCampaignModel::FromJson(Data->GetObjectField("campaignModel"));
+                    return Model::FCampaignModel::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("campaignModel")));
                  }() : nullptr);
     }
 

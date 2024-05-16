@@ -53,13 +53,13 @@ namespace Gs2::Mission::Result
             return nullptr;
         }
         return MakeShared<FGetCounterModelResult>()
-            ->WithItem(Data->HasField("item") ? [Data]() -> Model::FCounterModelPtr
+            ->WithItem(Data->HasField(ANSI_TO_TCHAR("item")) ? [Data]() -> Model::FCounterModelPtr
                  {
-                    if (Data->HasTypedField<EJson::Null>("item"))
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("item")))
                     {
                         return nullptr;
                     }
-                    return Model::FCounterModel::FromJson(Data->GetObjectField("item"));
+                    return Model::FCounterModel::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("item")));
                  }() : nullptr);
     }
 

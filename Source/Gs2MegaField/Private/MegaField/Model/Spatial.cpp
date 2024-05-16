@@ -253,80 +253,80 @@ namespace Gs2::MegaField::Model
             return nullptr;
         }
         return MakeShared<FSpatial>()
-            ->WithSpatialId(Data->HasField("spatialId") ? [Data]() -> TOptional<FString>
+            ->WithSpatialId(Data->HasField(ANSI_TO_TCHAR("spatialId")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("spatialId", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("spatialId"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithUserId(Data->HasField("userId") ? [Data]() -> TOptional<FString>
+            ->WithUserId(Data->HasField(ANSI_TO_TCHAR("userId")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("userId", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("userId"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithAreaModelName(Data->HasField("areaModelName") ? [Data]() -> TOptional<FString>
+            ->WithAreaModelName(Data->HasField(ANSI_TO_TCHAR("areaModelName")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("areaModelName", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("areaModelName"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithLayerModelName(Data->HasField("layerModelName") ? [Data]() -> TOptional<FString>
+            ->WithLayerModelName(Data->HasField(ANSI_TO_TCHAR("layerModelName")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("layerModelName", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("layerModelName"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithPosition(Data->HasField("position") ? [Data]() -> Model::FPositionPtr
+            ->WithPosition(Data->HasField(ANSI_TO_TCHAR("position")) ? [Data]() -> Model::FPositionPtr
                 {
-                    if (Data->HasTypedField<EJson::Null>("position"))
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("position")))
                     {
                         return nullptr;
                     }
-                    return Model::FPosition::FromJson(Data->GetObjectField("position"));
+                    return Model::FPosition::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("position")));
                  }() : nullptr)
-            ->WithVector(Data->HasField("vector") ? [Data]() -> Model::FVectorPtr
+            ->WithVector(Data->HasField(ANSI_TO_TCHAR("vector")) ? [Data]() -> Model::FVectorPtr
                 {
-                    if (Data->HasTypedField<EJson::Null>("vector"))
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("vector")))
                     {
                         return nullptr;
                     }
-                    return Model::FVector::FromJson(Data->GetObjectField("vector"));
+                    return Model::FVector::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("vector")));
                  }() : nullptr)
-            ->WithR(Data->HasField("r") ? [Data]() -> TOptional<float>
+            ->WithR(Data->HasField(ANSI_TO_TCHAR("r")) ? [Data]() -> TOptional<float>
                 {
                     float v;
-                    if (Data->TryGetNumberField("r", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("r"), v))
                     {
                         return TOptional(v);
                     }
                     return TOptional<float>();
                 }() : TOptional<float>())
-            ->WithLastSyncAt(Data->HasField("lastSyncAt") ? [Data]() -> TOptional<int64>
+            ->WithLastSyncAt(Data->HasField(ANSI_TO_TCHAR("lastSyncAt")) ? [Data]() -> TOptional<int64>
                 {
                     int64 v;
-                    if (Data->TryGetNumberField("lastSyncAt", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("lastSyncAt"), v))
                     {
                         return TOptional(v);
                     }
                     return TOptional<int64>();
                 }() : TOptional<int64>())
-            ->WithCreatedAt(Data->HasField("createdAt") ? [Data]() -> TOptional<int64>
+            ->WithCreatedAt(Data->HasField(ANSI_TO_TCHAR("createdAt")) ? [Data]() -> TOptional<int64>
                 {
                     int64 v;
-                    if (Data->TryGetNumberField("createdAt", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("createdAt"), v))
                     {
                         return TOptional(v);
                     }

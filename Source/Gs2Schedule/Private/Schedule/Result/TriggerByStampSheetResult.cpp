@@ -53,13 +53,13 @@ namespace Gs2::Schedule::Result
             return nullptr;
         }
         return MakeShared<FTriggerByStampSheetResult>()
-            ->WithItem(Data->HasField("item") ? [Data]() -> Model::FTriggerPtr
+            ->WithItem(Data->HasField(ANSI_TO_TCHAR("item")) ? [Data]() -> Model::FTriggerPtr
                  {
-                    if (Data->HasTypedField<EJson::Null>("item"))
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("item")))
                     {
                         return nullptr;
                     }
-                    return Model::FTrigger::FromJson(Data->GetObjectField("item"));
+                    return Model::FTrigger::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("item")));
                  }() : nullptr);
     }
 

@@ -124,47 +124,47 @@ namespace Gs2::Inventory::Request
             return nullptr;
         }
         return MakeShared<FConsumeSimpleItemsRequest>()
-            ->WithContextStack(Data->HasField("contextStack") ? TOptional<FString>(Data->GetStringField("contextStack")) : TOptional<FString>())
-            ->WithNamespaceName(Data->HasField("namespaceName") ? [Data]() -> TOptional<FString>
+            ->WithContextStack(Data->HasField(ANSI_TO_TCHAR("contextStack")) ? TOptional<FString>(Data->GetStringField(ANSI_TO_TCHAR("contextStack"))) : TOptional<FString>())
+            ->WithNamespaceName(Data->HasField(ANSI_TO_TCHAR("namespaceName")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
-                    if (Data->TryGetStringField("namespaceName", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("namespaceName"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
-            ->WithInventoryName(Data->HasField("inventoryName") ? [Data]() -> TOptional<FString>
+            ->WithInventoryName(Data->HasField(ANSI_TO_TCHAR("inventoryName")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
-                    if (Data->TryGetStringField("inventoryName", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("inventoryName"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
-            ->WithAccessToken(Data->HasField("xGs2AccessToken") ? [Data]() -> TOptional<FString>
+            ->WithAccessToken(Data->HasField(ANSI_TO_TCHAR("xGs2AccessToken")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
-                    if (Data->TryGetStringField("xGs2AccessToken", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("xGs2AccessToken"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
-          ->WithConsumeCounts(Data->HasField("consumeCounts") ? [Data]() -> TSharedPtr<TArray<Model::FConsumeCountPtr>>
+          ->WithConsumeCounts(Data->HasField(ANSI_TO_TCHAR("consumeCounts")) ? [Data]() -> TSharedPtr<TArray<Model::FConsumeCountPtr>>
               {
                   auto v = MakeShared<TArray<Model::FConsumeCountPtr>>();
-                  if (!Data->HasTypedField<EJson::Null>("consumeCounts") && Data->HasTypedField<EJson::Array>("consumeCounts"))
+                  if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("consumeCounts")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("consumeCounts")))
                   {
-                      for (auto JsonObjectValue : Data->GetArrayField("consumeCounts"))
+                      for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("consumeCounts")))
                       {
                           v->Add(Model::FConsumeCount::FromJson(JsonObjectValue->AsObject()));
                       }
                   }
                   return v;
               }() : MakeShared<TArray<Model::FConsumeCountPtr>>())
-          ->WithDuplicationAvoider(Data->HasField("duplicationAvoider") ? TOptional<FString>(Data->GetStringField("duplicationAvoider")) : TOptional<FString>());
+          ->WithDuplicationAvoider(Data->HasField(ANSI_TO_TCHAR("duplicationAvoider")) ? TOptional<FString>(Data->GetStringField(ANSI_TO_TCHAR("duplicationAvoider"))) : TOptional<FString>());
     }
 
     TSharedPtr<FJsonObject> FConsumeSimpleItemsRequest::ToJson() const

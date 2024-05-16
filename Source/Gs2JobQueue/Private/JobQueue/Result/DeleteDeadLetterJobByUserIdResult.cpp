@@ -53,13 +53,13 @@ namespace Gs2::JobQueue::Result
             return nullptr;
         }
         return MakeShared<FDeleteDeadLetterJobByUserIdResult>()
-            ->WithItem(Data->HasField("item") ? [Data]() -> Model::FDeadLetterJobPtr
+            ->WithItem(Data->HasField(ANSI_TO_TCHAR("item")) ? [Data]() -> Model::FDeadLetterJobPtr
                  {
-                    if (Data->HasTypedField<EJson::Null>("item"))
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("item")))
                     {
                         return nullptr;
                     }
-                    return Model::FDeadLetterJob::FromJson(Data->GetObjectField("item"));
+                    return Model::FDeadLetterJob::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("item")));
                  }() : nullptr);
     }
 

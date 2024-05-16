@@ -76,28 +76,28 @@ namespace Gs2::Friend::Model
             return nullptr;
         }
         return MakeShared<FFriendUser>()
-            ->WithUserId(Data->HasField("userId") ? [Data]() -> TOptional<FString>
+            ->WithUserId(Data->HasField(ANSI_TO_TCHAR("userId")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("userId", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("userId"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithPublicProfile(Data->HasField("publicProfile") ? [Data]() -> TOptional<FString>
+            ->WithPublicProfile(Data->HasField(ANSI_TO_TCHAR("publicProfile")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("publicProfile", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("publicProfile"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithFriendProfile(Data->HasField("friendProfile") ? [Data]() -> TOptional<FString>
+            ->WithFriendProfile(Data->HasField(ANSI_TO_TCHAR("friendProfile")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("friendProfile", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("friendProfile"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }

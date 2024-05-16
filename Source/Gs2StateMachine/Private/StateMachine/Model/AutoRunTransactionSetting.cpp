@@ -62,19 +62,19 @@ namespace Gs2::StateMachine::Model
             return nullptr;
         }
         return MakeShared<FAutoRunTransactionSetting>()
-            ->WithDistributorNamespaceId(Data->HasField("distributorNamespaceId") ? [Data]() -> TOptional<FString>
+            ->WithDistributorNamespaceId(Data->HasField(ANSI_TO_TCHAR("distributorNamespaceId")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("distributorNamespaceId", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("distributorNamespaceId"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithQueueNamespaceId(Data->HasField("queueNamespaceId") ? [Data]() -> TOptional<FString>
+            ->WithQueueNamespaceId(Data->HasField(ANSI_TO_TCHAR("queueNamespaceId")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("queueNamespaceId", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("queueNamespaceId"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
@@ -87,11 +87,11 @@ namespace Gs2::StateMachine::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (DistributorNamespaceIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("distributorNamespaceId", DistributorNamespaceIdValue.GetValue());
+            JsonRootObject->SetStringField(ANSI_TO_TCHAR("distributorNamespaceId"), DistributorNamespaceIdValue.GetValue());
         }
         if (QueueNamespaceIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("queueNamespaceId", QueueNamespaceIdValue.GetValue());
+            JsonRootObject->SetStringField(ANSI_TO_TCHAR("queueNamespaceId"), QueueNamespaceIdValue.GetValue());
         }
         return JsonRootObject;
     }

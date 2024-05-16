@@ -28,6 +28,8 @@
 #include "LoginReward/Domain/Model/ReceiveStatus.h"
 #include "LoginReward/Domain/Model/User.h"
 
+#include "Core/Domain/Gs2.h"
+
 namespace Gs2::LoginReward::Domain::Iterator
 {
 

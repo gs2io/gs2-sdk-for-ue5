@@ -48,10 +48,10 @@ namespace Gs2::LoginReward::Model
             return nullptr;
         }
         return MakeShared<FLogSetting>()
-            ->WithLoggingNamespaceId(Data->HasField("loggingNamespaceId") ? [Data]() -> TOptional<FString>
+            ->WithLoggingNamespaceId(Data->HasField(ANSI_TO_TCHAR("loggingNamespaceId")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("loggingNamespaceId", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("loggingNamespaceId"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }

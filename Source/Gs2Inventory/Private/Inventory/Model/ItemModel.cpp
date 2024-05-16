@@ -200,55 +200,55 @@ namespace Gs2::Inventory::Model
             return nullptr;
         }
         return MakeShared<FItemModel>()
-            ->WithItemModelId(Data->HasField("itemModelId") ? [Data]() -> TOptional<FString>
+            ->WithItemModelId(Data->HasField(ANSI_TO_TCHAR("itemModelId")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("itemModelId", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("itemModelId"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithName(Data->HasField("name") ? [Data]() -> TOptional<FString>
+            ->WithName(Data->HasField(ANSI_TO_TCHAR("name")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("name", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("name"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithMetadata(Data->HasField("metadata") ? [Data]() -> TOptional<FString>
+            ->WithMetadata(Data->HasField(ANSI_TO_TCHAR("metadata")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("metadata", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("metadata"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithStackingLimit(Data->HasField("stackingLimit") ? [Data]() -> TOptional<int64>
+            ->WithStackingLimit(Data->HasField(ANSI_TO_TCHAR("stackingLimit")) ? [Data]() -> TOptional<int64>
                 {
                     int64 v;
-                    if (Data->TryGetNumberField("stackingLimit", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("stackingLimit"), v))
                     {
                         return TOptional(v);
                     }
                     return TOptional<int64>();
                 }() : TOptional<int64>())
-            ->WithAllowMultipleStacks(Data->HasField("allowMultipleStacks") ? [Data]() -> TOptional<bool>
+            ->WithAllowMultipleStacks(Data->HasField(ANSI_TO_TCHAR("allowMultipleStacks")) ? [Data]() -> TOptional<bool>
                 {
                     bool v;
-                    if (Data->TryGetBoolField("allowMultipleStacks", v))
+                    if (Data->TryGetBoolField(ANSI_TO_TCHAR("allowMultipleStacks"), v))
                     {
                         return TOptional(v);
                     }
                     return TOptional<bool>();
                 }() : TOptional<bool>())
-            ->WithSortValue(Data->HasField("sortValue") ? [Data]() -> TOptional<int32>
+            ->WithSortValue(Data->HasField(ANSI_TO_TCHAR("sortValue")) ? [Data]() -> TOptional<int32>
                 {
                     int32 v;
-                    if (Data->TryGetNumberField("sortValue", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("sortValue"), v))
                     {
                         return TOptional(v);
                     }

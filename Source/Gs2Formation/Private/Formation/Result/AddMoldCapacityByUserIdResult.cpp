@@ -72,21 +72,21 @@ namespace Gs2::Formation::Result
             return nullptr;
         }
         return MakeShared<FAddMoldCapacityByUserIdResult>()
-            ->WithItem(Data->HasField("item") ? [Data]() -> Model::FMoldPtr
+            ->WithItem(Data->HasField(ANSI_TO_TCHAR("item")) ? [Data]() -> Model::FMoldPtr
                  {
-                    if (Data->HasTypedField<EJson::Null>("item"))
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("item")))
                     {
                         return nullptr;
                     }
-                    return Model::FMold::FromJson(Data->GetObjectField("item"));
+                    return Model::FMold::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("item")));
                  }() : nullptr)
-            ->WithMoldModel(Data->HasField("moldModel") ? [Data]() -> Model::FMoldModelPtr
+            ->WithMoldModel(Data->HasField(ANSI_TO_TCHAR("moldModel")) ? [Data]() -> Model::FMoldModelPtr
                  {
-                    if (Data->HasTypedField<EJson::Null>("moldModel"))
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("moldModel")))
                     {
                         return nullptr;
                     }
-                    return Model::FMoldModel::FromJson(Data->GetObjectField("moldModel"));
+                    return Model::FMoldModel::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("moldModel")));
                  }() : nullptr);
     }
 

@@ -80,19 +80,19 @@ namespace Gs2::Enhance::Model
             return nullptr;
         }
         return MakeShared<FBonusRate>()
-            ->WithRate(Data->HasField("rate") ? [Data]() -> TOptional<float>
+            ->WithRate(Data->HasField(ANSI_TO_TCHAR("rate")) ? [Data]() -> TOptional<float>
                 {
                     float v;
-                    if (Data->TryGetNumberField("rate", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("rate"), v))
                     {
                         return TOptional(v);
                     }
                     return TOptional<float>();
                 }() : TOptional<float>())
-            ->WithWeight(Data->HasField("weight") ? [Data]() -> TOptional<int32>
+            ->WithWeight(Data->HasField(ANSI_TO_TCHAR("weight")) ? [Data]() -> TOptional<int32>
                 {
                     int32 v;
-                    if (Data->TryGetNumberField("weight", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("weight"), v))
                     {
                         return TOptional(v);
                     }

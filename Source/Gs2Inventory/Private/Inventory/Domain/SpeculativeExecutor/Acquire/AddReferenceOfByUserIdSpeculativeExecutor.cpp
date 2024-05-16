@@ -27,6 +27,7 @@
 #include "Inventory/Domain/SpeculativeExecutor/Acquire/AddReferenceOfByUserIdSpeculativeExecutor.h"
 
 #include "Core/Domain/Gs2.h"
+#include "Inventory/Domain/Model/ReferenceOf.h"
 
 namespace Gs2::Inventory::Domain::SpeculativeExecutor
 {
@@ -91,7 +92,7 @@ namespace Gs2::Inventory::Domain::SpeculativeExecutor
             Request->GetItemSetName(),
             FString("ReferenceOf")
         );
-        const auto Key = Model::FReferenceOfDomain::CreateCacheKey(
+        const auto Key = Gs2::Inventory::Domain::Model::FReferenceOfDomain::CreateCacheKey(
             Request->GetReferenceOf()
         );
 

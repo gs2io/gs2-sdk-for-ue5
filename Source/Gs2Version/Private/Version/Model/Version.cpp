@@ -103,28 +103,28 @@ namespace Gs2::Version::Model
             return nullptr;
         }
         return MakeShared<FVersion>()
-            ->WithMajor(Data->HasField("major") ? [Data]() -> TOptional<int32>
+            ->WithMajor(Data->HasField(ANSI_TO_TCHAR("major")) ? [Data]() -> TOptional<int32>
                 {
                     int32 v;
-                    if (Data->TryGetNumberField("major", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("major"), v))
                     {
                         return TOptional(v);
                     }
                     return TOptional<int32>();
                 }() : TOptional<int32>())
-            ->WithMinor(Data->HasField("minor") ? [Data]() -> TOptional<int32>
+            ->WithMinor(Data->HasField(ANSI_TO_TCHAR("minor")) ? [Data]() -> TOptional<int32>
                 {
                     int32 v;
-                    if (Data->TryGetNumberField("minor", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("minor"), v))
                     {
                         return TOptional(v);
                     }
                     return TOptional<int32>();
                 }() : TOptional<int32>())
-            ->WithMicro(Data->HasField("micro") ? [Data]() -> TOptional<int32>
+            ->WithMicro(Data->HasField(ANSI_TO_TCHAR("micro")) ? [Data]() -> TOptional<int32>
                 {
                     int32 v;
-                    if (Data->TryGetNumberField("micro", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("micro"), v))
                     {
                         return TOptional(v);
                     }

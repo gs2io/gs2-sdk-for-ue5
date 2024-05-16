@@ -58,10 +58,10 @@ namespace Gs2::Realtime::Result
             return nullptr;
         }
         return MakeShared<FNowResult>()
-            ->WithTimestamp(Data->HasField("timestamp") ? [Data]() -> TOptional<int64>
+            ->WithTimestamp(Data->HasField(ANSI_TO_TCHAR("timestamp")) ? [Data]() -> TOptional<int64>
                 {
                     int64 v;
-                    if (Data->TryGetNumberField("timestamp", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("timestamp"), v))
                     {
                         return TOptional(v);
                     }

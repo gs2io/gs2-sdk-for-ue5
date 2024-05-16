@@ -72,21 +72,21 @@ namespace Gs2::Guild::Result
             return nullptr;
         }
         return MakeShared<FAcceptRequestResult>()
-            ->WithItem(Data->HasField("item") ? [Data]() -> Model::FReceiveMemberRequestPtr
+            ->WithItem(Data->HasField(ANSI_TO_TCHAR("item")) ? [Data]() -> Model::FReceiveMemberRequestPtr
                  {
-                    if (Data->HasTypedField<EJson::Null>("item"))
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("item")))
                     {
                         return nullptr;
                     }
-                    return Model::FReceiveMemberRequest::FromJson(Data->GetObjectField("item"));
+                    return Model::FReceiveMemberRequest::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("item")));
                  }() : nullptr)
-            ->WithGuild(Data->HasField("guild") ? [Data]() -> Model::FGuildPtr
+            ->WithGuild(Data->HasField(ANSI_TO_TCHAR("guild")) ? [Data]() -> Model::FGuildPtr
                  {
-                    if (Data->HasTypedField<EJson::Null>("guild"))
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("guild")))
                     {
                         return nullptr;
                     }
-                    return Model::FGuild::FromJson(Data->GetObjectField("guild"));
+                    return Model::FGuild::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("guild")));
                  }() : nullptr);
     }
 

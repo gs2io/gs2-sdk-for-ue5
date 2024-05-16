@@ -224,96 +224,96 @@ namespace Gs2::Matchmaking::Request
             return nullptr;
         }
         return MakeShared<FCreateGatheringByUserIdRequest>()
-            ->WithContextStack(Data->HasField("contextStack") ? TOptional<FString>(Data->GetStringField("contextStack")) : TOptional<FString>())
-            ->WithNamespaceName(Data->HasField("namespaceName") ? [Data]() -> TOptional<FString>
+            ->WithContextStack(Data->HasField(ANSI_TO_TCHAR("contextStack")) ? TOptional<FString>(Data->GetStringField(ANSI_TO_TCHAR("contextStack"))) : TOptional<FString>())
+            ->WithNamespaceName(Data->HasField(ANSI_TO_TCHAR("namespaceName")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
-                    if (Data->TryGetStringField("namespaceName", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("namespaceName"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
-            ->WithUserId(Data->HasField("userId") ? [Data]() -> TOptional<FString>
+            ->WithUserId(Data->HasField(ANSI_TO_TCHAR("userId")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
-                    if (Data->TryGetStringField("userId", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("userId"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
-          ->WithPlayer(Data->HasField("player") ? [Data]() -> Model::FPlayerPtr
+          ->WithPlayer(Data->HasField(ANSI_TO_TCHAR("player")) ? [Data]() -> Model::FPlayerPtr
               {
-                  if (Data->HasTypedField<EJson::Null>("player"))
+                  if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("player")))
                   {
                       return nullptr;
                   }
-                  return Model::FPlayer::FromJson(Data->GetObjectField("player"));
+                  return Model::FPlayer::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("player")));
               }() : nullptr)
-          ->WithAttributeRanges(Data->HasField("attributeRanges") ? [Data]() -> TSharedPtr<TArray<Model::FAttributeRangePtr>>
+          ->WithAttributeRanges(Data->HasField(ANSI_TO_TCHAR("attributeRanges")) ? [Data]() -> TSharedPtr<TArray<Model::FAttributeRangePtr>>
               {
                   auto v = MakeShared<TArray<Model::FAttributeRangePtr>>();
-                  if (!Data->HasTypedField<EJson::Null>("attributeRanges") && Data->HasTypedField<EJson::Array>("attributeRanges"))
+                  if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("attributeRanges")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("attributeRanges")))
                   {
-                      for (auto JsonObjectValue : Data->GetArrayField("attributeRanges"))
+                      for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("attributeRanges")))
                       {
                           v->Add(Model::FAttributeRange::FromJson(JsonObjectValue->AsObject()));
                       }
                   }
                   return v;
               }() : MakeShared<TArray<Model::FAttributeRangePtr>>())
-          ->WithCapacityOfRoles(Data->HasField("capacityOfRoles") ? [Data]() -> TSharedPtr<TArray<Model::FCapacityOfRolePtr>>
+          ->WithCapacityOfRoles(Data->HasField(ANSI_TO_TCHAR("capacityOfRoles")) ? [Data]() -> TSharedPtr<TArray<Model::FCapacityOfRolePtr>>
               {
                   auto v = MakeShared<TArray<Model::FCapacityOfRolePtr>>();
-                  if (!Data->HasTypedField<EJson::Null>("capacityOfRoles") && Data->HasTypedField<EJson::Array>("capacityOfRoles"))
+                  if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("capacityOfRoles")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("capacityOfRoles")))
                   {
-                      for (auto JsonObjectValue : Data->GetArrayField("capacityOfRoles"))
+                      for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("capacityOfRoles")))
                       {
                           v->Add(Model::FCapacityOfRole::FromJson(JsonObjectValue->AsObject()));
                       }
                   }
                   return v;
               }() : MakeShared<TArray<Model::FCapacityOfRolePtr>>())
-          ->WithAllowUserIds(Data->HasField("allowUserIds") ? [Data]() -> TSharedPtr<TArray<FString>>
+          ->WithAllowUserIds(Data->HasField(ANSI_TO_TCHAR("allowUserIds")) ? [Data]() -> TSharedPtr<TArray<FString>>
               {
                   auto v = MakeShared<TArray<FString>>();
-                  if (!Data->HasTypedField<EJson::Null>("allowUserIds") && Data->HasTypedField<EJson::Array>("allowUserIds"))
+                  if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("allowUserIds")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("allowUserIds")))
                   {
-                      for (auto JsonObjectValue : Data->GetArrayField("allowUserIds"))
+                      for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("allowUserIds")))
                       {
                           v->Add(JsonObjectValue->AsString());
                       }
                   }
                   return v;
               }() : MakeShared<TArray<FString>>())
-            ->WithExpiresAt(Data->HasField("expiresAt") ? [Data]() -> TOptional<int64>
+            ->WithExpiresAt(Data->HasField(ANSI_TO_TCHAR("expiresAt")) ? [Data]() -> TOptional<int64>
               {
                   int64 v;
-                    if (Data->TryGetNumberField("expiresAt", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("expiresAt"), v))
                   {
                         return TOptional(v);
                   }
                   return TOptional<int64>();
               }() : TOptional<int64>())
-          ->WithExpiresAtTimeSpan(Data->HasField("expiresAtTimeSpan") ? [Data]() -> Model::FTimeSpanPtr
+          ->WithExpiresAtTimeSpan(Data->HasField(ANSI_TO_TCHAR("expiresAtTimeSpan")) ? [Data]() -> Model::FTimeSpanPtr
               {
-                  if (Data->HasTypedField<EJson::Null>("expiresAtTimeSpan"))
+                  if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("expiresAtTimeSpan")))
                   {
                       return nullptr;
                   }
-                  return Model::FTimeSpan::FromJson(Data->GetObjectField("expiresAtTimeSpan"));
+                  return Model::FTimeSpan::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("expiresAtTimeSpan")));
               }() : nullptr)
-            ->WithTimeOffsetToken(Data->HasField("timeOffsetToken") ? [Data]() -> TOptional<FString>
+            ->WithTimeOffsetToken(Data->HasField(ANSI_TO_TCHAR("timeOffsetToken")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
-                    if (Data->TryGetStringField("timeOffsetToken", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("timeOffsetToken"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
-          ->WithDuplicationAvoider(Data->HasField("duplicationAvoider") ? TOptional<FString>(Data->GetStringField("duplicationAvoider")) : TOptional<FString>());
+          ->WithDuplicationAvoider(Data->HasField(ANSI_TO_TCHAR("duplicationAvoider")) ? TOptional<FString>(Data->GetStringField(ANSI_TO_TCHAR("duplicationAvoider"))) : TOptional<FString>());
     }
 
     TSharedPtr<FJsonObject> FCreateGatheringByUserIdRequest::ToJson() const

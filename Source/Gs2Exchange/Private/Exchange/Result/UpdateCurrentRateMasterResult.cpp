@@ -53,13 +53,13 @@ namespace Gs2::Exchange::Result
             return nullptr;
         }
         return MakeShared<FUpdateCurrentRateMasterResult>()
-            ->WithItem(Data->HasField("item") ? [Data]() -> Model::FCurrentRateMasterPtr
+            ->WithItem(Data->HasField(ANSI_TO_TCHAR("item")) ? [Data]() -> Model::FCurrentRateMasterPtr
                  {
-                    if (Data->HasTypedField<EJson::Null>("item"))
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("item")))
                     {
                         return nullptr;
                     }
-                    return Model::FCurrentRateMaster::FromJson(Data->GetObjectField("item"));
+                    return Model::FCurrentRateMaster::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("item")));
                  }() : nullptr);
     }
 

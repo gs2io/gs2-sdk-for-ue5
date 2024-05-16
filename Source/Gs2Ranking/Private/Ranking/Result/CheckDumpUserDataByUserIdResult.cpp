@@ -49,10 +49,10 @@ namespace Gs2::Ranking::Result
             return nullptr;
         }
         return MakeShared<FCheckDumpUserDataByUserIdResult>()
-            ->WithUrl(Data->HasField("url") ? [Data]() -> TOptional<FString>
+            ->WithUrl(Data->HasField(ANSI_TO_TCHAR("url")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("url", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("url"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }

@@ -659,8 +659,8 @@ namespace Gs2::Inbox::Domain
                 return;
             }
             const auto ListParentKey = Gs2::Inbox::Domain::Model::FUserDomain::CreateCacheParentKey(
-                PayloadJson->GetStringField("namespaceName"),
-                PayloadJson->GetStringField("userId"),
+                PayloadJson->GetStringField(ANSI_TO_TCHAR("namespaceName")),
+                PayloadJson->GetStringField(ANSI_TO_TCHAR("userId")),
                 "Message"
             );
             Gs2->Cache->ClearListCache(Gs2::Inbox::Model::FMessage::TypeName, ListParentKey);

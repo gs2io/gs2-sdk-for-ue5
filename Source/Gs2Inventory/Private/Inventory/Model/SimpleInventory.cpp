@@ -214,67 +214,67 @@ namespace Gs2::Inventory::Model
             return nullptr;
         }
         return MakeShared<FSimpleInventory>()
-            ->WithInventoryId(Data->HasField("inventoryId") ? [Data]() -> TOptional<FString>
+            ->WithInventoryId(Data->HasField(ANSI_TO_TCHAR("inventoryId")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("inventoryId", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("inventoryId"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithInventoryName(Data->HasField("inventoryName") ? [Data]() -> TOptional<FString>
+            ->WithInventoryName(Data->HasField(ANSI_TO_TCHAR("inventoryName")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("inventoryName", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("inventoryName"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithUserId(Data->HasField("userId") ? [Data]() -> TOptional<FString>
+            ->WithUserId(Data->HasField(ANSI_TO_TCHAR("userId")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField("userId", v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("userId"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithSimpleItems(Data->HasField("simpleItems") ? [Data]() -> TSharedPtr<TArray<Model::FSimpleItemPtr>>
+            ->WithSimpleItems(Data->HasField(ANSI_TO_TCHAR("simpleItems")) ? [Data]() -> TSharedPtr<TArray<Model::FSimpleItemPtr>>
                 {
                     auto v = MakeShared<TArray<Model::FSimpleItemPtr>>();
-                    if (!Data->HasTypedField<EJson::Null>("simpleItems") && Data->HasTypedField<EJson::Array>("simpleItems"))
+                    if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("simpleItems")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("simpleItems")))
                     {
-                        for (auto JsonObjectValue : Data->GetArrayField("simpleItems"))
+                        for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("simpleItems")))
                         {
                             v->Add(Model::FSimpleItem::FromJson(JsonObjectValue->AsObject()));
                         }
                     }
                     return v;
                  }() : MakeShared<TArray<Model::FSimpleItemPtr>>())
-            ->WithCreatedAt(Data->HasField("createdAt") ? [Data]() -> TOptional<int64>
+            ->WithCreatedAt(Data->HasField(ANSI_TO_TCHAR("createdAt")) ? [Data]() -> TOptional<int64>
                 {
                     int64 v;
-                    if (Data->TryGetNumberField("createdAt", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("createdAt"), v))
                     {
                         return TOptional(v);
                     }
                     return TOptional<int64>();
                 }() : TOptional<int64>())
-            ->WithUpdatedAt(Data->HasField("updatedAt") ? [Data]() -> TOptional<int64>
+            ->WithUpdatedAt(Data->HasField(ANSI_TO_TCHAR("updatedAt")) ? [Data]() -> TOptional<int64>
                 {
                     int64 v;
-                    if (Data->TryGetNumberField("updatedAt", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("updatedAt"), v))
                     {
                         return TOptional(v);
                     }
                     return TOptional<int64>();
                 }() : TOptional<int64>())
-            ->WithRevision(Data->HasField("revision") ? [Data]() -> TOptional<int64>
+            ->WithRevision(Data->HasField(ANSI_TO_TCHAR("revision")) ? [Data]() -> TOptional<int64>
                 {
                     int64 v;
-                    if (Data->TryGetNumberField("revision", v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("revision"), v))
                     {
                         return TOptional(v);
                     }
