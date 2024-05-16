@@ -42,6 +42,10 @@ namespace Gs2::News::Domain::Iterator
             const Gs2::Auth::Model::FAccessTokenPtr AccessToken
         );
 
+        FDescribeNewsIterator(
+            const FDescribeNewsIterator& From
+        );
+
         class FIterator;
 
         class GS2NEWS_API FIteratorNextTask :

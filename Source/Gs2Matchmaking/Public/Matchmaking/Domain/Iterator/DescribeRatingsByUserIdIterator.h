@@ -43,6 +43,10 @@ namespace Gs2::Matchmaking::Domain::Iterator
             const TOptional<FString> TimeOffsetToken = TOptional<FString>()
         );
 
+        FDescribeRatingsByUserIdIterator(
+            const FDescribeRatingsByUserIdIterator& From
+        );
+
         class FIterator;
 
         class GS2MATCHMAKING_API FIteratorNextTask :

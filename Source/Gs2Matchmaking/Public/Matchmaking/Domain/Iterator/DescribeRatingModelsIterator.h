@@ -39,6 +39,10 @@ namespace Gs2::Matchmaking::Domain::Iterator
             const TOptional<FString> NamespaceName
         );
 
+        FDescribeRatingModelsIterator(
+            const FDescribeRatingModelsIterator& From
+        );
+
         class FIterator;
 
         class GS2MATCHMAKING_API FIteratorNextTask :

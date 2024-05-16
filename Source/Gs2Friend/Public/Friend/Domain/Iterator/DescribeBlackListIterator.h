@@ -43,6 +43,10 @@ namespace Gs2::Friend::Domain::Iterator
             const Gs2::Auth::Model::FAccessTokenPtr AccessToken
         );
 
+        FDescribeBlackListIterator(
+            const FDescribeBlackListIterator& From
+        );
+
         class FIterator;
 
         class GS2FRIEND_API FIteratorNextTask :

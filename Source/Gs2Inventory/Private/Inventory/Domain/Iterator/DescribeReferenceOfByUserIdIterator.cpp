@@ -53,6 +53,20 @@ namespace Gs2::Inventory::Domain::Iterator
     {
     }
 
+    FDescribeReferenceOfByUserIdIterator::FDescribeReferenceOfByUserIdIterator(
+        const FDescribeReferenceOfByUserIdIterator& From
+    ):
+        Gs2(From.Gs2),
+        Client(From.Client),
+        NamespaceName(From.NamespaceName),
+        InventoryName(From.InventoryName),
+        UserId(From.UserId),
+        ItemName(From.ItemName),
+        ItemSetName(From.ItemSetName),
+        TimeOffsetToken(From.TimeOffsetToken)
+    {
+    }
+
     Gs2::Core::Model::FGs2ErrorPtr FDescribeReferenceOfByUserIdIterator::FIteratorNextTask::Action(TSharedPtr<TSharedPtr<Inventory::Model::FReferenceOfEntry>> Result)
     {
         ++Iterator;

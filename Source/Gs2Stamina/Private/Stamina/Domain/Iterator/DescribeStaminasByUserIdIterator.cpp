@@ -47,6 +47,17 @@ namespace Gs2::Stamina::Domain::Iterator
     {
     }
 
+    FDescribeStaminasByUserIdIterator::FDescribeStaminasByUserIdIterator(
+        const FDescribeStaminasByUserIdIterator& From
+    ):
+        Gs2(From.Gs2),
+        Client(From.Client),
+        NamespaceName(From.NamespaceName),
+        UserId(From.UserId),
+        TimeOffsetToken(From.TimeOffsetToken)
+    {
+    }
+
     Gs2::Core::Model::FGs2ErrorPtr FDescribeStaminasByUserIdIterator::FIteratorNextTask::Action(TSharedPtr<TSharedPtr<Gs2::Stamina::Model::FStamina>> Result)
     {
         ++Iterator;

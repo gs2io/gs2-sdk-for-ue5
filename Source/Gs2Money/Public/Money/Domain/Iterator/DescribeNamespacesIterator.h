@@ -37,6 +37,10 @@ namespace Gs2::Money::Domain::Iterator
             const Gs2::Money::FGs2MoneyRestClientPtr Client
         );
 
+        FDescribeNamespacesIterator(
+            const FDescribeNamespacesIterator& From
+        );
+
         class FIterator;
 
         class GS2MONEY_API FIteratorNextTask :

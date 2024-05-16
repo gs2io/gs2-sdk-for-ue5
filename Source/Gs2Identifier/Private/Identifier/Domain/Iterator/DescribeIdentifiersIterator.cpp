@@ -43,6 +43,15 @@ namespace Gs2::Identifier::Domain::Iterator
     {
     }
 
+    FDescribeIdentifiersIterator::FDescribeIdentifiersIterator(
+        const FDescribeIdentifiersIterator& From
+    ):
+        Gs2(From.Gs2),
+        Client(From.Client),
+        UserName(From.UserName)
+    {
+    }
+
     Gs2::Core::Model::FGs2ErrorPtr FDescribeIdentifiersIterator::FIteratorNextTask::Action(TSharedPtr<TSharedPtr<Gs2::Identifier::Model::FIdentifier>> Result)
     {
         ++Iterator;

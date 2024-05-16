@@ -43,6 +43,15 @@ namespace Gs2::Formation::Domain::Iterator
     {
     }
 
+    FDescribeFormModelMastersIterator::FDescribeFormModelMastersIterator(
+        const FDescribeFormModelMastersIterator& From
+    ):
+        Gs2(From.Gs2),
+        Client(From.Client),
+        NamespaceName(From.NamespaceName)
+    {
+    }
+
     Gs2::Core::Model::FGs2ErrorPtr FDescribeFormModelMastersIterator::FIteratorNextTask::Action(TSharedPtr<TSharedPtr<Gs2::Formation::Model::FFormModelMaster>> Result)
     {
         ++Iterator;

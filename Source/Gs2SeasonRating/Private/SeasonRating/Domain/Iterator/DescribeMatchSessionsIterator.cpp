@@ -43,6 +43,15 @@ namespace Gs2::SeasonRating::Domain::Iterator
     {
     }
 
+    FDescribeMatchSessionsIterator::FDescribeMatchSessionsIterator(
+        const FDescribeMatchSessionsIterator& From
+    ):
+        Gs2(From.Gs2),
+        Client(From.Client),
+        NamespaceName(From.NamespaceName)
+    {
+    }
+
     Gs2::Core::Model::FGs2ErrorPtr FDescribeMatchSessionsIterator::FIteratorNextTask::Action(TSharedPtr<TSharedPtr<Gs2::SeasonRating::Model::FMatchSession>> Result)
     {
         ++Iterator;

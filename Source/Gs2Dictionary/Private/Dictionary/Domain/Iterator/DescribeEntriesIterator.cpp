@@ -45,6 +45,16 @@ namespace Gs2::Dictionary::Domain::Iterator
     {
     }
 
+    FDescribeEntriesIterator::FDescribeEntriesIterator(
+        const FDescribeEntriesIterator& From
+    ):
+        Gs2(From.Gs2),
+        Client(From.Client),
+        NamespaceName(From.NamespaceName),
+        AccessToken(From.AccessToken)
+    {
+    }
+
     Gs2::Core::Model::FGs2ErrorPtr FDescribeEntriesIterator::FIteratorNextTask::Action(TSharedPtr<TSharedPtr<Gs2::Dictionary::Model::FEntry>> Result)
     {
         ++Iterator;

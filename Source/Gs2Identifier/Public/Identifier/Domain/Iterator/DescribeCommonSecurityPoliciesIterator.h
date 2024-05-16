@@ -37,6 +37,10 @@ namespace Gs2::Identifier::Domain::Iterator
             const Gs2::Identifier::FGs2IdentifierRestClientPtr Client
         );
 
+        FDescribeCommonSecurityPoliciesIterator(
+            const FDescribeCommonSecurityPoliciesIterator& From
+        );
+
         class FIterator;
 
         class GS2IDENTIFIER_API FIteratorNextTask :

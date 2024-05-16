@@ -39,6 +39,10 @@ namespace Gs2::News::Domain::Iterator
             const TOptional<FString> NamespaceName
         );
 
+        FDescribeProgressesIterator(
+            const FDescribeProgressesIterator& From
+        );
+
         class FIterator;
 
         class GS2NEWS_API FIteratorNextTask :

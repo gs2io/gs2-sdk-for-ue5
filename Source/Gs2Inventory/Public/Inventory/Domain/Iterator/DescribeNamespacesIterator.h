@@ -37,6 +37,10 @@ namespace Gs2::Inventory::Domain::Iterator
             const Gs2::Inventory::FGs2InventoryRestClientPtr Client
         );
 
+        FDescribeNamespacesIterator(
+            const FDescribeNamespacesIterator& From
+        );
+
         class FIterator;
 
         class GS2INVENTORY_API FIteratorNextTask :

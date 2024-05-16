@@ -43,6 +43,10 @@ namespace Gs2::Version::Domain::Iterator
             const TOptional<FString> TimeOffsetToken = TOptional<FString>()
         );
 
+        FDescribeAcceptVersionsByUserIdIterator(
+            const FDescribeAcceptVersionsByUserIdIterator& From
+        );
+
         class FIterator;
 
         class GS2VERSION_API FIteratorNextTask :

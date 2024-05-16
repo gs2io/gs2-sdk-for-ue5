@@ -43,6 +43,15 @@ namespace Gs2::Showcase::Domain::Iterator
     {
     }
 
+    FDescribeSalesItemMastersIterator::FDescribeSalesItemMastersIterator(
+        const FDescribeSalesItemMastersIterator& From
+    ):
+        Gs2(From.Gs2),
+        Client(From.Client),
+        NamespaceName(From.NamespaceName)
+    {
+    }
+
     Gs2::Core::Model::FGs2ErrorPtr FDescribeSalesItemMastersIterator::FIteratorNextTask::Action(TSharedPtr<TSharedPtr<Gs2::Showcase::Model::FSalesItemMaster>> Result)
     {
         ++Iterator;

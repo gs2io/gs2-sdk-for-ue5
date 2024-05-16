@@ -43,6 +43,15 @@ namespace Gs2::SerialKey::Domain::Iterator
     {
     }
 
+    FDescribeCampaignModelMastersIterator::FDescribeCampaignModelMastersIterator(
+        const FDescribeCampaignModelMastersIterator& From
+    ):
+        Gs2(From.Gs2),
+        Client(From.Client),
+        NamespaceName(From.NamespaceName)
+    {
+    }
+
     Gs2::Core::Model::FGs2ErrorPtr FDescribeCampaignModelMastersIterator::FIteratorNextTask::Action(TSharedPtr<TSharedPtr<Gs2::SerialKey::Model::FCampaignModelMaster>> Result)
     {
         ++Iterator;

@@ -45,6 +45,10 @@ namespace Gs2::Datastore::Domain::Iterator
             const TOptional<FString> TimeOffsetToken = TOptional<FString>()
         );
 
+        FDescribeDataObjectHistoriesByUserIdIterator(
+            const FDescribeDataObjectHistoriesByUserIdIterator& From
+        );
+
         class FIterator;
 
         class GS2DATASTORE_API FIteratorNextTask :

@@ -43,6 +43,15 @@ namespace Gs2::Matchmaking::Domain::Iterator
     {
     }
 
+    FDescribeGatheringsIterator::FDescribeGatheringsIterator(
+        const FDescribeGatheringsIterator& From
+    ):
+        Gs2(From.Gs2),
+        Client(From.Client),
+        NamespaceName(From.NamespaceName)
+    {
+    }
+
     Gs2::Core::Model::FGs2ErrorPtr FDescribeGatheringsIterator::FIteratorNextTask::Action(TSharedPtr<TSharedPtr<Gs2::Matchmaking::Model::FGathering>> Result)
     {
         ++Iterator;

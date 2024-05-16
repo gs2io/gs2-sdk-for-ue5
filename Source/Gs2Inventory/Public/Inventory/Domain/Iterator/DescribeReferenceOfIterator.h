@@ -49,6 +49,10 @@ namespace Gs2::Inventory::Domain::Iterator
             const TOptional<FString> ItemSetName = TOptional<FString>()
         );
 
+        FDescribeReferenceOfIterator(
+            const FDescribeReferenceOfIterator& From
+        );
+
         class FIterator;
 
         class GS2INVENTORY_API FIteratorNextTask :

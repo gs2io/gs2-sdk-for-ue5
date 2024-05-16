@@ -45,6 +45,16 @@ namespace Gs2::News::Domain::Iterator
     {
     }
 
+    FDescribeOutputsIterator::FDescribeOutputsIterator(
+        const FDescribeOutputsIterator& From
+    ):
+        Gs2(From.Gs2),
+        Client(From.Client),
+        NamespaceName(From.NamespaceName),
+        UploadToken(From.UploadToken)
+    {
+    }
+
     Gs2::Core::Model::FGs2ErrorPtr FDescribeOutputsIterator::FIteratorNextTask::Action(TSharedPtr<TSharedPtr<Gs2::News::Model::FOutput>> Result)
     {
         ++Iterator;

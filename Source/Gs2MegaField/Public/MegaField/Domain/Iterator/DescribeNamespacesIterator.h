@@ -37,6 +37,10 @@ namespace Gs2::MegaField::Domain::Iterator
             const Gs2::MegaField::FGs2MegaFieldRestClientPtr Client
         );
 
+        FDescribeNamespacesIterator(
+            const FDescribeNamespacesIterator& From
+        );
+
         class FIterator;
 
         class GS2MEGAFIELD_API FIteratorNextTask :

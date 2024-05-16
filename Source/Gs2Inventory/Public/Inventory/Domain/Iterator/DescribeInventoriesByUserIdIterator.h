@@ -43,6 +43,10 @@ namespace Gs2::Inventory::Domain::Iterator
             const TOptional<FString> TimeOffsetToken = TOptional<FString>()
         );
 
+        FDescribeInventoriesByUserIdIterator(
+            const FDescribeInventoriesByUserIdIterator& From
+        );
+
         class FIterator;
 
         class GS2INVENTORY_API FIteratorNextTask :

@@ -39,6 +39,10 @@ namespace Gs2::Experience::Domain::Iterator
             const TOptional<FString> NamespaceName
         );
 
+        FDescribeExperienceModelMastersIterator(
+            const FDescribeExperienceModelMastersIterator& From
+        );
+
         class FIterator;
 
         class GS2EXPERIENCE_API FIteratorNextTask :

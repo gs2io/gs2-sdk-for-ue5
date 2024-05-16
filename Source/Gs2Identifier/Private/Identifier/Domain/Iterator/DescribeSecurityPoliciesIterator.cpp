@@ -40,6 +40,14 @@ namespace Gs2::Identifier::Domain::Iterator
     {
     }
 
+    FDescribeSecurityPoliciesIterator::FDescribeSecurityPoliciesIterator(
+        const FDescribeSecurityPoliciesIterator& From
+    ):
+        Gs2(From.Gs2),
+        Client(From.Client)
+    {
+    }
+
     Gs2::Core::Model::FGs2ErrorPtr FDescribeSecurityPoliciesIterator::FIteratorNextTask::Action(TSharedPtr<TSharedPtr<Gs2::Identifier::Model::FSecurityPolicy>> Result)
     {
         ++Iterator;

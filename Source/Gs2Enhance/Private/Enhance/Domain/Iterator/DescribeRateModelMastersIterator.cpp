@@ -43,6 +43,15 @@ namespace Gs2::Enhance::Domain::Iterator
     {
     }
 
+    FDescribeRateModelMastersIterator::FDescribeRateModelMastersIterator(
+        const FDescribeRateModelMastersIterator& From
+    ):
+        Gs2(From.Gs2),
+        Client(From.Client),
+        NamespaceName(From.NamespaceName)
+    {
+    }
+
     Gs2::Core::Model::FGs2ErrorPtr FDescribeRateModelMastersIterator::FIteratorNextTask::Action(TSharedPtr<TSharedPtr<Gs2::Enhance::Model::FRateModelMaster>> Result)
     {
         ++Iterator;

@@ -43,6 +43,10 @@ namespace Gs2::Gateway::Domain::Iterator
             const TOptional<FString> TimeOffsetToken = TOptional<FString>()
         );
 
+        FDescribeWebSocketSessionsByUserIdIterator(
+            const FDescribeWebSocketSessionsByUserIdIterator& From
+        );
+
         class FIterator;
 
         class GS2GATEWAY_API FIteratorNextTask :

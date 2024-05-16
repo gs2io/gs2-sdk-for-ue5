@@ -41,6 +41,10 @@ namespace Gs2::MegaField::Domain::Iterator
             const TOptional<FString> AreaModelName
         );
 
+        FDescribeLayerModelMastersIterator(
+            const FDescribeLayerModelMastersIterator& From
+        );
+
         class FIterator;
 
         class GS2MEGAFIELD_API FIteratorNextTask :

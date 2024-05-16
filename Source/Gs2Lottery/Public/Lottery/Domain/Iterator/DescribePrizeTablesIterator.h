@@ -39,6 +39,10 @@ namespace Gs2::Lottery::Domain::Iterator
             const TOptional<FString> NamespaceName
         );
 
+        FDescribePrizeTablesIterator(
+            const FDescribePrizeTablesIterator& From
+        );
+
         class FIterator;
 
         class GS2LOTTERY_API FIteratorNextTask :

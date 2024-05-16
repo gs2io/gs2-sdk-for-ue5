@@ -47,6 +47,17 @@ namespace Gs2::Datastore::Domain::Iterator
     {
     }
 
+    FDescribeDataObjectHistoriesIterator::FDescribeDataObjectHistoriesIterator(
+        const FDescribeDataObjectHistoriesIterator& From
+    ):
+        Gs2(From.Gs2),
+        Client(From.Client),
+        NamespaceName(From.NamespaceName),
+        AccessToken(From.AccessToken),
+        DataObjectName(From.DataObjectName)
+    {
+    }
+
     Gs2::Core::Model::FGs2ErrorPtr FDescribeDataObjectHistoriesIterator::FIteratorNextTask::Action(TSharedPtr<TSharedPtr<Gs2::Datastore::Model::FDataObjectHistory>> Result)
     {
         ++Iterator;

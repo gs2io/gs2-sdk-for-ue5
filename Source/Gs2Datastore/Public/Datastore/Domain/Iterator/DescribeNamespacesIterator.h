@@ -37,6 +37,10 @@ namespace Gs2::Datastore::Domain::Iterator
             const Gs2::Datastore::FGs2DatastoreRestClientPtr Client
         );
 
+        FDescribeNamespacesIterator(
+            const FDescribeNamespacesIterator& From
+        );
+
         class FIterator;
 
         class GS2DATASTORE_API FIteratorNextTask :

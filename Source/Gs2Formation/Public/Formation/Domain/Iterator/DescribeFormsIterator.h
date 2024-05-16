@@ -44,6 +44,10 @@ namespace Gs2::Formation::Domain::Iterator
             const Gs2::Auth::Model::FAccessTokenPtr AccessToken
         );
 
+        FDescribeFormsIterator(
+            const FDescribeFormsIterator& From
+        );
+
         class FIterator;
 
         class GS2FORMATION_API FIteratorNextTask :

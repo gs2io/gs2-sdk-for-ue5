@@ -39,6 +39,10 @@ namespace Gs2::Inbox::Domain::Iterator
             const TOptional<FString> NamespaceName
         );
 
+        FDescribeGlobalMessagesIterator(
+            const FDescribeGlobalMessagesIterator& From
+        );
+
         class FIterator;
 
         class GS2INBOX_API FIteratorNextTask :

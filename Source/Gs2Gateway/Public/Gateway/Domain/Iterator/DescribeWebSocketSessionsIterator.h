@@ -42,6 +42,10 @@ namespace Gs2::Gateway::Domain::Iterator
             const Gs2::Auth::Model::FAccessTokenPtr AccessToken
         );
 
+        FDescribeWebSocketSessionsIterator(
+            const FDescribeWebSocketSessionsIterator& From
+        );
+
         class FIterator;
 
         class GS2GATEWAY_API FIteratorNextTask :

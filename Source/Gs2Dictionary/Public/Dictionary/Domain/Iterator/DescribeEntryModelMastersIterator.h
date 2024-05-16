@@ -39,6 +39,10 @@ namespace Gs2::Dictionary::Domain::Iterator
             const TOptional<FString> NamespaceName
         );
 
+        FDescribeEntryModelMastersIterator(
+            const FDescribeEntryModelMastersIterator& From
+        );
+
         class FIterator;
 
         class GS2DICTIONARY_API FIteratorNextTask :

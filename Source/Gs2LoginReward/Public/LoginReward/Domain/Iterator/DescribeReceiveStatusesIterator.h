@@ -42,6 +42,10 @@ namespace Gs2::LoginReward::Domain::Iterator
             const Gs2::Auth::Model::FAccessTokenPtr AccessToken
         );
 
+        FDescribeReceiveStatusesIterator(
+            const FDescribeReceiveStatusesIterator& From
+        );
+
         class FIterator;
 
         class GS2LOGINREWARD_API FIteratorNextTask :

@@ -45,6 +45,10 @@ namespace Gs2::Ranking::Domain::Iterator
             const TOptional<FString> TimeOffsetToken = TOptional<FString>()
         );
 
+        FDescribeSubscribesByCategoryNameAndUserIdIterator(
+            const FDescribeSubscribesByCategoryNameAndUserIdIterator& From
+        );
+
         class FIterator;
 
         class GS2RANKING_API FIteratorNextTask :

@@ -44,6 +44,10 @@ namespace Gs2::Exchange::Domain::Iterator
             const TOptional<FString> RateName = TOptional<FString>()
         );
 
+        FDescribeAwaitsIterator(
+            const FDescribeAwaitsIterator& From
+        );
+
         class FIterator;
 
         class GS2EXCHANGE_API FIteratorNextTask :

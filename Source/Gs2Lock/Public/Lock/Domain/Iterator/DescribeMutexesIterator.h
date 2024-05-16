@@ -42,6 +42,10 @@ namespace Gs2::Lock::Domain::Iterator
             const Gs2::Auth::Model::FAccessTokenPtr AccessToken
         );
 
+        FDescribeMutexesIterator(
+            const FDescribeMutexesIterator& From
+        );
+
         class FIterator;
 
         class GS2LOCK_API FIteratorNextTask :

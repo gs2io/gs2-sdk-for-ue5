@@ -42,6 +42,10 @@ namespace Gs2::Friend::Domain::Iterator
             const Gs2::Auth::Model::FAccessTokenPtr AccessToken
         );
 
+        FDescribeSendRequestsIterator(
+            const FDescribeSendRequestsIterator& From
+        );
+
         class FIterator;
 
         class GS2FRIEND_API FIteratorNextTask :

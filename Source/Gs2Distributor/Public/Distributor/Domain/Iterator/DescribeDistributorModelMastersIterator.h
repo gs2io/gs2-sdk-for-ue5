@@ -39,6 +39,10 @@ namespace Gs2::Distributor::Domain::Iterator
             const TOptional<FString> NamespaceName
         );
 
+        FDescribeDistributorModelMastersIterator(
+            const FDescribeDistributorModelMastersIterator& From
+        );
+
         class FIterator;
 
         class GS2DISTRIBUTOR_API FIteratorNextTask :

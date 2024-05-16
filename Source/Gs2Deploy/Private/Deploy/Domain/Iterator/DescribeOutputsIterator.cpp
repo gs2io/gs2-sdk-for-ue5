@@ -43,6 +43,15 @@ namespace Gs2::Deploy::Domain::Iterator
     {
     }
 
+    FDescribeOutputsIterator::FDescribeOutputsIterator(
+        const FDescribeOutputsIterator& From
+    ):
+        Gs2(From.Gs2),
+        Client(From.Client),
+        StackName(From.StackName)
+    {
+    }
+
     Gs2::Core::Model::FGs2ErrorPtr FDescribeOutputsIterator::FIteratorNextTask::Action(TSharedPtr<TSharedPtr<Gs2::Deploy::Model::FOutput>> Result)
     {
         ++Iterator;

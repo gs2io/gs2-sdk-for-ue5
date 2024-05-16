@@ -45,6 +45,16 @@ namespace Gs2::Quest::Domain::Iterator
     {
     }
 
+    FDescribeCompletedQuestListsIterator::FDescribeCompletedQuestListsIterator(
+        const FDescribeCompletedQuestListsIterator& From
+    ):
+        Gs2(From.Gs2),
+        Client(From.Client),
+        NamespaceName(From.NamespaceName),
+        AccessToken(From.AccessToken)
+    {
+    }
+
     Gs2::Core::Model::FGs2ErrorPtr FDescribeCompletedQuestListsIterator::FIteratorNextTask::Action(TSharedPtr<TSharedPtr<Gs2::Quest::Model::FCompletedQuestList>> Result)
     {
         ++Iterator;

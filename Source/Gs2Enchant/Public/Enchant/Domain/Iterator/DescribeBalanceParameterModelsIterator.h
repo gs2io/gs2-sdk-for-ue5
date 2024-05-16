@@ -39,6 +39,10 @@ namespace Gs2::Enchant::Domain::Iterator
             const TOptional<FString> NamespaceName
         );
 
+        FDescribeBalanceParameterModelsIterator(
+            const FDescribeBalanceParameterModelsIterator& From
+        );
+
         class FIterator;
 
         class GS2ENCHANT_API FIteratorNextTask :

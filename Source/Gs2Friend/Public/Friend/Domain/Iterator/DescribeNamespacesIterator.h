@@ -37,6 +37,10 @@ namespace Gs2::Friend::Domain::Iterator
             const Gs2::Friend::FGs2FriendRestClientPtr Client
         );
 
+        FDescribeNamespacesIterator(
+            const FDescribeNamespacesIterator& From
+        );
+
         class FIterator;
 
         class GS2FRIEND_API FIteratorNextTask :

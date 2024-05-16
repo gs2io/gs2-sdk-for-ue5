@@ -39,6 +39,10 @@ namespace Gs2::Key::Domain::Iterator
             const TOptional<FString> NamespaceName
         );
 
+        FDescribeKeysIterator(
+            const FDescribeKeysIterator& From
+        );
+
         class FIterator;
 
         class GS2KEY_API FIteratorNextTask :

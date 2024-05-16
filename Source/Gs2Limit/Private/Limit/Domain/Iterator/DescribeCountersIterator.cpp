@@ -47,6 +47,17 @@ namespace Gs2::Limit::Domain::Iterator
     {
     }
 
+    FDescribeCountersIterator::FDescribeCountersIterator(
+        const FDescribeCountersIterator& From
+    ):
+        Gs2(From.Gs2),
+        Client(From.Client),
+        NamespaceName(From.NamespaceName),
+        AccessToken(From.AccessToken),
+        LimitName(From.LimitName)
+    {
+    }
+
     Gs2::Core::Model::FGs2ErrorPtr FDescribeCountersIterator::FIteratorNextTask::Action(TSharedPtr<TSharedPtr<Gs2::Limit::Model::FCounter>> Result)
     {
         ++Iterator;

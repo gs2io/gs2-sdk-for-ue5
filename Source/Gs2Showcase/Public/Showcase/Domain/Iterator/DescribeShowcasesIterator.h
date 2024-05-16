@@ -42,6 +42,10 @@ namespace Gs2::Showcase::Domain::Iterator
             const Gs2::Auth::Model::FAccessTokenPtr AccessToken
         );
 
+        FDescribeShowcasesIterator(
+            const FDescribeShowcasesIterator& From
+        );
+
         class FIterator;
 
         class GS2SHOWCASE_API FIteratorNextTask :

@@ -16,8 +16,6 @@
 
 #include "Guild/Request/SearchGuildsRequest.h"
 
-#include "Core/Gs2Constant.h"
-
 namespace Gs2::Guild::Request
 {
     FSearchGuildsRequest::FSearchGuildsRequest():
@@ -54,7 +52,6 @@ namespace Gs2::Guild::Request
         PageTokenValue(From.PageTokenValue),
         LimitValue(From.LimitValue)
     {
-        
     }
 
     TSharedPtr<FSearchGuildsRequest> FSearchGuildsRequest::WithContextStack(

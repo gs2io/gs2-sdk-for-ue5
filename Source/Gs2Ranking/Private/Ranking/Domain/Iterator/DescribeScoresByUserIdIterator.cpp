@@ -51,6 +51,19 @@ namespace Gs2::Ranking::Domain::Iterator
     {
     }
 
+    FDescribeScoresByUserIdIterator::FDescribeScoresByUserIdIterator(
+        const FDescribeScoresByUserIdIterator& From
+    ):
+        Gs2(From.Gs2),
+        Client(From.Client),
+        NamespaceName(From.NamespaceName),
+        CategoryName(From.CategoryName),
+        UserId(From.UserId),
+        ScorerUserId(From.ScorerUserId),
+        TimeOffsetToken(From.TimeOffsetToken)
+    {
+    }
+
     Gs2::Core::Model::FGs2ErrorPtr FDescribeScoresByUserIdIterator::FIteratorNextTask::Action(TSharedPtr<TSharedPtr<Gs2::Ranking::Model::FScore>> Result)
     {
         ++Iterator;

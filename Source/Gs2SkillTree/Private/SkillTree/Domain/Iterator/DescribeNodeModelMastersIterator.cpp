@@ -43,6 +43,15 @@ namespace Gs2::SkillTree::Domain::Iterator
     {
     }
 
+    FDescribeNodeModelMastersIterator::FDescribeNodeModelMastersIterator(
+        const FDescribeNodeModelMastersIterator& From
+    ):
+        Gs2(From.Gs2),
+        Client(From.Client),
+        NamespaceName(From.NamespaceName)
+    {
+    }
+
     Gs2::Core::Model::FGs2ErrorPtr FDescribeNodeModelMastersIterator::FIteratorNextTask::Action(TSharedPtr<TSharedPtr<Gs2::SkillTree::Model::FNodeModelMaster>> Result)
     {
         ++Iterator;

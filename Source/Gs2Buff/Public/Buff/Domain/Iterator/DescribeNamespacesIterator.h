@@ -37,6 +37,10 @@ namespace Gs2::Buff::Domain::Iterator
             const Gs2::Buff::FGs2BuffRestClientPtr Client
         );
 
+        FDescribeNamespacesIterator(
+            const FDescribeNamespacesIterator& From
+        );
+
         class FIterator;
 
         class GS2BUFF_API FIteratorNextTask :

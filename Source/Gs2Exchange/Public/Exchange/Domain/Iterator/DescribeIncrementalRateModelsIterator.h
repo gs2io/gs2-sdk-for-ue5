@@ -39,6 +39,10 @@ namespace Gs2::Exchange::Domain::Iterator
             const TOptional<FString> NamespaceName
         );
 
+        FDescribeIncrementalRateModelsIterator(
+            const FDescribeIncrementalRateModelsIterator& From
+        );
+
         class FIterator;
 
         class GS2EXCHANGE_API FIteratorNextTask :

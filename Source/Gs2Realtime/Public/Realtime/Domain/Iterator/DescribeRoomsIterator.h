@@ -39,6 +39,10 @@ namespace Gs2::Realtime::Domain::Iterator
             const TOptional<FString> NamespaceName
         );
 
+        FDescribeRoomsIterator(
+            const FDescribeRoomsIterator& From
+        );
+
         class FIterator;
 
         class GS2REALTIME_API FIteratorNextTask :

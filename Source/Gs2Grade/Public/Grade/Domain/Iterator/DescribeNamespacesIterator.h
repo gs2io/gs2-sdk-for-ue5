@@ -37,6 +37,10 @@ namespace Gs2::Grade::Domain::Iterator
             const Gs2::Grade::FGs2GradeRestClientPtr Client
         );
 
+        FDescribeNamespacesIterator(
+            const FDescribeNamespacesIterator& From
+        );
+
         class FIterator;
 
         class GS2GRADE_API FIteratorNextTask :

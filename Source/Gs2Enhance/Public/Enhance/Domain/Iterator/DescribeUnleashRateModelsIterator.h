@@ -39,6 +39,10 @@ namespace Gs2::Enhance::Domain::Iterator
             const TOptional<FString> NamespaceName
         );
 
+        FDescribeUnleashRateModelsIterator(
+            const FDescribeUnleashRateModelsIterator& From
+        );
+
         class FIterator;
 
         class GS2ENHANCE_API FIteratorNextTask :

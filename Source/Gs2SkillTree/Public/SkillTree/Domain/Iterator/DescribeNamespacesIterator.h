@@ -37,6 +37,10 @@ namespace Gs2::SkillTree::Domain::Iterator
             const Gs2::SkillTree::FGs2SkillTreeRestClientPtr Client
         );
 
+        FDescribeNamespacesIterator(
+            const FDescribeNamespacesIterator& From
+        );
+
         class FIterator;
 
         class GS2SKILLTREE_API FIteratorNextTask :

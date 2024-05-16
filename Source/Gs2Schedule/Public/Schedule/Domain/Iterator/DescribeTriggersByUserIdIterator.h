@@ -43,6 +43,10 @@ namespace Gs2::Schedule::Domain::Iterator
             const TOptional<FString> TimeOffsetToken = TOptional<FString>()
         );
 
+        FDescribeTriggersByUserIdIterator(
+            const FDescribeTriggersByUserIdIterator& From
+        );
+
         class FIterator;
 
         class GS2SCHEDULE_API FIteratorNextTask :

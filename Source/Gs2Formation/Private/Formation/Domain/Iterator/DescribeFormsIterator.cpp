@@ -47,6 +47,17 @@ namespace Gs2::Formation::Domain::Iterator
     {
     }
 
+    FDescribeFormsIterator::FDescribeFormsIterator(
+        const FDescribeFormsIterator& From
+    ):
+        Gs2(From.Gs2),
+        Client(From.Client),
+        NamespaceName(From.NamespaceName),
+        MoldModelName(From.MoldModelName),
+        AccessToken(From.AccessToken)
+    {
+    }
+
     Gs2::Core::Model::FGs2ErrorPtr FDescribeFormsIterator::FIteratorNextTask::Action(TSharedPtr<TSharedPtr<Gs2::Formation::Model::FForm>> Result)
     {
         ++Iterator;

@@ -37,6 +37,10 @@ namespace Gs2::Lock::Domain::Iterator
             const Gs2::Lock::FGs2LockRestClientPtr Client
         );
 
+        FDescribeNamespacesIterator(
+            const FDescribeNamespacesIterator& From
+        );
+
         class FIterator;
 
         class GS2LOCK_API FIteratorNextTask :

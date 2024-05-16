@@ -45,6 +45,16 @@ namespace Gs2::Mission::Domain::Iterator
     {
     }
 
+    FDescribeCountersIterator::FDescribeCountersIterator(
+        const FDescribeCountersIterator& From
+    ):
+        Gs2(From.Gs2),
+        Client(From.Client),
+        NamespaceName(From.NamespaceName),
+        AccessToken(From.AccessToken)
+    {
+    }
+
     Gs2::Core::Model::FGs2ErrorPtr FDescribeCountersIterator::FIteratorNextTask::Action(TSharedPtr<TSharedPtr<Gs2::Mission::Model::FCounter>> Result)
     {
         ++Iterator;

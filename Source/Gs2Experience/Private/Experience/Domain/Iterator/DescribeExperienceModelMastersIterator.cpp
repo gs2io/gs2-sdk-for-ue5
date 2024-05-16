@@ -43,6 +43,15 @@ namespace Gs2::Experience::Domain::Iterator
     {
     }
 
+    FDescribeExperienceModelMastersIterator::FDescribeExperienceModelMastersIterator(
+        const FDescribeExperienceModelMastersIterator& From
+    ):
+        Gs2(From.Gs2),
+        Client(From.Client),
+        NamespaceName(From.NamespaceName)
+    {
+    }
+
     Gs2::Core::Model::FGs2ErrorPtr FDescribeExperienceModelMastersIterator::FIteratorNextTask::Action(TSharedPtr<TSharedPtr<Gs2::Experience::Model::FExperienceModelMaster>> Result)
     {
         ++Iterator;

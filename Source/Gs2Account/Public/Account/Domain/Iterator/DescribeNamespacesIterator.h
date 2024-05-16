@@ -37,6 +37,10 @@ namespace Gs2::Account::Domain::Iterator
             const Gs2::Account::FGs2AccountRestClientPtr Client
         );
 
+        FDescribeNamespacesIterator(
+            const FDescribeNamespacesIterator& From
+        );
+
         class FIterator;
 
         class GS2ACCOUNT_API FIteratorNextTask :

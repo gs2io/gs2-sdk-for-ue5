@@ -45,6 +45,16 @@ namespace Gs2::Gateway::Domain::Iterator
     {
     }
 
+    FDescribeWebSocketSessionsIterator::FDescribeWebSocketSessionsIterator(
+        const FDescribeWebSocketSessionsIterator& From
+    ):
+        Gs2(From.Gs2),
+        Client(From.Client),
+        NamespaceName(From.NamespaceName),
+        AccessToken(From.AccessToken)
+    {
+    }
+
     Gs2::Core::Model::FGs2ErrorPtr FDescribeWebSocketSessionsIterator::FIteratorNextTask::Action(TSharedPtr<TSharedPtr<Gs2::Gateway::Model::FWebSocketSession>> Result)
     {
         ++Iterator;

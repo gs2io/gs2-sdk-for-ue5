@@ -47,6 +47,10 @@ namespace Gs2::Chat::Domain::Iterator
             const TOptional<FString> TimeOffsetToken = TOptional<FString>()
         );
 
+        FDescribeMessagesByUserIdIterator(
+            const FDescribeMessagesByUserIdIterator& From
+        );
+
         class FIterator;
 
         class GS2CHAT_API FIteratorNextTask :

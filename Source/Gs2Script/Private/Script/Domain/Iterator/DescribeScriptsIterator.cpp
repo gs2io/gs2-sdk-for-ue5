@@ -43,6 +43,15 @@ namespace Gs2::Script::Domain::Iterator
     {
     }
 
+    FDescribeScriptsIterator::FDescribeScriptsIterator(
+        const FDescribeScriptsIterator& From
+    ):
+        Gs2(From.Gs2),
+        Client(From.Client),
+        NamespaceName(From.NamespaceName)
+    {
+    }
+
     Gs2::Core::Model::FGs2ErrorPtr FDescribeScriptsIterator::FIteratorNextTask::Action(TSharedPtr<TSharedPtr<Gs2::Script::Model::FScript>> Result)
     {
         ++Iterator;

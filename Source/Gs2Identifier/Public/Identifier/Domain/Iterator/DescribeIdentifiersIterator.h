@@ -39,6 +39,10 @@ namespace Gs2::Identifier::Domain::Iterator
             const TOptional<FString> UserName
         );
 
+        FDescribeIdentifiersIterator(
+            const FDescribeIdentifiersIterator& From
+        );
+
         class FIterator;
 
         class GS2IDENTIFIER_API FIteratorNextTask :

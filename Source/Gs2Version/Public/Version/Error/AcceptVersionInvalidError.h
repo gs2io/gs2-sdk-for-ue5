@@ -22,7 +22,7 @@
 
 namespace Gs2::Version::Error
 {
-    class GS2VERSION_API FAcceptVersionInvalidError : public Core::Model::FUnauthorizedError
+    class GS2VERSION_API FAcceptVersionInvalidError : public Core::Model::FBadRequestError
     {
     public:
         inline static const FGs2ErrorType TypeString = "FAcceptVersionInvalidError";
@@ -37,7 +37,7 @@ namespace Gs2::Version::Error
 
         virtual FGs2ErrorType SuperType() const override
         {
-            return Core::Model::FUnauthorizedError::SuperType() + ":" + TypeString;
+            return Core::Model::FBadRequestError::SuperType() + ":" + TypeString;
         }
     };
     typedef TSharedPtr<FAcceptVersionInvalidError, ESPMode::ThreadSafe> FAcceptVersionInvalidErrorPtr;

@@ -43,6 +43,15 @@ namespace Gs2::Grade::Domain::Iterator
     {
     }
 
+    FDescribeGradeModelsIterator::FDescribeGradeModelsIterator(
+        const FDescribeGradeModelsIterator& From
+    ):
+        Gs2(From.Gs2),
+        Client(From.Client),
+        NamespaceName(From.NamespaceName)
+    {
+    }
+
     Gs2::Core::Model::FGs2ErrorPtr FDescribeGradeModelsIterator::FIteratorNextTask::Action(TSharedPtr<TSharedPtr<Gs2::Grade::Model::FGradeModel>> Result)
     {
         ++Iterator;

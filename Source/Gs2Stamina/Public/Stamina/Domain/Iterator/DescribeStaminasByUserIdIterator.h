@@ -43,6 +43,10 @@ namespace Gs2::Stamina::Domain::Iterator
             const TOptional<FString> TimeOffsetToken = TOptional<FString>()
         );
 
+        FDescribeStaminasByUserIdIterator(
+            const FDescribeStaminasByUserIdIterator& From
+        );
+
         class FIterator;
 
         class GS2STAMINA_API FIteratorNextTask :

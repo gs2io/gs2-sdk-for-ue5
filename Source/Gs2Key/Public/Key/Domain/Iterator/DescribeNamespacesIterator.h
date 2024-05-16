@@ -37,6 +37,10 @@ namespace Gs2::Key::Domain::Iterator
             const Gs2::Key::FGs2KeyRestClientPtr Client
         );
 
+        FDescribeNamespacesIterator(
+            const FDescribeNamespacesIterator& From
+        );
+
         class FIterator;
 
         class GS2KEY_API FIteratorNextTask :

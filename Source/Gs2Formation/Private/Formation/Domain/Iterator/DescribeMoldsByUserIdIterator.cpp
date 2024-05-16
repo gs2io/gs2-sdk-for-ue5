@@ -47,6 +47,17 @@ namespace Gs2::Formation::Domain::Iterator
     {
     }
 
+    FDescribeMoldsByUserIdIterator::FDescribeMoldsByUserIdIterator(
+        const FDescribeMoldsByUserIdIterator& From
+    ):
+        Gs2(From.Gs2),
+        Client(From.Client),
+        NamespaceName(From.NamespaceName),
+        UserId(From.UserId),
+        TimeOffsetToken(From.TimeOffsetToken)
+    {
+    }
+
     Gs2::Core::Model::FGs2ErrorPtr FDescribeMoldsByUserIdIterator::FIteratorNextTask::Action(TSharedPtr<TSharedPtr<Gs2::Formation::Model::FMold>> Result)
     {
         ++Iterator;

@@ -43,6 +43,10 @@ namespace Gs2::Lottery::Domain::Iterator
             const TOptional<FString> TimeOffsetToken = TOptional<FString>()
         );
 
+        FDescribeBoxesByUserIdIterator(
+            const FDescribeBoxesByUserIdIterator& From
+        );
+
         class FIterator;
 
         class GS2LOTTERY_API FIteratorNextTask :

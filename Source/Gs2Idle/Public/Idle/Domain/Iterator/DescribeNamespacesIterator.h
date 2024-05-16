@@ -37,6 +37,10 @@ namespace Gs2::Idle::Domain::Iterator
             const Gs2::Idle::FGs2IdleRestClientPtr Client
         );
 
+        FDescribeNamespacesIterator(
+            const FDescribeNamespacesIterator& From
+        );
+
         class FIterator;
 
         class GS2IDLE_API FIteratorNextTask :

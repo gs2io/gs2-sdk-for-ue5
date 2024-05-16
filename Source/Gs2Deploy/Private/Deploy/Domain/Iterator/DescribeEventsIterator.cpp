@@ -43,6 +43,15 @@ namespace Gs2::Deploy::Domain::Iterator
     {
     }
 
+    FDescribeEventsIterator::FDescribeEventsIterator(
+        const FDescribeEventsIterator& From
+    ):
+        Gs2(From.Gs2),
+        Client(From.Client),
+        StackName(From.StackName)
+    {
+    }
+
     Gs2::Core::Model::FGs2ErrorPtr FDescribeEventsIterator::FIteratorNextTask::Action(TSharedPtr<TSharedPtr<Gs2::Deploy::Model::FEvent>> Result)
     {
         ++Iterator;

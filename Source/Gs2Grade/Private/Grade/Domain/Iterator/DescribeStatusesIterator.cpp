@@ -47,6 +47,17 @@ namespace Gs2::Grade::Domain::Iterator
     {
     }
 
+    FDescribeStatusesIterator::FDescribeStatusesIterator(
+        const FDescribeStatusesIterator& From
+    ):
+        Gs2(From.Gs2),
+        Client(From.Client),
+        NamespaceName(From.NamespaceName),
+        GradeName(From.GradeName),
+        AccessToken(From.AccessToken)
+    {
+    }
+
     Gs2::Core::Model::FGs2ErrorPtr FDescribeStatusesIterator::FIteratorNextTask::Action(TSharedPtr<TSharedPtr<Gs2::Grade::Model::FStatus>> Result)
     {
         ++Iterator;

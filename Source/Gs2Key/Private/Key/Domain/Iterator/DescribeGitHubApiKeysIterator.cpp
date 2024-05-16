@@ -43,6 +43,15 @@ namespace Gs2::Key::Domain::Iterator
     {
     }
 
+    FDescribeGitHubApiKeysIterator::FDescribeGitHubApiKeysIterator(
+        const FDescribeGitHubApiKeysIterator& From
+    ):
+        Gs2(From.Gs2),
+        Client(From.Client),
+        NamespaceName(From.NamespaceName)
+    {
+    }
+
     Gs2::Core::Model::FGs2ErrorPtr FDescribeGitHubApiKeysIterator::FIteratorNextTask::Action(TSharedPtr<TSharedPtr<Gs2::Key::Model::FGitHubApiKey>> Result)
     {
         ++Iterator;

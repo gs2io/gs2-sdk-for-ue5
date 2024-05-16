@@ -42,6 +42,10 @@ namespace Gs2::Dictionary::Domain::Iterator
             const Gs2::Auth::Model::FAccessTokenPtr AccessToken
         );
 
+        FDescribeEntriesIterator(
+            const FDescribeEntriesIterator& From
+        );
+
         class FIterator;
 
         class GS2DICTIONARY_API FIteratorNextTask :

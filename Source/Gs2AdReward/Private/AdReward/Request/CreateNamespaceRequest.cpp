@@ -22,6 +22,7 @@ namespace Gs2::AdReward::Request
         NameValue(TOptional<FString>()),
         AdmobValue(nullptr),
         UnityAdValue(nullptr),
+        AppLovinMaxesValue(nullptr),
         DescriptionValue(TOptional<FString>()),
         ChangePointNotificationValue(nullptr),
         LogSettingValue(nullptr)
@@ -34,6 +35,7 @@ namespace Gs2::AdReward::Request
         NameValue(From.NameValue),
         AdmobValue(From.AdmobValue),
         UnityAdValue(From.UnityAdValue),
+        AppLovinMaxesValue(From.AppLovinMaxesValue),
         DescriptionValue(From.DescriptionValue),
         ChangePointNotificationValue(From.ChangePointNotificationValue),
         LogSettingValue(From.LogSettingValue)
@@ -69,6 +71,14 @@ namespace Gs2::AdReward::Request
     )
     {
         this->UnityAdValue = UnityAd;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FCreateNamespaceRequest> FCreateNamespaceRequest::WithAppLovinMaxes(
+        const TSharedPtr<TArray<TSharedPtr<Model::FAppLovinMax>>> AppLovinMaxes
+    )
+    {
+        this->AppLovinMaxesValue = AppLovinMaxes;
         return SharedThis(this);
     }
 
@@ -122,6 +132,15 @@ namespace Gs2::AdReward::Request
             return nullptr;
         }
         return UnityAdValue;
+    }
+
+    TSharedPtr<TArray<TSharedPtr<Model::FAppLovinMax>>> FCreateNamespaceRequest::GetAppLovinMaxes() const
+    {
+        if (!AppLovinMaxesValue.IsValid())
+        {
+            return nullptr;
+        }
+        return AppLovinMaxesValue;
     }
 
     TOptional<FString> FCreateNamespaceRequest::GetDescription() const
@@ -179,6 +198,18 @@ namespace Gs2::AdReward::Request
                   }
                   return Model::FUnityAd::FromJson(Data->GetObjectField("unityAd"));
               }() : nullptr)
+          ->WithAppLovinMaxes(Data->HasField("appLovinMaxes") ? [Data]() -> TSharedPtr<TArray<Model::FAppLovinMaxPtr>>
+              {
+                  auto v = MakeShared<TArray<Model::FAppLovinMaxPtr>>();
+                  if (!Data->HasTypedField<EJson::Null>("appLovinMaxes") && Data->HasTypedField<EJson::Array>("appLovinMaxes"))
+                  {
+                      for (auto JsonObjectValue : Data->GetArrayField("appLovinMaxes"))
+                      {
+                          v->Add(Model::FAppLovinMax::FromJson(JsonObjectValue->AsObject()));
+                      }
+                  }
+                  return v;
+              }() : MakeShared<TArray<Model::FAppLovinMaxPtr>>())
             ->WithDescription(Data->HasField("description") ? [Data]() -> TOptional<FString>
               {
                   FString v("");
@@ -224,6 +255,15 @@ namespace Gs2::AdReward::Request
         if (UnityAdValue != nullptr && UnityAdValue.IsValid())
         {
             JsonRootObject->SetObjectField("unityAd", UnityAdValue->ToJson());
+        }
+        if (AppLovinMaxesValue != nullptr && AppLovinMaxesValue.IsValid())
+        {
+            TArray<TSharedPtr<FJsonValue>> v;
+            for (auto JsonObjectValue : *AppLovinMaxesValue)
+            {
+                v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
+            }
+            JsonRootObject->SetArrayField("appLovinMaxes", v);
         }
         if (DescriptionValue.IsSet())
         {

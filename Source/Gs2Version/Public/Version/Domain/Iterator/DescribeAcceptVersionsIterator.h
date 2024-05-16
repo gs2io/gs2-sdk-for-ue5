@@ -42,6 +42,10 @@ namespace Gs2::Version::Domain::Iterator
             const Gs2::Auth::Model::FAccessTokenPtr AccessToken
         );
 
+        FDescribeAcceptVersionsIterator(
+            const FDescribeAcceptVersionsIterator& From
+        );
+
         class FIterator;
 
         class GS2VERSION_API FIteratorNextTask :

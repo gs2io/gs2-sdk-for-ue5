@@ -42,6 +42,10 @@ namespace Gs2::Lottery::Domain::Iterator
             const Gs2::Auth::Model::FAccessTokenPtr AccessToken
         );
 
+        FDescribeBoxesIterator(
+            const FDescribeBoxesIterator& From
+        );
+
         class FIterator;
 
         class GS2LOTTERY_API FIteratorNextTask :

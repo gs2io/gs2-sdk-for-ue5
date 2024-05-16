@@ -37,6 +37,10 @@ namespace Gs2::Version::Domain::Iterator
             const Gs2::Version::FGs2VersionRestClientPtr Client
         );
 
+        FDescribeNamespacesIterator(
+            const FDescribeNamespacesIterator& From
+        );
+
         class FIterator;
 
         class GS2VERSION_API FIteratorNextTask :

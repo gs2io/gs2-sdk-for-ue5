@@ -46,6 +46,10 @@ namespace Gs2::Ranking::Domain::Iterator
             const TOptional<FString> ScorerUserId
         );
 
+        FDescribeScoresIterator(
+            const FDescribeScoresIterator& From
+        );
+
         class FIterator;
 
         class GS2RANKING_API FIteratorNextTask :

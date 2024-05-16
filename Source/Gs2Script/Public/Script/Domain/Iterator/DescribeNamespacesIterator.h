@@ -37,6 +37,10 @@ namespace Gs2::Script::Domain::Iterator
             const Gs2::Script::FGs2ScriptRestClientPtr Client
         );
 
+        FDescribeNamespacesIterator(
+            const FDescribeNamespacesIterator& From
+        );
+
         class FIterator;
 
         class GS2SCRIPT_API FIteratorNextTask :

@@ -49,6 +49,18 @@ namespace Gs2::Friend::Domain::Iterator
     {
     }
 
+    FDescribeFriendsByUserIdIterator::FDescribeFriendsByUserIdIterator(
+        const FDescribeFriendsByUserIdIterator& From
+    ):
+        Gs2(From.Gs2),
+        Client(From.Client),
+        NamespaceName(From.NamespaceName),
+        UserId(From.UserId),
+        WithProfile(From.WithProfile),
+        TimeOffsetToken(From.TimeOffsetToken)
+    {
+    }
+
     Gs2::Core::Model::FGs2ErrorPtr FDescribeFriendsByUserIdIterator::FIteratorNextTask::Action(TSharedPtr<TSharedPtr<Gs2::Friend::Model::FFriendUser>> Result)
     {
         ++Iterator;

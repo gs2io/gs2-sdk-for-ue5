@@ -39,6 +39,10 @@ namespace Gs2::LoginReward::Domain::Iterator
             const TOptional<FString> NamespaceName
         );
 
+        FDescribeBonusModelsIterator(
+            const FDescribeBonusModelsIterator& From
+        );
+
         class FIterator;
 
         class GS2LOGINREWARD_API FIteratorNextTask :

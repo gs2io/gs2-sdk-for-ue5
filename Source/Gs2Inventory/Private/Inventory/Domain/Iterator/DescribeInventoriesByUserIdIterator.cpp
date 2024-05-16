@@ -47,6 +47,17 @@ namespace Gs2::Inventory::Domain::Iterator
     {
     }
 
+    FDescribeInventoriesByUserIdIterator::FDescribeInventoriesByUserIdIterator(
+        const FDescribeInventoriesByUserIdIterator& From
+    ):
+        Gs2(From.Gs2),
+        Client(From.Client),
+        NamespaceName(From.NamespaceName),
+        UserId(From.UserId),
+        TimeOffsetToken(From.TimeOffsetToken)
+    {
+    }
+
     Gs2::Core::Model::FGs2ErrorPtr FDescribeInventoriesByUserIdIterator::FIteratorNextTask::Action(TSharedPtr<TSharedPtr<Gs2::Inventory::Model::FInventory>> Result)
     {
         ++Iterator;

@@ -42,6 +42,10 @@ namespace Gs2::SkillTree::Domain::Iterator
             const Gs2::Auth::Model::FAccessTokenPtr AccessToken
         );
 
+        FDescribeStatusesIterator(
+            const FDescribeStatusesIterator& From
+        );
+
         class FIterator;
 
         class GS2SKILLTREE_API FIteratorNextTask :

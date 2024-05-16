@@ -39,6 +39,10 @@ namespace Gs2::Stamina::Domain::Iterator
             const TOptional<FString> NamespaceName
         );
 
+        FDescribeRecoverIntervalTableMastersIterator(
+            const FDescribeRecoverIntervalTableMastersIterator& From
+        );
+
         class FIterator;
 
         class GS2STAMINA_API FIteratorNextTask :

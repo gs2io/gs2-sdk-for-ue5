@@ -45,6 +45,16 @@ namespace Gs2::Idle::Domain::Iterator
     {
     }
 
+    FDescribeStatusesIterator::FDescribeStatusesIterator(
+        const FDescribeStatusesIterator& From
+    ):
+        Gs2(From.Gs2),
+        Client(From.Client),
+        NamespaceName(From.NamespaceName),
+        AccessToken(From.AccessToken)
+    {
+    }
+
     Gs2::Core::Model::FGs2ErrorPtr FDescribeStatusesIterator::FIteratorNextTask::Action(TSharedPtr<TSharedPtr<Gs2::Idle::Model::FStatus>> Result)
     {
         ++Iterator;

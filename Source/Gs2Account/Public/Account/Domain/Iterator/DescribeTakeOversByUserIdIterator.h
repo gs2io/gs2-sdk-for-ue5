@@ -43,6 +43,10 @@ namespace Gs2::Account::Domain::Iterator
             const TOptional<FString> TimeOffsetToken = TOptional<FString>()
         );
 
+        FDescribeTakeOversByUserIdIterator(
+            const FDescribeTakeOversByUserIdIterator& From
+        );
+
         class FIterator;
 
         class GS2ACCOUNT_API FIteratorNextTask :

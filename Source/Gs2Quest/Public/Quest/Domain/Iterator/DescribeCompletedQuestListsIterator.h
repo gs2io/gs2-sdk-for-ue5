@@ -42,6 +42,10 @@ namespace Gs2::Quest::Domain::Iterator
             const Gs2::Auth::Model::FAccessTokenPtr AccessToken
         );
 
+        FDescribeCompletedQuestListsIterator(
+            const FDescribeCompletedQuestListsIterator& From
+        );
+
         class FIterator;
 
         class GS2QUEST_API FIteratorNextTask :

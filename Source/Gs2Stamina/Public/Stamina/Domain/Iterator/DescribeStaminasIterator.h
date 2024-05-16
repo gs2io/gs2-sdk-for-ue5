@@ -42,6 +42,10 @@ namespace Gs2::Stamina::Domain::Iterator
             const Gs2::Auth::Model::FAccessTokenPtr AccessToken
         );
 
+        FDescribeStaminasIterator(
+            const FDescribeStaminasIterator& From
+        );
+
         class FIterator;
 
         class GS2STAMINA_API FIteratorNextTask :

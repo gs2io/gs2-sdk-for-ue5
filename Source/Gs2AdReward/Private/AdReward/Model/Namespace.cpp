@@ -24,6 +24,7 @@ namespace Gs2::AdReward::Model
         DescriptionValue(TOptional<FString>()),
         AdmobValue(nullptr),
         UnityAdValue(nullptr),
+        AppLovinMaxesValue(nullptr),
         ChangePointNotificationValue(nullptr),
         LogSettingValue(nullptr),
         CreatedAtValue(TOptional<int64>()),
@@ -40,6 +41,7 @@ namespace Gs2::AdReward::Model
         DescriptionValue(From.DescriptionValue),
         AdmobValue(From.AdmobValue),
         UnityAdValue(From.UnityAdValue),
+        AppLovinMaxesValue(From.AppLovinMaxesValue),
         ChangePointNotificationValue(From.ChangePointNotificationValue),
         LogSettingValue(From.LogSettingValue),
         CreatedAtValue(From.CreatedAtValue),
@@ -85,6 +87,14 @@ namespace Gs2::AdReward::Model
     )
     {
         this->UnityAdValue = UnityAd;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FNamespace> FNamespace::WithAppLovinMaxes(
+        const TSharedPtr<TArray<TSharedPtr<Model::FAppLovinMax>>> AppLovinMaxes
+    )
+    {
+        this->AppLovinMaxesValue = AppLovinMaxes;
         return SharedThis(this);
     }
 
@@ -146,6 +156,10 @@ namespace Gs2::AdReward::Model
     TSharedPtr<FUnityAd> FNamespace::GetUnityAd() const
     {
         return UnityAdValue;
+    }
+    TSharedPtr<TArray<TSharedPtr<Model::FAppLovinMax>>> FNamespace::GetAppLovinMaxes() const
+    {
+        return AppLovinMaxesValue;
     }
     TSharedPtr<FNotificationSetting> FNamespace::GetChangePointNotification() const
     {
@@ -277,6 +291,18 @@ namespace Gs2::AdReward::Model
                     }
                     return Model::FUnityAd::FromJson(Data->GetObjectField("unityAd"));
                  }() : nullptr)
+            ->WithAppLovinMaxes(Data->HasField("appLovinMaxes") ? [Data]() -> TSharedPtr<TArray<Model::FAppLovinMaxPtr>>
+                {
+                    auto v = MakeShared<TArray<Model::FAppLovinMaxPtr>>();
+                    if (!Data->HasTypedField<EJson::Null>("appLovinMaxes") && Data->HasTypedField<EJson::Array>("appLovinMaxes"))
+                    {
+                        for (auto JsonObjectValue : Data->GetArrayField("appLovinMaxes"))
+                        {
+                            v->Add(Model::FAppLovinMax::FromJson(JsonObjectValue->AsObject()));
+                        }
+                    }
+                    return v;
+                 }() : MakeShared<TArray<Model::FAppLovinMaxPtr>>())
             ->WithChangePointNotification(Data->HasField("changePointNotification") ? [Data]() -> Model::FNotificationSettingPtr
                 {
                     if (Data->HasTypedField<EJson::Null>("changePointNotification"))
@@ -344,6 +370,15 @@ namespace Gs2::AdReward::Model
         if (UnityAdValue != nullptr && UnityAdValue.IsValid())
         {
             JsonRootObject->SetObjectField("unityAd", UnityAdValue->ToJson());
+        }
+        if (AppLovinMaxesValue != nullptr && AppLovinMaxesValue.IsValid())
+        {
+            TArray<TSharedPtr<FJsonValue>> v;
+            for (auto JsonObjectValue : *AppLovinMaxesValue)
+            {
+                v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
+            }
+            JsonRootObject->SetArrayField("appLovinMaxes", v);
         }
         if (ChangePointNotificationValue != nullptr && ChangePointNotificationValue.IsValid())
         {

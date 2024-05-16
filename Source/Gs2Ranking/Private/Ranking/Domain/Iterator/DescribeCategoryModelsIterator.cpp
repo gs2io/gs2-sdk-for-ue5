@@ -43,6 +43,15 @@ namespace Gs2::Ranking::Domain::Iterator
     {
     }
 
+    FDescribeCategoryModelsIterator::FDescribeCategoryModelsIterator(
+        const FDescribeCategoryModelsIterator& From
+    ):
+        Gs2(From.Gs2),
+        Client(From.Client),
+        NamespaceName(From.NamespaceName)
+    {
+    }
+
     Gs2::Core::Model::FGs2ErrorPtr FDescribeCategoryModelsIterator::FIteratorNextTask::Action(TSharedPtr<TSharedPtr<Gs2::Ranking::Model::FCategoryModel>> Result)
     {
         ++Iterator;

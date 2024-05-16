@@ -43,6 +43,15 @@ namespace Gs2::Quest::Domain::Iterator
     {
     }
 
+    FDescribeQuestGroupModelMastersIterator::FDescribeQuestGroupModelMastersIterator(
+        const FDescribeQuestGroupModelMastersIterator& From
+    ):
+        Gs2(From.Gs2),
+        Client(From.Client),
+        NamespaceName(From.NamespaceName)
+    {
+    }
+
     Gs2::Core::Model::FGs2ErrorPtr FDescribeQuestGroupModelMastersIterator::FIteratorNextTask::Action(TSharedPtr<TSharedPtr<Gs2::Quest::Model::FQuestGroupModelMaster>> Result)
     {
         ++Iterator;

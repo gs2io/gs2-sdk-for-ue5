@@ -53,6 +53,20 @@ namespace Gs2::Money::Domain::Iterator
     {
     }
 
+    FDescribeReceiptsIterator::FDescribeReceiptsIterator(
+        const FDescribeReceiptsIterator& From
+    ):
+        Gs2(From.Gs2),
+        Client(From.Client),
+        NamespaceName(From.NamespaceName),
+        UserId(From.UserId),
+        Slot(From.Slot),
+        Begin(From.Begin),
+        End(From.End),
+        TimeOffsetToken(From.TimeOffsetToken)
+    {
+    }
+
     Gs2::Core::Model::FGs2ErrorPtr FDescribeReceiptsIterator::FIteratorNextTask::Action(TSharedPtr<TSharedPtr<Gs2::Money::Model::FReceipt>> Result)
     {
         ++Iterator;

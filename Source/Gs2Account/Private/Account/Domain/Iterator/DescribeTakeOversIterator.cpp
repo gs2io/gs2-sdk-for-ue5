@@ -45,6 +45,16 @@ namespace Gs2::Account::Domain::Iterator
     {
     }
 
+    FDescribeTakeOversIterator::FDescribeTakeOversIterator(
+        const FDescribeTakeOversIterator& From
+    ):
+        Gs2(From.Gs2),
+        Client(From.Client),
+        NamespaceName(From.NamespaceName),
+        AccessToken(From.AccessToken)
+    {
+    }
+
     Gs2::Core::Model::FGs2ErrorPtr FDescribeTakeOversIterator::FIteratorNextTask::Action(TSharedPtr<TSharedPtr<Gs2::Account::Model::FTakeOver>> Result)
     {
         ++Iterator;

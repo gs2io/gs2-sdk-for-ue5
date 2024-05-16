@@ -47,6 +47,17 @@ namespace Gs2::JobQueue::Domain::Iterator
     {
     }
 
+    FDescribeDeadLetterJobsByUserIdIterator::FDescribeDeadLetterJobsByUserIdIterator(
+        const FDescribeDeadLetterJobsByUserIdIterator& From
+    ):
+        Gs2(From.Gs2),
+        Client(From.Client),
+        NamespaceName(From.NamespaceName),
+        UserId(From.UserId),
+        TimeOffsetToken(From.TimeOffsetToken)
+    {
+    }
+
     Gs2::Core::Model::FGs2ErrorPtr FDescribeDeadLetterJobsByUserIdIterator::FIteratorNextTask::Action(TSharedPtr<TSharedPtr<Gs2::JobQueue::Model::FDeadLetterJob>> Result)
     {
         ++Iterator;

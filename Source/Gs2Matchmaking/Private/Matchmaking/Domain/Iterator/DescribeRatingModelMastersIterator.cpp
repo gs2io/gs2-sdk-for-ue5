@@ -43,6 +43,15 @@ namespace Gs2::Matchmaking::Domain::Iterator
     {
     }
 
+    FDescribeRatingModelMastersIterator::FDescribeRatingModelMastersIterator(
+        const FDescribeRatingModelMastersIterator& From
+    ):
+        Gs2(From.Gs2),
+        Client(From.Client),
+        NamespaceName(From.NamespaceName)
+    {
+    }
+
     Gs2::Core::Model::FGs2ErrorPtr FDescribeRatingModelMastersIterator::FIteratorNextTask::Action(TSharedPtr<TSharedPtr<Gs2::Matchmaking::Model::FRatingModelMaster>> Result)
     {
         ++Iterator;

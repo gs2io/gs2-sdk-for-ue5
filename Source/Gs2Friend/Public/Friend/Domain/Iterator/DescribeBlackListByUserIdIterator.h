@@ -44,6 +44,10 @@ namespace Gs2::Friend::Domain::Iterator
             const TOptional<FString> TimeOffsetToken = TOptional<FString>()
         );
 
+        FDescribeBlackListByUserIdIterator(
+            const FDescribeBlackListByUserIdIterator& From
+        );
+
         class FIterator;
 
         class GS2FRIEND_API FIteratorNextTask :

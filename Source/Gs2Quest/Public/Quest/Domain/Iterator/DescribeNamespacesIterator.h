@@ -37,6 +37,10 @@ namespace Gs2::Quest::Domain::Iterator
             const Gs2::Quest::FGs2QuestRestClientPtr Client
         );
 
+        FDescribeNamespacesIterator(
+            const FDescribeNamespacesIterator& From
+        );
+
         class FIterator;
 
         class GS2QUEST_API FIteratorNextTask :

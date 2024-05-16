@@ -39,6 +39,10 @@ namespace Gs2::Buff::Domain::Iterator
             const TOptional<FString> NamespaceName
         );
 
+        FDescribeBuffEntryModelsIterator(
+            const FDescribeBuffEntryModelsIterator& From
+        );
+
         class FIterator;
 
         class GS2BUFF_API FIteratorNextTask :

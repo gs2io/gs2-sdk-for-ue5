@@ -37,6 +37,10 @@ namespace Gs2::AdReward::Domain::Iterator
             const Gs2::AdReward::FGs2AdRewardRestClientPtr Client
         );
 
+        FDescribeNamespacesIterator(
+            const FDescribeNamespacesIterator& From
+        );
+
         class FIterator;
 
         class GS2ADREWARD_API FIteratorNextTask :

@@ -47,6 +47,17 @@ namespace Gs2::News::Domain::Iterator
     {
     }
 
+    FDescribeNewsByUserIdIterator::FDescribeNewsByUserIdIterator(
+        const FDescribeNewsByUserIdIterator& From
+    ):
+        Gs2(From.Gs2),
+        Client(From.Client),
+        NamespaceName(From.NamespaceName),
+        UserId(From.UserId),
+        TimeOffsetToken(From.TimeOffsetToken)
+    {
+    }
+
     Gs2::Core::Model::FGs2ErrorPtr FDescribeNewsByUserIdIterator::FIteratorNextTask::Action(TSharedPtr<TSharedPtr<Gs2::News::Model::FNews>> Result)
     {
         ++Iterator;

@@ -45,6 +45,10 @@ namespace Gs2::Limit::Domain::Iterator
             const TOptional<FString> TimeOffsetToken = TOptional<FString>()
         );
 
+        FDescribeCountersByUserIdIterator(
+            const FDescribeCountersByUserIdIterator& From
+        );
+
         class FIterator;
 
         class GS2LIMIT_API FIteratorNextTask :

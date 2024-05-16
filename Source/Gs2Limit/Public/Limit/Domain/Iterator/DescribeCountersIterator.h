@@ -44,6 +44,10 @@ namespace Gs2::Limit::Domain::Iterator
             const TOptional<FString> LimitName = TOptional<FString>()
         );
 
+        FDescribeCountersIterator(
+            const FDescribeCountersIterator& From
+        );
+
         class FIterator;
 
         class GS2LIMIT_API FIteratorNextTask :

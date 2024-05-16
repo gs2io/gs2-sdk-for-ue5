@@ -39,6 +39,10 @@ namespace Gs2::Deploy::Domain::Iterator
             const TOptional<FString> StackName
         );
 
+        FDescribeResourcesIterator(
+            const FDescribeResourcesIterator& From
+        );
+
         class FIterator;
 
         class GS2DEPLOY_API FIteratorNextTask :

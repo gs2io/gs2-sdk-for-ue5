@@ -37,6 +37,10 @@ namespace Gs2::Ranking::Domain::Iterator
             const Gs2::Ranking::FGs2RankingRestClientPtr Client
         );
 
+        FDescribeNamespacesIterator(
+            const FDescribeNamespacesIterator& From
+        );
+
         class FIterator;
 
         class GS2RANKING_API FIteratorNextTask :

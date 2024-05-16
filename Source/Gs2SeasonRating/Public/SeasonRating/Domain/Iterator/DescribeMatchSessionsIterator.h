@@ -39,6 +39,10 @@ namespace Gs2::SeasonRating::Domain::Iterator
             const TOptional<FString> NamespaceName
         );
 
+        FDescribeMatchSessionsIterator(
+            const FDescribeMatchSessionsIterator& From
+        );
+
         class FIterator;
 
         class GS2SEASONRATING_API FIteratorNextTask :

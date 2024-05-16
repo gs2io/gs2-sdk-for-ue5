@@ -43,6 +43,15 @@ namespace Gs2::Inbox::Domain::Iterator
     {
     }
 
+    FDescribeGlobalMessageMastersIterator::FDescribeGlobalMessageMastersIterator(
+        const FDescribeGlobalMessageMastersIterator& From
+    ):
+        Gs2(From.Gs2),
+        Client(From.Client),
+        NamespaceName(From.NamespaceName)
+    {
+    }
+
     Gs2::Core::Model::FGs2ErrorPtr FDescribeGlobalMessageMastersIterator::FIteratorNextTask::Action(TSharedPtr<TSharedPtr<Gs2::Inbox::Model::FGlobalMessageMaster>> Result)
     {
         ++Iterator;

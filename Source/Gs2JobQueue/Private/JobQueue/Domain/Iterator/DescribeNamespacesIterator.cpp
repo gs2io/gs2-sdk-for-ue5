@@ -40,6 +40,14 @@ namespace Gs2::JobQueue::Domain::Iterator
     {
     }
 
+    FDescribeNamespacesIterator::FDescribeNamespacesIterator(
+        const FDescribeNamespacesIterator& From
+    ):
+        Gs2(From.Gs2),
+        Client(From.Client)
+    {
+    }
+
     Gs2::Core::Model::FGs2ErrorPtr FDescribeNamespacesIterator::FIteratorNextTask::Action(TSharedPtr<TSharedPtr<Gs2::JobQueue::Model::FNamespace>> Result)
     {
         ++Iterator;

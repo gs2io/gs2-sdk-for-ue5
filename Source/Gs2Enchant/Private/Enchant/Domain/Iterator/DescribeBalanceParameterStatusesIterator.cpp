@@ -47,6 +47,17 @@ namespace Gs2::Enchant::Domain::Iterator
     {
     }
 
+    FDescribeBalanceParameterStatusesIterator::FDescribeBalanceParameterStatusesIterator(
+        const FDescribeBalanceParameterStatusesIterator& From
+    ):
+        Gs2(From.Gs2),
+        Client(From.Client),
+        NamespaceName(From.NamespaceName),
+        AccessToken(From.AccessToken),
+        ParameterName(From.ParameterName)
+    {
+    }
+
     Gs2::Core::Model::FGs2ErrorPtr FDescribeBalanceParameterStatusesIterator::FIteratorNextTask::Action(TSharedPtr<TSharedPtr<Gs2::Enchant::Model::FBalanceParameterStatus>> Result)
     {
         ++Iterator;

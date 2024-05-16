@@ -39,6 +39,10 @@ namespace Gs2::Inventory::Domain::Iterator
             const TOptional<FString> NamespaceName
         );
 
+        FDescribeInventoryModelMastersIterator(
+            const FDescribeInventoryModelMastersIterator& From
+        );
+
         class FIterator;
 
         class GS2INVENTORY_API FIteratorNextTask :

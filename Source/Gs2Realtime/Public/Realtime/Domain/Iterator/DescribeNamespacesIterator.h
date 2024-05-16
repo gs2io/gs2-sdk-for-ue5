@@ -37,6 +37,10 @@ namespace Gs2::Realtime::Domain::Iterator
             const Gs2::Realtime::FGs2RealtimeRestClientPtr Client
         );
 
+        FDescribeNamespacesIterator(
+            const FDescribeNamespacesIterator& From
+        );
+
         class FIterator;
 
         class GS2REALTIME_API FIteratorNextTask :

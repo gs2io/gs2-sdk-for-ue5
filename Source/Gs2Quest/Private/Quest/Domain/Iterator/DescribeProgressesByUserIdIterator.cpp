@@ -47,6 +47,17 @@ namespace Gs2::Quest::Domain::Iterator
     {
     }
 
+    FDescribeProgressesByUserIdIterator::FDescribeProgressesByUserIdIterator(
+        const FDescribeProgressesByUserIdIterator& From
+    ):
+        Gs2(From.Gs2),
+        Client(From.Client),
+        NamespaceName(From.NamespaceName),
+        UserId(From.UserId),
+        TimeOffsetToken(From.TimeOffsetToken)
+    {
+    }
+
     Gs2::Core::Model::FGs2ErrorPtr FDescribeProgressesByUserIdIterator::FIteratorNextTask::Action(TSharedPtr<TSharedPtr<Gs2::Quest::Model::FProgress>> Result)
     {
         ++Iterator;

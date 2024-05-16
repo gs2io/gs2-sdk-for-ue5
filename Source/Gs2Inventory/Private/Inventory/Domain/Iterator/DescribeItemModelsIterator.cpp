@@ -45,6 +45,16 @@ namespace Gs2::Inventory::Domain::Iterator
     {
     }
 
+    FDescribeItemModelsIterator::FDescribeItemModelsIterator(
+        const FDescribeItemModelsIterator& From
+    ):
+        Gs2(From.Gs2),
+        Client(From.Client),
+        NamespaceName(From.NamespaceName),
+        InventoryName(From.InventoryName)
+    {
+    }
+
     Gs2::Core::Model::FGs2ErrorPtr FDescribeItemModelsIterator::FIteratorNextTask::Action(TSharedPtr<TSharedPtr<Gs2::Inventory::Model::FItemModel>> Result)
     {
         ++Iterator;

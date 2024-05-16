@@ -37,6 +37,10 @@ namespace Gs2::News::Domain::Iterator
             const Gs2::News::FGs2NewsRestClientPtr Client
         );
 
+        FDescribeNamespacesIterator(
+            const FDescribeNamespacesIterator& From
+        );
+
         class FIterator;
 
         class GS2NEWS_API FIteratorNextTask :

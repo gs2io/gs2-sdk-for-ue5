@@ -49,6 +49,18 @@ namespace Gs2::Formation::Domain::Iterator
     {
     }
 
+    FDescribePropertyFormsByUserIdIterator::FDescribePropertyFormsByUserIdIterator(
+        const FDescribePropertyFormsByUserIdIterator& From
+    ):
+        Gs2(From.Gs2),
+        Client(From.Client),
+        NamespaceName(From.NamespaceName),
+        UserId(From.UserId),
+        PropertyFormModelName(From.PropertyFormModelName),
+        TimeOffsetToken(From.TimeOffsetToken)
+    {
+    }
+
     Gs2::Core::Model::FGs2ErrorPtr FDescribePropertyFormsByUserIdIterator::FIteratorNextTask::Action(TSharedPtr<TSharedPtr<Gs2::Formation::Model::FPropertyForm>> Result)
     {
         ++Iterator;

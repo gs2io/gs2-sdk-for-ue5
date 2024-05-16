@@ -37,6 +37,10 @@ namespace Gs2::Deploy::Domain::Iterator
             const Gs2::Deploy::FGs2DeployRestClientPtr Client
         );
 
+        FDescribeStacksIterator(
+            const FDescribeStacksIterator& From
+        );
+
         class FIterator;
 
         class GS2DEPLOY_API FIteratorNextTask :

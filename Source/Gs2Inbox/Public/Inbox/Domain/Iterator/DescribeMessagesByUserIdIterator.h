@@ -45,6 +45,10 @@ namespace Gs2::Inbox::Domain::Iterator
             const TOptional<FString> TimeOffsetToken = TOptional<FString>()
         );
 
+        FDescribeMessagesByUserIdIterator(
+            const FDescribeMessagesByUserIdIterator& From
+        );
+
         class FIterator;
 
         class GS2INBOX_API FIteratorNextTask :

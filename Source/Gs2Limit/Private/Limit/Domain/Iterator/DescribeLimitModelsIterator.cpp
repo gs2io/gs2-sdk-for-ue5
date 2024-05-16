@@ -43,6 +43,15 @@ namespace Gs2::Limit::Domain::Iterator
     {
     }
 
+    FDescribeLimitModelsIterator::FDescribeLimitModelsIterator(
+        const FDescribeLimitModelsIterator& From
+    ):
+        Gs2(From.Gs2),
+        Client(From.Client),
+        NamespaceName(From.NamespaceName)
+    {
+    }
+
     Gs2::Core::Model::FGs2ErrorPtr FDescribeLimitModelsIterator::FIteratorNextTask::Action(TSharedPtr<TSharedPtr<Gs2::Limit::Model::FLimitModel>> Result)
     {
         ++Iterator;

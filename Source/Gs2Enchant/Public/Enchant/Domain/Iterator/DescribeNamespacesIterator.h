@@ -37,6 +37,10 @@ namespace Gs2::Enchant::Domain::Iterator
             const Gs2::Enchant::FGs2EnchantRestClientPtr Client
         );
 
+        FDescribeNamespacesIterator(
+            const FDescribeNamespacesIterator& From
+        );
+
         class FIterator;
 
         class GS2ENCHANT_API FIteratorNextTask :

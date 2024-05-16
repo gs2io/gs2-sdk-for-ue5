@@ -42,6 +42,10 @@ namespace Gs2::Schedule::Domain::Iterator
             const Gs2::Auth::Model::FAccessTokenPtr AccessToken
         );
 
+        FDescribeTriggersIterator(
+            const FDescribeTriggersIterator& From
+        );
+
         class FIterator;
 
         class GS2SCHEDULE_API FIteratorNextTask :

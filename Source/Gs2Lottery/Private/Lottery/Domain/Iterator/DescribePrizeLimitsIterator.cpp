@@ -45,6 +45,16 @@ namespace Gs2::Lottery::Domain::Iterator
     {
     }
 
+    FDescribePrizeLimitsIterator::FDescribePrizeLimitsIterator(
+        const FDescribePrizeLimitsIterator& From
+    ):
+        Gs2(From.Gs2),
+        Client(From.Client),
+        NamespaceName(From.NamespaceName),
+        PrizeTableName(From.PrizeTableName)
+    {
+    }
+
     Gs2::Core::Model::FGs2ErrorPtr FDescribePrizeLimitsIterator::FIteratorNextTask::Action(TSharedPtr<TSharedPtr<Gs2::Lottery::Model::FPrizeLimit>> Result)
     {
         ++Iterator;

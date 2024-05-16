@@ -47,6 +47,17 @@ namespace Gs2::Showcase::Domain::Iterator
     {
     }
 
+    FDescribeRandomDisplayItemsIterator::FDescribeRandomDisplayItemsIterator(
+        const FDescribeRandomDisplayItemsIterator& From
+    ):
+        Gs2(From.Gs2),
+        Client(From.Client),
+        NamespaceName(From.NamespaceName),
+        ShowcaseName(From.ShowcaseName),
+        AccessToken(From.AccessToken)
+    {
+    }
+
     Gs2::Core::Model::FGs2ErrorPtr FDescribeRandomDisplayItemsIterator::FIteratorNextTask::Action(TSharedPtr<TSharedPtr<Gs2::Showcase::Model::FRandomDisplayItem>> Result)
     {
         ++Iterator;

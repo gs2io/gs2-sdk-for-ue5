@@ -45,6 +45,16 @@ namespace Gs2::Lottery::Domain::Iterator
     {
     }
 
+    FDescribeBoxesIterator::FDescribeBoxesIterator(
+        const FDescribeBoxesIterator& From
+    ):
+        Gs2(From.Gs2),
+        Client(From.Client),
+        NamespaceName(From.NamespaceName),
+        AccessToken(From.AccessToken)
+    {
+    }
+
     Gs2::Core::Model::FGs2ErrorPtr FDescribeBoxesIterator::FIteratorNextTask::Action(TSharedPtr<TSharedPtr<Gs2::Lottery::Model::FBoxItems>> Result)
     {
         ++Iterator;

@@ -37,6 +37,10 @@ namespace Gs2::Formation::Domain::Iterator
             const Gs2::Formation::FGs2FormationRestClientPtr Client
         );
 
+        FDescribeNamespacesIterator(
+            const FDescribeNamespacesIterator& From
+        );
+
         class FIterator;
 
         class GS2FORMATION_API FIteratorNextTask :

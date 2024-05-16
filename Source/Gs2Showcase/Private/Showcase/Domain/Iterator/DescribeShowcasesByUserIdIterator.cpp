@@ -47,6 +47,17 @@ namespace Gs2::Showcase::Domain::Iterator
     {
     }
 
+    FDescribeShowcasesByUserIdIterator::FDescribeShowcasesByUserIdIterator(
+        const FDescribeShowcasesByUserIdIterator& From
+    ):
+        Gs2(From.Gs2),
+        Client(From.Client),
+        NamespaceName(From.NamespaceName),
+        UserId(From.UserId),
+        TimeOffsetToken(From.TimeOffsetToken)
+    {
+    }
+
     Gs2::Core::Model::FGs2ErrorPtr FDescribeShowcasesByUserIdIterator::FIteratorNextTask::Action(TSharedPtr<TSharedPtr<Gs2::Showcase::Model::FShowcase>> Result)
     {
         ++Iterator;

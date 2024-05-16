@@ -43,6 +43,10 @@ namespace Gs2::Idle::Domain::Iterator
             const TOptional<FString> TimeOffsetToken = TOptional<FString>()
         );
 
+        FDescribeStatusesByUserIdIterator(
+            const FDescribeStatusesByUserIdIterator& From
+        );
+
         class FIterator;
 
         class GS2IDLE_API FIteratorNextTask :

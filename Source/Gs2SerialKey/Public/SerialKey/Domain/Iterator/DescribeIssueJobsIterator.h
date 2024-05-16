@@ -41,6 +41,10 @@ namespace Gs2::SerialKey::Domain::Iterator
             const TOptional<FString> CampaignModelName
         );
 
+        FDescribeIssueJobsIterator(
+            const FDescribeIssueJobsIterator& From
+        );
+
         class FIterator;
 
         class GS2SERIALKEY_API FIteratorNextTask :

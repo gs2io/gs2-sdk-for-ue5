@@ -43,6 +43,10 @@ namespace Gs2::JobQueue::Domain::Iterator
             const TOptional<FString> TimeOffsetToken = TOptional<FString>()
         );
 
+        FDescribeDeadLetterJobsByUserIdIterator(
+            const FDescribeDeadLetterJobsByUserIdIterator& From
+        );
+
         class FIterator;
 
         class GS2JOBQUEUE_API FIteratorNextTask :

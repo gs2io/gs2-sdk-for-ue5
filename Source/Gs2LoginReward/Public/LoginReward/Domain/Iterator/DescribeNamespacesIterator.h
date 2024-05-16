@@ -37,6 +37,10 @@ namespace Gs2::LoginReward::Domain::Iterator
             const Gs2::LoginReward::FGs2LoginRewardRestClientPtr Client
         );
 
+        FDescribeNamespacesIterator(
+            const FDescribeNamespacesIterator& From
+        );
+
         class FIterator;
 
         class GS2LOGINREWARD_API FIteratorNextTask :

@@ -39,6 +39,10 @@ namespace Gs2::Schedule::Domain::Iterator
             const TOptional<FString> NamespaceName
         );
 
+        FDescribeEventMastersIterator(
+            const FDescribeEventMastersIterator& From
+        );
+
         class FIterator;
 
         class GS2SCHEDULE_API FIteratorNextTask :

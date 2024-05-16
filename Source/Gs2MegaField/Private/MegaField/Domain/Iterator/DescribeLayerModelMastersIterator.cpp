@@ -45,6 +45,16 @@ namespace Gs2::MegaField::Domain::Iterator
     {
     }
 
+    FDescribeLayerModelMastersIterator::FDescribeLayerModelMastersIterator(
+        const FDescribeLayerModelMastersIterator& From
+    ):
+        Gs2(From.Gs2),
+        Client(From.Client),
+        NamespaceName(From.NamespaceName),
+        AreaModelName(From.AreaModelName)
+    {
+    }
+
     Gs2::Core::Model::FGs2ErrorPtr FDescribeLayerModelMastersIterator::FIteratorNextTask::Action(TSharedPtr<TSharedPtr<Gs2::MegaField::Model::FLayerModelMaster>> Result)
     {
         ++Iterator;

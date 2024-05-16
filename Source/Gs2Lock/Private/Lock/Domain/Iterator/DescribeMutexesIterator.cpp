@@ -45,6 +45,16 @@ namespace Gs2::Lock::Domain::Iterator
     {
     }
 
+    FDescribeMutexesIterator::FDescribeMutexesIterator(
+        const FDescribeMutexesIterator& From
+    ):
+        Gs2(From.Gs2),
+        Client(From.Client),
+        NamespaceName(From.NamespaceName),
+        AccessToken(From.AccessToken)
+    {
+    }
+
     Gs2::Core::Model::FGs2ErrorPtr FDescribeMutexesIterator::FIteratorNextTask::Action(TSharedPtr<TSharedPtr<Gs2::Lock::Model::FMutex>> Result)
     {
         ++Iterator;

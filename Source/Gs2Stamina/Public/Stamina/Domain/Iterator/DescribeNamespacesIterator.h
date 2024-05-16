@@ -37,6 +37,10 @@ namespace Gs2::Stamina::Domain::Iterator
             const Gs2::Stamina::FGs2StaminaRestClientPtr Client
         );
 
+        FDescribeNamespacesIterator(
+            const FDescribeNamespacesIterator& From
+        );
+
         class FIterator;
 
         class GS2STAMINA_API FIteratorNextTask :

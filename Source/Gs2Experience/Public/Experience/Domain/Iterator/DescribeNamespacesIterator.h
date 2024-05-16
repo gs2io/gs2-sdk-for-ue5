@@ -37,6 +37,10 @@ namespace Gs2::Experience::Domain::Iterator
             const Gs2::Experience::FGs2ExperienceRestClientPtr Client
         );
 
+        FDescribeNamespacesIterator(
+            const FDescribeNamespacesIterator& From
+        );
+
         class FIterator;
 
         class GS2EXPERIENCE_API FIteratorNextTask :

@@ -43,6 +43,15 @@ namespace Gs2::News::Domain::Iterator
     {
     }
 
+    FDescribeProgressesIterator::FDescribeProgressesIterator(
+        const FDescribeProgressesIterator& From
+    ):
+        Gs2(From.Gs2),
+        Client(From.Client),
+        NamespaceName(From.NamespaceName)
+    {
+    }
+
     Gs2::Core::Model::FGs2ErrorPtr FDescribeProgressesIterator::FIteratorNextTask::Action(TSharedPtr<TSharedPtr<Gs2::News::Model::FProgress>> Result)
     {
         ++Iterator;

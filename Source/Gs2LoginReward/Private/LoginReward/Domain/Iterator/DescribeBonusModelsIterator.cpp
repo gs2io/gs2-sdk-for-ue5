@@ -43,6 +43,15 @@ namespace Gs2::LoginReward::Domain::Iterator
     {
     }
 
+    FDescribeBonusModelsIterator::FDescribeBonusModelsIterator(
+        const FDescribeBonusModelsIterator& From
+    ):
+        Gs2(From.Gs2),
+        Client(From.Client),
+        NamespaceName(From.NamespaceName)
+    {
+    }
+
     Gs2::Core::Model::FGs2ErrorPtr FDescribeBonusModelsIterator::FIteratorNextTask::Action(TSharedPtr<TSharedPtr<Gs2::LoginReward::Model::FBonusModel>> Result)
     {
         ++Iterator;

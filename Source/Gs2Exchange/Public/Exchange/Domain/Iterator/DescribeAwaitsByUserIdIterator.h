@@ -45,6 +45,10 @@ namespace Gs2::Exchange::Domain::Iterator
             const TOptional<FString> TimeOffsetToken = TOptional<FString>()
         );
 
+        FDescribeAwaitsByUserIdIterator(
+            const FDescribeAwaitsByUserIdIterator& From
+        );
+
         class FIterator;
 
         class GS2EXCHANGE_API FIteratorNextTask :

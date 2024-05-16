@@ -45,6 +45,10 @@ namespace Gs2::Enchant::Domain::Iterator
             const TOptional<FString> TimeOffsetToken = TOptional<FString>()
         );
 
+        FDescribeRarityParameterStatusesByUserIdIterator(
+            const FDescribeRarityParameterStatusesByUserIdIterator& From
+        );
+
         class FIterator;
 
         class GS2ENCHANT_API FIteratorNextTask :

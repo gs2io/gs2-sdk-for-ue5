@@ -43,6 +43,15 @@ namespace Gs2::Distributor::Domain::Iterator
     {
     }
 
+    FDescribeDistributorModelsIterator::FDescribeDistributorModelsIterator(
+        const FDescribeDistributorModelsIterator& From
+    ):
+        Gs2(From.Gs2),
+        Client(From.Client),
+        NamespaceName(From.NamespaceName)
+    {
+    }
+
     Gs2::Core::Model::FGs2ErrorPtr FDescribeDistributorModelsIterator::FIteratorNextTask::Action(TSharedPtr<TSharedPtr<Gs2::Distributor::Model::FDistributorModel>> Result)
     {
         ++Iterator;

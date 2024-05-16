@@ -45,6 +45,10 @@ namespace Gs2::Ranking::Domain::Iterator
             const TOptional<FString> AdditionalScopeName = TOptional<FString>()
         );
 
+        FDescribeNearRankingsIterator(
+            const FDescribeNearRankingsIterator& From
+        );
+
         class FIterator;
 
         class GS2RANKING_API FIteratorNextTask :

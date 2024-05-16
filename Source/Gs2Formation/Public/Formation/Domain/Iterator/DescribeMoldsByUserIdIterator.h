@@ -43,6 +43,10 @@ namespace Gs2::Formation::Domain::Iterator
             const TOptional<FString> TimeOffsetToken = TOptional<FString>()
         );
 
+        FDescribeMoldsByUserIdIterator(
+            const FDescribeMoldsByUserIdIterator& From
+        );
+
         class FIterator;
 
         class GS2FORMATION_API FIteratorNextTask :

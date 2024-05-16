@@ -49,6 +49,18 @@ namespace Gs2::Exchange::Domain::Iterator
     {
     }
 
+    FDescribeAwaitsByUserIdIterator::FDescribeAwaitsByUserIdIterator(
+        const FDescribeAwaitsByUserIdIterator& From
+    ):
+        Gs2(From.Gs2),
+        Client(From.Client),
+        NamespaceName(From.NamespaceName),
+        UserId(From.UserId),
+        RateName(From.RateName),
+        TimeOffsetToken(From.TimeOffsetToken)
+    {
+    }
+
     Gs2::Core::Model::FGs2ErrorPtr FDescribeAwaitsByUserIdIterator::FIteratorNextTask::Action(TSharedPtr<TSharedPtr<Gs2::Exchange::Model::FAwait>> Result)
     {
         ++Iterator;

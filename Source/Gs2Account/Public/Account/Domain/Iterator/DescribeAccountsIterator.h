@@ -39,6 +39,10 @@ namespace Gs2::Account::Domain::Iterator
             const TOptional<FString> NamespaceName
         );
 
+        FDescribeAccountsIterator(
+            const FDescribeAccountsIterator& From
+        );
+
         class FIterator;
 
         class GS2ACCOUNT_API FIteratorNextTask :

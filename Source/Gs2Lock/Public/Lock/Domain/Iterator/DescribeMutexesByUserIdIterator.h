@@ -43,6 +43,10 @@ namespace Gs2::Lock::Domain::Iterator
             const TOptional<FString> TimeOffsetToken = TOptional<FString>()
         );
 
+        FDescribeMutexesByUserIdIterator(
+            const FDescribeMutexesByUserIdIterator& From
+        );
+
         class FIterator;
 
         class GS2LOCK_API FIteratorNextTask :

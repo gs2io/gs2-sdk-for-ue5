@@ -18,7 +18,7 @@
 
 namespace Gs2::Version::Error
 {
-    FAcceptVersionInvalidError::FAcceptVersionInvalidError(Core::Model::FGs2ErrorPtr Error) : Core::Model::FUnauthorizedError(Error->GetErrors())
+    FAcceptVersionInvalidError::FAcceptVersionInvalidError(Core::Model::FGs2ErrorPtr Error) : Core::Model::FBadRequestError(Error->GetErrors())
     {
     }
 }

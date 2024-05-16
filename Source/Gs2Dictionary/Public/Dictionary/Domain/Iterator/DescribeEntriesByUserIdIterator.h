@@ -43,6 +43,10 @@ namespace Gs2::Dictionary::Domain::Iterator
             const TOptional<FString> TimeOffsetToken = TOptional<FString>()
         );
 
+        FDescribeEntriesByUserIdIterator(
+            const FDescribeEntriesByUserIdIterator& From
+        );
+
         class FIterator;
 
         class GS2DICTIONARY_API FIteratorNextTask :

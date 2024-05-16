@@ -42,6 +42,10 @@ namespace Gs2::Mission::Domain::Iterator
             const Gs2::Auth::Model::FAccessTokenPtr AccessToken
         );
 
+        FDescribeCompletesIterator(
+            const FDescribeCompletesIterator& From
+        );
+
         class FIterator;
 
         class GS2MISSION_API FIteratorNextTask :

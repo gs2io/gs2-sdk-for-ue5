@@ -43,6 +43,15 @@ namespace Gs2::Deploy::Domain::Iterator
     {
     }
 
+    FDescribeResourcesIterator::FDescribeResourcesIterator(
+        const FDescribeResourcesIterator& From
+    ):
+        Gs2(From.Gs2),
+        Client(From.Client),
+        StackName(From.StackName)
+    {
+    }
+
     Gs2::Core::Model::FGs2ErrorPtr FDescribeResourcesIterator::FIteratorNextTask::Action(TSharedPtr<TSharedPtr<Gs2::Deploy::Model::FResource>> Result)
     {
         ++Iterator;

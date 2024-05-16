@@ -47,6 +47,17 @@ namespace Gs2::SkillTree::Domain::Iterator
     {
     }
 
+    FDescribeStatusesByUserIdIterator::FDescribeStatusesByUserIdIterator(
+        const FDescribeStatusesByUserIdIterator& From
+    ):
+        Gs2(From.Gs2),
+        Client(From.Client),
+        NamespaceName(From.NamespaceName),
+        UserId(From.UserId),
+        TimeOffsetToken(From.TimeOffsetToken)
+    {
+    }
+
     Gs2::Core::Model::FGs2ErrorPtr FDescribeStatusesByUserIdIterator::FIteratorNextTask::Action(TSharedPtr<TSharedPtr<Gs2::SkillTree::Model::FStatus>> Result)
     {
         ++Iterator;

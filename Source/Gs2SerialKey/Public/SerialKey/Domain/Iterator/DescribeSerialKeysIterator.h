@@ -43,6 +43,10 @@ namespace Gs2::SerialKey::Domain::Iterator
             const TOptional<FString> IssueJobName = TOptional<FString>()
         );
 
+        FDescribeSerialKeysIterator(
+            const FDescribeSerialKeysIterator& From
+        );
+
         class FIterator;
 
         class GS2SERIALKEY_API FIteratorNextTask :

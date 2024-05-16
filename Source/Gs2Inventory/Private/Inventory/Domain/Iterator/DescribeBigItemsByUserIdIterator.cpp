@@ -49,6 +49,18 @@ namespace Gs2::Inventory::Domain::Iterator
     {
     }
 
+    FDescribeBigItemsByUserIdIterator::FDescribeBigItemsByUserIdIterator(
+        const FDescribeBigItemsByUserIdIterator& From
+    ):
+        Gs2(From.Gs2),
+        Client(From.Client),
+        NamespaceName(From.NamespaceName),
+        InventoryName(From.InventoryName),
+        UserId(From.UserId),
+        TimeOffsetToken(From.TimeOffsetToken)
+    {
+    }
+
     Gs2::Core::Model::FGs2ErrorPtr FDescribeBigItemsByUserIdIterator::FIteratorNextTask::Action(TSharedPtr<TSharedPtr<Gs2::Inventory::Model::FBigItem>> Result)
     {
         ++Iterator;

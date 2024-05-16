@@ -45,6 +45,16 @@ namespace Gs2::Schedule::Domain::Iterator
     {
     }
 
+    FDescribeTriggersIterator::FDescribeTriggersIterator(
+        const FDescribeTriggersIterator& From
+    ):
+        Gs2(From.Gs2),
+        Client(From.Client),
+        NamespaceName(From.NamespaceName),
+        AccessToken(From.AccessToken)
+    {
+    }
+
     Gs2::Core::Model::FGs2ErrorPtr FDescribeTriggersIterator::FIteratorNextTask::Action(TSharedPtr<TSharedPtr<Gs2::Schedule::Model::FTrigger>> Result)
     {
         ++Iterator;

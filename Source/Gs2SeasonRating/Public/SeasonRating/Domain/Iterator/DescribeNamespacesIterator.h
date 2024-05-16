@@ -37,6 +37,10 @@ namespace Gs2::SeasonRating::Domain::Iterator
             const Gs2::SeasonRating::FGs2SeasonRatingRestClientPtr Client
         );
 
+        FDescribeNamespacesIterator(
+            const FDescribeNamespacesIterator& From
+        );
+
         class FIterator;
 
         class GS2SEASONRATING_API FIteratorNextTask :

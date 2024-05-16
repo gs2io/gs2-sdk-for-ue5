@@ -39,6 +39,10 @@ namespace Gs2::SkillTree::Domain::Iterator
             const TOptional<FString> NamespaceName
         );
 
+        FDescribeNodeModelsIterator(
+            const FDescribeNodeModelsIterator& From
+        );
+
         class FIterator;
 
         class GS2SKILLTREE_API FIteratorNextTask :

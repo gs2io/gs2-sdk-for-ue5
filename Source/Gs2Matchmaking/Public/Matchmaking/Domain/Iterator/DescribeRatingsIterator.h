@@ -42,6 +42,10 @@ namespace Gs2::Matchmaking::Domain::Iterator
             const Gs2::Auth::Model::FAccessTokenPtr AccessToken
         );
 
+        FDescribeRatingsIterator(
+            const FDescribeRatingsIterator& From
+        );
+
         class FIterator;
 
         class GS2MATCHMAKING_API FIteratorNextTask :

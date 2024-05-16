@@ -45,6 +45,16 @@ namespace Gs2::Formation::Domain::Iterator
     {
     }
 
+    FDescribeMoldsIterator::FDescribeMoldsIterator(
+        const FDescribeMoldsIterator& From
+    ):
+        Gs2(From.Gs2),
+        Client(From.Client),
+        NamespaceName(From.NamespaceName),
+        AccessToken(From.AccessToken)
+    {
+    }
+
     Gs2::Core::Model::FGs2ErrorPtr FDescribeMoldsIterator::FIteratorNextTask::Action(TSharedPtr<TSharedPtr<Gs2::Formation::Model::FMold>> Result)
     {
         ++Iterator;

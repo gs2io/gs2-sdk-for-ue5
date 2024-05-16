@@ -37,6 +37,10 @@ namespace Gs2::Dictionary::Domain::Iterator
             const Gs2::Dictionary::FGs2DictionaryRestClientPtr Client
         );
 
+        FDescribeNamespacesIterator(
+            const FDescribeNamespacesIterator& From
+        );
+
         class FIterator;
 
         class GS2DICTIONARY_API FIteratorNextTask :

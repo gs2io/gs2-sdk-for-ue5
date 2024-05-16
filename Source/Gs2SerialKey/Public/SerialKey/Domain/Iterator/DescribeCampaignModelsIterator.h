@@ -39,6 +39,10 @@ namespace Gs2::SerialKey::Domain::Iterator
             const TOptional<FString> NamespaceName
         );
 
+        FDescribeCampaignModelsIterator(
+            const FDescribeCampaignModelsIterator& From
+        );
+
         class FIterator;
 
         class GS2SERIALKEY_API FIteratorNextTask :

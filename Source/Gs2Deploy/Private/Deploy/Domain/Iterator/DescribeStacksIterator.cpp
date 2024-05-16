@@ -40,6 +40,14 @@ namespace Gs2::Deploy::Domain::Iterator
     {
     }
 
+    FDescribeStacksIterator::FDescribeStacksIterator(
+        const FDescribeStacksIterator& From
+    ):
+        Gs2(From.Gs2),
+        Client(From.Client)
+    {
+    }
+
     Gs2::Core::Model::FGs2ErrorPtr FDescribeStacksIterator::FIteratorNextTask::Action(TSharedPtr<TSharedPtr<Gs2::Deploy::Model::FStack>> Result)
     {
         ++Iterator;

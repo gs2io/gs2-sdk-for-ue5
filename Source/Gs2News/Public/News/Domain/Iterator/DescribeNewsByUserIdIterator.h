@@ -43,6 +43,10 @@ namespace Gs2::News::Domain::Iterator
             const TOptional<FString> TimeOffsetToken = TOptional<FString>()
         );
 
+        FDescribeNewsByUserIdIterator(
+            const FDescribeNewsByUserIdIterator& From
+        );
+
         class FIterator;
 
         class GS2NEWS_API FIteratorNextTask :

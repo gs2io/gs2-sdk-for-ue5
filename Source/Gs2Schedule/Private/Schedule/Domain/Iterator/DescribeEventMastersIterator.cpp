@@ -43,6 +43,15 @@ namespace Gs2::Schedule::Domain::Iterator
     {
     }
 
+    FDescribeEventMastersIterator::FDescribeEventMastersIterator(
+        const FDescribeEventMastersIterator& From
+    ):
+        Gs2(From.Gs2),
+        Client(From.Client),
+        NamespaceName(From.NamespaceName)
+    {
+    }
+
     Gs2::Core::Model::FGs2ErrorPtr FDescribeEventMastersIterator::FIteratorNextTask::Action(TSharedPtr<TSharedPtr<Gs2::Schedule::Model::FEventMaster>> Result)
     {
         ++Iterator;

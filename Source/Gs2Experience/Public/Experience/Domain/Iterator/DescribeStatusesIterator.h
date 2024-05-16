@@ -44,6 +44,10 @@ namespace Gs2::Experience::Domain::Iterator
             const TOptional<FString> ExperienceName = TOptional<FString>()
         );
 
+        FDescribeStatusesIterator(
+            const FDescribeStatusesIterator& From
+        );
+
         class FIterator;
 
         class GS2EXPERIENCE_API FIteratorNextTask :

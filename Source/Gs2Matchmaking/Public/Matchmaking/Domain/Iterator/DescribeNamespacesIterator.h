@@ -37,6 +37,10 @@ namespace Gs2::Matchmaking::Domain::Iterator
             const Gs2::Matchmaking::FGs2MatchmakingRestClientPtr Client
         );
 
+        FDescribeNamespacesIterator(
+            const FDescribeNamespacesIterator& From
+        );
+
         class FIterator;
 
         class GS2MATCHMAKING_API FIteratorNextTask :

@@ -44,6 +44,10 @@ namespace Gs2::Inbox::Domain::Iterator
             const TOptional<bool> IsRead = TOptional<bool>()
         );
 
+        FDescribeMessagesIterator(
+            const FDescribeMessagesIterator& From
+        );
+
         class FIterator;
 
         class GS2INBOX_API FIteratorNextTask :

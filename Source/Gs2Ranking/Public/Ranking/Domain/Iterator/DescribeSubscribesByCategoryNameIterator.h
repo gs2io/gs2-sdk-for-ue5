@@ -44,6 +44,10 @@ namespace Gs2::Ranking::Domain::Iterator
             const Gs2::Auth::Model::FAccessTokenPtr AccessToken
         );
 
+        FDescribeSubscribesByCategoryNameIterator(
+            const FDescribeSubscribesByCategoryNameIterator& From
+        );
+
         class FIterator;
 
         class GS2RANKING_API FIteratorNextTask :

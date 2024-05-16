@@ -45,6 +45,10 @@ namespace Gs2::Lottery::Domain::Iterator
             const TOptional<FString> TimeOffsetToken = TOptional<FString>()
         );
 
+        FDescribeProbabilitiesByUserIdIterator(
+            const FDescribeProbabilitiesByUserIdIterator& From
+        );
+
         class FIterator;
 
         class GS2LOTTERY_API FIteratorNextTask :

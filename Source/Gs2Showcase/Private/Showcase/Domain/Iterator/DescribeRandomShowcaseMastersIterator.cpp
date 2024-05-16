@@ -43,6 +43,15 @@ namespace Gs2::Showcase::Domain::Iterator
     {
     }
 
+    FDescribeRandomShowcaseMastersIterator::FDescribeRandomShowcaseMastersIterator(
+        const FDescribeRandomShowcaseMastersIterator& From
+    ):
+        Gs2(From.Gs2),
+        Client(From.Client),
+        NamespaceName(From.NamespaceName)
+    {
+    }
+
     Gs2::Core::Model::FGs2ErrorPtr FDescribeRandomShowcaseMastersIterator::FIteratorNextTask::Action(TSharedPtr<TSharedPtr<Gs2::Showcase::Model::FRandomShowcaseMaster>> Result)
     {
         ++Iterator;

@@ -42,6 +42,10 @@ namespace Gs2::Money::Domain::Iterator
             const Gs2::Auth::Model::FAccessTokenPtr AccessToken
         );
 
+        FDescribeWalletsIterator(
+            const FDescribeWalletsIterator& From
+        );
+
         class FIterator;
 
         class GS2MONEY_API FIteratorNextTask :

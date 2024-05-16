@@ -37,6 +37,10 @@ namespace Gs2::Gateway::Domain::Iterator
             const Gs2::Gateway::FGs2GatewayRestClientPtr Client
         );
 
+        FDescribeNamespacesIterator(
+            const FDescribeNamespacesIterator& From
+        );
+
         class FIterator;
 
         class GS2GATEWAY_API FIteratorNextTask :

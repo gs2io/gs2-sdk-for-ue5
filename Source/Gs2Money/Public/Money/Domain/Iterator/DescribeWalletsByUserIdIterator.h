@@ -43,6 +43,10 @@ namespace Gs2::Money::Domain::Iterator
             const TOptional<FString> TimeOffsetToken = TOptional<FString>()
         );
 
+        FDescribeWalletsByUserIdIterator(
+            const FDescribeWalletsByUserIdIterator& From
+        );
+
         class FIterator;
 
         class GS2MONEY_API FIteratorNextTask :

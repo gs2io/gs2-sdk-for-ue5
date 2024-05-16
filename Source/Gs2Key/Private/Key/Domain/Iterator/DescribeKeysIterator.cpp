@@ -43,6 +43,15 @@ namespace Gs2::Key::Domain::Iterator
     {
     }
 
+    FDescribeKeysIterator::FDescribeKeysIterator(
+        const FDescribeKeysIterator& From
+    ):
+        Gs2(From.Gs2),
+        Client(From.Client),
+        NamespaceName(From.NamespaceName)
+    {
+    }
+
     Gs2::Core::Model::FGs2ErrorPtr FDescribeKeysIterator::FIteratorNextTask::Action(TSharedPtr<TSharedPtr<Gs2::Key::Model::FKey>> Result)
     {
         ++Iterator;

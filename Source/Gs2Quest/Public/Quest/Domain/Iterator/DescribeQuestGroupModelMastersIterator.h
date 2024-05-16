@@ -39,6 +39,10 @@ namespace Gs2::Quest::Domain::Iterator
             const TOptional<FString> NamespaceName
         );
 
+        FDescribeQuestGroupModelMastersIterator(
+            const FDescribeQuestGroupModelMastersIterator& From
+        );
+
         class FIterator;
 
         class GS2QUEST_API FIteratorNextTask :

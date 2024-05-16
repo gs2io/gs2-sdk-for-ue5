@@ -37,6 +37,10 @@ namespace Gs2::SerialKey::Domain::Iterator
             const Gs2::SerialKey::FGs2SerialKeyRestClientPtr Client
         );
 
+        FDescribeNamespacesIterator(
+            const FDescribeNamespacesIterator& From
+        );
+
         class FIterator;
 
         class GS2SERIALKEY_API FIteratorNextTask :

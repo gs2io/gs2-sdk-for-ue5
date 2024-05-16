@@ -41,6 +41,10 @@ namespace Gs2::Matchmaking::Domain::Iterator
             const Gs2::Matchmaking::Model::FPlayerPtr Player
         );
 
+        FDoMatchmakingByPlayerIterator(
+            const FDoMatchmakingByPlayerIterator& From
+        );
+
         class FIterator;
 
         class GS2MATCHMAKING_API FIteratorNextTask :

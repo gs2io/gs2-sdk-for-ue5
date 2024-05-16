@@ -37,6 +37,10 @@ namespace Gs2::Mission::Domain::Iterator
             const Gs2::Mission::FGs2MissionRestClientPtr Client
         );
 
+        FDescribeNamespacesIterator(
+            const FDescribeNamespacesIterator& From
+        );
+
         class FIterator;
 
         class GS2MISSION_API FIteratorNextTask :

@@ -39,6 +39,10 @@ namespace Gs2::Stamina::Domain::Iterator
             const TOptional<FString> NamespaceName
         );
 
+        FDescribeStaminaModelMastersIterator(
+            const FDescribeStaminaModelMastersIterator& From
+        );
+
         class FIterator;
 
         class GS2STAMINA_API FIteratorNextTask :

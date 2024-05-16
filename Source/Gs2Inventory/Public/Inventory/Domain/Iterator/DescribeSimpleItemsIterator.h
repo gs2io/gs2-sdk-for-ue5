@@ -44,6 +44,10 @@ namespace Gs2::Inventory::Domain::Iterator
             const Gs2::Auth::Model::FAccessTokenPtr AccessToken
         );
 
+        FDescribeSimpleItemsIterator(
+            const FDescribeSimpleItemsIterator& From
+        );
+
         class FIterator;
 
         class GS2INVENTORY_API FIteratorNextTask :

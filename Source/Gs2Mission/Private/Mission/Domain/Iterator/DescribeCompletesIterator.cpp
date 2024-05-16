@@ -45,6 +45,16 @@ namespace Gs2::Mission::Domain::Iterator
     {
     }
 
+    FDescribeCompletesIterator::FDescribeCompletesIterator(
+        const FDescribeCompletesIterator& From
+    ):
+        Gs2(From.Gs2),
+        Client(From.Client),
+        NamespaceName(From.NamespaceName),
+        AccessToken(From.AccessToken)
+    {
+    }
+
     Gs2::Core::Model::FGs2ErrorPtr FDescribeCompletesIterator::FIteratorNextTask::Action(TSharedPtr<TSharedPtr<Gs2::Mission::Model::FComplete>> Result)
     {
         ++Iterator;

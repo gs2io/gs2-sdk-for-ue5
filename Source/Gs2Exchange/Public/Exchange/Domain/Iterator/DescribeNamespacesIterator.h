@@ -37,6 +37,10 @@ namespace Gs2::Exchange::Domain::Iterator
             const Gs2::Exchange::FGs2ExchangeRestClientPtr Client
         );
 
+        FDescribeNamespacesIterator(
+            const FDescribeNamespacesIterator& From
+        );
+
         class FIterator;
 
         class GS2EXCHANGE_API FIteratorNextTask :

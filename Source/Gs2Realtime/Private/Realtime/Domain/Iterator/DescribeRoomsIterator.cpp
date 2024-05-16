@@ -43,6 +43,15 @@ namespace Gs2::Realtime::Domain::Iterator
     {
     }
 
+    FDescribeRoomsIterator::FDescribeRoomsIterator(
+        const FDescribeRoomsIterator& From
+    ):
+        Gs2(From.Gs2),
+        Client(From.Client),
+        NamespaceName(From.NamespaceName)
+    {
+    }
+
     Gs2::Core::Model::FGs2ErrorPtr FDescribeRoomsIterator::FIteratorNextTask::Action(TSharedPtr<TSharedPtr<Gs2::Realtime::Model::FRoom>> Result)
     {
         ++Iterator;

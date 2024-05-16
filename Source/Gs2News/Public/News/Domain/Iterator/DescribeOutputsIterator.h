@@ -41,6 +41,10 @@ namespace Gs2::News::Domain::Iterator
             const TOptional<FString> UploadToken
         );
 
+        FDescribeOutputsIterator(
+            const FDescribeOutputsIterator& From
+        );
+
         class FIterator;
 
         class GS2NEWS_API FIteratorNextTask :

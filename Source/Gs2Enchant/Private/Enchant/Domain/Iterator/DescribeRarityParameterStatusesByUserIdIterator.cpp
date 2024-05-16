@@ -49,6 +49,18 @@ namespace Gs2::Enchant::Domain::Iterator
     {
     }
 
+    FDescribeRarityParameterStatusesByUserIdIterator::FDescribeRarityParameterStatusesByUserIdIterator(
+        const FDescribeRarityParameterStatusesByUserIdIterator& From
+    ):
+        Gs2(From.Gs2),
+        Client(From.Client),
+        NamespaceName(From.NamespaceName),
+        UserId(From.UserId),
+        ParameterName(From.ParameterName),
+        TimeOffsetToken(From.TimeOffsetToken)
+    {
+    }
+
     Gs2::Core::Model::FGs2ErrorPtr FDescribeRarityParameterStatusesByUserIdIterator::FIteratorNextTask::Action(TSharedPtr<TSharedPtr<Gs2::Enchant::Model::FRarityParameterStatus>> Result)
     {
         ++Iterator;

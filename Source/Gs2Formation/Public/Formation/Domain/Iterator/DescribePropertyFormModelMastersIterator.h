@@ -39,6 +39,10 @@ namespace Gs2::Formation::Domain::Iterator
             const TOptional<FString> NamespaceName
         );
 
+        FDescribePropertyFormModelMastersIterator(
+            const FDescribePropertyFormModelMastersIterator& From
+        );
+
         class FIterator;
 
         class GS2FORMATION_API FIteratorNextTask :

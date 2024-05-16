@@ -37,6 +37,10 @@ namespace Gs2::JobQueue::Domain::Iterator
             const Gs2::JobQueue::FGs2JobQueueRestClientPtr Client
         );
 
+        FDescribeNamespacesIterator(
+            const FDescribeNamespacesIterator& From
+        );
+
         class FIterator;
 
         class GS2JOBQUEUE_API FIteratorNextTask :

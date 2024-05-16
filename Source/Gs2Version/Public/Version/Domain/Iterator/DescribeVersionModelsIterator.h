@@ -39,6 +39,10 @@ namespace Gs2::Version::Domain::Iterator
             const TOptional<FString> NamespaceName
         );
 
+        FDescribeVersionModelsIterator(
+            const FDescribeVersionModelsIterator& From
+        );
+
         class FIterator;
 
         class GS2VERSION_API FIteratorNextTask :

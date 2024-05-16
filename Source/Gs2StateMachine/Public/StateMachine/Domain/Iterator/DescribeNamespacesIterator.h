@@ -37,6 +37,10 @@ namespace Gs2::StateMachine::Domain::Iterator
             const Gs2::StateMachine::FGs2StateMachineRestClientPtr Client
         );
 
+        FDescribeNamespacesIterator(
+            const FDescribeNamespacesIterator& From
+        );
+
         class FIterator;
 
         class GS2STATEMACHINE_API FIteratorNextTask :

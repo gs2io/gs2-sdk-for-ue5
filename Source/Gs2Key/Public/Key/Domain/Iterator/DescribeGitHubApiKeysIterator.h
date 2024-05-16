@@ -39,6 +39,10 @@ namespace Gs2::Key::Domain::Iterator
             const TOptional<FString> NamespaceName
         );
 
+        FDescribeGitHubApiKeysIterator(
+            const FDescribeGitHubApiKeysIterator& From
+        );
+
         class FIterator;
 
         class GS2KEY_API FIteratorNextTask :

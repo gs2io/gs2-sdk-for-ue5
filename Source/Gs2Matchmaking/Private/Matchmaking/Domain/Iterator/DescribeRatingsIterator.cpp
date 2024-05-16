@@ -45,6 +45,16 @@ namespace Gs2::Matchmaking::Domain::Iterator
     {
     }
 
+    FDescribeRatingsIterator::FDescribeRatingsIterator(
+        const FDescribeRatingsIterator& From
+    ):
+        Gs2(From.Gs2),
+        Client(From.Client),
+        NamespaceName(From.NamespaceName),
+        AccessToken(From.AccessToken)
+    {
+    }
+
     Gs2::Core::Model::FGs2ErrorPtr FDescribeRatingsIterator::FIteratorNextTask::Action(TSharedPtr<TSharedPtr<Gs2::Matchmaking::Model::FRating>> Result)
     {
         ++Iterator;

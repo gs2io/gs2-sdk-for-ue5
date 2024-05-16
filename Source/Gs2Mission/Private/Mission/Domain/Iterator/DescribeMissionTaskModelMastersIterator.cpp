@@ -45,6 +45,16 @@ namespace Gs2::Mission::Domain::Iterator
     {
     }
 
+    FDescribeMissionTaskModelMastersIterator::FDescribeMissionTaskModelMastersIterator(
+        const FDescribeMissionTaskModelMastersIterator& From
+    ):
+        Gs2(From.Gs2),
+        Client(From.Client),
+        NamespaceName(From.NamespaceName),
+        MissionGroupName(From.MissionGroupName)
+    {
+    }
+
     Gs2::Core::Model::FGs2ErrorPtr FDescribeMissionTaskModelMastersIterator::FIteratorNextTask::Action(TSharedPtr<TSharedPtr<Gs2::Mission::Model::FMissionTaskModelMaster>> Result)
     {
         ++Iterator;

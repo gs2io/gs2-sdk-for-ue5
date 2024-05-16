@@ -44,6 +44,10 @@ namespace Gs2::Datastore::Domain::Iterator
             const TOptional<FString> Status = TOptional<FString>()
         );
 
+        FDescribeDataObjectsIterator(
+            const FDescribeDataObjectsIterator& From
+        );
+
         class FIterator;
 
         class GS2DATASTORE_API FIteratorNextTask :

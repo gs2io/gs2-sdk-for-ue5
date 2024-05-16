@@ -37,6 +37,10 @@ namespace Gs2::Lottery::Domain::Iterator
             const Gs2::Lottery::FGs2LotteryRestClientPtr Client
         );
 
+        FDescribeNamespacesIterator(
+            const FDescribeNamespacesIterator& From
+        );
+
         class FIterator;
 
         class GS2LOTTERY_API FIteratorNextTask :

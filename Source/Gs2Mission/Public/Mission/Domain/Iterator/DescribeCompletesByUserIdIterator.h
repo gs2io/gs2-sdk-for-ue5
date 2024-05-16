@@ -43,6 +43,10 @@ namespace Gs2::Mission::Domain::Iterator
             const TOptional<FString> TimeOffsetToken = TOptional<FString>()
         );
 
+        FDescribeCompletesByUserIdIterator(
+            const FDescribeCompletesByUserIdIterator& From
+        );
+
         class FIterator;
 
         class GS2MISSION_API FIteratorNextTask :

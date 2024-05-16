@@ -37,6 +37,10 @@ namespace Gs2::Schedule::Domain::Iterator
             const Gs2::Schedule::FGs2ScheduleRestClientPtr Client
         );
 
+        FDescribeNamespacesIterator(
+            const FDescribeNamespacesIterator& From
+        );
+
         class FIterator;
 
         class GS2SCHEDULE_API FIteratorNextTask :

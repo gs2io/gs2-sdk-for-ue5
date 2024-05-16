@@ -45,6 +45,16 @@ namespace Gs2::LoginReward::Domain::Iterator
     {
     }
 
+    FDescribeReceiveStatusesIterator::FDescribeReceiveStatusesIterator(
+        const FDescribeReceiveStatusesIterator& From
+    ):
+        Gs2(From.Gs2),
+        Client(From.Client),
+        NamespaceName(From.NamespaceName),
+        AccessToken(From.AccessToken)
+    {
+    }
+
     Gs2::Core::Model::FGs2ErrorPtr FDescribeReceiveStatusesIterator::FIteratorNextTask::Action(TSharedPtr<TSharedPtr<Gs2::LoginReward::Model::FReceiveStatus>> Result)
     {
         ++Iterator;

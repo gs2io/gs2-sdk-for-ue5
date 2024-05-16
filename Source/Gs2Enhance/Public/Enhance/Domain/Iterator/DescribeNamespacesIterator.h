@@ -37,6 +37,10 @@ namespace Gs2::Enhance::Domain::Iterator
             const Gs2::Enhance::FGs2EnhanceRestClientPtr Client
         );
 
+        FDescribeNamespacesIterator(
+            const FDescribeNamespacesIterator& From
+        );
+
         class FIterator;
 
         class GS2ENHANCE_API FIteratorNextTask :

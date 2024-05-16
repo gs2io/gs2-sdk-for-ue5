@@ -43,6 +43,15 @@ namespace Gs2::StateMachine::Domain::Iterator
     {
     }
 
+    FDescribeStateMachineMastersIterator::FDescribeStateMachineMastersIterator(
+        const FDescribeStateMachineMastersIterator& From
+    ):
+        Gs2(From.Gs2),
+        Client(From.Client),
+        NamespaceName(From.NamespaceName)
+    {
+    }
+
     Gs2::Core::Model::FGs2ErrorPtr FDescribeStateMachineMastersIterator::FIteratorNextTask::Action(TSharedPtr<TSharedPtr<Gs2::StateMachine::Model::FStateMachineMaster>> Result)
     {
         ++Iterator;

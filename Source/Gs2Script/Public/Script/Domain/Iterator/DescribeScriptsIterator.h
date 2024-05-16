@@ -39,6 +39,10 @@ namespace Gs2::Script::Domain::Iterator
             const TOptional<FString> NamespaceName
         );
 
+        FDescribeScriptsIterator(
+            const FDescribeScriptsIterator& From
+        );
+
         class FIterator;
 
         class GS2SCRIPT_API FIteratorNextTask :

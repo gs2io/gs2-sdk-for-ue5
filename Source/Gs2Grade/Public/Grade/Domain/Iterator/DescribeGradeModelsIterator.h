@@ -39,6 +39,10 @@ namespace Gs2::Grade::Domain::Iterator
             const TOptional<FString> NamespaceName
         );
 
+        FDescribeGradeModelsIterator(
+            const FDescribeGradeModelsIterator& From
+        );
+
         class FIterator;
 
         class GS2GRADE_API FIteratorNextTask :

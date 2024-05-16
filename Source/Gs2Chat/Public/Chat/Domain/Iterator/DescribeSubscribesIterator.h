@@ -42,6 +42,10 @@ namespace Gs2::Chat::Domain::Iterator
             const Gs2::Auth::Model::FAccessTokenPtr AccessToken
         );
 
+        FDescribeSubscribesIterator(
+            const FDescribeSubscribesIterator& From
+        );
+
         class FIterator;
 
         class GS2CHAT_API FIteratorNextTask :

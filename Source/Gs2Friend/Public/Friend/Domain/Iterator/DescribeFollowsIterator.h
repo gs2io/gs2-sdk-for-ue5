@@ -44,6 +44,10 @@ namespace Gs2::Friend::Domain::Iterator
             const TOptional<bool> WithProfile = TOptional<bool>()
         );
 
+        FDescribeFollowsIterator(
+            const FDescribeFollowsIterator& From
+        );
+
         class FIterator;
 
         class GS2FRIEND_API FIteratorNextTask :

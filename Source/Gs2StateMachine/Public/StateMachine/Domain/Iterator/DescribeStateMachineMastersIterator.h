@@ -39,6 +39,10 @@ namespace Gs2::StateMachine::Domain::Iterator
             const TOptional<FString> NamespaceName
         );
 
+        FDescribeStateMachineMastersIterator(
+            const FDescribeStateMachineMastersIterator& From
+        );
+
         class FIterator;
 
         class GS2STATEMACHINE_API FIteratorNextTask :

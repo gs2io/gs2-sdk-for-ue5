@@ -43,6 +43,15 @@ namespace Gs2::Exchange::Domain::Iterator
     {
     }
 
+    FDescribeIncrementalRateModelsIterator::FDescribeIncrementalRateModelsIterator(
+        const FDescribeIncrementalRateModelsIterator& From
+    ):
+        Gs2(From.Gs2),
+        Client(From.Client),
+        NamespaceName(From.NamespaceName)
+    {
+    }
+
     Gs2::Core::Model::FGs2ErrorPtr FDescribeIncrementalRateModelsIterator::FIteratorNextTask::Action(TSharedPtr<TSharedPtr<Gs2::Exchange::Model::FIncrementalRateModel>> Result)
     {
         ++Iterator;

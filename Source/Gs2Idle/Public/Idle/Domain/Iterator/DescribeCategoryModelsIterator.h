@@ -39,6 +39,10 @@ namespace Gs2::Idle::Domain::Iterator
             const TOptional<FString> NamespaceName
         );
 
+        FDescribeCategoryModelsIterator(
+            const FDescribeCategoryModelsIterator& From
+        );
+
         class FIterator;
 
         class GS2IDLE_API FIteratorNextTask :

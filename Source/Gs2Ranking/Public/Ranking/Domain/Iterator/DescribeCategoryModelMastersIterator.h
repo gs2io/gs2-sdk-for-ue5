@@ -39,6 +39,10 @@ namespace Gs2::Ranking::Domain::Iterator
             const TOptional<FString> NamespaceName
         );
 
+        FDescribeCategoryModelMastersIterator(
+            const FDescribeCategoryModelMastersIterator& From
+        );
+
         class FIterator;
 
         class GS2RANKING_API FIteratorNextTask :

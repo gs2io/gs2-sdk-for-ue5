@@ -39,6 +39,10 @@ namespace Gs2::Showcase::Domain::Iterator
             const TOptional<FString> NamespaceName
         );
 
+        FDescribeRandomShowcaseMastersIterator(
+            const FDescribeRandomShowcaseMastersIterator& From
+        );
+
         class FIterator;
 
         class GS2SHOWCASE_API FIteratorNextTask :

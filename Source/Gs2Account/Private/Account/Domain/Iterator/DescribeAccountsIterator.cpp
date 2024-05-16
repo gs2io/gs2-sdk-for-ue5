@@ -43,6 +43,15 @@ namespace Gs2::Account::Domain::Iterator
     {
     }
 
+    FDescribeAccountsIterator::FDescribeAccountsIterator(
+        const FDescribeAccountsIterator& From
+    ):
+        Gs2(From.Gs2),
+        Client(From.Client),
+        NamespaceName(From.NamespaceName)
+    {
+    }
+
     Gs2::Core::Model::FGs2ErrorPtr FDescribeAccountsIterator::FIteratorNextTask::Action(TSharedPtr<TSharedPtr<Gs2::Account::Model::FAccount>> Result)
     {
         ++Iterator;

@@ -45,6 +45,10 @@ namespace Gs2::Showcase::Domain::Iterator
             const TOptional<FString> TimeOffsetToken = TOptional<FString>()
         );
 
+        FDescribeRandomDisplayItemsByUserIdIterator(
+            const FDescribeRandomDisplayItemsByUserIdIterator& From
+        );
+
         class FIterator;
 
         class GS2SHOWCASE_API FIteratorNextTask :

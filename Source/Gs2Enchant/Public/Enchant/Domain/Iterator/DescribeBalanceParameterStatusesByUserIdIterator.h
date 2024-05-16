@@ -45,6 +45,10 @@ namespace Gs2::Enchant::Domain::Iterator
             const TOptional<FString> TimeOffsetToken = TOptional<FString>()
         );
 
+        FDescribeBalanceParameterStatusesByUserIdIterator(
+            const FDescribeBalanceParameterStatusesByUserIdIterator& From
+        );
+
         class FIterator;
 
         class GS2ENCHANT_API FIteratorNextTask :

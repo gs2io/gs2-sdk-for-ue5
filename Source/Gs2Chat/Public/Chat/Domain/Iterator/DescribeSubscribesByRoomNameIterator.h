@@ -41,6 +41,10 @@ namespace Gs2::Chat::Domain::Iterator
             const TOptional<FString> RoomName
         );
 
+        FDescribeSubscribesByRoomNameIterator(
+            const FDescribeSubscribesByRoomNameIterator& From
+        );
+
         class FIterator;
 
         class GS2CHAT_API FIteratorNextTask :

@@ -42,6 +42,10 @@ namespace Gs2::Account::Domain::Iterator
             const Gs2::Auth::Model::FAccessTokenPtr AccessToken
         );
 
+        FDescribeTakeOversIterator(
+            const FDescribeTakeOversIterator& From
+        );
+
         class FIterator;
 
         class GS2ACCOUNT_API FIteratorNextTask :

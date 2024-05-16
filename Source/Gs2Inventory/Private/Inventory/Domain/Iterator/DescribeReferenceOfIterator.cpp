@@ -51,6 +51,19 @@ namespace Gs2::Inventory::Domain::Iterator
     {
     }
 
+    FDescribeReferenceOfIterator::FDescribeReferenceOfIterator(
+        const FDescribeReferenceOfIterator& From
+    ):
+        Gs2(From.Gs2),
+        Client(From.Client),
+        NamespaceName(From.NamespaceName),
+        InventoryName(From.InventoryName),
+        AccessToken(From.AccessToken),
+        ItemName(From.ItemName),
+        ItemSetName(From.ItemSetName)
+    {
+    }
+
     Gs2::Core::Model::FGs2ErrorPtr FDescribeReferenceOfIterator::FIteratorNextTask::Action(TSharedPtr<TSharedPtr<Inventory::Model::FReferenceOfEntry>> Result)
     {
         ++Iterator;

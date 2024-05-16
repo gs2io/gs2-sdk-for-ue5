@@ -43,6 +43,15 @@ namespace Gs2::Buff::Domain::Iterator
     {
     }
 
+    FDescribeBuffEntryModelsIterator::FDescribeBuffEntryModelsIterator(
+        const FDescribeBuffEntryModelsIterator& From
+    ):
+        Gs2(From.Gs2),
+        Client(From.Client),
+        NamespaceName(From.NamespaceName)
+    {
+    }
+
     Gs2::Core::Model::FGs2ErrorPtr FDescribeBuffEntryModelsIterator::FIteratorNextTask::Action(TSharedPtr<TSharedPtr<Gs2::Buff::Model::FBuffEntryModel>> Result)
     {
         ++Iterator;

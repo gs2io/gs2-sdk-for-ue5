@@ -90,6 +90,15 @@ namespace Gs2::AdReward::Task::Rest
             {
                 JsonRootObject->SetObjectField("unityAd", this->Request->GetUnityAd()->ToJson());
             }
+            if (this->Request->GetAppLovinMaxes() != nullptr && this->Request->GetAppLovinMaxes().IsValid())
+            {
+                TArray<TSharedPtr<FJsonValue>> v;
+                for (auto JsonObjectValue : *this->Request->GetAppLovinMaxes())
+                {
+                    v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
+                }
+                JsonRootObject->SetArrayField("appLovinMaxes", v);
+            }
             if (this->Request->GetDescription().IsSet())
             {
                 JsonRootObject->SetStringField("description", this->Request->GetDescription().GetValue());

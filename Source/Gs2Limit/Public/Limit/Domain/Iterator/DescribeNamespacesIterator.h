@@ -37,6 +37,10 @@ namespace Gs2::Limit::Domain::Iterator
             const Gs2::Limit::FGs2LimitRestClientPtr Client
         );
 
+        FDescribeNamespacesIterator(
+            const FDescribeNamespacesIterator& From
+        );
+
         class FIterator;
 
         class GS2LIMIT_API FIteratorNextTask :

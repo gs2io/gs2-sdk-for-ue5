@@ -39,6 +39,10 @@ namespace Gs2::Limit::Domain::Iterator
             const TOptional<FString> NamespaceName
         );
 
+        FDescribeLimitModelsIterator(
+            const FDescribeLimitModelsIterator& From
+        );
+
         class FIterator;
 
         class GS2LIMIT_API FIteratorNextTask :

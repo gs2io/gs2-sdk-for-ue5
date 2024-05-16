@@ -39,6 +39,10 @@ namespace Gs2::Stamina::Domain::Iterator
             const TOptional<FString> NamespaceName
         );
 
+        FDescribeMaxStaminaTableMastersIterator(
+            const FDescribeMaxStaminaTableMastersIterator& From
+        );
+
         class FIterator;
 
         class GS2STAMINA_API FIteratorNextTask :

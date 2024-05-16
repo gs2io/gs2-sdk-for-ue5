@@ -47,6 +47,17 @@ namespace Gs2::Version::Domain::Iterator
     {
     }
 
+    FDescribeAcceptVersionsByUserIdIterator::FDescribeAcceptVersionsByUserIdIterator(
+        const FDescribeAcceptVersionsByUserIdIterator& From
+    ):
+        Gs2(From.Gs2),
+        Client(From.Client),
+        NamespaceName(From.NamespaceName),
+        UserId(From.UserId),
+        TimeOffsetToken(From.TimeOffsetToken)
+    {
+    }
+
     Gs2::Core::Model::FGs2ErrorPtr FDescribeAcceptVersionsByUserIdIterator::FIteratorNextTask::Action(TSharedPtr<TSharedPtr<Gs2::Version::Model::FAcceptVersion>> Result)
     {
         ++Iterator;

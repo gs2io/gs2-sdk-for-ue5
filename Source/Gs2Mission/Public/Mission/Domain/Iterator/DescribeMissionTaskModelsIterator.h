@@ -41,6 +41,10 @@ namespace Gs2::Mission::Domain::Iterator
             const TOptional<FString> MissionGroupName
         );
 
+        FDescribeMissionTaskModelsIterator(
+            const FDescribeMissionTaskModelsIterator& From
+        );
+
         class FIterator;
 
         class GS2MISSION_API FIteratorNextTask :

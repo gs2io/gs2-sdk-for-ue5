@@ -37,6 +37,10 @@ namespace Gs2::Showcase::Domain::Iterator
             const Gs2::Showcase::FGs2ShowcaseRestClientPtr Client
         );
 
+        FDescribeNamespacesIterator(
+            const FDescribeNamespacesIterator& From
+        );
+
         class FIterator;
 
         class GS2SHOWCASE_API FIteratorNextTask :

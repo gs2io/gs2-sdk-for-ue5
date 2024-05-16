@@ -21,6 +21,7 @@
 #include "Model/Point.h"
 #include "Model/AdMob.h"
 #include "Model/UnityAd.h"
+#include "Model/AppLovinMax.h"
 #include "Model/NotificationSetting.h"
 #include "Model/LogSetting.h"
 
