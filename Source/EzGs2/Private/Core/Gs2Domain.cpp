@@ -73,6 +73,54 @@ namespace Gs2::UE5::Core::Domain
 
         this->Initialize();
     }
+    
+    FGs2Domain::FGs2Domain(
+        FGs2Domain& From
+    ):
+        Connection(From.Connection),
+        Super(From.Super),
+        Account(From.Account),
+        AdReward(From.AdReward),
+        Auth(From.Auth),
+        Buff(From.Buff),
+        Chat(From.Chat),
+        Datastore(From.Datastore),
+        Dictionary(From.Dictionary),
+        Distributor(From.Distributor),
+        Enchant(From.Enchant),
+        Enhance(From.Enhance),
+        Exchange(From.Exchange),
+        Experience(From.Experience),
+        Formation(From.Formation),
+        Friend(From.Friend),
+        Gateway(From.Gateway),
+        Grade(From.Grade),
+        Guild(From.Guild),
+        Idle(From.Idle),
+        Inbox(From.Inbox),
+        Inventory(From.Inventory),
+        JobQueue(From.JobQueue),
+        Limit(From.Limit),
+        LoginReward(From.LoginReward),
+        Lottery(From.Lottery),
+        Matchmaking(From.Matchmaking),
+        MegaField(From.MegaField),
+        Mission(From.Mission),
+        Money(From.Money),
+        News(From.News),
+        Quest(From.Quest),
+        Ranking(From.Ranking),
+        Realtime(From.Realtime),
+        Schedule(From.Schedule),
+        SeasonRating(From.SeasonRating),
+        SerialKey(From.SerialKey),
+        Showcase(From.Showcase),
+        SkillTree(From.SkillTree),
+        Stamina(From.Stamina),
+        StateMachine(From.StateMachine),
+        Version(From.Version)
+    {
+    }
 
     FGs2Domain::FGs2Domain(Gs2::Core::Domain::FGs2Ptr Gs2)
     {

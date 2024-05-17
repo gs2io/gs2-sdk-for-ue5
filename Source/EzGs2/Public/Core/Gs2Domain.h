@@ -122,6 +122,9 @@ namespace Gs2::UE5::Core::Domain
             Util::FGs2ConnectionPtr Connection,
             FString DistributorNamespaceName = "default"
             );
+        FGs2Domain(
+            FGs2Domain& From
+        );
         explicit FGs2Domain(
             Gs2::Core::Domain::FGs2Ptr Gs2
         );

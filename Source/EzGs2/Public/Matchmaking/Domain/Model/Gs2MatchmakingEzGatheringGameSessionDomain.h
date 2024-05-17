@@ -78,6 +78,26 @@ namespace Gs2::UE5::Matchmaking::Domain::Model
             TOptional<TArray<TSharedPtr<Gs2::UE5::Matchmaking::Model::FEzAttributeRange>>> AttributeRanges = TOptional<TArray<TSharedPtr<Gs2::UE5::Matchmaking::Model::FEzAttributeRange>>>()
         );
 
+        class FPingTask :
+            public Gs2::Core::Util::TGs2Future<Gs2::UE5::Matchmaking::Domain::Model::FEzGatheringGameSessionDomain>,
+            public TSharedFromThis<FPingTask>
+        {
+            TSharedPtr<FEzGatheringGameSessionDomain> Self;
+
+        public:
+            explicit FPingTask(
+                TSharedPtr<FEzGatheringGameSessionDomain> Self
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::UE5::Matchmaking::Domain::Model::FEzGatheringGameSessionDomain>> Result
+            ) override;
+        };
+        friend FPingTask;
+
+        TSharedPtr<FAsyncTask<FPingTask>> Ping(
+        );
+
         class FCancelMatchmakingTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::Matchmaking::Domain::Model::FEzGatheringGameSessionDomain>,
             public TSharedFromThis<FCancelMatchmakingTask>

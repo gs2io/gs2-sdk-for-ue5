@@ -109,6 +109,56 @@ namespace Gs2::UE5::Matchmaking::Domain::Model
         );
     }
 
+    FEzGatheringGameSessionDomain::FPingTask::FPingTask(
+        TSharedPtr<FEzGatheringGameSessionDomain> Self
+    ): Self(Self)
+    {
+
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FEzGatheringGameSessionDomain::FPingTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::UE5::Matchmaking::Domain::Model::FEzGatheringGameSessionDomain>> Result
+    )
+    {
+        const auto Future = Self->ConnectionValue->Run(
+            [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
+                const auto Task = Self->Domain->Ping(
+                    MakeShared<Gs2::Matchmaking::Request::FPingRequest>()
+                );
+                Task->StartSynchronousTask();
+                if (Task->GetTask().IsError())
+                {
+                    Task->EnsureCompletion();
+                    return Task->GetTask().Error();
+                }
+                *Result = MakeShared<Gs2::UE5::Matchmaking::Domain::Model::FEzGatheringGameSessionDomain>(
+                    Task->GetTask().Result(),
+                    Self->GameSession,
+                    Self->ConnectionValue
+                );
+                Task->EnsureCompletion();
+                return nullptr;
+            },
+            nullptr
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            Future->EnsureCompletion();
+            return Future->GetTask().Error();
+        }
+        Future->EnsureCompletion();
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FEzGatheringGameSessionDomain::FPingTask>> FEzGatheringGameSessionDomain::Ping(
+    )
+    {
+        return Gs2::Core::Util::New<FAsyncTask<FPingTask>>(
+            this->AsShared()
+        );
+    }
+
     FEzGatheringGameSessionDomain::FCancelMatchmakingTask::FCancelMatchmakingTask(
         TSharedPtr<FEzGatheringGameSessionDomain> Self
     ): Self(Self)
