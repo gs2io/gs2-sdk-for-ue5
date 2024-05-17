@@ -55,6 +55,12 @@ class BPGS2_API UGs2MatchmakingUserFunctionLibrary : public UBlueprintFunctionLi
         FString GatheringName
     );
 
+    UFUNCTION(BlueprintCallable, DisplayName="Gs2::Matchmaking::OwnRating", Category="Game Server Services|GS2-Matchmaking|Namespace|User|Rating", meta=(WorldContext="WorldContextObject"))
+    static UPARAM(DisplayName="Rating") FGs2MatchmakingOwnRating OwnRating(
+        FGs2MatchmakingOwnUser User,
+        FString RatingName
+    );
+
     UFUNCTION(BlueprintCallable, DisplayName="Gs2::Matchmaking::OwnBallot", Category="Game Server Services|GS2-Matchmaking|Namespace|User|Ballot", meta=(WorldContext="WorldContextObject"))
     static UPARAM(DisplayName="Ballot") FGs2MatchmakingOwnBallot OwnBallot(
         FGs2MatchmakingOwnUser User,
@@ -62,11 +68,5 @@ class BPGS2_API UGs2MatchmakingUserFunctionLibrary : public UBlueprintFunctionLi
         FString GatheringName,
         int32 NumberOfPlayer,
         FString KeyId
-    );
-
-    UFUNCTION(BlueprintCallable, DisplayName="Gs2::Matchmaking::OwnRating", Category="Game Server Services|GS2-Matchmaking|Namespace|User|Rating", meta=(WorldContext="WorldContextObject"))
-    static UPARAM(DisplayName="Rating") FGs2MatchmakingOwnRating OwnRating(
-        FGs2MatchmakingOwnUser User,
-        FString RatingName
     );
 };

@@ -164,6 +164,18 @@
 #include "Task/Rest/DoMatchmakingByUserIdTask.h"
 #include "Task/WebSocket/DoMatchmakingByUserIdTask.h"
 
+// Ping
+#include "Request/PingRequest.h"
+#include "Result/PingResult.h"
+#include "Task/Rest/PingTask.h"
+#include "Task/WebSocket/PingTask.h"
+
+// PingByUserId
+#include "Request/PingByUserIdRequest.h"
+#include "Result/PingByUserIdResult.h"
+#include "Task/Rest/PingByUserIdTask.h"
+#include "Task/WebSocket/PingByUserIdTask.h"
+
 // GetGathering
 #include "Request/GetGatheringRequest.h"
 #include "Result/GetGatheringResult.h"

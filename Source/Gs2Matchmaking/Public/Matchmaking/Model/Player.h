@@ -28,6 +28,7 @@ namespace Gs2::Matchmaking::Model
         TSharedPtr<TArray<TSharedPtr<FAttribute>>> AttributesValue;
         TOptional<FString> RoleNameValue;
         TSharedPtr<TArray<FString>> DenyUserIdsValue;
+        TOptional<int64> CreatedAtValue;
 
     public:
         FPlayer();
@@ -40,11 +41,14 @@ namespace Gs2::Matchmaking::Model
         TSharedPtr<FPlayer> WithAttributes(const TSharedPtr<TArray<TSharedPtr<FAttribute>>> Attributes);
         TSharedPtr<FPlayer> WithRoleName(const TOptional<FString> RoleName);
         TSharedPtr<FPlayer> WithDenyUserIds(const TSharedPtr<TArray<FString>> DenyUserIds);
+        TSharedPtr<FPlayer> WithCreatedAt(const TOptional<int64> CreatedAt);
 
         TOptional<FString> GetUserId() const;
         TSharedPtr<TArray<TSharedPtr<FAttribute>>> GetAttributes() const;
         TOptional<FString> GetRoleName() const;
         TSharedPtr<TArray<FString>> GetDenyUserIds() const;
+        TOptional<int64> GetCreatedAt() const;
+        FString GetCreatedAtString() const;
 
 
         static TSharedPtr<FPlayer> FromJson(const TSharedPtr<FJsonObject> Data);

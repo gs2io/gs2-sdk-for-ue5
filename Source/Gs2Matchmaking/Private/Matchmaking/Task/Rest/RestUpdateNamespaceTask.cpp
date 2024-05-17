@@ -92,6 +92,14 @@ namespace Gs2::Matchmaking::Task::Rest
             {
                 JsonRootObject->SetBoolField("enableRating", this->Request->GetEnableRating().GetValue());
             }
+            if (this->Request->GetEnableDisconnectDetection().IsSet())
+            {
+                JsonRootObject->SetStringField("enableDisconnectDetection", this->Request->GetEnableDisconnectDetection().GetValue());
+            }
+            if (this->Request->GetDisconnectDetectionTimeoutSeconds().IsSet())
+            {
+                JsonRootObject->SetNumberField("disconnectDetectionTimeoutSeconds", this->Request->GetDisconnectDetectionTimeoutSeconds().GetValue());
+            }
             if (this->Request->GetCreateGatheringTriggerType().IsSet())
             {
                 JsonRootObject->SetStringField("createGatheringTriggerType", this->Request->GetCreateGatheringTriggerType().GetValue());

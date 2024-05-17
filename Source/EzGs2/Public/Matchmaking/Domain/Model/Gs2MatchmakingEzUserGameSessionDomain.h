@@ -31,9 +31,9 @@
 #include "Matchmaking/Model/Gs2MatchmakingEzTimeSpan.h"
 #include "Gs2MatchmakingEzGatheringGameSessionDomain.h"
 #include "Matchmaking/Domain/Iterator/Gs2MatchmakingEzDoMatchmakingIterator.h"
-#include "Gs2MatchmakingEzBallotGameSessionDomain.h"
 #include "Gs2MatchmakingEzRatingGameSessionDomain.h"
 #include "Matchmaking/Domain/Iterator/Gs2MatchmakingEzDescribeRatingsIterator.h"
+#include "Gs2MatchmakingEzBallotGameSessionDomain.h"
 #include "Gs2MatchmakingEzUserGameSessionDomain.h"
 #include "Util/Net/GameSession.h"
 #include "Util/Net/Gs2Connection.h"
@@ -110,13 +110,6 @@ namespace Gs2::UE5::Matchmaking::Domain::Model
             const FString GatheringName
         ) const;
 
-        Gs2::UE5::Matchmaking::Domain::Model::FEzBallotGameSessionDomainPtr Ballot(
-            const FString RatingName,
-            const FString GatheringName,
-            const int32 NumberOfPlayer,
-            const FString KeyId
-        ) const;
-
         Gs2::UE5::Matchmaking::Domain::Iterator::FEzDescribeRatingsIteratorPtr Ratings(
         ) const;
 
@@ -126,6 +119,13 @@ namespace Gs2::UE5::Matchmaking::Domain::Model
 
         Gs2::UE5::Matchmaking::Domain::Model::FEzRatingGameSessionDomainPtr Rating(
             const FString RatingName
+        ) const;
+
+        Gs2::UE5::Matchmaking::Domain::Model::FEzBallotGameSessionDomainPtr Ballot(
+            const FString RatingName,
+            const FString GatheringName,
+            const int32 NumberOfPlayer,
+            const FString KeyId
         ) const;
 
     };

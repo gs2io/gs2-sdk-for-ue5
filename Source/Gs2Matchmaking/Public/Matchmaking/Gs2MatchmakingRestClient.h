@@ -60,6 +60,10 @@
 #include "Task/Rest/DoMatchmakingTask.h"
 #include "Request/DoMatchmakingByUserIdRequest.h"
 #include "Task/Rest/DoMatchmakingByUserIdTask.h"
+#include "Request/PingRequest.h"
+#include "Task/Rest/PingTask.h"
+#include "Request/PingByUserIdRequest.h"
+#include "Task/Rest/PingByUserIdTask.h"
 #include "Request/GetGatheringRequest.h"
 #include "Task/Rest/GetGatheringTask.h"
 #include "Request/CancelMatchmakingRequest.h"
@@ -210,6 +214,14 @@ namespace Gs2::Matchmaking
 
         TSharedPtr<FAsyncTask<Task::Rest::FDoMatchmakingByUserIdTask>> DoMatchmakingByUserId(
             const Request::FDoMatchmakingByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FPingTask>> Ping(
+            const Request::FPingRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FPingByUserIdTask>> PingByUserId(
+            const Request::FPingByUserIdRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::Rest::FGetGatheringTask>> GetGathering(

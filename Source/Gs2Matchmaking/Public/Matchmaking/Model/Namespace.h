@@ -30,6 +30,8 @@ namespace Gs2::Matchmaking::Model
         TOptional<FString> NameValue;
         TOptional<FString> DescriptionValue;
         TOptional<bool> EnableRatingValue;
+        TOptional<FString> EnableDisconnectDetectionValue;
+        TOptional<int32> DisconnectDetectionTimeoutSecondsValue;
         TOptional<FString> CreateGatheringTriggerTypeValue;
         TOptional<FString> CreateGatheringTriggerRealtimeNamespaceIdValue;
         TOptional<FString> CreateGatheringTriggerScriptIdValue;
@@ -60,6 +62,8 @@ namespace Gs2::Matchmaking::Model
         TSharedPtr<FNamespace> WithName(const TOptional<FString> Name);
         TSharedPtr<FNamespace> WithDescription(const TOptional<FString> Description);
         TSharedPtr<FNamespace> WithEnableRating(const TOptional<bool> EnableRating);
+        TSharedPtr<FNamespace> WithEnableDisconnectDetection(const TOptional<FString> EnableDisconnectDetection);
+        TSharedPtr<FNamespace> WithDisconnectDetectionTimeoutSeconds(const TOptional<int32> DisconnectDetectionTimeoutSeconds);
         TSharedPtr<FNamespace> WithCreateGatheringTriggerType(const TOptional<FString> CreateGatheringTriggerType);
         TSharedPtr<FNamespace> WithCreateGatheringTriggerRealtimeNamespaceId(const TOptional<FString> CreateGatheringTriggerRealtimeNamespaceId);
         TSharedPtr<FNamespace> WithCreateGatheringTriggerScriptId(const TOptional<FString> CreateGatheringTriggerScriptId);
@@ -84,6 +88,9 @@ namespace Gs2::Matchmaking::Model
         TOptional<FString> GetDescription() const;
         TOptional<bool> GetEnableRating() const;
         FString GetEnableRatingString() const;
+        TOptional<FString> GetEnableDisconnectDetection() const;
+        TOptional<int32> GetDisconnectDetectionTimeoutSeconds() const;
+        FString GetDisconnectDetectionTimeoutSecondsString() const;
         TOptional<FString> GetCreateGatheringTriggerType() const;
         TOptional<FString> GetCreateGatheringTriggerRealtimeNamespaceId() const;
         TOptional<FString> GetCreateGatheringTriggerScriptId() const;

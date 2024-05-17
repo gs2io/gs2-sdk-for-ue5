@@ -50,13 +50,13 @@ namespace Gs2::Matchmaking::Domain::Model
     class FRatingModelMasterDomain;
     class FRatingModelDomain;
     class FCurrentRatingModelMasterDomain;
+    class FUserDomain;
+    class FUserAccessTokenDomain;
     class FRatingDomain;
     class FRatingAccessTokenDomain;
     class FBallotDomain;
     class FBallotAccessTokenDomain;
     class FVoteDomain;
-    class FUserDomain;
-    class FUserAccessTokenDomain;
 
     class GS2MATCHMAKING_API FNamespaceDomain:
         public TSharedFromThis<FNamespaceDomain>
@@ -213,6 +213,32 @@ namespace Gs2::Matchmaking::Domain::Model
             Request::FDeleteNamespaceRequestPtr Request
         );
 
+        class GS2MATCHMAKING_API FCreateRatingModelMasterTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Matchmaking::Domain::Model::FRatingModelMasterDomain>,
+            public TSharedFromThis<FCreateRatingModelMasterTask>
+        {
+            const TSharedPtr<FNamespaceDomain> Self;
+            const Request::FCreateRatingModelMasterRequestPtr Request;
+        public:
+            explicit FCreateRatingModelMasterTask(
+                const TSharedPtr<FNamespaceDomain>& Self,
+                const Request::FCreateRatingModelMasterRequestPtr Request
+            );
+
+            FCreateRatingModelMasterTask(
+                const FCreateRatingModelMasterTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Matchmaking::Domain::Model::FRatingModelMasterDomain>> Result
+            ) override;
+        };
+        friend FCreateRatingModelMasterTask;
+
+        TSharedPtr<FAsyncTask<FCreateRatingModelMasterTask>> CreateRatingModelMaster(
+            Request::FCreateRatingModelMasterRequestPtr Request
+        );
+
         class GS2MATCHMAKING_API FVoteTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Matchmaking::Domain::Model::FBallotDomain>,
             public TSharedFromThis<FVoteTask>
@@ -265,30 +291,7 @@ namespace Gs2::Matchmaking::Domain::Model
             Request::FVoteMultipleRequestPtr Request
         );
 
-        class GS2MATCHMAKING_API FCreateRatingModelMasterTask final :
-            public Gs2::Core::Util::TGs2Future<Gs2::Matchmaking::Domain::Model::FRatingModelMasterDomain>,
-            public TSharedFromThis<FCreateRatingModelMasterTask>
-        {
-            const TSharedPtr<FNamespaceDomain> Self;
-            const Request::FCreateRatingModelMasterRequestPtr Request;
-        public:
-            explicit FCreateRatingModelMasterTask(
-                const TSharedPtr<FNamespaceDomain>& Self,
-                const Request::FCreateRatingModelMasterRequestPtr Request
-            );
-
-            FCreateRatingModelMasterTask(
-                const FCreateRatingModelMasterTask& From
-            );
-
-            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-                TSharedPtr<TSharedPtr<Gs2::Matchmaking::Domain::Model::FRatingModelMasterDomain>> Result
-            ) override;
-        };
-        friend FCreateRatingModelMasterTask;
-
-        TSharedPtr<FAsyncTask<FCreateRatingModelMasterTask>> CreateRatingModelMaster(
-            Request::FCreateRatingModelMasterRequestPtr Request
+        TSharedPtr<Gs2::Matchmaking::Domain::Model::FCurrentRatingModelMasterDomain> CurrentRatingModelMaster(
         );
 
         TSharedPtr<Gs2::Matchmaking::Domain::Model::FUserDomain> User(
@@ -297,9 +300,6 @@ namespace Gs2::Matchmaking::Domain::Model
 
         TSharedPtr<Gs2::Matchmaking::Domain::Model::FUserAccessTokenDomain> AccessToken(
             Gs2::Auth::Model::FAccessTokenPtr AccessToken
-        );
-
-        TSharedPtr<Gs2::Matchmaking::Domain::Model::FCurrentRatingModelMasterDomain> CurrentRatingModelMaster(
         );
 
         Gs2::Matchmaking::Domain::Iterator::FDescribeRatingModelsIteratorPtr RatingModels(
@@ -317,11 +317,6 @@ namespace Gs2::Matchmaking::Domain::Model
             const FString RatingName
         );
 
-        TSharedPtr<Gs2::Matchmaking::Domain::Model::FVoteDomain> Vote(
-            const FString RatingName,
-            const FString GatheringName
-        );
-
         Gs2::Matchmaking::Domain::Iterator::FDescribeRatingModelMastersIteratorPtr RatingModelMasters(
         ) const;
 
@@ -335,6 +330,11 @@ namespace Gs2::Matchmaking::Domain::Model
 
         TSharedPtr<Gs2::Matchmaking::Domain::Model::FRatingModelMasterDomain> RatingModelMaster(
             const FString RatingName
+        );
+
+        TSharedPtr<Gs2::Matchmaking::Domain::Model::FVoteDomain> Vote(
+            const FString RatingName,
+            const FString GatheringName
         );
 
         static FString CreateCacheParentKey(

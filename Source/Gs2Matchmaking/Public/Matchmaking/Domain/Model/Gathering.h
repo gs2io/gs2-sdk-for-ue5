@@ -50,13 +50,13 @@ namespace Gs2::Matchmaking::Domain::Model
     class FRatingModelMasterDomain;
     class FRatingModelDomain;
     class FCurrentRatingModelMasterDomain;
+    class FUserDomain;
+    class FUserAccessTokenDomain;
     class FRatingDomain;
     class FRatingAccessTokenDomain;
     class FBallotDomain;
     class FBallotAccessTokenDomain;
     class FVoteDomain;
-    class FUserDomain;
-    class FUserAccessTokenDomain;
 
     class GS2MATCHMAKING_API FGatheringDomain:
         public TSharedFromThis<FGatheringDomain>
@@ -112,6 +112,32 @@ namespace Gs2::Matchmaking::Domain::Model
 
         TSharedPtr<FAsyncTask<FUpdateTask>> Update(
             Request::FUpdateGatheringByUserIdRequestPtr Request
+        );
+
+        class GS2MATCHMAKING_API FPingTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Matchmaking::Domain::Model::FGatheringDomain>,
+            public TSharedFromThis<FPingTask>
+        {
+            const TSharedPtr<FGatheringDomain> Self;
+            const Request::FPingByUserIdRequestPtr Request;
+        public:
+            explicit FPingTask(
+                const TSharedPtr<FGatheringDomain>& Self,
+                const Request::FPingByUserIdRequestPtr Request
+            );
+
+            FPingTask(
+                const FPingTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Matchmaking::Domain::Model::FGatheringDomain>> Result
+            ) override;
+        };
+        friend FPingTask;
+
+        TSharedPtr<FAsyncTask<FPingTask>> Ping(
+            Request::FPingByUserIdRequestPtr Request
         );
 
         class GS2MATCHMAKING_API FGetTask final :

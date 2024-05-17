@@ -29,13 +29,13 @@
 #include "Matchmaking/Domain/Model/RatingModelMaster.h"
 #include "Matchmaking/Domain/Model/RatingModel.h"
 #include "Matchmaking/Domain/Model/CurrentRatingModelMaster.h"
+#include "Matchmaking/Domain/Model/User.h"
+#include "Matchmaking/Domain/Model/UserAccessToken.h"
 #include "Matchmaking/Domain/Model/Rating.h"
 #include "Matchmaking/Domain/Model/RatingAccessToken.h"
 #include "Matchmaking/Domain/Model/Ballot.h"
 #include "Matchmaking/Domain/Model/BallotAccessToken.h"
 #include "Matchmaking/Domain/Model/Vote.h"
-#include "Matchmaking/Domain/Model/User.h"
-#include "Matchmaking/Domain/Model/UserAccessToken.h"
 
 #include "Core/Domain/Gs2.h"
 #include "Core/Domain/Transaction/JobQueueJobDomainFactory.h"
@@ -296,6 +296,75 @@ namespace Gs2::Matchmaking::Domain::Model
         return Gs2::Core::Util::New<FAsyncTask<FDeleteTask>>(this->AsShared(), Request);
     }
 
+    FNamespaceDomain::FCreateRatingModelMasterTask::FCreateRatingModelMasterTask(
+        const TSharedPtr<FNamespaceDomain>& Self,
+        const Request::FCreateRatingModelMasterRequestPtr Request
+    ): Self(Self), Request(Request)
+    {
+
+    }
+
+    FNamespaceDomain::FCreateRatingModelMasterTask::FCreateRatingModelMasterTask(
+        const FCreateRatingModelMasterTask& From
+    ): TGs2Future(From), Self(From.Self), Request(From.Request)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FNamespaceDomain::FCreateRatingModelMasterTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::Matchmaking::Domain::Model::FRatingModelMasterDomain>> Result
+    )
+    {
+        Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
+            ->WithNamespaceName(Self->NamespaceName);
+        const auto Future = Self->Client->CreateRatingModelMaster(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto RequestModel = Request;
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
+        if (ResultModel != nullptr) {
+            
+            if (ResultModel->GetItem() != nullptr)
+            {
+                const auto ParentKey = Gs2::Matchmaking::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                    Self->NamespaceName,
+                    "RatingModelMaster"
+                );
+                const auto Key = Gs2::Matchmaking::Domain::Model::FRatingModelMasterDomain::CreateCacheKey(
+                    ResultModel->GetItem()->GetName()
+                );
+                Self->Gs2->Cache->Put(
+                    Gs2::Matchmaking::Model::FRatingModelMaster::TypeName,
+                    ParentKey,
+                    Key,
+                    ResultModel->GetItem(),
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+            }
+        }
+        auto Domain = MakeShared<Gs2::Matchmaking::Domain::Model::FRatingModelMasterDomain>(
+            Self->Gs2,
+            Self->Service,
+            Request->GetNamespaceName(),
+            ResultModel->GetItem()->GetName()
+        );
+
+        *Result = Domain;
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FNamespaceDomain::FCreateRatingModelMasterTask>> FNamespaceDomain::CreateRatingModelMaster(
+        Request::FCreateRatingModelMasterRequestPtr Request
+    ) {
+        return Gs2::Core::Util::New<FAsyncTask<FCreateRatingModelMasterTask>>(this->AsShared(), Request);
+    }
+
     FNamespaceDomain::FVoteTask::FVoteTask(
         const TSharedPtr<FNamespaceDomain>& Self,
         const Request::FVoteRequestPtr Request
@@ -450,73 +519,14 @@ namespace Gs2::Matchmaking::Domain::Model
         return Gs2::Core::Util::New<FAsyncTask<FVoteMultipleTask>>(this->AsShared(), Request);
     }
 
-    FNamespaceDomain::FCreateRatingModelMasterTask::FCreateRatingModelMasterTask(
-        const TSharedPtr<FNamespaceDomain>& Self,
-        const Request::FCreateRatingModelMasterRequestPtr Request
-    ): Self(Self), Request(Request)
-    {
-
-    }
-
-    FNamespaceDomain::FCreateRatingModelMasterTask::FCreateRatingModelMasterTask(
-        const FCreateRatingModelMasterTask& From
-    ): TGs2Future(From), Self(From.Self), Request(From.Request)
-    {
-    }
-
-    Gs2::Core::Model::FGs2ErrorPtr FNamespaceDomain::FCreateRatingModelMasterTask::Action(
-        TSharedPtr<TSharedPtr<Gs2::Matchmaking::Domain::Model::FRatingModelMasterDomain>> Result
+    TSharedPtr<Gs2::Matchmaking::Domain::Model::FCurrentRatingModelMasterDomain> FNamespaceDomain::CurrentRatingModelMaster(
     )
     {
-        Request
-            ->WithContextStack(Self->Gs2->DefaultContextStack)
-            ->WithNamespaceName(Self->NamespaceName);
-        const auto Future = Self->Client->CreateRatingModelMaster(
-            Request
+        return MakeShared<Gs2::Matchmaking::Domain::Model::FCurrentRatingModelMasterDomain>(
+            Gs2,
+            Service,
+            NamespaceName
         );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            return Future->GetTask().Error();
-        }
-        const auto RequestModel = Request;
-        const auto ResultModel = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::Matchmaking::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
-                    Self->NamespaceName,
-                    "RatingModelMaster"
-                );
-                const auto Key = Gs2::Matchmaking::Domain::Model::FRatingModelMasterDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetName()
-                );
-                Self->Gs2->Cache->Put(
-                    Gs2::Matchmaking::Model::FRatingModelMaster::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
-        }
-        auto Domain = MakeShared<Gs2::Matchmaking::Domain::Model::FRatingModelMasterDomain>(
-            Self->Gs2,
-            Self->Service,
-            Request->GetNamespaceName(),
-            ResultModel->GetItem()->GetName()
-        );
-
-        *Result = Domain;
-        return nullptr;
-    }
-
-    TSharedPtr<FAsyncTask<FNamespaceDomain::FCreateRatingModelMasterTask>> FNamespaceDomain::CreateRatingModelMaster(
-        Request::FCreateRatingModelMasterRequestPtr Request
-    ) {
-        return Gs2::Core::Util::New<FAsyncTask<FCreateRatingModelMasterTask>>(this->AsShared(), Request);
     }
 
     TSharedPtr<Gs2::Matchmaking::Domain::Model::FUserDomain> FNamespaceDomain::User(
@@ -540,16 +550,6 @@ namespace Gs2::Matchmaking::Domain::Model
             Service,
             NamespaceName,
             AccessToken
-        );
-    }
-
-    TSharedPtr<Gs2::Matchmaking::Domain::Model::FCurrentRatingModelMasterDomain> FNamespaceDomain::CurrentRatingModelMaster(
-    )
-    {
-        return MakeShared<Gs2::Matchmaking::Domain::Model::FCurrentRatingModelMasterDomain>(
-            Gs2,
-            Service,
-            NamespaceName
         );
     }
 
@@ -603,20 +603,6 @@ namespace Gs2::Matchmaking::Domain::Model
         );
     }
 
-    TSharedPtr<Gs2::Matchmaking::Domain::Model::FVoteDomain> FNamespaceDomain::Vote(
-        const FString RatingName,
-        const FString GatheringName
-    )
-    {
-        return MakeShared<Gs2::Matchmaking::Domain::Model::FVoteDomain>(
-            Gs2,
-            Service,
-            NamespaceName,
-            RatingName == TEXT("") ? TOptional<FString>() : TOptional<FString>(RatingName),
-            GatheringName == TEXT("") ? TOptional<FString>() : TOptional<FString>(GatheringName)
-        );
-    }
-
     Gs2::Matchmaking::Domain::Iterator::FDescribeRatingModelMastersIteratorPtr FNamespaceDomain::RatingModelMasters(
     ) const
     {
@@ -664,6 +650,20 @@ namespace Gs2::Matchmaking::Domain::Model
             Service,
             NamespaceName,
             RatingName == TEXT("") ? TOptional<FString>() : TOptional<FString>(RatingName)
+        );
+    }
+
+    TSharedPtr<Gs2::Matchmaking::Domain::Model::FVoteDomain> FNamespaceDomain::Vote(
+        const FString RatingName,
+        const FString GatheringName
+    )
+    {
+        return MakeShared<Gs2::Matchmaking::Domain::Model::FVoteDomain>(
+            Gs2,
+            Service,
+            NamespaceName,
+            RatingName == TEXT("") ? TOptional<FString>() : TOptional<FString>(RatingName),
+            GatheringName == TEXT("") ? TOptional<FString>() : TOptional<FString>(GatheringName)
         );
     }
 

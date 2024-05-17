@@ -31,6 +31,8 @@ namespace Gs2::Matchmaking::Request
         TOptional<FString> NameValue;
         TOptional<FString> DescriptionValue;
         TOptional<bool> EnableRatingValue;
+        TOptional<FString> EnableDisconnectDetectionValue;
+        TOptional<int32> DisconnectDetectionTimeoutSecondsValue;
         TOptional<FString> CreateGatheringTriggerTypeValue;
         TOptional<FString> CreateGatheringTriggerRealtimeNamespaceIdValue;
         TOptional<FString> CreateGatheringTriggerScriptIdValue;
@@ -59,6 +61,8 @@ namespace Gs2::Matchmaking::Request
         TSharedPtr<FCreateNamespaceRequest> WithName(const TOptional<FString> Name);
         TSharedPtr<FCreateNamespaceRequest> WithDescription(const TOptional<FString> Description);
         TSharedPtr<FCreateNamespaceRequest> WithEnableRating(const TOptional<bool> EnableRating);
+        TSharedPtr<FCreateNamespaceRequest> WithEnableDisconnectDetection(const TOptional<FString> EnableDisconnectDetection);
+        TSharedPtr<FCreateNamespaceRequest> WithDisconnectDetectionTimeoutSeconds(const TOptional<int32> DisconnectDetectionTimeoutSeconds);
         TSharedPtr<FCreateNamespaceRequest> WithCreateGatheringTriggerType(const TOptional<FString> CreateGatheringTriggerType);
         TSharedPtr<FCreateNamespaceRequest> WithCreateGatheringTriggerRealtimeNamespaceId(const TOptional<FString> CreateGatheringTriggerRealtimeNamespaceId);
         TSharedPtr<FCreateNamespaceRequest> WithCreateGatheringTriggerScriptId(const TOptional<FString> CreateGatheringTriggerScriptId);
@@ -80,6 +84,9 @@ namespace Gs2::Matchmaking::Request
         TOptional<FString> GetDescription() const;
         TOptional<bool> GetEnableRating() const;
         FString GetEnableRatingString() const;
+        TOptional<FString> GetEnableDisconnectDetection() const;
+        TOptional<int32> GetDisconnectDetectionTimeoutSeconds() const;
+        FString GetDisconnectDetectionTimeoutSecondsString() const;
         TOptional<FString> GetCreateGatheringTriggerType() const;
         TOptional<FString> GetCreateGatheringTriggerRealtimeNamespaceId() const;
         TOptional<FString> GetCreateGatheringTriggerScriptId() const;

@@ -30,11 +30,11 @@
 #include "Matchmaking/Domain/Model/RatingModelMaster.h"
 #include "Matchmaking/Domain/Model/RatingModel.h"
 #include "Matchmaking/Domain/Model/CurrentRatingModelMaster.h"
+#include "Matchmaking/Domain/Model/User.h"
+#include "Matchmaking/Domain/Model/UserAccessToken.h"
 #include "Matchmaking/Domain/Model/Rating.h"
 #include "Matchmaking/Domain/Model/Ballot.h"
 #include "Matchmaking/Domain/Model/Vote.h"
-#include "Matchmaking/Domain/Model/User.h"
-#include "Matchmaking/Domain/Model/UserAccessToken.h"
 #include "Core/Domain/Gs2.h"
 
 namespace Gs2::Matchmaking::Domain

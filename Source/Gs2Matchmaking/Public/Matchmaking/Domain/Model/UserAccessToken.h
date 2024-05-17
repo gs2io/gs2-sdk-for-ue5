@@ -51,13 +51,13 @@ namespace Gs2::Matchmaking::Domain::Model
     class FRatingModelMasterDomain;
     class FRatingModelDomain;
     class FCurrentRatingModelMasterDomain;
+    class FUserDomain;
+    class FUserAccessTokenDomain;
     class FRatingDomain;
     class FRatingAccessTokenDomain;
     class FBallotDomain;
     class FBallotAccessTokenDomain;
     class FVoteDomain;
-    class FUserDomain;
-    class FUserAccessTokenDomain;
 
     class GS2MATCHMAKING_API FUserAccessTokenDomain:
         public TSharedFromThis<FUserAccessTokenDomain>
@@ -132,13 +132,6 @@ namespace Gs2::Matchmaking::Domain::Model
             const FString GatheringName
         );
 
-        TSharedPtr<Gs2::Matchmaking::Domain::Model::FBallotAccessTokenDomain> Ballot(
-            const FString RatingName,
-            const FString GatheringName,
-            const int32 NumberOfPlayer,
-            const FString KeyId
-        );
-
         Gs2::Matchmaking::Domain::Iterator::FDescribeRatingsIteratorPtr Ratings(
         ) const;
 
@@ -152,6 +145,13 @@ namespace Gs2::Matchmaking::Domain::Model
 
         TSharedPtr<Gs2::Matchmaking::Domain::Model::FRatingAccessTokenDomain> Rating(
             const FString RatingName
+        );
+
+        TSharedPtr<Gs2::Matchmaking::Domain::Model::FBallotAccessTokenDomain> Ballot(
+            const FString RatingName,
+            const FString GatheringName,
+            const int32 NumberOfPlayer,
+            const FString KeyId
         );
 
         static FString CreateCacheParentKey(

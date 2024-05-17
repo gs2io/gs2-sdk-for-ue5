@@ -30,13 +30,13 @@
 #include "Matchmaking/Domain/Model/RatingModelMaster.h"
 #include "Matchmaking/Domain/Model/RatingModel.h"
 #include "Matchmaking/Domain/Model/CurrentRatingModelMaster.h"
+#include "Matchmaking/Domain/Model/User.h"
+#include "Matchmaking/Domain/Model/UserAccessToken.h"
 #include "Matchmaking/Domain/Model/Rating.h"
 #include "Matchmaking/Domain/Model/RatingAccessToken.h"
 #include "Matchmaking/Domain/Model/Ballot.h"
 #include "Matchmaking/Domain/Model/BallotAccessToken.h"
 #include "Matchmaking/Domain/Model/Vote.h"
-#include "Matchmaking/Domain/Model/User.h"
-#include "Matchmaking/Domain/Model/UserAccessToken.h"
 
 #include "Core/Domain/Gs2.h"
 #include "Core/Domain/Transaction/JobQueueJobDomainFactory.h"
@@ -176,25 +176,6 @@ namespace Gs2::Matchmaking::Domain::Model
         );
     }
 
-    TSharedPtr<Gs2::Matchmaking::Domain::Model::FBallotAccessTokenDomain> FUserAccessTokenDomain::Ballot(
-        const FString RatingName,
-        const FString GatheringName,
-        const int32 NumberOfPlayer,
-        const FString KeyId
-    )
-    {
-        return MakeShared<Gs2::Matchmaking::Domain::Model::FBallotAccessTokenDomain>(
-            Gs2,
-            Service,
-            NamespaceName,
-            AccessToken,
-            RatingName == TEXT("") ? TOptional<FString>() : TOptional<FString>(RatingName),
-            GatheringName == TEXT("") ? TOptional<FString>() : TOptional<FString>(GatheringName),
-            NumberOfPlayer,
-            KeyId == TEXT("") ? TOptional<FString>() : TOptional<FString>(KeyId)
-        );
-    }
-
     Gs2::Matchmaking::Domain::Iterator::FDescribeRatingsIteratorPtr FUserAccessTokenDomain::Ratings(
     ) const
     {
@@ -246,6 +227,25 @@ namespace Gs2::Matchmaking::Domain::Model
             NamespaceName,
             AccessToken,
             RatingName == TEXT("") ? TOptional<FString>() : TOptional<FString>(RatingName)
+        );
+    }
+
+    TSharedPtr<Gs2::Matchmaking::Domain::Model::FBallotAccessTokenDomain> FUserAccessTokenDomain::Ballot(
+        const FString RatingName,
+        const FString GatheringName,
+        const int32 NumberOfPlayer,
+        const FString KeyId
+    )
+    {
+        return MakeShared<Gs2::Matchmaking::Domain::Model::FBallotAccessTokenDomain>(
+            Gs2,
+            Service,
+            NamespaceName,
+            AccessToken,
+            RatingName == TEXT("") ? TOptional<FString>() : TOptional<FString>(RatingName),
+            GatheringName == TEXT("") ? TOptional<FString>() : TOptional<FString>(GatheringName),
+            NumberOfPlayer,
+            KeyId == TEXT("") ? TOptional<FString>() : TOptional<FString>(KeyId)
         );
     }
 

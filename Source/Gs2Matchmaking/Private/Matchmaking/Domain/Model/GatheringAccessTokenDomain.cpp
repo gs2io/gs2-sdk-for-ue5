@@ -30,13 +30,13 @@
 #include "Matchmaking/Domain/Model/RatingModelMaster.h"
 #include "Matchmaking/Domain/Model/RatingModel.h"
 #include "Matchmaking/Domain/Model/CurrentRatingModelMaster.h"
+#include "Matchmaking/Domain/Model/User.h"
+#include "Matchmaking/Domain/Model/UserAccessToken.h"
 #include "Matchmaking/Domain/Model/Rating.h"
 #include "Matchmaking/Domain/Model/RatingAccessToken.h"
 #include "Matchmaking/Domain/Model/Ballot.h"
 #include "Matchmaking/Domain/Model/BallotAccessToken.h"
 #include "Matchmaking/Domain/Model/Vote.h"
-#include "Matchmaking/Domain/Model/User.h"
-#include "Matchmaking/Domain/Model/UserAccessToken.h"
 
 #include "Core/Domain/Gs2.h"
 #include "Core/Domain/Transaction/JobQueueJobDomainFactory.h"
@@ -147,6 +147,73 @@ namespace Gs2::Matchmaking::Domain::Model
         Request::FUpdateGatheringRequestPtr Request
     ) {
         return Gs2::Core::Util::New<FAsyncTask<FUpdateTask>>(this->AsShared(), Request);
+    }
+
+    FGatheringAccessTokenDomain::FPingTask::FPingTask(
+        const TSharedPtr<FGatheringAccessTokenDomain>& Self,
+        const Request::FPingRequestPtr Request
+    ): Self(Self), Request(Request)
+    {
+
+    }
+
+    FGatheringAccessTokenDomain::FPingTask::FPingTask(
+        const FPingTask& From
+    ): TGs2Future(From), Self(From.Self), Request(From.Request)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FGatheringAccessTokenDomain::FPingTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::Matchmaking::Domain::Model::FGatheringAccessTokenDomain>> Result
+    )
+    {
+        Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
+            ->WithNamespaceName(Self->NamespaceName)
+            ->WithAccessToken(Self->AccessToken->GetToken())
+            ->WithGatheringName(Self->GatheringName);
+        const auto Future = Self->Client->Ping(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto RequestModel = Request;
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
+        if (ResultModel != nullptr) {
+            
+            if (ResultModel->GetItem() != nullptr)
+            {
+                const auto ParentKey = Gs2::Matchmaking::Domain::Model::FUserDomain::CreateCacheParentKey(
+                    Self->NamespaceName,
+                    TOptional<FString>("Singleton"),
+                    "Gathering"
+                );
+                const auto Key = Gs2::Matchmaking::Domain::Model::FGatheringDomain::CreateCacheKey(
+                    ResultModel->GetItem()->GetName()
+                );
+                Self->Gs2->Cache->Put(
+                    Gs2::Matchmaking::Model::FGathering::TypeName,
+                    ParentKey,
+                    Key,
+                    ResultModel->GetItem(),
+                    ResultModel->GetItem()->GetExpiresAt().IsSet() && *ResultModel->GetItem()->GetExpiresAt() != 0 ? FDateTime::FromUnixTimestamp(*ResultModel->GetItem()->GetExpiresAt() / 1000) : FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+            }
+        }
+        auto Domain = Self;
+
+        *Result = Domain;
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FGatheringAccessTokenDomain::FPingTask>> FGatheringAccessTokenDomain::Ping(
+        Request::FPingRequestPtr Request
+    ) {
+        return Gs2::Core::Util::New<FAsyncTask<FPingTask>>(this->AsShared(), Request);
     }
 
     FGatheringAccessTokenDomain::FCancelMatchmakingTask::FCancelMatchmakingTask(

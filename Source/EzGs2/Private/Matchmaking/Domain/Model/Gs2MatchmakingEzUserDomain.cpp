@@ -61,6 +61,18 @@ namespace Gs2::UE5::Matchmaking::Domain::Model
         );
     }
 
+    Gs2::UE5::Matchmaking::Domain::Model::FEzRatingDomainPtr FEzUserDomain::Rating(
+        const FString RatingName
+    ) const
+    {
+        return MakeShared<Gs2::UE5::Matchmaking::Domain::Model::FEzRatingDomain>(
+            Domain->Rating(
+                RatingName
+            ),
+            ConnectionValue
+        );
+    }
+
     Gs2::UE5::Matchmaking::Domain::Model::FEzBallotDomainPtr FEzUserDomain::Ballot(
         const FString RatingName,
         const FString GatheringName,
@@ -74,18 +86,6 @@ namespace Gs2::UE5::Matchmaking::Domain::Model
                 GatheringName,
                 NumberOfPlayer,
                 KeyId
-            ),
-            ConnectionValue
-        );
-    }
-
-    Gs2::UE5::Matchmaking::Domain::Model::FEzRatingDomainPtr FEzUserDomain::Rating(
-        const FString RatingName
-    ) const
-    {
-        return MakeShared<Gs2::UE5::Matchmaking::Domain::Model::FEzRatingDomain>(
-            Domain->Rating(
-                RatingName
             ),
             ConnectionValue
         );

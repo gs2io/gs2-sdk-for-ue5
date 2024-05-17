@@ -30,8 +30,8 @@
 #include "Matchmaking/Model/Gs2MatchmakingEzSignedBallot.h"
 #include "Matchmaking/Model/Gs2MatchmakingEzTimeSpan.h"
 #include "Gs2MatchmakingEzGatheringDomain.h"
-#include "Gs2MatchmakingEzBallotDomain.h"
 #include "Gs2MatchmakingEzRatingDomain.h"
+#include "Gs2MatchmakingEzBallotDomain.h"
 #include "Gs2MatchmakingEzUserDomain.h"
 #include "Gs2MatchmakingEzUserDomain.h"
 #include "Gs2MatchmakingEzUserGameSessionDomain.h"
@@ -62,15 +62,15 @@ namespace Gs2::UE5::Matchmaking::Domain::Model
             const FString GatheringName
         ) const;
 
+        Gs2::UE5::Matchmaking::Domain::Model::FEzRatingDomainPtr Rating(
+            const FString RatingName
+        ) const;
+
         Gs2::UE5::Matchmaking::Domain::Model::FEzBallotDomainPtr Ballot(
             const FString RatingName,
             const FString GatheringName,
             const int32 NumberOfPlayer,
             const FString KeyId
-        ) const;
-
-        Gs2::UE5::Matchmaking::Domain::Model::FEzRatingDomainPtr Rating(
-            const FString RatingName
         ) const;
 
     };

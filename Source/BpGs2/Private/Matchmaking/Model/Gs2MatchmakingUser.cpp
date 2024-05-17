@@ -16,12 +16,12 @@
 
 #include "Matchmaking/Model/Gs2MatchmakingUser.h"
 #include "Matchmaking/Model/Gs2MatchmakingGathering.h"
-#include "Matchmaking/Model/Gs2MatchmakingBallot.h"
 #include "Matchmaking/Model/Gs2MatchmakingRating.h"
+#include "Matchmaking/Model/Gs2MatchmakingBallot.h"
 #include "Core/Model/Gs2AccessToken.h"
 #include "Matchmaking/Model/Gs2MatchmakingGathering.h"
-#include "Matchmaking/Model/Gs2MatchmakingBallot.h"
 #include "Matchmaking/Model/Gs2MatchmakingRating.h"
+#include "Matchmaking/Model/Gs2MatchmakingBallot.h"
 #include "Core/BpGs2Constant.h"
 
 FGs2MatchmakingGathering UGs2MatchmakingUserFunctionLibrary::Gathering(
@@ -64,6 +64,26 @@ FGs2MatchmakingOwnGathering UGs2MatchmakingUserFunctionLibrary::OwnGathering(
     return Return;
 }
 
+FGs2MatchmakingOwnRating UGs2MatchmakingUserFunctionLibrary::OwnRating(
+    FGs2MatchmakingOwnUser User,
+    FString RatingName
+)
+{
+    FGs2MatchmakingOwnRating Return;
+    if (User.Value == nullptr) {
+        UE_LOG(BpGs2Log, Error, TEXT("[UGs2MatchmakingUserFunctionLibrary::OwnRating] User parameter specification is missing."))
+        return Return;
+    }
+    if (RatingName == "") {
+        UE_LOG(BpGs2Log, Error, TEXT("[UGs2MatchmakingUserFunctionLibrary::OwnRating] RatingName parameter specification is missing."))
+        return Return;
+    }
+    Return.Value = User.Value->Rating(
+        RatingName
+    );
+    return Return;
+}
+
 FGs2MatchmakingOwnBallot UGs2MatchmakingUserFunctionLibrary::OwnBallot(
     FGs2MatchmakingOwnUser User,
     FString RatingName,
@@ -94,26 +114,6 @@ FGs2MatchmakingOwnBallot UGs2MatchmakingUserFunctionLibrary::OwnBallot(
         GatheringName,
         NumberOfPlayer,
         KeyId
-    );
-    return Return;
-}
-
-FGs2MatchmakingOwnRating UGs2MatchmakingUserFunctionLibrary::OwnRating(
-    FGs2MatchmakingOwnUser User,
-    FString RatingName
-)
-{
-    FGs2MatchmakingOwnRating Return;
-    if (User.Value == nullptr) {
-        UE_LOG(BpGs2Log, Error, TEXT("[UGs2MatchmakingUserFunctionLibrary::OwnRating] User parameter specification is missing."))
-        return Return;
-    }
-    if (RatingName == "") {
-        UE_LOG(BpGs2Log, Error, TEXT("[UGs2MatchmakingUserFunctionLibrary::OwnRating] RatingName parameter specification is missing."))
-        return Return;
-    }
-    Return.Value = User.Value->Rating(
-        RatingName
     );
     return Return;
 }

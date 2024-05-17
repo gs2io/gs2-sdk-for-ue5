@@ -22,7 +22,8 @@ namespace Gs2::Matchmaking::Model
         UserIdValue(TOptional<FString>()),
         AttributesValue(nullptr),
         RoleNameValue(TOptional<FString>()),
-        DenyUserIdsValue(nullptr)
+        DenyUserIdsValue(nullptr),
+        CreatedAtValue(TOptional<int64>())
     {
     }
 
@@ -32,7 +33,8 @@ namespace Gs2::Matchmaking::Model
         UserIdValue(From.UserIdValue),
         AttributesValue(From.AttributesValue),
         RoleNameValue(From.RoleNameValue),
-        DenyUserIdsValue(From.DenyUserIdsValue)
+        DenyUserIdsValue(From.DenyUserIdsValue),
+        CreatedAtValue(From.CreatedAtValue)
     {
     }
 
@@ -67,6 +69,14 @@ namespace Gs2::Matchmaking::Model
         this->DenyUserIdsValue = DenyUserIds;
         return SharedThis(this);
     }
+
+    TSharedPtr<FPlayer> FPlayer::WithCreatedAt(
+        const TOptional<int64> CreatedAt
+    )
+    {
+        this->CreatedAtValue = CreatedAt;
+        return SharedThis(this);
+    }
     TOptional<FString> FPlayer::GetUserId() const
     {
         return UserIdValue;
@@ -82,6 +92,19 @@ namespace Gs2::Matchmaking::Model
     TSharedPtr<TArray<FString>> FPlayer::GetDenyUserIds() const
     {
         return DenyUserIdsValue;
+    }
+    TOptional<int64> FPlayer::GetCreatedAt() const
+    {
+        return CreatedAtValue;
+    }
+
+    FString FPlayer::GetCreatedAtString() const
+    {
+        if (!CreatedAtValue.IsSet())
+        {
+            return FString("null");
+        }
+        return FString::Printf(TEXT("%lld"), CreatedAtValue.GetValue());
     }
 
     TSharedPtr<FPlayer> FPlayer::FromJson(const TSharedPtr<FJsonObject> Data)
@@ -131,7 +154,16 @@ namespace Gs2::Matchmaking::Model
                         }
                     }
                     return v;
-                 }() : MakeShared<TArray<FString>>());
+                 }() : MakeShared<TArray<FString>>())
+            ->WithCreatedAt(Data->HasField(ANSI_TO_TCHAR("createdAt")) ? [Data]() -> TOptional<int64>
+                {
+                    int64 v;
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("createdAt"), v))
+                    {
+                        return TOptional(v);
+                    }
+                    return TOptional<int64>();
+                }() : TOptional<int64>());
     }
 
     TSharedPtr<FJsonObject> FPlayer::ToJson() const
@@ -162,6 +194,10 @@ namespace Gs2::Matchmaking::Model
                 v.Add(MakeShared<FJsonValueString>(JsonObjectValue));
             }
             JsonRootObject->SetArrayField("denyUserIds", v);
+        }
+        if (CreatedAtValue.IsSet())
+        {
+            JsonRootObject->SetStringField("createdAt", FString::Printf(TEXT("%lld"), CreatedAtValue.GetValue()));
         }
         return JsonRootObject;
     }

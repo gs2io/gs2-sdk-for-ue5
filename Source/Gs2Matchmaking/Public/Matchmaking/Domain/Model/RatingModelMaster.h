@@ -50,13 +50,13 @@ namespace Gs2::Matchmaking::Domain::Model
     class FRatingModelMasterDomain;
     class FRatingModelDomain;
     class FCurrentRatingModelMasterDomain;
+    class FUserDomain;
+    class FUserAccessTokenDomain;
     class FRatingDomain;
     class FRatingAccessTokenDomain;
     class FBallotDomain;
     class FBallotAccessTokenDomain;
     class FVoteDomain;
-    class FUserDomain;
-    class FUserAccessTokenDomain;
 
     class GS2MATCHMAKING_API FRatingModelMasterDomain:
         public TSharedFromThis<FRatingModelMasterDomain>

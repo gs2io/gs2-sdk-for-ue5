@@ -23,6 +23,8 @@ namespace Gs2::Matchmaking::Model
         NameValue(TOptional<FString>()),
         DescriptionValue(TOptional<FString>()),
         EnableRatingValue(TOptional<bool>()),
+        EnableDisconnectDetectionValue(TOptional<FString>()),
+        DisconnectDetectionTimeoutSecondsValue(TOptional<int32>()),
         CreateGatheringTriggerTypeValue(TOptional<FString>()),
         CreateGatheringTriggerRealtimeNamespaceIdValue(TOptional<FString>()),
         CreateGatheringTriggerScriptIdValue(TOptional<FString>()),
@@ -51,6 +53,8 @@ namespace Gs2::Matchmaking::Model
         NameValue(From.NameValue),
         DescriptionValue(From.DescriptionValue),
         EnableRatingValue(From.EnableRatingValue),
+        EnableDisconnectDetectionValue(From.EnableDisconnectDetectionValue),
+        DisconnectDetectionTimeoutSecondsValue(From.DisconnectDetectionTimeoutSecondsValue),
         CreateGatheringTriggerTypeValue(From.CreateGatheringTriggerTypeValue),
         CreateGatheringTriggerRealtimeNamespaceIdValue(From.CreateGatheringTriggerRealtimeNamespaceIdValue),
         CreateGatheringTriggerScriptIdValue(From.CreateGatheringTriggerScriptIdValue),
@@ -101,6 +105,22 @@ namespace Gs2::Matchmaking::Model
     )
     {
         this->EnableRatingValue = EnableRating;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FNamespace> FNamespace::WithEnableDisconnectDetection(
+        const TOptional<FString> EnableDisconnectDetection
+    )
+    {
+        this->EnableDisconnectDetectionValue = EnableDisconnectDetection;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FNamespace> FNamespace::WithDisconnectDetectionTimeoutSeconds(
+        const TOptional<int32> DisconnectDetectionTimeoutSeconds
+    )
+    {
+        this->DisconnectDetectionTimeoutSecondsValue = DisconnectDetectionTimeoutSeconds;
         return SharedThis(this);
     }
 
@@ -271,6 +291,23 @@ namespace Gs2::Matchmaking::Model
             return FString("null");
         }
         return FString(EnableRatingValue.GetValue() ? "true" : "false");
+    }
+    TOptional<FString> FNamespace::GetEnableDisconnectDetection() const
+    {
+        return EnableDisconnectDetectionValue;
+    }
+    TOptional<int32> FNamespace::GetDisconnectDetectionTimeoutSeconds() const
+    {
+        return DisconnectDetectionTimeoutSecondsValue;
+    }
+
+    FString FNamespace::GetDisconnectDetectionTimeoutSecondsString() const
+    {
+        if (!DisconnectDetectionTimeoutSecondsValue.IsSet())
+        {
+            return FString("null");
+        }
+        return FString::Printf(TEXT("%d"), DisconnectDetectionTimeoutSecondsValue.GetValue());
     }
     TOptional<FString> FNamespace::GetCreateGatheringTriggerType() const
     {
@@ -456,6 +493,24 @@ namespace Gs2::Matchmaking::Model
                     }
                     return TOptional<bool>();
                 }() : TOptional<bool>())
+            ->WithEnableDisconnectDetection(Data->HasField(ANSI_TO_TCHAR("enableDisconnectDetection")) ? [Data]() -> TOptional<FString>
+                {
+                    FString v("");
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("enableDisconnectDetection"), v))
+                    {
+                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                    }
+                    return TOptional<FString>();
+                }() : TOptional<FString>())
+            ->WithDisconnectDetectionTimeoutSeconds(Data->HasField(ANSI_TO_TCHAR("disconnectDetectionTimeoutSeconds")) ? [Data]() -> TOptional<int32>
+                {
+                    int32 v;
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("disconnectDetectionTimeoutSeconds"), v))
+                    {
+                        return TOptional(v);
+                    }
+                    return TOptional<int32>();
+                }() : TOptional<int32>())
             ->WithCreateGatheringTriggerType(Data->HasField(ANSI_TO_TCHAR("createGatheringTriggerType")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
@@ -632,6 +687,14 @@ namespace Gs2::Matchmaking::Model
         if (EnableRatingValue.IsSet())
         {
             JsonRootObject->SetBoolField("enableRating", EnableRatingValue.GetValue());
+        }
+        if (EnableDisconnectDetectionValue.IsSet())
+        {
+            JsonRootObject->SetStringField("enableDisconnectDetection", EnableDisconnectDetectionValue.GetValue());
+        }
+        if (DisconnectDetectionTimeoutSecondsValue.IsSet())
+        {
+            JsonRootObject->SetNumberField("disconnectDetectionTimeoutSeconds", DisconnectDetectionTimeoutSecondsValue.GetValue());
         }
         if (CreateGatheringTriggerTypeValue.IsSet())
         {

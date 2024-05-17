@@ -208,6 +208,24 @@ namespace Gs2::Matchmaking
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::Rest::FPingTask>> FGs2MatchmakingRestClient::Ping(
+        const Request::FPingRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FPingTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FPingByUserIdTask>> FGs2MatchmakingRestClient::PingByUserId(
+        const Request::FPingByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FPingByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::Rest::FGetGatheringTask>> FGs2MatchmakingRestClient::GetGathering(
         const Request::FGetGatheringRequestPtr Request) const
     {
