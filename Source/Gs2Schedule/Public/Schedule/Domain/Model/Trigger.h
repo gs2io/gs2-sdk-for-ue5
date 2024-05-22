@@ -47,9 +47,9 @@ namespace Gs2::Schedule::Domain::Model
     class FTriggerAccessTokenDomain;
     class FEventDomain;
     class FEventAccessTokenDomain;
-    class FCurrentEventMasterDomain;
     class FUserDomain;
     class FUserAccessTokenDomain;
+    class FCurrentEventMasterDomain;
 
     class GS2SCHEDULE_API FTriggerDomain:
         public TSharedFromThis<FTriggerDomain>

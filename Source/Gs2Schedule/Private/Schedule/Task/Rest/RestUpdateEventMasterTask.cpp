@@ -141,6 +141,10 @@ namespace Gs2::Schedule::Task::Rest
             {
                 JsonRootObject->SetStringField("relativeTriggerName", this->Request->GetRelativeTriggerName().GetValue());
             }
+            if (this->Request->GetRepeatSetting() != nullptr && this->Request->GetRepeatSetting().IsValid())
+            {
+                JsonRootObject->SetObjectField("repeatSetting", this->Request->GetRepeatSetting()->ToJson());
+            }
             FJsonSerializer::Serialize(JsonRootObject.ToSharedRef(), Writer);
             request->SetContentAsString(Body);
 

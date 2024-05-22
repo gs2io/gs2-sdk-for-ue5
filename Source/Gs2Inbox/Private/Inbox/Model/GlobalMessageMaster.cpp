@@ -24,8 +24,9 @@ namespace Gs2::Inbox::Model
         MetadataValue(TOptional<FString>()),
         ReadAcquireActionsValue(nullptr),
         ExpiresTimeSpanValue(nullptr),
-        CreatedAtValue(TOptional<int64>()),
         ExpiresAtValue(TOptional<int64>()),
+        MessageReceptionPeriodEventIdValue(TOptional<FString>()),
+        CreatedAtValue(TOptional<int64>()),
         RevisionValue(TOptional<int64>())
     {
     }
@@ -38,8 +39,9 @@ namespace Gs2::Inbox::Model
         MetadataValue(From.MetadataValue),
         ReadAcquireActionsValue(From.ReadAcquireActionsValue),
         ExpiresTimeSpanValue(From.ExpiresTimeSpanValue),
-        CreatedAtValue(From.CreatedAtValue),
         ExpiresAtValue(From.ExpiresAtValue),
+        MessageReceptionPeriodEventIdValue(From.MessageReceptionPeriodEventIdValue),
+        CreatedAtValue(From.CreatedAtValue),
         RevisionValue(From.RevisionValue)
     {
     }
@@ -84,19 +86,27 @@ namespace Gs2::Inbox::Model
         return SharedThis(this);
     }
 
-    TSharedPtr<FGlobalMessageMaster> FGlobalMessageMaster::WithCreatedAt(
-        const TOptional<int64> CreatedAt
-    )
-    {
-        this->CreatedAtValue = CreatedAt;
-        return SharedThis(this);
-    }
-
     TSharedPtr<FGlobalMessageMaster> FGlobalMessageMaster::WithExpiresAt(
         const TOptional<int64> ExpiresAt
     )
     {
         this->ExpiresAtValue = ExpiresAt;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FGlobalMessageMaster> FGlobalMessageMaster::WithMessageReceptionPeriodEventId(
+        const TOptional<FString> MessageReceptionPeriodEventId
+    )
+    {
+        this->MessageReceptionPeriodEventIdValue = MessageReceptionPeriodEventId;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FGlobalMessageMaster> FGlobalMessageMaster::WithCreatedAt(
+        const TOptional<int64> CreatedAt
+    )
+    {
+        this->CreatedAtValue = CreatedAt;
         return SharedThis(this);
     }
 
@@ -127,19 +137,6 @@ namespace Gs2::Inbox::Model
     {
         return ExpiresTimeSpanValue;
     }
-    TOptional<int64> FGlobalMessageMaster::GetCreatedAt() const
-    {
-        return CreatedAtValue;
-    }
-
-    FString FGlobalMessageMaster::GetCreatedAtString() const
-    {
-        if (!CreatedAtValue.IsSet())
-        {
-            return FString("null");
-        }
-        return FString::Printf(TEXT("%lld"), CreatedAtValue.GetValue());
-    }
     TOptional<int64> FGlobalMessageMaster::GetExpiresAt() const
     {
         return ExpiresAtValue;
@@ -152,6 +149,23 @@ namespace Gs2::Inbox::Model
             return FString("null");
         }
         return FString::Printf(TEXT("%lld"), ExpiresAtValue.GetValue());
+    }
+    TOptional<FString> FGlobalMessageMaster::GetMessageReceptionPeriodEventId() const
+    {
+        return MessageReceptionPeriodEventIdValue;
+    }
+    TOptional<int64> FGlobalMessageMaster::GetCreatedAt() const
+    {
+        return CreatedAtValue;
+    }
+
+    FString FGlobalMessageMaster::GetCreatedAtString() const
+    {
+        if (!CreatedAtValue.IsSet())
+        {
+            return FString("null");
+        }
+        return FString::Printf(TEXT("%lld"), CreatedAtValue.GetValue());
     }
     TOptional<int64> FGlobalMessageMaster::GetRevision() const
     {
@@ -264,19 +278,28 @@ namespace Gs2::Inbox::Model
                     }
                     return Model::FTimeSpan::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("expiresTimeSpan")));
                  }() : nullptr)
-            ->WithCreatedAt(Data->HasField(ANSI_TO_TCHAR("createdAt")) ? [Data]() -> TOptional<int64>
+            ->WithExpiresAt(Data->HasField(ANSI_TO_TCHAR("expiresAt")) ? [Data]() -> TOptional<int64>
                 {
                     int64 v;
-                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("createdAt"), v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("expiresAt"), v))
                     {
                         return TOptional(v);
                     }
                     return TOptional<int64>();
                 }() : TOptional<int64>())
-            ->WithExpiresAt(Data->HasField(ANSI_TO_TCHAR("expiresAt")) ? [Data]() -> TOptional<int64>
+            ->WithMessageReceptionPeriodEventId(Data->HasField(ANSI_TO_TCHAR("messageReceptionPeriodEventId")) ? [Data]() -> TOptional<FString>
+                {
+                    FString v("");
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("messageReceptionPeriodEventId"), v))
+                    {
+                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                    }
+                    return TOptional<FString>();
+                }() : TOptional<FString>())
+            ->WithCreatedAt(Data->HasField(ANSI_TO_TCHAR("createdAt")) ? [Data]() -> TOptional<int64>
                 {
                     int64 v;
-                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("expiresAt"), v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("createdAt"), v))
                     {
                         return TOptional(v);
                     }
@@ -321,13 +344,17 @@ namespace Gs2::Inbox::Model
         {
             JsonRootObject->SetObjectField("expiresTimeSpan", ExpiresTimeSpanValue->ToJson());
         }
-        if (CreatedAtValue.IsSet())
-        {
-            JsonRootObject->SetStringField("createdAt", FString::Printf(TEXT("%lld"), CreatedAtValue.GetValue()));
-        }
         if (ExpiresAtValue.IsSet())
         {
             JsonRootObject->SetStringField("expiresAt", FString::Printf(TEXT("%lld"), ExpiresAtValue.GetValue()));
+        }
+        if (MessageReceptionPeriodEventIdValue.IsSet())
+        {
+            JsonRootObject->SetStringField("messageReceptionPeriodEventId", MessageReceptionPeriodEventIdValue.GetValue());
+        }
+        if (CreatedAtValue.IsSet())
+        {
+            JsonRootObject->SetStringField("createdAt", FString::Printf(TEXT("%lld"), CreatedAtValue.GetValue()));
         }
         if (RevisionValue.IsSet())
         {

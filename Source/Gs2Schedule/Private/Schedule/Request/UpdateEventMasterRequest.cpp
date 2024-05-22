@@ -33,7 +33,8 @@ namespace Gs2::Schedule::Request
         RepeatEndDayOfWeekValue(TOptional<FString>()),
         RepeatBeginHourValue(TOptional<int32>()),
         RepeatEndHourValue(TOptional<int32>()),
-        RelativeTriggerNameValue(TOptional<FString>())
+        RelativeTriggerNameValue(TOptional<FString>()),
+        RepeatSettingValue(nullptr)
     {
     }
 
@@ -54,7 +55,8 @@ namespace Gs2::Schedule::Request
         RepeatEndDayOfWeekValue(From.RepeatEndDayOfWeekValue),
         RepeatBeginHourValue(From.RepeatBeginHourValue),
         RepeatEndHourValue(From.RepeatEndHourValue),
-        RelativeTriggerNameValue(From.RelativeTriggerNameValue)
+        RelativeTriggerNameValue(From.RelativeTriggerNameValue),
+        RepeatSettingValue(From.RepeatSettingValue)
     {
     }
 
@@ -183,6 +185,14 @@ namespace Gs2::Schedule::Request
     )
     {
         this->RelativeTriggerNameValue = RelativeTriggerName;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FUpdateEventMasterRequest> FUpdateEventMasterRequest::WithRepeatSetting(
+        const TSharedPtr<Model::FRepeatSetting> RepeatSetting
+    )
+    {
+        this->RepeatSettingValue = RepeatSetting;
         return SharedThis(this);
     }
 
@@ -318,6 +328,15 @@ namespace Gs2::Schedule::Request
     TOptional<FString> FUpdateEventMasterRequest::GetRelativeTriggerName() const
     {
         return RelativeTriggerNameValue;
+    }
+
+    TSharedPtr<Model::FRepeatSetting> FUpdateEventMasterRequest::GetRepeatSetting() const
+    {
+        if (!RepeatSettingValue.IsValid())
+        {
+            return nullptr;
+        }
+        return RepeatSettingValue;
     }
 
     TSharedPtr<FUpdateEventMasterRequest> FUpdateEventMasterRequest::FromJson(const TSharedPtr<FJsonObject> Data)
@@ -461,7 +480,15 @@ namespace Gs2::Schedule::Request
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
-              }() : TOptional<FString>());
+              }() : TOptional<FString>())
+          ->WithRepeatSetting(Data->HasField(ANSI_TO_TCHAR("repeatSetting")) ? [Data]() -> Model::FRepeatSettingPtr
+              {
+                  if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("repeatSetting")))
+                  {
+                      return nullptr;
+                  }
+                  return Model::FRepeatSetting::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("repeatSetting")));
+              }() : nullptr);
     }
 
     TSharedPtr<FJsonObject> FUpdateEventMasterRequest::ToJson() const
@@ -530,6 +557,10 @@ namespace Gs2::Schedule::Request
         if (RelativeTriggerNameValue.IsSet())
         {
             JsonRootObject->SetStringField("relativeTriggerName", RelativeTriggerNameValue.GetValue());
+        }
+        if (RepeatSettingValue != nullptr && RepeatSettingValue.IsValid())
+        {
+            JsonRootObject->SetObjectField("repeatSetting", RepeatSettingValue->ToJson());
         }
         return JsonRootObject;
     }

@@ -17,6 +17,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "../Model/RepeatSetting.h"
 
 namespace Gs2::Schedule::Request
 {
@@ -40,6 +41,7 @@ namespace Gs2::Schedule::Request
         TOptional<int32> RepeatBeginHourValue;
         TOptional<int32> RepeatEndHourValue;
         TOptional<FString> RelativeTriggerNameValue;
+        TSharedPtr<Model::FRepeatSetting> RepeatSettingValue;
         
     public:
         
@@ -65,6 +67,7 @@ namespace Gs2::Schedule::Request
         TSharedPtr<FUpdateEventMasterRequest> WithRepeatBeginHour(const TOptional<int32> RepeatBeginHour);
         TSharedPtr<FUpdateEventMasterRequest> WithRepeatEndHour(const TOptional<int32> RepeatEndHour);
         TSharedPtr<FUpdateEventMasterRequest> WithRelativeTriggerName(const TOptional<FString> RelativeTriggerName);
+        TSharedPtr<FUpdateEventMasterRequest> WithRepeatSetting(const TSharedPtr<Model::FRepeatSetting> RepeatSetting);
 
         TOptional<FString> GetContextStack() const;
         TOptional<FString> GetNamespaceName() const;
@@ -88,6 +91,7 @@ namespace Gs2::Schedule::Request
         TOptional<int32> GetRepeatEndHour() const;
         FString GetRepeatEndHourString() const;
         TOptional<FString> GetRelativeTriggerName() const;
+        TSharedPtr<Model::FRepeatSetting> GetRepeatSetting() const;
 
         static TSharedPtr<FUpdateEventMasterRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;

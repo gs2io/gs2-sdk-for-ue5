@@ -29,9 +29,9 @@
 #include "Schedule/Domain/Model/EventMaster.h"
 #include "Schedule/Domain/Model/Trigger.h"
 #include "Schedule/Domain/Model/Event.h"
-#include "Schedule/Domain/Model/CurrentEventMaster.h"
 #include "Schedule/Domain/Model/User.h"
 #include "Schedule/Domain/Model/UserAccessToken.h"
+#include "Schedule/Domain/Model/CurrentEventMaster.h"
 #include "Core/Domain/Gs2.h"
 
 namespace Gs2::Schedule::Domain

@@ -24,6 +24,8 @@ namespace Gs2::AdReward::Request
         AdmobValue(nullptr),
         UnityAdValue(nullptr),
         AppLovinMaxesValue(nullptr),
+        AcquirePointScriptValue(nullptr),
+        ConsumePointScriptValue(nullptr),
         ChangePointNotificationValue(nullptr),
         LogSettingValue(nullptr)
     {
@@ -37,6 +39,8 @@ namespace Gs2::AdReward::Request
         AdmobValue(From.AdmobValue),
         UnityAdValue(From.UnityAdValue),
         AppLovinMaxesValue(From.AppLovinMaxesValue),
+        AcquirePointScriptValue(From.AcquirePointScriptValue),
+        ConsumePointScriptValue(From.ConsumePointScriptValue),
         ChangePointNotificationValue(From.ChangePointNotificationValue),
         LogSettingValue(From.LogSettingValue)
     {
@@ -87,6 +91,22 @@ namespace Gs2::AdReward::Request
     )
     {
         this->AppLovinMaxesValue = AppLovinMaxes;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FUpdateNamespaceRequest> FUpdateNamespaceRequest::WithAcquirePointScript(
+        const TSharedPtr<Model::FScriptSetting> AcquirePointScript
+    )
+    {
+        this->AcquirePointScriptValue = AcquirePointScript;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FUpdateNamespaceRequest> FUpdateNamespaceRequest::WithConsumePointScript(
+        const TSharedPtr<Model::FScriptSetting> ConsumePointScript
+    )
+    {
+        this->ConsumePointScriptValue = ConsumePointScript;
         return SharedThis(this);
     }
 
@@ -146,6 +166,24 @@ namespace Gs2::AdReward::Request
             return nullptr;
         }
         return AppLovinMaxesValue;
+    }
+
+    TSharedPtr<Model::FScriptSetting> FUpdateNamespaceRequest::GetAcquirePointScript() const
+    {
+        if (!AcquirePointScriptValue.IsValid())
+        {
+            return nullptr;
+        }
+        return AcquirePointScriptValue;
+    }
+
+    TSharedPtr<Model::FScriptSetting> FUpdateNamespaceRequest::GetConsumePointScript() const
+    {
+        if (!ConsumePointScriptValue.IsValid())
+        {
+            return nullptr;
+        }
+        return ConsumePointScriptValue;
     }
 
     TSharedPtr<Model::FNotificationSetting> FUpdateNamespaceRequest::GetChangePointNotification() const
@@ -219,6 +257,22 @@ namespace Gs2::AdReward::Request
                   }
                   return v;
               }() : MakeShared<TArray<Model::FAppLovinMaxPtr>>())
+          ->WithAcquirePointScript(Data->HasField(ANSI_TO_TCHAR("acquirePointScript")) ? [Data]() -> Model::FScriptSettingPtr
+              {
+                  if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("acquirePointScript")))
+                  {
+                      return nullptr;
+                  }
+                  return Model::FScriptSetting::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("acquirePointScript")));
+              }() : nullptr)
+          ->WithConsumePointScript(Data->HasField(ANSI_TO_TCHAR("consumePointScript")) ? [Data]() -> Model::FScriptSettingPtr
+              {
+                  if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("consumePointScript")))
+                  {
+                      return nullptr;
+                  }
+                  return Model::FScriptSetting::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("consumePointScript")));
+              }() : nullptr)
           ->WithChangePointNotification(Data->HasField(ANSI_TO_TCHAR("changePointNotification")) ? [Data]() -> Model::FNotificationSettingPtr
               {
                   if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("changePointNotification")))
@@ -268,6 +322,14 @@ namespace Gs2::AdReward::Request
                 v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
             }
             JsonRootObject->SetArrayField("appLovinMaxes", v);
+        }
+        if (AcquirePointScriptValue != nullptr && AcquirePointScriptValue.IsValid())
+        {
+            JsonRootObject->SetObjectField("acquirePointScript", AcquirePointScriptValue->ToJson());
+        }
+        if (ConsumePointScriptValue != nullptr && ConsumePointScriptValue.IsValid())
+        {
+            JsonRootObject->SetObjectField("consumePointScript", ConsumePointScriptValue->ToJson());
         }
         if (ChangePointNotificationValue != nullptr && ChangePointNotificationValue.IsValid())
         {

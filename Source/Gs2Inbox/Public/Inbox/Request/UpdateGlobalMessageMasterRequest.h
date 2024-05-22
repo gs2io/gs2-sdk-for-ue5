@@ -33,6 +33,7 @@ namespace Gs2::Inbox::Request
         TSharedPtr<TArray<TSharedPtr<Model::FAcquireAction>>> ReadAcquireActionsValue;
         TSharedPtr<Model::FTimeSpan> ExpiresTimeSpanValue;
         TOptional<int64> ExpiresAtValue;
+        TOptional<FString> MessageReceptionPeriodEventIdValue;
         
     public:
         
@@ -49,6 +50,7 @@ namespace Gs2::Inbox::Request
         TSharedPtr<FUpdateGlobalMessageMasterRequest> WithReadAcquireActions(const TSharedPtr<TArray<TSharedPtr<Model::FAcquireAction>>> ReadAcquireActions);
         TSharedPtr<FUpdateGlobalMessageMasterRequest> WithExpiresTimeSpan(const TSharedPtr<Model::FTimeSpan> ExpiresTimeSpan);
         TSharedPtr<FUpdateGlobalMessageMasterRequest> WithExpiresAt(const TOptional<int64> ExpiresAt);
+        TSharedPtr<FUpdateGlobalMessageMasterRequest> WithMessageReceptionPeriodEventId(const TOptional<FString> MessageReceptionPeriodEventId);
 
         TOptional<FString> GetContextStack() const;
         TOptional<FString> GetNamespaceName() const;
@@ -57,6 +59,7 @@ namespace Gs2::Inbox::Request
         TSharedPtr<Model::FTimeSpan> GetExpiresTimeSpan() const;
         TOptional<int64> GetExpiresAt() const;
         FString GetExpiresAtString() const;
+        TOptional<FString> GetMessageReceptionPeriodEventId() const;
 
         static TSharedPtr<FUpdateGlobalMessageMasterRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;

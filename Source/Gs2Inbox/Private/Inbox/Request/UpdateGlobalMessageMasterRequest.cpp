@@ -24,7 +24,8 @@ namespace Gs2::Inbox::Request
         MetadataValue(TOptional<FString>()),
         ReadAcquireActionsValue(nullptr),
         ExpiresTimeSpanValue(nullptr),
-        ExpiresAtValue(TOptional<int64>())
+        ExpiresAtValue(TOptional<int64>()),
+        MessageReceptionPeriodEventIdValue(TOptional<FString>())
     {
     }
 
@@ -36,7 +37,8 @@ namespace Gs2::Inbox::Request
         MetadataValue(From.MetadataValue),
         ReadAcquireActionsValue(From.ReadAcquireActionsValue),
         ExpiresTimeSpanValue(From.ExpiresTimeSpanValue),
-        ExpiresAtValue(From.ExpiresAtValue)
+        ExpiresAtValue(From.ExpiresAtValue),
+        MessageReceptionPeriodEventIdValue(From.MessageReceptionPeriodEventIdValue)
     {
     }
 
@@ -96,6 +98,14 @@ namespace Gs2::Inbox::Request
         return SharedThis(this);
     }
 
+    TSharedPtr<FUpdateGlobalMessageMasterRequest> FUpdateGlobalMessageMasterRequest::WithMessageReceptionPeriodEventId(
+        const TOptional<FString> MessageReceptionPeriodEventId
+    )
+    {
+        this->MessageReceptionPeriodEventIdValue = MessageReceptionPeriodEventId;
+        return SharedThis(this);
+    }
+
     TOptional<FString> FUpdateGlobalMessageMasterRequest::GetContextStack() const
     {
         return ContextStackValue;
@@ -146,6 +156,11 @@ namespace Gs2::Inbox::Request
             return FString("null");
         }
         return FString::Printf(TEXT("%lld"), ExpiresAtValue.GetValue());
+    }
+
+    TOptional<FString> FUpdateGlobalMessageMasterRequest::GetMessageReceptionPeriodEventId() const
+    {
+        return MessageReceptionPeriodEventIdValue;
     }
 
     TSharedPtr<FUpdateGlobalMessageMasterRequest> FUpdateGlobalMessageMasterRequest::FromJson(const TSharedPtr<FJsonObject> Data)
@@ -210,7 +225,16 @@ namespace Gs2::Inbox::Request
                         return TOptional(v);
                   }
                   return TOptional<int64>();
-              }() : TOptional<int64>());
+              }() : TOptional<int64>())
+            ->WithMessageReceptionPeriodEventId(Data->HasField(ANSI_TO_TCHAR("messageReceptionPeriodEventId")) ? [Data]() -> TOptional<FString>
+              {
+                  FString v("");
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("messageReceptionPeriodEventId"), v))
+                  {
+                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                  }
+                  return TOptional<FString>();
+              }() : TOptional<FString>());
     }
 
     TSharedPtr<FJsonObject> FUpdateGlobalMessageMasterRequest::ToJson() const
@@ -248,6 +272,10 @@ namespace Gs2::Inbox::Request
         if (ExpiresAtValue.IsSet())
         {
             JsonRootObject->SetStringField("expiresAt", FString::Printf(TEXT("%lld"), ExpiresAtValue.GetValue()));
+        }
+        if (MessageReceptionPeriodEventIdValue.IsSet())
+        {
+            JsonRootObject->SetStringField("messageReceptionPeriodEventId", MessageReceptionPeriodEventIdValue.GetValue());
         }
         return JsonRootObject;
     }

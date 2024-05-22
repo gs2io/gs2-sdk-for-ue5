@@ -30,8 +30,9 @@ namespace Gs2::Inbox::Model
         TOptional<FString> MetadataValue;
         TSharedPtr<TArray<TSharedPtr<FAcquireAction>>> ReadAcquireActionsValue;
         TSharedPtr<FTimeSpan> ExpiresTimeSpanValue;
-        TOptional<int64> CreatedAtValue;
         TOptional<int64> ExpiresAtValue;
+        TOptional<FString> MessageReceptionPeriodEventIdValue;
+        TOptional<int64> CreatedAtValue;
         TOptional<int64> RevisionValue;
 
     public:
@@ -46,8 +47,9 @@ namespace Gs2::Inbox::Model
         TSharedPtr<FGlobalMessageMaster> WithMetadata(const TOptional<FString> Metadata);
         TSharedPtr<FGlobalMessageMaster> WithReadAcquireActions(const TSharedPtr<TArray<TSharedPtr<FAcquireAction>>> ReadAcquireActions);
         TSharedPtr<FGlobalMessageMaster> WithExpiresTimeSpan(const TSharedPtr<FTimeSpan> ExpiresTimeSpan);
-        TSharedPtr<FGlobalMessageMaster> WithCreatedAt(const TOptional<int64> CreatedAt);
         TSharedPtr<FGlobalMessageMaster> WithExpiresAt(const TOptional<int64> ExpiresAt);
+        TSharedPtr<FGlobalMessageMaster> WithMessageReceptionPeriodEventId(const TOptional<FString> MessageReceptionPeriodEventId);
+        TSharedPtr<FGlobalMessageMaster> WithCreatedAt(const TOptional<int64> CreatedAt);
         TSharedPtr<FGlobalMessageMaster> WithRevision(const TOptional<int64> Revision);
 
         TOptional<FString> GetGlobalMessageId() const;
@@ -55,10 +57,11 @@ namespace Gs2::Inbox::Model
         TOptional<FString> GetMetadata() const;
         TSharedPtr<TArray<TSharedPtr<FAcquireAction>>> GetReadAcquireActions() const;
         TSharedPtr<FTimeSpan> GetExpiresTimeSpan() const;
-        TOptional<int64> GetCreatedAt() const;
-        FString GetCreatedAtString() const;
         TOptional<int64> GetExpiresAt() const;
         FString GetExpiresAtString() const;
+        TOptional<FString> GetMessageReceptionPeriodEventId() const;
+        TOptional<int64> GetCreatedAt() const;
+        FString GetCreatedAtString() const;
         TOptional<int64> GetRevision() const;
         FString GetRevisionString() const;
 

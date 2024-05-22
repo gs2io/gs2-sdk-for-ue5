@@ -20,6 +20,7 @@
 #include "../Model/AdMob.h"
 #include "../Model/UnityAd.h"
 #include "../Model/AppLovinMax.h"
+#include "../Model/ScriptSetting.h"
 #include "../Model/NotificationSetting.h"
 #include "../Model/LogSetting.h"
 
@@ -35,6 +36,8 @@ namespace Gs2::AdReward::Request
         TSharedPtr<Model::FAdMob> AdmobValue;
         TSharedPtr<Model::FUnityAd> UnityAdValue;
         TSharedPtr<TArray<TSharedPtr<Model::FAppLovinMax>>> AppLovinMaxesValue;
+        TSharedPtr<Model::FScriptSetting> AcquirePointScriptValue;
+        TSharedPtr<Model::FScriptSetting> ConsumePointScriptValue;
         TSharedPtr<Model::FNotificationSetting> ChangePointNotificationValue;
         TSharedPtr<Model::FLogSetting> LogSettingValue;
         
@@ -52,6 +55,8 @@ namespace Gs2::AdReward::Request
         TSharedPtr<FUpdateNamespaceRequest> WithAdmob(const TSharedPtr<Model::FAdMob> Admob);
         TSharedPtr<FUpdateNamespaceRequest> WithUnityAd(const TSharedPtr<Model::FUnityAd> UnityAd);
         TSharedPtr<FUpdateNamespaceRequest> WithAppLovinMaxes(const TSharedPtr<TArray<TSharedPtr<Model::FAppLovinMax>>> AppLovinMaxes);
+        TSharedPtr<FUpdateNamespaceRequest> WithAcquirePointScript(const TSharedPtr<Model::FScriptSetting> AcquirePointScript);
+        TSharedPtr<FUpdateNamespaceRequest> WithConsumePointScript(const TSharedPtr<Model::FScriptSetting> ConsumePointScript);
         TSharedPtr<FUpdateNamespaceRequest> WithChangePointNotification(const TSharedPtr<Model::FNotificationSetting> ChangePointNotification);
         TSharedPtr<FUpdateNamespaceRequest> WithLogSetting(const TSharedPtr<Model::FLogSetting> LogSetting);
 
@@ -60,6 +65,8 @@ namespace Gs2::AdReward::Request
         TOptional<FString> GetDescription() const;
         TSharedPtr<Model::FAdMob> GetAdmob() const;
         TSharedPtr<Model::FUnityAd> GetUnityAd() const;TSharedPtr<TArray<TSharedPtr<Model::FAppLovinMax>>> GetAppLovinMaxes() const;
+        TSharedPtr<Model::FScriptSetting> GetAcquirePointScript() const;
+        TSharedPtr<Model::FScriptSetting> GetConsumePointScript() const;
         TSharedPtr<Model::FNotificationSetting> GetChangePointNotification() const;
         TSharedPtr<Model::FLogSetting> GetLogSetting() const;
 

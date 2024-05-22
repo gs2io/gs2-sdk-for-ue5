@@ -23,16 +23,17 @@ namespace Gs2::Schedule::Model
         NameValue(TOptional<FString>()),
         MetadataValue(TOptional<FString>()),
         ScheduleTypeValue(TOptional<FString>()),
-        RepeatTypeValue(TOptional<FString>()),
         AbsoluteBeginValue(TOptional<int64>()),
         AbsoluteEndValue(TOptional<int64>()),
+        RelativeTriggerNameValue(TOptional<FString>()),
+        RepeatSettingValue(nullptr),
+        RepeatTypeValue(TOptional<FString>()),
         RepeatBeginDayOfMonthValue(TOptional<int32>()),
         RepeatEndDayOfMonthValue(TOptional<int32>()),
         RepeatBeginDayOfWeekValue(TOptional<FString>()),
         RepeatEndDayOfWeekValue(TOptional<FString>()),
         RepeatBeginHourValue(TOptional<int32>()),
-        RepeatEndHourValue(TOptional<int32>()),
-        RelativeTriggerNameValue(TOptional<FString>())
+        RepeatEndHourValue(TOptional<int32>())
     {
     }
 
@@ -43,16 +44,17 @@ namespace Gs2::Schedule::Model
         NameValue(From.NameValue),
         MetadataValue(From.MetadataValue),
         ScheduleTypeValue(From.ScheduleTypeValue),
-        RepeatTypeValue(From.RepeatTypeValue),
         AbsoluteBeginValue(From.AbsoluteBeginValue),
         AbsoluteEndValue(From.AbsoluteEndValue),
+        RelativeTriggerNameValue(From.RelativeTriggerNameValue),
+        RepeatSettingValue(From.RepeatSettingValue),
+        RepeatTypeValue(From.RepeatTypeValue),
         RepeatBeginDayOfMonthValue(From.RepeatBeginDayOfMonthValue),
         RepeatEndDayOfMonthValue(From.RepeatEndDayOfMonthValue),
         RepeatBeginDayOfWeekValue(From.RepeatBeginDayOfWeekValue),
         RepeatEndDayOfWeekValue(From.RepeatEndDayOfWeekValue),
         RepeatBeginHourValue(From.RepeatBeginHourValue),
-        RepeatEndHourValue(From.RepeatEndHourValue),
-        RelativeTriggerNameValue(From.RelativeTriggerNameValue)
+        RepeatEndHourValue(From.RepeatEndHourValue)
     {
     }
 
@@ -88,14 +90,6 @@ namespace Gs2::Schedule::Model
         return SharedThis(this);
     }
 
-    TSharedPtr<FEvent> FEvent::WithRepeatType(
-        const TOptional<FString> RepeatType
-    )
-    {
-        this->RepeatTypeValue = RepeatType;
-        return SharedThis(this);
-    }
-
     TSharedPtr<FEvent> FEvent::WithAbsoluteBegin(
         const TOptional<int64> AbsoluteBegin
     )
@@ -109,6 +103,30 @@ namespace Gs2::Schedule::Model
     )
     {
         this->AbsoluteEndValue = AbsoluteEnd;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FEvent> FEvent::WithRelativeTriggerName(
+        const TOptional<FString> RelativeTriggerName
+    )
+    {
+        this->RelativeTriggerNameValue = RelativeTriggerName;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FEvent> FEvent::WithRepeatSetting(
+        const TSharedPtr<FRepeatSetting> RepeatSetting
+    )
+    {
+        this->RepeatSettingValue = RepeatSetting;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FEvent> FEvent::WithRepeatType(
+        const TOptional<FString> RepeatType
+    )
+    {
+        this->RepeatTypeValue = RepeatType;
         return SharedThis(this);
     }
 
@@ -159,14 +177,6 @@ namespace Gs2::Schedule::Model
         this->RepeatEndHourValue = RepeatEndHour;
         return SharedThis(this);
     }
-
-    TSharedPtr<FEvent> FEvent::WithRelativeTriggerName(
-        const TOptional<FString> RelativeTriggerName
-    )
-    {
-        this->RelativeTriggerNameValue = RelativeTriggerName;
-        return SharedThis(this);
-    }
     TOptional<FString> FEvent::GetEventId() const
     {
         return EventIdValue;
@@ -182,10 +192,6 @@ namespace Gs2::Schedule::Model
     TOptional<FString> FEvent::GetScheduleType() const
     {
         return ScheduleTypeValue;
-    }
-    TOptional<FString> FEvent::GetRepeatType() const
-    {
-        return RepeatTypeValue;
     }
     TOptional<int64> FEvent::GetAbsoluteBegin() const
     {
@@ -212,6 +218,18 @@ namespace Gs2::Schedule::Model
             return FString("null");
         }
         return FString::Printf(TEXT("%lld"), AbsoluteEndValue.GetValue());
+    }
+    TOptional<FString> FEvent::GetRelativeTriggerName() const
+    {
+        return RelativeTriggerNameValue;
+    }
+    TSharedPtr<FRepeatSetting> FEvent::GetRepeatSetting() const
+    {
+        return RepeatSettingValue;
+    }
+    TOptional<FString> FEvent::GetRepeatType() const
+    {
+        return RepeatTypeValue;
     }
     TOptional<int32> FEvent::GetRepeatBeginDayOfMonth() const
     {
@@ -272,10 +290,6 @@ namespace Gs2::Schedule::Model
             return FString("null");
         }
         return FString::Printf(TEXT("%d"), RepeatEndHourValue.GetValue());
-    }
-    TOptional<FString> FEvent::GetRelativeTriggerName() const
-    {
-        return RelativeTriggerNameValue;
     }
 
     TOptional<FString> FEvent::GetRegionFromGrn(const FString Grn)
@@ -364,15 +378,6 @@ namespace Gs2::Schedule::Model
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithRepeatType(Data->HasField(ANSI_TO_TCHAR("repeatType")) ? [Data]() -> TOptional<FString>
-                {
-                    FString v("");
-                    if (Data->TryGetStringField(ANSI_TO_TCHAR("repeatType"), v))
-                    {
-                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
-                    }
-                    return TOptional<FString>();
-                }() : TOptional<FString>())
             ->WithAbsoluteBegin(Data->HasField(ANSI_TO_TCHAR("absoluteBegin")) ? [Data]() -> TOptional<int64>
                 {
                     int64 v;
@@ -391,6 +396,32 @@ namespace Gs2::Schedule::Model
                     }
                     return TOptional<int64>();
                 }() : TOptional<int64>())
+            ->WithRelativeTriggerName(Data->HasField(ANSI_TO_TCHAR("relativeTriggerName")) ? [Data]() -> TOptional<FString>
+                {
+                    FString v("");
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("relativeTriggerName"), v))
+                    {
+                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                    }
+                    return TOptional<FString>();
+                }() : TOptional<FString>())
+            ->WithRepeatSetting(Data->HasField(ANSI_TO_TCHAR("repeatSetting")) ? [Data]() -> Model::FRepeatSettingPtr
+                {
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("repeatSetting")))
+                    {
+                        return nullptr;
+                    }
+                    return Model::FRepeatSetting::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("repeatSetting")));
+                 }() : nullptr)
+            ->WithRepeatType(Data->HasField(ANSI_TO_TCHAR("repeatType")) ? [Data]() -> TOptional<FString>
+                {
+                    FString v("");
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("repeatType"), v))
+                    {
+                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                    }
+                    return TOptional<FString>();
+                }() : TOptional<FString>())
             ->WithRepeatBeginDayOfMonth(Data->HasField(ANSI_TO_TCHAR("repeatBeginDayOfMonth")) ? [Data]() -> TOptional<int32>
                 {
                     int32 v;
@@ -444,16 +475,7 @@ namespace Gs2::Schedule::Model
                         return TOptional(v);
                     }
                     return TOptional<int32>();
-                }() : TOptional<int32>())
-            ->WithRelativeTriggerName(Data->HasField(ANSI_TO_TCHAR("relativeTriggerName")) ? [Data]() -> TOptional<FString>
-                {
-                    FString v("");
-                    if (Data->TryGetStringField(ANSI_TO_TCHAR("relativeTriggerName"), v))
-                    {
-                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
-                    }
-                    return TOptional<FString>();
-                }() : TOptional<FString>());
+                }() : TOptional<int32>());
     }
 
     TSharedPtr<FJsonObject> FEvent::ToJson() const
@@ -475,10 +497,6 @@ namespace Gs2::Schedule::Model
         {
             JsonRootObject->SetStringField("scheduleType", ScheduleTypeValue.GetValue());
         }
-        if (RepeatTypeValue.IsSet())
-        {
-            JsonRootObject->SetStringField("repeatType", RepeatTypeValue.GetValue());
-        }
         if (AbsoluteBeginValue.IsSet())
         {
             JsonRootObject->SetStringField("absoluteBegin", FString::Printf(TEXT("%lld"), AbsoluteBeginValue.GetValue()));
@@ -486,6 +504,18 @@ namespace Gs2::Schedule::Model
         if (AbsoluteEndValue.IsSet())
         {
             JsonRootObject->SetStringField("absoluteEnd", FString::Printf(TEXT("%lld"), AbsoluteEndValue.GetValue()));
+        }
+        if (RelativeTriggerNameValue.IsSet())
+        {
+            JsonRootObject->SetStringField("relativeTriggerName", RelativeTriggerNameValue.GetValue());
+        }
+        if (RepeatSettingValue != nullptr && RepeatSettingValue.IsValid())
+        {
+            JsonRootObject->SetObjectField("repeatSetting", RepeatSettingValue->ToJson());
+        }
+        if (RepeatTypeValue.IsSet())
+        {
+            JsonRootObject->SetStringField("repeatType", RepeatTypeValue.GetValue());
         }
         if (RepeatBeginDayOfMonthValue.IsSet())
         {
@@ -510,10 +540,6 @@ namespace Gs2::Schedule::Model
         if (RepeatEndHourValue.IsSet())
         {
             JsonRootObject->SetNumberField("repeatEndHour", RepeatEndHourValue.GetValue());
-        }
-        if (RelativeTriggerNameValue.IsSet())
-        {
-            JsonRootObject->SetStringField("relativeTriggerName", RelativeTriggerNameValue.GetValue());
         }
         return JsonRootObject;
     }

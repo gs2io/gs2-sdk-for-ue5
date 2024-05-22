@@ -21,6 +21,7 @@
 #include "AdMob.h"
 #include "UnityAd.h"
 #include "AppLovinMax.h"
+#include "ScriptSetting.h"
 #include "NotificationSetting.h"
 #include "LogSetting.h"
 
@@ -34,6 +35,8 @@ namespace Gs2::AdReward::Model
         TSharedPtr<FAdMob> AdmobValue;
         TSharedPtr<FUnityAd> UnityAdValue;
         TSharedPtr<TArray<TSharedPtr<FAppLovinMax>>> AppLovinMaxesValue;
+        TSharedPtr<FScriptSetting> AcquirePointScriptValue;
+        TSharedPtr<FScriptSetting> ConsumePointScriptValue;
         TSharedPtr<FNotificationSetting> ChangePointNotificationValue;
         TSharedPtr<FLogSetting> LogSettingValue;
         TOptional<int64> CreatedAtValue;
@@ -53,6 +56,8 @@ namespace Gs2::AdReward::Model
         TSharedPtr<FNamespace> WithAdmob(const TSharedPtr<FAdMob> Admob);
         TSharedPtr<FNamespace> WithUnityAd(const TSharedPtr<FUnityAd> UnityAd);
         TSharedPtr<FNamespace> WithAppLovinMaxes(const TSharedPtr<TArray<TSharedPtr<FAppLovinMax>>> AppLovinMaxes);
+        TSharedPtr<FNamespace> WithAcquirePointScript(const TSharedPtr<FScriptSetting> AcquirePointScript);
+        TSharedPtr<FNamespace> WithConsumePointScript(const TSharedPtr<FScriptSetting> ConsumePointScript);
         TSharedPtr<FNamespace> WithChangePointNotification(const TSharedPtr<FNotificationSetting> ChangePointNotification);
         TSharedPtr<FNamespace> WithLogSetting(const TSharedPtr<FLogSetting> LogSetting);
         TSharedPtr<FNamespace> WithCreatedAt(const TOptional<int64> CreatedAt);
@@ -65,6 +70,8 @@ namespace Gs2::AdReward::Model
         TSharedPtr<FAdMob> GetAdmob() const;
         TSharedPtr<FUnityAd> GetUnityAd() const;
         TSharedPtr<TArray<TSharedPtr<FAppLovinMax>>> GetAppLovinMaxes() const;
+        TSharedPtr<FScriptSetting> GetAcquirePointScript() const;
+        TSharedPtr<FScriptSetting> GetConsumePointScript() const;
         TSharedPtr<FNotificationSetting> GetChangePointNotification() const;
         TSharedPtr<FLogSetting> GetLogSetting() const;
         TOptional<int64> GetCreatedAt() const;

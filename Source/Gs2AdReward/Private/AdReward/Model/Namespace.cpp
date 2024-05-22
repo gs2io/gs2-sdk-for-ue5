@@ -25,6 +25,8 @@ namespace Gs2::AdReward::Model
         AdmobValue(nullptr),
         UnityAdValue(nullptr),
         AppLovinMaxesValue(nullptr),
+        AcquirePointScriptValue(nullptr),
+        ConsumePointScriptValue(nullptr),
         ChangePointNotificationValue(nullptr),
         LogSettingValue(nullptr),
         CreatedAtValue(TOptional<int64>()),
@@ -42,6 +44,8 @@ namespace Gs2::AdReward::Model
         AdmobValue(From.AdmobValue),
         UnityAdValue(From.UnityAdValue),
         AppLovinMaxesValue(From.AppLovinMaxesValue),
+        AcquirePointScriptValue(From.AcquirePointScriptValue),
+        ConsumePointScriptValue(From.ConsumePointScriptValue),
         ChangePointNotificationValue(From.ChangePointNotificationValue),
         LogSettingValue(From.LogSettingValue),
         CreatedAtValue(From.CreatedAtValue),
@@ -95,6 +99,22 @@ namespace Gs2::AdReward::Model
     )
     {
         this->AppLovinMaxesValue = AppLovinMaxes;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FNamespace> FNamespace::WithAcquirePointScript(
+        const TSharedPtr<FScriptSetting> AcquirePointScript
+    )
+    {
+        this->AcquirePointScriptValue = AcquirePointScript;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FNamespace> FNamespace::WithConsumePointScript(
+        const TSharedPtr<FScriptSetting> ConsumePointScript
+    )
+    {
+        this->ConsumePointScriptValue = ConsumePointScript;
         return SharedThis(this);
     }
 
@@ -160,6 +180,14 @@ namespace Gs2::AdReward::Model
     TSharedPtr<TArray<TSharedPtr<Model::FAppLovinMax>>> FNamespace::GetAppLovinMaxes() const
     {
         return AppLovinMaxesValue;
+    }
+    TSharedPtr<FScriptSetting> FNamespace::GetAcquirePointScript() const
+    {
+        return AcquirePointScriptValue;
+    }
+    TSharedPtr<FScriptSetting> FNamespace::GetConsumePointScript() const
+    {
+        return ConsumePointScriptValue;
     }
     TSharedPtr<FNotificationSetting> FNamespace::GetChangePointNotification() const
     {
@@ -303,6 +331,22 @@ namespace Gs2::AdReward::Model
                     }
                     return v;
                  }() : MakeShared<TArray<Model::FAppLovinMaxPtr>>())
+            ->WithAcquirePointScript(Data->HasField(ANSI_TO_TCHAR("acquirePointScript")) ? [Data]() -> Model::FScriptSettingPtr
+                {
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("acquirePointScript")))
+                    {
+                        return nullptr;
+                    }
+                    return Model::FScriptSetting::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("acquirePointScript")));
+                 }() : nullptr)
+            ->WithConsumePointScript(Data->HasField(ANSI_TO_TCHAR("consumePointScript")) ? [Data]() -> Model::FScriptSettingPtr
+                {
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("consumePointScript")))
+                    {
+                        return nullptr;
+                    }
+                    return Model::FScriptSetting::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("consumePointScript")));
+                 }() : nullptr)
             ->WithChangePointNotification(Data->HasField(ANSI_TO_TCHAR("changePointNotification")) ? [Data]() -> Model::FNotificationSettingPtr
                 {
                     if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("changePointNotification")))
@@ -379,6 +423,14 @@ namespace Gs2::AdReward::Model
                 v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
             }
             JsonRootObject->SetArrayField("appLovinMaxes", v);
+        }
+        if (AcquirePointScriptValue != nullptr && AcquirePointScriptValue.IsValid())
+        {
+            JsonRootObject->SetObjectField("acquirePointScript", AcquirePointScriptValue->ToJson());
+        }
+        if (ConsumePointScriptValue != nullptr && ConsumePointScriptValue.IsValid())
+        {
+            JsonRootObject->SetObjectField("consumePointScript", ConsumePointScriptValue->ToJson());
         }
         if (ChangePointNotificationValue != nullptr && ChangePointNotificationValue.IsValid())
         {

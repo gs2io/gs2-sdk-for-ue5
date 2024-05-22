@@ -109,6 +109,10 @@ namespace Gs2::Inbox::Task::Rest
             {
                 JsonRootObject->SetStringField("expiresAt", FString::Printf(TEXT("%lld"), this->Request->GetExpiresAt().GetValue()));
             }
+            if (this->Request->GetMessageReceptionPeriodEventId().IsSet())
+            {
+                JsonRootObject->SetStringField("messageReceptionPeriodEventId", this->Request->GetMessageReceptionPeriodEventId().GetValue());
+            }
             FJsonSerializer::Serialize(JsonRootObject.ToSharedRef(), Writer);
             request->SetContentAsString(Body);
 

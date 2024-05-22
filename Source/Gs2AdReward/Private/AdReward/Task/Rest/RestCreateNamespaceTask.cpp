@@ -103,6 +103,14 @@ namespace Gs2::AdReward::Task::Rest
             {
                 JsonRootObject->SetStringField("description", this->Request->GetDescription().GetValue());
             }
+            if (this->Request->GetAcquirePointScript() != nullptr && this->Request->GetAcquirePointScript().IsValid())
+            {
+                JsonRootObject->SetObjectField("acquirePointScript", this->Request->GetAcquirePointScript()->ToJson());
+            }
+            if (this->Request->GetConsumePointScript() != nullptr && this->Request->GetConsumePointScript().IsValid())
+            {
+                JsonRootObject->SetObjectField("consumePointScript", this->Request->GetConsumePointScript()->ToJson());
+            }
             if (this->Request->GetChangePointNotification() != nullptr && this->Request->GetChangePointNotification().IsValid())
             {
                 JsonRootObject->SetObjectField("changePointNotification", this->Request->GetChangePointNotification()->ToJson());

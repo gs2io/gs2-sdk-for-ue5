@@ -31,6 +31,7 @@ namespace Gs2::Inbox::Model
         TSharedPtr<TArray<TSharedPtr<FAcquireAction>>> ReadAcquireActionsValue;
         TSharedPtr<FTimeSpan> ExpiresTimeSpanValue;
         TOptional<int64> ExpiresAtValue;
+        TOptional<FString> MessageReceptionPeriodEventIdValue;
 
     public:
         FGlobalMessage();
@@ -45,6 +46,7 @@ namespace Gs2::Inbox::Model
         TSharedPtr<FGlobalMessage> WithReadAcquireActions(const TSharedPtr<TArray<TSharedPtr<FAcquireAction>>> ReadAcquireActions);
         TSharedPtr<FGlobalMessage> WithExpiresTimeSpan(const TSharedPtr<FTimeSpan> ExpiresTimeSpan);
         TSharedPtr<FGlobalMessage> WithExpiresAt(const TOptional<int64> ExpiresAt);
+        TSharedPtr<FGlobalMessage> WithMessageReceptionPeriodEventId(const TOptional<FString> MessageReceptionPeriodEventId);
 
         TOptional<FString> GetGlobalMessageId() const;
         TOptional<FString> GetName() const;
@@ -53,6 +55,7 @@ namespace Gs2::Inbox::Model
         TSharedPtr<FTimeSpan> GetExpiresTimeSpan() const;
         TOptional<int64> GetExpiresAt() const;
         FString GetExpiresAtString() const;
+        TOptional<FString> GetMessageReceptionPeriodEventId() const;
 
         static TOptional<FString> GetRegionFromGrn(const FString Grn);
         static TOptional<FString> GetOwnerIdFromGrn(const FString Grn);
