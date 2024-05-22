@@ -141,6 +141,10 @@ namespace Gs2::Exchange::Domain::SpeculativeExecutor
         const double Rate
     )
     {
+        if (Request->GetMinutes().IsSet())
+        {
+            Request->WithMinutes(*Request->GetMinutes() * Rate);
+        }
         return Request;
     }
 
@@ -149,6 +153,11 @@ namespace Gs2::Exchange::Domain::SpeculativeExecutor
         TBigInt<1024, false> Rate
     )
     {
+        if (Request->GetMinutes().IsSet())
+        {
+            Rate.Multiply(*Request->GetMinutes());
+            Request->WithMinutes(Rate.ToInt());
+        }
         return Request;
     }
 }

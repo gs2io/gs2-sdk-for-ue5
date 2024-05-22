@@ -21,6 +21,7 @@
 #include "GenericPlatform/GenericPlatformHttp.h"
 #include "Core/Gs2Constant.h"
 #include "Core/Net/Rest/Gs2RestSession.h"
+#include "Inbox/Error/MessageExpiredError.h"
 #include "Interfaces/IHttpResponse.h"
 
 namespace Gs2::Inbox::Task::Rest
@@ -136,5 +137,15 @@ namespace Gs2::Inbox::Task::Rest
             return MakeShared<Core::Model::FUnknownError>(Details);
         }
         return Core::Model::FGs2Error::FromResponse(ResponseCode, ResponseBody);
+    }
+
+    void FOpenMessageTask::OnError(Core::Model::FGs2ErrorPtr Error)
+    {
+        if (Error->Count() > 0 && Error->Detail(0)->Code() == "inbox.message.expired") {
+            TGs2Future<Result::FOpenMessageResult>::OnError(MakeShared<Inbox::Error::FMessageExpiredError>(Error));
+        }
+        else {
+            TGs2Future<Result::FOpenMessageResult>::OnError(Error);
+        }
     }
 }
