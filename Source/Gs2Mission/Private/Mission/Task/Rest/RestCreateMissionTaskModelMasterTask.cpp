@@ -101,17 +101,22 @@ namespace Gs2::Mission::Task::Rest
             {
                 JsonRootObject->SetStringField("description", this->Request->GetDescription().GetValue());
             }
-            if (this->Request->GetCounterName().IsSet())
+            if (this->Request->GetVerifyCompleteType().IsSet())
             {
-                JsonRootObject->SetStringField("counterName", this->Request->GetCounterName().GetValue());
+                JsonRootObject->SetStringField("verifyCompleteType", this->Request->GetVerifyCompleteType().GetValue());
             }
-            if (this->Request->GetTargetResetType().IsSet())
+            if (this->Request->GetTargetCounter() != nullptr && this->Request->GetTargetCounter().IsValid())
             {
-                JsonRootObject->SetStringField("targetResetType", this->Request->GetTargetResetType().GetValue());
+                JsonRootObject->SetObjectField("targetCounter", this->Request->GetTargetCounter()->ToJson());
             }
-            if (this->Request->GetTargetValue().IsSet())
+            if (this->Request->GetVerifyCompleteConsumeActions() != nullptr && this->Request->GetVerifyCompleteConsumeActions().IsValid())
             {
-                JsonRootObject->SetStringField("targetValue", FString::Printf(TEXT("%lld"), this->Request->GetTargetValue().GetValue()));
+                TArray<TSharedPtr<FJsonValue>> v;
+                for (auto JsonObjectValue : *this->Request->GetVerifyCompleteConsumeActions())
+                {
+                    v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
+                }
+                JsonRootObject->SetArrayField("verifyCompleteConsumeActions", v);
             }
             if (this->Request->GetCompleteAcquireActions() != nullptr && this->Request->GetCompleteAcquireActions().IsValid())
             {
@@ -129,6 +134,18 @@ namespace Gs2::Mission::Task::Rest
             if (this->Request->GetPremiseMissionTaskName().IsSet())
             {
                 JsonRootObject->SetStringField("premiseMissionTaskName", this->Request->GetPremiseMissionTaskName().GetValue());
+            }
+            if (this->Request->GetCounterName().IsSet())
+            {
+                JsonRootObject->SetStringField("counterName", this->Request->GetCounterName().GetValue());
+            }
+            if (this->Request->GetTargetResetType().IsSet())
+            {
+                JsonRootObject->SetStringField("targetResetType", this->Request->GetTargetResetType().GetValue());
+            }
+            if (this->Request->GetTargetValue().IsSet())
+            {
+                JsonRootObject->SetStringField("targetValue", FString::Printf(TEXT("%lld"), this->Request->GetTargetValue().GetValue()));
             }
             FJsonSerializer::Serialize(JsonRootObject.ToSharedRef(), Writer);
             request->SetContentAsString(Body);

@@ -18,6 +18,8 @@
 
 #include "CoreMinimal.h"
 #include "Core/Gs2Object.h"
+#include "TargetCounterModel.h"
+#include "ConsumeAction.h"
 #include "AcquireAction.h"
 
 namespace Gs2::Mission::Model
@@ -28,15 +30,18 @@ namespace Gs2::Mission::Model
         TOptional<FString> NameValue;
         TOptional<FString> MetadataValue;
         TOptional<FString> DescriptionValue;
-        TOptional<FString> CounterNameValue;
-        TOptional<FString> TargetResetTypeValue;
-        TOptional<int64> TargetValueValue;
+        TOptional<FString> VerifyCompleteTypeValue;
+        TSharedPtr<FTargetCounterModel> TargetCounterValue;
+        TSharedPtr<TArray<TSharedPtr<FConsumeAction>>> VerifyCompleteConsumeActionsValue;
         TSharedPtr<TArray<TSharedPtr<FAcquireAction>>> CompleteAcquireActionsValue;
         TOptional<FString> ChallengePeriodEventIdValue;
         TOptional<FString> PremiseMissionTaskNameValue;
         TOptional<int64> CreatedAtValue;
         TOptional<int64> UpdatedAtValue;
         TOptional<int64> RevisionValue;
+        TOptional<FString> CounterNameValue;
+        TOptional<FString> TargetResetTypeValue;
+        TOptional<int64> TargetValueValue;
 
     public:
         FMissionTaskModelMaster();
@@ -49,24 +54,26 @@ namespace Gs2::Mission::Model
         TSharedPtr<FMissionTaskModelMaster> WithName(const TOptional<FString> Name);
         TSharedPtr<FMissionTaskModelMaster> WithMetadata(const TOptional<FString> Metadata);
         TSharedPtr<FMissionTaskModelMaster> WithDescription(const TOptional<FString> Description);
-        TSharedPtr<FMissionTaskModelMaster> WithCounterName(const TOptional<FString> CounterName);
-        TSharedPtr<FMissionTaskModelMaster> WithTargetResetType(const TOptional<FString> TargetResetType);
-        TSharedPtr<FMissionTaskModelMaster> WithTargetValue(const TOptional<int64> TargetValue);
+        TSharedPtr<FMissionTaskModelMaster> WithVerifyCompleteType(const TOptional<FString> VerifyCompleteType);
+        TSharedPtr<FMissionTaskModelMaster> WithTargetCounter(const TSharedPtr<FTargetCounterModel> TargetCounter);
+        TSharedPtr<FMissionTaskModelMaster> WithVerifyCompleteConsumeActions(const TSharedPtr<TArray<TSharedPtr<FConsumeAction>>> VerifyCompleteConsumeActions);
         TSharedPtr<FMissionTaskModelMaster> WithCompleteAcquireActions(const TSharedPtr<TArray<TSharedPtr<FAcquireAction>>> CompleteAcquireActions);
         TSharedPtr<FMissionTaskModelMaster> WithChallengePeriodEventId(const TOptional<FString> ChallengePeriodEventId);
         TSharedPtr<FMissionTaskModelMaster> WithPremiseMissionTaskName(const TOptional<FString> PremiseMissionTaskName);
         TSharedPtr<FMissionTaskModelMaster> WithCreatedAt(const TOptional<int64> CreatedAt);
         TSharedPtr<FMissionTaskModelMaster> WithUpdatedAt(const TOptional<int64> UpdatedAt);
         TSharedPtr<FMissionTaskModelMaster> WithRevision(const TOptional<int64> Revision);
+        TSharedPtr<FMissionTaskModelMaster> WithCounterName(const TOptional<FString> CounterName);
+        TSharedPtr<FMissionTaskModelMaster> WithTargetResetType(const TOptional<FString> TargetResetType);
+        TSharedPtr<FMissionTaskModelMaster> WithTargetValue(const TOptional<int64> TargetValue);
 
         TOptional<FString> GetMissionTaskId() const;
         TOptional<FString> GetName() const;
         TOptional<FString> GetMetadata() const;
         TOptional<FString> GetDescription() const;
-        TOptional<FString> GetCounterName() const;
-        TOptional<FString> GetTargetResetType() const;
-        TOptional<int64> GetTargetValue() const;
-        FString GetTargetValueString() const;
+        TOptional<FString> GetVerifyCompleteType() const;
+        TSharedPtr<FTargetCounterModel> GetTargetCounter() const;
+        TSharedPtr<TArray<TSharedPtr<FConsumeAction>>> GetVerifyCompleteConsumeActions() const;
         TSharedPtr<TArray<TSharedPtr<FAcquireAction>>> GetCompleteAcquireActions() const;
         TOptional<FString> GetChallengePeriodEventId() const;
         TOptional<FString> GetPremiseMissionTaskName() const;
@@ -76,6 +83,10 @@ namespace Gs2::Mission::Model
         FString GetUpdatedAtString() const;
         TOptional<int64> GetRevision() const;
         FString GetRevisionString() const;
+        TOptional<FString> GetCounterName() const;
+        TOptional<FString> GetTargetResetType() const;
+        TOptional<int64> GetTargetValue() const;
+        FString GetTargetValueString() const;
 
         static TOptional<FString> GetRegionFromGrn(const FString Grn);
         static TOptional<FString> GetOwnerIdFromGrn(const FString Grn);

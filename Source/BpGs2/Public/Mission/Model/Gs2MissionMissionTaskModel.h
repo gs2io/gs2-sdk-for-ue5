@@ -18,6 +18,8 @@
 
 #include "CoreMinimal.h"
 #include "Mission/Domain/Model/Gs2MissionEzMissionTaskModelDomain.h"
+#include "Mission/Model/Gs2MissionTargetCounterModel.h"
+#include "Mission/Model/Gs2MissionConsumeAction.h"
 #include "Mission/Model/Gs2MissionAcquireAction.h"
 #include "Core/BpGs2Constant.h"
 #include "Gs2MissionMissionTaskModel.generated.h"
@@ -40,17 +42,23 @@ struct FGs2MissionMissionTaskModelValue
     UPROPERTY(Category = Gs2, BlueprintReadOnly)
     FString Metadata = "";
     UPROPERTY(Category = Gs2, BlueprintReadOnly)
-    FString CounterName = "";
+    FString VerifyCompleteType = "";
     UPROPERTY(Category = Gs2, BlueprintReadOnly)
-    FString TargetResetType = "";
+    FGs2MissionTargetCounterModel TargetCounter = FGs2MissionTargetCounterModel();
     UPROPERTY(Category = Gs2, BlueprintReadOnly)
-    int64 TargetValue = 0;
+    TArray<FGs2MissionConsumeAction> VerifyCompleteConsumeActions = TArray<FGs2MissionConsumeAction>();
     UPROPERTY(Category = Gs2, BlueprintReadOnly)
     TArray<FGs2MissionAcquireAction> CompleteAcquireActions = TArray<FGs2MissionAcquireAction>();
     UPROPERTY(Category = Gs2, BlueprintReadOnly)
     FString ChallengePeriodEventId = "";
     UPROPERTY(Category = Gs2, BlueprintReadOnly)
     FString PremiseMissionTaskName = "";
+    UPROPERTY(Category = Gs2, BlueprintReadOnly)
+    FString CounterName = "";
+    UPROPERTY(Category = Gs2, BlueprintReadOnly)
+    FString TargetResetType = "";
+    UPROPERTY(Category = Gs2, BlueprintReadOnly)
+    int64 TargetValue = 0;
 };
 
 inline FGs2MissionMissionTaskModelValue EzMissionTaskModelToFGs2MissionMissionTaskModelValue(
@@ -64,9 +72,17 @@ inline FGs2MissionMissionTaskModelValue EzMissionTaskModelToFGs2MissionMissionTa
     }
     Value.Name = Model->GetName() ? *Model->GetName() : "";
     Value.Metadata = Model->GetMetadata() ? *Model->GetMetadata() : "";
-    Value.CounterName = Model->GetCounterName() ? *Model->GetCounterName() : "";
-    Value.TargetResetType = Model->GetTargetResetType() ? *Model->GetTargetResetType() : "";
-    Value.TargetValue = Model->GetTargetValue() ? *Model->GetTargetValue() : 0;
+    Value.VerifyCompleteType = Model->GetVerifyCompleteType() ? *Model->GetVerifyCompleteType() : "";
+    Value.TargetCounter = Model->GetTargetCounter() ? EzTargetCounterModelToFGs2MissionTargetCounterModel(Model->GetTargetCounter()) : FGs2MissionTargetCounterModel();
+    Value.VerifyCompleteConsumeActions = Model->GetVerifyCompleteConsumeActions() ? [&]
+    {
+        TArray<FGs2MissionConsumeAction> r;
+        for (auto v : *Model->GetVerifyCompleteConsumeActions())
+        {
+            r.Add(EzConsumeActionToFGs2MissionConsumeAction(v));
+        }
+        return r;
+    }() : TArray<FGs2MissionConsumeAction>();
     Value.CompleteAcquireActions = Model->GetCompleteAcquireActions() ? [&]
     {
         TArray<FGs2MissionAcquireAction> r;
@@ -78,6 +94,9 @@ inline FGs2MissionMissionTaskModelValue EzMissionTaskModelToFGs2MissionMissionTa
     }() : TArray<FGs2MissionAcquireAction>();
     Value.ChallengePeriodEventId = Model->GetChallengePeriodEventId() ? *Model->GetChallengePeriodEventId() : "";
     Value.PremiseMissionTaskName = Model->GetPremiseMissionTaskName() ? *Model->GetPremiseMissionTaskName() : "";
+    Value.CounterName = Model->GetCounterName() ? *Model->GetCounterName() : "";
+    Value.TargetResetType = Model->GetTargetResetType() ? *Model->GetTargetResetType() : "";
+    Value.TargetValue = Model->GetTargetValue() ? *Model->GetTargetValue() : 0;
     return Value;
 }
 
@@ -88,9 +107,15 @@ inline Gs2::UE5::Mission::Model::FEzMissionTaskModelPtr FGs2MissionMissionTaskMo
     return MakeShared<Gs2::UE5::Mission::Model::FEzMissionTaskModel>()
         ->WithName(Model.Name)
         ->WithMetadata(Model.Metadata)
-        ->WithCounterName(Model.CounterName)
-        ->WithTargetResetType(Model.TargetResetType)
-        ->WithTargetValue(Model.TargetValue)
+        ->WithVerifyCompleteType(Model.VerifyCompleteType)
+        ->WithTargetCounter(FGs2MissionTargetCounterModelToEzTargetCounterModel(Model.TargetCounter))
+        ->WithVerifyCompleteConsumeActions([&]{
+            auto r = MakeShared<TArray<Gs2::UE5::Mission::Model::FEzConsumeActionPtr>>();
+            for (auto v : Model.VerifyCompleteConsumeActions) {
+                r->Add(FGs2MissionConsumeActionToEzConsumeAction(v));
+            }
+            return r;
+        }())
         ->WithCompleteAcquireActions([&]{
             auto r = MakeShared<TArray<Gs2::UE5::Mission::Model::FEzAcquireActionPtr>>();
             for (auto v : Model.CompleteAcquireActions) {
@@ -99,7 +124,10 @@ inline Gs2::UE5::Mission::Model::FEzMissionTaskModelPtr FGs2MissionMissionTaskMo
             return r;
         }())
         ->WithChallengePeriodEventId(Model.ChallengePeriodEventId)
-        ->WithPremiseMissionTaskName(Model.PremiseMissionTaskName);
+        ->WithPremiseMissionTaskName(Model.PremiseMissionTaskName)
+        ->WithCounterName(Model.CounterName)
+        ->WithTargetResetType(Model.TargetResetType)
+        ->WithTargetValue(Model.TargetValue);
 }
 
 UCLASS()

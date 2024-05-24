@@ -124,6 +124,32 @@ namespace Gs2::Mission::Domain::Model
             Request::FGetCounterRequestPtr Request
         );
 
+        class GS2MISSION_API FVerifyValueTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Mission::Domain::Model::FCounterAccessTokenDomain>,
+            public TSharedFromThis<FVerifyValueTask>
+        {
+            const TSharedPtr<FCounterAccessTokenDomain> Self;
+            const Request::FVerifyCounterValueRequestPtr Request;
+        public:
+            explicit FVerifyValueTask(
+                const TSharedPtr<FCounterAccessTokenDomain>& Self,
+                const Request::FVerifyCounterValueRequestPtr Request
+            );
+
+            FVerifyValueTask(
+                const FVerifyValueTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Mission::Domain::Model::FCounterAccessTokenDomain>> Result
+            ) override;
+        };
+        friend FVerifyValueTask;
+
+        TSharedPtr<FAsyncTask<FVerifyValueTask>> VerifyValue(
+            Request::FVerifyCounterValueRequestPtr Request
+        );
+
         static FString CreateCacheParentKey(
             TOptional<FString> NamespaceName,
             TOptional<FString> UserId,

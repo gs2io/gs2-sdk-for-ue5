@@ -22,12 +22,15 @@ namespace Gs2::Mission::Model
         MissionTaskIdValue(TOptional<FString>()),
         NameValue(TOptional<FString>()),
         MetadataValue(TOptional<FString>()),
-        CounterNameValue(TOptional<FString>()),
-        TargetResetTypeValue(TOptional<FString>()),
-        TargetValueValue(TOptional<int64>()),
+        VerifyCompleteTypeValue(TOptional<FString>()),
+        TargetCounterValue(nullptr),
+        VerifyCompleteConsumeActionsValue(nullptr),
         CompleteAcquireActionsValue(nullptr),
         ChallengePeriodEventIdValue(TOptional<FString>()),
-        PremiseMissionTaskNameValue(TOptional<FString>())
+        PremiseMissionTaskNameValue(TOptional<FString>()),
+        CounterNameValue(TOptional<FString>()),
+        TargetResetTypeValue(TOptional<FString>()),
+        TargetValueValue(TOptional<int64>())
     {
     }
 
@@ -37,12 +40,15 @@ namespace Gs2::Mission::Model
         MissionTaskIdValue(From.MissionTaskIdValue),
         NameValue(From.NameValue),
         MetadataValue(From.MetadataValue),
-        CounterNameValue(From.CounterNameValue),
-        TargetResetTypeValue(From.TargetResetTypeValue),
-        TargetValueValue(From.TargetValueValue),
+        VerifyCompleteTypeValue(From.VerifyCompleteTypeValue),
+        TargetCounterValue(From.TargetCounterValue),
+        VerifyCompleteConsumeActionsValue(From.VerifyCompleteConsumeActionsValue),
         CompleteAcquireActionsValue(From.CompleteAcquireActionsValue),
         ChallengePeriodEventIdValue(From.ChallengePeriodEventIdValue),
-        PremiseMissionTaskNameValue(From.PremiseMissionTaskNameValue)
+        PremiseMissionTaskNameValue(From.PremiseMissionTaskNameValue),
+        CounterNameValue(From.CounterNameValue),
+        TargetResetTypeValue(From.TargetResetTypeValue),
+        TargetValueValue(From.TargetValueValue)
     {
     }
 
@@ -70,27 +76,27 @@ namespace Gs2::Mission::Model
         return SharedThis(this);
     }
 
-    TSharedPtr<FMissionTaskModel> FMissionTaskModel::WithCounterName(
-        const TOptional<FString> CounterName
+    TSharedPtr<FMissionTaskModel> FMissionTaskModel::WithVerifyCompleteType(
+        const TOptional<FString> VerifyCompleteType
     )
     {
-        this->CounterNameValue = CounterName;
+        this->VerifyCompleteTypeValue = VerifyCompleteType;
         return SharedThis(this);
     }
 
-    TSharedPtr<FMissionTaskModel> FMissionTaskModel::WithTargetResetType(
-        const TOptional<FString> TargetResetType
+    TSharedPtr<FMissionTaskModel> FMissionTaskModel::WithTargetCounter(
+        const TSharedPtr<FTargetCounterModel> TargetCounter
     )
     {
-        this->TargetResetTypeValue = TargetResetType;
+        this->TargetCounterValue = TargetCounter;
         return SharedThis(this);
     }
 
-    TSharedPtr<FMissionTaskModel> FMissionTaskModel::WithTargetValue(
-        const TOptional<int64> TargetValue
+    TSharedPtr<FMissionTaskModel> FMissionTaskModel::WithVerifyCompleteConsumeActions(
+        const TSharedPtr<TArray<TSharedPtr<Model::FConsumeAction>>> VerifyCompleteConsumeActions
     )
     {
-        this->TargetValueValue = TargetValue;
+        this->VerifyCompleteConsumeActionsValue = VerifyCompleteConsumeActions;
         return SharedThis(this);
     }
 
@@ -117,6 +123,30 @@ namespace Gs2::Mission::Model
         this->PremiseMissionTaskNameValue = PremiseMissionTaskName;
         return SharedThis(this);
     }
+
+    TSharedPtr<FMissionTaskModel> FMissionTaskModel::WithCounterName(
+        const TOptional<FString> CounterName
+    )
+    {
+        this->CounterNameValue = CounterName;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FMissionTaskModel> FMissionTaskModel::WithTargetResetType(
+        const TOptional<FString> TargetResetType
+    )
+    {
+        this->TargetResetTypeValue = TargetResetType;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FMissionTaskModel> FMissionTaskModel::WithTargetValue(
+        const TOptional<int64> TargetValue
+    )
+    {
+        this->TargetValueValue = TargetValue;
+        return SharedThis(this);
+    }
     TOptional<FString> FMissionTaskModel::GetMissionTaskId() const
     {
         return MissionTaskIdValue;
@@ -128,6 +158,30 @@ namespace Gs2::Mission::Model
     TOptional<FString> FMissionTaskModel::GetMetadata() const
     {
         return MetadataValue;
+    }
+    TOptional<FString> FMissionTaskModel::GetVerifyCompleteType() const
+    {
+        return VerifyCompleteTypeValue;
+    }
+    TSharedPtr<FTargetCounterModel> FMissionTaskModel::GetTargetCounter() const
+    {
+        return TargetCounterValue;
+    }
+    TSharedPtr<TArray<TSharedPtr<Model::FConsumeAction>>> FMissionTaskModel::GetVerifyCompleteConsumeActions() const
+    {
+        return VerifyCompleteConsumeActionsValue;
+    }
+    TSharedPtr<TArray<TSharedPtr<Model::FAcquireAction>>> FMissionTaskModel::GetCompleteAcquireActions() const
+    {
+        return CompleteAcquireActionsValue;
+    }
+    TOptional<FString> FMissionTaskModel::GetChallengePeriodEventId() const
+    {
+        return ChallengePeriodEventIdValue;
+    }
+    TOptional<FString> FMissionTaskModel::GetPremiseMissionTaskName() const
+    {
+        return PremiseMissionTaskNameValue;
     }
     TOptional<FString> FMissionTaskModel::GetCounterName() const
     {
@@ -149,18 +203,6 @@ namespace Gs2::Mission::Model
             return FString("null");
         }
         return FString::Printf(TEXT("%lld"), TargetValueValue.GetValue());
-    }
-    TSharedPtr<TArray<TSharedPtr<Model::FAcquireAction>>> FMissionTaskModel::GetCompleteAcquireActions() const
-    {
-        return CompleteAcquireActionsValue;
-    }
-    TOptional<FString> FMissionTaskModel::GetChallengePeriodEventId() const
-    {
-        return ChallengePeriodEventIdValue;
-    }
-    TOptional<FString> FMissionTaskModel::GetPremiseMissionTaskName() const
-    {
-        return PremiseMissionTaskNameValue;
     }
 
     TOptional<FString> FMissionTaskModel::GetRegionFromGrn(const FString Grn)
@@ -251,33 +293,35 @@ namespace Gs2::Mission::Model
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithCounterName(Data->HasField(ANSI_TO_TCHAR("counterName")) ? [Data]() -> TOptional<FString>
+            ->WithVerifyCompleteType(Data->HasField(ANSI_TO_TCHAR("verifyCompleteType")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
-                    if (Data->TryGetStringField(ANSI_TO_TCHAR("counterName"), v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("verifyCompleteType"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithTargetResetType(Data->HasField(ANSI_TO_TCHAR("targetResetType")) ? [Data]() -> TOptional<FString>
+            ->WithTargetCounter(Data->HasField(ANSI_TO_TCHAR("targetCounter")) ? [Data]() -> Model::FTargetCounterModelPtr
                 {
-                    FString v("");
-                    if (Data->TryGetStringField(ANSI_TO_TCHAR("targetResetType"), v))
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("targetCounter")))
                     {
-                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                        return nullptr;
                     }
-                    return TOptional<FString>();
-                }() : TOptional<FString>())
-            ->WithTargetValue(Data->HasField(ANSI_TO_TCHAR("targetValue")) ? [Data]() -> TOptional<int64>
+                    return Model::FTargetCounterModel::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("targetCounter")));
+                 }() : nullptr)
+            ->WithVerifyCompleteConsumeActions(Data->HasField(ANSI_TO_TCHAR("verifyCompleteConsumeActions")) ? [Data]() -> TSharedPtr<TArray<Model::FConsumeActionPtr>>
                 {
-                    int64 v;
-                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("targetValue"), v))
+                    auto v = MakeShared<TArray<Model::FConsumeActionPtr>>();
+                    if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("verifyCompleteConsumeActions")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("verifyCompleteConsumeActions")))
                     {
-                        return TOptional(v);
+                        for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("verifyCompleteConsumeActions")))
+                        {
+                            v->Add(Model::FConsumeAction::FromJson(JsonObjectValue->AsObject()));
+                        }
                     }
-                    return TOptional<int64>();
-                }() : TOptional<int64>())
+                    return v;
+                 }() : MakeShared<TArray<Model::FConsumeActionPtr>>())
             ->WithCompleteAcquireActions(Data->HasField(ANSI_TO_TCHAR("completeAcquireActions")) ? [Data]() -> TSharedPtr<TArray<Model::FAcquireActionPtr>>
                 {
                     auto v = MakeShared<TArray<Model::FAcquireActionPtr>>();
@@ -307,7 +351,34 @@ namespace Gs2::Mission::Model
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
-                }() : TOptional<FString>());
+                }() : TOptional<FString>())
+            ->WithCounterName(Data->HasField(ANSI_TO_TCHAR("counterName")) ? [Data]() -> TOptional<FString>
+                {
+                    FString v("");
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("counterName"), v))
+                    {
+                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                    }
+                    return TOptional<FString>();
+                }() : TOptional<FString>())
+            ->WithTargetResetType(Data->HasField(ANSI_TO_TCHAR("targetResetType")) ? [Data]() -> TOptional<FString>
+                {
+                    FString v("");
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("targetResetType"), v))
+                    {
+                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                    }
+                    return TOptional<FString>();
+                }() : TOptional<FString>())
+            ->WithTargetValue(Data->HasField(ANSI_TO_TCHAR("targetValue")) ? [Data]() -> TOptional<int64>
+                {
+                    int64 v;
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("targetValue"), v))
+                    {
+                        return TOptional(v);
+                    }
+                    return TOptional<int64>();
+                }() : TOptional<int64>());
     }
 
     TSharedPtr<FJsonObject> FMissionTaskModel::ToJson() const
@@ -325,17 +396,22 @@ namespace Gs2::Mission::Model
         {
             JsonRootObject->SetStringField("metadata", MetadataValue.GetValue());
         }
-        if (CounterNameValue.IsSet())
+        if (VerifyCompleteTypeValue.IsSet())
         {
-            JsonRootObject->SetStringField("counterName", CounterNameValue.GetValue());
+            JsonRootObject->SetStringField("verifyCompleteType", VerifyCompleteTypeValue.GetValue());
         }
-        if (TargetResetTypeValue.IsSet())
+        if (TargetCounterValue != nullptr && TargetCounterValue.IsValid())
         {
-            JsonRootObject->SetStringField("targetResetType", TargetResetTypeValue.GetValue());
+            JsonRootObject->SetObjectField("targetCounter", TargetCounterValue->ToJson());
         }
-        if (TargetValueValue.IsSet())
+        if (VerifyCompleteConsumeActionsValue != nullptr && VerifyCompleteConsumeActionsValue.IsValid())
         {
-            JsonRootObject->SetStringField("targetValue", FString::Printf(TEXT("%lld"), TargetValueValue.GetValue()));
+            TArray<TSharedPtr<FJsonValue>> v;
+            for (auto JsonObjectValue : *VerifyCompleteConsumeActionsValue)
+            {
+                v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
+            }
+            JsonRootObject->SetArrayField("verifyCompleteConsumeActions", v);
         }
         if (CompleteAcquireActionsValue != nullptr && CompleteAcquireActionsValue.IsValid())
         {
@@ -353,6 +429,18 @@ namespace Gs2::Mission::Model
         if (PremiseMissionTaskNameValue.IsSet())
         {
             JsonRootObject->SetStringField("premiseMissionTaskName", PremiseMissionTaskNameValue.GetValue());
+        }
+        if (CounterNameValue.IsSet())
+        {
+            JsonRootObject->SetStringField("counterName", CounterNameValue.GetValue());
+        }
+        if (TargetResetTypeValue.IsSet())
+        {
+            JsonRootObject->SetStringField("targetResetType", TargetResetTypeValue.GetValue());
+        }
+        if (TargetValueValue.IsSet())
+        {
+            JsonRootObject->SetStringField("targetValue", FString::Printf(TEXT("%lld"), TargetValueValue.GetValue()));
         }
         return JsonRootObject;
     }

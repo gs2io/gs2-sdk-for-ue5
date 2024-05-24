@@ -388,6 +388,24 @@ namespace Gs2::Mission
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::WebSocket::FVerifyCounterValueTask>> FGs2MissionWebSocketClient::VerifyCounterValue(
+        const Request::FVerifyCounterValueRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FVerifyCounterValueTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FVerifyCounterValueByUserIdTask>> FGs2MissionWebSocketClient::VerifyCounterValueByUserId(
+        const Request::FVerifyCounterValueByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FVerifyCounterValueByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::WebSocket::FDeleteCounterByUserIdTask>> FGs2MissionWebSocketClient::DeleteCounterByUserId(
         const Request::FDeleteCounterByUserIdRequestPtr Request) const
     {
@@ -419,6 +437,15 @@ namespace Gs2::Mission
         const Request::FDecreaseByStampTaskRequestPtr Request) const
     {
         return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FDecreaseByStampTaskTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FVerifyCounterValueByStampTaskTask>> FGs2MissionWebSocketClient::VerifyCounterValueByStampTask(
+        const Request::FVerifyCounterValueByStampTaskRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FVerifyCounterValueByStampTaskTask>>(
             Session,
             Request
         );

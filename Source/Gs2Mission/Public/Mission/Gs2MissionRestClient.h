@@ -100,6 +100,10 @@
 #include "Task/Rest/GetCounterTask.h"
 #include "Request/GetCounterByUserIdRequest.h"
 #include "Task/Rest/GetCounterByUserIdTask.h"
+#include "Request/VerifyCounterValueRequest.h"
+#include "Task/Rest/VerifyCounterValueTask.h"
+#include "Request/VerifyCounterValueByUserIdRequest.h"
+#include "Task/Rest/VerifyCounterValueByUserIdTask.h"
 #include "Request/DeleteCounterByUserIdRequest.h"
 #include "Task/Rest/DeleteCounterByUserIdTask.h"
 #include "Request/IncreaseByStampSheetRequest.h"
@@ -108,6 +112,8 @@
 #include "Task/Rest/SetByStampSheetTask.h"
 #include "Request/DecreaseByStampTaskRequest.h"
 #include "Task/Rest/DecreaseByStampTaskTask.h"
+#include "Request/VerifyCounterValueByStampTaskRequest.h"
+#include "Task/Rest/VerifyCounterValueByStampTaskTask.h"
 #include "Request/ExportMasterRequest.h"
 #include "Task/Rest/ExportMasterTask.h"
 #include "Request/GetCurrentMissionMasterRequest.h"
@@ -314,6 +320,14 @@ namespace Gs2::Mission
             const Request::FGetCounterByUserIdRequestPtr Request
         ) const;
 
+        TSharedPtr<FAsyncTask<Task::Rest::FVerifyCounterValueTask>> VerifyCounterValue(
+            const Request::FVerifyCounterValueRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FVerifyCounterValueByUserIdTask>> VerifyCounterValueByUserId(
+            const Request::FVerifyCounterValueByUserIdRequestPtr Request
+        ) const;
+
         TSharedPtr<FAsyncTask<Task::Rest::FDeleteCounterByUserIdTask>> DeleteCounterByUserId(
             const Request::FDeleteCounterByUserIdRequestPtr Request
         ) const;
@@ -328,6 +342,10 @@ namespace Gs2::Mission
 
         TSharedPtr<FAsyncTask<Task::Rest::FDecreaseByStampTaskTask>> DecreaseByStampTask(
             const Request::FDecreaseByStampTaskRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FVerifyCounterValueByStampTaskTask>> VerifyCounterValueByStampTask(
+            const Request::FVerifyCounterValueByStampTaskRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::Rest::FExportMasterTask>> ExportMaster(

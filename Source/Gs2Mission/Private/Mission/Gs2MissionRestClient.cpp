@@ -388,6 +388,24 @@ namespace Gs2::Mission
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::Rest::FVerifyCounterValueTask>> FGs2MissionRestClient::VerifyCounterValue(
+        const Request::FVerifyCounterValueRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FVerifyCounterValueTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FVerifyCounterValueByUserIdTask>> FGs2MissionRestClient::VerifyCounterValueByUserId(
+        const Request::FVerifyCounterValueByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FVerifyCounterValueByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::Rest::FDeleteCounterByUserIdTask>> FGs2MissionRestClient::DeleteCounterByUserId(
         const Request::FDeleteCounterByUserIdRequestPtr Request) const
     {
@@ -419,6 +437,15 @@ namespace Gs2::Mission
         const Request::FDecreaseByStampTaskRequestPtr Request) const
     {
         return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FDecreaseByStampTaskTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FVerifyCounterValueByStampTaskTask>> FGs2MissionRestClient::VerifyCounterValueByStampTask(
+        const Request::FVerifyCounterValueByStampTaskRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FVerifyCounterValueByStampTaskTask>>(
             Session,
             Request
         );

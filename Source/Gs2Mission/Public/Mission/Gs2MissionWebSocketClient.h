@@ -100,6 +100,10 @@
 #include "Task/WebSocket/GetCounterTask.h"
 #include "Request/GetCounterByUserIdRequest.h"
 #include "Task/WebSocket/GetCounterByUserIdTask.h"
+#include "Request/VerifyCounterValueRequest.h"
+#include "Task/WebSocket/VerifyCounterValueTask.h"
+#include "Request/VerifyCounterValueByUserIdRequest.h"
+#include "Task/WebSocket/VerifyCounterValueByUserIdTask.h"
 #include "Request/DeleteCounterByUserIdRequest.h"
 #include "Task/WebSocket/DeleteCounterByUserIdTask.h"
 #include "Request/IncreaseByStampSheetRequest.h"
@@ -108,6 +112,8 @@
 #include "Task/WebSocket/SetByStampSheetTask.h"
 #include "Request/DecreaseByStampTaskRequest.h"
 #include "Task/WebSocket/DecreaseByStampTaskTask.h"
+#include "Request/VerifyCounterValueByStampTaskRequest.h"
+#include "Task/WebSocket/VerifyCounterValueByStampTaskTask.h"
 #include "Request/ExportMasterRequest.h"
 #include "Task/WebSocket/ExportMasterTask.h"
 #include "Request/GetCurrentMissionMasterRequest.h"
@@ -314,6 +320,14 @@ namespace Gs2::Mission
             const Request::FGetCounterByUserIdRequestPtr Request
         ) const;
 
+        TSharedPtr<FAsyncTask<Task::WebSocket::FVerifyCounterValueTask>> VerifyCounterValue(
+            const Request::FVerifyCounterValueRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FVerifyCounterValueByUserIdTask>> VerifyCounterValueByUserId(
+            const Request::FVerifyCounterValueByUserIdRequestPtr Request
+        ) const;
+
         TSharedPtr<FAsyncTask<Task::WebSocket::FDeleteCounterByUserIdTask>> DeleteCounterByUserId(
             const Request::FDeleteCounterByUserIdRequestPtr Request
         ) const;
@@ -328,6 +342,10 @@ namespace Gs2::Mission
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FDecreaseByStampTaskTask>> DecreaseByStampTask(
             const Request::FDecreaseByStampTaskRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FVerifyCounterValueByStampTaskTask>> VerifyCounterValueByStampTask(
+            const Request::FVerifyCounterValueByStampTaskRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FExportMasterTask>> ExportMaster(

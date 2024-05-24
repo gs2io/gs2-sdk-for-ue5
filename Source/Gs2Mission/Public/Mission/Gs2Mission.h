@@ -28,9 +28,11 @@
 #include "Model/CounterModel.h"
 #include "Model/MissionGroupModel.h"
 #include "Model/MissionTaskModel.h"
-#include "Model/ScopedValue.h"
 #include "Model/MissionTaskModelMaster.h"
+#include "Model/ScopedValue.h"
+#include "Model/TargetCounterModel.h"
 #include "Model/AcquireAction.h"
+#include "Model/ConsumeAction.h"
 #include "Model/Config.h"
 #include "Model/LogSetting.h"
 #include "Model/GitHubCheckoutSetting.h"
@@ -283,6 +285,18 @@
 #include "Task/Rest/GetCounterByUserIdTask.h"
 #include "Task/WebSocket/GetCounterByUserIdTask.h"
 
+// VerifyCounterValue
+#include "Request/VerifyCounterValueRequest.h"
+#include "Result/VerifyCounterValueResult.h"
+#include "Task/Rest/VerifyCounterValueTask.h"
+#include "Task/WebSocket/VerifyCounterValueTask.h"
+
+// VerifyCounterValueByUserId
+#include "Request/VerifyCounterValueByUserIdRequest.h"
+#include "Result/VerifyCounterValueByUserIdResult.h"
+#include "Task/Rest/VerifyCounterValueByUserIdTask.h"
+#include "Task/WebSocket/VerifyCounterValueByUserIdTask.h"
+
 // DeleteCounterByUserId
 #include "Request/DeleteCounterByUserIdRequest.h"
 #include "Result/DeleteCounterByUserIdResult.h"
@@ -306,6 +320,12 @@
 #include "Result/DecreaseByStampTaskResult.h"
 #include "Task/Rest/DecreaseByStampTaskTask.h"
 #include "Task/WebSocket/DecreaseByStampTaskTask.h"
+
+// VerifyCounterValueByStampTask
+#include "Request/VerifyCounterValueByStampTaskRequest.h"
+#include "Result/VerifyCounterValueByStampTaskResult.h"
+#include "Task/Rest/VerifyCounterValueByStampTaskTask.h"
+#include "Task/WebSocket/VerifyCounterValueByStampTaskTask.h"
 
 // ExportMaster
 #include "Request/ExportMasterRequest.h"

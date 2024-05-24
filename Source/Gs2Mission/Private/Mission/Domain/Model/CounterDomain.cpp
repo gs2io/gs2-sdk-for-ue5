@@ -409,6 +409,54 @@ namespace Gs2::Mission::Domain::Model
         return Gs2::Core::Util::New<FAsyncTask<FGetTask>>(this->AsShared(), Request);
     }
 
+    FCounterDomain::FVerifyValueTask::FVerifyValueTask(
+        const TSharedPtr<FCounterDomain>& Self,
+        const Request::FVerifyCounterValueByUserIdRequestPtr Request
+    ): Self(Self), Request(Request)
+    {
+
+    }
+
+    FCounterDomain::FVerifyValueTask::FVerifyValueTask(
+        const FVerifyValueTask& From
+    ): TGs2Future(From), Self(From.Self), Request(From.Request)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FCounterDomain::FVerifyValueTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::Mission::Domain::Model::FCounterDomain>> Result
+    )
+    {
+        Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
+            ->WithNamespaceName(Self->NamespaceName)
+            ->WithUserId(Self->UserId)
+            ->WithCounterName(Self->CounterName);
+        const auto Future = Self->Client->VerifyCounterValueByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto RequestModel = Request;
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
+        if (ResultModel != nullptr) {
+            
+        }
+        const auto Domain = Self;
+        *Result = Domain;
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FCounterDomain::FVerifyValueTask>> FCounterDomain::VerifyValue(
+        Request::FVerifyCounterValueByUserIdRequestPtr Request
+    ) {
+        return Gs2::Core::Util::New<FAsyncTask<FVerifyValueTask>>(this->AsShared(), Request);
+    }
+
     FCounterDomain::FDeleteTask::FDeleteTask(
         const TSharedPtr<FCounterDomain>& Self,
         const Request::FDeleteCounterByUserIdRequestPtr Request

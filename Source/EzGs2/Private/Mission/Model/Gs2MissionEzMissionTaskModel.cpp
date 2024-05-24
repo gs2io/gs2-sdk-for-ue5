@@ -35,27 +35,27 @@ namespace Gs2::UE5::Mission::Model
         return SharedThis(this);
     }
 
-    TSharedPtr<FEzMissionTaskModel> FEzMissionTaskModel::WithCounterName(
-        const TOptional<FString> CounterName
+    TSharedPtr<FEzMissionTaskModel> FEzMissionTaskModel::WithVerifyCompleteType(
+        const TOptional<FString> VerifyCompleteType
     )
     {
-        this->CounterNameValue = CounterName;
+        this->VerifyCompleteTypeValue = VerifyCompleteType;
         return SharedThis(this);
     }
 
-    TSharedPtr<FEzMissionTaskModel> FEzMissionTaskModel::WithTargetResetType(
-        const TOptional<FString> TargetResetType
+    TSharedPtr<FEzMissionTaskModel> FEzMissionTaskModel::WithTargetCounter(
+        const TSharedPtr<Gs2::UE5::Mission::Model::FEzTargetCounterModel> TargetCounter
     )
     {
-        this->TargetResetTypeValue = TargetResetType;
+        this->TargetCounterValue = TargetCounter;
         return SharedThis(this);
     }
 
-    TSharedPtr<FEzMissionTaskModel> FEzMissionTaskModel::WithTargetValue(
-        const TOptional<int64> TargetValue
+    TSharedPtr<FEzMissionTaskModel> FEzMissionTaskModel::WithVerifyCompleteConsumeActions(
+        const TSharedPtr<TArray<TSharedPtr<Gs2::UE5::Mission::Model::FEzConsumeAction>>> VerifyCompleteConsumeActions
     )
     {
-        this->TargetValueValue = TargetValue;
+        this->VerifyCompleteConsumeActionsValue = VerifyCompleteConsumeActions;
         return SharedThis(this);
     }
 
@@ -82,6 +82,30 @@ namespace Gs2::UE5::Mission::Model
         this->PremiseMissionTaskNameValue = PremiseMissionTaskName;
         return SharedThis(this);
     }
+
+    TSharedPtr<FEzMissionTaskModel> FEzMissionTaskModel::WithCounterName(
+        const TOptional<FString> CounterName
+    )
+    {
+        this->CounterNameValue = CounterName;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FEzMissionTaskModel> FEzMissionTaskModel::WithTargetResetType(
+        const TOptional<FString> TargetResetType
+    )
+    {
+        this->TargetResetTypeValue = TargetResetType;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FEzMissionTaskModel> FEzMissionTaskModel::WithTargetValue(
+        const TOptional<int64> TargetValue
+    )
+    {
+        this->TargetValueValue = TargetValue;
+        return SharedThis(this);
+    }
     TOptional<FString> FEzMissionTaskModel::GetName() const
     {
         return NameValue;
@@ -89,6 +113,30 @@ namespace Gs2::UE5::Mission::Model
     TOptional<FString> FEzMissionTaskModel::GetMetadata() const
     {
         return MetadataValue;
+    }
+    TOptional<FString> FEzMissionTaskModel::GetVerifyCompleteType() const
+    {
+        return VerifyCompleteTypeValue;
+    }
+    TSharedPtr<Gs2::UE5::Mission::Model::FEzTargetCounterModel> FEzMissionTaskModel::GetTargetCounter() const
+    {
+        return TargetCounterValue;
+    }
+    TSharedPtr<TArray<TSharedPtr<Gs2::UE5::Mission::Model::FEzConsumeAction>>> FEzMissionTaskModel::GetVerifyCompleteConsumeActions() const
+    {
+        return VerifyCompleteConsumeActionsValue;
+    }
+    TSharedPtr<TArray<TSharedPtr<Gs2::UE5::Mission::Model::FEzAcquireAction>>> FEzMissionTaskModel::GetCompleteAcquireActions() const
+    {
+        return CompleteAcquireActionsValue;
+    }
+    TOptional<FString> FEzMissionTaskModel::GetChallengePeriodEventId() const
+    {
+        return ChallengePeriodEventIdValue;
+    }
+    TOptional<FString> FEzMissionTaskModel::GetPremiseMissionTaskName() const
+    {
+        return PremiseMissionTaskNameValue;
     }
     TOptional<FString> FEzMissionTaskModel::GetCounterName() const
     {
@@ -111,27 +159,28 @@ namespace Gs2::UE5::Mission::Model
         }
         return FString::Printf(TEXT("%lld"), TargetValueValue.GetValue());
     }
-    TSharedPtr<TArray<TSharedPtr<Gs2::UE5::Mission::Model::FEzAcquireAction>>> FEzMissionTaskModel::GetCompleteAcquireActions() const
-    {
-        return CompleteAcquireActionsValue;
-    }
-    TOptional<FString> FEzMissionTaskModel::GetChallengePeriodEventId() const
-    {
-        return ChallengePeriodEventIdValue;
-    }
-    TOptional<FString> FEzMissionTaskModel::GetPremiseMissionTaskName() const
-    {
-        return PremiseMissionTaskNameValue;
-    }
 
     Gs2::Mission::Model::FMissionTaskModelPtr FEzMissionTaskModel::ToModel() const
     {
         return MakeShared<Gs2::Mission::Model::FMissionTaskModel>()
             ->WithName(NameValue)
             ->WithMetadata(MetadataValue)
-            ->WithCounterName(CounterNameValue)
-            ->WithTargetResetType(TargetResetTypeValue)
-            ->WithTargetValue(TargetValueValue)
+            ->WithVerifyCompleteType(VerifyCompleteTypeValue)
+            ->WithTargetCounter(TargetCounterValue == nullptr ? nullptr : TargetCounterValue->ToModel())
+            ->WithVerifyCompleteConsumeActions([&]
+                {
+                    auto v = MakeShared<TArray<TSharedPtr<Gs2::Mission::Model::FConsumeAction>>>();
+                    if (VerifyCompleteConsumeActionsValue == nullptr)
+                    {
+                        return v;
+                    }
+                    for (auto v2 : *VerifyCompleteConsumeActionsValue)
+                    {
+                        v->Add(v2->ToModel());
+                    }
+                    return v;
+                }()
+            )
             ->WithCompleteAcquireActions([&]
                 {
                     auto v = MakeShared<TArray<TSharedPtr<Gs2::Mission::Model::FAcquireAction>>>();
@@ -147,7 +196,10 @@ namespace Gs2::UE5::Mission::Model
                 }()
             )
             ->WithChallengePeriodEventId(ChallengePeriodEventIdValue)
-            ->WithPremiseMissionTaskName(PremiseMissionTaskNameValue);
+            ->WithPremiseMissionTaskName(PremiseMissionTaskNameValue)
+            ->WithCounterName(CounterNameValue)
+            ->WithTargetResetType(TargetResetTypeValue)
+            ->WithTargetValue(TargetValueValue);
     }
 
     TSharedPtr<FEzMissionTaskModel> FEzMissionTaskModel::FromModel(const Gs2::Mission::Model::FMissionTaskModelPtr Model)
@@ -159,9 +211,22 @@ namespace Gs2::UE5::Mission::Model
         return MakeShared<FEzMissionTaskModel>()
             ->WithName(Model->GetName())
             ->WithMetadata(Model->GetMetadata())
-            ->WithCounterName(Model->GetCounterName())
-            ->WithTargetResetType(Model->GetTargetResetType())
-            ->WithTargetValue(Model->GetTargetValue())
+            ->WithVerifyCompleteType(Model->GetVerifyCompleteType())
+            ->WithTargetCounter(Model->GetTargetCounter() != nullptr ? Gs2::UE5::Mission::Model::FEzTargetCounterModel::FromModel(Model->GetTargetCounter()) : nullptr)
+            ->WithVerifyCompleteConsumeActions([&]
+                {
+                    auto v = MakeShared<TArray<TSharedPtr<FEzConsumeAction>>>();
+                    if (Model->GetVerifyCompleteConsumeActions() == nullptr)
+                    {
+                        return v;
+                    }
+                    for (auto v2 : *Model->GetVerifyCompleteConsumeActions())
+                    {
+                        v->Add(FEzConsumeAction::FromModel(v2));
+                    }
+                    return v;
+                }()
+            )
             ->WithCompleteAcquireActions([&]
                 {
                     auto v = MakeShared<TArray<TSharedPtr<FEzAcquireAction>>>();
@@ -177,6 +242,9 @@ namespace Gs2::UE5::Mission::Model
                 }()
             )
             ->WithChallengePeriodEventId(Model->GetChallengePeriodEventId())
-            ->WithPremiseMissionTaskName(Model->GetPremiseMissionTaskName());
+            ->WithPremiseMissionTaskName(Model->GetPremiseMissionTaskName())
+            ->WithCounterName(Model->GetCounterName())
+            ->WithTargetResetType(Model->GetTargetResetType())
+            ->WithTargetValue(Model->GetTargetValue());
     }
 }

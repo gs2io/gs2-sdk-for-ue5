@@ -25,6 +25,7 @@
 #include "Mission/Domain/SpeculativeExecutor/Consume/ConsumeActionSpeculativeExecutorIndex.h"
 #include "Mission/Domain/SpeculativeExecutor/Consume/ReceiveByUserIdSpeculativeExecutor.h"
 #include "Mission/Domain/SpeculativeExecutor/Consume/DecreaseCounterByUserIdSpeculativeExecutor.h"
+#include "Mission/Domain/SpeculativeExecutor/Consume/VerifyCounterValueByUserIdSpeculativeExecutor.h"
 
 #include "Core/Domain/Gs2.h"
 
@@ -97,6 +98,28 @@ namespace Gs2::Mission::Domain::SpeculativeExecutor
             auto Request = Request::FDecreaseCounterByUserIdRequest::FromJson(RequestModelJson);
             Request = FDecreaseCounterByUserIdSpeculativeExecutor::Rate(Request, Rate);
             auto Future = FDecreaseCounterByUserIdSpeculativeExecutor::Execute(
+                Domain,
+                Service,
+                AccessToken,
+                Request
+            );
+            Future->StartSynchronousTask();
+            if (Future->GetTask().IsError())
+            {
+                return Future->GetTask().Error();
+            }
+            *Result = Future->GetTask().Result();
+        }
+        if (FVerifyCounterValueByUserIdSpeculativeExecutor::Action() == NewConsumeAction->GetAction()) {
+            TSharedPtr<FJsonObject> RequestModelJson;
+            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(NewConsumeAction->GetRequest().IsSet() ? *NewConsumeAction->GetRequest() : "{}");
+                !FJsonSerializer::Deserialize(JsonReader, RequestModelJson))
+            {
+                return nullptr;
+            }
+            auto Request = Request::FVerifyCounterValueByUserIdRequest::FromJson(RequestModelJson);
+            Request = FVerifyCounterValueByUserIdSpeculativeExecutor::Rate(Request, Rate);
+            auto Future = FVerifyCounterValueByUserIdSpeculativeExecutor::Execute(
                 Domain,
                 Service,
                 AccessToken,

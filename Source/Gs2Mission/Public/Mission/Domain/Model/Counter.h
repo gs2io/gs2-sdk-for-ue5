@@ -200,6 +200,32 @@ namespace Gs2::Mission::Domain::Model
             Request::FGetCounterByUserIdRequestPtr Request
         );
 
+        class GS2MISSION_API FVerifyValueTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Mission::Domain::Model::FCounterDomain>,
+            public TSharedFromThis<FVerifyValueTask>
+        {
+            const TSharedPtr<FCounterDomain> Self;
+            const Request::FVerifyCounterValueByUserIdRequestPtr Request;
+        public:
+            explicit FVerifyValueTask(
+                const TSharedPtr<FCounterDomain>& Self,
+                const Request::FVerifyCounterValueByUserIdRequestPtr Request
+            );
+
+            FVerifyValueTask(
+                const FVerifyValueTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Mission::Domain::Model::FCounterDomain>> Result
+            ) override;
+        };
+        friend FVerifyValueTask;
+
+        TSharedPtr<FAsyncTask<FVerifyValueTask>> VerifyValue(
+            Request::FVerifyCounterValueByUserIdRequestPtr Request
+        );
+
         class GS2MISSION_API FDeleteTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Mission::Domain::Model::FCounterDomain>,
             public TSharedFromThis<FDeleteTask>
