@@ -18,6 +18,7 @@
 
 #include "CoreMinimal.h"
 #include "Ranking/Domain/Model/Gs2RankingEzCategoryModelDomain.h"
+#include "Ranking/Model/Gs2RankingGlobalRankingSetting.h"
 #include "Core/BpGs2Constant.h"
 #include "Gs2RankingCategoryModel.generated.h"
 
@@ -39,6 +40,10 @@ struct FGs2RankingCategoryModelValue
     UPROPERTY(Category = Gs2, BlueprintReadOnly)
     FString Metadata = "";
     UPROPERTY(Category = Gs2, BlueprintReadOnly)
+    FString Scope = "";
+    UPROPERTY(Category = Gs2, BlueprintReadOnly)
+    FGs2RankingGlobalRankingSetting GlobalRankingSetting = FGs2RankingGlobalRankingSetting();
+    UPROPERTY(Category = Gs2, BlueprintReadOnly)
     FString EntryPeriodEventId = "";
     UPROPERTY(Category = Gs2, BlueprintReadOnly)
     FString AccessPeriodEventId = "";
@@ -55,6 +60,8 @@ inline FGs2RankingCategoryModelValue EzCategoryModelToFGs2RankingCategoryModelVa
     }
     Value.Name = Model->GetName() ? *Model->GetName() : "";
     Value.Metadata = Model->GetMetadata() ? *Model->GetMetadata() : "";
+    Value.Scope = Model->GetScope() ? *Model->GetScope() : "";
+    Value.GlobalRankingSetting = Model->GetGlobalRankingSetting() ? EzGlobalRankingSettingToFGs2RankingGlobalRankingSetting(Model->GetGlobalRankingSetting()) : FGs2RankingGlobalRankingSetting();
     Value.EntryPeriodEventId = Model->GetEntryPeriodEventId() ? *Model->GetEntryPeriodEventId() : "";
     Value.AccessPeriodEventId = Model->GetAccessPeriodEventId() ? *Model->GetAccessPeriodEventId() : "";
     return Value;
@@ -67,6 +74,8 @@ inline Gs2::UE5::Ranking::Model::FEzCategoryModelPtr FGs2RankingCategoryModelVal
     return MakeShared<Gs2::UE5::Ranking::Model::FEzCategoryModel>()
         ->WithName(Model.Name)
         ->WithMetadata(Model.Metadata)
+        ->WithScope(Model.Scope)
+        ->WithGlobalRankingSetting(FGs2RankingGlobalRankingSettingToEzGlobalRankingSetting(Model.GlobalRankingSetting))
         ->WithEntryPeriodEventId(Model.EntryPeriodEventId)
         ->WithAccessPeriodEventId(Model.AccessPeriodEventId);
 }

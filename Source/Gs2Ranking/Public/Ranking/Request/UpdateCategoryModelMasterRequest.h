@@ -17,6 +17,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "../Model/GlobalRankingSetting.h"
 #include "../Model/Scope.h"
 
 namespace Gs2::Ranking::Request
@@ -34,14 +35,15 @@ namespace Gs2::Ranking::Request
         TOptional<int64> MaximumValueValue;
         TOptional<FString> OrderDirectionValue;
         TOptional<FString> ScopeValue;
+        TSharedPtr<Model::FGlobalRankingSetting> GlobalRankingSettingValue;
+        TOptional<FString> EntryPeriodEventIdValue;
+        TOptional<FString> AccessPeriodEventIdValue;
         TOptional<bool> UniqueByUserIdValue;
         TOptional<bool> SumValue;
         TOptional<int32> CalculateFixedTimingHourValue;
         TOptional<int32> CalculateFixedTimingMinuteValue;
         TOptional<int32> CalculateIntervalMinutesValue;
         TSharedPtr<TArray<TSharedPtr<Model::FScope>>> AdditionalScopesValue;
-        TOptional<FString> EntryPeriodEventIdValue;
-        TOptional<FString> AccessPeriodEventIdValue;
         TSharedPtr<TArray<FString>> IgnoreUserIdsValue;
         TOptional<FString> GenerationValue;
         
@@ -62,14 +64,15 @@ namespace Gs2::Ranking::Request
         TSharedPtr<FUpdateCategoryModelMasterRequest> WithMaximumValue(const TOptional<int64> MaximumValue);
         TSharedPtr<FUpdateCategoryModelMasterRequest> WithOrderDirection(const TOptional<FString> OrderDirection);
         TSharedPtr<FUpdateCategoryModelMasterRequest> WithScope(const TOptional<FString> Scope);
+        TSharedPtr<FUpdateCategoryModelMasterRequest> WithGlobalRankingSetting(const TSharedPtr<Model::FGlobalRankingSetting> GlobalRankingSetting);
+        TSharedPtr<FUpdateCategoryModelMasterRequest> WithEntryPeriodEventId(const TOptional<FString> EntryPeriodEventId);
+        TSharedPtr<FUpdateCategoryModelMasterRequest> WithAccessPeriodEventId(const TOptional<FString> AccessPeriodEventId);
         TSharedPtr<FUpdateCategoryModelMasterRequest> WithUniqueByUserId(const TOptional<bool> UniqueByUserId);
         TSharedPtr<FUpdateCategoryModelMasterRequest> WithSum(const TOptional<bool> Sum);
         TSharedPtr<FUpdateCategoryModelMasterRequest> WithCalculateFixedTimingHour(const TOptional<int32> CalculateFixedTimingHour);
         TSharedPtr<FUpdateCategoryModelMasterRequest> WithCalculateFixedTimingMinute(const TOptional<int32> CalculateFixedTimingMinute);
         TSharedPtr<FUpdateCategoryModelMasterRequest> WithCalculateIntervalMinutes(const TOptional<int32> CalculateIntervalMinutes);
         TSharedPtr<FUpdateCategoryModelMasterRequest> WithAdditionalScopes(const TSharedPtr<TArray<TSharedPtr<Model::FScope>>> AdditionalScopes);
-        TSharedPtr<FUpdateCategoryModelMasterRequest> WithEntryPeriodEventId(const TOptional<FString> EntryPeriodEventId);
-        TSharedPtr<FUpdateCategoryModelMasterRequest> WithAccessPeriodEventId(const TOptional<FString> AccessPeriodEventId);
         TSharedPtr<FUpdateCategoryModelMasterRequest> WithIgnoreUserIds(
             const TSharedPtr<TArray<FString>> IgnoreUserIds);
         TSharedPtr<FUpdateCategoryModelMasterRequest> WithGeneration(const TOptional<FString> Generation);
@@ -85,6 +88,9 @@ namespace Gs2::Ranking::Request
         FString GetMaximumValueString() const;
         TOptional<FString> GetOrderDirection() const;
         TOptional<FString> GetScope() const;
+        TSharedPtr<Model::FGlobalRankingSetting> GetGlobalRankingSetting() const;
+        TOptional<FString> GetEntryPeriodEventId() const;
+        TOptional<FString> GetAccessPeriodEventId() const;
         TOptional<bool> GetUniqueByUserId() const;
         FString GetUniqueByUserIdString() const;
         TOptional<bool> GetSum() const;
@@ -95,8 +101,6 @@ namespace Gs2::Ranking::Request
         FString GetCalculateFixedTimingMinuteString() const;
         TOptional<int32> GetCalculateIntervalMinutes() const;
         FString GetCalculateIntervalMinutesString() const;TSharedPtr<TArray<TSharedPtr<Model::FScope>>> GetAdditionalScopes() const;
-        TOptional<FString> GetEntryPeriodEventId() const;
-        TOptional<FString> GetAccessPeriodEventId() const;
         TSharedPtr<TArray<FString>> GetIgnoreUserIds() const;
         TOptional<FString> GetGeneration() const;
 

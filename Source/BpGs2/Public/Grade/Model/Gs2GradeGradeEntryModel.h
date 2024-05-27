@@ -30,10 +30,6 @@ struct FGs2GradeGradeEntryModel
     FString Metadata = "";
     UPROPERTY(Category = Gs2, BlueprintReadWrite)
     int64 RankCapValue = 0;
-    UPROPERTY(Category = Gs2, BlueprintReadWrite)
-    FString PropertyIdRegex = "";
-    UPROPERTY(Category = Gs2, BlueprintReadWrite)
-    FString GradeUpPropertyIdRegex = "";
 };
 
 inline FGs2GradeGradeEntryModel EzGradeEntryModelToFGs2GradeGradeEntryModel(

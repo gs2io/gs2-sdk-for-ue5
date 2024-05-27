@@ -17,11 +17,36 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Core/BpGs2Constant.h"
+
+#include "Ranking/Model/Gs2RankingEzScope.h"
 #include "Gs2RankingScope.generated.h"
 
-UCLASS()
-class BPGS2_API UGs2RankingScopeFunctionLibrary : public UBlueprintFunctionLibrary
+USTRUCT(BlueprintType)
+struct FGs2RankingScope
 {
     GENERATED_BODY()
+
+    UPROPERTY(Category = Gs2, BlueprintReadWrite)
+    FString Name = "";
+    UPROPERTY(Category = Gs2, BlueprintReadWrite)
+    int64 TargetDays = 0;
 };
+
+inline FGs2RankingScope EzScopeToFGs2RankingScope(
+    const Gs2::UE5::Ranking::Model::FEzScopePtr Model
+)
+{
+    FGs2RankingScope Value;
+    Value.Name = Model->GetName() ? *Model->GetName() : "";
+    Value.TargetDays = Model->GetTargetDays() ? *Model->GetTargetDays() : 0;
+    return Value;
+}
+
+inline Gs2::UE5::Ranking::Model::FEzScopePtr FGs2RankingScopeToEzScope(
+    const FGs2RankingScope Model
+)
+{
+    return MakeShared<Gs2::UE5::Ranking::Model::FEzScope>()
+        ->WithName(Model.Name)
+        ->WithTargetDays(Model.TargetDays);
+}

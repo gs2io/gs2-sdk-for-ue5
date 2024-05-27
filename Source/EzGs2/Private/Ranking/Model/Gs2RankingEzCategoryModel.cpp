@@ -35,6 +35,22 @@ namespace Gs2::UE5::Ranking::Model
         return SharedThis(this);
     }
 
+    TSharedPtr<FEzCategoryModel> FEzCategoryModel::WithScope(
+        const TOptional<FString> Scope
+    )
+    {
+        this->ScopeValue = Scope;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FEzCategoryModel> FEzCategoryModel::WithGlobalRankingSetting(
+        const TSharedPtr<Gs2::UE5::Ranking::Model::FEzGlobalRankingSetting> GlobalRankingSetting
+    )
+    {
+        this->GlobalRankingSettingValue = GlobalRankingSetting;
+        return SharedThis(this);
+    }
+
     TSharedPtr<FEzCategoryModel> FEzCategoryModel::WithEntryPeriodEventId(
         const TOptional<FString> EntryPeriodEventId
     )
@@ -58,6 +74,14 @@ namespace Gs2::UE5::Ranking::Model
     {
         return MetadataValue;
     }
+    TOptional<FString> FEzCategoryModel::GetScope() const
+    {
+        return ScopeValue;
+    }
+    TSharedPtr<Gs2::UE5::Ranking::Model::FEzGlobalRankingSetting> FEzCategoryModel::GetGlobalRankingSetting() const
+    {
+        return GlobalRankingSettingValue;
+    }
     TOptional<FString> FEzCategoryModel::GetEntryPeriodEventId() const
     {
         return EntryPeriodEventIdValue;
@@ -72,6 +96,8 @@ namespace Gs2::UE5::Ranking::Model
         return MakeShared<Gs2::Ranking::Model::FCategoryModel>()
             ->WithName(NameValue)
             ->WithMetadata(MetadataValue)
+            ->WithScope(ScopeValue)
+            ->WithGlobalRankingSetting(GlobalRankingSettingValue == nullptr ? nullptr : GlobalRankingSettingValue->ToModel())
             ->WithEntryPeriodEventId(EntryPeriodEventIdValue)
             ->WithAccessPeriodEventId(AccessPeriodEventIdValue);
     }
@@ -85,6 +111,8 @@ namespace Gs2::UE5::Ranking::Model
         return MakeShared<FEzCategoryModel>()
             ->WithName(Model->GetName())
             ->WithMetadata(Model->GetMetadata())
+            ->WithScope(Model->GetScope())
+            ->WithGlobalRankingSetting(Model->GetGlobalRankingSetting() != nullptr ? Gs2::UE5::Ranking::Model::FEzGlobalRankingSetting::FromModel(Model->GetGlobalRankingSetting()) : nullptr)
             ->WithEntryPeriodEventId(Model->GetEntryPeriodEventId())
             ->WithAccessPeriodEventId(Model->GetAccessPeriodEventId());
     }

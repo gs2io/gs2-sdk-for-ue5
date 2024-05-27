@@ -30,10 +30,6 @@ struct FGs2MissionScopedValue
     FString ResetType = "";
     UPROPERTY(Category = Gs2, BlueprintReadWrite)
     int64 Value = 0;
-    UPROPERTY(Category = Gs2, BlueprintReadWrite)
-    int64 NextResetAt = 0;
-    UPROPERTY(Category = Gs2, BlueprintReadWrite)
-    int64 UpdatedAt = 0;
 };
 
 inline FGs2MissionScopedValue EzScopedValueToFGs2MissionScopedValue(

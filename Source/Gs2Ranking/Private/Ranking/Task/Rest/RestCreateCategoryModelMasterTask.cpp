@@ -112,6 +112,18 @@ namespace Gs2::Ranking::Task::Rest
             {
                 JsonRootObject->SetStringField("scope", this->Request->GetScope().GetValue());
             }
+            if (this->Request->GetGlobalRankingSetting() != nullptr && this->Request->GetGlobalRankingSetting().IsValid())
+            {
+                JsonRootObject->SetObjectField("globalRankingSetting", this->Request->GetGlobalRankingSetting()->ToJson());
+            }
+            if (this->Request->GetEntryPeriodEventId().IsSet())
+            {
+                JsonRootObject->SetStringField("entryPeriodEventId", this->Request->GetEntryPeriodEventId().GetValue());
+            }
+            if (this->Request->GetAccessPeriodEventId().IsSet())
+            {
+                JsonRootObject->SetStringField("accessPeriodEventId", this->Request->GetAccessPeriodEventId().GetValue());
+            }
             if (this->Request->GetUniqueByUserId().IsSet())
             {
                 JsonRootObject->SetBoolField("uniqueByUserId", this->Request->GetUniqueByUserId().GetValue());
@@ -140,14 +152,6 @@ namespace Gs2::Ranking::Task::Rest
                     v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
                 }
                 JsonRootObject->SetArrayField("additionalScopes", v);
-            }
-            if (this->Request->GetEntryPeriodEventId().IsSet())
-            {
-                JsonRootObject->SetStringField("entryPeriodEventId", this->Request->GetEntryPeriodEventId().GetValue());
-            }
-            if (this->Request->GetAccessPeriodEventId().IsSet())
-            {
-                JsonRootObject->SetStringField("accessPeriodEventId", this->Request->GetAccessPeriodEventId().GetValue());
             }
             if (this->Request->GetIgnoreUserIds() != nullptr && this->Request->GetIgnoreUserIds().IsValid())
             {

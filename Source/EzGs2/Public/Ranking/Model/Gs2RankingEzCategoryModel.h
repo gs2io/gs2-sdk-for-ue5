@@ -18,6 +18,7 @@
 
 #include "CoreMinimal.h"
 #include "Ranking/Model/CategoryModel.h"
+#include "Gs2RankingEzGlobalRankingSetting.h"
 
 namespace Gs2::UE5::Ranking::Model
 {
@@ -25,18 +26,26 @@ namespace Gs2::UE5::Ranking::Model
 	{
         TOptional<FString> NameValue;
         TOptional<FString> MetadataValue;
+        TOptional<FString> ScopeValue;
+        TSharedPtr<Gs2::UE5::Ranking::Model::FEzGlobalRankingSetting> GlobalRankingSettingValue;
         TOptional<FString> EntryPeriodEventIdValue;
         TOptional<FString> AccessPeriodEventIdValue;
 
 	public:
         TSharedPtr<FEzCategoryModel> WithName(const TOptional<FString> Name);
         TSharedPtr<FEzCategoryModel> WithMetadata(const TOptional<FString> Metadata);
+        TSharedPtr<FEzCategoryModel> WithScope(const TOptional<FString> Scope);
+        TSharedPtr<FEzCategoryModel> WithGlobalRankingSetting(const TSharedPtr<Gs2::UE5::Ranking::Model::FEzGlobalRankingSetting> GlobalRankingSetting);
         TSharedPtr<FEzCategoryModel> WithEntryPeriodEventId(const TOptional<FString> EntryPeriodEventId);
         TSharedPtr<FEzCategoryModel> WithAccessPeriodEventId(const TOptional<FString> AccessPeriodEventId);
 
         TOptional<FString> GetName() const;
 
         TOptional<FString> GetMetadata() const;
+
+        TOptional<FString> GetScope() const;
+
+        TSharedPtr<Gs2::UE5::Ranking::Model::FEzGlobalRankingSetting> GetGlobalRankingSetting() const;
 
         TOptional<FString> GetEntryPeriodEventId() const;
 

@@ -19,6 +19,8 @@
 #include "CoreMinimal.h"
 #include "Ranking/Domain/Model/User.h"
 #include "Ranking/Model/Gs2RankingEzCategoryModel.h"
+#include "Ranking/Model/Gs2RankingEzGlobalRankingSetting.h"
+#include "Ranking/Model/Gs2RankingEzScope.h"
 #include "Ranking/Model/Gs2RankingEzScore.h"
 #include "Ranking/Model/Gs2RankingEzRanking.h"
 #include "Ranking/Model/Gs2RankingEzSubscribeUser.h"

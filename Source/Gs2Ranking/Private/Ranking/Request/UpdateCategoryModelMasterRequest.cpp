@@ -27,14 +27,15 @@ namespace Gs2::Ranking::Request
         MaximumValueValue(TOptional<int64>()),
         OrderDirectionValue(TOptional<FString>()),
         ScopeValue(TOptional<FString>()),
+        GlobalRankingSettingValue(nullptr),
+        EntryPeriodEventIdValue(TOptional<FString>()),
+        AccessPeriodEventIdValue(TOptional<FString>()),
         UniqueByUserIdValue(TOptional<bool>()),
         SumValue(TOptional<bool>()),
         CalculateFixedTimingHourValue(TOptional<int32>()),
         CalculateFixedTimingMinuteValue(TOptional<int32>()),
         CalculateIntervalMinutesValue(TOptional<int32>()),
         AdditionalScopesValue(nullptr),
-        EntryPeriodEventIdValue(TOptional<FString>()),
-        AccessPeriodEventIdValue(TOptional<FString>()),
         IgnoreUserIdsValue(nullptr),
         GenerationValue(TOptional<FString>())
     {
@@ -51,14 +52,15 @@ namespace Gs2::Ranking::Request
         MaximumValueValue(From.MaximumValueValue),
         OrderDirectionValue(From.OrderDirectionValue),
         ScopeValue(From.ScopeValue),
+        GlobalRankingSettingValue(From.GlobalRankingSettingValue),
+        EntryPeriodEventIdValue(From.EntryPeriodEventIdValue),
+        AccessPeriodEventIdValue(From.AccessPeriodEventIdValue),
         UniqueByUserIdValue(From.UniqueByUserIdValue),
         SumValue(From.SumValue),
         CalculateFixedTimingHourValue(From.CalculateFixedTimingHourValue),
         CalculateFixedTimingMinuteValue(From.CalculateFixedTimingMinuteValue),
         CalculateIntervalMinutesValue(From.CalculateIntervalMinutesValue),
         AdditionalScopesValue(From.AdditionalScopesValue),
-        EntryPeriodEventIdValue(From.EntryPeriodEventIdValue),
-        AccessPeriodEventIdValue(From.AccessPeriodEventIdValue),
         IgnoreUserIdsValue(From.IgnoreUserIdsValue),
         GenerationValue(From.GenerationValue)
     {
@@ -136,6 +138,30 @@ namespace Gs2::Ranking::Request
         return SharedThis(this);
     }
 
+    TSharedPtr<FUpdateCategoryModelMasterRequest> FUpdateCategoryModelMasterRequest::WithGlobalRankingSetting(
+        const TSharedPtr<Model::FGlobalRankingSetting> GlobalRankingSetting
+    )
+    {
+        this->GlobalRankingSettingValue = GlobalRankingSetting;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FUpdateCategoryModelMasterRequest> FUpdateCategoryModelMasterRequest::WithEntryPeriodEventId(
+        const TOptional<FString> EntryPeriodEventId
+    )
+    {
+        this->EntryPeriodEventIdValue = EntryPeriodEventId;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FUpdateCategoryModelMasterRequest> FUpdateCategoryModelMasterRequest::WithAccessPeriodEventId(
+        const TOptional<FString> AccessPeriodEventId
+    )
+    {
+        this->AccessPeriodEventIdValue = AccessPeriodEventId;
+        return SharedThis(this);
+    }
+
     TSharedPtr<FUpdateCategoryModelMasterRequest> FUpdateCategoryModelMasterRequest::WithUniqueByUserId(
         const TOptional<bool> UniqueByUserId
     )
@@ -181,22 +207,6 @@ namespace Gs2::Ranking::Request
     )
     {
         this->AdditionalScopesValue = AdditionalScopes;
-        return SharedThis(this);
-    }
-
-    TSharedPtr<FUpdateCategoryModelMasterRequest> FUpdateCategoryModelMasterRequest::WithEntryPeriodEventId(
-        const TOptional<FString> EntryPeriodEventId
-    )
-    {
-        this->EntryPeriodEventIdValue = EntryPeriodEventId;
-        return SharedThis(this);
-    }
-
-    TSharedPtr<FUpdateCategoryModelMasterRequest> FUpdateCategoryModelMasterRequest::WithAccessPeriodEventId(
-        const TOptional<FString> AccessPeriodEventId
-    )
-    {
-        this->AccessPeriodEventIdValue = AccessPeriodEventId;
         return SharedThis(this);
     }
 
@@ -279,6 +289,25 @@ namespace Gs2::Ranking::Request
         return ScopeValue;
     }
 
+    TSharedPtr<Model::FGlobalRankingSetting> FUpdateCategoryModelMasterRequest::GetGlobalRankingSetting() const
+    {
+        if (!GlobalRankingSettingValue.IsValid())
+        {
+            return nullptr;
+        }
+        return GlobalRankingSettingValue;
+    }
+
+    TOptional<FString> FUpdateCategoryModelMasterRequest::GetEntryPeriodEventId() const
+    {
+        return EntryPeriodEventIdValue;
+    }
+
+    TOptional<FString> FUpdateCategoryModelMasterRequest::GetAccessPeriodEventId() const
+    {
+        return AccessPeriodEventIdValue;
+    }
+
     TOptional<bool> FUpdateCategoryModelMasterRequest::GetUniqueByUserId() const
     {
         return UniqueByUserIdValue;
@@ -356,16 +385,6 @@ namespace Gs2::Ranking::Request
             return nullptr;
         }
         return AdditionalScopesValue;
-    }
-
-    TOptional<FString> FUpdateCategoryModelMasterRequest::GetEntryPeriodEventId() const
-    {
-        return EntryPeriodEventIdValue;
-    }
-
-    TOptional<FString> FUpdateCategoryModelMasterRequest::GetAccessPeriodEventId() const
-    {
-        return AccessPeriodEventIdValue;
     }
 
     TSharedPtr<TArray<FString>> FUpdateCategoryModelMasterRequest::GetIgnoreUserIds() const
@@ -461,6 +480,32 @@ namespace Gs2::Ranking::Request
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
+          ->WithGlobalRankingSetting(Data->HasField(ANSI_TO_TCHAR("globalRankingSetting")) ? [Data]() -> Model::FGlobalRankingSettingPtr
+              {
+                  if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("globalRankingSetting")))
+                  {
+                      return nullptr;
+                  }
+                  return Model::FGlobalRankingSetting::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("globalRankingSetting")));
+              }() : nullptr)
+            ->WithEntryPeriodEventId(Data->HasField(ANSI_TO_TCHAR("entryPeriodEventId")) ? [Data]() -> TOptional<FString>
+              {
+                  FString v("");
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("entryPeriodEventId"), v))
+                  {
+                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                  }
+                  return TOptional<FString>();
+              }() : TOptional<FString>())
+            ->WithAccessPeriodEventId(Data->HasField(ANSI_TO_TCHAR("accessPeriodEventId")) ? [Data]() -> TOptional<FString>
+              {
+                  FString v("");
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("accessPeriodEventId"), v))
+                  {
+                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                  }
+                  return TOptional<FString>();
+              }() : TOptional<FString>())
             ->WithUniqueByUserId(Data->HasField(ANSI_TO_TCHAR("uniqueByUserId")) ? [Data]() -> TOptional<bool>
               {
                   bool v;
@@ -518,24 +563,6 @@ namespace Gs2::Ranking::Request
                   }
                   return v;
               }() : MakeShared<TArray<Model::FScopePtr>>())
-            ->WithEntryPeriodEventId(Data->HasField(ANSI_TO_TCHAR("entryPeriodEventId")) ? [Data]() -> TOptional<FString>
-              {
-                  FString v("");
-                    if (Data->TryGetStringField(ANSI_TO_TCHAR("entryPeriodEventId"), v))
-                  {
-                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
-                  }
-                  return TOptional<FString>();
-              }() : TOptional<FString>())
-            ->WithAccessPeriodEventId(Data->HasField(ANSI_TO_TCHAR("accessPeriodEventId")) ? [Data]() -> TOptional<FString>
-              {
-                  FString v("");
-                    if (Data->TryGetStringField(ANSI_TO_TCHAR("accessPeriodEventId"), v))
-                  {
-                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
-                  }
-                  return TOptional<FString>();
-              }() : TOptional<FString>())
           ->WithIgnoreUserIds(Data->HasField(ANSI_TO_TCHAR("ignoreUserIds")) ? [Data]() -> TSharedPtr<TArray<FString>>
               {
                   auto v = MakeShared<TArray<FString>>();
@@ -598,6 +625,18 @@ namespace Gs2::Ranking::Request
         {
             JsonRootObject->SetStringField("scope", ScopeValue.GetValue());
         }
+        if (GlobalRankingSettingValue != nullptr && GlobalRankingSettingValue.IsValid())
+        {
+            JsonRootObject->SetObjectField("globalRankingSetting", GlobalRankingSettingValue->ToJson());
+        }
+        if (EntryPeriodEventIdValue.IsSet())
+        {
+            JsonRootObject->SetStringField("entryPeriodEventId", EntryPeriodEventIdValue.GetValue());
+        }
+        if (AccessPeriodEventIdValue.IsSet())
+        {
+            JsonRootObject->SetStringField("accessPeriodEventId", AccessPeriodEventIdValue.GetValue());
+        }
         if (UniqueByUserIdValue.IsSet())
         {
             JsonRootObject->SetBoolField("uniqueByUserId", UniqueByUserIdValue.GetValue());
@@ -626,14 +665,6 @@ namespace Gs2::Ranking::Request
                 v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
             }
             JsonRootObject->SetArrayField("additionalScopes", v);
-        }
-        if (EntryPeriodEventIdValue.IsSet())
-        {
-            JsonRootObject->SetStringField("entryPeriodEventId", EntryPeriodEventIdValue.GetValue());
-        }
-        if (AccessPeriodEventIdValue.IsSet())
-        {
-            JsonRootObject->SetStringField("accessPeriodEventId", AccessPeriodEventIdValue.GetValue());
         }
         if (IgnoreUserIdsValue != nullptr && IgnoreUserIdsValue.IsValid())
         {

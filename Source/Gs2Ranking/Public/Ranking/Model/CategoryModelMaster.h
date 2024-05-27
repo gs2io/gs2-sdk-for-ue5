@@ -18,6 +18,7 @@
 
 #include "CoreMinimal.h"
 #include "Core/Gs2Object.h"
+#include "GlobalRankingSetting.h"
 #include "Scope.h"
 
 namespace Gs2::Ranking::Model
@@ -30,16 +31,17 @@ namespace Gs2::Ranking::Model
         TOptional<FString> MetadataValue;
         TOptional<int64> MinimumValueValue;
         TOptional<int64> MaximumValueValue;
+        TOptional<bool> SumValue;
         TOptional<FString> OrderDirectionValue;
         TOptional<FString> ScopeValue;
+        TSharedPtr<FGlobalRankingSetting> GlobalRankingSettingValue;
+        TOptional<FString> EntryPeriodEventIdValue;
+        TOptional<FString> AccessPeriodEventIdValue;
         TOptional<bool> UniqueByUserIdValue;
-        TOptional<bool> SumValue;
         TOptional<int32> CalculateFixedTimingHourValue;
         TOptional<int32> CalculateFixedTimingMinuteValue;
         TOptional<int32> CalculateIntervalMinutesValue;
         TSharedPtr<TArray<TSharedPtr<FScope>>> AdditionalScopesValue;
-        TOptional<FString> EntryPeriodEventIdValue;
-        TOptional<FString> AccessPeriodEventIdValue;
         TSharedPtr<TArray<FString>> IgnoreUserIdsValue;
         TOptional<FString> GenerationValue;
         TOptional<int64> CreatedAtValue;
@@ -59,16 +61,17 @@ namespace Gs2::Ranking::Model
         TSharedPtr<FCategoryModelMaster> WithMetadata(const TOptional<FString> Metadata);
         TSharedPtr<FCategoryModelMaster> WithMinimumValue(const TOptional<int64> MinimumValue);
         TSharedPtr<FCategoryModelMaster> WithMaximumValue(const TOptional<int64> MaximumValue);
+        TSharedPtr<FCategoryModelMaster> WithSum(const TOptional<bool> Sum);
         TSharedPtr<FCategoryModelMaster> WithOrderDirection(const TOptional<FString> OrderDirection);
         TSharedPtr<FCategoryModelMaster> WithScope(const TOptional<FString> Scope);
+        TSharedPtr<FCategoryModelMaster> WithGlobalRankingSetting(const TSharedPtr<FGlobalRankingSetting> GlobalRankingSetting);
+        TSharedPtr<FCategoryModelMaster> WithEntryPeriodEventId(const TOptional<FString> EntryPeriodEventId);
+        TSharedPtr<FCategoryModelMaster> WithAccessPeriodEventId(const TOptional<FString> AccessPeriodEventId);
         TSharedPtr<FCategoryModelMaster> WithUniqueByUserId(const TOptional<bool> UniqueByUserId);
-        TSharedPtr<FCategoryModelMaster> WithSum(const TOptional<bool> Sum);
         TSharedPtr<FCategoryModelMaster> WithCalculateFixedTimingHour(const TOptional<int32> CalculateFixedTimingHour);
         TSharedPtr<FCategoryModelMaster> WithCalculateFixedTimingMinute(const TOptional<int32> CalculateFixedTimingMinute);
         TSharedPtr<FCategoryModelMaster> WithCalculateIntervalMinutes(const TOptional<int32> CalculateIntervalMinutes);
         TSharedPtr<FCategoryModelMaster> WithAdditionalScopes(const TSharedPtr<TArray<TSharedPtr<FScope>>> AdditionalScopes);
-        TSharedPtr<FCategoryModelMaster> WithEntryPeriodEventId(const TOptional<FString> EntryPeriodEventId);
-        TSharedPtr<FCategoryModelMaster> WithAccessPeriodEventId(const TOptional<FString> AccessPeriodEventId);
         TSharedPtr<FCategoryModelMaster> WithIgnoreUserIds(const TSharedPtr<TArray<FString>> IgnoreUserIds);
         TSharedPtr<FCategoryModelMaster> WithGeneration(const TOptional<FString> Generation);
         TSharedPtr<FCategoryModelMaster> WithCreatedAt(const TOptional<int64> CreatedAt);
@@ -83,12 +86,15 @@ namespace Gs2::Ranking::Model
         FString GetMinimumValueString() const;
         TOptional<int64> GetMaximumValue() const;
         FString GetMaximumValueString() const;
-        TOptional<FString> GetOrderDirection() const;
-        TOptional<FString> GetScope() const;
-        TOptional<bool> GetUniqueByUserId() const;
-        FString GetUniqueByUserIdString() const;
         TOptional<bool> GetSum() const;
         FString GetSumString() const;
+        TOptional<FString> GetOrderDirection() const;
+        TOptional<FString> GetScope() const;
+        TSharedPtr<FGlobalRankingSetting> GetGlobalRankingSetting() const;
+        TOptional<FString> GetEntryPeriodEventId() const;
+        TOptional<FString> GetAccessPeriodEventId() const;
+        TOptional<bool> GetUniqueByUserId() const;
+        FString GetUniqueByUserIdString() const;
         TOptional<int32> GetCalculateFixedTimingHour() const;
         FString GetCalculateFixedTimingHourString() const;
         TOptional<int32> GetCalculateFixedTimingMinute() const;
@@ -96,8 +102,6 @@ namespace Gs2::Ranking::Model
         TOptional<int32> GetCalculateIntervalMinutes() const;
         FString GetCalculateIntervalMinutesString() const;
         TSharedPtr<TArray<TSharedPtr<FScope>>> GetAdditionalScopes() const;
-        TOptional<FString> GetEntryPeriodEventId() const;
-        TOptional<FString> GetAccessPeriodEventId() const;
         TSharedPtr<TArray<FString>> GetIgnoreUserIds() const;
         TOptional<FString> GetGeneration() const;
         TOptional<int64> GetCreatedAt() const;

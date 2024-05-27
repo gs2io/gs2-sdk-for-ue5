@@ -27,8 +27,6 @@ struct FGs2MegaFieldScope
     GENERATED_BODY()
 
     UPROPERTY(Category = Gs2, BlueprintReadWrite)
-    FString LayerName = "";
-    UPROPERTY(Category = Gs2, BlueprintReadWrite)
     float R = 0;
     UPROPERTY(Category = Gs2, BlueprintReadWrite)
     int32 Limit = 0;

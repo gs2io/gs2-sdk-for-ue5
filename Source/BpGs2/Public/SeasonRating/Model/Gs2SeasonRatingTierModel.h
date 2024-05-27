@@ -31,8 +31,6 @@ struct FGs2SeasonRatingTierModel
     UPROPERTY(Category = Gs2, BlueprintReadWrite)
     int32 RaiseRankBonus = 0;
     UPROPERTY(Category = Gs2, BlueprintReadWrite)
-    int32 EntryFee = 0;
-    UPROPERTY(Category = Gs2, BlueprintReadWrite)
     int32 MinimumChangePoint = 0;
     UPROPERTY(Category = Gs2, BlueprintReadWrite)
     int32 MaximumChangePoint = 0;

@@ -31,8 +31,6 @@ struct FGs2QuestContents
     FString Metadata = "";
     UPROPERTY(Category = Gs2, BlueprintReadWrite)
     TArray<FGs2QuestAcquireAction> CompleteAcquireActions = TArray<FGs2QuestAcquireAction>();
-    UPROPERTY(Category = Gs2, BlueprintReadWrite)
-    int32 Weight = 0;
 };
 
 inline FGs2QuestContents EzContentsToFGs2QuestContents(

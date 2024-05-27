@@ -30,12 +30,6 @@ struct FGs2LotteryProbability
     UPROPERTY(Category = Gs2, BlueprintReadWrite)
     FGs2LotteryDrawnPrize Prize = FGs2LotteryDrawnPrize();
     UPROPERTY(Category = Gs2, BlueprintReadWrite)
-    FString PrizeTableName = "";
-    UPROPERTY(Category = Gs2, BlueprintReadWrite)
-    int32 DrawnLimit = 0;
-    UPROPERTY(Category = Gs2, BlueprintReadWrite)
-    FString LimitFailOverPrizeId = "";
-    UPROPERTY(Category = Gs2, BlueprintReadWrite)
     float Rate = 0;
 };
 
