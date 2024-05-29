@@ -21,6 +21,7 @@ namespace Gs2::Buff::Request
     FCreateNamespaceRequest::FCreateNamespaceRequest():
         NameValue(TOptional<FString>()),
         DescriptionValue(TOptional<FString>()),
+        ApplyBuffScriptValue(nullptr),
         LogSettingValue(nullptr)
     {
     }
@@ -30,6 +31,7 @@ namespace Gs2::Buff::Request
     ):
         NameValue(From.NameValue),
         DescriptionValue(From.DescriptionValue),
+        ApplyBuffScriptValue(From.ApplyBuffScriptValue),
         LogSettingValue(From.LogSettingValue)
     {
     }
@@ -58,6 +60,14 @@ namespace Gs2::Buff::Request
         return SharedThis(this);
     }
 
+    TSharedPtr<FCreateNamespaceRequest> FCreateNamespaceRequest::WithApplyBuffScript(
+        const TSharedPtr<Model::FScriptSetting> ApplyBuffScript
+    )
+    {
+        this->ApplyBuffScriptValue = ApplyBuffScript;
+        return SharedThis(this);
+    }
+
     TSharedPtr<FCreateNamespaceRequest> FCreateNamespaceRequest::WithLogSetting(
         const TSharedPtr<Model::FLogSetting> LogSetting
     )
@@ -79,6 +89,15 @@ namespace Gs2::Buff::Request
     TOptional<FString> FCreateNamespaceRequest::GetDescription() const
     {
         return DescriptionValue;
+    }
+
+    TSharedPtr<Model::FScriptSetting> FCreateNamespaceRequest::GetApplyBuffScript() const
+    {
+        if (!ApplyBuffScriptValue.IsValid())
+        {
+            return nullptr;
+        }
+        return ApplyBuffScriptValue;
     }
 
     TSharedPtr<Model::FLogSetting> FCreateNamespaceRequest::GetLogSetting() const
@@ -115,6 +134,14 @@ namespace Gs2::Buff::Request
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
+          ->WithApplyBuffScript(Data->HasField(ANSI_TO_TCHAR("applyBuffScript")) ? [Data]() -> Model::FScriptSettingPtr
+              {
+                  if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("applyBuffScript")))
+                  {
+                      return nullptr;
+                  }
+                  return Model::FScriptSetting::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("applyBuffScript")));
+              }() : nullptr)
           ->WithLogSetting(Data->HasField(ANSI_TO_TCHAR("logSetting")) ? [Data]() -> Model::FLogSettingPtr
               {
                   if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("logSetting")))
@@ -139,6 +166,10 @@ namespace Gs2::Buff::Request
         if (DescriptionValue.IsSet())
         {
             JsonRootObject->SetStringField("description", DescriptionValue.GetValue());
+        }
+        if (ApplyBuffScriptValue != nullptr && ApplyBuffScriptValue.IsValid())
+        {
+            JsonRootObject->SetObjectField("applyBuffScript", ApplyBuffScriptValue->ToJson());
         }
         if (LogSettingValue != nullptr && LogSettingValue.IsValid())
         {

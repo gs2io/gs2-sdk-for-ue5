@@ -88,6 +88,10 @@ namespace Gs2::Buff::Task::Rest
             {
                 JsonRootObject->SetStringField("description", this->Request->GetDescription().GetValue());
             }
+            if (this->Request->GetApplyBuffScript() != nullptr && this->Request->GetApplyBuffScript().IsValid())
+            {
+                JsonRootObject->SetObjectField("applyBuffScript", this->Request->GetApplyBuffScript()->ToJson());
+            }
             if (this->Request->GetLogSetting() != nullptr && this->Request->GetLogSetting().IsValid())
             {
                 JsonRootObject->SetObjectField("logSetting", this->Request->GetLogSetting()->ToJson());

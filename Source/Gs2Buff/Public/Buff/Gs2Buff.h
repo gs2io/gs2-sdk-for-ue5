@@ -24,6 +24,8 @@
 #include "Model/BuffEntryModel.h"
 #include "Model/BuffEntryModelMaster.h"
 #include "Model/CurrentBuffMaster.h"
+#include "Model/OverrideBuffRate.h"
+#include "Model/ScriptSetting.h"
 #include "Model/GitHubCheckoutSetting.h"
 #include "Model/LogSetting.h"
 
