@@ -28,6 +28,7 @@ namespace Gs2::UE5::Util
 		virtual ~FGameSession() {};
 		
 		Gs2::UE5::Auth::Model::FEzAccessTokenPtr AccessToken();
+		void SetAccessToken( TSharedPtr<Auth::Model::FEzAccessToken> AccessToken );
 	
 		class FRefreshTask final :
 			public Gs2::Core::Util::TGs2Future<void>,

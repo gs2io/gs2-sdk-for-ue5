@@ -97,6 +97,10 @@ namespace Gs2::SerialKey::Task::Rest
             {
                 JsonRootObject->SetNumberField("issueRequestCount", this->Request->GetIssueRequestCount().GetValue());
             }
+            if (this->Request->GetContextStack().IsSet())
+            {
+                JsonRootObject->SetStringField("contextStack", this->Request->GetContextStack().GetValue());
+            }
             FJsonSerializer::Serialize(JsonRootObject.ToSharedRef(), Writer);
             request->SetContentAsString(Body);
 

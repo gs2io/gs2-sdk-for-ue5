@@ -103,6 +103,10 @@ namespace Gs2::Limit::Task::Rest
             {
                 JsonRootObject->SetNumberField("maxValue", this->Request->GetMaxValue().GetValue());
             }
+            if (this->Request->GetContextStack().IsSet())
+            {
+                JsonRootObject->SetStringField("contextStack", this->Request->GetContextStack().GetValue());
+            }
             FJsonSerializer::Serialize(JsonRootObject.ToSharedRef(), Writer);
             request->SetContentAsString(Body);
 

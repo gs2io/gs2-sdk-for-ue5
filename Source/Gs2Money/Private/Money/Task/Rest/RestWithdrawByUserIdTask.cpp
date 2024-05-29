@@ -103,6 +103,10 @@ namespace Gs2::Money::Task::Rest
             {
                 JsonRootObject->SetBoolField("paidOnly", this->Request->GetPaidOnly().GetValue());
             }
+            if (this->Request->GetContextStack().IsSet())
+            {
+                JsonRootObject->SetStringField("contextStack", this->Request->GetContextStack().GetValue());
+            }
             FJsonSerializer::Serialize(JsonRootObject.ToSharedRef(), Writer);
             request->SetContentAsString(Body);
 

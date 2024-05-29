@@ -88,6 +88,10 @@ namespace Gs2::Experience::Task::Rest
             {
                 JsonRootObject->SetStringField("settings", this->Request->GetSettings().GetValue());
             }
+            if (this->Request->GetContextStack().IsSet())
+            {
+                JsonRootObject->SetStringField("contextStack", this->Request->GetContextStack().GetValue());
+            }
             FJsonSerializer::Serialize(JsonRootObject.ToSharedRef(), Writer);
             request->SetContentAsString(Body);
 

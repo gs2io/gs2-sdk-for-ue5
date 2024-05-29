@@ -99,6 +99,10 @@ namespace Gs2::Mission::Task::Rest
             {
                 JsonRootObject->SetStringField("value", FString::Printf(TEXT("%lld"), this->Request->GetValue().GetValue()));
             }
+            if (this->Request->GetContextStack().IsSet())
+            {
+                JsonRootObject->SetStringField("contextStack", this->Request->GetContextStack().GetValue());
+            }
             FJsonSerializer::Serialize(JsonRootObject.ToSharedRef(), Writer);
             request->SetContentAsString(Body);
 

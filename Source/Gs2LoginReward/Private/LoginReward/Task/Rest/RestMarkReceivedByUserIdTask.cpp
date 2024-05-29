@@ -98,6 +98,10 @@ namespace Gs2::LoginReward::Task::Rest
             {
                 JsonRootObject->SetNumberField("stepNumber", this->Request->GetStepNumber().GetValue());
             }
+            if (this->Request->GetContextStack().IsSet())
+            {
+                JsonRootObject->SetStringField("contextStack", this->Request->GetContextStack().GetValue());
+            }
             FJsonSerializer::Serialize(JsonRootObject.ToSharedRef(), Writer);
             request->SetContentAsString(Body);
 

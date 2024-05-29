@@ -93,6 +93,10 @@ namespace Gs2::Datastore::Task::Rest
             {
                 JsonRootObject->SetStringField("dataObjectId", this->Request->GetDataObjectId().GetValue());
             }
+            if (this->Request->GetContextStack().IsSet())
+            {
+                JsonRootObject->SetStringField("contextStack", this->Request->GetContextStack().GetValue());
+            }
             FJsonSerializer::Serialize(JsonRootObject.ToSharedRef(), Writer);
             request->SetContentAsString(Body);
 

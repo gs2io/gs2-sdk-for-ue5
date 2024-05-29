@@ -123,6 +123,10 @@ namespace Gs2::Exchange::Task::Rest
                 }
                 JsonRootObject->SetArrayField("consumeActions", v);
             }
+            if (this->Request->GetContextStack().IsSet())
+            {
+                JsonRootObject->SetStringField("contextStack", this->Request->GetContextStack().GetValue());
+            }
             FJsonSerializer::Serialize(JsonRootObject.ToSharedRef(), Writer);
             request->SetContentAsString(Body);
 

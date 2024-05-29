@@ -93,6 +93,10 @@ namespace Gs2::Money::Task::Rest
             {
                 JsonRootObject->SetStringField("receipt", this->Request->GetReceipt().GetValue());
             }
+            if (this->Request->GetContextStack().IsSet())
+            {
+                JsonRootObject->SetStringField("contextStack", this->Request->GetContextStack().GetValue());
+            }
             FJsonSerializer::Serialize(JsonRootObject.ToSharedRef(), Writer);
             request->SetContentAsString(Body);
 

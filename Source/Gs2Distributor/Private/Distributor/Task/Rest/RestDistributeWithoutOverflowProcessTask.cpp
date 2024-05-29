@@ -86,6 +86,10 @@ namespace Gs2::Distributor::Task::Rest
             {
                 JsonRootObject->SetObjectField("distributeResource", this->Request->GetDistributeResource()->ToJson());
             }
+            if (this->Request->GetContextStack().IsSet())
+            {
+                JsonRootObject->SetStringField("contextStack", this->Request->GetContextStack().GetValue());
+            }
             FJsonSerializer::Serialize(JsonRootObject.ToSharedRef(), Writer);
             request->SetContentAsString(Body);
 

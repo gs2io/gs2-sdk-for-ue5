@@ -97,6 +97,10 @@ namespace Gs2::StateMachine::Task::Rest
             {
                 JsonRootObject->SetStringField("args", this->Request->GetArgs().GetValue());
             }
+            if (this->Request->GetContextStack().IsSet())
+            {
+                JsonRootObject->SetStringField("contextStack", this->Request->GetContextStack().GetValue());
+            }
             FJsonSerializer::Serialize(JsonRootObject.ToSharedRef(), Writer);
             request->SetContentAsString(Body);
 

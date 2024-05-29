@@ -110,6 +110,10 @@ namespace Gs2::Distributor::Task::Rest
                 }
                 JsonRootObject->SetArrayField("whiteListTargetIds", v);
             }
+            if (this->Request->GetContextStack().IsSet())
+            {
+                JsonRootObject->SetStringField("contextStack", this->Request->GetContextStack().GetValue());
+            }
             FJsonSerializer::Serialize(JsonRootObject.ToSharedRef(), Writer);
             request->SetContentAsString(Body);
 

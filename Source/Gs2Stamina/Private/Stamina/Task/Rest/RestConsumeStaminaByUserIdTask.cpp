@@ -99,6 +99,10 @@ namespace Gs2::Stamina::Task::Rest
             {
                 JsonRootObject->SetNumberField("consumeValue", this->Request->GetConsumeValue().GetValue());
             }
+            if (this->Request->GetContextStack().IsSet())
+            {
+                JsonRootObject->SetStringField("contextStack", this->Request->GetContextStack().GetValue());
+            }
             FJsonSerializer::Serialize(JsonRootObject.ToSharedRef(), Writer);
             request->SetContentAsString(Body);
 

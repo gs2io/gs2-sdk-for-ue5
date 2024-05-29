@@ -113,6 +113,10 @@ namespace Gs2::Enchant::Task::Rest
                 }
                 JsonRootObject->SetArrayField("parameters", v);
             }
+            if (this->Request->GetContextStack().IsSet())
+            {
+                JsonRootObject->SetStringField("contextStack", this->Request->GetContextStack().GetValue());
+            }
             FJsonSerializer::Serialize(JsonRootObject.ToSharedRef(), Writer);
             request->SetContentAsString(Body);
 

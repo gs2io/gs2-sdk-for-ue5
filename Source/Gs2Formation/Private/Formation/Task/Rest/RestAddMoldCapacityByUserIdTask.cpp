@@ -98,6 +98,10 @@ namespace Gs2::Formation::Task::Rest
             {
                 JsonRootObject->SetNumberField("capacity", this->Request->GetCapacity().GetValue());
             }
+            if (this->Request->GetContextStack().IsSet())
+            {
+                JsonRootObject->SetStringField("contextStack", this->Request->GetContextStack().GetValue());
+            }
             FJsonSerializer::Serialize(JsonRootObject.ToSharedRef(), Writer);
             request->SetContentAsString(Body);
 

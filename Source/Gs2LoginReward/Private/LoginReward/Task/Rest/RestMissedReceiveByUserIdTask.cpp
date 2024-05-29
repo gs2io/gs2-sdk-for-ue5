@@ -108,6 +108,10 @@ namespace Gs2::LoginReward::Task::Rest
                 }
                 JsonRootObject->SetArrayField("config", v);
             }
+            if (this->Request->GetContextStack().IsSet())
+            {
+                JsonRootObject->SetStringField("contextStack", this->Request->GetContextStack().GetValue());
+            }
             FJsonSerializer::Serialize(JsonRootObject.ToSharedRef(), Writer);
             request->SetContentAsString(Body);
 

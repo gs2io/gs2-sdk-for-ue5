@@ -96,6 +96,10 @@ namespace Gs2::Script::Task::Rest
             {
                 JsonRootObject->SetStringField("script", this->Request->GetScript().GetValue());
             }
+            if (this->Request->GetContextStack().IsSet())
+            {
+                JsonRootObject->SetStringField("contextStack", this->Request->GetContextStack().GetValue());
+            }
             FJsonSerializer::Serialize(JsonRootObject.ToSharedRef(), Writer);
             request->SetContentAsString(Body);
 

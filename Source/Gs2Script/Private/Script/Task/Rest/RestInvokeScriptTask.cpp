@@ -94,6 +94,10 @@ namespace Gs2::Script::Task::Rest
             {
                 JsonRootObject->SetObjectField("randomStatus", this->Request->GetRandomStatus()->ToJson());
             }
+            if (this->Request->GetContextStack().IsSet())
+            {
+                JsonRootObject->SetStringField("contextStack", this->Request->GetContextStack().GetValue());
+            }
             FJsonSerializer::Serialize(JsonRootObject.ToSharedRef(), Writer);
             request->SetContentAsString(Body);
 

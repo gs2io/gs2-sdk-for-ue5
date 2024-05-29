@@ -93,6 +93,10 @@ namespace Gs2::Gateway::Task::Rest
             {
                 JsonRootObject->SetStringField("token", this->Request->GetToken().GetValue());
             }
+            if (this->Request->GetContextStack().IsSet())
+            {
+                JsonRootObject->SetStringField("contextStack", this->Request->GetContextStack().GetValue());
+            }
             FJsonSerializer::Serialize(JsonRootObject.ToSharedRef(), Writer);
             request->SetContentAsString(Body);
 

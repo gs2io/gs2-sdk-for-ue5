@@ -93,6 +93,10 @@ namespace Gs2::Ranking::Task::Rest
             {
                 JsonRootObject->SetStringField("additionalScopeName", this->Request->GetAdditionalScopeName().GetValue());
             }
+            if (this->Request->GetContextStack().IsSet())
+            {
+                JsonRootObject->SetStringField("contextStack", this->Request->GetContextStack().GetValue());
+            }
             FJsonSerializer::Serialize(JsonRootObject.ToSharedRef(), Writer);
             request->SetContentAsString(Body);
 

@@ -98,6 +98,10 @@ namespace Gs2::Matchmaking::Task::Rest
                 }
                 JsonRootObject->SetArrayField("gameResults", v);
             }
+            if (this->Request->GetContextStack().IsSet())
+            {
+                JsonRootObject->SetStringField("contextStack", this->Request->GetContextStack().GetValue());
+            }
             FJsonSerializer::Serialize(JsonRootObject.ToSharedRef(), Writer);
             request->SetContentAsString(Body);
 

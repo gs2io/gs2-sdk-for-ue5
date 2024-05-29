@@ -112,6 +112,10 @@ namespace Gs2::Lottery::Task::Rest
             {
                 JsonRootObject->SetStringField("choicePrizeTableScriptId", this->Request->GetChoicePrizeTableScriptId().GetValue());
             }
+            if (this->Request->GetContextStack().IsSet())
+            {
+                JsonRootObject->SetStringField("contextStack", this->Request->GetContextStack().GetValue());
+            }
             FJsonSerializer::Serialize(JsonRootObject.ToSharedRef(), Writer);
             request->SetContentAsString(Body);
 

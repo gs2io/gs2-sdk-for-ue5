@@ -92,6 +92,10 @@ namespace Gs2::SeasonRating::Task::Rest
             {
                 JsonRootObject->SetNumberField("ttlSeconds", this->Request->GetTtlSeconds().GetValue());
             }
+            if (this->Request->GetContextStack().IsSet())
+            {
+                JsonRootObject->SetStringField("contextStack", this->Request->GetContextStack().GetValue());
+            }
             FJsonSerializer::Serialize(JsonRootObject.ToSharedRef(), Writer);
             request->SetContentAsString(Body);
 

@@ -102,6 +102,10 @@ namespace Gs2::Lottery::Task::Rest
             {
                 JsonRootObject->SetNumberField("count", this->Request->GetCount().GetValue());
             }
+            if (this->Request->GetContextStack().IsSet())
+            {
+                JsonRootObject->SetStringField("contextStack", this->Request->GetContextStack().GetValue());
+            }
             FJsonSerializer::Serialize(JsonRootObject.ToSharedRef(), Writer);
             request->SetContentAsString(Body);
 

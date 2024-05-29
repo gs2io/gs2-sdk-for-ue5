@@ -121,6 +121,10 @@ namespace Gs2::Idle::Task::Rest
             {
                 JsonRootObject->SetStringField("receivePeriodScheduleId", this->Request->GetReceivePeriodScheduleId().GetValue());
             }
+            if (this->Request->GetContextStack().IsSet())
+            {
+                JsonRootObject->SetStringField("contextStack", this->Request->GetContextStack().GetValue());
+            }
             FJsonSerializer::Serialize(JsonRootObject.ToSharedRef(), Writer);
             request->SetContentAsString(Body);
 

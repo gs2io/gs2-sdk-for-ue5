@@ -98,6 +98,10 @@ namespace Gs2::Idle::Task::Rest
             {
                 JsonRootObject->SetNumberField("maximumIdleMinutes", this->Request->GetMaximumIdleMinutes().GetValue());
             }
+            if (this->Request->GetContextStack().IsSet())
+            {
+                JsonRootObject->SetStringField("contextStack", this->Request->GetContextStack().GetValue());
+            }
             FJsonSerializer::Serialize(JsonRootObject.ToSharedRef(), Writer);
             request->SetContentAsString(Body);
 

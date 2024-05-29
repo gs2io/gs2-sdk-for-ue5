@@ -90,6 +90,10 @@ namespace Gs2::SerialKey::Task::Rest
             {
                 JsonRootObject->SetStringField("code", this->Request->GetCode().GetValue());
             }
+            if (this->Request->GetContextStack().IsSet())
+            {
+                JsonRootObject->SetStringField("contextStack", this->Request->GetContextStack().GetValue());
+            }
             FJsonSerializer::Serialize(JsonRootObject.ToSharedRef(), Writer);
             request->SetContentAsString(Body);
 

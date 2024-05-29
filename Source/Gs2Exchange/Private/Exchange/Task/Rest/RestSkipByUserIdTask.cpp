@@ -106,6 +106,10 @@ namespace Gs2::Exchange::Task::Rest
             {
                 JsonRootObject->SetNumberField("rate", this->Request->GetRate().GetValue());
             }
+            if (this->Request->GetContextStack().IsSet())
+            {
+                JsonRootObject->SetStringField("contextStack", this->Request->GetContextStack().GetValue());
+            }
             FJsonSerializer::Serialize(JsonRootObject.ToSharedRef(), Writer);
             request->SetContentAsString(Body);
 

@@ -93,6 +93,7 @@ namespace Gs2::SkillTree::Domain::Transaction::SpeculativeExecutor
                                         MakeShared<Gs2::SkillTree::Request::FMarkReleaseByUserIdRequest>()
                                                 ->WithNamespaceName(Request->GetNamespaceName())
                                                 ->WithUserId(AccessToken->GetUserId())
+                                                ->WithPropertyId(Request->GetPropertyId())
                                                 ->WithNodeModelNames(
                                                     [NodeModelName]
                                                     {

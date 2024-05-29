@@ -159,6 +159,10 @@ namespace Gs2::Guild::Task::Rest
             {
                 JsonRootObject->SetNumberField("limit", this->Request->GetLimit().GetValue());
             }
+            if (this->Request->GetContextStack().IsSet())
+            {
+                JsonRootObject->SetStringField("contextStack", this->Request->GetContextStack().GetValue());
+            }
             FJsonSerializer::Serialize(JsonRootObject.ToSharedRef(), Writer);
             request->SetContentAsString(Body);
 

@@ -33,6 +33,13 @@ namespace Gs2::UE5::Util
 		return AccessTokenValue;
 	}
 
+	void FGameSession::SetAccessToken(
+		TSharedPtr<Auth::Model::FEzAccessToken> AccessToken
+	)
+	{
+		AccessTokenValue = AccessToken;
+	}
+	
 	FGameSession::FRefreshTask::FRefreshTask(
 		TSharedPtr<FGameSession> Self
 	): Self(Self)

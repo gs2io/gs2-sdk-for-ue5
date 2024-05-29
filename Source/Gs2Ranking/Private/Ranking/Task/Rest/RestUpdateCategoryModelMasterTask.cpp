@@ -167,6 +167,10 @@ namespace Gs2::Ranking::Task::Rest
             {
                 JsonRootObject->SetStringField("generation", this->Request->GetGeneration().GetValue());
             }
+            if (this->Request->GetContextStack().IsSet())
+            {
+                JsonRootObject->SetStringField("contextStack", this->Request->GetContextStack().GetValue());
+            }
             FJsonSerializer::Serialize(JsonRootObject.ToSharedRef(), Writer);
             request->SetContentAsString(Body);
 

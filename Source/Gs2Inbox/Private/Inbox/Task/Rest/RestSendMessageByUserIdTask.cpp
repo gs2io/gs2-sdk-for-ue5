@@ -110,6 +110,10 @@ namespace Gs2::Inbox::Task::Rest
             {
                 JsonRootObject->SetObjectField("expiresTimeSpan", this->Request->GetExpiresTimeSpan()->ToJson());
             }
+            if (this->Request->GetContextStack().IsSet())
+            {
+                JsonRootObject->SetStringField("contextStack", this->Request->GetContextStack().GetValue());
+            }
             FJsonSerializer::Serialize(JsonRootObject.ToSharedRef(), Writer);
             request->SetContentAsString(Body);
 

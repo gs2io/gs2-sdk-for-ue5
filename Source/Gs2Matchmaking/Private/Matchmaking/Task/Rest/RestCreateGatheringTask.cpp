@@ -123,6 +123,10 @@ namespace Gs2::Matchmaking::Task::Rest
             {
                 JsonRootObject->SetObjectField("expiresAtTimeSpan", this->Request->GetExpiresAtTimeSpan()->ToJson());
             }
+            if (this->Request->GetContextStack().IsSet())
+            {
+                JsonRootObject->SetStringField("contextStack", this->Request->GetContextStack().GetValue());
+            }
             FJsonSerializer::Serialize(JsonRootObject.ToSharedRef(), Writer);
             request->SetContentAsString(Body);
 

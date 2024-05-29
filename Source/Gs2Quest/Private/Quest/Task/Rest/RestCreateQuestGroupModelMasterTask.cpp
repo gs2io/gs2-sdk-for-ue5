@@ -100,6 +100,10 @@ namespace Gs2::Quest::Task::Rest
             {
                 JsonRootObject->SetStringField("challengePeriodEventId", this->Request->GetChallengePeriodEventId().GetValue());
             }
+            if (this->Request->GetContextStack().IsSet())
+            {
+                JsonRootObject->SetStringField("contextStack", this->Request->GetContextStack().GetValue());
+            }
             FJsonSerializer::Serialize(JsonRootObject.ToSharedRef(), Writer);
             request->SetContentAsString(Body);
 

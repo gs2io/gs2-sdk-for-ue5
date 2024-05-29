@@ -107,6 +107,10 @@ namespace Gs2::Grade::Task::Rest
             {
                 JsonRootObject->SetStringField("materialPropertyId", this->Request->GetMaterialPropertyId().GetValue());
             }
+            if (this->Request->GetContextStack().IsSet())
+            {
+                JsonRootObject->SetStringField("contextStack", this->Request->GetContextStack().GetValue());
+            }
             FJsonSerializer::Serialize(JsonRootObject.ToSharedRef(), Writer);
             request->SetContentAsString(Body);
 
