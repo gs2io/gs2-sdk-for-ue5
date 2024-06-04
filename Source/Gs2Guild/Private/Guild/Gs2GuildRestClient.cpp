@@ -343,6 +343,42 @@ namespace Gs2::Guild
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::Rest::FVerifyCurrentMaximumMemberCountTask>> FGs2GuildRestClient::VerifyCurrentMaximumMemberCount(
+        const Request::FVerifyCurrentMaximumMemberCountRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FVerifyCurrentMaximumMemberCountTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FVerifyCurrentMaximumMemberCountByGuildNameTask>> FGs2GuildRestClient::VerifyCurrentMaximumMemberCountByGuildName(
+        const Request::FVerifyCurrentMaximumMemberCountByGuildNameRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FVerifyCurrentMaximumMemberCountByGuildNameTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FVerifyIncludeMemberTask>> FGs2GuildRestClient::VerifyIncludeMember(
+        const Request::FVerifyIncludeMemberRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FVerifyIncludeMemberTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FVerifyIncludeMemberByUserIdTask>> FGs2GuildRestClient::VerifyIncludeMemberByUserId(
+        const Request::FVerifyIncludeMemberByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FVerifyIncludeMemberByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::Rest::FSetMaximumCurrentMaximumMemberCountByGuildNameTask>> FGs2GuildRestClient::SetMaximumCurrentMaximumMemberCountByGuildName(
         const Request::FSetMaximumCurrentMaximumMemberCountByGuildNameRequestPtr Request) const
     {
@@ -392,6 +428,24 @@ namespace Gs2::Guild
         const Request::FSetMaximumCurrentMaximumMemberCountByStampSheetRequestPtr Request) const
     {
         return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FSetMaximumCurrentMaximumMemberCountByStampSheetTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FVerifyCurrentMaximumMemberCountByStampTaskTask>> FGs2GuildRestClient::VerifyCurrentMaximumMemberCountByStampTask(
+        const Request::FVerifyCurrentMaximumMemberCountByStampTaskRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FVerifyCurrentMaximumMemberCountByStampTaskTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FVerifyIncludeMemberByStampTaskTask>> FGs2GuildRestClient::VerifyIncludeMemberByStampTask(
+        const Request::FVerifyIncludeMemberByStampTaskRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FVerifyIncludeMemberByStampTaskTask>>(
             Session,
             Request
         );

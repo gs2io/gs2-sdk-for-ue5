@@ -251,6 +251,30 @@
 #include "Task/Rest/DecreaseMaximumCurrentMaximumMemberCountByGuildNameTask.h"
 #include "Task/WebSocket/DecreaseMaximumCurrentMaximumMemberCountByGuildNameTask.h"
 
+// VerifyCurrentMaximumMemberCount
+#include "Request/VerifyCurrentMaximumMemberCountRequest.h"
+#include "Result/VerifyCurrentMaximumMemberCountResult.h"
+#include "Task/Rest/VerifyCurrentMaximumMemberCountTask.h"
+#include "Task/WebSocket/VerifyCurrentMaximumMemberCountTask.h"
+
+// VerifyCurrentMaximumMemberCountByGuildName
+#include "Request/VerifyCurrentMaximumMemberCountByGuildNameRequest.h"
+#include "Result/VerifyCurrentMaximumMemberCountByGuildNameResult.h"
+#include "Task/Rest/VerifyCurrentMaximumMemberCountByGuildNameTask.h"
+#include "Task/WebSocket/VerifyCurrentMaximumMemberCountByGuildNameTask.h"
+
+// VerifyIncludeMember
+#include "Request/VerifyIncludeMemberRequest.h"
+#include "Result/VerifyIncludeMemberResult.h"
+#include "Task/Rest/VerifyIncludeMemberTask.h"
+#include "Task/WebSocket/VerifyIncludeMemberTask.h"
+
+// VerifyIncludeMemberByUserId
+#include "Request/VerifyIncludeMemberByUserIdRequest.h"
+#include "Result/VerifyIncludeMemberByUserIdResult.h"
+#include "Task/Rest/VerifyIncludeMemberByUserIdTask.h"
+#include "Task/WebSocket/VerifyIncludeMemberByUserIdTask.h"
+
 // SetMaximumCurrentMaximumMemberCountByGuildName
 #include "Request/SetMaximumCurrentMaximumMemberCountByGuildNameRequest.h"
 #include "Result/SetMaximumCurrentMaximumMemberCountByGuildNameResult.h"
@@ -286,6 +310,18 @@
 #include "Result/SetMaximumCurrentMaximumMemberCountByStampSheetResult.h"
 #include "Task/Rest/SetMaximumCurrentMaximumMemberCountByStampSheetTask.h"
 #include "Task/WebSocket/SetMaximumCurrentMaximumMemberCountByStampSheetTask.h"
+
+// VerifyCurrentMaximumMemberCountByStampTask
+#include "Request/VerifyCurrentMaximumMemberCountByStampTaskRequest.h"
+#include "Result/VerifyCurrentMaximumMemberCountByStampTaskResult.h"
+#include "Task/Rest/VerifyCurrentMaximumMemberCountByStampTaskTask.h"
+#include "Task/WebSocket/VerifyCurrentMaximumMemberCountByStampTaskTask.h"
+
+// VerifyIncludeMemberByStampTask
+#include "Request/VerifyIncludeMemberByStampTaskRequest.h"
+#include "Result/VerifyIncludeMemberByStampTaskResult.h"
+#include "Task/Rest/VerifyIncludeMemberByStampTaskTask.h"
+#include "Task/WebSocket/VerifyIncludeMemberByStampTaskTask.h"
 
 // DescribeJoinedGuilds
 #include "Request/DescribeJoinedGuildsRequest.h"

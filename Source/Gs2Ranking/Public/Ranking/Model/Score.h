@@ -31,6 +31,7 @@ namespace Gs2::Ranking::Model
         TOptional<int64> ScoreValue;
         TOptional<FString> MetadataValue;
         TOptional<int64> CreatedAtValue;
+        TOptional<int64> RevisionValue;
 
     public:
         FScore();
@@ -47,6 +48,7 @@ namespace Gs2::Ranking::Model
         TSharedPtr<FScore> WithScore(const TOptional<int64> Score);
         TSharedPtr<FScore> WithMetadata(const TOptional<FString> Metadata);
         TSharedPtr<FScore> WithCreatedAt(const TOptional<int64> CreatedAt);
+        TSharedPtr<FScore> WithRevision(const TOptional<int64> Revision);
 
         TOptional<FString> GetScoreId() const;
         TOptional<FString> GetCategoryName() const;
@@ -58,6 +60,8 @@ namespace Gs2::Ranking::Model
         TOptional<FString> GetMetadata() const;
         TOptional<int64> GetCreatedAt() const;
         FString GetCreatedAtString() const;
+        TOptional<int64> GetRevision() const;
+        FString GetRevisionString() const;
 
         static TOptional<FString> GetRegionFromGrn(const FString Grn);
         static TOptional<FString> GetOwnerIdFromGrn(const FString Grn);

@@ -26,7 +26,8 @@ namespace Gs2::Ranking::Model
         ScorerUserIdValue(TOptional<FString>()),
         ScoreValue(TOptional<int64>()),
         MetadataValue(TOptional<FString>()),
-        CreatedAtValue(TOptional<int64>())
+        CreatedAtValue(TOptional<int64>()),
+        RevisionValue(TOptional<int64>())
     {
     }
 
@@ -40,7 +41,8 @@ namespace Gs2::Ranking::Model
         ScorerUserIdValue(From.ScorerUserIdValue),
         ScoreValue(From.ScoreValue),
         MetadataValue(From.MetadataValue),
-        CreatedAtValue(From.CreatedAtValue)
+        CreatedAtValue(From.CreatedAtValue),
+        RevisionValue(From.RevisionValue)
     {
     }
 
@@ -107,6 +109,14 @@ namespace Gs2::Ranking::Model
         this->CreatedAtValue = CreatedAt;
         return SharedThis(this);
     }
+
+    TSharedPtr<FScore> FScore::WithRevision(
+        const TOptional<int64> Revision
+    )
+    {
+        this->RevisionValue = Revision;
+        return SharedThis(this);
+    }
     TOptional<FString> FScore::GetScoreId() const
     {
         return ScoreIdValue;
@@ -156,6 +166,19 @@ namespace Gs2::Ranking::Model
             return FString("null");
         }
         return FString::Printf(TEXT("%lld"), CreatedAtValue.GetValue());
+    }
+    TOptional<int64> FScore::GetRevision() const
+    {
+        return RevisionValue;
+    }
+
+    FString FScore::GetRevisionString() const
+    {
+        if (!RevisionValue.IsSet())
+        {
+            return FString("null");
+        }
+        return FString::Printf(TEXT("%lld"), RevisionValue.GetValue());
     }
 
     TOptional<FString> FScore::GetRegionFromGrn(const FString Grn)
@@ -312,6 +335,15 @@ namespace Gs2::Ranking::Model
                         return TOptional(v);
                     }
                     return TOptional<int64>();
+                }() : TOptional<int64>())
+            ->WithRevision(Data->HasField(ANSI_TO_TCHAR("revision")) ? [Data]() -> TOptional<int64>
+                {
+                    int64 v;
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("revision"), v))
+                    {
+                        return TOptional(v);
+                    }
+                    return TOptional<int64>();
                 }() : TOptional<int64>());
     }
 
@@ -349,6 +381,10 @@ namespace Gs2::Ranking::Model
         if (CreatedAtValue.IsSet())
         {
             JsonRootObject->SetStringField("createdAt", FString::Printf(TEXT("%lld"), CreatedAtValue.GetValue()));
+        }
+        if (RevisionValue.IsSet())
+        {
+            JsonRootObject->SetStringField("revision", FString::Printf(TEXT("%lld"), RevisionValue.GetValue()));
         }
         return JsonRootObject;
     }

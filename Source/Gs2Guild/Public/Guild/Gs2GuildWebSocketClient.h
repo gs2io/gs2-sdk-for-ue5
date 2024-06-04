@@ -90,6 +90,14 @@
 #include "Task/WebSocket/IncreaseMaximumCurrentMaximumMemberCountByGuildNameTask.h"
 #include "Request/DecreaseMaximumCurrentMaximumMemberCountByGuildNameRequest.h"
 #include "Task/WebSocket/DecreaseMaximumCurrentMaximumMemberCountByGuildNameTask.h"
+#include "Request/VerifyCurrentMaximumMemberCountRequest.h"
+#include "Task/WebSocket/VerifyCurrentMaximumMemberCountTask.h"
+#include "Request/VerifyCurrentMaximumMemberCountByGuildNameRequest.h"
+#include "Task/WebSocket/VerifyCurrentMaximumMemberCountByGuildNameTask.h"
+#include "Request/VerifyIncludeMemberRequest.h"
+#include "Task/WebSocket/VerifyIncludeMemberTask.h"
+#include "Request/VerifyIncludeMemberByUserIdRequest.h"
+#include "Task/WebSocket/VerifyIncludeMemberByUserIdTask.h"
 #include "Request/SetMaximumCurrentMaximumMemberCountByGuildNameRequest.h"
 #include "Task/WebSocket/SetMaximumCurrentMaximumMemberCountByGuildNameTask.h"
 #include "Request/AssumeRequest.h"
@@ -102,6 +110,10 @@
 #include "Task/WebSocket/DecreaseMaximumCurrentMaximumMemberCountByStampTaskTask.h"
 #include "Request/SetMaximumCurrentMaximumMemberCountByStampSheetRequest.h"
 #include "Task/WebSocket/SetMaximumCurrentMaximumMemberCountByStampSheetTask.h"
+#include "Request/VerifyCurrentMaximumMemberCountByStampTaskRequest.h"
+#include "Task/WebSocket/VerifyCurrentMaximumMemberCountByStampTaskTask.h"
+#include "Request/VerifyIncludeMemberByStampTaskRequest.h"
+#include "Task/WebSocket/VerifyIncludeMemberByStampTaskTask.h"
 #include "Request/DescribeJoinedGuildsRequest.h"
 #include "Task/WebSocket/DescribeJoinedGuildsTask.h"
 #include "Request/DescribeJoinedGuildsByUserIdRequest.h"
@@ -310,6 +322,22 @@ namespace Gs2::Guild
             const Request::FDecreaseMaximumCurrentMaximumMemberCountByGuildNameRequestPtr Request
         ) const;
 
+        TSharedPtr<FAsyncTask<Task::WebSocket::FVerifyCurrentMaximumMemberCountTask>> VerifyCurrentMaximumMemberCount(
+            const Request::FVerifyCurrentMaximumMemberCountRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FVerifyCurrentMaximumMemberCountByGuildNameTask>> VerifyCurrentMaximumMemberCountByGuildName(
+            const Request::FVerifyCurrentMaximumMemberCountByGuildNameRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FVerifyIncludeMemberTask>> VerifyIncludeMember(
+            const Request::FVerifyIncludeMemberRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FVerifyIncludeMemberByUserIdTask>> VerifyIncludeMemberByUserId(
+            const Request::FVerifyIncludeMemberByUserIdRequestPtr Request
+        ) const;
+
         TSharedPtr<FAsyncTask<Task::WebSocket::FSetMaximumCurrentMaximumMemberCountByGuildNameTask>> SetMaximumCurrentMaximumMemberCountByGuildName(
             const Request::FSetMaximumCurrentMaximumMemberCountByGuildNameRequestPtr Request
         ) const;
@@ -332,6 +360,14 @@ namespace Gs2::Guild
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FSetMaximumCurrentMaximumMemberCountByStampSheetTask>> SetMaximumCurrentMaximumMemberCountByStampSheet(
             const Request::FSetMaximumCurrentMaximumMemberCountByStampSheetRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FVerifyCurrentMaximumMemberCountByStampTaskTask>> VerifyCurrentMaximumMemberCountByStampTask(
+            const Request::FVerifyCurrentMaximumMemberCountByStampTaskRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FVerifyIncludeMemberByStampTaskTask>> VerifyIncludeMemberByStampTask(
+            const Request::FVerifyIncludeMemberByStampTaskRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FDescribeJoinedGuildsTask>> DescribeJoinedGuilds(

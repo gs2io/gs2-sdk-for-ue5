@@ -90,6 +90,14 @@
 #include "Task/Rest/IncreaseMaximumCurrentMaximumMemberCountByGuildNameTask.h"
 #include "Request/DecreaseMaximumCurrentMaximumMemberCountByGuildNameRequest.h"
 #include "Task/Rest/DecreaseMaximumCurrentMaximumMemberCountByGuildNameTask.h"
+#include "Request/VerifyCurrentMaximumMemberCountRequest.h"
+#include "Task/Rest/VerifyCurrentMaximumMemberCountTask.h"
+#include "Request/VerifyCurrentMaximumMemberCountByGuildNameRequest.h"
+#include "Task/Rest/VerifyCurrentMaximumMemberCountByGuildNameTask.h"
+#include "Request/VerifyIncludeMemberRequest.h"
+#include "Task/Rest/VerifyIncludeMemberTask.h"
+#include "Request/VerifyIncludeMemberByUserIdRequest.h"
+#include "Task/Rest/VerifyIncludeMemberByUserIdTask.h"
 #include "Request/SetMaximumCurrentMaximumMemberCountByGuildNameRequest.h"
 #include "Task/Rest/SetMaximumCurrentMaximumMemberCountByGuildNameTask.h"
 #include "Request/AssumeRequest.h"
@@ -102,6 +110,10 @@
 #include "Task/Rest/DecreaseMaximumCurrentMaximumMemberCountByStampTaskTask.h"
 #include "Request/SetMaximumCurrentMaximumMemberCountByStampSheetRequest.h"
 #include "Task/Rest/SetMaximumCurrentMaximumMemberCountByStampSheetTask.h"
+#include "Request/VerifyCurrentMaximumMemberCountByStampTaskRequest.h"
+#include "Task/Rest/VerifyCurrentMaximumMemberCountByStampTaskTask.h"
+#include "Request/VerifyIncludeMemberByStampTaskRequest.h"
+#include "Task/Rest/VerifyIncludeMemberByStampTaskTask.h"
 #include "Request/DescribeJoinedGuildsRequest.h"
 #include "Task/Rest/DescribeJoinedGuildsTask.h"
 #include "Request/DescribeJoinedGuildsByUserIdRequest.h"
@@ -310,6 +322,22 @@ namespace Gs2::Guild
             const Request::FDecreaseMaximumCurrentMaximumMemberCountByGuildNameRequestPtr Request
         ) const;
 
+        TSharedPtr<FAsyncTask<Task::Rest::FVerifyCurrentMaximumMemberCountTask>> VerifyCurrentMaximumMemberCount(
+            const Request::FVerifyCurrentMaximumMemberCountRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FVerifyCurrentMaximumMemberCountByGuildNameTask>> VerifyCurrentMaximumMemberCountByGuildName(
+            const Request::FVerifyCurrentMaximumMemberCountByGuildNameRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FVerifyIncludeMemberTask>> VerifyIncludeMember(
+            const Request::FVerifyIncludeMemberRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FVerifyIncludeMemberByUserIdTask>> VerifyIncludeMemberByUserId(
+            const Request::FVerifyIncludeMemberByUserIdRequestPtr Request
+        ) const;
+
         TSharedPtr<FAsyncTask<Task::Rest::FSetMaximumCurrentMaximumMemberCountByGuildNameTask>> SetMaximumCurrentMaximumMemberCountByGuildName(
             const Request::FSetMaximumCurrentMaximumMemberCountByGuildNameRequestPtr Request
         ) const;
@@ -332,6 +360,14 @@ namespace Gs2::Guild
 
         TSharedPtr<FAsyncTask<Task::Rest::FSetMaximumCurrentMaximumMemberCountByStampSheetTask>> SetMaximumCurrentMaximumMemberCountByStampSheet(
             const Request::FSetMaximumCurrentMaximumMemberCountByStampSheetRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FVerifyCurrentMaximumMemberCountByStampTaskTask>> VerifyCurrentMaximumMemberCountByStampTask(
+            const Request::FVerifyCurrentMaximumMemberCountByStampTaskRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FVerifyIncludeMemberByStampTaskTask>> VerifyIncludeMemberByStampTask(
+            const Request::FVerifyIncludeMemberByStampTaskRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::Rest::FDescribeJoinedGuildsTask>> DescribeJoinedGuilds(

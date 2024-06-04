@@ -343,6 +343,42 @@ namespace Gs2::Guild
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::WebSocket::FVerifyCurrentMaximumMemberCountTask>> FGs2GuildWebSocketClient::VerifyCurrentMaximumMemberCount(
+        const Request::FVerifyCurrentMaximumMemberCountRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FVerifyCurrentMaximumMemberCountTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FVerifyCurrentMaximumMemberCountByGuildNameTask>> FGs2GuildWebSocketClient::VerifyCurrentMaximumMemberCountByGuildName(
+        const Request::FVerifyCurrentMaximumMemberCountByGuildNameRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FVerifyCurrentMaximumMemberCountByGuildNameTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FVerifyIncludeMemberTask>> FGs2GuildWebSocketClient::VerifyIncludeMember(
+        const Request::FVerifyIncludeMemberRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FVerifyIncludeMemberTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FVerifyIncludeMemberByUserIdTask>> FGs2GuildWebSocketClient::VerifyIncludeMemberByUserId(
+        const Request::FVerifyIncludeMemberByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FVerifyIncludeMemberByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::WebSocket::FSetMaximumCurrentMaximumMemberCountByGuildNameTask>> FGs2GuildWebSocketClient::SetMaximumCurrentMaximumMemberCountByGuildName(
         const Request::FSetMaximumCurrentMaximumMemberCountByGuildNameRequestPtr Request) const
     {
@@ -392,6 +428,24 @@ namespace Gs2::Guild
         const Request::FSetMaximumCurrentMaximumMemberCountByStampSheetRequestPtr Request) const
     {
         return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FSetMaximumCurrentMaximumMemberCountByStampSheetTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FVerifyCurrentMaximumMemberCountByStampTaskTask>> FGs2GuildWebSocketClient::VerifyCurrentMaximumMemberCountByStampTask(
+        const Request::FVerifyCurrentMaximumMemberCountByStampTaskRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FVerifyCurrentMaximumMemberCountByStampTaskTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FVerifyIncludeMemberByStampTaskTask>> FGs2GuildWebSocketClient::VerifyIncludeMemberByStampTask(
+        const Request::FVerifyIncludeMemberByStampTaskRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FVerifyIncludeMemberByStampTaskTask>>(
             Session,
             Request
         );

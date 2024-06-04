@@ -24,6 +24,8 @@
 
 #include "Guild/Domain/SpeculativeExecutor/Consume/ConsumeActionSpeculativeExecutorIndex.h"
 #include "Guild/Domain/SpeculativeExecutor/Consume/DecreaseMaximumCurrentMaximumMemberCountByGuildNameSpeculativeExecutor.h"
+#include "Guild/Domain/SpeculativeExecutor/Consume/VerifyCurrentMaximumMemberCountByGuildNameSpeculativeExecutor.h"
+#include "Guild/Domain/SpeculativeExecutor/Consume/VerifyIncludeMemberByUserIdSpeculativeExecutor.h"
 
 #include "Core/Domain/Gs2.h"
 
@@ -74,6 +76,50 @@ namespace Gs2::Guild::Domain::SpeculativeExecutor
             auto Request = Request::FDecreaseMaximumCurrentMaximumMemberCountByGuildNameRequest::FromJson(RequestModelJson);
             Request = FDecreaseMaximumCurrentMaximumMemberCountByGuildNameSpeculativeExecutor::Rate(Request, Rate);
             auto Future = FDecreaseMaximumCurrentMaximumMemberCountByGuildNameSpeculativeExecutor::Execute(
+                Domain,
+                Service,
+                AccessToken,
+                Request
+            );
+            Future->StartSynchronousTask();
+            if (Future->GetTask().IsError())
+            {
+                return Future->GetTask().Error();
+            }
+            *Result = Future->GetTask().Result();
+        }
+        if (FVerifyCurrentMaximumMemberCountByGuildNameSpeculativeExecutor::Action() == NewConsumeAction->GetAction()) {
+            TSharedPtr<FJsonObject> RequestModelJson;
+            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(NewConsumeAction->GetRequest().IsSet() ? *NewConsumeAction->GetRequest() : "{}");
+                !FJsonSerializer::Deserialize(JsonReader, RequestModelJson))
+            {
+                return nullptr;
+            }
+            auto Request = Request::FVerifyCurrentMaximumMemberCountByGuildNameRequest::FromJson(RequestModelJson);
+            Request = FVerifyCurrentMaximumMemberCountByGuildNameSpeculativeExecutor::Rate(Request, Rate);
+            auto Future = FVerifyCurrentMaximumMemberCountByGuildNameSpeculativeExecutor::Execute(
+                Domain,
+                Service,
+                AccessToken,
+                Request
+            );
+            Future->StartSynchronousTask();
+            if (Future->GetTask().IsError())
+            {
+                return Future->GetTask().Error();
+            }
+            *Result = Future->GetTask().Result();
+        }
+        if (FVerifyIncludeMemberByUserIdSpeculativeExecutor::Action() == NewConsumeAction->GetAction()) {
+            TSharedPtr<FJsonObject> RequestModelJson;
+            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(NewConsumeAction->GetRequest().IsSet() ? *NewConsumeAction->GetRequest() : "{}");
+                !FJsonSerializer::Deserialize(JsonReader, RequestModelJson))
+            {
+                return nullptr;
+            }
+            auto Request = Request::FVerifyIncludeMemberByUserIdRequest::FromJson(RequestModelJson);
+            Request = FVerifyIncludeMemberByUserIdSpeculativeExecutor::Rate(Request, Rate);
+            auto Future = FVerifyIncludeMemberByUserIdSpeculativeExecutor::Execute(
                 Domain,
                 Service,
                 AccessToken,
