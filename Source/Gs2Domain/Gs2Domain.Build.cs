@@ -52,6 +52,7 @@ public class Gs2Domain : ModuleRules
 			"Gs2News",
 			"Gs2Quest",
 			"Gs2Ranking",
+			"Gs2Ranking2",
 			"Gs2Realtime",
 			"Gs2Schedule",
 			"Gs2Script",

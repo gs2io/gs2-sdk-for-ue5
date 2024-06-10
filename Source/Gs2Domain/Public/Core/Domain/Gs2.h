@@ -54,6 +54,7 @@
 #include "News/Domain/Gs2News.h"
 #include "Quest/Domain/Gs2Quest.h"
 #include "Ranking/Domain/Gs2Ranking.h"
+#include "Ranking2/Domain/Gs2Ranking2.h"
 #include "Realtime/Domain/Gs2Realtime.h"
 #include "Schedule/Domain/Gs2Schedule.h"
 #include "Script/Domain/Gs2Script.h"
@@ -115,6 +116,7 @@ namespace Gs2::Core::Domain
         Gs2::News::Domain::FGs2NewsDomainPtr News;
         Gs2::Quest::Domain::FGs2QuestDomainPtr Quest;
         Gs2::Ranking::Domain::FGs2RankingDomainPtr Ranking;
+        Gs2::Ranking2::Domain::FGs2Ranking2DomainPtr Ranking2;
         Gs2::Realtime::Domain::FGs2RealtimeDomainPtr Realtime;
         Gs2::Schedule::Domain::FGs2ScheduleDomainPtr Schedule;
         Gs2::Script::Domain::FGs2ScriptDomainPtr Script;

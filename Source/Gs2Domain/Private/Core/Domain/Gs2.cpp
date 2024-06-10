@@ -92,6 +92,7 @@ namespace Gs2::Core::Domain
         News(nullptr),
         Quest(nullptr),
         Ranking(nullptr),
+        Ranking2(nullptr),
         Realtime(nullptr),
         Schedule(nullptr),
         Script(nullptr),
@@ -259,6 +260,10 @@ namespace Gs2::Core::Domain
                     {
                         Ranking->HandleNotification(Method, *Message->GetPayload());
                     }
+                    if (Service == "Gs2Ranking2")
+                    {
+                        Ranking2->HandleNotification(Method, *Message->GetPayload());
+                    }
                     if (Service == "Gs2Realtime")
                     {
                         Realtime->HandleNotification(Method, *Message->GetPayload());
@@ -347,6 +352,7 @@ namespace Gs2::Core::Domain
         News(From.News),
         Quest(From.Quest),
         Ranking(From.Ranking),
+        Ranking2(From.Ranking2),
         Realtime(From.Realtime),
         Schedule(From.Schedule),
         Script(From.Script),
@@ -403,6 +409,7 @@ namespace Gs2::Core::Domain
         News = MakeShared<News::Domain::FGs2NewsDomain>(SharedThis(this));
         Quest = MakeShared<Quest::Domain::FGs2QuestDomain>(SharedThis(this));
         Ranking = MakeShared<Ranking::Domain::FGs2RankingDomain>(SharedThis(this));
+        Ranking2 = MakeShared<Ranking2::Domain::FGs2Ranking2Domain>(SharedThis(this));
         Realtime = MakeShared<Realtime::Domain::FGs2RealtimeDomain>(SharedThis(this));
         Schedule = MakeShared<Schedule::Domain::FGs2ScheduleDomain>(SharedThis(this));
         Script = MakeShared<Script::Domain::FGs2ScriptDomain>(SharedThis(this));
@@ -457,6 +464,7 @@ namespace Gs2::Core::Domain
         News->OnIssueTransaction.AddLambda(IssueTransactionAction);
         Quest->OnIssueTransaction.AddLambda(IssueTransactionAction);
         Ranking->OnIssueTransaction.AddLambda(IssueTransactionAction);
+        Ranking2->OnIssueTransaction.AddLambda(IssueTransactionAction);
         Realtime->OnIssueTransaction.AddLambda(IssueTransactionAction);
         Schedule->OnIssueTransaction.AddLambda(IssueTransactionAction);
         Script->OnIssueTransaction.AddLambda(IssueTransactionAction);
@@ -623,6 +631,10 @@ namespace Gs2::Core::Domain
             if (Service == "Gs2Ranking")
             {
                 Ranking->UpdateCacheFromStampSheet(Method, Request, Result);
+            }
+            if (Service == "Gs2Ranking2")
+            {
+                Ranking2->UpdateCacheFromStampSheet(Method, Request, Result);
             }
             if (Service == "Gs2Realtime")
             {
@@ -820,6 +832,10 @@ namespace Gs2::Core::Domain
             if (Service == "Gs2Ranking")
             {
                 Ranking->UpdateCacheFromStampTask(Method, Request, Result);
+            }
+            if (Service == "Gs2Ranking2")
+            {
+                Ranking2->UpdateCacheFromStampTask(Method, Request, Result);
             }
             if (Service == "Gs2Realtime")
             {
@@ -1036,6 +1052,10 @@ namespace Gs2::Core::Domain
             if (Service == "ranking")
             {
                 Ranking->UpdateCacheFromJobResult(Method, Job, Result);
+            }
+            if (Service == "ranking2")
+            {
+                Ranking2->UpdateCacheFromJobResult(Method, Job, Result);
             }
             if (Service == "realtime")
             {
