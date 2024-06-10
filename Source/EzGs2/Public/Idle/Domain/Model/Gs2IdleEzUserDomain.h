@@ -40,6 +40,8 @@ namespace Gs2::UE5::Idle::Domain::Model
         Gs2::UE5::Util::FGs2ConnectionPtr ConnectionValue;
 
         public:
+        TOptional<FString> TransactionId() const;
+        TOptional<bool> AutoRunStampSheet() const;
         TOptional<FString> NextPageToken() const;
         TOptional<FString> NamespaceName() const;
         TOptional<FString> UserId() const;

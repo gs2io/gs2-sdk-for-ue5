@@ -99,6 +99,10 @@ namespace Gs2::Ranking2::Task::Rest
             FString Body;
             const TSharedRef<TJsonWriter<TCHAR>> Writer = TJsonWriterFactory<TCHAR>::Create(&Body);
             const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
+            if (this->Request->GetSeason().IsSet())
+            {
+                JsonRootObject->SetStringField("season", FString::Printf(TEXT("%lld"), this->Request->GetSeason().GetValue()));
+            }
             if (this->Request->GetContextStack().IsSet())
             {
                 JsonRootObject->SetStringField("contextStack", this->Request->GetContextStack().GetValue());
