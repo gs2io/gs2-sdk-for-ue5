@@ -325,6 +325,15 @@ namespace Gs2::Idle
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::Rest::FReceiveByStampSheetTask>> FGs2IdleRestClient::ReceiveByStampSheet(
+        const Request::FReceiveByStampSheetRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FReceiveByStampSheetTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::Rest::FExportMasterTask>> FGs2IdleRestClient::ExportMaster(
         const Request::FExportMasterRequestPtr Request) const
     {

@@ -86,6 +86,8 @@
 #include "Task/Rest/DecreaseMaximumIdleMinutesByStampTaskTask.h"
 #include "Request/SetMaximumIdleMinutesByStampSheetRequest.h"
 #include "Task/Rest/SetMaximumIdleMinutesByStampSheetTask.h"
+#include "Request/ReceiveByStampSheetRequest.h"
+#include "Task/Rest/ReceiveByStampSheetTask.h"
 #include "Request/ExportMasterRequest.h"
 #include "Task/Rest/ExportMasterTask.h"
 #include "Request/GetCurrentCategoryMasterRequest.h"
@@ -240,6 +242,10 @@ namespace Gs2::Idle
 
         TSharedPtr<FAsyncTask<Task::Rest::FSetMaximumIdleMinutesByStampSheetTask>> SetMaximumIdleMinutesByStampSheet(
             const Request::FSetMaximumIdleMinutesByStampSheetRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FReceiveByStampSheetTask>> ReceiveByStampSheet(
+            const Request::FReceiveByStampSheetRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::Rest::FExportMasterTask>> ExportMaster(

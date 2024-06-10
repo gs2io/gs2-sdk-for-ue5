@@ -86,6 +86,8 @@
 #include "Task/WebSocket/DecreaseMaximumIdleMinutesByStampTaskTask.h"
 #include "Request/SetMaximumIdleMinutesByStampSheetRequest.h"
 #include "Task/WebSocket/SetMaximumIdleMinutesByStampSheetTask.h"
+#include "Request/ReceiveByStampSheetRequest.h"
+#include "Task/WebSocket/ReceiveByStampSheetTask.h"
 #include "Request/ExportMasterRequest.h"
 #include "Task/WebSocket/ExportMasterTask.h"
 #include "Request/GetCurrentCategoryMasterRequest.h"
@@ -240,6 +242,10 @@ namespace Gs2::Idle
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FSetMaximumIdleMinutesByStampSheetTask>> SetMaximumIdleMinutesByStampSheet(
             const Request::FSetMaximumIdleMinutesByStampSheetRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FReceiveByStampSheetTask>> ReceiveByStampSheet(
+            const Request::FReceiveByStampSheetRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FExportMasterTask>> ExportMaster(

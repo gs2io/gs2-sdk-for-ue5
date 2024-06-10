@@ -325,6 +325,15 @@ namespace Gs2::Idle
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::WebSocket::FReceiveByStampSheetTask>> FGs2IdleWebSocketClient::ReceiveByStampSheet(
+        const Request::FReceiveByStampSheetRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FReceiveByStampSheetTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::WebSocket::FExportMasterTask>> FGs2IdleWebSocketClient::ExportMaster(
         const Request::FExportMasterRequestPtr Request) const
     {

@@ -25,6 +25,7 @@
 #include "Idle/Domain/SpeculativeExecutor/Acquire/AcquireActionSpeculativeExecutorIndex.h"
 #include "Idle/Domain/SpeculativeExecutor/Acquire/IncreaseMaximumIdleMinutesByUserIdSpeculativeExecutor.h"
 #include "Idle/Domain/SpeculativeExecutor/Acquire/SetMaximumIdleMinutesByUserIdSpeculativeExecutor.h"
+#include "Idle/Domain/SpeculativeExecutor/Acquire/ReceiveByUserIdSpeculativeExecutor.h"
 
 #include "Core/Domain/Gs2.h"
 
@@ -97,6 +98,28 @@ namespace Gs2::Idle::Domain::SpeculativeExecutor
             auto Request = Request::FSetMaximumIdleMinutesByUserIdRequest::FromJson(RequestModelJson);
             Request = FSetMaximumIdleMinutesByUserIdSpeculativeExecutor::Rate(Request, Rate);
             auto Future = FSetMaximumIdleMinutesByUserIdSpeculativeExecutor::Execute(
+                Domain,
+                Service,
+                AccessToken,
+                Request
+            );
+            Future->StartSynchronousTask();
+            if (Future->GetTask().IsError())
+            {
+                return Future->GetTask().Error();
+            }
+            *Result = Future->GetTask().Result();
+        }
+        if (FReceiveByUserIdSpeculativeExecutor::Action() == NewAcquireAction->GetAction()) {
+            TSharedPtr<FJsonObject> RequestModelJson;
+            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(NewAcquireAction->GetRequest().IsSet() ? *NewAcquireAction->GetRequest() : "{}");
+                !FJsonSerializer::Deserialize(JsonReader, RequestModelJson))
+            {
+                return nullptr;
+            }
+            auto Request = Request::FReceiveByUserIdRequest::FromJson(RequestModelJson);
+            Request = FReceiveByUserIdSpeculativeExecutor::Rate(Request, Rate);
+            auto Future = FReceiveByUserIdSpeculativeExecutor::Execute(
                 Domain,
                 Service,
                 AccessToken,

@@ -234,6 +234,12 @@
 #include "Task/Rest/SetMaximumIdleMinutesByStampSheetTask.h"
 #include "Task/WebSocket/SetMaximumIdleMinutesByStampSheetTask.h"
 
+// ReceiveByStampSheet
+#include "Request/ReceiveByStampSheetRequest.h"
+#include "Result/ReceiveByStampSheetResult.h"
+#include "Task/Rest/ReceiveByStampSheetTask.h"
+#include "Task/WebSocket/ReceiveByStampSheetTask.h"
+
 // ExportMaster
 #include "Request/ExportMasterRequest.h"
 #include "Result/ExportMasterResult.h"
