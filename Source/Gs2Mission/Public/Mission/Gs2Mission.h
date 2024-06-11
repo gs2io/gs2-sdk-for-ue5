@@ -93,6 +93,12 @@
 #include "Task/Rest/DeleteCompleteByUserIdTask.h"
 #include "Task/WebSocket/DeleteCompleteByUserIdTask.h"
 
+// VerifyCompleteByUserId
+#include "Request/VerifyCompleteByUserIdRequest.h"
+#include "Result/VerifyCompleteByUserIdResult.h"
+#include "Task/Rest/VerifyCompleteByUserIdTask.h"
+#include "Task/WebSocket/VerifyCompleteByUserIdTask.h"
+
 // ReceiveByStampTask
 #include "Request/ReceiveByStampTaskRequest.h"
 #include "Result/ReceiveByStampTaskResult.h"
@@ -104,6 +110,12 @@
 #include "Result/RevertReceiveByStampSheetResult.h"
 #include "Task/Rest/RevertReceiveByStampSheetTask.h"
 #include "Task/WebSocket/RevertReceiveByStampSheetTask.h"
+
+// VerifyCompleteByStampTask
+#include "Request/VerifyCompleteByStampTaskRequest.h"
+#include "Result/VerifyCompleteByStampTaskResult.h"
+#include "Task/Rest/VerifyCompleteByStampTaskTask.h"
+#include "Task/WebSocket/VerifyCompleteByStampTaskTask.h"
 
 // DescribeCounterModelMasters
 #include "Request/DescribeCounterModelMastersRequest.h"

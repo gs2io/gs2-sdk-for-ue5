@@ -36,10 +36,14 @@
 #include "Task/Rest/GetCompleteByUserIdTask.h"
 #include "Request/DeleteCompleteByUserIdRequest.h"
 #include "Task/Rest/DeleteCompleteByUserIdTask.h"
+#include "Request/VerifyCompleteByUserIdRequest.h"
+#include "Task/Rest/VerifyCompleteByUserIdTask.h"
 #include "Request/ReceiveByStampTaskRequest.h"
 #include "Task/Rest/ReceiveByStampTaskTask.h"
 #include "Request/RevertReceiveByStampSheetRequest.h"
 #include "Task/Rest/RevertReceiveByStampSheetTask.h"
+#include "Request/VerifyCompleteByStampTaskRequest.h"
+#include "Task/Rest/VerifyCompleteByStampTaskTask.h"
 #include "Request/DescribeCounterModelMastersRequest.h"
 #include "Task/Rest/DescribeCounterModelMastersTask.h"
 #include "Request/CreateCounterModelMasterRequest.h"
@@ -192,12 +196,20 @@ namespace Gs2::Mission
             const Request::FDeleteCompleteByUserIdRequestPtr Request
         ) const;
 
+        TSharedPtr<FAsyncTask<Task::Rest::FVerifyCompleteByUserIdTask>> VerifyCompleteByUserId(
+            const Request::FVerifyCompleteByUserIdRequestPtr Request
+        ) const;
+
         TSharedPtr<FAsyncTask<Task::Rest::FReceiveByStampTaskTask>> ReceiveByStampTask(
             const Request::FReceiveByStampTaskRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::Rest::FRevertReceiveByStampSheetTask>> RevertReceiveByStampSheet(
             const Request::FRevertReceiveByStampSheetRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FVerifyCompleteByStampTaskTask>> VerifyCompleteByStampTask(
+            const Request::FVerifyCompleteByStampTaskRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::Rest::FDescribeCounterModelMastersTask>> DescribeCounterModelMasters(

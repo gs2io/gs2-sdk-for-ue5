@@ -100,6 +100,15 @@ namespace Gs2::Mission
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::WebSocket::FVerifyCompleteByUserIdTask>> FGs2MissionWebSocketClient::VerifyCompleteByUserId(
+        const Request::FVerifyCompleteByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FVerifyCompleteByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::WebSocket::FReceiveByStampTaskTask>> FGs2MissionWebSocketClient::ReceiveByStampTask(
         const Request::FReceiveByStampTaskRequestPtr Request) const
     {
@@ -113,6 +122,15 @@ namespace Gs2::Mission
         const Request::FRevertReceiveByStampSheetRequestPtr Request) const
     {
         return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FRevertReceiveByStampSheetTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FVerifyCompleteByStampTaskTask>> FGs2MissionWebSocketClient::VerifyCompleteByStampTask(
+        const Request::FVerifyCompleteByStampTaskRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FVerifyCompleteByStampTaskTask>>(
             Session,
             Request
         );

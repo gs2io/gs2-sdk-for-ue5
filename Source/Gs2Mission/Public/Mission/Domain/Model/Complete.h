@@ -231,6 +231,32 @@ namespace Gs2::Mission::Domain::Model
             Request::FDeleteCompleteByUserIdRequestPtr Request
         );
 
+        class GS2MISSION_API FVerifyTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Mission::Domain::Model::FCompleteDomain>,
+            public TSharedFromThis<FVerifyTask>
+        {
+            const TSharedPtr<FCompleteDomain> Self;
+            const Request::FVerifyCompleteByUserIdRequestPtr Request;
+        public:
+            explicit FVerifyTask(
+                const TSharedPtr<FCompleteDomain>& Self,
+                const Request::FVerifyCompleteByUserIdRequestPtr Request
+            );
+
+            FVerifyTask(
+                const FVerifyTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Mission::Domain::Model::FCompleteDomain>> Result
+            ) override;
+        };
+        friend FVerifyTask;
+
+        TSharedPtr<FAsyncTask<FVerifyTask>> Verify(
+            Request::FVerifyCompleteByUserIdRequestPtr Request
+        );
+
         static FString CreateCacheParentKey(
             TOptional<FString> NamespaceName,
             TOptional<FString> UserId,

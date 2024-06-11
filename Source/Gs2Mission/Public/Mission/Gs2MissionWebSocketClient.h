@@ -36,10 +36,14 @@
 #include "Task/WebSocket/GetCompleteByUserIdTask.h"
 #include "Request/DeleteCompleteByUserIdRequest.h"
 #include "Task/WebSocket/DeleteCompleteByUserIdTask.h"
+#include "Request/VerifyCompleteByUserIdRequest.h"
+#include "Task/WebSocket/VerifyCompleteByUserIdTask.h"
 #include "Request/ReceiveByStampTaskRequest.h"
 #include "Task/WebSocket/ReceiveByStampTaskTask.h"
 #include "Request/RevertReceiveByStampSheetRequest.h"
 #include "Task/WebSocket/RevertReceiveByStampSheetTask.h"
+#include "Request/VerifyCompleteByStampTaskRequest.h"
+#include "Task/WebSocket/VerifyCompleteByStampTaskTask.h"
 #include "Request/DescribeCounterModelMastersRequest.h"
 #include "Task/WebSocket/DescribeCounterModelMastersTask.h"
 #include "Request/CreateCounterModelMasterRequest.h"
@@ -192,12 +196,20 @@ namespace Gs2::Mission
             const Request::FDeleteCompleteByUserIdRequestPtr Request
         ) const;
 
+        TSharedPtr<FAsyncTask<Task::WebSocket::FVerifyCompleteByUserIdTask>> VerifyCompleteByUserId(
+            const Request::FVerifyCompleteByUserIdRequestPtr Request
+        ) const;
+
         TSharedPtr<FAsyncTask<Task::WebSocket::FReceiveByStampTaskTask>> ReceiveByStampTask(
             const Request::FReceiveByStampTaskRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FRevertReceiveByStampSheetTask>> RevertReceiveByStampSheet(
             const Request::FRevertReceiveByStampSheetRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FVerifyCompleteByStampTaskTask>> VerifyCompleteByStampTask(
+            const Request::FVerifyCompleteByStampTaskRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FDescribeCounterModelMastersTask>> DescribeCounterModelMasters(
