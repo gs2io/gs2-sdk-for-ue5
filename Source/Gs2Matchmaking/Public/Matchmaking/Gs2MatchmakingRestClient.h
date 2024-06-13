@@ -92,12 +92,46 @@
 #include "Task/Rest/GetRatingModelTask.h"
 #include "Request/ExportMasterRequest.h"
 #include "Task/Rest/ExportMasterTask.h"
-#include "Request/GetCurrentRatingModelMasterRequest.h"
-#include "Task/Rest/GetCurrentRatingModelMasterTask.h"
-#include "Request/UpdateCurrentRatingModelMasterRequest.h"
-#include "Task/Rest/UpdateCurrentRatingModelMasterTask.h"
-#include "Request/UpdateCurrentRatingModelMasterFromGitHubRequest.h"
-#include "Task/Rest/UpdateCurrentRatingModelMasterFromGitHubTask.h"
+#include "Request/GetCurrentModelMasterRequest.h"
+#include "Task/Rest/GetCurrentModelMasterTask.h"
+#include "Request/UpdateCurrentModelMasterRequest.h"
+#include "Task/Rest/UpdateCurrentModelMasterTask.h"
+#include "Request/UpdateCurrentModelMasterFromGitHubRequest.h"
+#include "Task/Rest/UpdateCurrentModelMasterFromGitHubTask.h"
+#include "Request/DescribeSeasonModelsRequest.h"
+#include "Task/Rest/DescribeSeasonModelsTask.h"
+#include "Request/GetSeasonModelRequest.h"
+#include "Task/Rest/GetSeasonModelTask.h"
+#include "Request/DescribeSeasonModelMastersRequest.h"
+#include "Task/Rest/DescribeSeasonModelMastersTask.h"
+#include "Request/CreateSeasonModelMasterRequest.h"
+#include "Task/Rest/CreateSeasonModelMasterTask.h"
+#include "Request/GetSeasonModelMasterRequest.h"
+#include "Task/Rest/GetSeasonModelMasterTask.h"
+#include "Request/UpdateSeasonModelMasterRequest.h"
+#include "Task/Rest/UpdateSeasonModelMasterTask.h"
+#include "Request/DeleteSeasonModelMasterRequest.h"
+#include "Task/Rest/DeleteSeasonModelMasterTask.h"
+#include "Request/DescribeSeasonGatheringsRequest.h"
+#include "Task/Rest/DescribeSeasonGatheringsTask.h"
+#include "Request/DescribeMatchmakingSeasonGatheringsRequest.h"
+#include "Task/Rest/DescribeMatchmakingSeasonGatheringsTask.h"
+#include "Request/DoSeasonMatchmakingRequest.h"
+#include "Task/Rest/DoSeasonMatchmakingTask.h"
+#include "Request/DoSeasonMatchmakingByUserIdRequest.h"
+#include "Task/Rest/DoSeasonMatchmakingByUserIdTask.h"
+#include "Request/GetSeasonGatheringRequest.h"
+#include "Task/Rest/GetSeasonGatheringTask.h"
+#include "Request/DeleteSeasonGatheringRequest.h"
+#include "Task/Rest/DeleteSeasonGatheringTask.h"
+#include "Request/DescribeJoinedSeasonGatheringsRequest.h"
+#include "Task/Rest/DescribeJoinedSeasonGatheringsTask.h"
+#include "Request/DescribeJoinedSeasonGatheringsByUserIdRequest.h"
+#include "Task/Rest/DescribeJoinedSeasonGatheringsByUserIdTask.h"
+#include "Request/GetJoinedSeasonGatheringRequest.h"
+#include "Task/Rest/GetJoinedSeasonGatheringTask.h"
+#include "Request/GetJoinedSeasonGatheringByUserIdRequest.h"
+#include "Task/Rest/GetJoinedSeasonGatheringByUserIdTask.h"
 #include "Request/DescribeRatingsRequest.h"
 #include "Task/Rest/DescribeRatingsTask.h"
 #include "Request/DescribeRatingsByUserIdRequest.h"
@@ -280,16 +314,84 @@ namespace Gs2::Matchmaking
             const Request::FExportMasterRequestPtr Request
         ) const;
 
-        TSharedPtr<FAsyncTask<Task::Rest::FGetCurrentRatingModelMasterTask>> GetCurrentRatingModelMaster(
-            const Request::FGetCurrentRatingModelMasterRequestPtr Request
+        TSharedPtr<FAsyncTask<Task::Rest::FGetCurrentModelMasterTask>> GetCurrentModelMaster(
+            const Request::FGetCurrentModelMasterRequestPtr Request
         ) const;
 
-        TSharedPtr<FAsyncTask<Task::Rest::FUpdateCurrentRatingModelMasterTask>> UpdateCurrentRatingModelMaster(
-            const Request::FUpdateCurrentRatingModelMasterRequestPtr Request
+        TSharedPtr<FAsyncTask<Task::Rest::FUpdateCurrentModelMasterTask>> UpdateCurrentModelMaster(
+            const Request::FUpdateCurrentModelMasterRequestPtr Request
         ) const;
 
-        TSharedPtr<FAsyncTask<Task::Rest::FUpdateCurrentRatingModelMasterFromGitHubTask>> UpdateCurrentRatingModelMasterFromGitHub(
-            const Request::FUpdateCurrentRatingModelMasterFromGitHubRequestPtr Request
+        TSharedPtr<FAsyncTask<Task::Rest::FUpdateCurrentModelMasterFromGitHubTask>> UpdateCurrentModelMasterFromGitHub(
+            const Request::FUpdateCurrentModelMasterFromGitHubRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FDescribeSeasonModelsTask>> DescribeSeasonModels(
+            const Request::FDescribeSeasonModelsRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FGetSeasonModelTask>> GetSeasonModel(
+            const Request::FGetSeasonModelRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FDescribeSeasonModelMastersTask>> DescribeSeasonModelMasters(
+            const Request::FDescribeSeasonModelMastersRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FCreateSeasonModelMasterTask>> CreateSeasonModelMaster(
+            const Request::FCreateSeasonModelMasterRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FGetSeasonModelMasterTask>> GetSeasonModelMaster(
+            const Request::FGetSeasonModelMasterRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FUpdateSeasonModelMasterTask>> UpdateSeasonModelMaster(
+            const Request::FUpdateSeasonModelMasterRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FDeleteSeasonModelMasterTask>> DeleteSeasonModelMaster(
+            const Request::FDeleteSeasonModelMasterRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FDescribeSeasonGatheringsTask>> DescribeSeasonGatherings(
+            const Request::FDescribeSeasonGatheringsRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FDescribeMatchmakingSeasonGatheringsTask>> DescribeMatchmakingSeasonGatherings(
+            const Request::FDescribeMatchmakingSeasonGatheringsRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FDoSeasonMatchmakingTask>> DoSeasonMatchmaking(
+            const Request::FDoSeasonMatchmakingRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FDoSeasonMatchmakingByUserIdTask>> DoSeasonMatchmakingByUserId(
+            const Request::FDoSeasonMatchmakingByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FGetSeasonGatheringTask>> GetSeasonGathering(
+            const Request::FGetSeasonGatheringRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FDeleteSeasonGatheringTask>> DeleteSeasonGathering(
+            const Request::FDeleteSeasonGatheringRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FDescribeJoinedSeasonGatheringsTask>> DescribeJoinedSeasonGatherings(
+            const Request::FDescribeJoinedSeasonGatheringsRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FDescribeJoinedSeasonGatheringsByUserIdTask>> DescribeJoinedSeasonGatheringsByUserId(
+            const Request::FDescribeJoinedSeasonGatheringsByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FGetJoinedSeasonGatheringTask>> GetJoinedSeasonGathering(
+            const Request::FGetJoinedSeasonGatheringRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FGetJoinedSeasonGatheringByUserIdTask>> GetJoinedSeasonGatheringByUserId(
+            const Request::FGetJoinedSeasonGatheringByUserIdRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::Rest::FDescribeRatingsTask>> DescribeRatings(

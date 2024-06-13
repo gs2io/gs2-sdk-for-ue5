@@ -34,7 +34,6 @@
 #include "Guild/Domain/Model/JoinedGuildAccessToken.h"
 #include "Guild/Domain/Model/CurrentGuildMaster.h"
 #include "Guild/Domain/Model/ReceiveMemberRequest.h"
-#include "Guild/Domain/Model/ReceiveMemberRequestAccessToken.h"
 #include "Guild/Domain/Model/SendMemberRequest.h"
 #include "Guild/Domain/Model/SendMemberRequestAccessToken.h"
 

@@ -21,7 +21,11 @@
 #include "Model/Gathering.h"
 #include "Model/RatingModelMaster.h"
 #include "Model/RatingModel.h"
-#include "Model/CurrentRatingModelMaster.h"
+#include "Model/CurrentModelMaster.h"
+#include "Model/SeasonModel.h"
+#include "Model/SeasonModelMaster.h"
+#include "Model/SeasonGathering.h"
+#include "Model/JoinedSeasonGathering.h"
 #include "Model/ScriptSetting.h"
 #include "Model/NotificationSetting.h"
 #include "Model/LogSetting.h"
@@ -260,23 +264,125 @@
 #include "Task/Rest/ExportMasterTask.h"
 #include "Task/WebSocket/ExportMasterTask.h"
 
-// GetCurrentRatingModelMaster
-#include "Request/GetCurrentRatingModelMasterRequest.h"
-#include "Result/GetCurrentRatingModelMasterResult.h"
-#include "Task/Rest/GetCurrentRatingModelMasterTask.h"
-#include "Task/WebSocket/GetCurrentRatingModelMasterTask.h"
+// GetCurrentModelMaster
+#include "Request/GetCurrentModelMasterRequest.h"
+#include "Result/GetCurrentModelMasterResult.h"
+#include "Task/Rest/GetCurrentModelMasterTask.h"
+#include "Task/WebSocket/GetCurrentModelMasterTask.h"
 
-// UpdateCurrentRatingModelMaster
-#include "Request/UpdateCurrentRatingModelMasterRequest.h"
-#include "Result/UpdateCurrentRatingModelMasterResult.h"
-#include "Task/Rest/UpdateCurrentRatingModelMasterTask.h"
-#include "Task/WebSocket/UpdateCurrentRatingModelMasterTask.h"
+// UpdateCurrentModelMaster
+#include "Request/UpdateCurrentModelMasterRequest.h"
+#include "Result/UpdateCurrentModelMasterResult.h"
+#include "Task/Rest/UpdateCurrentModelMasterTask.h"
+#include "Task/WebSocket/UpdateCurrentModelMasterTask.h"
 
-// UpdateCurrentRatingModelMasterFromGitHub
-#include "Request/UpdateCurrentRatingModelMasterFromGitHubRequest.h"
-#include "Result/UpdateCurrentRatingModelMasterFromGitHubResult.h"
-#include "Task/Rest/UpdateCurrentRatingModelMasterFromGitHubTask.h"
-#include "Task/WebSocket/UpdateCurrentRatingModelMasterFromGitHubTask.h"
+// UpdateCurrentModelMasterFromGitHub
+#include "Request/UpdateCurrentModelMasterFromGitHubRequest.h"
+#include "Result/UpdateCurrentModelMasterFromGitHubResult.h"
+#include "Task/Rest/UpdateCurrentModelMasterFromGitHubTask.h"
+#include "Task/WebSocket/UpdateCurrentModelMasterFromGitHubTask.h"
+
+// DescribeSeasonModels
+#include "Request/DescribeSeasonModelsRequest.h"
+#include "Result/DescribeSeasonModelsResult.h"
+#include "Task/Rest/DescribeSeasonModelsTask.h"
+#include "Task/WebSocket/DescribeSeasonModelsTask.h"
+
+// GetSeasonModel
+#include "Request/GetSeasonModelRequest.h"
+#include "Result/GetSeasonModelResult.h"
+#include "Task/Rest/GetSeasonModelTask.h"
+#include "Task/WebSocket/GetSeasonModelTask.h"
+
+// DescribeSeasonModelMasters
+#include "Request/DescribeSeasonModelMastersRequest.h"
+#include "Result/DescribeSeasonModelMastersResult.h"
+#include "Task/Rest/DescribeSeasonModelMastersTask.h"
+#include "Task/WebSocket/DescribeSeasonModelMastersTask.h"
+
+// CreateSeasonModelMaster
+#include "Request/CreateSeasonModelMasterRequest.h"
+#include "Result/CreateSeasonModelMasterResult.h"
+#include "Task/Rest/CreateSeasonModelMasterTask.h"
+#include "Task/WebSocket/CreateSeasonModelMasterTask.h"
+
+// GetSeasonModelMaster
+#include "Request/GetSeasonModelMasterRequest.h"
+#include "Result/GetSeasonModelMasterResult.h"
+#include "Task/Rest/GetSeasonModelMasterTask.h"
+#include "Task/WebSocket/GetSeasonModelMasterTask.h"
+
+// UpdateSeasonModelMaster
+#include "Request/UpdateSeasonModelMasterRequest.h"
+#include "Result/UpdateSeasonModelMasterResult.h"
+#include "Task/Rest/UpdateSeasonModelMasterTask.h"
+#include "Task/WebSocket/UpdateSeasonModelMasterTask.h"
+
+// DeleteSeasonModelMaster
+#include "Request/DeleteSeasonModelMasterRequest.h"
+#include "Result/DeleteSeasonModelMasterResult.h"
+#include "Task/Rest/DeleteSeasonModelMasterTask.h"
+#include "Task/WebSocket/DeleteSeasonModelMasterTask.h"
+
+// DescribeSeasonGatherings
+#include "Request/DescribeSeasonGatheringsRequest.h"
+#include "Result/DescribeSeasonGatheringsResult.h"
+#include "Task/Rest/DescribeSeasonGatheringsTask.h"
+#include "Task/WebSocket/DescribeSeasonGatheringsTask.h"
+
+// DescribeMatchmakingSeasonGatherings
+#include "Request/DescribeMatchmakingSeasonGatheringsRequest.h"
+#include "Result/DescribeMatchmakingSeasonGatheringsResult.h"
+#include "Task/Rest/DescribeMatchmakingSeasonGatheringsTask.h"
+#include "Task/WebSocket/DescribeMatchmakingSeasonGatheringsTask.h"
+
+// DoSeasonMatchmaking
+#include "Request/DoSeasonMatchmakingRequest.h"
+#include "Result/DoSeasonMatchmakingResult.h"
+#include "Task/Rest/DoSeasonMatchmakingTask.h"
+#include "Task/WebSocket/DoSeasonMatchmakingTask.h"
+
+// DoSeasonMatchmakingByUserId
+#include "Request/DoSeasonMatchmakingByUserIdRequest.h"
+#include "Result/DoSeasonMatchmakingByUserIdResult.h"
+#include "Task/Rest/DoSeasonMatchmakingByUserIdTask.h"
+#include "Task/WebSocket/DoSeasonMatchmakingByUserIdTask.h"
+
+// GetSeasonGathering
+#include "Request/GetSeasonGatheringRequest.h"
+#include "Result/GetSeasonGatheringResult.h"
+#include "Task/Rest/GetSeasonGatheringTask.h"
+#include "Task/WebSocket/GetSeasonGatheringTask.h"
+
+// DeleteSeasonGathering
+#include "Request/DeleteSeasonGatheringRequest.h"
+#include "Result/DeleteSeasonGatheringResult.h"
+#include "Task/Rest/DeleteSeasonGatheringTask.h"
+#include "Task/WebSocket/DeleteSeasonGatheringTask.h"
+
+// DescribeJoinedSeasonGatherings
+#include "Request/DescribeJoinedSeasonGatheringsRequest.h"
+#include "Result/DescribeJoinedSeasonGatheringsResult.h"
+#include "Task/Rest/DescribeJoinedSeasonGatheringsTask.h"
+#include "Task/WebSocket/DescribeJoinedSeasonGatheringsTask.h"
+
+// DescribeJoinedSeasonGatheringsByUserId
+#include "Request/DescribeJoinedSeasonGatheringsByUserIdRequest.h"
+#include "Result/DescribeJoinedSeasonGatheringsByUserIdResult.h"
+#include "Task/Rest/DescribeJoinedSeasonGatheringsByUserIdTask.h"
+#include "Task/WebSocket/DescribeJoinedSeasonGatheringsByUserIdTask.h"
+
+// GetJoinedSeasonGathering
+#include "Request/GetJoinedSeasonGatheringRequest.h"
+#include "Result/GetJoinedSeasonGatheringResult.h"
+#include "Task/Rest/GetJoinedSeasonGatheringTask.h"
+#include "Task/WebSocket/GetJoinedSeasonGatheringTask.h"
+
+// GetJoinedSeasonGatheringByUserId
+#include "Request/GetJoinedSeasonGatheringByUserIdRequest.h"
+#include "Result/GetJoinedSeasonGatheringByUserIdResult.h"
+#include "Task/Rest/GetJoinedSeasonGatheringByUserIdTask.h"
+#include "Task/WebSocket/GetJoinedSeasonGatheringByUserIdTask.h"
 
 // DescribeRatings
 #include "Request/DescribeRatingsRequest.h"

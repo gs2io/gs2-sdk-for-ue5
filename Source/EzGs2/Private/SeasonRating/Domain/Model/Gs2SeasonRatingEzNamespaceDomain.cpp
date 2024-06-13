@@ -260,7 +260,7 @@ namespace Gs2::UE5::SeasonRating::Domain::Model
     }
 
     Gs2::UE5::SeasonRating::Domain::Model::FEzUserGameSessionDomainPtr FEzNamespaceDomain::Me(
-        Gs2::UE5::Util::FGameSessionPtr GameSession
+        Gs2::UE5::Util::IGameSessionPtr GameSession
     ) const
     {
         return MakeShared<Gs2::UE5::SeasonRating::Domain::Model::FEzUserGameSessionDomain>(

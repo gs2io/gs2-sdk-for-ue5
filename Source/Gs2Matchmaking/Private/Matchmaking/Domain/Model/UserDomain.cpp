@@ -28,9 +28,17 @@
 #include "Matchmaking/Domain/Model/GatheringAccessToken.h"
 #include "Matchmaking/Domain/Model/RatingModelMaster.h"
 #include "Matchmaking/Domain/Model/RatingModel.h"
-#include "Matchmaking/Domain/Model/CurrentRatingModelMaster.h"
+#include "Matchmaking/Domain/Model/CurrentModelMaster.h"
 #include "Matchmaking/Domain/Model/User.h"
 #include "Matchmaking/Domain/Model/UserAccessToken.h"
+#include "Matchmaking/Domain/Model/Season.h"
+#include "Matchmaking/Domain/Model/SeasonAccessToken.h"
+#include "Matchmaking/Domain/Model/SeasonModel.h"
+#include "Matchmaking/Domain/Model/SeasonModelMaster.h"
+#include "Matchmaking/Domain/Model/SeasonGathering.h"
+#include "Matchmaking/Domain/Model/SeasonGatheringAccessToken.h"
+#include "Matchmaking/Domain/Model/JoinedSeasonGathering.h"
+#include "Matchmaking/Domain/Model/JoinedSeasonGatheringAccessToken.h"
 #include "Matchmaking/Domain/Model/Rating.h"
 #include "Matchmaking/Domain/Model/RatingAccessToken.h"
 #include "Matchmaking/Domain/Model/Ballot.h"
@@ -443,6 +451,21 @@ namespace Gs2::Matchmaking::Domain::Model
             GatheringName == TEXT("") ? TOptional<FString>() : TOptional<FString>(GatheringName),
             NumberOfPlayer,
             KeyId == TEXT("") ? TOptional<FString>() : TOptional<FString>(KeyId)
+        );
+    }
+
+    TSharedPtr<Gs2::Matchmaking::Domain::Model::FSeasonDomain> FUserDomain::Season(
+        const FString SeasonName,
+        const int64 Season
+    )
+    {
+        return MakeShared<Gs2::Matchmaking::Domain::Model::FSeasonDomain>(
+            Gs2,
+            Service,
+            NamespaceName,
+            UserId,
+            SeasonName == TEXT("") ? TOptional<FString>() : TOptional<FString>(SeasonName),
+            Season
         );
     }
 

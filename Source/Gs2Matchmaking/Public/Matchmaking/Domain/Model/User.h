@@ -27,6 +27,14 @@
 #include "Matchmaking/Domain/Iterator/DoMatchmakingByUserIdIterator.h"
 #include "Matchmaking/Domain/Iterator/DescribeRatingModelMastersIterator.h"
 #include "Matchmaking/Domain/Iterator/DescribeRatingModelsIterator.h"
+#include "Matchmaking/Domain/Iterator/DescribeSeasonModelsIterator.h"
+#include "Matchmaking/Domain/Iterator/DescribeSeasonModelMastersIterator.h"
+#include "Matchmaking/Domain/Iterator/DescribeSeasonGatheringsIterator.h"
+#include "Matchmaking/Domain/Iterator/DescribeMatchmakingSeasonGatheringsIterator.h"
+#include "Matchmaking/Domain/Iterator/DoSeasonMatchmakingIterator.h"
+#include "Matchmaking/Domain/Iterator/DoSeasonMatchmakingByUserIdIterator.h"
+#include "Matchmaking/Domain/Iterator/DescribeJoinedSeasonGatheringsIterator.h"
+#include "Matchmaking/Domain/Iterator/DescribeJoinedSeasonGatheringsByUserIdIterator.h"
 #include "Matchmaking/Domain/Iterator/DescribeRatingsIterator.h"
 #include "Matchmaking/Domain/Iterator/DescribeRatingsByUserIdIterator.h"
 
@@ -49,9 +57,17 @@ namespace Gs2::Matchmaking::Domain::Model
     class FGatheringAccessTokenDomain;
     class FRatingModelMasterDomain;
     class FRatingModelDomain;
-    class FCurrentRatingModelMasterDomain;
+    class FCurrentModelMasterDomain;
     class FUserDomain;
     class FUserAccessTokenDomain;
+    class FSeasonDomain;
+    class FSeasonAccessTokenDomain;
+    class FSeasonModelDomain;
+    class FSeasonModelMasterDomain;
+    class FSeasonGatheringDomain;
+    class FSeasonGatheringAccessTokenDomain;
+    class FJoinedSeasonGatheringDomain;
+    class FJoinedSeasonGatheringAccessTokenDomain;
     class FRatingDomain;
     class FRatingAccessTokenDomain;
     class FBallotDomain;
@@ -219,6 +235,11 @@ namespace Gs2::Matchmaking::Domain::Model
             const FString GatheringName,
             const int32 NumberOfPlayer,
             const FString KeyId
+        );
+
+        TSharedPtr<Gs2::Matchmaking::Domain::Model::FSeasonDomain> Season(
+            const FString SeasonName,
+            const int64 Season
         );
 
         static FString CreateCacheParentKey(

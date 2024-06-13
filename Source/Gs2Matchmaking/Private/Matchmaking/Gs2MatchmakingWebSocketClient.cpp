@@ -352,28 +352,181 @@ namespace Gs2::Matchmaking
         );
     }
 
-    TSharedPtr<FAsyncTask<Task::WebSocket::FGetCurrentRatingModelMasterTask>> FGs2MatchmakingWebSocketClient::GetCurrentRatingModelMaster(
-        const Request::FGetCurrentRatingModelMasterRequestPtr Request) const
+    TSharedPtr<FAsyncTask<Task::WebSocket::FGetCurrentModelMasterTask>> FGs2MatchmakingWebSocketClient::GetCurrentModelMaster(
+        const Request::FGetCurrentModelMasterRequestPtr Request) const
     {
-        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FGetCurrentRatingModelMasterTask>>(
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FGetCurrentModelMasterTask>>(
             Session,
             Request
         );
     }
 
-    TSharedPtr<FAsyncTask<Task::WebSocket::FUpdateCurrentRatingModelMasterTask>> FGs2MatchmakingWebSocketClient::UpdateCurrentRatingModelMaster(
-        const Request::FUpdateCurrentRatingModelMasterRequestPtr Request) const
+    TSharedPtr<FAsyncTask<Task::WebSocket::FUpdateCurrentModelMasterTask>> FGs2MatchmakingWebSocketClient::UpdateCurrentModelMaster(
+        const Request::FUpdateCurrentModelMasterRequestPtr Request) const
     {
-        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FUpdateCurrentRatingModelMasterTask>>(
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FUpdateCurrentModelMasterTask>>(
             Session,
             Request
         );
     }
 
-    TSharedPtr<FAsyncTask<Task::WebSocket::FUpdateCurrentRatingModelMasterFromGitHubTask>> FGs2MatchmakingWebSocketClient::UpdateCurrentRatingModelMasterFromGitHub(
-        const Request::FUpdateCurrentRatingModelMasterFromGitHubRequestPtr Request) const
+    TSharedPtr<FAsyncTask<Task::WebSocket::FUpdateCurrentModelMasterFromGitHubTask>> FGs2MatchmakingWebSocketClient::UpdateCurrentModelMasterFromGitHub(
+        const Request::FUpdateCurrentModelMasterFromGitHubRequestPtr Request) const
     {
-        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FUpdateCurrentRatingModelMasterFromGitHubTask>>(
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FUpdateCurrentModelMasterFromGitHubTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FDescribeSeasonModelsTask>> FGs2MatchmakingWebSocketClient::DescribeSeasonModels(
+        const Request::FDescribeSeasonModelsRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FDescribeSeasonModelsTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FGetSeasonModelTask>> FGs2MatchmakingWebSocketClient::GetSeasonModel(
+        const Request::FGetSeasonModelRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FGetSeasonModelTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FDescribeSeasonModelMastersTask>> FGs2MatchmakingWebSocketClient::DescribeSeasonModelMasters(
+        const Request::FDescribeSeasonModelMastersRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FDescribeSeasonModelMastersTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FCreateSeasonModelMasterTask>> FGs2MatchmakingWebSocketClient::CreateSeasonModelMaster(
+        const Request::FCreateSeasonModelMasterRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FCreateSeasonModelMasterTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FGetSeasonModelMasterTask>> FGs2MatchmakingWebSocketClient::GetSeasonModelMaster(
+        const Request::FGetSeasonModelMasterRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FGetSeasonModelMasterTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FUpdateSeasonModelMasterTask>> FGs2MatchmakingWebSocketClient::UpdateSeasonModelMaster(
+        const Request::FUpdateSeasonModelMasterRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FUpdateSeasonModelMasterTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FDeleteSeasonModelMasterTask>> FGs2MatchmakingWebSocketClient::DeleteSeasonModelMaster(
+        const Request::FDeleteSeasonModelMasterRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FDeleteSeasonModelMasterTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FDescribeSeasonGatheringsTask>> FGs2MatchmakingWebSocketClient::DescribeSeasonGatherings(
+        const Request::FDescribeSeasonGatheringsRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FDescribeSeasonGatheringsTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FDescribeMatchmakingSeasonGatheringsTask>> FGs2MatchmakingWebSocketClient::DescribeMatchmakingSeasonGatherings(
+        const Request::FDescribeMatchmakingSeasonGatheringsRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FDescribeMatchmakingSeasonGatheringsTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FDoSeasonMatchmakingTask>> FGs2MatchmakingWebSocketClient::DoSeasonMatchmaking(
+        const Request::FDoSeasonMatchmakingRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FDoSeasonMatchmakingTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FDoSeasonMatchmakingByUserIdTask>> FGs2MatchmakingWebSocketClient::DoSeasonMatchmakingByUserId(
+        const Request::FDoSeasonMatchmakingByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FDoSeasonMatchmakingByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FGetSeasonGatheringTask>> FGs2MatchmakingWebSocketClient::GetSeasonGathering(
+        const Request::FGetSeasonGatheringRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FGetSeasonGatheringTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FDeleteSeasonGatheringTask>> FGs2MatchmakingWebSocketClient::DeleteSeasonGathering(
+        const Request::FDeleteSeasonGatheringRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FDeleteSeasonGatheringTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FDescribeJoinedSeasonGatheringsTask>> FGs2MatchmakingWebSocketClient::DescribeJoinedSeasonGatherings(
+        const Request::FDescribeJoinedSeasonGatheringsRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FDescribeJoinedSeasonGatheringsTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FDescribeJoinedSeasonGatheringsByUserIdTask>> FGs2MatchmakingWebSocketClient::DescribeJoinedSeasonGatheringsByUserId(
+        const Request::FDescribeJoinedSeasonGatheringsByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FDescribeJoinedSeasonGatheringsByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FGetJoinedSeasonGatheringTask>> FGs2MatchmakingWebSocketClient::GetJoinedSeasonGathering(
+        const Request::FGetJoinedSeasonGatheringRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FGetJoinedSeasonGatheringTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FGetJoinedSeasonGatheringByUserIdTask>> FGs2MatchmakingWebSocketClient::GetJoinedSeasonGatheringByUserId(
+        const Request::FGetJoinedSeasonGatheringByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FGetJoinedSeasonGatheringByUserIdTask>>(
             Session,
             Request
         );

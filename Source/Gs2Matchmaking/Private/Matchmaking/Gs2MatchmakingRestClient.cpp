@@ -352,28 +352,181 @@ namespace Gs2::Matchmaking
         );
     }
 
-    TSharedPtr<FAsyncTask<Task::Rest::FGetCurrentRatingModelMasterTask>> FGs2MatchmakingRestClient::GetCurrentRatingModelMaster(
-        const Request::FGetCurrentRatingModelMasterRequestPtr Request) const
+    TSharedPtr<FAsyncTask<Task::Rest::FGetCurrentModelMasterTask>> FGs2MatchmakingRestClient::GetCurrentModelMaster(
+        const Request::FGetCurrentModelMasterRequestPtr Request) const
     {
-        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FGetCurrentRatingModelMasterTask>>(
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FGetCurrentModelMasterTask>>(
             Session,
             Request
         );
     }
 
-    TSharedPtr<FAsyncTask<Task::Rest::FUpdateCurrentRatingModelMasterTask>> FGs2MatchmakingRestClient::UpdateCurrentRatingModelMaster(
-        const Request::FUpdateCurrentRatingModelMasterRequestPtr Request) const
+    TSharedPtr<FAsyncTask<Task::Rest::FUpdateCurrentModelMasterTask>> FGs2MatchmakingRestClient::UpdateCurrentModelMaster(
+        const Request::FUpdateCurrentModelMasterRequestPtr Request) const
     {
-        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FUpdateCurrentRatingModelMasterTask>>(
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FUpdateCurrentModelMasterTask>>(
             Session,
             Request
         );
     }
 
-    TSharedPtr<FAsyncTask<Task::Rest::FUpdateCurrentRatingModelMasterFromGitHubTask>> FGs2MatchmakingRestClient::UpdateCurrentRatingModelMasterFromGitHub(
-        const Request::FUpdateCurrentRatingModelMasterFromGitHubRequestPtr Request) const
+    TSharedPtr<FAsyncTask<Task::Rest::FUpdateCurrentModelMasterFromGitHubTask>> FGs2MatchmakingRestClient::UpdateCurrentModelMasterFromGitHub(
+        const Request::FUpdateCurrentModelMasterFromGitHubRequestPtr Request) const
     {
-        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FUpdateCurrentRatingModelMasterFromGitHubTask>>(
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FUpdateCurrentModelMasterFromGitHubTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FDescribeSeasonModelsTask>> FGs2MatchmakingRestClient::DescribeSeasonModels(
+        const Request::FDescribeSeasonModelsRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FDescribeSeasonModelsTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FGetSeasonModelTask>> FGs2MatchmakingRestClient::GetSeasonModel(
+        const Request::FGetSeasonModelRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FGetSeasonModelTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FDescribeSeasonModelMastersTask>> FGs2MatchmakingRestClient::DescribeSeasonModelMasters(
+        const Request::FDescribeSeasonModelMastersRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FDescribeSeasonModelMastersTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FCreateSeasonModelMasterTask>> FGs2MatchmakingRestClient::CreateSeasonModelMaster(
+        const Request::FCreateSeasonModelMasterRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FCreateSeasonModelMasterTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FGetSeasonModelMasterTask>> FGs2MatchmakingRestClient::GetSeasonModelMaster(
+        const Request::FGetSeasonModelMasterRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FGetSeasonModelMasterTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FUpdateSeasonModelMasterTask>> FGs2MatchmakingRestClient::UpdateSeasonModelMaster(
+        const Request::FUpdateSeasonModelMasterRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FUpdateSeasonModelMasterTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FDeleteSeasonModelMasterTask>> FGs2MatchmakingRestClient::DeleteSeasonModelMaster(
+        const Request::FDeleteSeasonModelMasterRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FDeleteSeasonModelMasterTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FDescribeSeasonGatheringsTask>> FGs2MatchmakingRestClient::DescribeSeasonGatherings(
+        const Request::FDescribeSeasonGatheringsRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FDescribeSeasonGatheringsTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FDescribeMatchmakingSeasonGatheringsTask>> FGs2MatchmakingRestClient::DescribeMatchmakingSeasonGatherings(
+        const Request::FDescribeMatchmakingSeasonGatheringsRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FDescribeMatchmakingSeasonGatheringsTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FDoSeasonMatchmakingTask>> FGs2MatchmakingRestClient::DoSeasonMatchmaking(
+        const Request::FDoSeasonMatchmakingRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FDoSeasonMatchmakingTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FDoSeasonMatchmakingByUserIdTask>> FGs2MatchmakingRestClient::DoSeasonMatchmakingByUserId(
+        const Request::FDoSeasonMatchmakingByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FDoSeasonMatchmakingByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FGetSeasonGatheringTask>> FGs2MatchmakingRestClient::GetSeasonGathering(
+        const Request::FGetSeasonGatheringRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FGetSeasonGatheringTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FDeleteSeasonGatheringTask>> FGs2MatchmakingRestClient::DeleteSeasonGathering(
+        const Request::FDeleteSeasonGatheringRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FDeleteSeasonGatheringTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FDescribeJoinedSeasonGatheringsTask>> FGs2MatchmakingRestClient::DescribeJoinedSeasonGatherings(
+        const Request::FDescribeJoinedSeasonGatheringsRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FDescribeJoinedSeasonGatheringsTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FDescribeJoinedSeasonGatheringsByUserIdTask>> FGs2MatchmakingRestClient::DescribeJoinedSeasonGatheringsByUserId(
+        const Request::FDescribeJoinedSeasonGatheringsByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FDescribeJoinedSeasonGatheringsByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FGetJoinedSeasonGatheringTask>> FGs2MatchmakingRestClient::GetJoinedSeasonGathering(
+        const Request::FGetJoinedSeasonGatheringRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FGetJoinedSeasonGatheringTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FGetJoinedSeasonGatheringByUserIdTask>> FGs2MatchmakingRestClient::GetJoinedSeasonGatheringByUserId(
+        const Request::FGetJoinedSeasonGatheringByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FGetJoinedSeasonGatheringByUserIdTask>>(
             Session,
             Request
         );

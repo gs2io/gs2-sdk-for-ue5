@@ -28,9 +28,17 @@
 #include "Matchmaking/Domain/Model/GatheringAccessToken.h"
 #include "Matchmaking/Domain/Model/RatingModelMaster.h"
 #include "Matchmaking/Domain/Model/RatingModel.h"
-#include "Matchmaking/Domain/Model/CurrentRatingModelMaster.h"
+#include "Matchmaking/Domain/Model/CurrentModelMaster.h"
 #include "Matchmaking/Domain/Model/User.h"
 #include "Matchmaking/Domain/Model/UserAccessToken.h"
+#include "Matchmaking/Domain/Model/Season.h"
+#include "Matchmaking/Domain/Model/SeasonAccessToken.h"
+#include "Matchmaking/Domain/Model/SeasonModel.h"
+#include "Matchmaking/Domain/Model/SeasonModelMaster.h"
+#include "Matchmaking/Domain/Model/SeasonGathering.h"
+#include "Matchmaking/Domain/Model/SeasonGatheringAccessToken.h"
+#include "Matchmaking/Domain/Model/JoinedSeasonGathering.h"
+#include "Matchmaking/Domain/Model/JoinedSeasonGatheringAccessToken.h"
 #include "Matchmaking/Domain/Model/Rating.h"
 #include "Matchmaking/Domain/Model/RatingAccessToken.h"
 #include "Matchmaking/Domain/Model/Ballot.h"
@@ -519,10 +527,79 @@ namespace Gs2::Matchmaking::Domain::Model
         return Gs2::Core::Util::New<FAsyncTask<FVoteMultipleTask>>(this->AsShared(), Request);
     }
 
-    TSharedPtr<Gs2::Matchmaking::Domain::Model::FCurrentRatingModelMasterDomain> FNamespaceDomain::CurrentRatingModelMaster(
+    FNamespaceDomain::FCreateSeasonModelMasterTask::FCreateSeasonModelMasterTask(
+        const TSharedPtr<FNamespaceDomain>& Self,
+        const Request::FCreateSeasonModelMasterRequestPtr Request
+    ): Self(Self), Request(Request)
+    {
+
+    }
+
+    FNamespaceDomain::FCreateSeasonModelMasterTask::FCreateSeasonModelMasterTask(
+        const FCreateSeasonModelMasterTask& From
+    ): TGs2Future(From), Self(From.Self), Request(From.Request)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FNamespaceDomain::FCreateSeasonModelMasterTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::Matchmaking::Domain::Model::FSeasonModelMasterDomain>> Result
     )
     {
-        return MakeShared<Gs2::Matchmaking::Domain::Model::FCurrentRatingModelMasterDomain>(
+        Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
+            ->WithNamespaceName(Self->NamespaceName);
+        const auto Future = Self->Client->CreateSeasonModelMaster(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto RequestModel = Request;
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
+        if (ResultModel != nullptr) {
+            
+            if (ResultModel->GetItem() != nullptr)
+            {
+                const auto ParentKey = Gs2::Matchmaking::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                    Self->NamespaceName,
+                    "SeasonModelMaster"
+                );
+                const auto Key = Gs2::Matchmaking::Domain::Model::FSeasonModelMasterDomain::CreateCacheKey(
+                    ResultModel->GetItem()->GetName()
+                );
+                Self->Gs2->Cache->Put(
+                    Gs2::Matchmaking::Model::FSeasonModelMaster::TypeName,
+                    ParentKey,
+                    Key,
+                    ResultModel->GetItem(),
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+            }
+        }
+        auto Domain = MakeShared<Gs2::Matchmaking::Domain::Model::FSeasonModelMasterDomain>(
+            Self->Gs2,
+            Self->Service,
+            Request->GetNamespaceName(),
+            ResultModel->GetItem()->GetName()
+        );
+
+        *Result = Domain;
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FNamespaceDomain::FCreateSeasonModelMasterTask>> FNamespaceDomain::CreateSeasonModelMaster(
+        Request::FCreateSeasonModelMasterRequestPtr Request
+    ) {
+        return Gs2::Core::Util::New<FAsyncTask<FCreateSeasonModelMasterTask>>(this->AsShared(), Request);
+    }
+
+    TSharedPtr<Gs2::Matchmaking::Domain::Model::FCurrentModelMasterDomain> FNamespaceDomain::CurrentModelMaster(
+    )
+    {
+        return MakeShared<Gs2::Matchmaking::Domain::Model::FCurrentModelMasterDomain>(
             Gs2,
             Service,
             NamespaceName
@@ -664,6 +741,106 @@ namespace Gs2::Matchmaking::Domain::Model
             NamespaceName,
             RatingName == TEXT("") ? TOptional<FString>() : TOptional<FString>(RatingName),
             GatheringName == TEXT("") ? TOptional<FString>() : TOptional<FString>(GatheringName)
+        );
+    }
+
+    Gs2::Matchmaking::Domain::Iterator::FDescribeSeasonModelsIteratorPtr FNamespaceDomain::SeasonModels(
+    ) const
+    {
+        return MakeShared<Gs2::Matchmaking::Domain::Iterator::FDescribeSeasonModelsIterator>(
+            Gs2,
+            Client,
+            NamespaceName
+        );
+    }
+
+    Gs2::Core::Domain::CallbackID FNamespaceDomain::SubscribeSeasonModels(
+    TFunction<void()> Callback
+    )
+    {
+        return Gs2->Cache->ListSubscribe(
+            Gs2::Matchmaking::Model::FSeasonModel::TypeName,
+            Gs2::Matchmaking::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                NamespaceName,
+                "SeasonModel"
+            ),
+            Callback
+        );
+    }
+
+    void FNamespaceDomain::UnsubscribeSeasonModels(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Gs2->Cache->ListUnsubscribe(
+            Gs2::Matchmaking::Model::FSeasonModel::TypeName,
+            Gs2::Matchmaking::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                NamespaceName,
+                "SeasonModel"
+            ),
+            CallbackID
+        );
+    }
+
+    TSharedPtr<Gs2::Matchmaking::Domain::Model::FSeasonModelDomain> FNamespaceDomain::SeasonModel(
+        const FString SeasonName
+    )
+    {
+        return MakeShared<Gs2::Matchmaking::Domain::Model::FSeasonModelDomain>(
+            Gs2,
+            Service,
+            NamespaceName,
+            SeasonName == TEXT("") ? TOptional<FString>() : TOptional<FString>(SeasonName)
+        );
+    }
+
+    Gs2::Matchmaking::Domain::Iterator::FDescribeSeasonModelMastersIteratorPtr FNamespaceDomain::SeasonModelMasters(
+    ) const
+    {
+        return MakeShared<Gs2::Matchmaking::Domain::Iterator::FDescribeSeasonModelMastersIterator>(
+            Gs2,
+            Client,
+            NamespaceName
+        );
+    }
+
+    Gs2::Core::Domain::CallbackID FNamespaceDomain::SubscribeSeasonModelMasters(
+    TFunction<void()> Callback
+    )
+    {
+        return Gs2->Cache->ListSubscribe(
+            Gs2::Matchmaking::Model::FSeasonModelMaster::TypeName,
+            Gs2::Matchmaking::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                NamespaceName,
+                "SeasonModelMaster"
+            ),
+            Callback
+        );
+    }
+
+    void FNamespaceDomain::UnsubscribeSeasonModelMasters(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Gs2->Cache->ListUnsubscribe(
+            Gs2::Matchmaking::Model::FSeasonModelMaster::TypeName,
+            Gs2::Matchmaking::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                NamespaceName,
+                "SeasonModelMaster"
+            ),
+            CallbackID
+        );
+    }
+
+    TSharedPtr<Gs2::Matchmaking::Domain::Model::FSeasonModelMasterDomain> FNamespaceDomain::SeasonModelMaster(
+        const FString SeasonName
+    )
+    {
+        return MakeShared<Gs2::Matchmaking::Domain::Model::FSeasonModelMasterDomain>(
+            Gs2,
+            Service,
+            NamespaceName,
+            SeasonName == TEXT("") ? TOptional<FString>() : TOptional<FString>(SeasonName)
         );
     }
 

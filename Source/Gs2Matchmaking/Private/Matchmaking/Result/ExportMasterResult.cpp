@@ -31,14 +31,14 @@ namespace Gs2::Matchmaking::Result
     }
 
     TSharedPtr<FExportMasterResult> FExportMasterResult::WithItem(
-        const TSharedPtr<Model::FCurrentRatingModelMaster> Item
+        const TSharedPtr<Model::FCurrentModelMaster> Item
     )
     {
         this->ItemValue = Item;
         return SharedThis(this);
     }
 
-    TSharedPtr<Model::FCurrentRatingModelMaster> FExportMasterResult::GetItem() const
+    TSharedPtr<Model::FCurrentModelMaster> FExportMasterResult::GetItem() const
     {
         if (!ItemValue.IsValid())
         {
@@ -53,13 +53,13 @@ namespace Gs2::Matchmaking::Result
             return nullptr;
         }
         return MakeShared<FExportMasterResult>()
-            ->WithItem(Data->HasField(ANSI_TO_TCHAR("item")) ? [Data]() -> Model::FCurrentRatingModelMasterPtr
+            ->WithItem(Data->HasField(ANSI_TO_TCHAR("item")) ? [Data]() -> Model::FCurrentModelMasterPtr
                  {
                     if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("item")))
                     {
                         return nullptr;
                     }
-                    return Model::FCurrentRatingModelMaster::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("item")));
+                    return Model::FCurrentModelMaster::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("item")));
                  }() : nullptr);
     }
 

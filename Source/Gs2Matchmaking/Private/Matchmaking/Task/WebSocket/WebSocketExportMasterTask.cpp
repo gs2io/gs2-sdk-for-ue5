@@ -51,12 +51,12 @@ namespace Gs2::Matchmaking::Task::WebSocket
             Session->Credential()->ClientId(),
             Session->Credential()->ProjectToken(),
             "matchmaking",
-            "currentRatingModelMaster",
+            "currentModelMaster",
             "exportMaster"
         );
         Session->Send(RequestPayload);
 
-        UE_LOG(Gs2Log, VeryVerbose, TEXT("[%s:%s:%s] %s"), TEXT("matchmaking"), TEXT("currentRatingModelMaster"), TEXT("exportMaster"), ToCStr(RequestPayload->Payload()));
+        UE_LOG(Gs2Log, VeryVerbose, TEXT("[%s:%s:%s] %s"), TEXT("matchmaking"), TEXT("currentModelMaster"), TEXT("exportMaster"), ToCStr(RequestPayload->Payload()));
 
         while (!Session->IsConnected() || !Session->IsComplete(RequestPayload->TaskId()))
         {

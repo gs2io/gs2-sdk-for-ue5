@@ -27,6 +27,14 @@
 #include "Matchmaking/Domain/Iterator/DoMatchmakingByUserIdIterator.h"
 #include "Matchmaking/Domain/Iterator/DescribeRatingModelMastersIterator.h"
 #include "Matchmaking/Domain/Iterator/DescribeRatingModelsIterator.h"
+#include "Matchmaking/Domain/Iterator/DescribeSeasonModelsIterator.h"
+#include "Matchmaking/Domain/Iterator/DescribeSeasonModelMastersIterator.h"
+#include "Matchmaking/Domain/Iterator/DescribeSeasonGatheringsIterator.h"
+#include "Matchmaking/Domain/Iterator/DescribeMatchmakingSeasonGatheringsIterator.h"
+#include "Matchmaking/Domain/Iterator/DoSeasonMatchmakingIterator.h"
+#include "Matchmaking/Domain/Iterator/DoSeasonMatchmakingByUserIdIterator.h"
+#include "Matchmaking/Domain/Iterator/DescribeJoinedSeasonGatheringsIterator.h"
+#include "Matchmaking/Domain/Iterator/DescribeJoinedSeasonGatheringsByUserIdIterator.h"
 #include "Matchmaking/Domain/Iterator/DescribeRatingsIterator.h"
 #include "Matchmaking/Domain/Iterator/DescribeRatingsByUserIdIterator.h"
 
@@ -49,9 +57,17 @@ namespace Gs2::Matchmaking::Domain::Model
     class FGatheringAccessTokenDomain;
     class FRatingModelMasterDomain;
     class FRatingModelDomain;
-    class FCurrentRatingModelMasterDomain;
+    class FCurrentModelMasterDomain;
     class FUserDomain;
     class FUserAccessTokenDomain;
+    class FSeasonDomain;
+    class FSeasonAccessTokenDomain;
+    class FSeasonModelDomain;
+    class FSeasonModelMasterDomain;
+    class FSeasonGatheringDomain;
+    class FSeasonGatheringAccessTokenDomain;
+    class FJoinedSeasonGatheringDomain;
+    class FJoinedSeasonGatheringAccessTokenDomain;
     class FRatingDomain;
     class FRatingAccessTokenDomain;
     class FBallotDomain;
@@ -291,7 +307,33 @@ namespace Gs2::Matchmaking::Domain::Model
             Request::FVoteMultipleRequestPtr Request
         );
 
-        TSharedPtr<Gs2::Matchmaking::Domain::Model::FCurrentRatingModelMasterDomain> CurrentRatingModelMaster(
+        class GS2MATCHMAKING_API FCreateSeasonModelMasterTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Matchmaking::Domain::Model::FSeasonModelMasterDomain>,
+            public TSharedFromThis<FCreateSeasonModelMasterTask>
+        {
+            const TSharedPtr<FNamespaceDomain> Self;
+            const Request::FCreateSeasonModelMasterRequestPtr Request;
+        public:
+            explicit FCreateSeasonModelMasterTask(
+                const TSharedPtr<FNamespaceDomain>& Self,
+                const Request::FCreateSeasonModelMasterRequestPtr Request
+            );
+
+            FCreateSeasonModelMasterTask(
+                const FCreateSeasonModelMasterTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Matchmaking::Domain::Model::FSeasonModelMasterDomain>> Result
+            ) override;
+        };
+        friend FCreateSeasonModelMasterTask;
+
+        TSharedPtr<FAsyncTask<FCreateSeasonModelMasterTask>> CreateSeasonModelMaster(
+            Request::FCreateSeasonModelMasterRequestPtr Request
+        );
+
+        TSharedPtr<Gs2::Matchmaking::Domain::Model::FCurrentModelMasterDomain> CurrentModelMaster(
         );
 
         TSharedPtr<Gs2::Matchmaking::Domain::Model::FUserDomain> User(
@@ -335,6 +377,36 @@ namespace Gs2::Matchmaking::Domain::Model
         TSharedPtr<Gs2::Matchmaking::Domain::Model::FVoteDomain> Vote(
             const FString RatingName,
             const FString GatheringName
+        );
+
+        Gs2::Matchmaking::Domain::Iterator::FDescribeSeasonModelsIteratorPtr SeasonModels(
+        ) const;
+
+        Gs2::Core::Domain::CallbackID SubscribeSeasonModels(
+            TFunction<void()> Callback
+        );
+
+        void UnsubscribeSeasonModels(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
+
+        TSharedPtr<Gs2::Matchmaking::Domain::Model::FSeasonModelDomain> SeasonModel(
+            const FString SeasonName
+        );
+
+        Gs2::Matchmaking::Domain::Iterator::FDescribeSeasonModelMastersIteratorPtr SeasonModelMasters(
+        ) const;
+
+        Gs2::Core::Domain::CallbackID SubscribeSeasonModelMasters(
+            TFunction<void()> Callback
+        );
+
+        void UnsubscribeSeasonModelMasters(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
+
+        TSharedPtr<Gs2::Matchmaking::Domain::Model::FSeasonModelMasterDomain> SeasonModelMaster(
+            const FString SeasonName
         );
 
         static FString CreateCacheParentKey(

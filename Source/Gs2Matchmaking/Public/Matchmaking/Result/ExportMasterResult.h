@@ -17,13 +17,13 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "../Model/CurrentRatingModelMaster.h"
+#include "../Model/CurrentModelMaster.h"
 
 namespace Gs2::Matchmaking::Result
 {
     class GS2MATCHMAKING_API FExportMasterResult final : public TSharedFromThis<FExportMasterResult>
     {
-        TSharedPtr<Model::FCurrentRatingModelMaster> ItemValue;
+        TSharedPtr<Model::FCurrentModelMaster> ItemValue;
         
     public:
         
@@ -33,9 +33,9 @@ namespace Gs2::Matchmaking::Result
         );
         ~FExportMasterResult() = default;
 
-        TSharedPtr<FExportMasterResult> WithItem(const TSharedPtr<Model::FCurrentRatingModelMaster> Item);
+        TSharedPtr<FExportMasterResult> WithItem(const TSharedPtr<Model::FCurrentModelMaster> Item);
 
-        TSharedPtr<Model::FCurrentRatingModelMaster> GetItem() const;
+        TSharedPtr<Model::FCurrentModelMaster> GetItem() const;
 
         static TSharedPtr<FExportMasterResult> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;

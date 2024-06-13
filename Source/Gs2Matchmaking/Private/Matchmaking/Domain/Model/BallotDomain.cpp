@@ -30,7 +30,7 @@
 #include "Matchmaking/Domain/Model/GatheringAccessToken.h"
 #include "Matchmaking/Domain/Model/RatingModelMaster.h"
 #include "Matchmaking/Domain/Model/RatingModel.h"
-#include "Matchmaking/Domain/Model/CurrentRatingModelMaster.h"
+#include "Matchmaking/Domain/Model/CurrentModelMaster.h"
 #include "Matchmaking/Domain/Model/Rating.h"
 #include "Matchmaking/Domain/Model/RatingAccessToken.h"
 #include "Matchmaking/Domain/Model/Ballot.h"
