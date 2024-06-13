@@ -29,7 +29,7 @@ namespace Gs2::UE5::Exchange::Domain::Iterator
     {
         Gs2::Exchange::Domain::Iterator::FDescribeAwaitsIteratorPtr It;
         Gs2::Exchange::Domain::Model::FUserAccessTokenDomainPtr Domain;
-        Gs2::UE5::Util::FGameSessionPtr GameSession;
+        Gs2::UE5::Util::IGameSessionPtr GameSession;
         Gs2::UE5::Util::FGs2ConnectionPtr Connection;
         TOptional<FString> RateName;
 
@@ -37,7 +37,7 @@ namespace Gs2::UE5::Exchange::Domain::Iterator
 
         explicit FEzDescribeAwaitsIterator(
             Gs2::Exchange::Domain::Model::FUserAccessTokenDomainPtr Domain,
-            Gs2::UE5::Util::FGameSessionPtr GameSession,
+            Gs2::UE5::Util::IGameSessionPtr GameSession,
             Gs2::UE5::Util::FGs2ConnectionPtr Connection,
             TOptional<FString> RateName = TOptional<FString>()
         ) :

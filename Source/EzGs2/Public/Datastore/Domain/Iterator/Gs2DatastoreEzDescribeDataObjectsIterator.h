@@ -29,7 +29,7 @@ namespace Gs2::UE5::Datastore::Domain::Iterator
     {
         Gs2::Datastore::Domain::Iterator::FDescribeDataObjectsIteratorPtr It;
         Gs2::Datastore::Domain::Model::FUserAccessTokenDomainPtr Domain;
-        Gs2::UE5::Util::FGameSessionPtr GameSession;
+        Gs2::UE5::Util::IGameSessionPtr GameSession;
         Gs2::UE5::Util::FGs2ConnectionPtr Connection;
         TOptional<FString> Status;
 
@@ -37,7 +37,7 @@ namespace Gs2::UE5::Datastore::Domain::Iterator
 
         explicit FEzDescribeDataObjectsIterator(
             Gs2::Datastore::Domain::Model::FUserAccessTokenDomainPtr Domain,
-            Gs2::UE5::Util::FGameSessionPtr GameSession,
+            Gs2::UE5::Util::IGameSessionPtr GameSession,
             Gs2::UE5::Util::FGs2ConnectionPtr Connection,
             TOptional<FString> Status = TOptional<FString>()
         ) :

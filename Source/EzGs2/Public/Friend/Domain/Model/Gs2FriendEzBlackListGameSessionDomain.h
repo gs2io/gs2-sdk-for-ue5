@@ -36,7 +36,7 @@ namespace Gs2::UE5::Friend::Domain::Model
         public TSharedFromThis<FEzBlackListGameSessionDomain>
     {
         Gs2::Friend::Domain::Model::FBlackListAccessTokenDomainPtr Domain;
-        Gs2::UE5::Util::FGameSessionPtr GameSession;
+        Gs2::UE5::Util::IGameSessionPtr GameSession;
         Gs2::UE5::Util::FGs2ConnectionPtr ConnectionValue;
 
         public:
@@ -45,11 +45,11 @@ namespace Gs2::UE5::Friend::Domain::Model
 
         FEzBlackListGameSessionDomain(
             Gs2::Friend::Domain::Model::FBlackListAccessTokenDomainPtr Domain,
-            Gs2::UE5::Util::FGameSessionPtr GameSession,
+            Gs2::UE5::Util::IGameSessionPtr GameSession,
             Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
 
-        class FRegisterBlackListTask :
+        class EZGS2_API FRegisterBlackListTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::Friend::Domain::Model::FEzBlackListGameSessionDomain>,
             public TSharedFromThis<FRegisterBlackListTask>
         {
@@ -72,7 +72,7 @@ namespace Gs2::UE5::Friend::Domain::Model
             FString TargetUserId
         );
 
-        class FUnregisterBlackListTask :
+        class EZGS2_API FUnregisterBlackListTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::Friend::Domain::Model::FEzBlackListGameSessionDomain>,
             public TSharedFromThis<FUnregisterBlackListTask>
         {
@@ -95,7 +95,7 @@ namespace Gs2::UE5::Friend::Domain::Model
             FString TargetUserId
         );
 
-        class FModelTask :
+        class EZGS2_API FModelTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::Friend::Model::FEzBlackList>,
             public TSharedFromThis<FModelTask>
         {

@@ -39,7 +39,7 @@ namespace Gs2::UE5::Enchant::Domain::Model
         public TSharedFromThis<FEzRarityParameterStatusGameSessionDomain>
     {
         Gs2::Enchant::Domain::Model::FRarityParameterStatusAccessTokenDomainPtr Domain;
-        Gs2::UE5::Util::FGameSessionPtr GameSession;
+        Gs2::UE5::Util::IGameSessionPtr GameSession;
         Gs2::UE5::Util::FGs2ConnectionPtr ConnectionValue;
 
         public:
@@ -50,11 +50,11 @@ namespace Gs2::UE5::Enchant::Domain::Model
 
         FEzRarityParameterStatusGameSessionDomain(
             Gs2::Enchant::Domain::Model::FRarityParameterStatusAccessTokenDomainPtr Domain,
-            Gs2::UE5::Util::FGameSessionPtr GameSession,
+            Gs2::UE5::Util::IGameSessionPtr GameSession,
             Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
 
-        class FVerifyRarityParameterStatusTask :
+        class EZGS2_API FVerifyRarityParameterStatusTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::Enchant::Domain::Model::FEzRarityParameterStatusGameSessionDomain>,
             public TSharedFromThis<FVerifyRarityParameterStatusTask>
         {
@@ -83,7 +83,7 @@ namespace Gs2::UE5::Enchant::Domain::Model
             int32 ParameterCount
         );
 
-        class FModelTask :
+        class EZGS2_API FModelTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::Enchant::Model::FEzRarityParameterStatus>,
             public TSharedFromThis<FModelTask>
         {

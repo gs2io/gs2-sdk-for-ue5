@@ -41,7 +41,7 @@ namespace Gs2::UE5::Guild::Domain::Model
 
     FEzJoinedGuildGameSessionDomain::FEzJoinedGuildGameSessionDomain(
         Gs2::Guild::Domain::Model::FJoinedGuildAccessTokenDomainPtr Domain,
-        Gs2::UE5::Util::FGameSessionPtr GameSession,
+        Gs2::UE5::Util::IGameSessionPtr GameSession,
         Gs2::UE5::Util::FGs2ConnectionPtr Connection
     ):
         Domain(Domain),

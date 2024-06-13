@@ -36,7 +36,7 @@ namespace Gs2::UE5::Exchange::Domain::Model
         public TSharedFromThis<FEzAwaitGameSessionDomain>
     {
         Gs2::Exchange::Domain::Model::FAwaitAccessTokenDomainPtr Domain;
-        Gs2::UE5::Util::FGameSessionPtr GameSession;
+        Gs2::UE5::Util::IGameSessionPtr GameSession;
         Gs2::UE5::Util::FGs2ConnectionPtr ConnectionValue;
 
         public:
@@ -48,11 +48,11 @@ namespace Gs2::UE5::Exchange::Domain::Model
 
         FEzAwaitGameSessionDomain(
             Gs2::Exchange::Domain::Model::FAwaitAccessTokenDomainPtr Domain,
-            Gs2::UE5::Util::FGameSessionPtr GameSession,
+            Gs2::UE5::Util::IGameSessionPtr GameSession,
             Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
 
-        class FAcquireTask :
+        class EZGS2_API FAcquireTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::Exchange::Domain::Model::FEzAwaitGameSessionDomain>,
             public TSharedFromThis<FAcquireTask>
         {
@@ -72,7 +72,7 @@ namespace Gs2::UE5::Exchange::Domain::Model
         TSharedPtr<FAsyncTask<FAcquireTask>> Acquire(
         );
 
-        class FDeleteAwaitTask :
+        class EZGS2_API FDeleteAwaitTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::Exchange::Domain::Model::FEzAwaitGameSessionDomain>,
             public TSharedFromThis<FDeleteAwaitTask>
         {
@@ -92,7 +92,7 @@ namespace Gs2::UE5::Exchange::Domain::Model
         TSharedPtr<FAsyncTask<FDeleteAwaitTask>> DeleteAwait(
         );
 
-        class FModelTask :
+        class EZGS2_API FModelTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::Exchange::Model::FEzAwait>,
             public TSharedFromThis<FModelTask>
         {

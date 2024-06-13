@@ -30,7 +30,7 @@ namespace Gs2::UE5::Gateway::Domain::Model
         public TSharedFromThis<FEzWebSocketSessionGameSessionDomain>
     {
         Gs2::Gateway::Domain::Model::FWebSocketSessionAccessTokenDomainPtr Domain;
-        Gs2::UE5::Util::FGameSessionPtr GameSession;
+        Gs2::UE5::Util::IGameSessionPtr GameSession;
         Gs2::UE5::Util::FGs2ConnectionPtr ConnectionValue;
 
         public:
@@ -40,11 +40,11 @@ namespace Gs2::UE5::Gateway::Domain::Model
 
         FEzWebSocketSessionGameSessionDomain(
             Gs2::Gateway::Domain::Model::FWebSocketSessionAccessTokenDomainPtr Domain,
-            Gs2::UE5::Util::FGameSessionPtr GameSession,
+            Gs2::UE5::Util::IGameSessionPtr GameSession,
             Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
 
-        class FSetUserIdTask :
+        class EZGS2_API FSetUserIdTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::Gateway::Domain::Model::FEzWebSocketSessionGameSessionDomain>,
             public TSharedFromThis<FSetUserIdTask>
         {
@@ -67,7 +67,7 @@ namespace Gs2::UE5::Gateway::Domain::Model
             TOptional<bool> AllowConcurrentAccess = TOptional<bool>()
         );
 
-        class FModelTask :
+        class EZGS2_API FModelTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::Gateway::Model::FEzWebSocketSession>,
             public TSharedFromThis<FModelTask>
         {

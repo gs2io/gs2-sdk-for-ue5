@@ -55,15 +55,17 @@ namespace Gs2::UE5::Guild::Domain::Model
             const FString FromUserId
         ) const;
 
-        class FModelTask :
+        class EZGS2_API FModelTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::Guild::Model::FEzGuild>,
             public TSharedFromThis<FModelTask>
         {
             TSharedPtr<FEzGuildDomain> Self;
-
+            Gs2::UE5::Util::IGameSessionPtr GameSession;
+            
         public:
             explicit FModelTask(
-                TSharedPtr<FEzGuildDomain> Self
+                TSharedPtr<FEzGuildDomain> Self,
+                Gs2::UE5::Util::IGameSessionPtr GameSession
             );
 
             virtual Gs2::Core::Model::FGs2ErrorPtr Action(
@@ -71,7 +73,7 @@ namespace Gs2::UE5::Guild::Domain::Model
             ) override;
         };
 
-        TSharedPtr<FAsyncTask<FModelTask>> Model();
+        TSharedPtr<FAsyncTask<FModelTask>> Model(Gs2::UE5::Util::FGameSessionPtr GameSession);
 
         Gs2::Core::Domain::CallbackID Subscribe(TFunction<void(Gs2::UE5::Guild::Model::FEzGuildPtr)> Callback);
 

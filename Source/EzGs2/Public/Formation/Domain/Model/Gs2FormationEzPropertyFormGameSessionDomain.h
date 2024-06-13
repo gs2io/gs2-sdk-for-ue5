@@ -41,7 +41,7 @@ namespace Gs2::UE5::Formation::Domain::Model
         public TSharedFromThis<FEzPropertyFormGameSessionDomain>
     {
         Gs2::Formation::Domain::Model::FPropertyFormAccessTokenDomainPtr Domain;
-        Gs2::UE5::Util::FGameSessionPtr GameSession;
+        Gs2::UE5::Util::IGameSessionPtr GameSession;
         Gs2::UE5::Util::FGs2ConnectionPtr ConnectionValue;
 
         public:
@@ -56,11 +56,11 @@ namespace Gs2::UE5::Formation::Domain::Model
 
         FEzPropertyFormGameSessionDomain(
             Gs2::Formation::Domain::Model::FPropertyFormAccessTokenDomainPtr Domain,
-            Gs2::UE5::Util::FGameSessionPtr GameSession,
+            Gs2::UE5::Util::IGameSessionPtr GameSession,
             Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
 
-        class FGetPropertyFormWithSignatureTask :
+        class EZGS2_API FGetPropertyFormWithSignatureTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::Formation::Domain::Model::FEzPropertyFormGameSessionDomain>,
             public TSharedFromThis<FGetPropertyFormWithSignatureTask>
         {
@@ -83,7 +83,7 @@ namespace Gs2::UE5::Formation::Domain::Model
             TOptional<FString> KeyId = TOptional<FString>()
         );
 
-        class FSetPropertyFormTask :
+        class EZGS2_API FSetPropertyFormTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::Formation::Domain::Model::FEzPropertyFormGameSessionDomain>,
             public TSharedFromThis<FSetPropertyFormTask>
         {
@@ -109,7 +109,7 @@ namespace Gs2::UE5::Formation::Domain::Model
             TOptional<FString> KeyId = TOptional<FString>()
         );
 
-        class FDeletePropertyFormTask :
+        class EZGS2_API FDeletePropertyFormTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::Formation::Domain::Model::FEzPropertyFormGameSessionDomain>,
             public TSharedFromThis<FDeletePropertyFormTask>
         {
@@ -129,7 +129,7 @@ namespace Gs2::UE5::Formation::Domain::Model
         TSharedPtr<FAsyncTask<FDeletePropertyFormTask>> DeletePropertyForm(
         );
 
-        class FModelTask :
+        class EZGS2_API FModelTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::Formation::Model::FEzPropertyForm>,
             public TSharedFromThis<FModelTask>
         {

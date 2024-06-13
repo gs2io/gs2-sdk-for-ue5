@@ -53,7 +53,7 @@ namespace Gs2::UE5::JobQueue::Domain::Model
             const int32 TryNumber
         ) const;
 
-        class FModelTask :
+        class EZGS2_API FModelTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::JobQueue::Model::FEzJob>,
             public TSharedFromThis<FModelTask>
         {

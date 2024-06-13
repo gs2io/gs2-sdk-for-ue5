@@ -34,7 +34,7 @@ namespace Gs2::UE5::Chat::Domain::Model
         public TSharedFromThis<FEzSubscribeGameSessionDomain>
     {
         Gs2::Chat::Domain::Model::FSubscribeAccessTokenDomainPtr Domain;
-        Gs2::UE5::Util::FGameSessionPtr GameSession;
+        Gs2::UE5::Util::IGameSessionPtr GameSession;
         Gs2::UE5::Util::FGs2ConnectionPtr ConnectionValue;
 
         public:
@@ -44,11 +44,11 @@ namespace Gs2::UE5::Chat::Domain::Model
 
         FEzSubscribeGameSessionDomain(
             Gs2::Chat::Domain::Model::FSubscribeAccessTokenDomainPtr Domain,
-            Gs2::UE5::Util::FGameSessionPtr GameSession,
+            Gs2::UE5::Util::IGameSessionPtr GameSession,
             Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
 
-        class FSubscribeTask :
+        class EZGS2_API FSubscribeTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::Chat::Domain::Model::FEzSubscribeGameSessionDomain>,
             public TSharedFromThis<FSubscribeTask>
         {
@@ -71,7 +71,7 @@ namespace Gs2::UE5::Chat::Domain::Model
             TOptional<TArray<TSharedPtr<Gs2::UE5::Chat::Model::FEzNotificationType>>> NotificationTypes = TOptional<TArray<TSharedPtr<Gs2::UE5::Chat::Model::FEzNotificationType>>>()
         );
 
-        class FUpdateSubscribeSettingTask :
+        class EZGS2_API FUpdateSubscribeSettingTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::Chat::Domain::Model::FEzSubscribeGameSessionDomain>,
             public TSharedFromThis<FUpdateSubscribeSettingTask>
         {
@@ -94,7 +94,7 @@ namespace Gs2::UE5::Chat::Domain::Model
             TOptional<TArray<TSharedPtr<Gs2::UE5::Chat::Model::FEzNotificationType>>> NotificationTypes = TOptional<TArray<TSharedPtr<Gs2::UE5::Chat::Model::FEzNotificationType>>>()
         );
 
-        class FUnsubscribeTask :
+        class EZGS2_API FUnsubscribeTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::Chat::Domain::Model::FEzSubscribeGameSessionDomain>,
             public TSharedFromThis<FUnsubscribeTask>
         {
@@ -114,7 +114,7 @@ namespace Gs2::UE5::Chat::Domain::Model
         TSharedPtr<FAsyncTask<FUnsubscribeTask>> Unsubscribe(
         );
 
-        class FModelTask :
+        class EZGS2_API FModelTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::Chat::Model::FEzSubscribe>,
             public TSharedFromThis<FModelTask>
         {

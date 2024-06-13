@@ -35,7 +35,7 @@ namespace Gs2::UE5::Chat::Domain::Model
         public TSharedFromThis<FEzRoomGameSessionDomain>
     {
         Gs2::Chat::Domain::Model::FRoomAccessTokenDomainPtr Domain;
-        Gs2::UE5::Util::FGameSessionPtr GameSession;
+        Gs2::UE5::Util::IGameSessionPtr GameSession;
         Gs2::UE5::Util::FGs2ConnectionPtr ConnectionValue;
 
         public:
@@ -46,11 +46,11 @@ namespace Gs2::UE5::Chat::Domain::Model
 
         FEzRoomGameSessionDomain(
             Gs2::Chat::Domain::Model::FRoomAccessTokenDomainPtr Domain,
-            Gs2::UE5::Util::FGameSessionPtr GameSession,
+            Gs2::UE5::Util::IGameSessionPtr GameSession,
             Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
 
-        class FDeleteRoomTask :
+        class EZGS2_API FDeleteRoomTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::Chat::Domain::Model::FEzRoomGameSessionDomain>,
             public TSharedFromThis<FDeleteRoomTask>
         {
@@ -70,7 +70,7 @@ namespace Gs2::UE5::Chat::Domain::Model
         TSharedPtr<FAsyncTask<FDeleteRoomTask>> DeleteRoom(
         );
 
-        class FPostTask :
+        class EZGS2_API FPostTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::Chat::Domain::Model::FEzMessageGameSessionDomain>,
             public TSharedFromThis<FPostTask>
         {
@@ -107,7 +107,7 @@ namespace Gs2::UE5::Chat::Domain::Model
             const FString MessageName
         ) const;
 
-        class FModelTask :
+        class EZGS2_API FModelTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::Chat::Model::FEzRoom>,
             public TSharedFromThis<FModelTask>
         {

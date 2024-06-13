@@ -29,14 +29,14 @@ namespace Gs2::UE5::Showcase::Domain::Iterator
     {
         Gs2::Showcase::Domain::Iterator::FDescribeRandomDisplayItemsIteratorPtr It;
         Gs2::Showcase::Domain::Model::FRandomShowcaseAccessTokenDomainPtr Domain;
-        Gs2::UE5::Util::FGameSessionPtr GameSession;
+        Gs2::UE5::Util::IGameSessionPtr GameSession;
         Gs2::UE5::Util::FGs2ConnectionPtr Connection;
 
 	public:
 
         explicit FEzDescribeRandomDisplayItemsIterator(
             Gs2::Showcase::Domain::Model::FRandomShowcaseAccessTokenDomainPtr Domain,
-            Gs2::UE5::Util::FGameSessionPtr GameSession,
+            Gs2::UE5::Util::IGameSessionPtr GameSession,
             Gs2::UE5::Util::FGs2ConnectionPtr Connection
         ) :
             It(

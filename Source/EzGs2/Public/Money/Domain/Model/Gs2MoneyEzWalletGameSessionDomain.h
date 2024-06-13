@@ -30,7 +30,7 @@ namespace Gs2::UE5::Money::Domain::Model
         public TSharedFromThis<FEzWalletGameSessionDomain>
     {
         Gs2::Money::Domain::Model::FWalletAccessTokenDomainPtr Domain;
-        Gs2::UE5::Util::FGameSessionPtr GameSession;
+        Gs2::UE5::Util::IGameSessionPtr GameSession;
         Gs2::UE5::Util::FGs2ConnectionPtr ConnectionValue;
 
         public:
@@ -41,11 +41,11 @@ namespace Gs2::UE5::Money::Domain::Model
 
         FEzWalletGameSessionDomain(
             Gs2::Money::Domain::Model::FWalletAccessTokenDomainPtr Domain,
-            Gs2::UE5::Util::FGameSessionPtr GameSession,
+            Gs2::UE5::Util::IGameSessionPtr GameSession,
             Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
 
-        class FWithdrawTask :
+        class EZGS2_API FWithdrawTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::Money::Domain::Model::FEzWalletGameSessionDomain>,
             public TSharedFromThis<FWithdrawTask>
         {
@@ -71,7 +71,7 @@ namespace Gs2::UE5::Money::Domain::Model
             TOptional<bool> PaidOnly = TOptional<bool>()
         );
 
-        class FModelTask :
+        class EZGS2_API FModelTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::Money::Model::FEzWallet>,
             public TSharedFromThis<FModelTask>
         {

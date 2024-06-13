@@ -29,7 +29,7 @@ namespace Gs2::UE5::Limit::Domain::Iterator
     {
         Gs2::Limit::Domain::Iterator::FDescribeCountersIteratorPtr It;
         Gs2::Limit::Domain::Model::FUserAccessTokenDomainPtr Domain;
-        Gs2::UE5::Util::FGameSessionPtr GameSession;
+        Gs2::UE5::Util::IGameSessionPtr GameSession;
         Gs2::UE5::Util::FGs2ConnectionPtr Connection;
         TOptional<FString> LimitName;
 
@@ -37,7 +37,7 @@ namespace Gs2::UE5::Limit::Domain::Iterator
 
         explicit FEzDescribeCountersIterator(
             Gs2::Limit::Domain::Model::FUserAccessTokenDomainPtr Domain,
-            Gs2::UE5::Util::FGameSessionPtr GameSession,
+            Gs2::UE5::Util::IGameSessionPtr GameSession,
             Gs2::UE5::Util::FGs2ConnectionPtr Connection,
             TOptional<FString> LimitName = TOptional<FString>()
         ) :

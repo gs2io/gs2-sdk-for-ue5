@@ -33,7 +33,7 @@ namespace Gs2::UE5::Enhance::Domain::Model
         public TSharedFromThis<FEzProgressGameSessionDomain>
     {
         Gs2::Enhance::Domain::Model::FProgressAccessTokenDomainPtr Domain;
-        Gs2::UE5::Util::FGameSessionPtr GameSession;
+        Gs2::UE5::Util::IGameSessionPtr GameSession;
         Gs2::UE5::Util::FGs2ConnectionPtr ConnectionValue;
 
         public:
@@ -46,11 +46,11 @@ namespace Gs2::UE5::Enhance::Domain::Model
 
         FEzProgressGameSessionDomain(
             Gs2::Enhance::Domain::Model::FProgressAccessTokenDomainPtr Domain,
-            Gs2::UE5::Util::FGameSessionPtr GameSession,
+            Gs2::UE5::Util::IGameSessionPtr GameSession,
             Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
 
-        class FStartTask :
+        class EZGS2_API FStartTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::Enhance::Domain::Model::FEzProgressGameSessionDomain>,
             public TSharedFromThis<FStartTask>
         {
@@ -85,7 +85,7 @@ namespace Gs2::UE5::Enhance::Domain::Model
             TOptional<TArray<TSharedPtr<Gs2::UE5::Enhance::Model::FEzConfig>>> Config = TOptional<TArray<TSharedPtr<Gs2::UE5::Enhance::Model::FEzConfig>>>()
         );
 
-        class FEndTask :
+        class EZGS2_API FEndTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::Enhance::Domain::Model::FEzProgressGameSessionDomain>,
             public TSharedFromThis<FEndTask>
         {
@@ -108,7 +108,7 @@ namespace Gs2::UE5::Enhance::Domain::Model
             TOptional<TArray<TSharedPtr<Gs2::UE5::Enhance::Model::FEzConfig>>> Config = TOptional<TArray<TSharedPtr<Gs2::UE5::Enhance::Model::FEzConfig>>>()
         );
 
-        class FDeleteProgressTask :
+        class EZGS2_API FDeleteProgressTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::Enhance::Domain::Model::FEzProgressGameSessionDomain>,
             public TSharedFromThis<FDeleteProgressTask>
         {
@@ -128,7 +128,7 @@ namespace Gs2::UE5::Enhance::Domain::Model
         TSharedPtr<FAsyncTask<FDeleteProgressTask>> DeleteProgress(
         );
 
-        class FModelTask :
+        class EZGS2_API FModelTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::Enhance::Model::FEzProgress>,
             public TSharedFromThis<FModelTask>
         {

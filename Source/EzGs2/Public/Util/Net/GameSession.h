@@ -1,5 +1,6 @@
 #pragma once
 #include "Gs2Connection.h"
+#include "IGameSession.h"
 #include "Auth/Model/Gs2AuthEzAccessToken.h"
 
 namespace Gs2::UE5::Util
@@ -7,6 +8,7 @@ namespace Gs2::UE5::Util
 	class IAuthenticator;
 	
 	class EZGS2_API FGameSession:
+		public IGameSession,
 		public TSharedFromThis<FGameSession>
 	{
 		TSharedPtr<IAuthenticator> Authenticator;
@@ -14,7 +16,7 @@ namespace Gs2::UE5::Util
 		FString UserId;
 		FString Password;
 
-		Gs2::UE5::Auth::Model::FEzAccessTokenPtr AccessTokenValue;
+		Gs2::Auth::Model::FAccessTokenPtr AccessTokenValue;
 	public:
 		FGameSession(
 			TSharedPtr<IAuthenticator> Authenticator,
@@ -25,10 +27,10 @@ namespace Gs2::UE5::Util
 		FGameSession(
 			const FGameSession& From
 		);
-		virtual ~FGameSession() {};
+		virtual ~FGameSession() override {};
 		
-		Gs2::UE5::Auth::Model::FEzAccessTokenPtr AccessToken();
-		void SetAccessToken( TSharedPtr<Auth::Model::FEzAccessToken> AccessToken );
+		virtual Gs2::Auth::Model::FAccessTokenPtr AccessToken() override;
+		void SetAccessToken( TSharedPtr<Gs2::Auth::Model::FAccessToken> AccessToken );
 	
 		class FRefreshTask final :
 			public Gs2::Core::Util::TGs2Future<void>,

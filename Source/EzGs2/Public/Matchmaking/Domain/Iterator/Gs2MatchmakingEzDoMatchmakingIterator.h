@@ -29,7 +29,7 @@ namespace Gs2::UE5::Matchmaking::Domain::Iterator
     {
         Gs2::Matchmaking::Domain::Iterator::FDoMatchmakingIteratorPtr It;
         Gs2::Matchmaking::Domain::Model::FUserAccessTokenDomainPtr Domain;
-        Gs2::UE5::Util::FGameSessionPtr GameSession;
+        Gs2::UE5::Util::IGameSessionPtr GameSession;
         Gs2::UE5::Util::FGs2ConnectionPtr Connection;
         Gs2::UE5::Matchmaking::Model::FEzPlayerPtr Player;
 
@@ -37,7 +37,7 @@ namespace Gs2::UE5::Matchmaking::Domain::Iterator
 
         explicit FEzDoMatchmakingIterator(
             Gs2::Matchmaking::Domain::Model::FUserAccessTokenDomainPtr Domain,
-            Gs2::UE5::Util::FGameSessionPtr GameSession,
+            Gs2::UE5::Util::IGameSessionPtr GameSession,
             Gs2::UE5::Util::FGs2ConnectionPtr Connection,
             Gs2::UE5::Matchmaking::Model::FEzPlayerPtr Player
         ) :

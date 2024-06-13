@@ -48,7 +48,7 @@ namespace Gs2::UE5::Datastore::Domain::Model
             Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
 
-        class FRestoreDataObjectTask :
+        class EZGS2_API FRestoreDataObjectTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::Datastore::Domain::Model::FEzDataObjectDomain>,
             public TSharedFromThis<FRestoreDataObjectTask>
         {
@@ -76,7 +76,7 @@ namespace Gs2::UE5::Datastore::Domain::Model
         ) const;
 
         Gs2::UE5::Datastore::Domain::Model::FEzUserGameSessionDomainPtr Me(
-            Gs2::UE5::Util::FGameSessionPtr GameSession
+            Gs2::UE5::Util::IGameSessionPtr GameSession
         ) const;
 
     };

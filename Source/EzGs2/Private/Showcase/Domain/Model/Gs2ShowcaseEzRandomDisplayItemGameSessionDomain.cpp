@@ -51,7 +51,7 @@ namespace Gs2::UE5::Showcase::Domain::Model
 
     FEzRandomDisplayItemGameSessionDomain::FEzRandomDisplayItemGameSessionDomain(
         Gs2::Showcase::Domain::Model::FRandomDisplayItemAccessTokenDomainPtr Domain,
-        Gs2::UE5::Util::FGameSessionPtr GameSession,
+        Gs2::UE5::Util::IGameSessionPtr GameSession,
         Gs2::UE5::Util::FGs2ConnectionPtr Connection
     ):
         Domain(Domain),

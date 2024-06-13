@@ -72,12 +72,12 @@ namespace Gs2::UE5::LoginReward::Domain::Model
     }
 
     Gs2::UE5::LoginReward::Domain::Model::FEzUserGameSessionDomainPtr FEzNamespaceDomain::Me(
-        Gs2::UE5::Util::FGameSessionPtr GameSession
+        Gs2::UE5::Util::IGameSessionPtr GameSession
     ) const
     {
         return MakeShared<Gs2::UE5::LoginReward::Domain::Model::FEzUserGameSessionDomain>(
             Domain->AccessToken(
-                GameSession->AccessToken()->ToModel()
+                GameSession->AccessToken()
             ),
             GameSession,
             ConnectionValue

@@ -34,7 +34,7 @@ namespace Gs2::UE5::Account::Domain::Model
         public TSharedFromThis<FEzAccountGameSessionDomain>
     {
         Gs2::Account::Domain::Model::FAccountAccessTokenDomainPtr Domain;
-        Gs2::UE5::Util::FGameSessionPtr GameSession;
+        Gs2::UE5::Util::IGameSessionPtr GameSession;
         Gs2::UE5::Util::FGs2ConnectionPtr ConnectionValue;
 
         public:
@@ -47,7 +47,7 @@ namespace Gs2::UE5::Account::Domain::Model
 
         FEzAccountGameSessionDomain(
             Gs2::Account::Domain::Model::FAccountAccessTokenDomainPtr Domain,
-            Gs2::UE5::Util::FGameSessionPtr GameSession,
+            Gs2::UE5::Util::IGameSessionPtr GameSession,
             Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
 
@@ -62,7 +62,7 @@ namespace Gs2::UE5::Account::Domain::Model
             const int32 Type
         ) const;
 
-        class FModelTask :
+        class EZGS2_API FModelTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::Account::Model::FEzAccount>,
             public TSharedFromThis<FModelTask>
         {

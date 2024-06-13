@@ -61,7 +61,7 @@ namespace Gs2::UE5::MegaField::Domain::Model
             const FString LayerModelName
         ) const;
 
-        class FModelTask :
+        class EZGS2_API FModelTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::MegaField::Model::FEzAreaModel>,
             public TSharedFromThis<FModelTask>
         {

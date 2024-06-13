@@ -12,6 +12,8 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
+ *
+ * deny overwrite
  */
 
 #pragma once
@@ -33,6 +35,7 @@
 #include "Gs2GuildEzGuildDomain.h"
 #include "Gs2GuildEzNamespaceDomain.h"
 #include "Util/Net/GameSession.h"
+#include "Util/Net/GuildGameSession.h"
 #include "Util/Net/Gs2Connection.h"
 
 namespace Gs2::UE5::Guild::Domain::Model
@@ -73,12 +76,17 @@ namespace Gs2::UE5::Guild::Domain::Model
         ) const;
 
         Gs2::UE5::Guild::Domain::Model::FEzUserGameSessionDomainPtr Me(
-            Gs2::UE5::Util::FGameSessionPtr GameSession
+            Gs2::UE5::Util::IGameSessionPtr GameSession
         ) const;
 
         Gs2::UE5::Guild::Domain::Model::FEzGuildDomainPtr Guild(
             const FString GuildModelName,
             const FString GuildName
+        ) const;
+
+        Gs2::UE5::Guild::Domain::Model::FEzGuildGameSessionDomainPtr GuildGameSession(
+            const FString GuildModelName,
+            const Gs2::UE5::Util::FGuildGameSessionPtr GuildGameSession
         ) const;
 
     };

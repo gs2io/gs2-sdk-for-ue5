@@ -18,6 +18,12 @@
 
 #include "Guild/Domain/Model/Gs2GuildEzUserGameSessionDomain.h"
 
+#include "Guild/Domain/Model/Gs2GuildEzGuildGameSessionDomain.h"
+#include "Util/Configuration/GuildSetting.h"
+#include "Util/Configuration/GatewaySetting.h"
+#include "Util/Net/GuildGameSession.h"
+#include "Util/Authentication/Gs2GuildGuildAuthenticator.h"
+
 namespace Gs2::UE5::Guild::Domain::Model
 {
 
@@ -33,7 +39,7 @@ namespace Gs2::UE5::Guild::Domain::Model
 
     FEzUserGameSessionDomain::FEzUserGameSessionDomain(
         Gs2::Guild::Domain::Model::FUserAccessTokenDomainPtr Domain,
-        Gs2::UE5::Util::FGameSessionPtr GameSession,
+        Gs2::UE5::Util::IGameSessionPtr GameSession,
         Gs2::UE5::Util::FGs2ConnectionPtr Connection
     ):
         Domain(Domain),
@@ -138,6 +144,63 @@ namespace Gs2::UE5::Guild::Domain::Model
             Attribute5,
             CustomRoles,
             GuildMemberDefaultRole
+        );
+    }
+
+    FEzUserGameSessionDomain::FSendRequestTask::FSendRequestTask(
+        TSharedPtr<FEzUserGameSessionDomain> Self,
+        FString GuildModelName,
+        FString TargetGuildName
+    ): Self(Self), GuildModelName(GuildModelName), TargetGuildName(TargetGuildName)
+    {
+
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FEzUserGameSessionDomain::FSendRequestTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::UE5::Guild::Domain::Model::FEzGuildDomain>> Result
+    )
+    {
+        const auto Future = Self->ConnectionValue->Run(
+            [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
+                const auto Task = Self->Domain->SendRequest(
+                    MakeShared<Gs2::Guild::Request::FSendRequestRequest>()
+                        ->WithGuildModelName(GuildModelName)
+                        ->WithTargetGuildName(TargetGuildName)
+                );
+                Task->StartSynchronousTask();
+                if (Task->GetTask().IsError())
+                {
+                    Task->EnsureCompletion();
+                    return Task->GetTask().Error();
+                }
+                *Result = MakeShared<Gs2::UE5::Guild::Domain::Model::FEzGuildDomain>(
+                    Task->GetTask().Result(),
+                    Self->ConnectionValue
+                );
+                Task->EnsureCompletion();
+                return nullptr;
+            },
+            nullptr
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            Future->EnsureCompletion();
+            return Future->GetTask().Error();
+        }
+        Future->EnsureCompletion();
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FEzUserGameSessionDomain::FSendRequestTask>> FEzUserGameSessionDomain::SendRequest(
+        FString GuildModelName,
+        FString TargetGuildName
+    )
+    {
+        return Gs2::Core::Util::New<FAsyncTask<FSendRequestTask>>(
+            this->AsShared(),
+            GuildModelName,
+            TargetGuildName
         );
     }
 
@@ -286,6 +349,57 @@ namespace Gs2::UE5::Guild::Domain::Model
             ),
             GameSession,
             ConnectionValue
+        );
+    }
+
+    FEzUserGameSessionDomain::FAssumeTask::FAssumeTask(
+        TSharedPtr<FEzUserGameSessionDomain> Self,
+        Gs2::UE5::Util::FGatewaySettingPtr GatewaySetting,
+        FString GuildModelName,
+        FString TargetGuildName
+    ): Self(Self), GatewaySetting(GatewaySetting), GuildModelName(GuildModelName), TargetGuildName(TargetGuildName)
+    {
+
+    }
+    
+    Gs2::Core::Model::FGs2ErrorPtr FEzUserGameSessionDomain::FAssumeTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::UE5::Util::FGuildGameSession>> Result
+    )
+    {
+        auto _gameSession = MakeShared<Gs2::UE5::Util::FGuildGameSession>(
+            MakeShared<Gs2::UE5::Util::FGs2GuildGuildAuthenticator>(
+                MakeShared<Gs2::UE5::Util::FGuildSetting>(
+                    *Self->NamespaceName(),
+                    GuildModelName
+                ),
+                GatewaySetting
+            ),
+            Self->ConnectionValue,
+            Self->GameSession,
+            TargetGuildName
+        );
+        auto Future = _gameSession->Refresh();
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        Future->EnsureCompletion();
+        *Result = _gameSession;
+        return nullptr;
+    }
+    
+    TSharedPtr<FAsyncTask<FEzUserGameSessionDomain::FAssumeTask>> FEzUserGameSessionDomain::Assume(
+        Gs2::UE5::Util::FGatewaySettingPtr GatewaySetting,
+        FString GuildModelName,
+        FString TargetGuildName
+    )
+    {
+        return Gs2::Core::Util::New<FAsyncTask<FAssumeTask>>(
+            this->AsShared(),
+            GatewaySetting,
+            GuildModelName,
+            TargetGuildName
         );
     }
 }

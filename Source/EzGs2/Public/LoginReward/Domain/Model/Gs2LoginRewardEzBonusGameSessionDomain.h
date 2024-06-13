@@ -35,7 +35,7 @@ namespace Gs2::UE5::LoginReward::Domain::Model
         public TSharedFromThis<FEzBonusGameSessionDomain>
     {
         Gs2::LoginReward::Domain::Model::FBonusAccessTokenDomainPtr Domain;
-        Gs2::UE5::Util::FGameSessionPtr GameSession;
+        Gs2::UE5::Util::IGameSessionPtr GameSession;
         Gs2::UE5::Util::FGs2ConnectionPtr ConnectionValue;
 
         public:
@@ -46,11 +46,11 @@ namespace Gs2::UE5::LoginReward::Domain::Model
 
         FEzBonusGameSessionDomain(
             Gs2::LoginReward::Domain::Model::FBonusAccessTokenDomainPtr Domain,
-            Gs2::UE5::Util::FGameSessionPtr GameSession,
+            Gs2::UE5::Util::IGameSessionPtr GameSession,
             Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
 
-        class FReceiveTask :
+        class EZGS2_API FReceiveTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::LoginReward::Domain::Model::FEzBonusGameSessionDomain>,
             public TSharedFromThis<FReceiveTask>
         {
@@ -76,7 +76,7 @@ namespace Gs2::UE5::LoginReward::Domain::Model
             TOptional<TArray<TSharedPtr<Gs2::UE5::LoginReward::Model::FEzConfig>>> Config = TOptional<TArray<TSharedPtr<Gs2::UE5::LoginReward::Model::FEzConfig>>>()
         );
 
-        class FMissedReceiveTask :
+        class EZGS2_API FMissedReceiveTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::LoginReward::Domain::Model::FEzBonusGameSessionDomain>,
             public TSharedFromThis<FMissedReceiveTask>
         {

@@ -29,7 +29,7 @@ namespace Gs2::UE5::Formation::Domain::Iterator
     {
         Gs2::Formation::Domain::Iterator::FDescribePropertyFormsIteratorPtr It;
         Gs2::Formation::Domain::Model::FUserAccessTokenDomainPtr Domain;
-        Gs2::UE5::Util::FGameSessionPtr GameSession;
+        Gs2::UE5::Util::IGameSessionPtr GameSession;
         Gs2::UE5::Util::FGs2ConnectionPtr Connection;
         FString PropertyFormModelName;
 
@@ -37,7 +37,7 @@ namespace Gs2::UE5::Formation::Domain::Iterator
 
         explicit FEzDescribePropertyFormsIterator(
             Gs2::Formation::Domain::Model::FUserAccessTokenDomainPtr Domain,
-            Gs2::UE5::Util::FGameSessionPtr GameSession,
+            Gs2::UE5::Util::IGameSessionPtr GameSession,
             Gs2::UE5::Util::FGs2ConnectionPtr Connection,
             FString PropertyFormModelName
         ) :

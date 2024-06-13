@@ -12,6 +12,8 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
+ *
+ * deny overwrite
  */
 
 #pragma once
@@ -25,6 +27,7 @@
 #include "Guild/Model/Gs2GuildEzJoinedGuild.h"
 #include "Guild/Model/Gs2GuildEzMember.h"
 #include "Guild/Model/Gs2GuildEzRoleModel.h"
+#include "Gs2GuildEzReceiveMemberRequestGameSessionDomain.h"
 #include "Guild/Domain/Iterator/Gs2GuildEzDescribeReceiveRequestsIterator.h"
 #include "Util/Net/GameSession.h"
 #include "Util/Net/Gs2Connection.h"
@@ -36,22 +39,40 @@ namespace Gs2::UE5::Guild::Domain::Model
         public TSharedFromThis<FEzReceiveMemberRequestGameSessionDomain>
     {
         Gs2::Guild::Domain::Model::FReceiveMemberRequestAccessTokenDomainPtr Domain;
-        Gs2::UE5::Util::FGameSessionPtr GameSession;
+        Gs2::UE5::Util::IGameSessionPtr GameSession;
         Gs2::UE5::Util::FGs2ConnectionPtr ConnectionValue;
 
         public:
         TOptional<FString> NamespaceName() const;
         TOptional<FString> UserId() const;
-        TOptional<FString> TargetGuildName() const;
+        TOptional<FString> GuildName() const;
         TOptional<FString> FromUserId() const;
 
         FEzReceiveMemberRequestGameSessionDomain(
             Gs2::Guild::Domain::Model::FReceiveMemberRequestAccessTokenDomainPtr Domain,
-            Gs2::UE5::Util::FGameSessionPtr GameSession,
+            Gs2::UE5::Util::IGameSessionPtr GameSession,
             Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
 
-        class FModelTask :
+        class EZGS2_API FAcceptTask :
+            public Gs2::Core::Util::TGs2Future<Gs2::UE5::Guild::Domain::Model::FEzReceiveMemberRequestGameSessionDomain>,
+            public TSharedFromThis<FAcceptTask>
+        {
+            TSharedPtr<FEzReceiveMemberRequestGameSessionDomain> Self;
+
+        public:
+            explicit FAcceptTask(
+                TSharedPtr<FEzReceiveMemberRequestGameSessionDomain> Self
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::UE5::Guild::Domain::Model::FEzReceiveMemberRequestGameSessionDomain>> Result
+            ) override;
+        };
+
+        TSharedPtr<FAsyncTask<FAcceptTask>> Accept();
+        
+        class EZGS2_API FModelTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::Guild::Model::FEzReceiveMemberRequest>,
             public TSharedFromThis<FModelTask>
         {

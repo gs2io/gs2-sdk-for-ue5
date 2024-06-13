@@ -60,7 +60,7 @@ namespace Gs2::UE5::Formation::Domain::Model
             const int32 Index
         ) const;
 
-        class FModelTask :
+        class EZGS2_API FModelTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::Formation::Model::FEzMold>,
             public TSharedFromThis<FModelTask>
         {

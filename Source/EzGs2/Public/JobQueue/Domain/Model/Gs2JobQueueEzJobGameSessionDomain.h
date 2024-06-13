@@ -34,7 +34,7 @@ namespace Gs2::UE5::JobQueue::Domain::Model
         public TSharedFromThis<FEzJobGameSessionDomain>
     {
         Gs2::JobQueue::Domain::Model::FJobAccessTokenDomainPtr Domain;
-        Gs2::UE5::Util::FGameSessionPtr GameSession;
+        Gs2::UE5::Util::IGameSessionPtr GameSession;
         Gs2::UE5::Util::FGs2ConnectionPtr ConnectionValue;
 
         public:
@@ -47,7 +47,7 @@ namespace Gs2::UE5::JobQueue::Domain::Model
 
         FEzJobGameSessionDomain(
             Gs2::JobQueue::Domain::Model::FJobAccessTokenDomainPtr Domain,
-            Gs2::UE5::Util::FGameSessionPtr GameSession,
+            Gs2::UE5::Util::IGameSessionPtr GameSession,
             Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
 
@@ -55,7 +55,7 @@ namespace Gs2::UE5::JobQueue::Domain::Model
             const int32 TryNumber
         ) const;
 
-        class FModelTask :
+        class EZGS2_API FModelTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::JobQueue::Model::FEzJob>,
             public TSharedFromThis<FModelTask>
         {

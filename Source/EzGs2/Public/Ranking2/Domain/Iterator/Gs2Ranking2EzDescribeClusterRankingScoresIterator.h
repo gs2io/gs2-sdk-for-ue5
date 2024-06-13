@@ -29,7 +29,7 @@ namespace Gs2::UE5::Ranking2::Domain::Iterator
     {
         Gs2::Ranking2::Domain::Iterator::FDescribeClusterRankingScoresIteratorPtr It;
         Gs2::Ranking2::Domain::Model::FUserAccessTokenDomainPtr Domain;
-        Gs2::UE5::Util::FGameSessionPtr GameSession;
+        Gs2::UE5::Util::IGameSessionPtr GameSession;
         Gs2::UE5::Util::FGs2ConnectionPtr Connection;
         TOptional<FString> RankingName;
         TOptional<FString> ClusterName;
@@ -39,7 +39,7 @@ namespace Gs2::UE5::Ranking2::Domain::Iterator
 
         explicit FEzDescribeClusterRankingScoresIterator(
             Gs2::Ranking2::Domain::Model::FUserAccessTokenDomainPtr Domain,
-            Gs2::UE5::Util::FGameSessionPtr GameSession,
+            Gs2::UE5::Util::IGameSessionPtr GameSession,
             Gs2::UE5::Util::FGs2ConnectionPtr Connection,
             TOptional<FString> RankingName = TOptional<FString>(),
             TOptional<FString> ClusterName = TOptional<FString>(),

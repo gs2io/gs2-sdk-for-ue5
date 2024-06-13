@@ -63,7 +63,7 @@ namespace Gs2::UE5::Quest::Domain::Model
             const FString QuestName
         ) const;
 
-        class FModelTask :
+        class EZGS2_API FModelTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::Quest::Model::FEzQuestGroupModel>,
             public TSharedFromThis<FModelTask>
         {

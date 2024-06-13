@@ -41,7 +41,7 @@ namespace Gs2::UE5::Formation::Domain::Model
         public TSharedFromThis<FEzFormGameSessionDomain>
     {
         Gs2::Formation::Domain::Model::FFormAccessTokenDomainPtr Domain;
-        Gs2::UE5::Util::FGameSessionPtr GameSession;
+        Gs2::UE5::Util::IGameSessionPtr GameSession;
         Gs2::UE5::Util::FGs2ConnectionPtr ConnectionValue;
 
         public:
@@ -56,11 +56,11 @@ namespace Gs2::UE5::Formation::Domain::Model
 
         FEzFormGameSessionDomain(
             Gs2::Formation::Domain::Model::FFormAccessTokenDomainPtr Domain,
-            Gs2::UE5::Util::FGameSessionPtr GameSession,
+            Gs2::UE5::Util::IGameSessionPtr GameSession,
             Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
 
-        class FGetFormWithSignatureTask :
+        class EZGS2_API FGetFormWithSignatureTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::Formation::Domain::Model::FEzFormGameSessionDomain>,
             public TSharedFromThis<FGetFormWithSignatureTask>
         {
@@ -83,7 +83,7 @@ namespace Gs2::UE5::Formation::Domain::Model
             TOptional<FString> KeyId = TOptional<FString>()
         );
 
-        class FSetFormTask :
+        class EZGS2_API FSetFormTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::Formation::Domain::Model::FEzFormGameSessionDomain>,
             public TSharedFromThis<FSetFormTask>
         {
@@ -109,7 +109,7 @@ namespace Gs2::UE5::Formation::Domain::Model
             TOptional<FString> KeyId = TOptional<FString>()
         );
 
-        class FDeleteFormTask :
+        class EZGS2_API FDeleteFormTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::Formation::Domain::Model::FEzFormGameSessionDomain>,
             public TSharedFromThis<FDeleteFormTask>
         {
@@ -129,7 +129,7 @@ namespace Gs2::UE5::Formation::Domain::Model
         TSharedPtr<FAsyncTask<FDeleteFormTask>> DeleteForm(
         );
 
-        class FModelTask :
+        class EZGS2_API FModelTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::Formation::Model::FEzForm>,
             public TSharedFromThis<FModelTask>
         {

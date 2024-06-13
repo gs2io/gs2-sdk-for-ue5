@@ -41,7 +41,7 @@ namespace Gs2::UE5::Matchmaking::Domain::Model
         public TSharedFromThis<FEzGatheringGameSessionDomain>
     {
         Gs2::Matchmaking::Domain::Model::FGatheringAccessTokenDomainPtr Domain;
-        Gs2::UE5::Util::FGameSessionPtr GameSession;
+        Gs2::UE5::Util::IGameSessionPtr GameSession;
         Gs2::UE5::Util::FGs2ConnectionPtr ConnectionValue;
 
         public:
@@ -51,11 +51,11 @@ namespace Gs2::UE5::Matchmaking::Domain::Model
 
         FEzGatheringGameSessionDomain(
             Gs2::Matchmaking::Domain::Model::FGatheringAccessTokenDomainPtr Domain,
-            Gs2::UE5::Util::FGameSessionPtr GameSession,
+            Gs2::UE5::Util::IGameSessionPtr GameSession,
             Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
 
-        class FUpdateGatheringTask :
+        class EZGS2_API FUpdateGatheringTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::Matchmaking::Domain::Model::FEzGatheringGameSessionDomain>,
             public TSharedFromThis<FUpdateGatheringTask>
         {
@@ -78,7 +78,7 @@ namespace Gs2::UE5::Matchmaking::Domain::Model
             TOptional<TArray<TSharedPtr<Gs2::UE5::Matchmaking::Model::FEzAttributeRange>>> AttributeRanges = TOptional<TArray<TSharedPtr<Gs2::UE5::Matchmaking::Model::FEzAttributeRange>>>()
         );
 
-        class FPingTask :
+        class EZGS2_API FPingTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::Matchmaking::Domain::Model::FEzGatheringGameSessionDomain>,
             public TSharedFromThis<FPingTask>
         {
@@ -98,7 +98,7 @@ namespace Gs2::UE5::Matchmaking::Domain::Model
         TSharedPtr<FAsyncTask<FPingTask>> Ping(
         );
 
-        class FCancelMatchmakingTask :
+        class EZGS2_API FCancelMatchmakingTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::Matchmaking::Domain::Model::FEzGatheringGameSessionDomain>,
             public TSharedFromThis<FCancelMatchmakingTask>
         {
@@ -118,7 +118,7 @@ namespace Gs2::UE5::Matchmaking::Domain::Model
         TSharedPtr<FAsyncTask<FCancelMatchmakingTask>> CancelMatchmaking(
         );
 
-        class FEarlyCompleteMatchmakingTask :
+        class EZGS2_API FEarlyCompleteMatchmakingTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::Matchmaking::Domain::Model::FEzGatheringGameSessionDomain>,
             public TSharedFromThis<FEarlyCompleteMatchmakingTask>
         {
@@ -138,7 +138,7 @@ namespace Gs2::UE5::Matchmaking::Domain::Model
         TSharedPtr<FAsyncTask<FEarlyCompleteMatchmakingTask>> EarlyCompleteMatchmaking(
         );
 
-        class FModelTask :
+        class EZGS2_API FModelTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::Matchmaking::Model::FEzGathering>,
             public TSharedFromThis<FModelTask>
         {

@@ -37,7 +37,7 @@ namespace Gs2::UE5::Friend::Domain::Model
         public TSharedFromThis<FEzFriendUserGameSessionDomain>
     {
         Gs2::Friend::Domain::Model::FFriendUserAccessTokenDomainPtr Domain;
-        Gs2::UE5::Util::FGameSessionPtr GameSession;
+        Gs2::UE5::Util::IGameSessionPtr GameSession;
         Gs2::UE5::Util::FGs2ConnectionPtr ConnectionValue;
 
         public:
@@ -48,7 +48,7 @@ namespace Gs2::UE5::Friend::Domain::Model
 
         FEzFriendUserGameSessionDomain(
             Gs2::Friend::Domain::Model::FFriendUserAccessTokenDomainPtr Domain,
-            Gs2::UE5::Util::FGameSessionPtr GameSession,
+            Gs2::UE5::Util::IGameSessionPtr GameSession,
             Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
 

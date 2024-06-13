@@ -29,14 +29,14 @@ namespace Gs2::UE5::Idle::Domain::Iterator
     {
         Gs2::Idle::Domain::Iterator::FDescribeStatusesIteratorPtr It;
         Gs2::Idle::Domain::Model::FUserAccessTokenDomainPtr Domain;
-        Gs2::UE5::Util::FGameSessionPtr GameSession;
+        Gs2::UE5::Util::IGameSessionPtr GameSession;
         Gs2::UE5::Util::FGs2ConnectionPtr Connection;
 
 	public:
 
         explicit FEzDescribeStatusesIterator(
             Gs2::Idle::Domain::Model::FUserAccessTokenDomainPtr Domain,
-            Gs2::UE5::Util::FGameSessionPtr GameSession,
+            Gs2::UE5::Util::IGameSessionPtr GameSession,
             Gs2::UE5::Util::FGs2ConnectionPtr Connection
         ) :
             It(

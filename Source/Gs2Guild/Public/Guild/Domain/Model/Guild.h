@@ -98,11 +98,11 @@ namespace Gs2::Guild::Domain::Model
             public TSharedFromThis<FGetTask>
         {
             const TSharedPtr<FGuildDomain> Self;
-            const Request::FGetGuildByUserIdRequestPtr Request;
+            const Request::FGetGuildRequestPtr Request;
         public:
             explicit FGetTask(
                 const TSharedPtr<FGuildDomain>& Self,
-                const Request::FGetGuildByUserIdRequestPtr Request
+                const Request::FGetGuildRequestPtr Request
             );
 
             FGetTask(
@@ -116,7 +116,7 @@ namespace Gs2::Guild::Domain::Model
         friend FGetTask;
 
         TSharedPtr<FAsyncTask<FGetTask>> Get(
-            Request::FGetGuildByUserIdRequestPtr Request
+            Request::FGetGuildRequestPtr Request
         );
 
         class GS2GUILD_API FUpdateTask final :
@@ -385,9 +385,11 @@ namespace Gs2::Guild::Domain::Model
             public TSharedFromThis<FModelTask>
         {
             const TSharedPtr<FGuildDomain> Self;
+            const Gs2::Auth::Model::FAccessTokenPtr accessToken;
         public:
             explicit FModelTask(
-                const TSharedPtr<FGuildDomain> Self
+                const TSharedPtr<FGuildDomain> Self,
+                const Gs2::Auth::Model::FAccessTokenPtr accessToken
             );
 
             FModelTask(
@@ -400,7 +402,7 @@ namespace Gs2::Guild::Domain::Model
         };
         friend FModelTask;
 
-        TSharedPtr<FAsyncTask<FModelTask>> Model();
+        TSharedPtr<FAsyncTask<FModelTask>> Model(Gs2::Auth::Model::FAccessTokenPtr accessToken);
 
         Gs2::Core::Domain::CallbackID Subscribe(
             TFunction<void(Gs2::Guild::Model::FGuildPtr)> Callback

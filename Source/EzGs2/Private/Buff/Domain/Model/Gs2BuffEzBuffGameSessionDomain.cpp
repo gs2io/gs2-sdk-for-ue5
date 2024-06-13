@@ -33,9 +33,24 @@ namespace Gs2::UE5::Buff::Domain::Model
         return Domain->UserId();
     }
 
+    TSharedPtr<TArray<TSharedPtr<Gs2::UE5::Buff::Model::FEzBuffEntryModel>>> FEzBuffGameSessionDomain::GetBuffEntryModels() const
+    {
+        return [&]{
+            auto Result = MakeShared<TArray<TSharedPtr<Gs2::UE5::Buff::Model::FEzBuffEntryModel>>>();
+            for (auto Value : *Domain->BuffEntryModels) {
+                Result->Add(
+                    Gs2::UE5::Buff::Model::FEzBuffEntryModel::FromModel(
+                        Value
+                    )
+                );
+            }
+            return Result;
+        }();
+    }
+    
     FEzBuffGameSessionDomain::FEzBuffGameSessionDomain(
         Gs2::Buff::Domain::Model::FBuffAccessTokenDomainPtr Domain,
-        Gs2::UE5::Util::FGameSessionPtr GameSession,
+        Gs2::UE5::Util::IGameSessionPtr GameSession,
         Gs2::UE5::Util::FGs2ConnectionPtr Connection
     ):
         Domain(Domain),
@@ -73,6 +88,7 @@ namespace Gs2::UE5::Buff::Domain::Model
                     Self->Domain->Gs2->DistributorNamespaceName
                 );
                 Gs2->DefaultContextStack = Self->Domain->NewContextStack;
+                Gs2->Initialize();
                 *Result = MakeShared<Core::Domain::FGs2Domain>(Gs2);
                 Task->EnsureCompletion();
                 return nullptr;

@@ -41,7 +41,7 @@ namespace Gs2::UE5::JobQueue::Domain::Model
 
     FEzJobResultGameSessionDomain::FEzJobResultGameSessionDomain(
         Gs2::JobQueue::Domain::Model::FJobResultAccessTokenDomainPtr Domain,
-        Gs2::UE5::Util::FGameSessionPtr GameSession,
+        Gs2::UE5::Util::IGameSessionPtr GameSession,
         Gs2::UE5::Util::FGs2ConnectionPtr Connection
     ):
         Domain(Domain),

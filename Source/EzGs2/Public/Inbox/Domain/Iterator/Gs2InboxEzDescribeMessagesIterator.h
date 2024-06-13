@@ -29,7 +29,7 @@ namespace Gs2::UE5::Inbox::Domain::Iterator
     {
         Gs2::Inbox::Domain::Iterator::FDescribeMessagesIteratorPtr It;
         Gs2::Inbox::Domain::Model::FUserAccessTokenDomainPtr Domain;
-        Gs2::UE5::Util::FGameSessionPtr GameSession;
+        Gs2::UE5::Util::IGameSessionPtr GameSession;
         Gs2::UE5::Util::FGs2ConnectionPtr Connection;
         TOptional<bool> IsRead;
 
@@ -37,7 +37,7 @@ namespace Gs2::UE5::Inbox::Domain::Iterator
 
         explicit FEzDescribeMessagesIterator(
             Gs2::Inbox::Domain::Model::FUserAccessTokenDomainPtr Domain,
-            Gs2::UE5::Util::FGameSessionPtr GameSession,
+            Gs2::UE5::Util::IGameSessionPtr GameSession,
             Gs2::UE5::Util::FGs2ConnectionPtr Connection,
             TOptional<bool> IsRead = TOptional<bool>()
         ) :

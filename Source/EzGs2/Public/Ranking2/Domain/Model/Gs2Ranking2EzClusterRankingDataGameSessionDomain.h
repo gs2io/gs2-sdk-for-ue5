@@ -45,7 +45,7 @@ namespace Gs2::UE5::Ranking2::Domain::Model
         public TSharedFromThis<FEzClusterRankingDataGameSessionDomain>
     {
         Gs2::Ranking2::Domain::Model::FClusterRankingDataAccessTokenDomainPtr Domain;
-        Gs2::UE5::Util::FGameSessionPtr GameSession;
+        Gs2::UE5::Util::IGameSessionPtr GameSession;
         Gs2::UE5::Util::FGs2ConnectionPtr ConnectionValue;
 
         public:
@@ -57,11 +57,11 @@ namespace Gs2::UE5::Ranking2::Domain::Model
 
         FEzClusterRankingDataGameSessionDomain(
             Gs2::Ranking2::Domain::Model::FClusterRankingDataAccessTokenDomainPtr Domain,
-            Gs2::UE5::Util::FGameSessionPtr GameSession,
+            Gs2::UE5::Util::IGameSessionPtr GameSession,
             Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
 
-        class FGetClusterRankingRankTask :
+        class EZGS2_API FGetClusterRankingRankTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::Ranking2::Domain::Model::FEzClusterRankingDataGameSessionDomain>,
             public TSharedFromThis<FGetClusterRankingRankTask>
         {
@@ -81,7 +81,7 @@ namespace Gs2::UE5::Ranking2::Domain::Model
         TSharedPtr<FAsyncTask<FGetClusterRankingRankTask>> GetClusterRankingRank(
         );
 
-        class FModelTask :
+        class EZGS2_API FModelTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::Ranking2::Model::FEzClusterRankingData>,
             public TSharedFromThis<FModelTask>
         {

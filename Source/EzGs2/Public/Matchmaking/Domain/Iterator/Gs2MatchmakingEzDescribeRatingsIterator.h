@@ -29,14 +29,14 @@ namespace Gs2::UE5::Matchmaking::Domain::Iterator
     {
         Gs2::Matchmaking::Domain::Iterator::FDescribeRatingsIteratorPtr It;
         Gs2::Matchmaking::Domain::Model::FUserAccessTokenDomainPtr Domain;
-        Gs2::UE5::Util::FGameSessionPtr GameSession;
+        Gs2::UE5::Util::IGameSessionPtr GameSession;
         Gs2::UE5::Util::FGs2ConnectionPtr Connection;
 
 	public:
 
         explicit FEzDescribeRatingsIterator(
             Gs2::Matchmaking::Domain::Model::FUserAccessTokenDomainPtr Domain,
-            Gs2::UE5::Util::FGameSessionPtr GameSession,
+            Gs2::UE5::Util::IGameSessionPtr GameSession,
             Gs2::UE5::Util::FGs2ConnectionPtr Connection
         ) :
             It(

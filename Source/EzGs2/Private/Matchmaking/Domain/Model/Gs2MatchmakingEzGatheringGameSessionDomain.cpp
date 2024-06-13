@@ -36,7 +36,7 @@ namespace Gs2::UE5::Matchmaking::Domain::Model
 
     FEzGatheringGameSessionDomain::FEzGatheringGameSessionDomain(
         Gs2::Matchmaking::Domain::Model::FGatheringAccessTokenDomainPtr Domain,
-        Gs2::UE5::Util::FGameSessionPtr GameSession,
+        Gs2::UE5::Util::IGameSessionPtr GameSession,
         Gs2::UE5::Util::FGs2ConnectionPtr Connection
     ):
         Domain(Domain),

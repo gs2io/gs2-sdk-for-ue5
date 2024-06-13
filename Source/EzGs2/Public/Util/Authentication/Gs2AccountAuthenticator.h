@@ -51,7 +51,7 @@ namespace Gs2::UE5::Util
             const Gs2::UE5::Util::FGs2ConnectionPtr Connection,
             const FString UserId,
             const FString Password,
-            const TSharedPtr<Gs2::UE5::Auth::Model::FEzAccessTokenPtr> Result
+            const TSharedPtr<Gs2::Auth::Model::FAccessTokenPtr> Result
         ) override;
 
         virtual bool NeedReAuthentication() override;

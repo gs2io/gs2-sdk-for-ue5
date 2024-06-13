@@ -35,7 +35,7 @@ namespace Gs2::UE5::Stamina::Domain::Model
         public TSharedFromThis<FEzStaminaGameSessionDomain>
     {
         Gs2::Stamina::Domain::Model::FStaminaAccessTokenDomainPtr Domain;
-        Gs2::UE5::Util::FGameSessionPtr GameSession;
+        Gs2::UE5::Util::IGameSessionPtr GameSession;
         Gs2::UE5::Util::FGs2ConnectionPtr ConnectionValue;
 
         public:
@@ -46,11 +46,11 @@ namespace Gs2::UE5::Stamina::Domain::Model
 
         FEzStaminaGameSessionDomain(
             Gs2::Stamina::Domain::Model::FStaminaAccessTokenDomainPtr Domain,
-            Gs2::UE5::Util::FGameSessionPtr GameSession,
+            Gs2::UE5::Util::IGameSessionPtr GameSession,
             Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
 
-        class FConsumeTask :
+        class EZGS2_API FConsumeTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::Stamina::Domain::Model::FEzStaminaGameSessionDomain>,
             public TSharedFromThis<FConsumeTask>
         {
@@ -73,7 +73,7 @@ namespace Gs2::UE5::Stamina::Domain::Model
             int32 ConsumeValue
         );
 
-        class FSetMaxValueTask :
+        class EZGS2_API FSetMaxValueTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::Stamina::Domain::Model::FEzStaminaGameSessionDomain>,
             public TSharedFromThis<FSetMaxValueTask>
         {
@@ -102,7 +102,7 @@ namespace Gs2::UE5::Stamina::Domain::Model
             TOptional<FString> KeyId = TOptional<FString>()
         );
 
-        class FSetRecoverIntervalTask :
+        class EZGS2_API FSetRecoverIntervalTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::Stamina::Domain::Model::FEzStaminaGameSessionDomain>,
             public TSharedFromThis<FSetRecoverIntervalTask>
         {
@@ -131,7 +131,7 @@ namespace Gs2::UE5::Stamina::Domain::Model
             TOptional<FString> KeyId = TOptional<FString>()
         );
 
-        class FSetRecoverValueTask :
+        class EZGS2_API FSetRecoverValueTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::Stamina::Domain::Model::FEzStaminaGameSessionDomain>,
             public TSharedFromThis<FSetRecoverValueTask>
         {
@@ -160,7 +160,7 @@ namespace Gs2::UE5::Stamina::Domain::Model
             TOptional<FString> KeyId = TOptional<FString>()
         );
 
-        class FModelTask :
+        class EZGS2_API FModelTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::Stamina::Model::FEzStamina>,
             public TSharedFromThis<FModelTask>
         {

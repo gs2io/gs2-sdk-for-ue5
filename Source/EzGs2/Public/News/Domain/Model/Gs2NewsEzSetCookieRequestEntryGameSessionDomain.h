@@ -31,7 +31,7 @@ namespace Gs2::UE5::News::Domain::Model
         public TSharedFromThis<FEzSetCookieRequestEntryGameSessionDomain>
     {
         Gs2::News::Domain::Model::FSetCookieRequestEntryAccessTokenDomainPtr Domain;
-        Gs2::UE5::Util::FGameSessionPtr GameSession;
+        Gs2::UE5::Util::IGameSessionPtr GameSession;
         Gs2::UE5::Util::FGs2ConnectionPtr ConnectionValue;
 
         public:
@@ -42,11 +42,11 @@ namespace Gs2::UE5::News::Domain::Model
 
         FEzSetCookieRequestEntryGameSessionDomain(
             Gs2::News::Domain::Model::FSetCookieRequestEntryAccessTokenDomainPtr Domain,
-            Gs2::UE5::Util::FGameSessionPtr GameSession,
+            Gs2::UE5::Util::IGameSessionPtr GameSession,
             Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
 
-        class FModelTask :
+        class EZGS2_API FModelTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::News::Model::FEzSetCookieRequestEntry>,
             public TSharedFromThis<FModelTask>
         {

@@ -35,7 +35,7 @@ namespace Gs2::UE5::Idle::Domain::Model
         public TSharedFromThis<FEzStatusGameSessionDomain>
     {
         Gs2::Idle::Domain::Model::FStatusAccessTokenDomainPtr Domain;
-        Gs2::UE5::Util::FGameSessionPtr GameSession;
+        Gs2::UE5::Util::IGameSessionPtr GameSession;
         Gs2::UE5::Util::FGs2ConnectionPtr ConnectionValue;
 
         public:
@@ -47,11 +47,11 @@ namespace Gs2::UE5::Idle::Domain::Model
 
         FEzStatusGameSessionDomain(
             Gs2::Idle::Domain::Model::FStatusAccessTokenDomainPtr Domain,
-            Gs2::UE5::Util::FGameSessionPtr GameSession,
+            Gs2::UE5::Util::IGameSessionPtr GameSession,
             Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
 
-        class FPredictionTask :
+        class EZGS2_API FPredictionTask :
             public Gs2::Core::Util::TGs2Future<TArray<TSharedPtr<Gs2::UE5::Idle::Model::FEzAcquireAction>>>,
             public TSharedFromThis<FPredictionTask>
         {
@@ -71,7 +71,7 @@ namespace Gs2::UE5::Idle::Domain::Model
         TSharedPtr<FAsyncTask<FPredictionTask>> Prediction(
         );
 
-        class FReceiveTask :
+        class EZGS2_API FReceiveTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::Idle::Domain::Model::FEzStatusGameSessionDomain>,
             public TSharedFromThis<FReceiveTask>
         {
@@ -91,7 +91,7 @@ namespace Gs2::UE5::Idle::Domain::Model
         TSharedPtr<FAsyncTask<FReceiveTask>> Receive(
         );
 
-        class FModelTask :
+        class EZGS2_API FModelTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::Idle::Model::FEzStatus>,
             public TSharedFromThis<FModelTask>
         {

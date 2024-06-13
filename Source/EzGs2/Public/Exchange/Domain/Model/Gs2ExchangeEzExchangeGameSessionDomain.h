@@ -35,7 +35,7 @@ namespace Gs2::UE5::Exchange::Domain::Model
         public TSharedFromThis<FEzExchangeGameSessionDomain>
     {
         Gs2::Exchange::Domain::Model::FExchangeAccessTokenDomainPtr Domain;
-        Gs2::UE5::Util::FGameSessionPtr GameSession;
+        Gs2::UE5::Util::IGameSessionPtr GameSession;
         Gs2::UE5::Util::FGs2ConnectionPtr ConnectionValue;
 
         public:
@@ -46,11 +46,11 @@ namespace Gs2::UE5::Exchange::Domain::Model
 
         FEzExchangeGameSessionDomain(
             Gs2::Exchange::Domain::Model::FExchangeAccessTokenDomainPtr Domain,
-            Gs2::UE5::Util::FGameSessionPtr GameSession,
+            Gs2::UE5::Util::IGameSessionPtr GameSession,
             Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
 
-        class FExchangeTask :
+        class EZGS2_API FExchangeTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::Exchange::Domain::Model::FEzExchangeGameSessionDomain>,
             public TSharedFromThis<FExchangeTask>
         {
@@ -79,7 +79,7 @@ namespace Gs2::UE5::Exchange::Domain::Model
             TOptional<TArray<TSharedPtr<Gs2::UE5::Exchange::Model::FEzConfig>>> Config = TOptional<TArray<TSharedPtr<Gs2::UE5::Exchange::Model::FEzConfig>>>()
         );
 
-        class FIncrementalExchangeTask :
+        class EZGS2_API FIncrementalExchangeTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::Exchange::Domain::Model::FEzExchangeGameSessionDomain>,
             public TSharedFromThis<FIncrementalExchangeTask>
         {

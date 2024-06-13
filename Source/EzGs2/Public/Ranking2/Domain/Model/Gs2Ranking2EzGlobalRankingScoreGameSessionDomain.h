@@ -45,7 +45,7 @@ namespace Gs2::UE5::Ranking2::Domain::Model
         public TSharedFromThis<FEzGlobalRankingScoreGameSessionDomain>
     {
         Gs2::Ranking2::Domain::Model::FGlobalRankingScoreAccessTokenDomainPtr Domain;
-        Gs2::UE5::Util::FGameSessionPtr GameSession;
+        Gs2::UE5::Util::IGameSessionPtr GameSession;
         Gs2::UE5::Util::FGs2ConnectionPtr ConnectionValue;
 
         public:
@@ -56,11 +56,11 @@ namespace Gs2::UE5::Ranking2::Domain::Model
 
         FEzGlobalRankingScoreGameSessionDomain(
             Gs2::Ranking2::Domain::Model::FGlobalRankingScoreAccessTokenDomainPtr Domain,
-            Gs2::UE5::Util::FGameSessionPtr GameSession,
+            Gs2::UE5::Util::IGameSessionPtr GameSession,
             Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
 
-        class FModelTask :
+        class EZGS2_API FModelTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::Ranking2::Model::FEzGlobalRankingScore>,
             public TSharedFromThis<FModelTask>
         {

@@ -38,7 +38,7 @@ namespace Gs2::UE5::StateMachine::Domain::Model
         public TSharedFromThis<FEzStatusGameSessionDomain>
     {
         Gs2::StateMachine::Domain::Model::FStatusAccessTokenDomainPtr Domain;
-        Gs2::UE5::Util::FGameSessionPtr GameSession;
+        Gs2::UE5::Util::IGameSessionPtr GameSession;
         Gs2::UE5::Util::FGs2ConnectionPtr ConnectionValue;
 
         public:
@@ -48,11 +48,11 @@ namespace Gs2::UE5::StateMachine::Domain::Model
 
         FEzStatusGameSessionDomain(
             Gs2::StateMachine::Domain::Model::FStatusAccessTokenDomainPtr Domain,
-            Gs2::UE5::Util::FGameSessionPtr GameSession,
+            Gs2::UE5::Util::IGameSessionPtr GameSession,
             Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
 
-        class FEmitTask :
+        class EZGS2_API FEmitTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::StateMachine::Domain::Model::FEzStatusGameSessionDomain>,
             public TSharedFromThis<FEmitTask>
         {
@@ -78,7 +78,7 @@ namespace Gs2::UE5::StateMachine::Domain::Model
             TOptional<FString> Args = TOptional<FString>()
         );
 
-        class FReportTask :
+        class EZGS2_API FReportTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::StateMachine::Domain::Model::FEzStatusGameSessionDomain>,
             public TSharedFromThis<FReportTask>
         {
@@ -101,7 +101,7 @@ namespace Gs2::UE5::StateMachine::Domain::Model
             TOptional<TArray<TSharedPtr<Gs2::UE5::StateMachine::Model::FEzEvent>>> Events = TOptional<TArray<TSharedPtr<Gs2::UE5::StateMachine::Model::FEzEvent>>>()
         );
 
-        class FExitTask :
+        class EZGS2_API FExitTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::StateMachine::Domain::Model::FEzStatusGameSessionDomain>,
             public TSharedFromThis<FExitTask>
         {
@@ -121,7 +121,7 @@ namespace Gs2::UE5::StateMachine::Domain::Model
         TSharedPtr<FAsyncTask<FExitTask>> Exit(
         );
 
-        class FModelTask :
+        class EZGS2_API FModelTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::StateMachine::Model::FEzStatus>,
             public TSharedFromThis<FModelTask>
         {

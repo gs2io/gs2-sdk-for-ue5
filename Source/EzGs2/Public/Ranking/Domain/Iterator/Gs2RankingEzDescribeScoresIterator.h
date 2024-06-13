@@ -29,7 +29,7 @@ namespace Gs2::UE5::Ranking::Domain::Iterator
     {
         Gs2::Ranking::Domain::Iterator::FDescribeScoresIteratorPtr It;
         Gs2::Ranking::Domain::Model::FUserAccessTokenDomainPtr Domain;
-        Gs2::UE5::Util::FGameSessionPtr GameSession;
+        Gs2::UE5::Util::IGameSessionPtr GameSession;
         Gs2::UE5::Util::FGs2ConnectionPtr Connection;
         FString CategoryName;
         FString ScorerUserId;
@@ -38,7 +38,7 @@ namespace Gs2::UE5::Ranking::Domain::Iterator
 
         explicit FEzDescribeScoresIterator(
             Gs2::Ranking::Domain::Model::FUserAccessTokenDomainPtr Domain,
-            Gs2::UE5::Util::FGameSessionPtr GameSession,
+            Gs2::UE5::Util::IGameSessionPtr GameSession,
             Gs2::UE5::Util::FGs2ConnectionPtr Connection,
             FString CategoryName,
             FString ScorerUserId

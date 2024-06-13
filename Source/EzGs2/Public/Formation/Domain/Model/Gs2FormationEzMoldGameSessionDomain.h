@@ -43,7 +43,7 @@ namespace Gs2::UE5::Formation::Domain::Model
         public TSharedFromThis<FEzMoldGameSessionDomain>
     {
         Gs2::Formation::Domain::Model::FMoldAccessTokenDomainPtr Domain;
-        Gs2::UE5::Util::FGameSessionPtr GameSession;
+        Gs2::UE5::Util::IGameSessionPtr GameSession;
         Gs2::UE5::Util::FGs2ConnectionPtr ConnectionValue;
 
         public:
@@ -56,7 +56,7 @@ namespace Gs2::UE5::Formation::Domain::Model
 
         FEzMoldGameSessionDomain(
             Gs2::Formation::Domain::Model::FMoldAccessTokenDomainPtr Domain,
-            Gs2::UE5::Util::FGameSessionPtr GameSession,
+            Gs2::UE5::Util::IGameSessionPtr GameSession,
             Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
 
@@ -71,7 +71,7 @@ namespace Gs2::UE5::Formation::Domain::Model
             const int32 Index
         ) const;
 
-        class FModelTask :
+        class EZGS2_API FModelTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::Formation::Model::FEzMold>,
             public TSharedFromThis<FModelTask>
         {

@@ -41,7 +41,7 @@ namespace Gs2::UE5::News::Domain::Model
 
     FEzSetCookieRequestEntryGameSessionDomain::FEzSetCookieRequestEntryGameSessionDomain(
         Gs2::News::Domain::Model::FSetCookieRequestEntryAccessTokenDomainPtr Domain,
-        Gs2::UE5::Util::FGameSessionPtr GameSession,
+        Gs2::UE5::Util::IGameSessionPtr GameSession,
         Gs2::UE5::Util::FGs2ConnectionPtr Connection
     ):
         Domain(Domain),

@@ -51,7 +51,7 @@ namespace Gs2::UE5::Chat::Domain::Model
             const FString MessageName
         ) const;
 
-        class FModelTask :
+        class EZGS2_API FModelTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::Chat::Model::FEzRoom>,
             public TSharedFromThis<FModelTask>
         {

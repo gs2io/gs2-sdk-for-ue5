@@ -61,7 +61,7 @@ namespace Gs2::UE5::Account::Domain::Model
 
     FEzAccountGameSessionDomain::FEzAccountGameSessionDomain(
         Gs2::Account::Domain::Model::FAccountAccessTokenDomainPtr Domain,
-        Gs2::UE5::Util::FGameSessionPtr GameSession,
+        Gs2::UE5::Util::IGameSessionPtr GameSession,
         Gs2::UE5::Util::FGs2ConnectionPtr Connection
     ):
         Domain(Domain),

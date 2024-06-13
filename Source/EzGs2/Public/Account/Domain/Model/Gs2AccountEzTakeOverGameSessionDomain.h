@@ -33,7 +33,7 @@ namespace Gs2::UE5::Account::Domain::Model
         public TSharedFromThis<FEzTakeOverGameSessionDomain>
     {
         Gs2::Account::Domain::Model::FTakeOverAccessTokenDomainPtr Domain;
-        Gs2::UE5::Util::FGameSessionPtr GameSession;
+        Gs2::UE5::Util::IGameSessionPtr GameSession;
         Gs2::UE5::Util::FGs2ConnectionPtr ConnectionValue;
 
         public:
@@ -43,11 +43,11 @@ namespace Gs2::UE5::Account::Domain::Model
 
         FEzTakeOverGameSessionDomain(
             Gs2::Account::Domain::Model::FTakeOverAccessTokenDomainPtr Domain,
-            Gs2::UE5::Util::FGameSessionPtr GameSession,
+            Gs2::UE5::Util::IGameSessionPtr GameSession,
             Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
 
-        class FAddTakeOverSettingTask :
+        class EZGS2_API FAddTakeOverSettingTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::Account::Domain::Model::FEzTakeOverGameSessionDomain>,
             public TSharedFromThis<FAddTakeOverSettingTask>
         {
@@ -73,7 +73,7 @@ namespace Gs2::UE5::Account::Domain::Model
             FString Password
         );
 
-        class FUpdateTakeOverSettingTask :
+        class EZGS2_API FUpdateTakeOverSettingTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::Account::Domain::Model::FEzTakeOverGameSessionDomain>,
             public TSharedFromThis<FUpdateTakeOverSettingTask>
         {
@@ -99,7 +99,7 @@ namespace Gs2::UE5::Account::Domain::Model
             FString Password
         );
 
-        class FDeleteTakeOverSettingTask :
+        class EZGS2_API FDeleteTakeOverSettingTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::Account::Domain::Model::FEzTakeOverGameSessionDomain>,
             public TSharedFromThis<FDeleteTakeOverSettingTask>
         {
@@ -119,7 +119,7 @@ namespace Gs2::UE5::Account::Domain::Model
         TSharedPtr<FAsyncTask<FDeleteTakeOverSettingTask>> DeleteTakeOverSetting(
         );
 
-        class FModelTask :
+        class EZGS2_API FModelTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::Account::Model::FEzTakeOver>,
             public TSharedFromThis<FModelTask>
         {

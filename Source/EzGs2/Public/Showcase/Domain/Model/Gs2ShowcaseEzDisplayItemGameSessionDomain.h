@@ -37,7 +37,7 @@ namespace Gs2::UE5::Showcase::Domain::Model
         public TSharedFromThis<FEzDisplayItemGameSessionDomain>
     {
         Gs2::Showcase::Domain::Model::FDisplayItemAccessTokenDomainPtr Domain;
-        Gs2::UE5::Util::FGameSessionPtr GameSession;
+        Gs2::UE5::Util::IGameSessionPtr GameSession;
         Gs2::UE5::Util::FGs2ConnectionPtr ConnectionValue;
 
         public:
@@ -50,11 +50,11 @@ namespace Gs2::UE5::Showcase::Domain::Model
 
         FEzDisplayItemGameSessionDomain(
             Gs2::Showcase::Domain::Model::FDisplayItemAccessTokenDomainPtr Domain,
-            Gs2::UE5::Util::FGameSessionPtr GameSession,
+            Gs2::UE5::Util::IGameSessionPtr GameSession,
             Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
 
-        class FBuyTask :
+        class EZGS2_API FBuyTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::Showcase::Domain::Model::FEzDisplayItemGameSessionDomain>,
             public TSharedFromThis<FBuyTask>
         {
@@ -80,7 +80,7 @@ namespace Gs2::UE5::Showcase::Domain::Model
             TOptional<TArray<TSharedPtr<Gs2::UE5::Showcase::Model::FEzConfig>>> Config = TOptional<TArray<TSharedPtr<Gs2::UE5::Showcase::Model::FEzConfig>>>()
         );
 
-        class FModelTask :
+        class EZGS2_API FModelTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::Showcase::Model::FEzDisplayItem>,
             public TSharedFromThis<FModelTask>
         {

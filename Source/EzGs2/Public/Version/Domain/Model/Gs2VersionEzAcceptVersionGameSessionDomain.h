@@ -35,7 +35,7 @@ namespace Gs2::UE5::Version::Domain::Model
         public TSharedFromThis<FEzAcceptVersionGameSessionDomain>
     {
         Gs2::Version::Domain::Model::FAcceptVersionAccessTokenDomainPtr Domain;
-        Gs2::UE5::Util::FGameSessionPtr GameSession;
+        Gs2::UE5::Util::IGameSessionPtr GameSession;
         Gs2::UE5::Util::FGs2ConnectionPtr ConnectionValue;
 
         public:
@@ -45,11 +45,11 @@ namespace Gs2::UE5::Version::Domain::Model
 
         FEzAcceptVersionGameSessionDomain(
             Gs2::Version::Domain::Model::FAcceptVersionAccessTokenDomainPtr Domain,
-            Gs2::UE5::Util::FGameSessionPtr GameSession,
+            Gs2::UE5::Util::IGameSessionPtr GameSession,
             Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
 
-        class FAcceptTask :
+        class EZGS2_API FAcceptTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::Version::Domain::Model::FEzAcceptVersionGameSessionDomain>,
             public TSharedFromThis<FAcceptTask>
         {
@@ -72,7 +72,7 @@ namespace Gs2::UE5::Version::Domain::Model
             Gs2::UE5::Version::Model::FEzVersionPtr Version = nullptr
         );
 
-        class FDeleteTask :
+        class EZGS2_API FDeleteTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::Version::Domain::Model::FEzAcceptVersionGameSessionDomain>,
             public TSharedFromThis<FDeleteTask>
         {
@@ -92,7 +92,7 @@ namespace Gs2::UE5::Version::Domain::Model
         TSharedPtr<FAsyncTask<FDeleteTask>> Delete(
         );
 
-        class FModelTask :
+        class EZGS2_API FModelTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::Version::Model::FEzAcceptVersion>,
             public TSharedFromThis<FModelTask>
         {

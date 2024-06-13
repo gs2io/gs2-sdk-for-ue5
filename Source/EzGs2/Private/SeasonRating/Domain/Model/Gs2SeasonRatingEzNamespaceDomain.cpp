@@ -265,7 +265,7 @@ namespace Gs2::UE5::SeasonRating::Domain::Model
     {
         return MakeShared<Gs2::UE5::SeasonRating::Domain::Model::FEzUserGameSessionDomain>(
             Domain->AccessToken(
-                GameSession->AccessToken()->ToModel()
+                GameSession->AccessToken()
             ),
             GameSession,
             ConnectionValue

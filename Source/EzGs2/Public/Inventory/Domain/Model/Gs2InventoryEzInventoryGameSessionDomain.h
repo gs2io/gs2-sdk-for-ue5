@@ -47,7 +47,7 @@ namespace Gs2::UE5::Inventory::Domain::Model
         public TSharedFromThis<FEzInventoryGameSessionDomain>
     {
         Gs2::Inventory::Domain::Model::FInventoryAccessTokenDomainPtr Domain;
-        Gs2::UE5::Util::FGameSessionPtr GameSession;
+        Gs2::UE5::Util::IGameSessionPtr GameSession;
         Gs2::UE5::Util::FGs2ConnectionPtr ConnectionValue;
 
         public:
@@ -59,7 +59,7 @@ namespace Gs2::UE5::Inventory::Domain::Model
 
         FEzInventoryGameSessionDomain(
             Gs2::Inventory::Domain::Model::FInventoryAccessTokenDomainPtr Domain,
-            Gs2::UE5::Util::FGameSessionPtr GameSession,
+            Gs2::UE5::Util::IGameSessionPtr GameSession,
             Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
 
@@ -75,7 +75,7 @@ namespace Gs2::UE5::Inventory::Domain::Model
             const TOptional<FString> ItemSetName = TOptional<FString>()
         ) const;
 
-        class FModelTask :
+        class EZGS2_API FModelTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::Inventory::Model::FEzInventory>,
             public TSharedFromThis<FModelTask>
         {

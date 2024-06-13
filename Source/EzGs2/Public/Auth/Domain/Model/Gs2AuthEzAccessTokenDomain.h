@@ -43,7 +43,7 @@ namespace Gs2::UE5::Auth::Domain::Model
             Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
 
-        class FLoginTask :
+        class EZGS2_API FLoginTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::Auth::Domain::Model::FEzAccessTokenDomain>,
             public TSharedFromThis<FLoginTask>
         {
@@ -72,7 +72,7 @@ namespace Gs2::UE5::Auth::Domain::Model
             TOptional<FString> KeyId = TOptional<FString>()
         );
 
-        class FModelTask :
+        class EZGS2_API FModelTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::Auth::Model::FEzAccessToken>,
             public TSharedFromThis<FModelTask>
         {

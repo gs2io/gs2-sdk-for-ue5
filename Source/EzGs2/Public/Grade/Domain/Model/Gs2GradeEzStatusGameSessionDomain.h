@@ -35,7 +35,7 @@ namespace Gs2::UE5::Grade::Domain::Model
         public TSharedFromThis<FEzStatusGameSessionDomain>
     {
         Gs2::Grade::Domain::Model::FStatusAccessTokenDomainPtr Domain;
-        Gs2::UE5::Util::FGameSessionPtr GameSession;
+        Gs2::UE5::Util::IGameSessionPtr GameSession;
         Gs2::UE5::Util::FGs2ConnectionPtr ConnectionValue;
 
         public:
@@ -49,11 +49,11 @@ namespace Gs2::UE5::Grade::Domain::Model
 
         FEzStatusGameSessionDomain(
             Gs2::Grade::Domain::Model::FStatusAccessTokenDomainPtr Domain,
-            Gs2::UE5::Util::FGameSessionPtr GameSession,
+            Gs2::UE5::Util::IGameSessionPtr GameSession,
             Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
 
-        class FApplyRankCapTask :
+        class EZGS2_API FApplyRankCapTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::Grade::Domain::Model::FEzStatusGameSessionDomain>,
             public TSharedFromThis<FApplyRankCapTask>
         {
@@ -73,7 +73,7 @@ namespace Gs2::UE5::Grade::Domain::Model
         TSharedPtr<FAsyncTask<FApplyRankCapTask>> ApplyRankCap(
         );
 
-        class FModelTask :
+        class EZGS2_API FModelTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::Grade::Model::FEzStatus>,
             public TSharedFromThis<FModelTask>
         {

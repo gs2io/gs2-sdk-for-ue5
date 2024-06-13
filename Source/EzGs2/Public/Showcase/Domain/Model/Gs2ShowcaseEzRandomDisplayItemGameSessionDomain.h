@@ -38,7 +38,7 @@ namespace Gs2::UE5::Showcase::Domain::Model
         public TSharedFromThis<FEzRandomDisplayItemGameSessionDomain>
     {
         Gs2::Showcase::Domain::Model::FRandomDisplayItemAccessTokenDomainPtr Domain;
-        Gs2::UE5::Util::FGameSessionPtr GameSession;
+        Gs2::UE5::Util::IGameSessionPtr GameSession;
         Gs2::UE5::Util::FGs2ConnectionPtr ConnectionValue;
 
         public:
@@ -51,11 +51,11 @@ namespace Gs2::UE5::Showcase::Domain::Model
 
         FEzRandomDisplayItemGameSessionDomain(
             Gs2::Showcase::Domain::Model::FRandomDisplayItemAccessTokenDomainPtr Domain,
-            Gs2::UE5::Util::FGameSessionPtr GameSession,
+            Gs2::UE5::Util::IGameSessionPtr GameSession,
             Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
 
-        class FRandomShowcaseBuyTask :
+        class EZGS2_API FRandomShowcaseBuyTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::Showcase::Domain::Model::FEzRandomDisplayItemGameSessionDomain>,
             public TSharedFromThis<FRandomShowcaseBuyTask>
         {
@@ -81,7 +81,7 @@ namespace Gs2::UE5::Showcase::Domain::Model
             TOptional<TArray<TSharedPtr<Gs2::UE5::Showcase::Model::FEzConfig>>> Config = TOptional<TArray<TSharedPtr<Gs2::UE5::Showcase::Model::FEzConfig>>>()
         );
 
-        class FModelTask :
+        class EZGS2_API FModelTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::Showcase::Model::FEzRandomDisplayItem>,
             public TSharedFromThis<FModelTask>
         {

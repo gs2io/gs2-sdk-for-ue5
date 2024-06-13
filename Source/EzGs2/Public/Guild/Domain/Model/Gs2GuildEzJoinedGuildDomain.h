@@ -49,7 +49,7 @@ namespace Gs2::UE5::Guild::Domain::Model
             Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
 
-        class FModelTask :
+        class EZGS2_API FModelTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::Guild::Model::FEzJoinedGuild>,
             public TSharedFromThis<FModelTask>
         {

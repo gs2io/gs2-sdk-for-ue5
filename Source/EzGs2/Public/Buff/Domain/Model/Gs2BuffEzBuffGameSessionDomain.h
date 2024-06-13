@@ -40,20 +40,22 @@ namespace Gs2::UE5::Buff::Domain::Model
         public TSharedFromThis<FEzBuffGameSessionDomain>
     {
         Gs2::Buff::Domain::Model::FBuffAccessTokenDomainPtr Domain;
-        Gs2::UE5::Util::FGameSessionPtr GameSession;
+        Gs2::UE5::Util::IGameSessionPtr GameSession;
         Gs2::UE5::Util::FGs2ConnectionPtr ConnectionValue;
-
+        TSharedPtr<TArray<TSharedPtr<Gs2::UE5::Buff::Model::FEzBuffEntryModel>>> BuffEntryModelsValue;
+        
         public:
         TOptional<FString> NamespaceName() const;
         TOptional<FString> UserId() const;
-
+        TSharedPtr<TArray<TSharedPtr<Gs2::UE5::Buff::Model::FEzBuffEntryModel>>> GetBuffEntryModels() const;
+        
         FEzBuffGameSessionDomain(
             Gs2::Buff::Domain::Model::FBuffAccessTokenDomainPtr Domain,
-            Gs2::UE5::Util::FGameSessionPtr GameSession,
+            Gs2::UE5::Util::IGameSessionPtr GameSession,
             Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
 
-        class FApplyBuffTask :
+        class EZGS2_API FApplyBuffTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::Core::Domain::FGs2Domain>,
             public TSharedFromThis<FApplyBuffTask>
         {

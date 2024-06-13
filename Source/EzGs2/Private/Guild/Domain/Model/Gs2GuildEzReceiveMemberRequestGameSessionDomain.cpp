@@ -29,9 +29,9 @@ namespace Gs2::UE5::Guild::Domain::Model
         return Domain->UserId();
     }
 
-    TOptional<FString> FEzReceiveMemberRequestGameSessionDomain::TargetGuildName() const
+    TOptional<FString> FEzReceiveMemberRequestGameSessionDomain::GuildName() const
     {
-        return Domain->TargetGuildName;
+        return Domain->GuildName();
     }
 
     TOptional<FString> FEzReceiveMemberRequestGameSessionDomain::FromUserId() const
@@ -41,7 +41,7 @@ namespace Gs2::UE5::Guild::Domain::Model
 
     FEzReceiveMemberRequestGameSessionDomain::FEzReceiveMemberRequestGameSessionDomain(
         Gs2::Guild::Domain::Model::FReceiveMemberRequestAccessTokenDomainPtr Domain,
-        Gs2::UE5::Util::FGameSessionPtr GameSession,
+        Gs2::UE5::Util::IGameSessionPtr GameSession,
         Gs2::UE5::Util::FGs2ConnectionPtr Connection
     ):
         Domain(Domain),
@@ -51,6 +51,50 @@ namespace Gs2::UE5::Guild::Domain::Model
 
     }
 
+    FEzReceiveMemberRequestGameSessionDomain::FAcceptTask::FAcceptTask(
+        TSharedPtr<FEzReceiveMemberRequestGameSessionDomain> Self
+    ): Self(Self)
+    {
+
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FEzReceiveMemberRequestGameSessionDomain::FAcceptTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::UE5::Guild::Domain::Model::FEzReceiveMemberRequestGameSessionDomain>> Result
+    )
+    {
+        const auto Future = Self->ConnectionValue->Run(
+            [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
+                const auto Task = Self->Domain->Accept();
+                Task->StartSynchronousTask();
+                if (Task->GetTask().IsError())
+                {
+                    Task->EnsureCompletion();
+                    return Task->GetTask().Error();
+                }
+                *Result = MakeShared<Gs2::UE5::Guild::Domain::Model::FEzReceiveMemberRequestGameSessionDomain>(
+                    Task->GetTask().Result(),
+                    Self->GameSession,
+                    Self->ConnectionValue
+                );
+                Task->EnsureCompletion();
+                return nullptr;
+            },
+            nullptr
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            Future->EnsureCompletion();
+            return Future->GetTask().Error();
+        }
+        Future->EnsureCompletion();
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FEzReceiveMemberRequestGameSessionDomain::FAcceptTask>> FEzReceiveMemberRequestGameSessionDomain::Accept() {
+        return Gs2::Core::Util::New<FAsyncTask<FAcceptTask>>(this->AsShared());
+    }
+    
     FEzReceiveMemberRequestGameSessionDomain::FModelTask::FModelTask(
         TSharedPtr<FEzReceiveMemberRequestGameSessionDomain> Self
     ): Self(Self)

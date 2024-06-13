@@ -39,7 +39,7 @@ namespace Gs2::UE5::MegaField::Domain::Model
         public TSharedFromThis<FEzSpatialGameSessionDomain>
     {
         Gs2::MegaField::Domain::Model::FSpatialAccessTokenDomainPtr Domain;
-        Gs2::UE5::Util::FGameSessionPtr GameSession;
+        Gs2::UE5::Util::IGameSessionPtr GameSession;
         Gs2::UE5::Util::FGs2ConnectionPtr ConnectionValue;
 
         public:
@@ -50,7 +50,7 @@ namespace Gs2::UE5::MegaField::Domain::Model
 
         FEzSpatialGameSessionDomain(
             Gs2::MegaField::Domain::Model::FSpatialAccessTokenDomainPtr Domain,
-            Gs2::UE5::Util::FGameSessionPtr GameSession,
+            Gs2::UE5::Util::IGameSessionPtr GameSession,
             Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
 

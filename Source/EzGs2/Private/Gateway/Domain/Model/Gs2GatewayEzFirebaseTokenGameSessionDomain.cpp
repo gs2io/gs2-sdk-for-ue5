@@ -31,7 +31,7 @@ namespace Gs2::UE5::Gateway::Domain::Model
 
     FEzFirebaseTokenGameSessionDomain::FEzFirebaseTokenGameSessionDomain(
         Gs2::Gateway::Domain::Model::FFirebaseTokenAccessTokenDomainPtr Domain,
-        Gs2::UE5::Util::FGameSessionPtr GameSession,
+        Gs2::UE5::Util::IGameSessionPtr GameSession,
         Gs2::UE5::Util::FGs2ConnectionPtr Connection
     ):
         Domain(Domain),

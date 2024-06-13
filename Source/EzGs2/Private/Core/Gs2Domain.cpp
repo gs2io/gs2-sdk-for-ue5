@@ -34,6 +34,8 @@ namespace Gs2::UE5::Core::Domain
         Formation = MakeShared<Gs2::UE5::Formation::Domain::FEzGs2Formation>(Super->Formation, Connection);
         Friend = MakeShared<Gs2::UE5::Friend::Domain::FEzGs2Friend>(Super->Friend, Connection);
         Gateway = MakeShared<Gs2::UE5::Gateway::Domain::FEzGs2Gateway>(Super->Gateway, Connection);
+        Grade = MakeShared<Gs2::UE5::Grade::Domain::FEzGs2Grade>(Super->Grade, Connection);
+        Guild = MakeShared<Gs2::UE5::Guild::Domain::FEzGs2Guild>(Super->Guild, Connection);
         Inbox = MakeShared<Gs2::UE5::Inbox::Domain::FEzGs2Inbox>(Super->Inbox, Connection);
         Idle = MakeShared<Gs2::UE5::Idle::Domain::FEzGs2Idle>(Super->Idle, Connection);
         Inventory = MakeShared<Gs2::UE5::Inventory::Domain::FEzGs2Inventory>(Super->Inventory, Connection);
@@ -122,7 +124,14 @@ namespace Gs2::UE5::Core::Domain
     {
     }
 
-    FGs2Domain::FGs2Domain(Gs2::Core::Domain::FGs2Ptr Gs2)
+    FGs2Domain::FGs2Domain(
+        Gs2::Core::Domain::FGs2Ptr Gs2
+    ): Connection(
+        MakeShared<Util::FGs2Connection>(
+            Gs2->RestSession->Credential(),
+            Gs2->RestSession->Region()
+        )
+    )
     {
         Super = Gs2;
 
@@ -188,7 +197,7 @@ namespace Gs2::UE5::Core::Domain
         TSharedPtr<TSharedPtr<void>> Result
     )
     {
-        const auto Future = Self->Super->Dispatch(GameSession->AccessToken()->ToModel());
+        const auto Future = Self->Super->Dispatch(GameSession->AccessToken());
         Future->StartSynchronousTask();
         if (Future->GetTask().IsError())
         {

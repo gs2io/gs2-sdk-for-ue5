@@ -50,7 +50,7 @@ namespace Gs2::UE5::Account::Domain::Model
             Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
 
-        class FCreateTask :
+        class EZGS2_API FCreateTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::Account::Domain::Model::FEzAccountDomain>,
             public TSharedFromThis<FCreateTask>
         {
@@ -70,7 +70,7 @@ namespace Gs2::UE5::Account::Domain::Model
         TSharedPtr<FAsyncTask<FCreateTask>> Create(
         );
 
-        class FDoTakeOverTask :
+        class EZGS2_API FDoTakeOverTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::Account::Domain::Model::FEzAccountDomain>,
             public TSharedFromThis<FDoTakeOverTask>
         {
@@ -104,7 +104,7 @@ namespace Gs2::UE5::Account::Domain::Model
         ) const;
 
         Gs2::UE5::Account::Domain::Model::FEzAccountGameSessionDomainPtr Me(
-            Gs2::UE5::Util::FGameSessionPtr GameSession
+            Gs2::UE5::Util::IGameSessionPtr GameSession
         ) const;
 
     };

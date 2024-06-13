@@ -43,7 +43,7 @@ namespace Gs2::UE5::Ranking2::Domain::Iterator
         ) :
             It(
                 Domain->ClusterRankings(
-                	GameSession->AccessToken()->ToModel()
+                	GameSession->AccessToken()
                 )
             ),
             Domain(Domain),

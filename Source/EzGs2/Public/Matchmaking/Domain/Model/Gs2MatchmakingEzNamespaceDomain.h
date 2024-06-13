@@ -60,7 +60,7 @@ namespace Gs2::UE5::Matchmaking::Domain::Model
             Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
 
-        class FVoteTask :
+        class EZGS2_API FVoteTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::Matchmaking::Domain::Model::FEzBallotDomain>,
             public TSharedFromThis<FVoteTask>
         {
@@ -92,7 +92,7 @@ namespace Gs2::UE5::Matchmaking::Domain::Model
             TOptional<FString> KeyId = TOptional<FString>()
         );
 
-        class FVoteMultipleTask :
+        class EZGS2_API FVoteMultipleTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::Matchmaking::Domain::Model::FEzBallotDomain>,
             public TSharedFromThis<FVoteMultipleTask>
         {
@@ -126,7 +126,7 @@ namespace Gs2::UE5::Matchmaking::Domain::Model
         ) const;
 
         Gs2::UE5::Matchmaking::Domain::Model::FEzUserGameSessionDomainPtr Me(
-            Gs2::UE5::Util::FGameSessionPtr GameSession
+            Gs2::UE5::Util::IGameSessionPtr GameSession
         ) const;
 
         Gs2::UE5::Matchmaking::Domain::Iterator::FEzDescribeRatingModelsIteratorPtr RatingModels(

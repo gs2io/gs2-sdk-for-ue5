@@ -182,12 +182,12 @@ namespace Gs2::UE5::Account::Domain::Model
     }
 
     Gs2::UE5::Account::Domain::Model::FEzAccountGameSessionDomainPtr FEzNamespaceDomain::Me(
-        Gs2::UE5::Util::FGameSessionPtr GameSession
+        Gs2::UE5::Util::IGameSessionPtr GameSession
     ) const
     {
         return MakeShared<Gs2::UE5::Account::Domain::Model::FEzAccountGameSessionDomain>(
             Domain->AccessToken(
-                GameSession->AccessToken()->ToModel()
+                GameSession->AccessToken()
             ),
             GameSession,
             ConnectionValue

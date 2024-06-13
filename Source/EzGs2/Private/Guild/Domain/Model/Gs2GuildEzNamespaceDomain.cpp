@@ -12,6 +12,8 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
+ *
+ * deny overwrite
  */
 
 #include "Guild/Domain/Model/Gs2GuildEzNamespaceDomain.h"
@@ -107,12 +109,12 @@ namespace Gs2::UE5::Guild::Domain::Model
     }
 
     Gs2::UE5::Guild::Domain::Model::FEzUserGameSessionDomainPtr FEzNamespaceDomain::Me(
-        Gs2::UE5::Util::FGameSessionPtr GameSession
+        Gs2::UE5::Util::IGameSessionPtr GameSession
     ) const
     {
         return MakeShared<Gs2::UE5::Guild::Domain::Model::FEzUserGameSessionDomain>(
             Domain->AccessToken(
-                GameSession->AccessToken()->ToModel()
+                GameSession->AccessToken()
             ),
             GameSession,
             ConnectionValue
@@ -129,6 +131,21 @@ namespace Gs2::UE5::Guild::Domain::Model
                 GuildModelName,
                 GuildName
             ),
+            ConnectionValue
+        );
+    }
+
+    Gs2::UE5::Guild::Domain::Model::FEzGuildGameSessionDomainPtr FEzNamespaceDomain::GuildGameSession(
+        const FString GuildModelName,
+        const Gs2::UE5::Util::FGuildGameSessionPtr GuildGameSession
+    ) const
+    {
+        return MakeShared<Gs2::UE5::Guild::Domain::Model::FEzGuildGameSessionDomain>(
+            Domain->GuildAccessToken(
+                GuildModelName,
+                GuildGameSession->AccessToken()
+            ),
+            GuildGameSession,
             ConnectionValue
         );
     }

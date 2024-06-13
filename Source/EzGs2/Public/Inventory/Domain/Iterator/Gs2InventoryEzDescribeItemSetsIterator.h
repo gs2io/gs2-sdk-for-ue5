@@ -29,14 +29,14 @@ namespace Gs2::UE5::Inventory::Domain::Iterator
     {
         Gs2::Inventory::Domain::Iterator::FDescribeItemSetsIteratorPtr It;
         Gs2::Inventory::Domain::Model::FInventoryAccessTokenDomainPtr Domain;
-        Gs2::UE5::Util::FGameSessionPtr GameSession;
+        Gs2::UE5::Util::IGameSessionPtr GameSession;
         Gs2::UE5::Util::FGs2ConnectionPtr Connection;
 
 	public:
 
         explicit FEzDescribeItemSetsIterator(
             Gs2::Inventory::Domain::Model::FInventoryAccessTokenDomainPtr Domain,
-            Gs2::UE5::Util::FGameSessionPtr GameSession,
+            Gs2::UE5::Util::IGameSessionPtr GameSession,
             Gs2::UE5::Util::FGs2ConnectionPtr Connection
         ) :
             It(

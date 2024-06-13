@@ -65,7 +65,7 @@ namespace Gs2::UE5::Mission::Domain::Model
             const FString MissionTaskName
         ) const;
 
-        class FModelTask :
+        class EZGS2_API FModelTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::Mission::Model::FEzMissionGroupModel>,
             public TSharedFromThis<FModelTask>
         {

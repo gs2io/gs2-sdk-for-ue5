@@ -34,7 +34,7 @@ namespace Gs2::UE5::JobQueue::Domain::Model
         public TSharedFromThis<FEzUserGameSessionDomain>
     {
         Gs2::JobQueue::Domain::Model::FUserAccessTokenDomainPtr Domain;
-        Gs2::UE5::Util::FGameSessionPtr GameSession;
+        Gs2::UE5::Util::IGameSessionPtr GameSession;
         Gs2::UE5::Util::FGs2ConnectionPtr ConnectionValue;
 
         public:
@@ -46,11 +46,11 @@ namespace Gs2::UE5::JobQueue::Domain::Model
 
         FEzUserGameSessionDomain(
             Gs2::JobQueue::Domain::Model::FUserAccessTokenDomainPtr Domain,
-            Gs2::UE5::Util::FGameSessionPtr GameSession,
+            Gs2::UE5::Util::IGameSessionPtr GameSession,
             Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
 
-        class FRunTask :
+        class EZGS2_API FRunTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::JobQueue::Domain::Model::FEzJobGameSessionDomain>,
             public TSharedFromThis<FRunTask>
         {

@@ -34,7 +34,7 @@ namespace Gs2::UE5::SkillTree::Domain::Model
         public TSharedFromThis<FEzStatusGameSessionDomain>
     {
         Gs2::SkillTree::Domain::Model::FStatusAccessTokenDomainPtr Domain;
-        Gs2::UE5::Util::FGameSessionPtr GameSession;
+        Gs2::UE5::Util::IGameSessionPtr GameSession;
         Gs2::UE5::Util::FGs2ConnectionPtr ConnectionValue;
 
         public:
@@ -46,11 +46,11 @@ namespace Gs2::UE5::SkillTree::Domain::Model
 
         FEzStatusGameSessionDomain(
             Gs2::SkillTree::Domain::Model::FStatusAccessTokenDomainPtr Domain,
-            Gs2::UE5::Util::FGameSessionPtr GameSession,
+            Gs2::UE5::Util::IGameSessionPtr GameSession,
             Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
 
-        class FReleaseTask :
+        class EZGS2_API FReleaseTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::SkillTree::Domain::Model::FEzStatusGameSessionDomain>,
             public TSharedFromThis<FReleaseTask>
         {
@@ -73,7 +73,7 @@ namespace Gs2::UE5::SkillTree::Domain::Model
             TArray<FString> NodeModelNames
         );
 
-        class FRestrainTask :
+        class EZGS2_API FRestrainTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::SkillTree::Domain::Model::FEzStatusGameSessionDomain>,
             public TSharedFromThis<FRestrainTask>
         {
@@ -96,7 +96,7 @@ namespace Gs2::UE5::SkillTree::Domain::Model
             TArray<FString> NodeModelNames
         );
 
-        class FResetTask :
+        class EZGS2_API FResetTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::SkillTree::Domain::Model::FEzStatusGameSessionDomain>,
             public TSharedFromThis<FResetTask>
         {
@@ -116,7 +116,7 @@ namespace Gs2::UE5::SkillTree::Domain::Model
         TSharedPtr<FAsyncTask<FResetTask>> Reset(
         );
 
-        class FModelTask :
+        class EZGS2_API FModelTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::SkillTree::Model::FEzStatus>,
             public TSharedFromThis<FModelTask>
         {

@@ -36,7 +36,7 @@ namespace Gs2::UE5::Datastore::Domain::Model
         public TSharedFromThis<FEzDataObjectGameSessionDomain>
     {
         Gs2::Datastore::Domain::Model::FDataObjectAccessTokenDomainPtr Domain;
-        Gs2::UE5::Util::FGameSessionPtr GameSession;
+        Gs2::UE5::Util::IGameSessionPtr GameSession;
         Gs2::UE5::Util::FGs2ConnectionPtr ConnectionValue;
 
         public:
@@ -50,7 +50,7 @@ namespace Gs2::UE5::Datastore::Domain::Model
 
         FEzDataObjectGameSessionDomain(
             Gs2::Datastore::Domain::Model::FDataObjectAccessTokenDomainPtr Domain,
-            Gs2::UE5::Util::FGameSessionPtr GameSession,
+            Gs2::UE5::Util::IGameSessionPtr GameSession,
             Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
 

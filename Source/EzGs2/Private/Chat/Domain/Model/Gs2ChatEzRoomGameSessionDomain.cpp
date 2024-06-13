@@ -41,7 +41,7 @@ namespace Gs2::UE5::Chat::Domain::Model
 
     FEzRoomGameSessionDomain::FEzRoomGameSessionDomain(
         Gs2::Chat::Domain::Model::FRoomAccessTokenDomainPtr Domain,
-        Gs2::UE5::Util::FGameSessionPtr GameSession,
+        Gs2::UE5::Util::IGameSessionPtr GameSession,
         Gs2::UE5::Util::FGs2ConnectionPtr Connection
     ):
         Domain(Domain),

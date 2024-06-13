@@ -35,7 +35,7 @@ namespace Gs2::UE5::Experience::Domain::Model
         public TSharedFromThis<FEzStatusGameSessionDomain>
     {
         Gs2::Experience::Domain::Model::FStatusAccessTokenDomainPtr Domain;
-        Gs2::UE5::Util::FGameSessionPtr GameSession;
+        Gs2::UE5::Util::IGameSessionPtr GameSession;
         Gs2::UE5::Util::FGs2ConnectionPtr ConnectionValue;
 
         public:
@@ -50,11 +50,11 @@ namespace Gs2::UE5::Experience::Domain::Model
 
         FEzStatusGameSessionDomain(
             Gs2::Experience::Domain::Model::FStatusAccessTokenDomainPtr Domain,
-            Gs2::UE5::Util::FGameSessionPtr GameSession,
+            Gs2::UE5::Util::IGameSessionPtr GameSession,
             Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
 
-        class FGetStatusWithSignatureTask :
+        class EZGS2_API FGetStatusWithSignatureTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::Experience::Domain::Model::FEzStatusGameSessionDomain>,
             public TSharedFromThis<FGetStatusWithSignatureTask>
         {
@@ -77,7 +77,7 @@ namespace Gs2::UE5::Experience::Domain::Model
             TOptional<FString> KeyId = TOptional<FString>()
         );
 
-        class FModelTask :
+        class EZGS2_API FModelTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::Experience::Model::FEzStatus>,
             public TSharedFromThis<FModelTask>
         {

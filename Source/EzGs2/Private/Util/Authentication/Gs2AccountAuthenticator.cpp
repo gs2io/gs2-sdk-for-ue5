@@ -44,7 +44,7 @@ namespace Gs2::UE5::Util
         const Gs2::UE5::Util::FGs2ConnectionPtr Connection,
         const FString UserId,
         const FString Password,
-        const TSharedPtr<Gs2::UE5::Auth::Model::FEzAccessTokenPtr> Result
+        const TSharedPtr<Gs2::Auth::Model::FAccessTokenPtr> Result
     )
     {
         if (Connection->IsDisconnected())
@@ -184,7 +184,7 @@ namespace Gs2::UE5::Util
         
         if (!Result->IsValid())
         {
-            *Result = MakeShared<Gs2::UE5::Auth::Model::FEzAccessToken>();
+            *Result = MakeShared<Gs2::Auth::Model::FAccessToken>();
         }
         (*Result)
             ->WithToken(AccessToken->GetToken())

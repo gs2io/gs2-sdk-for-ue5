@@ -12,6 +12,8 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
+ *
+ * deny overwrite
  */
 
 // ReSharper disable CppUnusedIncludeDirective
@@ -72,7 +74,8 @@ namespace Gs2::Guild::Domain::Model
         TOptional<FString> NamespaceName;
         Gs2::Auth::Model::FAccessTokenPtr AccessToken;
         TOptional<FString> UserId() const { return AccessToken->GetUserId(); }
-        TOptional<FString> TargetGuildName;
+        TOptional<FString> GuildModelName;
+        TOptional<FString> GuildName() const { return AccessToken->GetUserId(); }
         TOptional<FString> FromUserId;
     private:
 
@@ -85,7 +88,7 @@ namespace Gs2::Guild::Domain::Model
             const Guild::Domain::FGs2GuildDomainPtr& Service,
             const TOptional<FString> NamespaceName,
             const Gs2::Auth::Model::FAccessTokenPtr& AccessToken,
-            const TOptional<FString> TargetGuildName,
+            const TOptional<FString> GuildModelName,
             const TOptional<FString> FromUserId
             // ReSharper disable once CppMemberInitializersOrder
         );
@@ -96,16 +99,58 @@ namespace Gs2::Guild::Domain::Model
 
         static FString CreateCacheParentKey(
             TOptional<FString> NamespaceName,
-            TOptional<FString> UserId,
-            TOptional<FString> TargetGuildName,
-            TOptional<FString> FromUserId,
+            TOptional<FString> GuildModelName,
+            TOptional<FString> GuildName,
             FString ChildType
         );
 
         static FString CreateCacheKey(
-            TOptional<FString> TargetGuildName,
             TOptional<FString> FromUserId
         );
+
+        class GS2GUILD_API FAcceptTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Guild::Domain::Model::FReceiveMemberRequestAccessTokenDomain>,
+            public TSharedFromThis<FAcceptTask>
+        {
+            const TSharedPtr<FReceiveMemberRequestAccessTokenDomain> Self;
+        public:
+            explicit FAcceptTask(
+                const TSharedPtr<FReceiveMemberRequestAccessTokenDomain>& Self
+            );
+
+            FAcceptTask(
+                const FAcceptTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Guild::Domain::Model::FReceiveMemberRequestAccessTokenDomain>> Result
+            ) override;
+        };
+        friend FAcceptTask;
+
+        TSharedPtr<FAsyncTask<FAcceptTask>> Accept();
+        
+        class GS2GUILD_API FRejectTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Guild::Domain::Model::FReceiveMemberRequestAccessTokenDomain>,
+            public TSharedFromThis<FRejectTask>
+        {
+            const TSharedPtr<FReceiveMemberRequestAccessTokenDomain> Self;
+        public:
+            explicit FRejectTask(
+                const TSharedPtr<FReceiveMemberRequestAccessTokenDomain>& Self
+            );
+
+            FRejectTask(
+                const FRejectTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Guild::Domain::Model::FReceiveMemberRequestAccessTokenDomain>> Result
+            ) override;
+        };
+        friend FRejectTask;
+
+        TSharedPtr<FAsyncTask<FRejectTask>> Reject();
 
         class GS2GUILD_API FModelTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Guild::Model::FReceiveMemberRequest>,

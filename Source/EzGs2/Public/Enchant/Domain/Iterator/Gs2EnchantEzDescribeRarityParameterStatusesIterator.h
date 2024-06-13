@@ -29,7 +29,7 @@ namespace Gs2::UE5::Enchant::Domain::Iterator
     {
         Gs2::Enchant::Domain::Iterator::FDescribeRarityParameterStatusesIteratorPtr It;
         Gs2::Enchant::Domain::Model::FUserAccessTokenDomainPtr Domain;
-        Gs2::UE5::Util::FGameSessionPtr GameSession;
+        Gs2::UE5::Util::IGameSessionPtr GameSession;
         Gs2::UE5::Util::FGs2ConnectionPtr Connection;
         TOptional<FString> ParameterName;
 
@@ -37,7 +37,7 @@ namespace Gs2::UE5::Enchant::Domain::Iterator
 
         explicit FEzDescribeRarityParameterStatusesIterator(
             Gs2::Enchant::Domain::Model::FUserAccessTokenDomainPtr Domain,
-            Gs2::UE5::Util::FGameSessionPtr GameSession,
+            Gs2::UE5::Util::IGameSessionPtr GameSession,
             Gs2::UE5::Util::FGs2ConnectionPtr Connection,
             TOptional<FString> ParameterName = TOptional<FString>()
         ) :

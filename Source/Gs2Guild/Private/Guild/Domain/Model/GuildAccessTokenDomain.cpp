@@ -35,6 +35,7 @@
 #include "Guild/Domain/Model/JoinedGuildAccessToken.h"
 #include "Guild/Domain/Model/CurrentGuildMaster.h"
 #include "Guild/Domain/Model/ReceiveMemberRequest.h"
+#include "Guild/Domain/Model/ReceiveMemberRequestAccessToken.h"
 #include "Guild/Domain/Model/SendMemberRequest.h"
 #include "Guild/Domain/Model/SendMemberRequestAccessToken.h"
 
@@ -597,16 +598,16 @@ namespace Gs2::Guild::Domain::Model
         );
     }
 
-    TSharedPtr<Gs2::Guild::Domain::Model::FReceiveMemberRequestDomain> FGuildAccessTokenDomain::ReceiveMemberRequest(
+    TSharedPtr<Gs2::Guild::Domain::Model::FReceiveMemberRequestAccessTokenDomain> FGuildAccessTokenDomain::ReceiveMemberRequest(
         const FString FromUserId
     )
     {
-        return MakeShared<Gs2::Guild::Domain::Model::FReceiveMemberRequestDomain>(
+        return MakeShared<Gs2::Guild::Domain::Model::FReceiveMemberRequestAccessTokenDomain>(
             Gs2,
             Service,
             NamespaceName,
+            AccessToken,
             GuildModelName,
-            GuildName(),
             FromUserId == TEXT("") ? TOptional<FString>() : TOptional<FString>(FromUserId)
         );
     }

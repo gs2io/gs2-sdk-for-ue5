@@ -37,7 +37,7 @@ namespace Gs2::UE5::Lottery::Domain::Model
         public TSharedFromThis<FEzBoxItemsGameSessionDomain>
     {
         Gs2::Lottery::Domain::Model::FBoxItemsAccessTokenDomainPtr Domain;
-        Gs2::UE5::Util::FGameSessionPtr GameSession;
+        Gs2::UE5::Util::IGameSessionPtr GameSession;
         Gs2::UE5::Util::FGs2ConnectionPtr ConnectionValue;
 
         public:
@@ -47,11 +47,11 @@ namespace Gs2::UE5::Lottery::Domain::Model
 
         FEzBoxItemsGameSessionDomain(
             Gs2::Lottery::Domain::Model::FBoxItemsAccessTokenDomainPtr Domain,
-            Gs2::UE5::Util::FGameSessionPtr GameSession,
+            Gs2::UE5::Util::IGameSessionPtr GameSession,
             Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
 
-        class FResetBoxTask :
+        class EZGS2_API FResetBoxTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::Lottery::Domain::Model::FEzBoxItemsGameSessionDomain>,
             public TSharedFromThis<FResetBoxTask>
         {
@@ -71,7 +71,7 @@ namespace Gs2::UE5::Lottery::Domain::Model
         TSharedPtr<FAsyncTask<FResetBoxTask>> ResetBox(
         );
 
-        class FModelTask :
+        class EZGS2_API FModelTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::Lottery::Model::FEzBoxItems>,
             public TSharedFromThis<FModelTask>
         {

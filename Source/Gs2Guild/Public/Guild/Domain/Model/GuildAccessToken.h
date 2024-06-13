@@ -60,6 +60,7 @@ namespace Gs2::Guild::Domain::Model
     class FJoinedGuildAccessTokenDomain;
     class FCurrentGuildMasterDomain;
     class FReceiveMemberRequestDomain;
+    class FReceiveMemberRequestAccessTokenDomain;
     class FSendMemberRequestDomain;
     class FSendMemberRequestAccessTokenDomain;
 
@@ -312,7 +313,7 @@ namespace Gs2::Guild::Domain::Model
             Gs2::Core::Domain::CallbackID CallbackID
         );
 
-        TSharedPtr<Gs2::Guild::Domain::Model::FReceiveMemberRequestDomain> ReceiveMemberRequest(
+        TSharedPtr<Gs2::Guild::Domain::Model::FReceiveMemberRequestAccessTokenDomain> ReceiveMemberRequest(
             const FString FromUserId
         );
 

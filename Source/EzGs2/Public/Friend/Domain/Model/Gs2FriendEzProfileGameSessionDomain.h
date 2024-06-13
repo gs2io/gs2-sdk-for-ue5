@@ -35,7 +35,7 @@ namespace Gs2::UE5::Friend::Domain::Model
         public TSharedFromThis<FEzProfileGameSessionDomain>
     {
         Gs2::Friend::Domain::Model::FProfileAccessTokenDomainPtr Domain;
-        Gs2::UE5::Util::FGameSessionPtr GameSession;
+        Gs2::UE5::Util::IGameSessionPtr GameSession;
         Gs2::UE5::Util::FGs2ConnectionPtr ConnectionValue;
 
         public:
@@ -44,11 +44,11 @@ namespace Gs2::UE5::Friend::Domain::Model
 
         FEzProfileGameSessionDomain(
             Gs2::Friend::Domain::Model::FProfileAccessTokenDomainPtr Domain,
-            Gs2::UE5::Util::FGameSessionPtr GameSession,
+            Gs2::UE5::Util::IGameSessionPtr GameSession,
             Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
 
-        class FUpdateProfileTask :
+        class EZGS2_API FUpdateProfileTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::Friend::Domain::Model::FEzProfileGameSessionDomain>,
             public TSharedFromThis<FUpdateProfileTask>
         {
@@ -77,7 +77,7 @@ namespace Gs2::UE5::Friend::Domain::Model
             TOptional<FString> FriendProfile = TOptional<FString>()
         );
 
-        class FModelTask :
+        class EZGS2_API FModelTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::Friend::Model::FEzProfile>,
             public TSharedFromThis<FModelTask>
         {

@@ -48,7 +48,7 @@ namespace Gs2::UE5::Dictionary::Domain::Model
 
     FEzEntryGameSessionDomain::FEzEntryGameSessionDomain(
         Gs2::Dictionary::Domain::Model::FEntryAccessTokenDomainPtr Domain,
-        Gs2::UE5::Util::FGameSessionPtr GameSession,
+        Gs2::UE5::Util::IGameSessionPtr GameSession,
         Gs2::UE5::Util::FGs2ConnectionPtr Connection
     ):
         Domain(Domain),

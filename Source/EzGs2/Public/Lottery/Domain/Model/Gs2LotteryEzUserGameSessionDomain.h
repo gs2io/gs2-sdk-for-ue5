@@ -41,7 +41,7 @@ namespace Gs2::UE5::Lottery::Domain::Model
         public TSharedFromThis<FEzUserGameSessionDomain>
     {
         Gs2::Lottery::Domain::Model::FUserAccessTokenDomainPtr Domain;
-        Gs2::UE5::Util::FGameSessionPtr GameSession;
+        Gs2::UE5::Util::IGameSessionPtr GameSession;
         Gs2::UE5::Util::FGs2ConnectionPtr ConnectionValue;
 
         public:
@@ -53,7 +53,7 @@ namespace Gs2::UE5::Lottery::Domain::Model
 
         FEzUserGameSessionDomain(
             Gs2::Lottery::Domain::Model::FUserAccessTokenDomainPtr Domain,
-            Gs2::UE5::Util::FGameSessionPtr GameSession,
+            Gs2::UE5::Util::IGameSessionPtr GameSession,
             Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
 

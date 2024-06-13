@@ -45,7 +45,7 @@ namespace Gs2::UE5::Inventory::Domain::Model
         public TSharedFromThis<FEzSimpleItemGameSessionDomain>
     {
         Gs2::Inventory::Domain::Model::FSimpleItemAccessTokenDomainPtr Domain;
-        Gs2::UE5::Util::FGameSessionPtr GameSession;
+        Gs2::UE5::Util::IGameSessionPtr GameSession;
         Gs2::UE5::Util::FGs2ConnectionPtr ConnectionValue;
 
         public:
@@ -58,11 +58,11 @@ namespace Gs2::UE5::Inventory::Domain::Model
 
         FEzSimpleItemGameSessionDomain(
             Gs2::Inventory::Domain::Model::FSimpleItemAccessTokenDomainPtr Domain,
-            Gs2::UE5::Util::FGameSessionPtr GameSession,
+            Gs2::UE5::Util::IGameSessionPtr GameSession,
             Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
 
-        class FGetSimpleItemWithSignatureTask :
+        class EZGS2_API FGetSimpleItemWithSignatureTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::Inventory::Domain::Model::FEzSimpleItemGameSessionDomain>,
             public TSharedFromThis<FGetSimpleItemWithSignatureTask>
         {
@@ -85,7 +85,7 @@ namespace Gs2::UE5::Inventory::Domain::Model
             TOptional<FString> KeyId = TOptional<FString>()
         );
 
-        class FModelTask :
+        class EZGS2_API FModelTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::Inventory::Model::FEzSimpleItem>,
             public TSharedFromThis<FModelTask>
         {

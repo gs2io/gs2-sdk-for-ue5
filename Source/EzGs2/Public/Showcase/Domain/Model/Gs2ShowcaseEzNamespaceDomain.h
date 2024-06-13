@@ -60,7 +60,7 @@ namespace Gs2::UE5::Showcase::Domain::Model
         ) const;
 
         Gs2::UE5::Showcase::Domain::Model::FEzUserGameSessionDomainPtr Me(
-            Gs2::UE5::Util::FGameSessionPtr GameSession
+            Gs2::UE5::Util::IGameSessionPtr GameSession
         ) const;
 
     };

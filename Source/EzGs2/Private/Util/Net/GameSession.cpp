@@ -28,13 +28,13 @@ namespace Gs2::UE5::Util
 	{
 	}
 
-	Auth::Model::FEzAccessTokenPtr FGameSession::AccessToken()
+	Gs2::Auth::Model::FAccessTokenPtr FGameSession::AccessToken()
 	{
 		return AccessTokenValue;
 	}
 
 	void FGameSession::SetAccessToken(
-		TSharedPtr<Auth::Model::FEzAccessToken> AccessToken
+		TSharedPtr<Gs2::Auth::Model::FAccessToken> AccessToken
 	)
 	{
 		AccessTokenValue = AccessToken;
@@ -54,7 +54,7 @@ namespace Gs2::UE5::Util
 		{
 			return nullptr;
 		}
-        const auto AuthenticationResult = MakeShared<Auth::Model::FEzAccessTokenPtr>();
+        const auto AuthenticationResult = MakeShared<Gs2::Auth::Model::FAccessTokenPtr>();
 		auto Error = Self->Authenticator->Authentication(
 			Self->Connection,
 			Self->UserId,

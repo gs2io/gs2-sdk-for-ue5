@@ -53,7 +53,7 @@ namespace Gs2::Guild::Domain::Model
         const Guild::Domain::FGs2GuildDomainPtr& Service,
         const TOptional<FString> NamespaceName,
         const Gs2::Auth::Model::FAccessTokenPtr& AccessToken,
-        const TOptional<FString> TargetGuildName,
+        const TOptional<FString> GuildModelName,
         const TOptional<FString> FromUserId
         // ReSharper disable once CppMemberInitializersOrder
     ):
@@ -62,11 +62,12 @@ namespace Gs2::Guild::Domain::Model
         Client(MakeShared<Gs2::Guild::FGs2GuildRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         AccessToken(AccessToken),
-        TargetGuildName(TargetGuildName),
+        GuildModelName(GuildModelName),
         FromUserId(FromUserId),
-        ParentKey(Gs2::Guild::Domain::Model::FUserDomain::CreateCacheParentKey(
+        ParentKey(Gs2::Guild::Domain::Model::FGuildAccessTokenDomain::CreateCacheParentKey(
             NamespaceName,
-            UserId(),
+            GuildModelName,
+            GuildName(),
             "ReceiveMemberRequest"
         ))
     {
@@ -80,7 +81,7 @@ namespace Gs2::Guild::Domain::Model
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         AccessToken(From.AccessToken),
-        TargetGuildName(From.TargetGuildName),
+        GuildModelName(From.GuildModelName),
         FromUserId(From.FromUserId),
         ParentKey(From.ParentKey)
     {
@@ -89,30 +90,160 @@ namespace Gs2::Guild::Domain::Model
 
     FString FReceiveMemberRequestAccessTokenDomain::CreateCacheParentKey(
         TOptional<FString> NamespaceName,
-        TOptional<FString> UserId,
-        TOptional<FString> TargetGuildName,
-        TOptional<FString> FromUserId,
+        TOptional<FString> GuildModelName,
+        TOptional<FString> GuildName,
         FString ChildType
     )
     {
         return FString("") +
             (NamespaceName.IsSet() ? *NamespaceName : "null") + ":" +
-            (UserId.IsSet() ? *UserId : "null") + ":" +
-            (TargetGuildName.IsSet() ? *TargetGuildName : "null") + ":" +
-            (FromUserId.IsSet() ? *FromUserId : "null") + ":" +
+            (GuildModelName.IsSet() ? *GuildModelName : "null") + ":" +
+            (GuildName.IsSet() ? *GuildName : "null") + ":" +
             ChildType;
     }
 
     FString FReceiveMemberRequestAccessTokenDomain::CreateCacheKey(
-        TOptional<FString> TargetGuildName,
         TOptional<FString> FromUserId
     )
     {
         return FString("") +
-            (TargetGuildName.IsSet() ? *TargetGuildName : "null") + ":" + 
             (FromUserId.IsSet() ? *FromUserId : "null");
     }
 
+    FReceiveMemberRequestAccessTokenDomain::FAcceptTask::FAcceptTask(
+        const TSharedPtr<FReceiveMemberRequestAccessTokenDomain>& Self
+    ): Self(Self)
+    {
+
+    }
+
+    FReceiveMemberRequestAccessTokenDomain::FAcceptTask::FAcceptTask(
+        const FAcceptTask& From
+    ): TGs2Future(From), Self(From.Self)
+    {
+
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FReceiveMemberRequestAccessTokenDomain::FAcceptTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::Guild::Domain::Model::FReceiveMemberRequestAccessTokenDomain>> Result
+    )
+    {
+        const auto Future = Self->Client->AcceptRequest(
+            MakeShared<Gs2::Guild::Request::FAcceptRequestRequest>()
+                ->WithContextStack(Self->Gs2->DefaultContextStack)
+                ->WithNamespaceName(Self->NamespaceName)
+                ->WithAccessToken(Self->AccessToken->GetToken())
+                ->WithGuildModelName(Self->GuildModelName)
+                ->WithFromUserId(Self->FromUserId)
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
+        if (ResultModel != nullptr) {
+            
+            if (ResultModel->GetItem() != nullptr)
+            {
+                const auto ParentKey = Gs2::Guild::Domain::Model::FGuildAccessTokenDomain::CreateCacheParentKey(
+                    Self->NamespaceName,
+                    Self->GuildModelName,
+                    Self->GuildName(),
+                    "ReceiveMemberRequest"
+                );
+                const auto Key = Gs2::Guild::Domain::Model::FReceiveMemberRequestDomain::CreateCacheKey(
+                    ResultModel->GetItem()->GetUserId()
+                );
+                Self->Gs2->Cache->Delete(Gs2::Guild::Model::FReceiveMemberRequest::TypeName, ParentKey, Key);
+            }
+            if (ResultModel->GetGuild() != nullptr)
+            {
+                const auto ParentKey = Gs2::Guild::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                    Self->NamespaceName,
+                    "Guild"
+                );
+                const auto Key = Gs2::Guild::Domain::Model::FGuildAccessTokenDomain::CreateCacheKey(
+                    ResultModel->GetGuild()->GetGuildModelName(),
+                    ResultModel->GetGuild()->GetName()
+                );
+                Self->Gs2->Cache->Delete(Gs2::Guild::Model::FGuild::TypeName, ParentKey, Key);
+            }
+        }
+        auto Domain = Self;
+
+        *Result = Domain;
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FReceiveMemberRequestAccessTokenDomain::FAcceptTask>> FReceiveMemberRequestAccessTokenDomain::Accept() {
+        return Gs2::Core::Util::New<FAsyncTask<FReceiveMemberRequestAccessTokenDomain::FAcceptTask>>(
+            this->AsShared()
+        );
+    }
+
+    FReceiveMemberRequestAccessTokenDomain::FRejectTask::FRejectTask(
+        const TSharedPtr<FReceiveMemberRequestAccessTokenDomain>& Self
+    ): Self(Self)
+    {
+
+    }
+
+    FReceiveMemberRequestAccessTokenDomain::FRejectTask::FRejectTask(
+        const FRejectTask& From
+    ): TGs2Future(From), Self(From.Self)
+    {
+
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FReceiveMemberRequestAccessTokenDomain::FRejectTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::Guild::Domain::Model::FReceiveMemberRequestAccessTokenDomain>> Result
+    )
+    {
+        const auto Future = Self->Client->RejectRequest(
+            MakeShared<Gs2::Guild::Request::FRejectRequestRequest>()
+                ->WithContextStack(Self->Gs2->DefaultContextStack)
+                ->WithNamespaceName(Self->NamespaceName)
+                ->WithAccessToken(Self->AccessToken->GetToken())
+                ->WithGuildModelName(Self->GuildModelName)
+                ->WithFromUserId(Self->FromUserId)
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
+        if (ResultModel != nullptr) {
+            
+            if (ResultModel->GetItem() != nullptr)
+            {
+                const auto ParentKey = Gs2::Guild::Domain::Model::FGuildAccessTokenDomain::CreateCacheParentKey(
+                    Self->NamespaceName,
+                    Self->GuildModelName,
+                    Self->GuildName(),
+                    "ReceiveMemberRequest"
+                );
+                const auto Key = Gs2::Guild::Domain::Model::FReceiveMemberRequestDomain::CreateCacheKey(
+                    ResultModel->GetItem()->GetUserId()
+                );
+                Self->Gs2->Cache->Delete(Gs2::Guild::Model::FReceiveMemberRequest::TypeName, ParentKey, Key);
+            }
+        }
+        auto Domain = Self;
+
+        *Result = Domain;
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FReceiveMemberRequestAccessTokenDomain::FRejectTask>> FReceiveMemberRequestAccessTokenDomain::Reject() {
+        return Gs2::Core::Util::New<FAsyncTask<FReceiveMemberRequestAccessTokenDomain::FRejectTask>>(
+            this->AsShared()
+        );
+    }
+    
     FReceiveMemberRequestAccessTokenDomain::FModelTask::FModelTask(
         const TSharedPtr<FReceiveMemberRequestAccessTokenDomain> Self
     ): Self(Self)

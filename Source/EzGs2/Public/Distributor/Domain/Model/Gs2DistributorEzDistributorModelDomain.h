@@ -46,7 +46,7 @@ namespace Gs2::UE5::Distributor::Domain::Model
             Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
 
-        class FModelTask :
+        class EZGS2_API FModelTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::Distributor::Model::FEzDistributorModel>,
             public TSharedFromThis<FModelTask>
         {

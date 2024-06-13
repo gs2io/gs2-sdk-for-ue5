@@ -58,8 +58,9 @@ namespace Gs2::UE5::Guild::Domain::Model
     }
 
     FEzGuildDomain::FModelTask::FModelTask(
-        TSharedPtr<FEzGuildDomain> Self
-    ): Self(Self)
+        TSharedPtr<FEzGuildDomain> Self,
+        Gs2::UE5::Util::IGameSessionPtr GameSession
+    ): Self(Self), GameSession(GameSession)
     {
 
     }
@@ -70,7 +71,7 @@ namespace Gs2::UE5::Guild::Domain::Model
     {
         const auto Future = Self->ConnectionValue->Run(
             [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
-                const auto Task = Self->Domain->Model();
+                const auto Task = Self->Domain->Model(this->GameSession->AccessToken());
                 Task->StartSynchronousTask();
                 if (Task->GetTask().IsError())
                 {
@@ -93,8 +94,16 @@ namespace Gs2::UE5::Guild::Domain::Model
         return nullptr;
     }
 
-    TSharedPtr<FAsyncTask<FEzGuildDomain::FModelTask>> FEzGuildDomain::Model() {
-        return Gs2::Core::Util::New<FAsyncTask<FModelTask>>(this->AsShared());
+    TSharedPtr<FAsyncTask<FEzGuildDomain::FModelTask>> FEzGuildDomain::Model(
+        Gs2::UE5::Util::FGameSessionPtr GameSession
+    ) {
+        return Gs2::Core::Util::New<FAsyncTask<FModelTask>>(
+            MakeShared<Gs2::UE5::Guild::Domain::Model::FEzGuildDomain>(
+                Domain,
+                ConnectionValue
+            ),
+            GameSession
+        );
     }
 
     Gs2::Core::Domain::CallbackID FEzGuildDomain::Subscribe(TFunction<void(Gs2::UE5::Guild::Model::FEzGuildPtr)> Callback)

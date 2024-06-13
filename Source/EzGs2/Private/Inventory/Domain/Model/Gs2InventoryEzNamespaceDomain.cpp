@@ -114,7 +114,7 @@ namespace Gs2::UE5::Inventory::Domain::Model
     {
         return MakeShared<Gs2::UE5::Inventory::Domain::Model::FEzUserGameSessionDomain>(
             Domain->AccessToken(
-                GameSession->AccessToken()->ToModel()
+                GameSession->AccessToken()
             ),
             GameSession,
             ConnectionValue

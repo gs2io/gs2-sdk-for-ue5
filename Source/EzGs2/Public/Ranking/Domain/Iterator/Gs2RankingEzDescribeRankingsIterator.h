@@ -31,14 +31,14 @@ namespace Gs2::UE5::Ranking::Domain::Iterator
     {
         Gs2::Ranking::Domain::Iterator::FDescribeRankingsIteratorPtr It;
         Gs2::Ranking::Domain::Model::FRankingCategoryAccessTokenDomainPtr Domain;
-        Gs2::UE5::Util::FGameSessionPtr GameSession;
+        Gs2::UE5::Util::IGameSessionPtr GameSession;
         Gs2::UE5::Util::FGs2ConnectionPtr Connection;
 
 	public:
 
         explicit FEzDescribeRankingsIterator(
             Gs2::Ranking::Domain::Model::FRankingCategoryAccessTokenDomainPtr Domain,
-            Gs2::UE5::Util::FGameSessionPtr GameSession,
+            Gs2::UE5::Util::IGameSessionPtr GameSession,
             Gs2::UE5::Util::FGs2ConnectionPtr Connection
         ) :
             It(

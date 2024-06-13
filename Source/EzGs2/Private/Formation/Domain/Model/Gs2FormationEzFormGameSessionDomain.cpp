@@ -61,7 +61,7 @@ namespace Gs2::UE5::Formation::Domain::Model
 
     FEzFormGameSessionDomain::FEzFormGameSessionDomain(
         Gs2::Formation::Domain::Model::FFormAccessTokenDomainPtr Domain,
-        Gs2::UE5::Util::FGameSessionPtr GameSession,
+        Gs2::UE5::Util::IGameSessionPtr GameSession,
         Gs2::UE5::Util::FGs2ConnectionPtr Connection
     ):
         Domain(Domain),

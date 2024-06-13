@@ -22,7 +22,7 @@
 
 #include "Core/Domain/Gs2Core.h"
 #include "Auth/Gs2Auth.h"
-#include "Guild/Gs2Guild.h"
+#include "Auth/Domain/Model/AccessToken.h"
 #include "Guild/Domain/Iterator/DescribeNamespacesIterator.h"
 #include "Guild/Domain/Iterator/DescribeGuildModelMastersIterator.h"
 #include "Guild/Domain/Iterator/DescribeGuildModelsIterator.h"
@@ -67,11 +67,10 @@ namespace Gs2::Guild::Domain::Model
     class GS2GUILD_API FUserAccessTokenDomain:
         public TSharedFromThis<FUserAccessTokenDomain>
     {
+        public:
         const Core::Domain::FGs2Ptr Gs2;
         const Guild::Domain::FGs2GuildDomainPtr Service;
         const Gs2::Guild::FGs2GuildRestClientPtr Client;
-
-        public:
         TOptional<FString> NamespaceName;
         Auth::Model::FAccessTokenPtr AccessToken;
         TOptional<FString> UserId() const { return AccessToken->GetUserId(); }

@@ -36,7 +36,7 @@ namespace Gs2::UE5::Ranking2::Domain::Model
 
     FEzUserGameSessionDomain::FEzUserGameSessionDomain(
         Gs2::Ranking2::Domain::Model::FUserAccessTokenDomainPtr Domain,
-        Gs2::UE5::Util::FGameSessionPtr GameSession,
+        Gs2::UE5::Util::IGameSessionPtr GameSession,
         Gs2::UE5::Util::FGs2ConnectionPtr Connection
     ):
         Domain(Domain),

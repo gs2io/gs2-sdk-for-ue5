@@ -41,7 +41,7 @@ namespace Gs2::UE5::Datastore::Domain::Model
 
     FEzDataObjectHistoryGameSessionDomain::FEzDataObjectHistoryGameSessionDomain(
         Gs2::Datastore::Domain::Model::FDataObjectHistoryAccessTokenDomainPtr Domain,
-        Gs2::UE5::Util::FGameSessionPtr GameSession,
+        Gs2::UE5::Util::IGameSessionPtr GameSession,
         Gs2::UE5::Util::FGs2ConnectionPtr Connection
     ):
         Domain(Domain),

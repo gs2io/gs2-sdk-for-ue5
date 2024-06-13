@@ -37,7 +37,7 @@ namespace Gs2::UE5::Guild::Domain::Model
         public TSharedFromThis<FEzSendMemberRequestGameSessionDomain>
     {
         Gs2::Guild::Domain::Model::FSendMemberRequestAccessTokenDomainPtr Domain;
-        Gs2::UE5::Util::FGameSessionPtr GameSession;
+        Gs2::UE5::Util::IGameSessionPtr GameSession;
         Gs2::UE5::Util::FGs2ConnectionPtr ConnectionValue;
 
         public:
@@ -48,11 +48,11 @@ namespace Gs2::UE5::Guild::Domain::Model
 
         FEzSendMemberRequestGameSessionDomain(
             Gs2::Guild::Domain::Model::FSendMemberRequestAccessTokenDomainPtr Domain,
-            Gs2::UE5::Util::FGameSessionPtr GameSession,
+            Gs2::UE5::Util::IGameSessionPtr GameSession,
             Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
 
-        class FModelTask :
+        class EZGS2_API FModelTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::Guild::Model::FEzSendMemberRequest>,
             public TSharedFromThis<FModelTask>
         {

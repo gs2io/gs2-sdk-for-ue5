@@ -33,7 +33,7 @@ namespace Gs2::UE5::Inbox::Domain::Model
         public TSharedFromThis<FEzMessageGameSessionDomain>
     {
         Gs2::Inbox::Domain::Model::FMessageAccessTokenDomainPtr Domain;
-        Gs2::UE5::Util::FGameSessionPtr GameSession;
+        Gs2::UE5::Util::IGameSessionPtr GameSession;
         Gs2::UE5::Util::FGs2ConnectionPtr ConnectionValue;
 
         public:
@@ -45,11 +45,11 @@ namespace Gs2::UE5::Inbox::Domain::Model
 
         FEzMessageGameSessionDomain(
             Gs2::Inbox::Domain::Model::FMessageAccessTokenDomainPtr Domain,
-            Gs2::UE5::Util::FGameSessionPtr GameSession,
+            Gs2::UE5::Util::IGameSessionPtr GameSession,
             Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
 
-        class FReadTask :
+        class EZGS2_API FReadTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::Inbox::Domain::Model::FEzMessageGameSessionDomain>,
             public TSharedFromThis<FReadTask>
         {
@@ -69,7 +69,7 @@ namespace Gs2::UE5::Inbox::Domain::Model
         TSharedPtr<FAsyncTask<FReadTask>> Read(
         );
 
-        class FDeleteTask :
+        class EZGS2_API FDeleteTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::Inbox::Domain::Model::FEzMessageGameSessionDomain>,
             public TSharedFromThis<FDeleteTask>
         {
@@ -89,7 +89,7 @@ namespace Gs2::UE5::Inbox::Domain::Model
         TSharedPtr<FAsyncTask<FDeleteTask>> Delete(
         );
 
-        class FModelTask :
+        class EZGS2_API FModelTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::Inbox::Model::FEzMessage>,
             public TSharedFromThis<FModelTask>
         {

@@ -44,7 +44,7 @@ namespace Gs2::UE5::Ranking2::Domain::Model
         public TSharedFromThis<FEzSubscribeUserGameSessionDomain>
     {
         Gs2::Ranking2::Domain::Model::FSubscribeUserAccessTokenDomainPtr Domain;
-        Gs2::UE5::Util::FGameSessionPtr GameSession;
+        Gs2::UE5::Util::IGameSessionPtr GameSession;
         Gs2::UE5::Util::FGs2ConnectionPtr ConnectionValue;
 
         public:
@@ -55,11 +55,11 @@ namespace Gs2::UE5::Ranking2::Domain::Model
 
         FEzSubscribeUserGameSessionDomain(
             Gs2::Ranking2::Domain::Model::FSubscribeUserAccessTokenDomainPtr Domain,
-            Gs2::UE5::Util::FGameSessionPtr GameSession,
+            Gs2::UE5::Util::IGameSessionPtr GameSession,
             Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
 
-        class FGetSubscribeTask :
+        class EZGS2_API FGetSubscribeTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::Ranking2::Domain::Model::FEzSubscribeUserGameSessionDomain>,
             public TSharedFromThis<FGetSubscribeTask>
         {
@@ -79,7 +79,7 @@ namespace Gs2::UE5::Ranking2::Domain::Model
         TSharedPtr<FAsyncTask<FGetSubscribeTask>> GetSubscribe(
         );
 
-        class FModelTask :
+        class EZGS2_API FModelTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::Ranking2::Model::FEzSubscribeUser>,
             public TSharedFromThis<FModelTask>
         {

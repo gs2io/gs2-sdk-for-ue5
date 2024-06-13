@@ -38,7 +38,7 @@ namespace Gs2::UE5::Showcase::Domain::Model
         public TSharedFromThis<FEzShowcaseGameSessionDomain>
     {
         Gs2::Showcase::Domain::Model::FShowcaseAccessTokenDomainPtr Domain;
-        Gs2::UE5::Util::FGameSessionPtr GameSession;
+        Gs2::UE5::Util::IGameSessionPtr GameSession;
         Gs2::UE5::Util::FGs2ConnectionPtr ConnectionValue;
 
         public:
@@ -48,7 +48,7 @@ namespace Gs2::UE5::Showcase::Domain::Model
 
         FEzShowcaseGameSessionDomain(
             Gs2::Showcase::Domain::Model::FShowcaseAccessTokenDomainPtr Domain,
-            Gs2::UE5::Util::FGameSessionPtr GameSession,
+            Gs2::UE5::Util::IGameSessionPtr GameSession,
             Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
 
@@ -56,7 +56,7 @@ namespace Gs2::UE5::Showcase::Domain::Model
             const FString DisplayItemId
         ) const;
 
-        class FModelTask :
+        class EZGS2_API FModelTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::Showcase::Model::FEzShowcase>,
             public TSharedFromThis<FModelTask>
         {

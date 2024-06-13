@@ -50,7 +50,7 @@ namespace Gs2::UE5::Account::Domain::Model
             Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
 
-        class FAuthenticationTask :
+        class EZGS2_API FAuthenticationTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::Account::Domain::Model::FEzAccountDomain>,
             public TSharedFromThis<FAuthenticationTask>
         {
@@ -80,7 +80,7 @@ namespace Gs2::UE5::Account::Domain::Model
             const int32 Type
         ) const;
 
-        class FModelTask :
+        class EZGS2_API FModelTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::Account::Model::FEzAccount>,
             public TSharedFromThis<FModelTask>
         {

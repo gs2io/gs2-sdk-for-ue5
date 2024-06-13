@@ -20,6 +20,7 @@
 
 #include "CoreMinimal.h"
 #include "Gs2GuildEzGuildDomain.h"
+#include "Gs2GuildEzGuildGameSessionDomain.h"
 #include "Guild/Domain/Model/UserAccessToken.h"
 #include "Guild/Model/Gs2GuildEzGuildModel.h"
 #include "Guild/Model/Gs2GuildEzGuild.h"
@@ -33,7 +34,9 @@
 #include "Gs2GuildEzJoinedGuildGameSessionDomain.h"
 #include "Guild/Domain/Iterator/Gs2GuildEzDescribeJoinedGuildsIterator.h"
 #include "Gs2GuildEzUserGameSessionDomain.h"
+#include "Util/Configuration/GatewaySetting.h"
 #include "Util/Net/GameSession.h"
+#include "Util/Net/GuildGameSession.h"
 #include "Util/Net/Gs2Connection.h"
 
 namespace Gs2::UE5::Guild::Domain::Model
@@ -43,7 +46,7 @@ namespace Gs2::UE5::Guild::Domain::Model
         public TSharedFromThis<FEzUserGameSessionDomain>
     {
         Gs2::Guild::Domain::Model::FUserAccessTokenDomainPtr Domain;
-        Gs2::UE5::Util::FGameSessionPtr GameSession;
+        Gs2::UE5::Util::IGameSessionPtr GameSession;
         Gs2::UE5::Util::FGs2ConnectionPtr ConnectionValue;
 
         public:
@@ -52,11 +55,11 @@ namespace Gs2::UE5::Guild::Domain::Model
 
         FEzUserGameSessionDomain(
             Gs2::Guild::Domain::Model::FUserAccessTokenDomainPtr Domain,
-            Gs2::UE5::Util::FGameSessionPtr GameSession,
+            Gs2::UE5::Util::IGameSessionPtr GameSession,
             Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
 
-        class FCreateGuildTask :
+        class EZGS2_API FCreateGuildTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::Guild::Domain::Model::FEzGuildDomain>,
             public TSharedFromThis<FCreateGuildTask>
         {
@@ -106,7 +109,33 @@ namespace Gs2::UE5::Guild::Domain::Model
             TOptional<FString> GuildMemberDefaultRole = TOptional<FString>()
         );
 
-        class FCancelRequestTask :
+        class EZGS2_API FSendRequestTask :
+            public Gs2::Core::Util::TGs2Future<Gs2::UE5::Guild::Domain::Model::FEzGuildDomain>,
+            public TSharedFromThis<FSendRequestTask>
+        {
+            TSharedPtr<FEzUserGameSessionDomain> Self;
+            FString GuildModelName;
+            FString TargetGuildName;
+
+        public:
+            explicit FSendRequestTask(
+                TSharedPtr<FEzUserGameSessionDomain> Self,
+                FString GuildModelName,
+                FString TargetGuildName
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::UE5::Guild::Domain::Model::FEzGuildDomain>> Result
+            ) override;
+        };
+        friend FSendRequestTask;
+
+        TSharedPtr<FAsyncTask<FSendRequestTask>> SendRequest(
+            FString GuildModelName,
+            FString TargetGuildName
+        );
+
+        class EZGS2_API FCancelRequestTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::Guild::Domain::Model::FEzSendMemberRequestGameSessionDomain>,
             public TSharedFromThis<FCancelRequestTask>
         {
@@ -164,6 +193,34 @@ namespace Gs2::UE5::Guild::Domain::Model
             const FString GuildName
         ) const;
 
+        class EZGS2_API FAssumeTask :
+            public Gs2::Core::Util::TGs2Future<Gs2::UE5::Util::FGuildGameSession>,
+            public TSharedFromThis<FAssumeTask>
+        {
+            TSharedPtr<FEzUserGameSessionDomain> Self;
+            Gs2::UE5::Util::FGatewaySettingPtr GatewaySetting;
+            FString GuildModelName;
+            FString TargetGuildName;
+
+        public:
+            explicit FAssumeTask(
+                TSharedPtr<FEzUserGameSessionDomain> Self,
+                Gs2::UE5::Util::FGatewaySettingPtr GatewaySetting,
+                FString GuildModelName,
+                FString TargetGuildName
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::UE5::Util::FGuildGameSession>> Result
+            ) override;
+        };
+        friend FAssumeTask;
+        
+        TSharedPtr<FAsyncTask<FAssumeTask>> Assume(
+            Gs2::UE5::Util::FGatewaySettingPtr GatewaySetting,
+            FString GuildModelName,
+            FString TargetGuildName
+        );
     };
     typedef TSharedPtr<FEzUserGameSessionDomain> FEzUserGameSessionDomainPtr;
 }

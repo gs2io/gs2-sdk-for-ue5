@@ -31,7 +31,7 @@ namespace Gs2::UE5::SerialKey::Domain::Model
         public TSharedFromThis<FEzSerialKeyGameSessionDomain>
     {
         Gs2::SerialKey::Domain::Model::FSerialKeyAccessTokenDomainPtr Domain;
-        Gs2::UE5::Util::FGameSessionPtr GameSession;
+        Gs2::UE5::Util::IGameSessionPtr GameSession;
         Gs2::UE5::Util::FGs2ConnectionPtr ConnectionValue;
 
         public:
@@ -42,11 +42,11 @@ namespace Gs2::UE5::SerialKey::Domain::Model
 
         FEzSerialKeyGameSessionDomain(
             Gs2::SerialKey::Domain::Model::FSerialKeyAccessTokenDomainPtr Domain,
-            Gs2::UE5::Util::FGameSessionPtr GameSession,
+            Gs2::UE5::Util::IGameSessionPtr GameSession,
             Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
 
-        class FUseSerialCodeTask :
+        class EZGS2_API FUseSerialCodeTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::SerialKey::Domain::Model::FEzSerialKeyGameSessionDomain>,
             public TSharedFromThis<FUseSerialCodeTask>
         {
@@ -69,7 +69,7 @@ namespace Gs2::UE5::SerialKey::Domain::Model
             FString Code
         );
 
-        class FModelTask :
+        class EZGS2_API FModelTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::SerialKey::Model::FEzSerialKey>,
             public TSharedFromThis<FModelTask>
         {

@@ -33,7 +33,7 @@ namespace Gs2::UE5::Enhance::Domain::Model
         public TSharedFromThis<FEzEnhanceGameSessionDomain>
     {
         Gs2::Enhance::Domain::Model::FEnhanceAccessTokenDomainPtr Domain;
-        Gs2::UE5::Util::FGameSessionPtr GameSession;
+        Gs2::UE5::Util::IGameSessionPtr GameSession;
         Gs2::UE5::Util::FGs2ConnectionPtr ConnectionValue;
 
         public:
@@ -46,11 +46,11 @@ namespace Gs2::UE5::Enhance::Domain::Model
 
         FEzEnhanceGameSessionDomain(
             Gs2::Enhance::Domain::Model::FEnhanceAccessTokenDomainPtr Domain,
-            Gs2::UE5::Util::FGameSessionPtr GameSession,
+            Gs2::UE5::Util::IGameSessionPtr GameSession,
             Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
 
-        class FEnhanceTask :
+        class EZGS2_API FEnhanceTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::Enhance::Domain::Model::FEzEnhanceGameSessionDomain>,
             public TSharedFromThis<FEnhanceTask>
         {

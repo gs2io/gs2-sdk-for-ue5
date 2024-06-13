@@ -64,7 +64,7 @@ namespace Gs2::UE5::Inventory::Domain::Model
             const TOptional<FString> ItemSetName = TOptional<FString>()
         ) const;
 
-        class FModelTask :
+        class EZGS2_API FModelTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::Inventory::Model::FEzInventory>,
             public TSharedFromThis<FModelTask>
         {

@@ -83,7 +83,7 @@ namespace Gs2::Guild::Domain::Model
 
     FGuildDomain::FGetTask::FGetTask(
         const TSharedPtr<FGuildDomain>& Self,
-        const Request::FGetGuildByUserIdRequestPtr Request
+        const Request::FGetGuildRequestPtr Request
     ): Self(Self), Request(Request)
     {
 
@@ -104,7 +104,7 @@ namespace Gs2::Guild::Domain::Model
             ->WithNamespaceName(Self->NamespaceName)
             ->WithGuildModelName(Self->GuildModelName)
             ->WithGuildName(Self->GuildName);
-        const auto Future = Self->Client->GetGuildByUserId(
+        const auto Future = Self->Client->GetGuild(
             Request
         );
         Future->StartSynchronousTask();
@@ -141,7 +141,7 @@ namespace Gs2::Guild::Domain::Model
     }
 
     TSharedPtr<FAsyncTask<FGuildDomain::FGetTask>> FGuildDomain::Get(
-        Request::FGetGuildByUserIdRequestPtr Request
+        Request::FGetGuildRequestPtr Request
     ) {
         return Gs2::Core::Util::New<FAsyncTask<FGetTask>>(this->AsShared(), Request);
     }
@@ -836,15 +836,16 @@ namespace Gs2::Guild::Domain::Model
     }
 
     FGuildDomain::FModelTask::FModelTask(
-        const TSharedPtr<FGuildDomain> Self
-    ): Self(Self)
+        const TSharedPtr<FGuildDomain> Self,
+        const Gs2::Auth::Model::FAccessTokenPtr accessToken
+    ): Self(Self), accessToken(accessToken)
     {
 
     }
 
     FGuildDomain::FModelTask::FModelTask(
         const FModelTask& From
-    ): TGs2Future(From), Self(From.Self)
+    ): TGs2Future(From), Self(From.Self), accessToken(From.accessToken)
     {
 
     }
@@ -865,7 +866,8 @@ namespace Gs2::Guild::Domain::Model
         );
         if (!bCacheHit) {
             const auto Future = Self->Get(
-                MakeShared<Gs2::Guild::Request::FGetGuildByUserIdRequest>()
+                MakeShared<Gs2::Guild::Request::FGetGuildRequest>()
+                    ->WithAccessToken(*accessToken->GetToken())
             );
             Future->StartSynchronousTask();
             if (Future->GetTask().IsError())
@@ -907,8 +909,13 @@ namespace Gs2::Guild::Domain::Model
         return nullptr;
     }
 
-    TSharedPtr<FAsyncTask<FGuildDomain::FModelTask>> FGuildDomain::Model() {
-        return Gs2::Core::Util::New<FAsyncTask<FGuildDomain::FModelTask>>(this->AsShared());
+    TSharedPtr<FAsyncTask<FGuildDomain::FModelTask>> FGuildDomain::Model(
+        Gs2::Auth::Model::FAccessTokenPtr accessToken
+    ) {
+        return Gs2::Core::Util::New<FAsyncTask<FGuildDomain::FModelTask>>(
+            this->AsShared(),
+            accessToken
+        );
     }
 
     Gs2::Core::Domain::CallbackID FGuildDomain::Subscribe(

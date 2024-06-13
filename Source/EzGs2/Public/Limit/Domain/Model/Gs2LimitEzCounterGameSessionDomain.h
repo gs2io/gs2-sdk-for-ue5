@@ -32,7 +32,7 @@ namespace Gs2::UE5::Limit::Domain::Model
         public TSharedFromThis<FEzCounterGameSessionDomain>
     {
         Gs2::Limit::Domain::Model::FCounterAccessTokenDomainPtr Domain;
-        Gs2::UE5::Util::FGameSessionPtr GameSession;
+        Gs2::UE5::Util::IGameSessionPtr GameSession;
         Gs2::UE5::Util::FGs2ConnectionPtr ConnectionValue;
 
         public:
@@ -43,11 +43,11 @@ namespace Gs2::UE5::Limit::Domain::Model
 
         FEzCounterGameSessionDomain(
             Gs2::Limit::Domain::Model::FCounterAccessTokenDomainPtr Domain,
-            Gs2::UE5::Util::FGameSessionPtr GameSession,
+            Gs2::UE5::Util::IGameSessionPtr GameSession,
             Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
 
-        class FCountUpTask :
+        class EZGS2_API FCountUpTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::Limit::Domain::Model::FEzCounterGameSessionDomain>,
             public TSharedFromThis<FCountUpTask>
         {
@@ -73,7 +73,7 @@ namespace Gs2::UE5::Limit::Domain::Model
             TOptional<int32> MaxValue = TOptional<int32>()
         );
 
-        class FModelTask :
+        class EZGS2_API FModelTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::Limit::Model::FEzCounter>,
             public TSharedFromThis<FModelTask>
         {

@@ -29,14 +29,14 @@ namespace Gs2::UE5::Formation::Domain::Iterator
     {
         Gs2::Formation::Domain::Iterator::FDescribeFormsIteratorPtr It;
         Gs2::Formation::Domain::Model::FMoldAccessTokenDomainPtr Domain;
-        Gs2::UE5::Util::FGameSessionPtr GameSession;
+        Gs2::UE5::Util::IGameSessionPtr GameSession;
         Gs2::UE5::Util::FGs2ConnectionPtr Connection;
 
 	public:
 
         explicit FEzDescribeFormsIterator(
             Gs2::Formation::Domain::Model::FMoldAccessTokenDomainPtr Domain,
-            Gs2::UE5::Util::FGameSessionPtr GameSession,
+            Gs2::UE5::Util::IGameSessionPtr GameSession,
             Gs2::UE5::Util::FGs2ConnectionPtr Connection
         ) :
             It(

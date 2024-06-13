@@ -84,7 +84,7 @@ namespace Gs2::UE5::Ranking2::Domain::Model
         ) const;
 
         Gs2::UE5::Ranking2::Domain::Model::FEzUserGameSessionDomainPtr Me(
-            Gs2::UE5::Util::FGameSessionPtr GameSession
+            Gs2::UE5::Util::IGameSessionPtr GameSession
         ) const;
 
         Gs2::UE5::Ranking2::Domain::Iterator::FEzDescribeSubscribeRankingModelsIteratorPtr SubscribeRankingModels(

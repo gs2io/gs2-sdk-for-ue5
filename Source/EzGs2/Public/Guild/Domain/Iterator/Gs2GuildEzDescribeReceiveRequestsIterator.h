@@ -29,14 +29,14 @@ namespace Gs2::UE5::Guild::Domain::Iterator
     {
         Gs2::Guild::Domain::Iterator::FDescribeReceiveRequestsIteratorPtr It;
         Gs2::Guild::Domain::Model::FGuildAccessTokenDomainPtr Domain;
-        Gs2::UE5::Util::FGameSessionPtr GameSession;
+        Gs2::UE5::Util::IGameSessionPtr GameSession;
         Gs2::UE5::Util::FGs2ConnectionPtr Connection;
 
 	public:
 
         explicit FEzDescribeReceiveRequestsIterator(
             Gs2::Guild::Domain::Model::FGuildAccessTokenDomainPtr Domain,
-            Gs2::UE5::Util::FGameSessionPtr GameSession,
+            Gs2::UE5::Util::IGameSessionPtr GameSession,
             Gs2::UE5::Util::FGs2ConnectionPtr Connection
         ) :
             It(

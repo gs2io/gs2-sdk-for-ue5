@@ -32,7 +32,7 @@ namespace Gs2::UE5::Datastore::Domain::Model
         public TSharedFromThis<FEzDataObjectHistoryGameSessionDomain>
     {
         Gs2::Datastore::Domain::Model::FDataObjectHistoryAccessTokenDomainPtr Domain;
-        Gs2::UE5::Util::FGameSessionPtr GameSession;
+        Gs2::UE5::Util::IGameSessionPtr GameSession;
         Gs2::UE5::Util::FGs2ConnectionPtr ConnectionValue;
 
         public:
@@ -43,11 +43,11 @@ namespace Gs2::UE5::Datastore::Domain::Model
 
         FEzDataObjectHistoryGameSessionDomain(
             Gs2::Datastore::Domain::Model::FDataObjectHistoryAccessTokenDomainPtr Domain,
-            Gs2::UE5::Util::FGameSessionPtr GameSession,
+            Gs2::UE5::Util::IGameSessionPtr GameSession,
             Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
 
-        class FModelTask :
+        class EZGS2_API FModelTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::Datastore::Model::FEzDataObjectHistory>,
             public TSharedFromThis<FModelTask>
         {

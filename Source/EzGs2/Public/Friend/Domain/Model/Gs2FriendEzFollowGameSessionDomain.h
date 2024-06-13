@@ -37,7 +37,7 @@ namespace Gs2::UE5::Friend::Domain::Model
         public TSharedFromThis<FEzFollowGameSessionDomain>
     {
         Gs2::Friend::Domain::Model::FFollowAccessTokenDomainPtr Domain;
-        Gs2::UE5::Util::FGameSessionPtr GameSession;
+        Gs2::UE5::Util::IGameSessionPtr GameSession;
         Gs2::UE5::Util::FGs2ConnectionPtr ConnectionValue;
 
         public:
@@ -48,11 +48,11 @@ namespace Gs2::UE5::Friend::Domain::Model
 
         FEzFollowGameSessionDomain(
             Gs2::Friend::Domain::Model::FFollowAccessTokenDomainPtr Domain,
-            Gs2::UE5::Util::FGameSessionPtr GameSession,
+            Gs2::UE5::Util::IGameSessionPtr GameSession,
             Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
 
-        class FFollowTask :
+        class EZGS2_API FFollowTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::Friend::Domain::Model::FEzFollowUserGameSessionDomain>,
             public TSharedFromThis<FFollowTask>
         {

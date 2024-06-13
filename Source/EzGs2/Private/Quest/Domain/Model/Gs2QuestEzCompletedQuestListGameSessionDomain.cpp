@@ -36,7 +36,7 @@ namespace Gs2::UE5::Quest::Domain::Model
 
     FEzCompletedQuestListGameSessionDomain::FEzCompletedQuestListGameSessionDomain(
         Gs2::Quest::Domain::Model::FCompletedQuestListAccessTokenDomainPtr Domain,
-        Gs2::UE5::Util::FGameSessionPtr GameSession,
+        Gs2::UE5::Util::IGameSessionPtr GameSession,
         Gs2::UE5::Util::FGs2ConnectionPtr Connection
     ):
         Domain(Domain),

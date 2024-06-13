@@ -36,7 +36,7 @@ namespace Gs2::UE5::Schedule::Domain::Model
 
     FEzTriggerGameSessionDomain::FEzTriggerGameSessionDomain(
         Gs2::Schedule::Domain::Model::FTriggerAccessTokenDomainPtr Domain,
-        Gs2::UE5::Util::FGameSessionPtr GameSession,
+        Gs2::UE5::Util::IGameSessionPtr GameSession,
         Gs2::UE5::Util::FGs2ConnectionPtr Connection
     ):
         Domain(Domain),

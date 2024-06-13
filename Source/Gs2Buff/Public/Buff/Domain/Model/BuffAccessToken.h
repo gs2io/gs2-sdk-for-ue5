@@ -61,6 +61,7 @@ namespace Gs2::Buff::Domain::Model
         TOptional<FString> NamespaceName;
         Gs2::Auth::Model::FAccessTokenPtr AccessToken;
         TOptional<FString> UserId() const { return AccessToken->GetUserId(); }
+        TSharedPtr<TArray<TSharedPtr<Gs2::Buff::Model::FBuffEntryModel>>> BuffEntryModels;
         FString NewContextStack;
     private:
 
