@@ -112,6 +112,32 @@ namespace Gs2::Matchmaking::Domain::Model
             const FSeasonGatheringAccessTokenDomain& From
         );
 
+        class GS2MATCHMAKING_API FVerifyIncludeParticipantTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Matchmaking::Domain::Model::FSeasonGatheringAccessTokenDomain>,
+            public TSharedFromThis<FVerifyIncludeParticipantTask>
+        {
+            const TSharedPtr<FSeasonGatheringAccessTokenDomain> Self;
+            const Request::FVerifyIncludeParticipantRequestPtr Request;
+        public:
+            explicit FVerifyIncludeParticipantTask(
+                const TSharedPtr<FSeasonGatheringAccessTokenDomain>& Self,
+                const Request::FVerifyIncludeParticipantRequestPtr Request
+            );
+
+            FVerifyIncludeParticipantTask(
+                const FVerifyIncludeParticipantTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Matchmaking::Domain::Model::FSeasonGatheringAccessTokenDomain>> Result
+            ) override;
+        };
+        friend FVerifyIncludeParticipantTask;
+
+        TSharedPtr<FAsyncTask<FVerifyIncludeParticipantTask>> VerifyIncludeParticipant(
+            Request::FVerifyIncludeParticipantRequestPtr Request
+        );
+
         class GS2MATCHMAKING_API FGetTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Matchmaking::Model::FSeasonGathering>,
             public TSharedFromThis<FGetTask>

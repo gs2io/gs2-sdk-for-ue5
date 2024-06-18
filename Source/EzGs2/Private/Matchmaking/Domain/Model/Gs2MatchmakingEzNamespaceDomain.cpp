@@ -271,4 +271,39 @@ namespace Gs2::UE5::Matchmaking::Domain::Model
             ConnectionValue
         );
     }
+
+    Gs2::UE5::Matchmaking::Domain::Iterator::FEzDescribeSeasonModelsIteratorPtr FEzNamespaceDomain::SeasonModels(
+    ) const
+    {
+        return MakeShared<Gs2::UE5::Matchmaking::Domain::Iterator::FEzDescribeSeasonModelsIterator>(
+            Domain,
+            ConnectionValue
+        );
+    }
+
+    Gs2::Core::Domain::CallbackID FEzNamespaceDomain::SubscribeSeasonModels(TFunction<void()> Callback)
+    {
+        return Domain->SubscribeSeasonModels(
+            Callback
+        );
+    }
+
+    void FEzNamespaceDomain::UnsubscribeSeasonModels(Gs2::Core::Domain::CallbackID CallbackId)
+    {
+        Domain->UnsubscribeSeasonModels(
+            CallbackId
+        );
+    }
+
+    Gs2::UE5::Matchmaking::Domain::Model::FEzSeasonModelDomainPtr FEzNamespaceDomain::SeasonModel(
+        const FString SeasonName
+    ) const
+    {
+        return MakeShared<Gs2::UE5::Matchmaking::Domain::Model::FEzSeasonModelDomain>(
+            Domain->SeasonModel(
+                SeasonName
+            ),
+            ConnectionValue
+        );
+    }
 }

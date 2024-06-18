@@ -97,6 +97,10 @@ namespace Gs2::Buff::Task::Rest
             {
                 JsonRootObject->SetStringField("metadata", this->Request->GetMetadata().GetValue());
             }
+            if (this->Request->GetExpression().IsSet())
+            {
+                JsonRootObject->SetStringField("expression", this->Request->GetExpression().GetValue());
+            }
             if (this->Request->GetTargetType().IsSet())
             {
                 JsonRootObject->SetStringField("targetType", this->Request->GetTargetType().GetValue());
@@ -108,10 +112,6 @@ namespace Gs2::Buff::Task::Rest
             if (this->Request->GetTargetAction() != nullptr && this->Request->GetTargetAction().IsValid())
             {
                 JsonRootObject->SetObjectField("targetAction", this->Request->GetTargetAction()->ToJson());
-            }
-            if (this->Request->GetExpression().IsSet())
-            {
-                JsonRootObject->SetStringField("expression", this->Request->GetExpression().GetValue());
             }
             if (this->Request->GetPriority().IsSet())
             {

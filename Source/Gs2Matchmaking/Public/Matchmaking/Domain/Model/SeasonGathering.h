@@ -136,6 +136,32 @@ namespace Gs2::Matchmaking::Domain::Model
             Request::FGetSeasonGatheringRequestPtr Request
         );
 
+        class GS2MATCHMAKING_API FVerifyIncludeParticipantTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Matchmaking::Domain::Model::FSeasonGatheringDomain>,
+            public TSharedFromThis<FVerifyIncludeParticipantTask>
+        {
+            const TSharedPtr<FSeasonGatheringDomain> Self;
+            const Request::FVerifyIncludeParticipantByUserIdRequestPtr Request;
+        public:
+            explicit FVerifyIncludeParticipantTask(
+                const TSharedPtr<FSeasonGatheringDomain>& Self,
+                const Request::FVerifyIncludeParticipantByUserIdRequestPtr Request
+            );
+
+            FVerifyIncludeParticipantTask(
+                const FVerifyIncludeParticipantTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Matchmaking::Domain::Model::FSeasonGatheringDomain>> Result
+            ) override;
+        };
+        friend FVerifyIncludeParticipantTask;
+
+        TSharedPtr<FAsyncTask<FVerifyIncludeParticipantTask>> VerifyIncludeParticipant(
+            Request::FVerifyIncludeParticipantByUserIdRequestPtr Request
+        );
+
         class GS2MATCHMAKING_API FDeleteTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Matchmaking::Domain::Model::FSeasonGatheringDomain>,
             public TSharedFromThis<FDeleteTask>

@@ -20,11 +20,14 @@
 #include "Matchmaking/Domain/Model/Namespace.h"
 #include "Matchmaking/Model/Gs2MatchmakingEzGathering.h"
 #include "Matchmaking/Model/Gs2MatchmakingEzRatingModel.h"
+#include "Matchmaking/Model/Gs2MatchmakingEzRating.h"
+#include "Matchmaking/Model/Gs2MatchmakingEzJoinedSeasonGathering.h"
+#include "Matchmaking/Model/Gs2MatchmakingEzSeasonGathering.h"
+#include "Matchmaking/Model/Gs2MatchmakingEzSeasonModel.h"
+#include "Matchmaking/Model/Gs2MatchmakingEzPlayer.h"
 #include "Matchmaking/Model/Gs2MatchmakingEzAttributeRange.h"
 #include "Matchmaking/Model/Gs2MatchmakingEzCapacityOfRole.h"
 #include "Matchmaking/Model/Gs2MatchmakingEzAttribute.h"
-#include "Matchmaking/Model/Gs2MatchmakingEzPlayer.h"
-#include "Matchmaking/Model/Gs2MatchmakingEzRating.h"
 #include "Matchmaking/Model/Gs2MatchmakingEzGameResult.h"
 #include "Matchmaking/Model/Gs2MatchmakingEzBallot.h"
 #include "Matchmaking/Model/Gs2MatchmakingEzSignedBallot.h"
@@ -34,6 +37,8 @@
 #include "Gs2MatchmakingEzUserGameSessionDomain.h"
 #include "Gs2MatchmakingEzRatingModelDomain.h"
 #include "Matchmaking/Domain/Iterator/Gs2MatchmakingEzDescribeRatingModelsIterator.h"
+#include "Gs2MatchmakingEzSeasonModelDomain.h"
+#include "Matchmaking/Domain/Iterator/Gs2MatchmakingEzDescribeSeasonModelsIterator.h"
 #include "Gs2MatchmakingEzNamespaceDomain.h"
 #include "Util/Net/GameSession.h"
 #include "Util/Net/Gs2Connection.h"
@@ -138,6 +143,17 @@ namespace Gs2::UE5::Matchmaking::Domain::Model
 
         Gs2::UE5::Matchmaking::Domain::Model::FEzRatingModelDomainPtr RatingModel(
             const FString RatingName
+        ) const;
+
+        Gs2::UE5::Matchmaking::Domain::Iterator::FEzDescribeSeasonModelsIteratorPtr SeasonModels(
+        ) const;
+
+        Gs2::Core::Domain::CallbackID SubscribeSeasonModels(TFunction<void()> Callback);
+
+        void UnsubscribeSeasonModels(Gs2::Core::Domain::CallbackID CallbackId);
+
+        Gs2::UE5::Matchmaking::Domain::Model::FEzSeasonModelDomainPtr SeasonModel(
+            const FString SeasonName
         ) const;
 
     };

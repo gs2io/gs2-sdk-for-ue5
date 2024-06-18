@@ -31,10 +31,10 @@ namespace Gs2::Buff::Request
         TOptional<FString> BuffEntryNameValue;
         TOptional<FString> DescriptionValue;
         TOptional<FString> MetadataValue;
+        TOptional<FString> ExpressionValue;
         TOptional<FString> TargetTypeValue;
         TSharedPtr<Model::FBuffTargetModel> TargetModelValue;
         TSharedPtr<Model::FBuffTargetAction> TargetActionValue;
-        TOptional<FString> ExpressionValue;
         TOptional<int32> PriorityValue;
         TOptional<FString> ApplyPeriodScheduleEventIdValue;
         
@@ -51,10 +51,10 @@ namespace Gs2::Buff::Request
         TSharedPtr<FUpdateBuffEntryModelMasterRequest> WithBuffEntryName(const TOptional<FString> BuffEntryName);
         TSharedPtr<FUpdateBuffEntryModelMasterRequest> WithDescription(const TOptional<FString> Description);
         TSharedPtr<FUpdateBuffEntryModelMasterRequest> WithMetadata(const TOptional<FString> Metadata);
+        TSharedPtr<FUpdateBuffEntryModelMasterRequest> WithExpression(const TOptional<FString> Expression);
         TSharedPtr<FUpdateBuffEntryModelMasterRequest> WithTargetType(const TOptional<FString> TargetType);
         TSharedPtr<FUpdateBuffEntryModelMasterRequest> WithTargetModel(const TSharedPtr<Model::FBuffTargetModel> TargetModel);
         TSharedPtr<FUpdateBuffEntryModelMasterRequest> WithTargetAction(const TSharedPtr<Model::FBuffTargetAction> TargetAction);
-        TSharedPtr<FUpdateBuffEntryModelMasterRequest> WithExpression(const TOptional<FString> Expression);
         TSharedPtr<FUpdateBuffEntryModelMasterRequest> WithPriority(const TOptional<int32> Priority);
         TSharedPtr<FUpdateBuffEntryModelMasterRequest> WithApplyPeriodScheduleEventId(const TOptional<FString> ApplyPeriodScheduleEventId);
 
@@ -63,10 +63,10 @@ namespace Gs2::Buff::Request
         TOptional<FString> GetBuffEntryName() const;
         TOptional<FString> GetDescription() const;
         TOptional<FString> GetMetadata() const;
+        TOptional<FString> GetExpression() const;
         TOptional<FString> GetTargetType() const;
         TSharedPtr<Model::FBuffTargetModel> GetTargetModel() const;
         TSharedPtr<Model::FBuffTargetAction> GetTargetAction() const;
-        TOptional<FString> GetExpression() const;
         TOptional<int32> GetPriority() const;
         FString GetPriorityString() const;
         TOptional<FString> GetApplyPeriodScheduleEventId() const;

@@ -28,10 +28,10 @@ namespace Gs2::Buff::Model
         TOptional<FString> BuffEntryModelIdValue;
         TOptional<FString> NameValue;
         TOptional<FString> MetadataValue;
+        TOptional<FString> ExpressionValue;
         TOptional<FString> TargetTypeValue;
         TSharedPtr<FBuffTargetModel> TargetModelValue;
         TSharedPtr<FBuffTargetAction> TargetActionValue;
-        TOptional<FString> ExpressionValue;
         TOptional<int32> PriorityValue;
         TOptional<FString> ApplyPeriodScheduleEventIdValue;
 
@@ -45,20 +45,20 @@ namespace Gs2::Buff::Model
         TSharedPtr<FBuffEntryModel> WithBuffEntryModelId(const TOptional<FString> BuffEntryModelId);
         TSharedPtr<FBuffEntryModel> WithName(const TOptional<FString> Name);
         TSharedPtr<FBuffEntryModel> WithMetadata(const TOptional<FString> Metadata);
+        TSharedPtr<FBuffEntryModel> WithExpression(const TOptional<FString> Expression);
         TSharedPtr<FBuffEntryModel> WithTargetType(const TOptional<FString> TargetType);
         TSharedPtr<FBuffEntryModel> WithTargetModel(const TSharedPtr<FBuffTargetModel> TargetModel);
         TSharedPtr<FBuffEntryModel> WithTargetAction(const TSharedPtr<FBuffTargetAction> TargetAction);
-        TSharedPtr<FBuffEntryModel> WithExpression(const TOptional<FString> Expression);
         TSharedPtr<FBuffEntryModel> WithPriority(const TOptional<int32> Priority);
         TSharedPtr<FBuffEntryModel> WithApplyPeriodScheduleEventId(const TOptional<FString> ApplyPeriodScheduleEventId);
 
         TOptional<FString> GetBuffEntryModelId() const;
         TOptional<FString> GetName() const;
         TOptional<FString> GetMetadata() const;
+        TOptional<FString> GetExpression() const;
         TOptional<FString> GetTargetType() const;
         TSharedPtr<FBuffTargetModel> GetTargetModel() const;
         TSharedPtr<FBuffTargetAction> GetTargetAction() const;
-        TOptional<FString> GetExpression() const;
         TOptional<int32> GetPriority() const;
         FString GetPriorityString() const;
         TOptional<FString> GetApplyPeriodScheduleEventId() const;

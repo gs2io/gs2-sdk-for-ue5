@@ -20,16 +20,22 @@
 #include "Matchmaking/Domain/Model/SeasonAccessToken.h"
 #include "Matchmaking/Model/Gs2MatchmakingEzGathering.h"
 #include "Matchmaking/Model/Gs2MatchmakingEzRatingModel.h"
+#include "Matchmaking/Model/Gs2MatchmakingEzRating.h"
+#include "Matchmaking/Model/Gs2MatchmakingEzJoinedSeasonGathering.h"
+#include "Matchmaking/Model/Gs2MatchmakingEzSeasonGathering.h"
+#include "Matchmaking/Model/Gs2MatchmakingEzSeasonModel.h"
+#include "Matchmaking/Model/Gs2MatchmakingEzPlayer.h"
 #include "Matchmaking/Model/Gs2MatchmakingEzAttributeRange.h"
 #include "Matchmaking/Model/Gs2MatchmakingEzCapacityOfRole.h"
 #include "Matchmaking/Model/Gs2MatchmakingEzAttribute.h"
-#include "Matchmaking/Model/Gs2MatchmakingEzPlayer.h"
-#include "Matchmaking/Model/Gs2MatchmakingEzRating.h"
 #include "Matchmaking/Model/Gs2MatchmakingEzGameResult.h"
 #include "Matchmaking/Model/Gs2MatchmakingEzBallot.h"
 #include "Matchmaking/Model/Gs2MatchmakingEzSignedBallot.h"
 #include "Matchmaking/Model/Gs2MatchmakingEzTimeSpan.h"
+#include "Gs2MatchmakingEzSeasonGatheringGameSessionDomain.h"
+#include "Matchmaking/Domain/Iterator/Gs2MatchmakingEzDoSeasonMatchmakingIterator.h"
 #include "Gs2MatchmakingEzJoinedSeasonGatheringGameSessionDomain.h"
+#include "Matchmaking/Domain/Iterator/Gs2MatchmakingEzDescribeJoinedSeasonGatheringsIterator.h"
 #include "Gs2MatchmakingEzSeasonGameSessionDomain.h"
 #include "Util/Net/GameSession.h"
 #include "Util/Net/Gs2Connection.h"
@@ -57,6 +63,25 @@ namespace Gs2::UE5::Matchmaking::Domain::Model
             Gs2::UE5::Util::IGameSessionPtr GameSession,
             Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
+
+        Gs2::UE5::Matchmaking::Domain::Iterator::FEzDoSeasonMatchmakingIteratorPtr DoSeasonMatchmaking(
+        ) const;
+
+        Gs2::Core::Domain::CallbackID SubscribeDoSeasonMatchmaking(TFunction<void()> Callback);
+
+        void UnsubscribeDoSeasonMatchmaking(Gs2::Core::Domain::CallbackID CallbackId);
+
+        Gs2::UE5::Matchmaking::Domain::Model::FEzSeasonGatheringGameSessionDomainPtr SeasonGathering(
+            const int64 Tier,
+            const FString SeasonGatheringName
+        ) const;
+
+        Gs2::UE5::Matchmaking::Domain::Iterator::FEzDescribeJoinedSeasonGatheringsIteratorPtr JoinedSeasonGatherings(
+        ) const;
+
+        Gs2::Core::Domain::CallbackID SubscribeJoinedSeasonGatherings(TFunction<void()> Callback);
+
+        void UnsubscribeJoinedSeasonGatherings(Gs2::Core::Domain::CallbackID CallbackId);
 
         Gs2::UE5::Matchmaking::Domain::Model::FEzJoinedSeasonGatheringGameSessionDomainPtr JoinedSeasonGathering(
         ) const;

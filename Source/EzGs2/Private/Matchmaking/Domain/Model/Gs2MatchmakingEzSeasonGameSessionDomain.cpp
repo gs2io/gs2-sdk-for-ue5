@@ -61,6 +61,69 @@ namespace Gs2::UE5::Matchmaking::Domain::Model
 
     }
 
+    Gs2::UE5::Matchmaking::Domain::Iterator::FEzDoSeasonMatchmakingIteratorPtr FEzSeasonGameSessionDomain::DoSeasonMatchmaking(
+    ) const
+    {
+        return MakeShared<Gs2::UE5::Matchmaking::Domain::Iterator::FEzDoSeasonMatchmakingIterator>(
+            Domain,
+            GameSession,
+            ConnectionValue
+        );
+    }
+
+    Gs2::Core::Domain::CallbackID FEzSeasonGameSessionDomain::SubscribeDoSeasonMatchmaking(TFunction<void()> Callback)
+    {
+        return Domain->SubscribeDoSeasonMatchmaking(
+            Callback
+        );
+    }
+
+    void FEzSeasonGameSessionDomain::UnsubscribeDoSeasonMatchmaking(Gs2::Core::Domain::CallbackID CallbackId)
+    {
+        Domain->UnsubscribeDoSeasonMatchmaking(
+            CallbackId
+        );
+    }
+
+    Gs2::UE5::Matchmaking::Domain::Model::FEzSeasonGatheringGameSessionDomainPtr FEzSeasonGameSessionDomain::SeasonGathering(
+        const int64 Tier,
+        const FString SeasonGatheringName
+    ) const
+    {
+        return MakeShared<Gs2::UE5::Matchmaking::Domain::Model::FEzSeasonGatheringGameSessionDomain>(
+            Domain->SeasonGathering(
+                Tier,
+                SeasonGatheringName
+            ),
+            GameSession,
+            ConnectionValue
+        );
+    }
+
+    Gs2::UE5::Matchmaking::Domain::Iterator::FEzDescribeJoinedSeasonGatheringsIteratorPtr FEzSeasonGameSessionDomain::JoinedSeasonGatherings(
+    ) const
+    {
+        return MakeShared<Gs2::UE5::Matchmaking::Domain::Iterator::FEzDescribeJoinedSeasonGatheringsIterator>(
+            Domain,
+            GameSession,
+            ConnectionValue
+        );
+    }
+
+    Gs2::Core::Domain::CallbackID FEzSeasonGameSessionDomain::SubscribeJoinedSeasonGatherings(TFunction<void()> Callback)
+    {
+        return Domain->SubscribeJoinedSeasonGatherings(
+            Callback
+        );
+    }
+
+    void FEzSeasonGameSessionDomain::UnsubscribeJoinedSeasonGatherings(Gs2::Core::Domain::CallbackID CallbackId)
+    {
+        Domain->UnsubscribeJoinedSeasonGatherings(
+            CallbackId
+        );
+    }
+
     Gs2::UE5::Matchmaking::Domain::Model::FEzJoinedSeasonGatheringGameSessionDomainPtr FEzSeasonGameSessionDomain::JoinedSeasonGathering(
     ) const
     {

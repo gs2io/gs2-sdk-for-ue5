@@ -23,10 +23,10 @@ namespace Gs2::Buff::Request
         BuffEntryNameValue(TOptional<FString>()),
         DescriptionValue(TOptional<FString>()),
         MetadataValue(TOptional<FString>()),
+        ExpressionValue(TOptional<FString>()),
         TargetTypeValue(TOptional<FString>()),
         TargetModelValue(nullptr),
         TargetActionValue(nullptr),
-        ExpressionValue(TOptional<FString>()),
         PriorityValue(TOptional<int32>()),
         ApplyPeriodScheduleEventIdValue(TOptional<FString>())
     {
@@ -39,10 +39,10 @@ namespace Gs2::Buff::Request
         BuffEntryNameValue(From.BuffEntryNameValue),
         DescriptionValue(From.DescriptionValue),
         MetadataValue(From.MetadataValue),
+        ExpressionValue(From.ExpressionValue),
         TargetTypeValue(From.TargetTypeValue),
         TargetModelValue(From.TargetModelValue),
         TargetActionValue(From.TargetActionValue),
-        ExpressionValue(From.ExpressionValue),
         PriorityValue(From.PriorityValue),
         ApplyPeriodScheduleEventIdValue(From.ApplyPeriodScheduleEventIdValue)
     {
@@ -88,6 +88,14 @@ namespace Gs2::Buff::Request
         return SharedThis(this);
     }
 
+    TSharedPtr<FUpdateBuffEntryModelMasterRequest> FUpdateBuffEntryModelMasterRequest::WithExpression(
+        const TOptional<FString> Expression
+    )
+    {
+        this->ExpressionValue = Expression;
+        return SharedThis(this);
+    }
+
     TSharedPtr<FUpdateBuffEntryModelMasterRequest> FUpdateBuffEntryModelMasterRequest::WithTargetType(
         const TOptional<FString> TargetType
     )
@@ -109,14 +117,6 @@ namespace Gs2::Buff::Request
     )
     {
         this->TargetActionValue = TargetAction;
-        return SharedThis(this);
-    }
-
-    TSharedPtr<FUpdateBuffEntryModelMasterRequest> FUpdateBuffEntryModelMasterRequest::WithExpression(
-        const TOptional<FString> Expression
-    )
-    {
-        this->ExpressionValue = Expression;
         return SharedThis(this);
     }
 
@@ -161,6 +161,11 @@ namespace Gs2::Buff::Request
         return MetadataValue;
     }
 
+    TOptional<FString> FUpdateBuffEntryModelMasterRequest::GetExpression() const
+    {
+        return ExpressionValue;
+    }
+
     TOptional<FString> FUpdateBuffEntryModelMasterRequest::GetTargetType() const
     {
         return TargetTypeValue;
@@ -182,11 +187,6 @@ namespace Gs2::Buff::Request
             return nullptr;
         }
         return TargetActionValue;
-    }
-
-    TOptional<FString> FUpdateBuffEntryModelMasterRequest::GetExpression() const
-    {
-        return ExpressionValue;
     }
 
     TOptional<int32> FUpdateBuffEntryModelMasterRequest::GetPriority() const
@@ -251,6 +251,15 @@ namespace Gs2::Buff::Request
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
+            ->WithExpression(Data->HasField(ANSI_TO_TCHAR("expression")) ? [Data]() -> TOptional<FString>
+              {
+                  FString v("");
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("expression"), v))
+                  {
+                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                  }
+                  return TOptional<FString>();
+              }() : TOptional<FString>())
             ->WithTargetType(Data->HasField(ANSI_TO_TCHAR("targetType")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
@@ -276,15 +285,6 @@ namespace Gs2::Buff::Request
                   }
                   return Model::FBuffTargetAction::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("targetAction")));
               }() : nullptr)
-            ->WithExpression(Data->HasField(ANSI_TO_TCHAR("expression")) ? [Data]() -> TOptional<FString>
-              {
-                  FString v("");
-                    if (Data->TryGetStringField(ANSI_TO_TCHAR("expression"), v))
-                  {
-                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
-                  }
-                  return TOptional<FString>();
-              }() : TOptional<FString>())
             ->WithPriority(Data->HasField(ANSI_TO_TCHAR("priority")) ? [Data]() -> TOptional<int32>
               {
                   int32 v;
@@ -328,6 +328,10 @@ namespace Gs2::Buff::Request
         {
             JsonRootObject->SetStringField("metadata", MetadataValue.GetValue());
         }
+        if (ExpressionValue.IsSet())
+        {
+            JsonRootObject->SetStringField("expression", ExpressionValue.GetValue());
+        }
         if (TargetTypeValue.IsSet())
         {
             JsonRootObject->SetStringField("targetType", TargetTypeValue.GetValue());
@@ -339,10 +343,6 @@ namespace Gs2::Buff::Request
         if (TargetActionValue != nullptr && TargetActionValue.IsValid())
         {
             JsonRootObject->SetObjectField("targetAction", TargetActionValue->ToJson());
-        }
-        if (ExpressionValue.IsSet())
-        {
-            JsonRootObject->SetStringField("expression", ExpressionValue.GetValue());
         }
         if (PriorityValue.IsSet())
         {

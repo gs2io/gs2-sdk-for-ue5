@@ -487,10 +487,37 @@ namespace Gs2::Matchmaking
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::Rest::FVerifyIncludeParticipantTask>> FGs2MatchmakingRestClient::VerifyIncludeParticipant(
+        const Request::FVerifyIncludeParticipantRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FVerifyIncludeParticipantTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FVerifyIncludeParticipantByUserIdTask>> FGs2MatchmakingRestClient::VerifyIncludeParticipantByUserId(
+        const Request::FVerifyIncludeParticipantByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FVerifyIncludeParticipantByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::Rest::FDeleteSeasonGatheringTask>> FGs2MatchmakingRestClient::DeleteSeasonGathering(
         const Request::FDeleteSeasonGatheringRequestPtr Request) const
     {
         return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FDeleteSeasonGatheringTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FVerifyIncludeParticipantByStampTaskTask>> FGs2MatchmakingRestClient::VerifyIncludeParticipantByStampTask(
+        const Request::FVerifyIncludeParticipantByStampTaskRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FVerifyIncludeParticipantByStampTaskTask>>(
             Session,
             Request
         );

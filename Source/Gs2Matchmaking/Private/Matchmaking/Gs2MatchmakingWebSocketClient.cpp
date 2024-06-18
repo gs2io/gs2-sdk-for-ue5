@@ -487,10 +487,37 @@ namespace Gs2::Matchmaking
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::WebSocket::FVerifyIncludeParticipantTask>> FGs2MatchmakingWebSocketClient::VerifyIncludeParticipant(
+        const Request::FVerifyIncludeParticipantRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FVerifyIncludeParticipantTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FVerifyIncludeParticipantByUserIdTask>> FGs2MatchmakingWebSocketClient::VerifyIncludeParticipantByUserId(
+        const Request::FVerifyIncludeParticipantByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FVerifyIncludeParticipantByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::WebSocket::FDeleteSeasonGatheringTask>> FGs2MatchmakingWebSocketClient::DeleteSeasonGathering(
         const Request::FDeleteSeasonGatheringRequestPtr Request) const
     {
         return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FDeleteSeasonGatheringTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FVerifyIncludeParticipantByStampTaskTask>> FGs2MatchmakingWebSocketClient::VerifyIncludeParticipantByStampTask(
+        const Request::FVerifyIncludeParticipantByStampTaskRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FVerifyIncludeParticipantByStampTaskTask>>(
             Session,
             Request
         );

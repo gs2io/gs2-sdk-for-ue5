@@ -354,11 +354,29 @@
 #include "Task/Rest/GetSeasonGatheringTask.h"
 #include "Task/WebSocket/GetSeasonGatheringTask.h"
 
+// VerifyIncludeParticipant
+#include "Request/VerifyIncludeParticipantRequest.h"
+#include "Result/VerifyIncludeParticipantResult.h"
+#include "Task/Rest/VerifyIncludeParticipantTask.h"
+#include "Task/WebSocket/VerifyIncludeParticipantTask.h"
+
+// VerifyIncludeParticipantByUserId
+#include "Request/VerifyIncludeParticipantByUserIdRequest.h"
+#include "Result/VerifyIncludeParticipantByUserIdResult.h"
+#include "Task/Rest/VerifyIncludeParticipantByUserIdTask.h"
+#include "Task/WebSocket/VerifyIncludeParticipantByUserIdTask.h"
+
 // DeleteSeasonGathering
 #include "Request/DeleteSeasonGatheringRequest.h"
 #include "Result/DeleteSeasonGatheringResult.h"
 #include "Task/Rest/DeleteSeasonGatheringTask.h"
 #include "Task/WebSocket/DeleteSeasonGatheringTask.h"
+
+// VerifyIncludeParticipantByStampTask
+#include "Request/VerifyIncludeParticipantByStampTaskRequest.h"
+#include "Result/VerifyIncludeParticipantByStampTaskResult.h"
+#include "Task/Rest/VerifyIncludeParticipantByStampTaskTask.h"
+#include "Task/WebSocket/VerifyIncludeParticipantByStampTaskTask.h"
 
 // DescribeJoinedSeasonGatherings
 #include "Request/DescribeJoinedSeasonGatheringsRequest.h"

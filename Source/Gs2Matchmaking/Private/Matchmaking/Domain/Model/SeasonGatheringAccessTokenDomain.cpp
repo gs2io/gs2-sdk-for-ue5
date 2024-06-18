@@ -101,6 +101,57 @@ namespace Gs2::Matchmaking::Domain::Model
 
     }
 
+    FSeasonGatheringAccessTokenDomain::FVerifyIncludeParticipantTask::FVerifyIncludeParticipantTask(
+        const TSharedPtr<FSeasonGatheringAccessTokenDomain>& Self,
+        const Request::FVerifyIncludeParticipantRequestPtr Request
+    ): Self(Self), Request(Request)
+    {
+
+    }
+
+    FSeasonGatheringAccessTokenDomain::FVerifyIncludeParticipantTask::FVerifyIncludeParticipantTask(
+        const FVerifyIncludeParticipantTask& From
+    ): TGs2Future(From), Self(From.Self), Request(From.Request)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FSeasonGatheringAccessTokenDomain::FVerifyIncludeParticipantTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::Matchmaking::Domain::Model::FSeasonGatheringAccessTokenDomain>> Result
+    )
+    {
+        Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
+            ->WithNamespaceName(Self->NamespaceName)
+            ->WithAccessToken(Self->AccessToken->GetToken())
+            ->WithSeasonName(Self->SeasonName)
+            ->WithSeason(Self->Season)
+            ->WithTier(Self->Tier)
+            ->WithSeasonGatheringName(Self->SeasonGatheringName);
+        const auto Future = Self->Client->VerifyIncludeParticipant(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto RequestModel = Request;
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
+        if (ResultModel != nullptr) {
+            
+        }
+        const auto Domain = Self;
+        *Result = Domain;
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FSeasonGatheringAccessTokenDomain::FVerifyIncludeParticipantTask>> FSeasonGatheringAccessTokenDomain::VerifyIncludeParticipant(
+        Request::FVerifyIncludeParticipantRequestPtr Request
+    ) {
+        return Gs2::Core::Util::New<FAsyncTask<FVerifyIncludeParticipantTask>>(this->AsShared(), Request);
+    }
+
     FSeasonGatheringAccessTokenDomain::FGetTask::FGetTask(
         const TSharedPtr<FSeasonGatheringAccessTokenDomain>& Self,
         const Request::FGetSeasonGatheringRequestPtr Request

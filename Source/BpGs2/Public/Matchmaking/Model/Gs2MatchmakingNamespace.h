@@ -50,4 +50,10 @@ class BPGS2_API UGs2MatchmakingNamespaceFunctionLibrary : public UBlueprintFunct
         FGs2MatchmakingNamespace Namespace,
         FString RatingName
     );
+
+    UFUNCTION(BlueprintCallable, DisplayName="Gs2::Matchmaking::SeasonModel", Category="Game Server Services|GS2-Matchmaking|Namespace|SeasonModel", meta=(WorldContext="WorldContextObject"))
+    static UPARAM(DisplayName="SeasonModel") FGs2MatchmakingSeasonModel SeasonModel(
+        FGs2MatchmakingNamespace Namespace,
+        FString SeasonName
+    );
 };

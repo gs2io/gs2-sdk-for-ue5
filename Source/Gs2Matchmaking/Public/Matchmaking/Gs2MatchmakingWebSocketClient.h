@@ -122,8 +122,14 @@
 #include "Task/WebSocket/DoSeasonMatchmakingByUserIdTask.h"
 #include "Request/GetSeasonGatheringRequest.h"
 #include "Task/WebSocket/GetSeasonGatheringTask.h"
+#include "Request/VerifyIncludeParticipantRequest.h"
+#include "Task/WebSocket/VerifyIncludeParticipantTask.h"
+#include "Request/VerifyIncludeParticipantByUserIdRequest.h"
+#include "Task/WebSocket/VerifyIncludeParticipantByUserIdTask.h"
 #include "Request/DeleteSeasonGatheringRequest.h"
 #include "Task/WebSocket/DeleteSeasonGatheringTask.h"
+#include "Request/VerifyIncludeParticipantByStampTaskRequest.h"
+#include "Task/WebSocket/VerifyIncludeParticipantByStampTaskTask.h"
 #include "Request/DescribeJoinedSeasonGatheringsRequest.h"
 #include "Task/WebSocket/DescribeJoinedSeasonGatheringsTask.h"
 #include "Request/DescribeJoinedSeasonGatheringsByUserIdRequest.h"
@@ -374,8 +380,20 @@ namespace Gs2::Matchmaking
             const Request::FGetSeasonGatheringRequestPtr Request
         ) const;
 
+        TSharedPtr<FAsyncTask<Task::WebSocket::FVerifyIncludeParticipantTask>> VerifyIncludeParticipant(
+            const Request::FVerifyIncludeParticipantRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FVerifyIncludeParticipantByUserIdTask>> VerifyIncludeParticipantByUserId(
+            const Request::FVerifyIncludeParticipantByUserIdRequestPtr Request
+        ) const;
+
         TSharedPtr<FAsyncTask<Task::WebSocket::FDeleteSeasonGatheringTask>> DeleteSeasonGathering(
             const Request::FDeleteSeasonGatheringRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FVerifyIncludeParticipantByStampTaskTask>> VerifyIncludeParticipantByStampTask(
+            const Request::FVerifyIncludeParticipantByStampTaskRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FDescribeJoinedSeasonGatheringsTask>> DescribeJoinedSeasonGatherings(

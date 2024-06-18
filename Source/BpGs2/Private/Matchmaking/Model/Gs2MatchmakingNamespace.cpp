@@ -16,9 +16,11 @@
 
 #include "Matchmaking/Model/Gs2MatchmakingNamespace.h"
 #include "Matchmaking/Model/Gs2MatchmakingRatingModel.h"
+#include "Matchmaking/Model/Gs2MatchmakingSeasonModel.h"
 #include "Core/Model/Gs2AccessToken.h"
 #include "Matchmaking/Model/Gs2MatchmakingUser.h"
 #include "Matchmaking/Model/Gs2MatchmakingRatingModel.h"
+#include "Matchmaking/Model/Gs2MatchmakingSeasonModel.h"
 #include "Core/BpGs2Constant.h"
 
 FGs2MatchmakingUser UGs2MatchmakingNamespaceFunctionLibrary::User(
@@ -75,6 +77,26 @@ FGs2MatchmakingRatingModel UGs2MatchmakingNamespaceFunctionLibrary::RatingModel(
     }
     Return.Value = Namespace.Value->RatingModel(
         RatingName
+    );
+    return Return;
+}
+
+FGs2MatchmakingSeasonModel UGs2MatchmakingNamespaceFunctionLibrary::SeasonModel(
+    FGs2MatchmakingNamespace Namespace,
+    FString SeasonName
+)
+{
+    FGs2MatchmakingSeasonModel Return;
+    if (Namespace.Value == nullptr) {
+        UE_LOG(BpGs2Log, Error, TEXT("[UGs2MatchmakingNamespaceFunctionLibrary::SeasonModel] Namespace parameter specification is missing."))
+        return Return;
+    }
+    if (SeasonName == "") {
+        UE_LOG(BpGs2Log, Error, TEXT("[UGs2MatchmakingNamespaceFunctionLibrary::SeasonModel] SeasonName parameter specification is missing."))
+        return Return;
+    }
+    Return.Value = Namespace.Value->SeasonModel(
+        SeasonName
     );
     return Return;
 }

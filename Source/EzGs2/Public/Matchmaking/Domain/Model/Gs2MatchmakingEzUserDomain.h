@@ -20,11 +20,14 @@
 #include "Matchmaking/Domain/Model/User.h"
 #include "Matchmaking/Model/Gs2MatchmakingEzGathering.h"
 #include "Matchmaking/Model/Gs2MatchmakingEzRatingModel.h"
+#include "Matchmaking/Model/Gs2MatchmakingEzRating.h"
+#include "Matchmaking/Model/Gs2MatchmakingEzJoinedSeasonGathering.h"
+#include "Matchmaking/Model/Gs2MatchmakingEzSeasonGathering.h"
+#include "Matchmaking/Model/Gs2MatchmakingEzSeasonModel.h"
+#include "Matchmaking/Model/Gs2MatchmakingEzPlayer.h"
 #include "Matchmaking/Model/Gs2MatchmakingEzAttributeRange.h"
 #include "Matchmaking/Model/Gs2MatchmakingEzCapacityOfRole.h"
 #include "Matchmaking/Model/Gs2MatchmakingEzAttribute.h"
-#include "Matchmaking/Model/Gs2MatchmakingEzPlayer.h"
-#include "Matchmaking/Model/Gs2MatchmakingEzRating.h"
 #include "Matchmaking/Model/Gs2MatchmakingEzGameResult.h"
 #include "Matchmaking/Model/Gs2MatchmakingEzBallot.h"
 #include "Matchmaking/Model/Gs2MatchmakingEzSignedBallot.h"
@@ -32,6 +35,7 @@
 #include "Gs2MatchmakingEzGatheringDomain.h"
 #include "Gs2MatchmakingEzRatingDomain.h"
 #include "Gs2MatchmakingEzBallotDomain.h"
+#include "Gs2MatchmakingEzSeasonDomain.h"
 #include "Gs2MatchmakingEzUserDomain.h"
 #include "Gs2MatchmakingEzUserDomain.h"
 #include "Gs2MatchmakingEzUserGameSessionDomain.h"
@@ -71,6 +75,11 @@ namespace Gs2::UE5::Matchmaking::Domain::Model
             const FString GatheringName,
             const int32 NumberOfPlayer,
             const FString KeyId
+        ) const;
+
+        Gs2::UE5::Matchmaking::Domain::Model::FEzSeasonDomainPtr Season(
+            const FString SeasonName,
+            const int64 Season
         ) const;
 
     };
