@@ -292,6 +292,49 @@ namespace Gs2::Distributor::Domain::Model
         return Gs2::Core::Util::New<FAsyncTask<FDeleteTask>>(this->AsShared(), Request);
     }
 
+    FNamespaceDomain::FSetTransactionDefaultConfigTask::FSetTransactionDefaultConfigTask(
+        const TSharedPtr<FNamespaceDomain>& Self,
+        const Request::FSetTransactionDefaultConfigByUserIdRequestPtr Request
+    ): Self(Self), Request(Request)
+    {
+
+    }
+
+    FNamespaceDomain::FSetTransactionDefaultConfigTask::FSetTransactionDefaultConfigTask(
+        const FSetTransactionDefaultConfigTask& From
+    ): TGs2Future(From), Self(From.Self), Request(From.Request)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FNamespaceDomain::FSetTransactionDefaultConfigTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::Distributor::Domain::Model::FNamespaceDomain>> Result
+    )
+    {
+        const auto Future = Self->Client->SetTransactionDefaultConfigByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto RequestModel = Request;
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
+        if (ResultModel != nullptr) {
+            
+        }
+        const auto Domain = Self;
+        *Result = Domain;
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FNamespaceDomain::FSetTransactionDefaultConfigTask>> FNamespaceDomain::SetTransactionDefaultConfig(
+        Request::FSetTransactionDefaultConfigByUserIdRequestPtr Request
+    ) {
+        return Gs2::Core::Util::New<FAsyncTask<FSetTransactionDefaultConfigTask>>(this->AsShared(), Request);
+    }
+
     FNamespaceDomain::FCreateDistributorModelMasterTask::FCreateDistributorModelMasterTask(
         const TSharedPtr<FNamespaceDomain>& Self,
         const Request::FCreateDistributorModelMasterRequestPtr Request

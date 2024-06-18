@@ -244,6 +244,24 @@ namespace Gs2::Distributor
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::WebSocket::FSetTransactionDefaultConfigTask>> FGs2DistributorWebSocketClient::SetTransactionDefaultConfig(
+        const Request::FSetTransactionDefaultConfigRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FSetTransactionDefaultConfigTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FSetTransactionDefaultConfigByUserIdTask>> FGs2DistributorWebSocketClient::SetTransactionDefaultConfigByUserId(
+        const Request::FSetTransactionDefaultConfigByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FSetTransactionDefaultConfigByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::WebSocket::FGetStampSheetResultTask>> FGs2DistributorWebSocketClient::GetStampSheetResult(
         const Request::FGetStampSheetResultRequestPtr Request) const
     {

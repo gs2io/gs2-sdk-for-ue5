@@ -244,6 +244,24 @@ namespace Gs2::Distributor
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::Rest::FSetTransactionDefaultConfigTask>> FGs2DistributorRestClient::SetTransactionDefaultConfig(
+        const Request::FSetTransactionDefaultConfigRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FSetTransactionDefaultConfigTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FSetTransactionDefaultConfigByUserIdTask>> FGs2DistributorRestClient::SetTransactionDefaultConfigByUserId(
+        const Request::FSetTransactionDefaultConfigByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FSetTransactionDefaultConfigByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::Rest::FGetStampSheetResultTask>> FGs2DistributorRestClient::GetStampSheetResult(
         const Request::FGetStampSheetResultRequestPtr Request) const
     {

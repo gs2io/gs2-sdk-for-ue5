@@ -68,6 +68,10 @@
 #include "Task/Rest/RunStampSheetWithoutNamespaceTask.h"
 #include "Request/RunStampSheetExpressWithoutNamespaceRequest.h"
 #include "Task/Rest/RunStampSheetExpressWithoutNamespaceTask.h"
+#include "Request/SetTransactionDefaultConfigRequest.h"
+#include "Task/Rest/SetTransactionDefaultConfigTask.h"
+#include "Request/SetTransactionDefaultConfigByUserIdRequest.h"
+#include "Task/Rest/SetTransactionDefaultConfigByUserIdTask.h"
 #include "Request/GetStampSheetResultRequest.h"
 #include "Task/Rest/GetStampSheetResultTask.h"
 #include "Request/GetStampSheetResultByUserIdRequest.h"
@@ -182,6 +186,14 @@ namespace Gs2::Distributor
 
         TSharedPtr<FAsyncTask<Task::Rest::FRunStampSheetExpressWithoutNamespaceTask>> RunStampSheetExpressWithoutNamespace(
             const Request::FRunStampSheetExpressWithoutNamespaceRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FSetTransactionDefaultConfigTask>> SetTransactionDefaultConfig(
+            const Request::FSetTransactionDefaultConfigRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FSetTransactionDefaultConfigByUserIdTask>> SetTransactionDefaultConfigByUserId(
+            const Request::FSetTransactionDefaultConfigByUserIdRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::Rest::FGetStampSheetResultTask>> GetStampSheetResult(

@@ -68,6 +68,10 @@
 #include "Task/WebSocket/RunStampSheetWithoutNamespaceTask.h"
 #include "Request/RunStampSheetExpressWithoutNamespaceRequest.h"
 #include "Task/WebSocket/RunStampSheetExpressWithoutNamespaceTask.h"
+#include "Request/SetTransactionDefaultConfigRequest.h"
+#include "Task/WebSocket/SetTransactionDefaultConfigTask.h"
+#include "Request/SetTransactionDefaultConfigByUserIdRequest.h"
+#include "Task/WebSocket/SetTransactionDefaultConfigByUserIdTask.h"
 #include "Request/GetStampSheetResultRequest.h"
 #include "Task/WebSocket/GetStampSheetResultTask.h"
 #include "Request/GetStampSheetResultByUserIdRequest.h"
@@ -182,6 +186,14 @@ namespace Gs2::Distributor
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FRunStampSheetExpressWithoutNamespaceTask>> RunStampSheetExpressWithoutNamespace(
             const Request::FRunStampSheetExpressWithoutNamespaceRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FSetTransactionDefaultConfigTask>> SetTransactionDefaultConfig(
+            const Request::FSetTransactionDefaultConfigRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FSetTransactionDefaultConfigByUserIdTask>> SetTransactionDefaultConfigByUserId(
+            const Request::FSetTransactionDefaultConfigByUserIdRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FGetStampSheetResultTask>> GetStampSheetResult(

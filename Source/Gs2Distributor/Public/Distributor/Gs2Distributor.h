@@ -24,6 +24,7 @@
 #include "Model/StampSheetResult.h"
 #include "Model/AcquireAction.h"
 #include "Model/ConsumeAction.h"
+#include "Model/Config.h"
 #include "Model/GitHubCheckoutSetting.h"
 #include "Model/DistributeResource.h"
 #include "Model/LogSetting.h"
@@ -178,6 +179,18 @@
 #include "Result/RunStampSheetExpressWithoutNamespaceResult.h"
 #include "Task/Rest/RunStampSheetExpressWithoutNamespaceTask.h"
 #include "Task/WebSocket/RunStampSheetExpressWithoutNamespaceTask.h"
+
+// SetTransactionDefaultConfig
+#include "Request/SetTransactionDefaultConfigRequest.h"
+#include "Result/SetTransactionDefaultConfigResult.h"
+#include "Task/Rest/SetTransactionDefaultConfigTask.h"
+#include "Task/WebSocket/SetTransactionDefaultConfigTask.h"
+
+// SetTransactionDefaultConfigByUserId
+#include "Request/SetTransactionDefaultConfigByUserIdRequest.h"
+#include "Result/SetTransactionDefaultConfigByUserIdResult.h"
+#include "Task/Rest/SetTransactionDefaultConfigByUserIdTask.h"
+#include "Task/WebSocket/SetTransactionDefaultConfigByUserIdTask.h"
 
 // GetStampSheetResult
 #include "Request/GetStampSheetResultRequest.h"

@@ -223,6 +223,32 @@ namespace Gs2::Distributor::Domain::Model
             Request::FDeleteNamespaceRequestPtr Request
         );
 
+        class GS2DISTRIBUTOR_API FSetTransactionDefaultConfigTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Distributor::Domain::Model::FNamespaceDomain>,
+            public TSharedFromThis<FSetTransactionDefaultConfigTask>
+        {
+            const TSharedPtr<FNamespaceDomain> Self;
+            const Request::FSetTransactionDefaultConfigByUserIdRequestPtr Request;
+        public:
+            explicit FSetTransactionDefaultConfigTask(
+                const TSharedPtr<FNamespaceDomain>& Self,
+                const Request::FSetTransactionDefaultConfigByUserIdRequestPtr Request
+            );
+
+            FSetTransactionDefaultConfigTask(
+                const FSetTransactionDefaultConfigTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Distributor::Domain::Model::FNamespaceDomain>> Result
+            ) override;
+        };
+        friend FSetTransactionDefaultConfigTask;
+
+        TSharedPtr<FAsyncTask<FSetTransactionDefaultConfigTask>> SetTransactionDefaultConfig(
+            Request::FSetTransactionDefaultConfigByUserIdRequestPtr Request
+        );
+
         class GS2DISTRIBUTOR_API FCreateDistributorModelMasterTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Distributor::Domain::Model::FDistributorModelMasterDomain>,
             public TSharedFromThis<FCreateDistributorModelMasterTask>
