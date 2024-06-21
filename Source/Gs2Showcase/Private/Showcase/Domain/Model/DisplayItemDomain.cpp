@@ -45,6 +45,7 @@
 #include "Showcase/Domain/Model/RandomDisplayItemAccessToken.h"
 
 #include "Core/Domain/Gs2.h"
+#include "Core/Domain/Transaction/InternalTransactionDomainFactory.h"
 #include "Core/Domain/Transaction/ManualTransactionDomain.h"
 
 namespace Gs2::Showcase::Domain::Model

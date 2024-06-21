@@ -12,6 +12,8 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
+ *
+ * deny overwrite
  */
 
 #include "Matchmaking/Domain/Model/Gs2MatchmakingEzSeasonGameSessionDomain.h"
@@ -68,20 +70,6 @@ namespace Gs2::UE5::Matchmaking::Domain::Model
             Domain,
             GameSession,
             ConnectionValue
-        );
-    }
-
-    Gs2::Core::Domain::CallbackID FEzSeasonGameSessionDomain::SubscribeDoSeasonMatchmaking(TFunction<void()> Callback)
-    {
-        return Domain->SubscribeDoSeasonMatchmaking(
-            Callback
-        );
-    }
-
-    void FEzSeasonGameSessionDomain::UnsubscribeDoSeasonMatchmaking(Gs2::Core::Domain::CallbackID CallbackId)
-    {
-        Domain->UnsubscribeDoSeasonMatchmaking(
-            CallbackId
         );
     }
 

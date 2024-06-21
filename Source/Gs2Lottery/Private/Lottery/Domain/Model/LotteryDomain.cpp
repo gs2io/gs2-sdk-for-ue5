@@ -45,6 +45,7 @@
 #include "Core/Domain/Transaction/JobQueueJobDomainFactory.h"
 #include "Core/Domain/Transaction/InternalTransactionDomainFactory.h"
 #include "Core/Domain/Transaction/ManualTransactionDomain.h"
+#include "Lottery/Domain/Model/DrawnPrize.h"
 
 namespace Gs2::Lottery::Domain::Model
 {

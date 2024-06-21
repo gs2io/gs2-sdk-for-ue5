@@ -12,6 +12,8 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
+ *
+ * deny overwrite
  */
 
 // ReSharper disable CppUnusedIncludeDirective
@@ -65,6 +67,7 @@ namespace Gs2::Distributor::Domain::Model
         TOptional<int32> SheetResultCode;
         TOptional<FString> SheetResult;
         TOptional<FString> NextPageToken;
+        TOptional<FString> NewContextStack;
         TOptional<FString> GetStatus() const
         {
             return Status;
@@ -100,6 +103,10 @@ namespace Gs2::Distributor::Domain::Model
         TOptional<FString> GetNextPageToken() const
         {
             return NextPageToken;
+        }
+        TOptional<FString> GetNewContextStack() const
+        {
+            return NewContextStack;
         }
         TOptional<FString> NamespaceName;
     private:
@@ -228,11 +235,11 @@ namespace Gs2::Distributor::Domain::Model
             public TSharedFromThis<FSetTransactionDefaultConfigTask>
         {
             const TSharedPtr<FNamespaceDomain> Self;
-            const Request::FSetTransactionDefaultConfigByUserIdRequestPtr Request;
+            const Request::FSetTransactionDefaultConfigRequestPtr Request;
         public:
             explicit FSetTransactionDefaultConfigTask(
                 const TSharedPtr<FNamespaceDomain>& Self,
-                const Request::FSetTransactionDefaultConfigByUserIdRequestPtr Request
+                const Request::FSetTransactionDefaultConfigRequestPtr Request
             );
 
             FSetTransactionDefaultConfigTask(
@@ -246,7 +253,7 @@ namespace Gs2::Distributor::Domain::Model
         friend FSetTransactionDefaultConfigTask;
 
         TSharedPtr<FAsyncTask<FSetTransactionDefaultConfigTask>> SetTransactionDefaultConfig(
-            Request::FSetTransactionDefaultConfigByUserIdRequestPtr Request
+            Request::FSetTransactionDefaultConfigRequestPtr Request
         );
 
         class GS2DISTRIBUTOR_API FCreateDistributorModelMasterTask final :

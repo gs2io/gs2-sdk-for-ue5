@@ -12,6 +12,8 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
+ *
+ * deny overwrite
  */
 
 #if defined(_MSC_VER)
@@ -95,9 +97,9 @@ namespace Gs2::Matchmaking::Domain::SpeculativeExecutor
                 AccessToken
             )->Season(
                 Request->GetSeasonName().IsSet() ? *Request->GetSeasonName() : FString(""),
-                Request->GetSeason().IsSet() ? *Request->GetSeason() : FString("")
+                Request->GetSeason().IsSet() ? *Request->GetSeason() : 0
             )->SeasonGathering(
-                Request->GetTier().IsSet() ? *Request->GetTier() : FString(""),
+                Request->GetTier().IsSet() ? *Request->GetTier() : 0,
                 Request->GetSeasonGatheringName().IsSet() ? *Request->GetSeasonGatheringName() : FString("")
             )->Model();
         Future->StartSynchronousTask();

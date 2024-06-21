@@ -12,6 +12,8 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
+ *
+ * deny overwrite
  */
 
 #if defined(_MSC_VER)
@@ -281,7 +283,6 @@ namespace Gs2::Distributor::Domain::Model
             }
         }
         auto Domain = Self;
-
         *Result = Domain;
         return nullptr;
     }
@@ -294,7 +295,7 @@ namespace Gs2::Distributor::Domain::Model
 
     FNamespaceDomain::FSetTransactionDefaultConfigTask::FSetTransactionDefaultConfigTask(
         const TSharedPtr<FNamespaceDomain>& Self,
-        const Request::FSetTransactionDefaultConfigByUserIdRequestPtr Request
+        const Request::FSetTransactionDefaultConfigRequestPtr Request
     ): Self(Self), Request(Request)
     {
 
@@ -310,7 +311,7 @@ namespace Gs2::Distributor::Domain::Model
         TSharedPtr<TSharedPtr<Gs2::Distributor::Domain::Model::FNamespaceDomain>> Result
     )
     {
-        const auto Future = Self->Client->SetTransactionDefaultConfigByUserId(
+        const auto Future = Self->Client->SetTransactionDefaultConfig(
             Request
         );
         Future->StartSynchronousTask();
@@ -326,11 +327,12 @@ namespace Gs2::Distributor::Domain::Model
         }
         const auto Domain = Self;
         *Result = Domain;
+        Domain->NewContextStack = ResultModel->GetNewContextStack();
         return nullptr;
     }
 
     TSharedPtr<FAsyncTask<FNamespaceDomain::FSetTransactionDefaultConfigTask>> FNamespaceDomain::SetTransactionDefaultConfig(
-        Request::FSetTransactionDefaultConfigByUserIdRequestPtr Request
+        Request::FSetTransactionDefaultConfigRequestPtr Request
     ) {
         return Gs2::Core::Util::New<FAsyncTask<FSetTransactionDefaultConfigTask>>(this->AsShared(), Request);
     }

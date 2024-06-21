@@ -12,6 +12,8 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
+ *
+ * deny overwrite
  */
 
 #pragma once
@@ -24,8 +26,8 @@
 #include "Gs2MatchmakingActionDoSeasonMatchmaking.generated.h"
 
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FGs2MatchmakingDoSeasonMatchmakingSuccessDelegate, FGs2MatchmakingOwnSeasonGathering, SeasonGathering, const FGs2Error, Error);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FGs2MatchmakingDoSeasonMatchmakingErrorDelegate, FGs2MatchmakingOwnSeasonGathering, SeasonGathering, const FGs2Error, Error);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FGs2MatchmakingDoSeasonMatchmakingSuccessDelegate, FGs2MatchmakingSeasonGatheringValue, SeasonGathering, const FGs2Error, Error);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FGs2MatchmakingDoSeasonMatchmakingErrorDelegate, FGs2MatchmakingSeasonGatheringValue, SeasonGathering, const FGs2Error, Error);
 
 UCLASS()
 class BPGS2_API UGs2MatchmakingDoSeasonMatchmakingAsyncFunction : public UBlueprintAsyncActionBase

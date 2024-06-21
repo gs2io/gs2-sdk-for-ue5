@@ -30,6 +30,8 @@
 #include "Lottery/Domain/Model/Lottery.h"
 #include "Lottery/Domain/Model/Probability.h"
 
+#include "Core/Domain/Gs2.h"
+
 namespace Gs2::Lottery::Domain::Iterator
 {
 

@@ -18,6 +18,7 @@
 
 #include "CoreMinimal.h"
 #include "Distributor/Domain/Model/StampSheetResultAccessToken.h"
+#include "Distributor/Model/Gs2DistributorEzConfig.h"
 #include "Distributor/Model/Gs2DistributorEzDistributorModel.h"
 #include "Distributor/Model/Gs2DistributorEzDistributeResource.h"
 #include "Distributor/Model/Gs2DistributorEzStampSheetResult.h"

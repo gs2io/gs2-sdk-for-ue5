@@ -12,6 +12,8 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
+ *
+ * deny overwrite
  */
 
 #pragma once
@@ -66,10 +68,6 @@ namespace Gs2::UE5::Matchmaking::Domain::Model
 
         Gs2::UE5::Matchmaking::Domain::Iterator::FEzDoSeasonMatchmakingIteratorPtr DoSeasonMatchmaking(
         ) const;
-
-        Gs2::Core::Domain::CallbackID SubscribeDoSeasonMatchmaking(TFunction<void()> Callback);
-
-        void UnsubscribeDoSeasonMatchmaking(Gs2::Core::Domain::CallbackID CallbackId);
 
         Gs2::UE5::Matchmaking::Domain::Model::FEzSeasonGatheringGameSessionDomainPtr SeasonGathering(
             const int64 Tier,

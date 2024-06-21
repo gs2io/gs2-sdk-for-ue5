@@ -30,6 +30,8 @@
 #include "Ranking/Domain/Model/Ranking.h"
 #include "Ranking/Domain/Model/RankingCategory.h"
 
+#include "Core/Domain/Gs2.h"
+
 namespace Gs2::Ranking::Domain::Iterator
 {
 

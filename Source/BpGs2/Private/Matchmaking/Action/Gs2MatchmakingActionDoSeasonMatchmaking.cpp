@@ -12,6 +12,8 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
+ *
+ * deny overwrite
  */
 
 #include "Matchmaking/Action/Gs2MatchmakingActionDoSeasonMatchmaking.h"
@@ -48,21 +50,25 @@ void UGs2MatchmakingDoSeasonMatchmakingAsyncFunction::Activate()
 
     auto Future = Season.Value->DoSeasonMatchmaking(
     );
-    Future->GetTask().OnSuccessDelegate().BindLambda([&](auto Result)
+    for (auto Gathering : *Future)
     {
-        FGs2MatchmakingOwnSeasonGathering ReturnSeasonGathering;
-        ReturnSeasonGathering.Value = Result;
         const FGs2Error ReturnError;
-        OnSuccess.Broadcast(ReturnSeasonGathering, ReturnError);
+        OnSuccess.Broadcast(EzSeasonGatheringToFGs2MatchmakingSeasonGatheringValue(Gathering.Current()), ReturnError);
         SetReadyToDestroy();
-    });
-    Future->GetTask().OnErrorDelegate().BindLambda([&](auto Error)
-    {
-        FGs2MatchmakingOwnSeasonGathering ReturnSeasonGathering;
-        FGs2Error ReturnError;
-        ReturnError.Value = Error;
-        OnError.Broadcast(ReturnSeasonGathering, ReturnError);
-        SetReadyToDestroy();
-    });
-    Future->StartBackgroundTask();
+        return;
+    }
+    
+    FGs2MatchmakingSeasonGatheringValue ReturnGathering;
+    FGs2Error ReturnError;
+    auto Detail = MakeShared<TArray<Gs2::Core::Model::FGs2ErrorDetailPtr>>();
+    Detail->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>(
+        "gathering",
+        "matchmaking.gathering.gathering.error.notFound",
+        ""
+    ));
+    ReturnError.Value = MakeShared<Gs2::Core::Model::FNotFoundError>(
+        Detail
+    );
+    OnError.Broadcast(ReturnGathering, ReturnError);
+    SetReadyToDestroy();
 }
