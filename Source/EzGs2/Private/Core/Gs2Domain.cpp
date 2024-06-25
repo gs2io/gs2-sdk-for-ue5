@@ -47,6 +47,7 @@ namespace Gs2::UE5::Core::Domain
         MegaField = MakeShared<Gs2::UE5::MegaField::Domain::FEzGs2MegaField>(Super->MegaField, Connection);
         Mission = MakeShared<Gs2::UE5::Mission::Domain::FEzGs2Mission>(Super->Mission, Connection);
         Money = MakeShared<Gs2::UE5::Money::Domain::FEzGs2Money>(Super->Money, Connection);
+        Money2 = MakeShared<Gs2::UE5::Money2::Domain::FEzGs2Money2>(Super->Money2, Connection);
         News = MakeShared<Gs2::UE5::News::Domain::FEzGs2News>(Super->News, Connection);
         Quest = MakeShared<Gs2::UE5::Quest::Domain::FEzGs2Quest>(Super->Quest, Connection);
         Ranking = MakeShared<Gs2::UE5::Ranking::Domain::FEzGs2Ranking>(Super->Ranking, Connection);
@@ -109,6 +110,7 @@ namespace Gs2::UE5::Core::Domain
         MegaField(From.MegaField),
         Mission(From.Mission),
         Money(From.Money),
+        Money2(From.Money2),
         News(From.News),
         Quest(From.Quest),
         Ranking(From.Ranking),

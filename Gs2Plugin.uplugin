@@ -1,7 +1,7 @@
 {
 	"FileVersion": 3,
 	"Version": 1,
-	"VersionName": "2024.6.9",
+	"VersionName": "2024.6.10",
 	"FriendlyName": "GS2 Plugin",
 	"Description": "Plugin for Game Server Services",
 	"Category": "Online Service",
@@ -176,6 +176,11 @@
 			"LoadingPhase": "PostEngineInit"
 		},
 		{
+			"Name": "Gs2Money2",
+			"Type": "Runtime",
+			"LoadingPhase": "PostEngineInit"
+		},
+		{
 			"Name": "Gs2News",
 			"Type": "Runtime",
 			"LoadingPhase": "PostEngineInit"
@@ -187,6 +192,11 @@
 		},
 		{
 			"Name": "Gs2Ranking",
+			"Type": "Runtime",
+			"LoadingPhase": "PostEngineInit"
+		},
+		{
+			"Name": "Gs2Ranking2",
 			"Type": "Runtime",
 			"LoadingPhase": "PostEngineInit"
 		},

@@ -89,6 +89,7 @@ namespace Gs2::Core::Domain
         MegaField(nullptr),
         Mission(nullptr),
         Money(nullptr),
+        Money2(nullptr),
         News(nullptr),
         Quest(nullptr),
         Ranking(nullptr),
@@ -248,6 +249,10 @@ namespace Gs2::Core::Domain
                     {
                         Money->HandleNotification(Method, *Message->GetPayload());
                     }
+                    if (Service == "Gs2Money2")
+                    {
+                        Money2->HandleNotification(Method, *Message->GetPayload());
+                    }
                     if (Service == "Gs2News")
                     {
                         News->HandleNotification(Method, *Message->GetPayload());
@@ -349,6 +354,7 @@ namespace Gs2::Core::Domain
         MegaField(From.MegaField),
         Mission(From.Mission),
         Money(From.Money),
+        Money2(From.Money2),
         News(From.News),
         Quest(From.Quest),
         Ranking(From.Ranking),
@@ -406,6 +412,7 @@ namespace Gs2::Core::Domain
         MegaField = MakeShared<MegaField::Domain::FGs2MegaFieldDomain>(SharedThis(this));
         Mission = MakeShared<Mission::Domain::FGs2MissionDomain>(SharedThis(this));
         Money = MakeShared<Money::Domain::FGs2MoneyDomain>(SharedThis(this));
+        Money2 = MakeShared<Money2::Domain::FGs2Money2Domain>(SharedThis(this));
         News = MakeShared<News::Domain::FGs2NewsDomain>(SharedThis(this));
         Quest = MakeShared<Quest::Domain::FGs2QuestDomain>(SharedThis(this));
         Ranking = MakeShared<Ranking::Domain::FGs2RankingDomain>(SharedThis(this));
@@ -461,6 +468,7 @@ namespace Gs2::Core::Domain
         MegaField->OnIssueTransaction.AddLambda(IssueTransactionAction);
         Mission->OnIssueTransaction.AddLambda(IssueTransactionAction);
         Money->OnIssueTransaction.AddLambda(IssueTransactionAction);
+        Money2->OnIssueTransaction.AddLambda(IssueTransactionAction);
         News->OnIssueTransaction.AddLambda(IssueTransactionAction);
         Quest->OnIssueTransaction.AddLambda(IssueTransactionAction);
         Ranking->OnIssueTransaction.AddLambda(IssueTransactionAction);
@@ -619,6 +627,10 @@ namespace Gs2::Core::Domain
             if (Service == "Gs2Money")
             {
                 Money->UpdateCacheFromStampSheet(Method, Request, Result);
+            }
+            if (Service == "Gs2Money2")
+            {
+                Money2->UpdateCacheFromStampSheet(Method, Request, Result);
             }
             if (Service == "Gs2News")
             {
@@ -820,6 +832,10 @@ namespace Gs2::Core::Domain
             if (Service == "Gs2Money")
             {
                 Money->UpdateCacheFromStampTask(Method, Request, Result);
+            }
+            if (Service == "Gs2Money2")
+            {
+                Money2->UpdateCacheFromStampTask(Method, Request, Result);
             }
             if (Service == "Gs2News")
             {
@@ -1040,6 +1056,10 @@ namespace Gs2::Core::Domain
             if (Service == "money")
             {
                 Money->UpdateCacheFromJobResult(Method, Job, Result);
+            }
+            if (Service == "money2")
+            {
+                Money2->UpdateCacheFromJobResult(Method, Job, Result);
             }
             if (Service == "news")
             {

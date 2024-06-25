@@ -46,6 +46,7 @@
 #include "MegaField/Domain/EzGs2MegaField.h"
 #include "Mission/Domain/EzGs2Mission.h"
 #include "Money/Domain/EzGs2Money.h"
+#include "Money2/Domain/EzGs2Money2.h"
 #include "News/Domain/EzGs2News.h"
 #include "Quest/Domain/EzGs2Quest.h"
 #include "Ranking/Domain/EzGs2Ranking.h"
@@ -105,6 +106,7 @@ namespace Gs2::UE5::Core::Domain
         Gs2::UE5::MegaField::Domain::FEzGs2MegaFieldPtr MegaField;
         Gs2::UE5::Mission::Domain::FEzGs2MissionPtr Mission;
         Gs2::UE5::Money::Domain::FEzGs2MoneyPtr Money;
+        Gs2::UE5::Money2::Domain::FEzGs2Money2Ptr Money2;
         Gs2::UE5::News::Domain::FEzGs2NewsPtr News;
         Gs2::UE5::Quest::Domain::FEzGs2QuestPtr Quest;
         Gs2::UE5::Ranking::Domain::FEzGs2RankingPtr Ranking;

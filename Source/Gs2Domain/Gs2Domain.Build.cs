@@ -49,6 +49,7 @@ public class Gs2Domain : ModuleRules
 			"Gs2MegaField",
 			"Gs2Mission",
 			"Gs2Money",
+			"Gs2Money2",
 			"Gs2News",
 			"Gs2Quest",
 			"Gs2Ranking",

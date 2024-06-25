@@ -51,6 +51,7 @@
 #include "MegaField/Domain/Gs2MegaField.h"
 #include "Mission/Domain/Gs2Mission.h"
 #include "Money/Domain/Gs2Money.h"
+#include "Money2/Domain/Gs2Money2.h"
 #include "News/Domain/Gs2News.h"
 #include "Quest/Domain/Gs2Quest.h"
 #include "Ranking/Domain/Gs2Ranking.h"
@@ -113,6 +114,7 @@ namespace Gs2::Core::Domain
         Gs2::MegaField::Domain::FGs2MegaFieldDomainPtr MegaField;
         Gs2::Mission::Domain::FGs2MissionDomainPtr Mission;
         Gs2::Money::Domain::FGs2MoneyDomainPtr Money;
+        Gs2::Money2::Domain::FGs2Money2DomainPtr Money2;
         Gs2::News::Domain::FGs2NewsDomainPtr News;
         Gs2::Quest::Domain::FGs2QuestDomainPtr Quest;
         Gs2::Ranking::Domain::FGs2RankingDomainPtr Ranking;

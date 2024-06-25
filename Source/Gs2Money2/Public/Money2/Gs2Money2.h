@@ -1,0 +1,274 @@
+/*
+ * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
+ * Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License").
+ * You may not use this file except in compliance with the License.
+ * A copy of the License is located at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * or in the "license" file accompanying this file. This file is distributed
+ * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied. See the License for the specific language governing
+ * permissions and limitations under the License.
+ */
+
+#pragma once
+
+// Model
+#include "Model/Namespace.h"
+#include "Model/Wallet.h"
+#include "Model/Event.h"
+#include "Model/StoreContentModel.h"
+#include "Model/StoreContentModelMaster.h"
+#include "Model/CurrentModelMaster.h"
+#include "Model/Receipt.h"
+#include "Model/PlatformSetting.h"
+#include "Model/AppleAppStoreSetting.h"
+#include "Model/GooglePlaySetting.h"
+#include "Model/FakeSetting.h"
+#include "Model/WalletSummary.h"
+#include "Model/DepositTransaction.h"
+#include "Model/VerifyReceiptEvent.h"
+#include "Model/DepositEvent.h"
+#include "Model/WithdrawEvent.h"
+#include "Model/AppleAppStoreVerifyReceiptEvent.h"
+#include "Model/GooglePlayVerifyReceiptEvent.h"
+#include "Model/AppleAppStoreContent.h"
+#include "Model/GooglePlayContent.h"
+#include "Model/GitHubCheckoutSetting.h"
+#include "Model/ScriptSetting.h"
+#include "Model/LogSetting.h"
+
+// DescribeNamespaces
+#include "Request/DescribeNamespacesRequest.h"
+#include "Result/DescribeNamespacesResult.h"
+#include "Task/Rest/DescribeNamespacesTask.h"
+#include "Task/WebSocket/DescribeNamespacesTask.h"
+
+// CreateNamespace
+#include "Request/CreateNamespaceRequest.h"
+#include "Result/CreateNamespaceResult.h"
+#include "Task/Rest/CreateNamespaceTask.h"
+#include "Task/WebSocket/CreateNamespaceTask.h"
+
+// GetNamespaceStatus
+#include "Request/GetNamespaceStatusRequest.h"
+#include "Result/GetNamespaceStatusResult.h"
+#include "Task/Rest/GetNamespaceStatusTask.h"
+#include "Task/WebSocket/GetNamespaceStatusTask.h"
+
+// GetNamespace
+#include "Request/GetNamespaceRequest.h"
+#include "Result/GetNamespaceResult.h"
+#include "Task/Rest/GetNamespaceTask.h"
+#include "Task/WebSocket/GetNamespaceTask.h"
+
+// UpdateNamespace
+#include "Request/UpdateNamespaceRequest.h"
+#include "Result/UpdateNamespaceResult.h"
+#include "Task/Rest/UpdateNamespaceTask.h"
+#include "Task/WebSocket/UpdateNamespaceTask.h"
+
+// DeleteNamespace
+#include "Request/DeleteNamespaceRequest.h"
+#include "Result/DeleteNamespaceResult.h"
+#include "Task/Rest/DeleteNamespaceTask.h"
+#include "Task/WebSocket/DeleteNamespaceTask.h"
+
+// DumpUserDataByUserId
+#include "Request/DumpUserDataByUserIdRequest.h"
+#include "Result/DumpUserDataByUserIdResult.h"
+#include "Task/Rest/DumpUserDataByUserIdTask.h"
+#include "Task/WebSocket/DumpUserDataByUserIdTask.h"
+
+// CheckDumpUserDataByUserId
+#include "Request/CheckDumpUserDataByUserIdRequest.h"
+#include "Result/CheckDumpUserDataByUserIdResult.h"
+#include "Task/Rest/CheckDumpUserDataByUserIdTask.h"
+#include "Task/WebSocket/CheckDumpUserDataByUserIdTask.h"
+
+// CleanUserDataByUserId
+#include "Request/CleanUserDataByUserIdRequest.h"
+#include "Result/CleanUserDataByUserIdResult.h"
+#include "Task/Rest/CleanUserDataByUserIdTask.h"
+#include "Task/WebSocket/CleanUserDataByUserIdTask.h"
+
+// CheckCleanUserDataByUserId
+#include "Request/CheckCleanUserDataByUserIdRequest.h"
+#include "Result/CheckCleanUserDataByUserIdResult.h"
+#include "Task/Rest/CheckCleanUserDataByUserIdTask.h"
+#include "Task/WebSocket/CheckCleanUserDataByUserIdTask.h"
+
+// PrepareImportUserDataByUserId
+#include "Request/PrepareImportUserDataByUserIdRequest.h"
+#include "Result/PrepareImportUserDataByUserIdResult.h"
+#include "Task/Rest/PrepareImportUserDataByUserIdTask.h"
+#include "Task/WebSocket/PrepareImportUserDataByUserIdTask.h"
+
+// ImportUserDataByUserId
+#include "Request/ImportUserDataByUserIdRequest.h"
+#include "Result/ImportUserDataByUserIdResult.h"
+#include "Task/Rest/ImportUserDataByUserIdTask.h"
+#include "Task/WebSocket/ImportUserDataByUserIdTask.h"
+
+// CheckImportUserDataByUserId
+#include "Request/CheckImportUserDataByUserIdRequest.h"
+#include "Result/CheckImportUserDataByUserIdResult.h"
+#include "Task/Rest/CheckImportUserDataByUserIdTask.h"
+#include "Task/WebSocket/CheckImportUserDataByUserIdTask.h"
+
+// DescribeWallets
+#include "Request/DescribeWalletsRequest.h"
+#include "Result/DescribeWalletsResult.h"
+#include "Task/Rest/DescribeWalletsTask.h"
+#include "Task/WebSocket/DescribeWalletsTask.h"
+
+// DescribeWalletsByUserId
+#include "Request/DescribeWalletsByUserIdRequest.h"
+#include "Result/DescribeWalletsByUserIdResult.h"
+#include "Task/Rest/DescribeWalletsByUserIdTask.h"
+#include "Task/WebSocket/DescribeWalletsByUserIdTask.h"
+
+// GetWallet
+#include "Request/GetWalletRequest.h"
+#include "Result/GetWalletResult.h"
+#include "Task/Rest/GetWalletTask.h"
+#include "Task/WebSocket/GetWalletTask.h"
+
+// GetWalletByUserId
+#include "Request/GetWalletByUserIdRequest.h"
+#include "Result/GetWalletByUserIdResult.h"
+#include "Task/Rest/GetWalletByUserIdTask.h"
+#include "Task/WebSocket/GetWalletByUserIdTask.h"
+
+// DepositByUserId
+#include "Request/DepositByUserIdRequest.h"
+#include "Result/DepositByUserIdResult.h"
+#include "Task/Rest/DepositByUserIdTask.h"
+#include "Task/WebSocket/DepositByUserIdTask.h"
+
+// Withdraw
+#include "Request/WithdrawRequest.h"
+#include "Result/WithdrawResult.h"
+#include "Task/Rest/WithdrawTask.h"
+#include "Task/WebSocket/WithdrawTask.h"
+
+// WithdrawByUserId
+#include "Request/WithdrawByUserIdRequest.h"
+#include "Result/WithdrawByUserIdResult.h"
+#include "Task/Rest/WithdrawByUserIdTask.h"
+#include "Task/WebSocket/WithdrawByUserIdTask.h"
+
+// DepositByStampSheet
+#include "Request/DepositByStampSheetRequest.h"
+#include "Result/DepositByStampSheetResult.h"
+#include "Task/Rest/DepositByStampSheetTask.h"
+#include "Task/WebSocket/DepositByStampSheetTask.h"
+
+// WithdrawByStampTask
+#include "Request/WithdrawByStampTaskRequest.h"
+#include "Result/WithdrawByStampTaskResult.h"
+#include "Task/Rest/WithdrawByStampTaskTask.h"
+#include "Task/WebSocket/WithdrawByStampTaskTask.h"
+
+// DescribeEventsByUserId
+#include "Request/DescribeEventsByUserIdRequest.h"
+#include "Result/DescribeEventsByUserIdResult.h"
+#include "Task/Rest/DescribeEventsByUserIdTask.h"
+#include "Task/WebSocket/DescribeEventsByUserIdTask.h"
+
+// GetEventByTransactionId
+#include "Request/GetEventByTransactionIdRequest.h"
+#include "Result/GetEventByTransactionIdResult.h"
+#include "Task/Rest/GetEventByTransactionIdTask.h"
+#include "Task/WebSocket/GetEventByTransactionIdTask.h"
+
+// VerifyReceipt
+#include "Request/VerifyReceiptRequest.h"
+#include "Result/VerifyReceiptResult.h"
+#include "Task/Rest/VerifyReceiptTask.h"
+#include "Task/WebSocket/VerifyReceiptTask.h"
+
+// VerifyReceiptByUserId
+#include "Request/VerifyReceiptByUserIdRequest.h"
+#include "Result/VerifyReceiptByUserIdResult.h"
+#include "Task/Rest/VerifyReceiptByUserIdTask.h"
+#include "Task/WebSocket/VerifyReceiptByUserIdTask.h"
+
+// VerifyReceiptByStampTask
+#include "Request/VerifyReceiptByStampTaskRequest.h"
+#include "Result/VerifyReceiptByStampTaskResult.h"
+#include "Task/Rest/VerifyReceiptByStampTaskTask.h"
+#include "Task/WebSocket/VerifyReceiptByStampTaskTask.h"
+
+// DescribeStoreContentModels
+#include "Request/DescribeStoreContentModelsRequest.h"
+#include "Result/DescribeStoreContentModelsResult.h"
+#include "Task/Rest/DescribeStoreContentModelsTask.h"
+#include "Task/WebSocket/DescribeStoreContentModelsTask.h"
+
+// GetStoreContentModel
+#include "Request/GetStoreContentModelRequest.h"
+#include "Result/GetStoreContentModelResult.h"
+#include "Task/Rest/GetStoreContentModelTask.h"
+#include "Task/WebSocket/GetStoreContentModelTask.h"
+
+// DescribeStoreContentModelMasters
+#include "Request/DescribeStoreContentModelMastersRequest.h"
+#include "Result/DescribeStoreContentModelMastersResult.h"
+#include "Task/Rest/DescribeStoreContentModelMastersTask.h"
+#include "Task/WebSocket/DescribeStoreContentModelMastersTask.h"
+
+// CreateStoreContentModelMaster
+#include "Request/CreateStoreContentModelMasterRequest.h"
+#include "Result/CreateStoreContentModelMasterResult.h"
+#include "Task/Rest/CreateStoreContentModelMasterTask.h"
+#include "Task/WebSocket/CreateStoreContentModelMasterTask.h"
+
+// GetStoreContentModelMaster
+#include "Request/GetStoreContentModelMasterRequest.h"
+#include "Result/GetStoreContentModelMasterResult.h"
+#include "Task/Rest/GetStoreContentModelMasterTask.h"
+#include "Task/WebSocket/GetStoreContentModelMasterTask.h"
+
+// UpdateStoreContentModelMaster
+#include "Request/UpdateStoreContentModelMasterRequest.h"
+#include "Result/UpdateStoreContentModelMasterResult.h"
+#include "Task/Rest/UpdateStoreContentModelMasterTask.h"
+#include "Task/WebSocket/UpdateStoreContentModelMasterTask.h"
+
+// DeleteStoreContentModelMaster
+#include "Request/DeleteStoreContentModelMasterRequest.h"
+#include "Result/DeleteStoreContentModelMasterResult.h"
+#include "Task/Rest/DeleteStoreContentModelMasterTask.h"
+#include "Task/WebSocket/DeleteStoreContentModelMasterTask.h"
+
+// ExportMaster
+#include "Request/ExportMasterRequest.h"
+#include "Result/ExportMasterResult.h"
+#include "Task/Rest/ExportMasterTask.h"
+#include "Task/WebSocket/ExportMasterTask.h"
+
+// GetCurrentModelMaster
+#include "Request/GetCurrentModelMasterRequest.h"
+#include "Result/GetCurrentModelMasterResult.h"
+#include "Task/Rest/GetCurrentModelMasterTask.h"
+#include "Task/WebSocket/GetCurrentModelMasterTask.h"
+
+// UpdateCurrentModelMaster
+#include "Request/UpdateCurrentModelMasterRequest.h"
+#include "Result/UpdateCurrentModelMasterResult.h"
+#include "Task/Rest/UpdateCurrentModelMasterTask.h"
+#include "Task/WebSocket/UpdateCurrentModelMasterTask.h"
+
+// UpdateCurrentModelMasterFromGitHub
+#include "Request/UpdateCurrentModelMasterFromGitHubRequest.h"
+#include "Result/UpdateCurrentModelMasterFromGitHubResult.h"
+#include "Task/Rest/UpdateCurrentModelMasterFromGitHubTask.h"
+#include "Task/WebSocket/UpdateCurrentModelMasterFromGitHubTask.h"
+
+// Client
+#include "Gs2Money2RestClient.h"
+#include "Gs2Money2WebSocketClient.h"
