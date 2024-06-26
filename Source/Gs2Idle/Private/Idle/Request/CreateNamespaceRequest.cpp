@@ -23,6 +23,7 @@ namespace Gs2::Idle::Request
         DescriptionValue(TOptional<FString>()),
         TransactionSettingValue(nullptr),
         ReceiveScriptValue(nullptr),
+        OverrideAcquireActionsScriptIdValue(TOptional<FString>()),
         LogSettingValue(nullptr)
     {
     }
@@ -34,6 +35,7 @@ namespace Gs2::Idle::Request
         DescriptionValue(From.DescriptionValue),
         TransactionSettingValue(From.TransactionSettingValue),
         ReceiveScriptValue(From.ReceiveScriptValue),
+        OverrideAcquireActionsScriptIdValue(From.OverrideAcquireActionsScriptIdValue),
         LogSettingValue(From.LogSettingValue)
     {
     }
@@ -78,6 +80,14 @@ namespace Gs2::Idle::Request
         return SharedThis(this);
     }
 
+    TSharedPtr<FCreateNamespaceRequest> FCreateNamespaceRequest::WithOverrideAcquireActionsScriptId(
+        const TOptional<FString> OverrideAcquireActionsScriptId
+    )
+    {
+        this->OverrideAcquireActionsScriptIdValue = OverrideAcquireActionsScriptId;
+        return SharedThis(this);
+    }
+
     TSharedPtr<FCreateNamespaceRequest> FCreateNamespaceRequest::WithLogSetting(
         const TSharedPtr<Model::FLogSetting> LogSetting
     )
@@ -117,6 +127,11 @@ namespace Gs2::Idle::Request
             return nullptr;
         }
         return ReceiveScriptValue;
+    }
+
+    TOptional<FString> FCreateNamespaceRequest::GetOverrideAcquireActionsScriptId() const
+    {
+        return OverrideAcquireActionsScriptIdValue;
     }
 
     TSharedPtr<Model::FLogSetting> FCreateNamespaceRequest::GetLogSetting() const
@@ -169,6 +184,15 @@ namespace Gs2::Idle::Request
                   }
                   return Model::FScriptSetting::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("receiveScript")));
               }() : nullptr)
+            ->WithOverrideAcquireActionsScriptId(Data->HasField(ANSI_TO_TCHAR("overrideAcquireActionsScriptId")) ? [Data]() -> TOptional<FString>
+              {
+                  FString v("");
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("overrideAcquireActionsScriptId"), v))
+                  {
+                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                  }
+                  return TOptional<FString>();
+              }() : TOptional<FString>())
           ->WithLogSetting(Data->HasField(ANSI_TO_TCHAR("logSetting")) ? [Data]() -> Model::FLogSettingPtr
               {
                   if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("logSetting")))
@@ -201,6 +225,10 @@ namespace Gs2::Idle::Request
         if (ReceiveScriptValue != nullptr && ReceiveScriptValue.IsValid())
         {
             JsonRootObject->SetObjectField("receiveScript", ReceiveScriptValue->ToJson());
+        }
+        if (OverrideAcquireActionsScriptIdValue.IsSet())
+        {
+            JsonRootObject->SetStringField("overrideAcquireActionsScriptId", OverrideAcquireActionsScriptIdValue.GetValue());
         }
         if (LogSettingValue != nullptr && LogSettingValue.IsValid())
         {

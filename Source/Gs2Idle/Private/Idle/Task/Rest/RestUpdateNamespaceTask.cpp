@@ -96,6 +96,10 @@ namespace Gs2::Idle::Task::Rest
             {
                 JsonRootObject->SetObjectField("receiveScript", this->Request->GetReceiveScript()->ToJson());
             }
+            if (this->Request->GetOverrideAcquireActionsScriptId().IsSet())
+            {
+                JsonRootObject->SetStringField("overrideAcquireActionsScriptId", this->Request->GetOverrideAcquireActionsScriptId().GetValue());
+            }
             if (this->Request->GetLogSetting() != nullptr && this->Request->GetLogSetting().IsValid())
             {
                 JsonRootObject->SetObjectField("logSetting", this->Request->GetLogSetting()->ToJson());

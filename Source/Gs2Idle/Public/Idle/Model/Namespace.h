@@ -31,6 +31,7 @@ namespace Gs2::Idle::Model
         TOptional<FString> DescriptionValue;
         TSharedPtr<FTransactionSetting> TransactionSettingValue;
         TSharedPtr<FScriptSetting> ReceiveScriptValue;
+        TOptional<FString> OverrideAcquireActionsScriptIdValue;
         TSharedPtr<FLogSetting> LogSettingValue;
         TOptional<int64> CreatedAtValue;
         TOptional<int64> UpdatedAtValue;
@@ -48,6 +49,7 @@ namespace Gs2::Idle::Model
         TSharedPtr<FNamespace> WithDescription(const TOptional<FString> Description);
         TSharedPtr<FNamespace> WithTransactionSetting(const TSharedPtr<FTransactionSetting> TransactionSetting);
         TSharedPtr<FNamespace> WithReceiveScript(const TSharedPtr<FScriptSetting> ReceiveScript);
+        TSharedPtr<FNamespace> WithOverrideAcquireActionsScriptId(const TOptional<FString> OverrideAcquireActionsScriptId);
         TSharedPtr<FNamespace> WithLogSetting(const TSharedPtr<FLogSetting> LogSetting);
         TSharedPtr<FNamespace> WithCreatedAt(const TOptional<int64> CreatedAt);
         TSharedPtr<FNamespace> WithUpdatedAt(const TOptional<int64> UpdatedAt);
@@ -58,6 +60,7 @@ namespace Gs2::Idle::Model
         TOptional<FString> GetDescription() const;
         TSharedPtr<FTransactionSetting> GetTransactionSetting() const;
         TSharedPtr<FScriptSetting> GetReceiveScript() const;
+        TOptional<FString> GetOverrideAcquireActionsScriptId() const;
         TSharedPtr<FLogSetting> GetLogSetting() const;
         TOptional<int64> GetCreatedAt() const;
         FString GetCreatedAtString() const;

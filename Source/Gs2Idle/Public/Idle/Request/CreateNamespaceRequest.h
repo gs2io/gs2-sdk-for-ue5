@@ -32,6 +32,7 @@ namespace Gs2::Idle::Request
         TOptional<FString> DescriptionValue;
         TSharedPtr<Model::FTransactionSetting> TransactionSettingValue;
         TSharedPtr<Model::FScriptSetting> ReceiveScriptValue;
+        TOptional<FString> OverrideAcquireActionsScriptIdValue;
         TSharedPtr<Model::FLogSetting> LogSettingValue;
         
     public:
@@ -47,6 +48,7 @@ namespace Gs2::Idle::Request
         TSharedPtr<FCreateNamespaceRequest> WithDescription(const TOptional<FString> Description);
         TSharedPtr<FCreateNamespaceRequest> WithTransactionSetting(const TSharedPtr<Model::FTransactionSetting> TransactionSetting);
         TSharedPtr<FCreateNamespaceRequest> WithReceiveScript(const TSharedPtr<Model::FScriptSetting> ReceiveScript);
+        TSharedPtr<FCreateNamespaceRequest> WithOverrideAcquireActionsScriptId(const TOptional<FString> OverrideAcquireActionsScriptId);
         TSharedPtr<FCreateNamespaceRequest> WithLogSetting(const TSharedPtr<Model::FLogSetting> LogSetting);
 
         TOptional<FString> GetContextStack() const;
@@ -54,6 +56,7 @@ namespace Gs2::Idle::Request
         TOptional<FString> GetDescription() const;
         TSharedPtr<Model::FTransactionSetting> GetTransactionSetting() const;
         TSharedPtr<Model::FScriptSetting> GetReceiveScript() const;
+        TOptional<FString> GetOverrideAcquireActionsScriptId() const;
         TSharedPtr<Model::FLogSetting> GetLogSetting() const;
 
         static TSharedPtr<FCreateNamespaceRequest> FromJson(const TSharedPtr<FJsonObject> Data);
