@@ -94,6 +94,16 @@
 #include "Task/WebSocket/UpdateCurrentModelMasterTask.h"
 #include "Request/UpdateCurrentModelMasterFromGitHubRequest.h"
 #include "Task/WebSocket/UpdateCurrentModelMasterFromGitHubTask.h"
+#include "Request/DescribeDailyTransactionHistoriesByCurrencyRequest.h"
+#include "Task/WebSocket/DescribeDailyTransactionHistoriesByCurrencyTask.h"
+#include "Request/DescribeDailyTransactionHistoriesRequest.h"
+#include "Task/WebSocket/DescribeDailyTransactionHistoriesTask.h"
+#include "Request/GetDailyTransactionHistoryRequest.h"
+#include "Task/WebSocket/GetDailyTransactionHistoryTask.h"
+#include "Request/DescribeUnusedBalancesRequest.h"
+#include "Task/WebSocket/DescribeUnusedBalancesTask.h"
+#include "Request/GetUnusedBalanceRequest.h"
+#include "Task/WebSocket/GetUnusedBalanceTask.h"
 
 namespace Gs2::Money2
 {
@@ -256,6 +266,26 @@ namespace Gs2::Money2
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FUpdateCurrentModelMasterFromGitHubTask>> UpdateCurrentModelMasterFromGitHub(
             const Request::FUpdateCurrentModelMasterFromGitHubRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FDescribeDailyTransactionHistoriesByCurrencyTask>> DescribeDailyTransactionHistoriesByCurrency(
+            const Request::FDescribeDailyTransactionHistoriesByCurrencyRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FDescribeDailyTransactionHistoriesTask>> DescribeDailyTransactionHistories(
+            const Request::FDescribeDailyTransactionHistoriesRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FGetDailyTransactionHistoryTask>> GetDailyTransactionHistory(
+            const Request::FGetDailyTransactionHistoryRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FDescribeUnusedBalancesTask>> DescribeUnusedBalances(
+            const Request::FDescribeUnusedBalancesRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FGetUnusedBalanceTask>> GetUnusedBalance(
+            const Request::FGetUnusedBalanceRequestPtr Request
         ) const;
     };
     typedef TSharedPtr<FGs2Money2WebSocketClient, ESPMode::ThreadSafe> FGs2Money2WebSocketClientPtr;

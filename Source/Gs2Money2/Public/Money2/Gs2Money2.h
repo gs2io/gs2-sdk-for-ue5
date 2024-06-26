@@ -40,6 +40,8 @@
 #include "Model/GitHubCheckoutSetting.h"
 #include "Model/ScriptSetting.h"
 #include "Model/LogSetting.h"
+#include "Model/DailyTransactionHistory.h"
+#include "Model/UnusedBalance.h"
 
 // DescribeNamespaces
 #include "Request/DescribeNamespacesRequest.h"
@@ -268,6 +270,36 @@
 #include "Result/UpdateCurrentModelMasterFromGitHubResult.h"
 #include "Task/Rest/UpdateCurrentModelMasterFromGitHubTask.h"
 #include "Task/WebSocket/UpdateCurrentModelMasterFromGitHubTask.h"
+
+// DescribeDailyTransactionHistoriesByCurrency
+#include "Request/DescribeDailyTransactionHistoriesByCurrencyRequest.h"
+#include "Result/DescribeDailyTransactionHistoriesByCurrencyResult.h"
+#include "Task/Rest/DescribeDailyTransactionHistoriesByCurrencyTask.h"
+#include "Task/WebSocket/DescribeDailyTransactionHistoriesByCurrencyTask.h"
+
+// DescribeDailyTransactionHistories
+#include "Request/DescribeDailyTransactionHistoriesRequest.h"
+#include "Result/DescribeDailyTransactionHistoriesResult.h"
+#include "Task/Rest/DescribeDailyTransactionHistoriesTask.h"
+#include "Task/WebSocket/DescribeDailyTransactionHistoriesTask.h"
+
+// GetDailyTransactionHistory
+#include "Request/GetDailyTransactionHistoryRequest.h"
+#include "Result/GetDailyTransactionHistoryResult.h"
+#include "Task/Rest/GetDailyTransactionHistoryTask.h"
+#include "Task/WebSocket/GetDailyTransactionHistoryTask.h"
+
+// DescribeUnusedBalances
+#include "Request/DescribeUnusedBalancesRequest.h"
+#include "Result/DescribeUnusedBalancesResult.h"
+#include "Task/Rest/DescribeUnusedBalancesTask.h"
+#include "Task/WebSocket/DescribeUnusedBalancesTask.h"
+
+// GetUnusedBalance
+#include "Request/GetUnusedBalanceRequest.h"
+#include "Result/GetUnusedBalanceResult.h"
+#include "Task/Rest/GetUnusedBalanceTask.h"
+#include "Task/WebSocket/GetUnusedBalanceTask.h"
 
 // Client
 #include "Gs2Money2RestClient.h"

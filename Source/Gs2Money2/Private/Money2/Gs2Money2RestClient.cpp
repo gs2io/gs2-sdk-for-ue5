@@ -360,4 +360,49 @@ namespace Gs2::Money2
             Request
         );
     }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FDescribeDailyTransactionHistoriesByCurrencyTask>> FGs2Money2RestClient::DescribeDailyTransactionHistoriesByCurrency(
+        const Request::FDescribeDailyTransactionHistoriesByCurrencyRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FDescribeDailyTransactionHistoriesByCurrencyTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FDescribeDailyTransactionHistoriesTask>> FGs2Money2RestClient::DescribeDailyTransactionHistories(
+        const Request::FDescribeDailyTransactionHistoriesRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FDescribeDailyTransactionHistoriesTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FGetDailyTransactionHistoryTask>> FGs2Money2RestClient::GetDailyTransactionHistory(
+        const Request::FGetDailyTransactionHistoryRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FGetDailyTransactionHistoryTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FDescribeUnusedBalancesTask>> FGs2Money2RestClient::DescribeUnusedBalances(
+        const Request::FDescribeUnusedBalancesRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FDescribeUnusedBalancesTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FGetUnusedBalanceTask>> FGs2Money2RestClient::GetUnusedBalance(
+        const Request::FGetUnusedBalanceRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FGetUnusedBalanceTask>>(
+            Session,
+            Request
+        );
+    }
 }

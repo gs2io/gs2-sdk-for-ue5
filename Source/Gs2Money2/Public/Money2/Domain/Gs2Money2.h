@@ -34,6 +34,8 @@
 #include "Money2/Domain/Model/StoreContentModel.h"
 #include "Money2/Domain/Model/StoreContentModelMaster.h"
 #include "Money2/Domain/Model/CurrentModelMaster.h"
+#include "Money2/Domain/Model/DailyTransactionHistory.h"
+#include "Money2/Domain/Model/UnusedBalance.h"
 
 // Iterator
 #include "Money2/Domain/Iterator/DescribeNamespacesIterator.h"
@@ -42,6 +44,9 @@
 #include "Money2/Domain/Iterator/DescribeEventsByUserIdIterator.h"
 #include "Money2/Domain/Iterator/DescribeStoreContentModelsIterator.h"
 #include "Money2/Domain/Iterator/DescribeStoreContentModelMastersIterator.h"
+#include "Money2/Domain/Iterator/DescribeDailyTransactionHistoriesByCurrencyIterator.h"
+#include "Money2/Domain/Iterator/DescribeDailyTransactionHistoriesIterator.h"
+#include "Money2/Domain/Iterator/DescribeUnusedBalancesIterator.h"
 
 // Notification
 

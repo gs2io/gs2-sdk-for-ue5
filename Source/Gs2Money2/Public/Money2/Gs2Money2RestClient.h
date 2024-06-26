@@ -94,6 +94,16 @@
 #include "Task/Rest/UpdateCurrentModelMasterTask.h"
 #include "Request/UpdateCurrentModelMasterFromGitHubRequest.h"
 #include "Task/Rest/UpdateCurrentModelMasterFromGitHubTask.h"
+#include "Request/DescribeDailyTransactionHistoriesByCurrencyRequest.h"
+#include "Task/Rest/DescribeDailyTransactionHistoriesByCurrencyTask.h"
+#include "Request/DescribeDailyTransactionHistoriesRequest.h"
+#include "Task/Rest/DescribeDailyTransactionHistoriesTask.h"
+#include "Request/GetDailyTransactionHistoryRequest.h"
+#include "Task/Rest/GetDailyTransactionHistoryTask.h"
+#include "Request/DescribeUnusedBalancesRequest.h"
+#include "Task/Rest/DescribeUnusedBalancesTask.h"
+#include "Request/GetUnusedBalanceRequest.h"
+#include "Task/Rest/GetUnusedBalanceTask.h"
 
 namespace Gs2::Money2
 {
@@ -256,6 +266,26 @@ namespace Gs2::Money2
 
         TSharedPtr<FAsyncTask<Task::Rest::FUpdateCurrentModelMasterFromGitHubTask>> UpdateCurrentModelMasterFromGitHub(
             const Request::FUpdateCurrentModelMasterFromGitHubRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FDescribeDailyTransactionHistoriesByCurrencyTask>> DescribeDailyTransactionHistoriesByCurrency(
+            const Request::FDescribeDailyTransactionHistoriesByCurrencyRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FDescribeDailyTransactionHistoriesTask>> DescribeDailyTransactionHistories(
+            const Request::FDescribeDailyTransactionHistoriesRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FGetDailyTransactionHistoryTask>> GetDailyTransactionHistory(
+            const Request::FGetDailyTransactionHistoryRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FDescribeUnusedBalancesTask>> DescribeUnusedBalances(
+            const Request::FDescribeUnusedBalancesRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FGetUnusedBalanceTask>> GetUnusedBalance(
+            const Request::FGetUnusedBalanceRequestPtr Request
         ) const;
     };
     typedef TSharedPtr<FGs2Money2RestClient, ESPMode::ThreadSafe> FGs2Money2RestClientPtr;

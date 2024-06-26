@@ -26,6 +26,9 @@
 #include "Money2/Domain/Iterator/DescribeEventsByUserIdIterator.h"
 #include "Money2/Domain/Iterator/DescribeStoreContentModelsIterator.h"
 #include "Money2/Domain/Iterator/DescribeStoreContentModelMastersIterator.h"
+#include "Money2/Domain/Iterator/DescribeDailyTransactionHistoriesByCurrencyIterator.h"
+#include "Money2/Domain/Iterator/DescribeDailyTransactionHistoriesIterator.h"
+#include "Money2/Domain/Iterator/DescribeUnusedBalancesIterator.h"
 
 namespace Gs2::Core::Domain
 {
@@ -51,6 +54,8 @@ namespace Gs2::Money2::Domain::Model
     class FStoreContentModelDomain;
     class FStoreContentModelMasterDomain;
     class FCurrentModelMasterDomain;
+    class FDailyTransactionHistoryDomain;
+    class FUnusedBalanceDomain;
 
     class GS2MONEY2_API FCurrentModelMasterDomain:
         public TSharedFromThis<FCurrentModelMasterDomain>

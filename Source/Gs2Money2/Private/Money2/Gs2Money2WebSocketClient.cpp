@@ -360,4 +360,49 @@ namespace Gs2::Money2
             Request
         );
     }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FDescribeDailyTransactionHistoriesByCurrencyTask>> FGs2Money2WebSocketClient::DescribeDailyTransactionHistoriesByCurrency(
+        const Request::FDescribeDailyTransactionHistoriesByCurrencyRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FDescribeDailyTransactionHistoriesByCurrencyTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FDescribeDailyTransactionHistoriesTask>> FGs2Money2WebSocketClient::DescribeDailyTransactionHistories(
+        const Request::FDescribeDailyTransactionHistoriesRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FDescribeDailyTransactionHistoriesTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FGetDailyTransactionHistoryTask>> FGs2Money2WebSocketClient::GetDailyTransactionHistory(
+        const Request::FGetDailyTransactionHistoryRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FGetDailyTransactionHistoryTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FDescribeUnusedBalancesTask>> FGs2Money2WebSocketClient::DescribeUnusedBalances(
+        const Request::FDescribeUnusedBalancesRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FDescribeUnusedBalancesTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FGetUnusedBalanceTask>> FGs2Money2WebSocketClient::GetUnusedBalance(
+        const Request::FGetUnusedBalanceRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FGetUnusedBalanceTask>>(
+            Session,
+            Request
+        );
+    }
 }

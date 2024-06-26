@@ -33,6 +33,8 @@
 #include "Money2/Domain/Model/StoreContentModel.h"
 #include "Money2/Domain/Model/StoreContentModelMaster.h"
 #include "Money2/Domain/Model/CurrentModelMaster.h"
+#include "Money2/Domain/Model/DailyTransactionHistory.h"
+#include "Money2/Domain/Model/UnusedBalance.h"
 #include "Core/Domain/Gs2.h"
 
 namespace Gs2::Money2::Domain

@@ -26,6 +26,9 @@
 #include "Money2/Domain/Iterator/DescribeEventsByUserIdIterator.h"
 #include "Money2/Domain/Iterator/DescribeStoreContentModelsIterator.h"
 #include "Money2/Domain/Iterator/DescribeStoreContentModelMastersIterator.h"
+#include "Money2/Domain/Iterator/DescribeDailyTransactionHistoriesByCurrencyIterator.h"
+#include "Money2/Domain/Iterator/DescribeDailyTransactionHistoriesIterator.h"
+#include "Money2/Domain/Iterator/DescribeUnusedBalancesIterator.h"
 
 namespace Gs2::Core::Domain
 {
@@ -51,6 +54,8 @@ namespace Gs2::Money2::Domain::Model
     class FStoreContentModelDomain;
     class FStoreContentModelMasterDomain;
     class FCurrentModelMasterDomain;
+    class FDailyTransactionHistoryDomain;
+    class FUnusedBalanceDomain;
 
     class GS2MONEY2_API FNamespaceDomain:
         public TSharedFromThis<FNamespaceDomain>
@@ -233,6 +238,41 @@ namespace Gs2::Money2::Domain::Model
             Request::FCreateStoreContentModelMasterRequestPtr Request
         );
 
+        Gs2::Money2::Domain::Iterator::FDescribeDailyTransactionHistoriesByCurrencyIteratorPtr DailyTransactionHistoriesByCurrency(
+            const FString Currency,
+            const int32 Year,
+            const TOptional<int32> Month = TOptional<int32>()
+        ) const;
+
+        Gs2::Core::Domain::CallbackID SubscribeDailyTransactionHistoriesByCurrency(
+            TFunction<void()> Callback
+        );
+
+        void UnsubscribeDailyTransactionHistoriesByCurrency(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
+
+        Gs2::Money2::Domain::Iterator::FDescribeDailyTransactionHistoriesIteratorPtr DailyTransactionHistories(
+            const int32 Year,
+            const TOptional<int32> Month = TOptional<int32>(),
+            const TOptional<int32> Day = TOptional<int32>()
+        ) const;
+
+        Gs2::Core::Domain::CallbackID SubscribeDailyTransactionHistories(
+            TFunction<void()> Callback
+        );
+
+        void UnsubscribeDailyTransactionHistories(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
+
+        TSharedPtr<Gs2::Money2::Domain::Model::FDailyTransactionHistoryDomain> DailyTransactionHistory(
+            const int32 Year,
+            const int32 Month,
+            const int32 Day,
+            const FString Currency
+        );
+
         TSharedPtr<Gs2::Money2::Domain::Model::FUserDomain> User(
             const FString UserId
         );
@@ -257,6 +297,21 @@ namespace Gs2::Money2::Domain::Model
 
         TSharedPtr<Gs2::Money2::Domain::Model::FStoreContentModelDomain> StoreContentModel(
             const FString ContentName
+        );
+
+        Gs2::Money2::Domain::Iterator::FDescribeUnusedBalancesIteratorPtr UnusedBalances(
+        ) const;
+
+        Gs2::Core::Domain::CallbackID SubscribeUnusedBalances(
+            TFunction<void()> Callback
+        );
+
+        void UnsubscribeUnusedBalances(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
+
+        TSharedPtr<Gs2::Money2::Domain::Model::FUnusedBalanceDomain> UnusedBalance(
+            const FString Currency
         );
 
         Gs2::Money2::Domain::Iterator::FDescribeStoreContentModelMastersIteratorPtr StoreContentModelMasters(

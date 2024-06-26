@@ -33,6 +33,8 @@
 #include "Money2/Domain/Model/StoreContentModel.h"
 #include "Money2/Domain/Model/StoreContentModelMaster.h"
 #include "Money2/Domain/Model/CurrentModelMaster.h"
+#include "Money2/Domain/Model/DailyTransactionHistory.h"
+#include "Money2/Domain/Model/UnusedBalance.h"
 
 #include "Core/Domain/Gs2.h"
 #include "Core/Domain/Transaction/JobQueueJobDomainFactory.h"
@@ -362,6 +364,112 @@ namespace Gs2::Money2::Domain::Model
         return Gs2::Core::Util::New<FAsyncTask<FCreateStoreContentModelMasterTask>>(this->AsShared(), Request);
     }
 
+    Gs2::Money2::Domain::Iterator::FDescribeDailyTransactionHistoriesByCurrencyIteratorPtr FNamespaceDomain::DailyTransactionHistoriesByCurrency(
+        const FString Currency,
+        const int32 Year,
+        const TOptional<int32> Month
+    ) const
+    {
+        return MakeShared<Gs2::Money2::Domain::Iterator::FDescribeDailyTransactionHistoriesByCurrencyIterator>(
+            Gs2,
+            Client,
+            NamespaceName,
+            Currency,
+            Year,
+            Month
+        );
+    }
+
+    Gs2::Core::Domain::CallbackID FNamespaceDomain::SubscribeDailyTransactionHistoriesByCurrency(
+    TFunction<void()> Callback
+    )
+    {
+        return Gs2->Cache->ListSubscribe(
+            Gs2::Money2::Model::FDailyTransactionHistory::TypeName,
+            Gs2::Money2::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                NamespaceName,
+                "DailyTransactionHistory"
+            ),
+            Callback
+        );
+    }
+
+    void FNamespaceDomain::UnsubscribeDailyTransactionHistoriesByCurrency(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Gs2->Cache->ListUnsubscribe(
+            Gs2::Money2::Model::FDailyTransactionHistory::TypeName,
+            Gs2::Money2::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                NamespaceName,
+                "DailyTransactionHistory"
+            ),
+            CallbackID
+        );
+    }
+
+    Gs2::Money2::Domain::Iterator::FDescribeDailyTransactionHistoriesIteratorPtr FNamespaceDomain::DailyTransactionHistories(
+        const int32 Year,
+        const TOptional<int32> Month,
+        const TOptional<int32> Day
+    ) const
+    {
+        return MakeShared<Gs2::Money2::Domain::Iterator::FDescribeDailyTransactionHistoriesIterator>(
+            Gs2,
+            Client,
+            NamespaceName,
+            Year,
+            Month,
+            Day
+        );
+    }
+
+    Gs2::Core::Domain::CallbackID FNamespaceDomain::SubscribeDailyTransactionHistories(
+    TFunction<void()> Callback
+    )
+    {
+        return Gs2->Cache->ListSubscribe(
+            Gs2::Money2::Model::FDailyTransactionHistory::TypeName,
+            Gs2::Money2::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                NamespaceName,
+                "DailyTransactionHistory"
+            ),
+            Callback
+        );
+    }
+
+    void FNamespaceDomain::UnsubscribeDailyTransactionHistories(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Gs2->Cache->ListUnsubscribe(
+            Gs2::Money2::Model::FDailyTransactionHistory::TypeName,
+            Gs2::Money2::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                NamespaceName,
+                "DailyTransactionHistory"
+            ),
+            CallbackID
+        );
+    }
+
+    TSharedPtr<Gs2::Money2::Domain::Model::FDailyTransactionHistoryDomain> FNamespaceDomain::DailyTransactionHistory(
+        const int32 Year,
+        const int32 Month,
+        const int32 Day,
+        const FString Currency
+    )
+    {
+        return MakeShared<Gs2::Money2::Domain::Model::FDailyTransactionHistoryDomain>(
+            Gs2,
+            Service,
+            NamespaceName,
+            Year,
+            Month,
+            Day,
+            Currency == TEXT("") ? TOptional<FString>() : TOptional<FString>(Currency)
+        );
+    }
+
     TSharedPtr<Gs2::Money2::Domain::Model::FUserDomain> FNamespaceDomain::User(
         const FString UserId
     )
@@ -443,6 +551,56 @@ namespace Gs2::Money2::Domain::Model
             Service,
             NamespaceName,
             ContentName == TEXT("") ? TOptional<FString>() : TOptional<FString>(ContentName)
+        );
+    }
+
+    Gs2::Money2::Domain::Iterator::FDescribeUnusedBalancesIteratorPtr FNamespaceDomain::UnusedBalances(
+    ) const
+    {
+        return MakeShared<Gs2::Money2::Domain::Iterator::FDescribeUnusedBalancesIterator>(
+            Gs2,
+            Client,
+            NamespaceName
+        );
+    }
+
+    Gs2::Core::Domain::CallbackID FNamespaceDomain::SubscribeUnusedBalances(
+    TFunction<void()> Callback
+    )
+    {
+        return Gs2->Cache->ListSubscribe(
+            Gs2::Money2::Model::FUnusedBalance::TypeName,
+            Gs2::Money2::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                NamespaceName,
+                "UnusedBalance"
+            ),
+            Callback
+        );
+    }
+
+    void FNamespaceDomain::UnsubscribeUnusedBalances(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Gs2->Cache->ListUnsubscribe(
+            Gs2::Money2::Model::FUnusedBalance::TypeName,
+            Gs2::Money2::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                NamespaceName,
+                "UnusedBalance"
+            ),
+            CallbackID
+        );
+    }
+
+    TSharedPtr<Gs2::Money2::Domain::Model::FUnusedBalanceDomain> FNamespaceDomain::UnusedBalance(
+        const FString Currency
+    )
+    {
+        return MakeShared<Gs2::Money2::Domain::Model::FUnusedBalanceDomain>(
+            Gs2,
+            Service,
+            NamespaceName,
+            Currency == TEXT("") ? TOptional<FString>() : TOptional<FString>(Currency)
         );
     }
 
