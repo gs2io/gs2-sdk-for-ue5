@@ -34,6 +34,9 @@
 #include "Account/Domain/Model/DataOwnerAccessToken.h"
 
 #include "Core/Domain/Gs2.h"
+#include "Core/Domain/Transaction/JobQueueJobDomainFactory.h"
+#include "Core/Domain/Transaction/InternalTransactionDomainFactory.h"
+#include "Core/Domain/Transaction/ManualTransactionDomain.h"
 
 namespace Gs2::Account::Domain::Model
 {
@@ -89,6 +92,7 @@ namespace Gs2::Account::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithUserId(Self->UserId);
         const auto Future = Self->Client->UpdateTimeOffset(
@@ -153,6 +157,7 @@ namespace Gs2::Account::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithUserId(Self->UserId);
         const auto Future = Self->Client->UpdateBanned(
@@ -217,6 +222,7 @@ namespace Gs2::Account::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithUserId(Self->UserId);
         const auto Future = Self->Client->AddBan(
@@ -281,6 +287,7 @@ namespace Gs2::Account::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithUserId(Self->UserId);
         const auto Future = Self->Client->RemoveBan(
@@ -345,6 +352,7 @@ namespace Gs2::Account::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithUserId(Self->UserId);
         const auto Future = Self->Client->GetAccount(
@@ -407,6 +415,7 @@ namespace Gs2::Account::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithUserId(Self->UserId);
         const auto Future = Self->Client->DeleteAccount(
@@ -465,6 +474,7 @@ namespace Gs2::Account::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithUserId(Self->UserId);
         const auto Future = Self->Client->Authentication(
@@ -525,6 +535,72 @@ namespace Gs2::Account::Domain::Model
         return Gs2::Core::Util::New<FAsyncTask<FAuthenticationTask>>(this->AsShared(), Request);
     }
 
+    FAccountDomain::FDeleteTakeOverTask::FDeleteTakeOverTask(
+        const TSharedPtr<FAccountDomain>& Self,
+        const Request::FDeleteTakeOverByUserIdRequestPtr Request
+    ): Self(Self), Request(Request)
+    {
+
+    }
+
+    FAccountDomain::FDeleteTakeOverTask::FDeleteTakeOverTask(
+        const FDeleteTakeOverTask& From
+    ): TGs2Future(From), Self(From.Self), Request(From.Request)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FAccountDomain::FDeleteTakeOverTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::Account::Domain::Model::FTakeOverDomain>> Result
+    )
+    {
+        Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
+            ->WithNamespaceName(Self->NamespaceName)
+            ->WithUserId(Self->UserId);
+        const auto Future = Self->Client->DeleteTakeOverByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto RequestModel = Request;
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
+        if (ResultModel != nullptr) {
+            
+            if (ResultModel->GetItem() != nullptr)
+            {
+                const auto ParentKey = Gs2::Account::Domain::Model::FAccountDomain::CreateCacheParentKey(
+                    Self->NamespaceName,
+                    Self->UserId,
+                    "TakeOver"
+                );
+                const auto Key = Gs2::Account::Domain::Model::FTakeOverDomain::CreateCacheKey(
+                    ResultModel->GetItem()->GetType().IsSet() ? FString::FromInt(*ResultModel->GetItem()->GetType()) : TOptional<FString>()
+                );
+                Self->Gs2->Cache->Delete(Gs2::Account::Model::FTakeOver::TypeName, ParentKey, Key);
+            }
+        }
+        auto Domain = MakeShared<Gs2::Account::Domain::Model::FTakeOverDomain>(
+            Self->Gs2,
+            Self->Service,
+            Request->GetNamespaceName(),
+            ResultModel->GetItem()->GetUserId(),
+            ResultModel->GetItem()->GetType()
+        );
+
+        *Result = Domain;
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FAccountDomain::FDeleteTakeOverTask>> FAccountDomain::DeleteTakeOver(
+        Request::FDeleteTakeOverByUserIdRequestPtr Request
+    ) {
+        return Gs2::Core::Util::New<FAsyncTask<FDeleteTakeOverTask>>(this->AsShared(), Request);
+    }
+
     FAccountDomain::FDeleteDataOwnerTask::FDeleteDataOwnerTask(
         const TSharedPtr<FAccountDomain>& Self,
         const Request::FDeleteDataOwnerByUserIdRequestPtr Request
@@ -544,6 +620,7 @@ namespace Gs2::Account::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithUserId(Self->UserId);
         const auto Future = Self->Client->DeleteDataOwnerByUserId(
@@ -589,13 +666,15 @@ namespace Gs2::Account::Domain::Model
     }
 
     Gs2::Account::Domain::Iterator::FDescribeTakeOversByUserIdIteratorPtr FAccountDomain::TakeOvers(
+        const TOptional<FString> TimeOffsetToken
     ) const
     {
         return MakeShared<Gs2::Account::Domain::Iterator::FDescribeTakeOversByUserIdIterator>(
             Gs2,
             Client,
             NamespaceName,
-            UserId
+            UserId,
+            TimeOffsetToken
         );
     }
 
