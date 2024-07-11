@@ -30,6 +30,9 @@ namespace Gs2::Schedule::Model
         TOptional<FString> EndDayOfWeekValue;
         TOptional<int32> BeginHourValue;
         TOptional<int32> EndHourValue;
+        TOptional<int64> AnchorTimestampValue;
+        TOptional<int32> ActiveDaysValue;
+        TOptional<int32> InactiveDaysValue;
 
     public:
         FRepeatSetting();
@@ -45,6 +48,9 @@ namespace Gs2::Schedule::Model
         TSharedPtr<FRepeatSetting> WithEndDayOfWeek(const TOptional<FString> EndDayOfWeek);
         TSharedPtr<FRepeatSetting> WithBeginHour(const TOptional<int32> BeginHour);
         TSharedPtr<FRepeatSetting> WithEndHour(const TOptional<int32> EndHour);
+        TSharedPtr<FRepeatSetting> WithAnchorTimestamp(const TOptional<int64> AnchorTimestamp);
+        TSharedPtr<FRepeatSetting> WithActiveDays(const TOptional<int32> ActiveDays);
+        TSharedPtr<FRepeatSetting> WithInactiveDays(const TOptional<int32> InactiveDays);
 
         TOptional<FString> GetRepeatType() const;
         TOptional<int32> GetBeginDayOfMonth() const;
@@ -57,6 +63,12 @@ namespace Gs2::Schedule::Model
         FString GetBeginHourString() const;
         TOptional<int32> GetEndHour() const;
         FString GetEndHourString() const;
+        TOptional<int64> GetAnchorTimestamp() const;
+        FString GetAnchorTimestampString() const;
+        TOptional<int32> GetActiveDays() const;
+        FString GetActiveDaysString() const;
+        TOptional<int32> GetInactiveDays() const;
+        FString GetInactiveDaysString() const;
 
 
         static TSharedPtr<FRepeatSetting> FromJson(const TSharedPtr<FJsonObject> Data);

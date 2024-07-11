@@ -25,7 +25,10 @@ namespace Gs2::Schedule::Model
         BeginDayOfWeekValue(TOptional<FString>()),
         EndDayOfWeekValue(TOptional<FString>()),
         BeginHourValue(TOptional<int32>()),
-        EndHourValue(TOptional<int32>())
+        EndHourValue(TOptional<int32>()),
+        AnchorTimestampValue(TOptional<int64>()),
+        ActiveDaysValue(TOptional<int32>()),
+        InactiveDaysValue(TOptional<int32>())
     {
     }
 
@@ -38,7 +41,10 @@ namespace Gs2::Schedule::Model
         BeginDayOfWeekValue(From.BeginDayOfWeekValue),
         EndDayOfWeekValue(From.EndDayOfWeekValue),
         BeginHourValue(From.BeginHourValue),
-        EndHourValue(From.EndHourValue)
+        EndHourValue(From.EndHourValue),
+        AnchorTimestampValue(From.AnchorTimestampValue),
+        ActiveDaysValue(From.ActiveDaysValue),
+        InactiveDaysValue(From.InactiveDaysValue)
     {
     }
 
@@ -95,6 +101,30 @@ namespace Gs2::Schedule::Model
     )
     {
         this->EndHourValue = EndHour;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FRepeatSetting> FRepeatSetting::WithAnchorTimestamp(
+        const TOptional<int64> AnchorTimestamp
+    )
+    {
+        this->AnchorTimestampValue = AnchorTimestamp;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FRepeatSetting> FRepeatSetting::WithActiveDays(
+        const TOptional<int32> ActiveDays
+    )
+    {
+        this->ActiveDaysValue = ActiveDays;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FRepeatSetting> FRepeatSetting::WithInactiveDays(
+        const TOptional<int32> InactiveDays
+    )
+    {
+        this->InactiveDaysValue = InactiveDays;
         return SharedThis(this);
     }
     TOptional<FString> FRepeatSetting::GetRepeatType() const
@@ -160,6 +190,45 @@ namespace Gs2::Schedule::Model
             return FString("null");
         }
         return FString::Printf(TEXT("%d"), EndHourValue.GetValue());
+    }
+    TOptional<int64> FRepeatSetting::GetAnchorTimestamp() const
+    {
+        return AnchorTimestampValue;
+    }
+
+    FString FRepeatSetting::GetAnchorTimestampString() const
+    {
+        if (!AnchorTimestampValue.IsSet())
+        {
+            return FString("null");
+        }
+        return FString::Printf(TEXT("%lld"), AnchorTimestampValue.GetValue());
+    }
+    TOptional<int32> FRepeatSetting::GetActiveDays() const
+    {
+        return ActiveDaysValue;
+    }
+
+    FString FRepeatSetting::GetActiveDaysString() const
+    {
+        if (!ActiveDaysValue.IsSet())
+        {
+            return FString("null");
+        }
+        return FString::Printf(TEXT("%d"), ActiveDaysValue.GetValue());
+    }
+    TOptional<int32> FRepeatSetting::GetInactiveDays() const
+    {
+        return InactiveDaysValue;
+    }
+
+    FString FRepeatSetting::GetInactiveDaysString() const
+    {
+        if (!InactiveDaysValue.IsSet())
+        {
+            return FString("null");
+        }
+        return FString::Printf(TEXT("%d"), InactiveDaysValue.GetValue());
     }
 
     TSharedPtr<FRepeatSetting> FRepeatSetting::FromJson(const TSharedPtr<FJsonObject> Data)
@@ -230,6 +299,33 @@ namespace Gs2::Schedule::Model
                         return TOptional(v);
                     }
                     return TOptional<int32>();
+                }() : TOptional<int32>())
+            ->WithAnchorTimestamp(Data->HasField(ANSI_TO_TCHAR("anchorTimestamp")) ? [Data]() -> TOptional<int64>
+                {
+                    int64 v;
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("anchorTimestamp"), v))
+                    {
+                        return TOptional(v);
+                    }
+                    return TOptional<int64>();
+                }() : TOptional<int64>())
+            ->WithActiveDays(Data->HasField(ANSI_TO_TCHAR("activeDays")) ? [Data]() -> TOptional<int32>
+                {
+                    int32 v;
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("activeDays"), v))
+                    {
+                        return TOptional(v);
+                    }
+                    return TOptional<int32>();
+                }() : TOptional<int32>())
+            ->WithInactiveDays(Data->HasField(ANSI_TO_TCHAR("inactiveDays")) ? [Data]() -> TOptional<int32>
+                {
+                    int32 v;
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("inactiveDays"), v))
+                    {
+                        return TOptional(v);
+                    }
+                    return TOptional<int32>();
                 }() : TOptional<int32>());
     }
 
@@ -263,6 +359,18 @@ namespace Gs2::Schedule::Model
         if (EndHourValue.IsSet())
         {
             JsonRootObject->SetNumberField("endHour", EndHourValue.GetValue());
+        }
+        if (AnchorTimestampValue.IsSet())
+        {
+            JsonRootObject->SetStringField("anchorTimestamp", FString::Printf(TEXT("%lld"), AnchorTimestampValue.GetValue()));
+        }
+        if (ActiveDaysValue.IsSet())
+        {
+            JsonRootObject->SetNumberField("activeDays", ActiveDaysValue.GetValue());
+        }
+        if (InactiveDaysValue.IsSet())
+        {
+            JsonRootObject->SetNumberField("inactiveDays", InactiveDaysValue.GetValue());
         }
         return JsonRootObject;
     }
