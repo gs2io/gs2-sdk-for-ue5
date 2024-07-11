@@ -12,6 +12,8 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
+ *
+ * deny overwrite
  */
 
 #if defined(_MSC_VER)
@@ -28,6 +30,8 @@
 #include "Account/Domain/Model/AccountAccessToken.h"
 #include "Account/Domain/Model/TakeOver.h"
 #include "Account/Domain/Model/TakeOverAccessToken.h"
+#include "Account/Domain/Model/PlatformId.h"
+#include "Account/Domain/Model/PlatformIdAccessToken.h"
 #include "Account/Domain/Model/DataOwner.h"
 #include "Account/Domain/Model/DataOwnerAccessToken.h"
 
@@ -491,6 +495,73 @@ namespace Gs2::Account::Domain::Model
         Request::FDoTakeOverRequestPtr Request
     ) {
         return Gs2::Core::Util::New<FAsyncTask<FDoTakeOverTask>>(this->AsShared(), Request);
+    }
+
+    FNamespaceDomain::FDeletePlatformIdByUserIdentifierTask::FDeletePlatformIdByUserIdentifierTask(
+        const TSharedPtr<FNamespaceDomain>& Self,
+        const Request::FDeletePlatformIdByUserIdentifierRequestPtr Request
+    ): Self(Self), Request(Request)
+    {
+
+    }
+
+    FNamespaceDomain::FDeletePlatformIdByUserIdentifierTask::FDeletePlatformIdByUserIdentifierTask(
+        const FDeletePlatformIdByUserIdentifierTask& From
+    ): TGs2Future(From), Self(From.Self), Request(From.Request)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FNamespaceDomain::FDeletePlatformIdByUserIdentifierTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::Account::Domain::Model::FPlatformIdDomain>> Result
+    )
+    {
+        Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
+            ->WithNamespaceName(Self->NamespaceName);
+        const auto Future = Self->Client->DeletePlatformIdByUserIdentifier(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto RequestModel = Request;
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
+        if (ResultModel != nullptr) {
+            
+            if (ResultModel->GetItem() != nullptr)
+            {
+                const auto ParentKey = Gs2::Account::Domain::Model::FAccountDomain::CreateCacheParentKey(
+                    Self->NamespaceName,
+                    ResultModel->GetItem()->GetUserId(),
+                    "PlatformId"
+                );
+                const auto Key = Gs2::Account::Domain::Model::FPlatformIdDomain::CreateCacheKey(
+                    ResultModel->GetItem()->GetType().IsSet() ? FString::FromInt(*ResultModel->GetItem()->GetType()) : TOptional<FString>(),
+                    ResultModel->GetItem()->GetUserIdentifier().IsSet() ? *ResultModel->GetItem()->GetUserIdentifier() : TOptional<FString>()
+                );
+                Self->Gs2->Cache->Delete(Gs2::Account::Model::FPlatformId::TypeName, ParentKey, Key);
+            }
+        }
+        auto Domain = MakeShared<Gs2::Account::Domain::Model::FPlatformIdDomain>(
+            Self->Gs2,
+            Self->Service,
+            Request->GetNamespaceName(),
+            ResultModel->GetItem()->GetUserId(),
+            ResultModel->GetItem()->GetType(),
+            ResultModel->GetItem()->GetUserIdentifier()
+        );
+
+        *Result = Domain;
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FNamespaceDomain::FDeletePlatformIdByUserIdentifierTask>> FNamespaceDomain::DeletePlatformIdByUserIdentifier(
+        Request::FDeletePlatformIdByUserIdentifierRequestPtr Request
+    ) {
+        return Gs2::Core::Util::New<FAsyncTask<FDeletePlatformIdByUserIdentifierTask>>(this->AsShared(), Request);
     }
 
     Gs2::Account::Domain::Iterator::FDescribeAccountsIteratorPtr FNamespaceDomain::Accounts(

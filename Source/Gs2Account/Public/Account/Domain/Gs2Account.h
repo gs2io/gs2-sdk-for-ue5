@@ -29,6 +29,8 @@
 #include "Account/Domain/Model/AccountAccessToken.h"
 #include "Account/Domain/Model/TakeOver.h"
 #include "Account/Domain/Model/TakeOverAccessToken.h"
+#include "Account/Domain/Model/PlatformId.h"
+#include "Account/Domain/Model/PlatformIdAccessToken.h"
 #include "Account/Domain/Model/DataOwner.h"
 #include "Account/Domain/Model/DataOwnerAccessToken.h"
 
@@ -37,6 +39,8 @@
 #include "Account/Domain/Iterator/DescribeAccountsIterator.h"
 #include "Account/Domain/Iterator/DescribeTakeOversIterator.h"
 #include "Account/Domain/Iterator/DescribeTakeOversByUserIdIterator.h"
+#include "Account/Domain/Iterator/DescribePlatformIdsIterator.h"
+#include "Account/Domain/Iterator/DescribePlatformIdsByUserIdIterator.h"
 
 // Notification
 

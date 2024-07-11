@@ -325,6 +325,105 @@ namespace Gs2::Account
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::Rest::FDescribePlatformIdsTask>> FGs2AccountRestClient::DescribePlatformIds(
+        const Request::FDescribePlatformIdsRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FDescribePlatformIdsTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FDescribePlatformIdsByUserIdTask>> FGs2AccountRestClient::DescribePlatformIdsByUserId(
+        const Request::FDescribePlatformIdsByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FDescribePlatformIdsByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FCreatePlatformIdTask>> FGs2AccountRestClient::CreatePlatformId(
+        const Request::FCreatePlatformIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FCreatePlatformIdTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FCreatePlatformIdByUserIdTask>> FGs2AccountRestClient::CreatePlatformIdByUserId(
+        const Request::FCreatePlatformIdByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FCreatePlatformIdByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FGetPlatformIdTask>> FGs2AccountRestClient::GetPlatformId(
+        const Request::FGetPlatformIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FGetPlatformIdTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FGetPlatformIdByUserIdTask>> FGs2AccountRestClient::GetPlatformIdByUserId(
+        const Request::FGetPlatformIdByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FGetPlatformIdByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FFindPlatformIdTask>> FGs2AccountRestClient::FindPlatformId(
+        const Request::FFindPlatformIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FFindPlatformIdTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FFindPlatformIdByUserIdTask>> FGs2AccountRestClient::FindPlatformIdByUserId(
+        const Request::FFindPlatformIdByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FFindPlatformIdByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FDeletePlatformIdTask>> FGs2AccountRestClient::DeletePlatformId(
+        const Request::FDeletePlatformIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FDeletePlatformIdTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FDeletePlatformIdByUserIdentifierTask>> FGs2AccountRestClient::DeletePlatformIdByUserIdentifier(
+        const Request::FDeletePlatformIdByUserIdentifierRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FDeletePlatformIdByUserIdentifierTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FDeletePlatformIdByUserIdTask>> FGs2AccountRestClient::DeletePlatformIdByUserId(
+        const Request::FDeletePlatformIdByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FDeletePlatformIdByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::Rest::FGetDataOwnerByUserIdTask>> FGs2AccountRestClient::GetDataOwnerByUserId(
         const Request::FGetDataOwnerByUserIdRequestPtr Request) const
     {

@@ -27,6 +27,8 @@
 #include "Account/Domain/Iterator/DescribeAccountsIterator.h"
 #include "Account/Domain/Iterator/DescribeTakeOversIterator.h"
 #include "Account/Domain/Iterator/DescribeTakeOversByUserIdIterator.h"
+#include "Account/Domain/Iterator/DescribePlatformIdsIterator.h"
+#include "Account/Domain/Iterator/DescribePlatformIdsByUserIdIterator.h"
 
 namespace Gs2::Core::Domain
 {
@@ -47,6 +49,8 @@ namespace Gs2::Account::Domain::Model
     class FAccountAccessTokenDomain;
     class FTakeOverDomain;
     class FTakeOverAccessTokenDomain;
+    class FPlatformIdDomain;
+    class FPlatformIdAccessTokenDomain;
     class FDataOwnerDomain;
     class FDataOwnerAccessTokenDomain;
 
@@ -332,6 +336,32 @@ namespace Gs2::Account::Domain::Model
             Request::FDeleteDataOwnerByUserIdRequestPtr Request
         );
 
+        class GS2ACCOUNT_API FDeletePlatformIdTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Account::Domain::Model::FPlatformIdDomain>,
+            public TSharedFromThis<FDeletePlatformIdTask>
+        {
+            const TSharedPtr<FAccountDomain> Self;
+            const Request::FDeletePlatformIdByUserIdRequestPtr Request;
+        public:
+            explicit FDeletePlatformIdTask(
+                const TSharedPtr<FAccountDomain>& Self,
+                const Request::FDeletePlatformIdByUserIdRequestPtr Request
+            );
+
+            FDeletePlatformIdTask(
+                const FDeletePlatformIdTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Account::Domain::Model::FPlatformIdDomain>> Result
+            ) override;
+        };
+        friend FDeletePlatformIdTask;
+
+        TSharedPtr<FAsyncTask<FDeletePlatformIdTask>> DeletePlatformId(
+            Request::FDeletePlatformIdByUserIdRequestPtr Request
+        );
+
         Gs2::Account::Domain::Iterator::FDescribeTakeOversByUserIdIteratorPtr TakeOvers(
             const TOptional<FString> TimeOffsetToken = TOptional<FString>()
         ) const;
@@ -349,6 +379,23 @@ namespace Gs2::Account::Domain::Model
         );
 
         TSharedPtr<Gs2::Account::Domain::Model::FDataOwnerDomain> DataOwner(
+        );
+
+        Gs2::Account::Domain::Iterator::FDescribePlatformIdsByUserIdIteratorPtr PlatformIds(
+            const TOptional<FString> TimeOffsetToken = TOptional<FString>()
+        ) const;
+
+        Gs2::Core::Domain::CallbackID SubscribePlatformIds(
+            TFunction<void()> Callback
+        );
+
+        void UnsubscribePlatformIds(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
+
+        TSharedPtr<Gs2::Account::Domain::Model::FPlatformIdDomain> PlatformId(
+            const int32 Type,
+            const FString UserIdentifier
         );
 
         static FString CreateCacheParentKey(

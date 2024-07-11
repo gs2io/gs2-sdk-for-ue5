@@ -30,6 +30,8 @@
 #include "Account/Domain/Model/AccountAccessToken.h"
 #include "Account/Domain/Model/TakeOver.h"
 #include "Account/Domain/Model/TakeOverAccessToken.h"
+#include "Account/Domain/Model/PlatformId.h"
+#include "Account/Domain/Model/PlatformIdAccessToken.h"
 #include "Account/Domain/Model/DataOwner.h"
 #include "Account/Domain/Model/DataOwnerAccessToken.h"
 
@@ -115,7 +117,7 @@ namespace Gs2::Account::Domain::Model
                     "Account"
                 );
                 const auto Key = Gs2::Account::Domain::Model::FAccountDomain::CreateCacheKey(
-                    Self->UserId
+                    ResultModel->GetItem()->GetUserId()
                 );
                 Self->Gs2->Cache->Put(
                     Gs2::Account::Model::FAccount::TypeName,
@@ -375,7 +377,7 @@ namespace Gs2::Account::Domain::Model
                     "Account"
                 );
                 const auto Key = Gs2::Account::Domain::Model::FAccountDomain::CreateCacheKey(
-                    Self->UserId
+                    ResultModel->GetItem()->GetUserId()
                 );
                 Self->Gs2->Cache->Put(
                     Gs2::Account::Model::FAccount::TypeName,
@@ -438,7 +440,7 @@ namespace Gs2::Account::Domain::Model
                     "Account"
                 );
                 const auto Key = Gs2::Account::Domain::Model::FAccountDomain::CreateCacheKey(
-                    Self->UserId
+                    ResultModel->GetItem()->GetUserId()
                 );
                 Self->Gs2->Cache->Delete(Gs2::Account::Model::FAccount::TypeName, ParentKey, Key);
             }
@@ -497,7 +499,7 @@ namespace Gs2::Account::Domain::Model
                     "Account"
                 );
                 const auto Key = Gs2::Account::Domain::Model::FAccountDomain::CreateCacheKey(
-                    Self->UserId
+                    ResultModel->GetItem()->GetUserId()
                 );
                 Self->Gs2->Cache->Put(
                     Gs2::Account::Model::FAccount::TypeName,
@@ -665,6 +667,74 @@ namespace Gs2::Account::Domain::Model
         return Gs2::Core::Util::New<FAsyncTask<FDeleteDataOwnerTask>>(this->AsShared(), Request);
     }
 
+    FAccountDomain::FDeletePlatformIdTask::FDeletePlatformIdTask(
+        const TSharedPtr<FAccountDomain>& Self,
+        const Request::FDeletePlatformIdByUserIdRequestPtr Request
+    ): Self(Self), Request(Request)
+    {
+
+    }
+
+    FAccountDomain::FDeletePlatformIdTask::FDeletePlatformIdTask(
+        const FDeletePlatformIdTask& From
+    ): TGs2Future(From), Self(From.Self), Request(From.Request)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FAccountDomain::FDeletePlatformIdTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::Account::Domain::Model::FPlatformIdDomain>> Result
+    )
+    {
+        Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
+            ->WithNamespaceName(Self->NamespaceName)
+            ->WithUserId(Self->UserId);
+        const auto Future = Self->Client->DeletePlatformIdByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto RequestModel = Request;
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
+        if (ResultModel != nullptr) {
+            
+            if (ResultModel->GetItem() != nullptr)
+            {
+                const auto ParentKey = Gs2::Account::Domain::Model::FAccountDomain::CreateCacheParentKey(
+                    Self->NamespaceName,
+                    Self->UserId,
+                    "PlatformId"
+                );
+                const auto Key = Gs2::Account::Domain::Model::FPlatformIdDomain::CreateCacheKey(
+                    ResultModel->GetItem()->GetType().IsSet() ? FString::FromInt(*ResultModel->GetItem()->GetType()) : TOptional<FString>(),
+                    ResultModel->GetItem()->GetUserIdentifier().IsSet() ? *ResultModel->GetItem()->GetUserIdentifier() : TOptional<FString>()
+                );
+                Self->Gs2->Cache->Delete(Gs2::Account::Model::FPlatformId::TypeName, ParentKey, Key);
+            }
+        }
+        auto Domain = MakeShared<Gs2::Account::Domain::Model::FPlatformIdDomain>(
+            Self->Gs2,
+            Self->Service,
+            Request->GetNamespaceName(),
+            ResultModel->GetItem()->GetUserId(),
+            ResultModel->GetItem()->GetType(),
+            ResultModel->GetItem()->GetUserIdentifier()
+        );
+
+        *Result = Domain;
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FAccountDomain::FDeletePlatformIdTask>> FAccountDomain::DeletePlatformId(
+        Request::FDeletePlatformIdByUserIdRequestPtr Request
+    ) {
+        return Gs2::Core::Util::New<FAsyncTask<FDeletePlatformIdTask>>(this->AsShared(), Request);
+    }
+
     Gs2::Account::Domain::Iterator::FDescribeTakeOversByUserIdIteratorPtr FAccountDomain::TakeOvers(
         const TOptional<FString> TimeOffsetToken
     ) const
@@ -729,6 +799,64 @@ namespace Gs2::Account::Domain::Model
             Service,
             NamespaceName,
             UserId
+        );
+    }
+
+    Gs2::Account::Domain::Iterator::FDescribePlatformIdsByUserIdIteratorPtr FAccountDomain::PlatformIds(
+        const TOptional<FString> TimeOffsetToken
+    ) const
+    {
+        return MakeShared<Gs2::Account::Domain::Iterator::FDescribePlatformIdsByUserIdIterator>(
+            Gs2,
+            Client,
+            NamespaceName,
+            UserId,
+            TimeOffsetToken
+        );
+    }
+
+    Gs2::Core::Domain::CallbackID FAccountDomain::SubscribePlatformIds(
+    TFunction<void()> Callback
+    )
+    {
+        return Gs2->Cache->ListSubscribe(
+            Gs2::Account::Model::FPlatformId::TypeName,
+            Gs2::Account::Domain::Model::FAccountDomain::CreateCacheParentKey(
+                NamespaceName,
+                UserId,
+                "PlatformId"
+            ),
+            Callback
+        );
+    }
+
+    void FAccountDomain::UnsubscribePlatformIds(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Gs2->Cache->ListUnsubscribe(
+            Gs2::Account::Model::FPlatformId::TypeName,
+            Gs2::Account::Domain::Model::FAccountDomain::CreateCacheParentKey(
+                NamespaceName,
+                UserId,
+                "PlatformId"
+            ),
+            CallbackID
+        );
+    }
+
+    TSharedPtr<Gs2::Account::Domain::Model::FPlatformIdDomain> FAccountDomain::PlatformId(
+        const int32 Type,
+        const FString UserIdentifier
+    )
+    {
+        return MakeShared<Gs2::Account::Domain::Model::FPlatformIdDomain>(
+            Gs2,
+            Service,
+            NamespaceName,
+            UserId,
+            Type,
+            UserIdentifier == TEXT("") ? TOptional<FString>() : TOptional<FString>(UserIdentifier)
         );
     }
 

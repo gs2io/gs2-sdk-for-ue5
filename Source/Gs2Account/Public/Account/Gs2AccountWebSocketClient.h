@@ -86,6 +86,28 @@
 #include "Task/WebSocket/DeleteTakeOverByUserIdTask.h"
 #include "Request/DoTakeOverRequest.h"
 #include "Task/WebSocket/DoTakeOverTask.h"
+#include "Request/DescribePlatformIdsRequest.h"
+#include "Task/WebSocket/DescribePlatformIdsTask.h"
+#include "Request/DescribePlatformIdsByUserIdRequest.h"
+#include "Task/WebSocket/DescribePlatformIdsByUserIdTask.h"
+#include "Request/CreatePlatformIdRequest.h"
+#include "Task/WebSocket/CreatePlatformIdTask.h"
+#include "Request/CreatePlatformIdByUserIdRequest.h"
+#include "Task/WebSocket/CreatePlatformIdByUserIdTask.h"
+#include "Request/GetPlatformIdRequest.h"
+#include "Task/WebSocket/GetPlatformIdTask.h"
+#include "Request/GetPlatformIdByUserIdRequest.h"
+#include "Task/WebSocket/GetPlatformIdByUserIdTask.h"
+#include "Request/FindPlatformIdRequest.h"
+#include "Task/WebSocket/FindPlatformIdTask.h"
+#include "Request/FindPlatformIdByUserIdRequest.h"
+#include "Task/WebSocket/FindPlatformIdByUserIdTask.h"
+#include "Request/DeletePlatformIdRequest.h"
+#include "Task/WebSocket/DeletePlatformIdTask.h"
+#include "Request/DeletePlatformIdByUserIdentifierRequest.h"
+#include "Task/WebSocket/DeletePlatformIdByUserIdentifierTask.h"
+#include "Request/DeletePlatformIdByUserIdRequest.h"
+#include "Task/WebSocket/DeletePlatformIdByUserIdTask.h"
 #include "Request/GetDataOwnerByUserIdRequest.h"
 #include "Task/WebSocket/GetDataOwnerByUserIdTask.h"
 #include "Request/DeleteDataOwnerByUserIdRequest.h"
@@ -236,6 +258,50 @@ namespace Gs2::Account
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FDoTakeOverTask>> DoTakeOver(
             const Request::FDoTakeOverRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FDescribePlatformIdsTask>> DescribePlatformIds(
+            const Request::FDescribePlatformIdsRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FDescribePlatformIdsByUserIdTask>> DescribePlatformIdsByUserId(
+            const Request::FDescribePlatformIdsByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FCreatePlatformIdTask>> CreatePlatformId(
+            const Request::FCreatePlatformIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FCreatePlatformIdByUserIdTask>> CreatePlatformIdByUserId(
+            const Request::FCreatePlatformIdByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FGetPlatformIdTask>> GetPlatformId(
+            const Request::FGetPlatformIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FGetPlatformIdByUserIdTask>> GetPlatformIdByUserId(
+            const Request::FGetPlatformIdByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FFindPlatformIdTask>> FindPlatformId(
+            const Request::FFindPlatformIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FFindPlatformIdByUserIdTask>> FindPlatformIdByUserId(
+            const Request::FFindPlatformIdByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FDeletePlatformIdTask>> DeletePlatformId(
+            const Request::FDeletePlatformIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FDeletePlatformIdByUserIdentifierTask>> DeletePlatformIdByUserIdentifier(
+            const Request::FDeletePlatformIdByUserIdentifierRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FDeletePlatformIdByUserIdTask>> DeletePlatformIdByUserId(
+            const Request::FDeletePlatformIdByUserIdRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FGetDataOwnerByUserIdTask>> GetDataOwnerByUserId(

@@ -20,6 +20,8 @@
 #include "Account/Domain/Model/TakeOver.h"
 #include "Account/Model/Gs2AccountEzAccount.h"
 #include "Account/Model/Gs2AccountEzTakeOver.h"
+#include "Account/Model/Gs2AccountEzPlatformId.h"
+#include "Account/Model/Gs2AccountEzPlatformUser.h"
 #include "Account/Model/Gs2AccountEzBanStatus.h"
 #include "Gs2AccountEzTakeOverDomain.h"
 #include "Util/Net/GameSession.h"

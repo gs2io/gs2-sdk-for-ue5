@@ -86,6 +86,28 @@
 #include "Task/Rest/DeleteTakeOverByUserIdTask.h"
 #include "Request/DoTakeOverRequest.h"
 #include "Task/Rest/DoTakeOverTask.h"
+#include "Request/DescribePlatformIdsRequest.h"
+#include "Task/Rest/DescribePlatformIdsTask.h"
+#include "Request/DescribePlatformIdsByUserIdRequest.h"
+#include "Task/Rest/DescribePlatformIdsByUserIdTask.h"
+#include "Request/CreatePlatformIdRequest.h"
+#include "Task/Rest/CreatePlatformIdTask.h"
+#include "Request/CreatePlatformIdByUserIdRequest.h"
+#include "Task/Rest/CreatePlatformIdByUserIdTask.h"
+#include "Request/GetPlatformIdRequest.h"
+#include "Task/Rest/GetPlatformIdTask.h"
+#include "Request/GetPlatformIdByUserIdRequest.h"
+#include "Task/Rest/GetPlatformIdByUserIdTask.h"
+#include "Request/FindPlatformIdRequest.h"
+#include "Task/Rest/FindPlatformIdTask.h"
+#include "Request/FindPlatformIdByUserIdRequest.h"
+#include "Task/Rest/FindPlatformIdByUserIdTask.h"
+#include "Request/DeletePlatformIdRequest.h"
+#include "Task/Rest/DeletePlatformIdTask.h"
+#include "Request/DeletePlatformIdByUserIdentifierRequest.h"
+#include "Task/Rest/DeletePlatformIdByUserIdentifierTask.h"
+#include "Request/DeletePlatformIdByUserIdRequest.h"
+#include "Task/Rest/DeletePlatformIdByUserIdTask.h"
 #include "Request/GetDataOwnerByUserIdRequest.h"
 #include "Task/Rest/GetDataOwnerByUserIdTask.h"
 #include "Request/DeleteDataOwnerByUserIdRequest.h"
@@ -236,6 +258,50 @@ namespace Gs2::Account
 
         TSharedPtr<FAsyncTask<Task::Rest::FDoTakeOverTask>> DoTakeOver(
             const Request::FDoTakeOverRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FDescribePlatformIdsTask>> DescribePlatformIds(
+            const Request::FDescribePlatformIdsRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FDescribePlatformIdsByUserIdTask>> DescribePlatformIdsByUserId(
+            const Request::FDescribePlatformIdsByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FCreatePlatformIdTask>> CreatePlatformId(
+            const Request::FCreatePlatformIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FCreatePlatformIdByUserIdTask>> CreatePlatformIdByUserId(
+            const Request::FCreatePlatformIdByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FGetPlatformIdTask>> GetPlatformId(
+            const Request::FGetPlatformIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FGetPlatformIdByUserIdTask>> GetPlatformIdByUserId(
+            const Request::FGetPlatformIdByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FFindPlatformIdTask>> FindPlatformId(
+            const Request::FFindPlatformIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FFindPlatformIdByUserIdTask>> FindPlatformIdByUserId(
+            const Request::FFindPlatformIdByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FDeletePlatformIdTask>> DeletePlatformId(
+            const Request::FDeletePlatformIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FDeletePlatformIdByUserIdentifierTask>> DeletePlatformIdByUserIdentifier(
+            const Request::FDeletePlatformIdByUserIdentifierRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FDeletePlatformIdByUserIdTask>> DeletePlatformIdByUserId(
+            const Request::FDeletePlatformIdByUserIdRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::Rest::FGetDataOwnerByUserIdTask>> GetDataOwnerByUserId(

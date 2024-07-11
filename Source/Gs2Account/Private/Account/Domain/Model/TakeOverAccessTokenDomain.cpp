@@ -29,6 +29,8 @@
 #include "Account/Domain/Model/AccountAccessToken.h"
 #include "Account/Domain/Model/TakeOver.h"
 #include "Account/Domain/Model/TakeOverAccessToken.h"
+#include "Account/Domain/Model/PlatformId.h"
+#include "Account/Domain/Model/PlatformIdAccessToken.h"
 #include "Account/Domain/Model/DataOwner.h"
 #include "Account/Domain/Model/DataOwnerAccessToken.h"
 

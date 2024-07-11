@@ -20,7 +20,9 @@
 #include "Model/Namespace.h"
 #include "Model/Account.h"
 #include "Model/TakeOver.h"
+#include "Model/PlatformId.h"
 #include "Model/DataOwner.h"
+#include "Model/PlatformUser.h"
 #include "Model/BanStatus.h"
 #include "Model/ScriptSetting.h"
 #include "Model/LogSetting.h"
@@ -228,6 +230,72 @@
 #include "Result/DoTakeOverResult.h"
 #include "Task/Rest/DoTakeOverTask.h"
 #include "Task/WebSocket/DoTakeOverTask.h"
+
+// DescribePlatformIds
+#include "Request/DescribePlatformIdsRequest.h"
+#include "Result/DescribePlatformIdsResult.h"
+#include "Task/Rest/DescribePlatformIdsTask.h"
+#include "Task/WebSocket/DescribePlatformIdsTask.h"
+
+// DescribePlatformIdsByUserId
+#include "Request/DescribePlatformIdsByUserIdRequest.h"
+#include "Result/DescribePlatformIdsByUserIdResult.h"
+#include "Task/Rest/DescribePlatformIdsByUserIdTask.h"
+#include "Task/WebSocket/DescribePlatformIdsByUserIdTask.h"
+
+// CreatePlatformId
+#include "Request/CreatePlatformIdRequest.h"
+#include "Result/CreatePlatformIdResult.h"
+#include "Task/Rest/CreatePlatformIdTask.h"
+#include "Task/WebSocket/CreatePlatformIdTask.h"
+
+// CreatePlatformIdByUserId
+#include "Request/CreatePlatformIdByUserIdRequest.h"
+#include "Result/CreatePlatformIdByUserIdResult.h"
+#include "Task/Rest/CreatePlatformIdByUserIdTask.h"
+#include "Task/WebSocket/CreatePlatformIdByUserIdTask.h"
+
+// GetPlatformId
+#include "Request/GetPlatformIdRequest.h"
+#include "Result/GetPlatformIdResult.h"
+#include "Task/Rest/GetPlatformIdTask.h"
+#include "Task/WebSocket/GetPlatformIdTask.h"
+
+// GetPlatformIdByUserId
+#include "Request/GetPlatformIdByUserIdRequest.h"
+#include "Result/GetPlatformIdByUserIdResult.h"
+#include "Task/Rest/GetPlatformIdByUserIdTask.h"
+#include "Task/WebSocket/GetPlatformIdByUserIdTask.h"
+
+// FindPlatformId
+#include "Request/FindPlatformIdRequest.h"
+#include "Result/FindPlatformIdResult.h"
+#include "Task/Rest/FindPlatformIdTask.h"
+#include "Task/WebSocket/FindPlatformIdTask.h"
+
+// FindPlatformIdByUserId
+#include "Request/FindPlatformIdByUserIdRequest.h"
+#include "Result/FindPlatformIdByUserIdResult.h"
+#include "Task/Rest/FindPlatformIdByUserIdTask.h"
+#include "Task/WebSocket/FindPlatformIdByUserIdTask.h"
+
+// DeletePlatformId
+#include "Request/DeletePlatformIdRequest.h"
+#include "Result/DeletePlatformIdResult.h"
+#include "Task/Rest/DeletePlatformIdTask.h"
+#include "Task/WebSocket/DeletePlatformIdTask.h"
+
+// DeletePlatformIdByUserIdentifier
+#include "Request/DeletePlatformIdByUserIdentifierRequest.h"
+#include "Result/DeletePlatformIdByUserIdentifierResult.h"
+#include "Task/Rest/DeletePlatformIdByUserIdentifierTask.h"
+#include "Task/WebSocket/DeletePlatformIdByUserIdentifierTask.h"
+
+// DeletePlatformIdByUserId
+#include "Request/DeletePlatformIdByUserIdRequest.h"
+#include "Result/DeletePlatformIdByUserIdResult.h"
+#include "Task/Rest/DeletePlatformIdByUserIdTask.h"
+#include "Task/WebSocket/DeletePlatformIdByUserIdTask.h"
 
 // GetDataOwnerByUserId
 #include "Request/GetDataOwnerByUserIdRequest.h"

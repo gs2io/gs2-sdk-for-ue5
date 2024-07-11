@@ -108,6 +108,45 @@ namespace Gs2::UE5::Account::Domain::Model
         );
     }
 
+    Gs2::UE5::Account::Domain::Iterator::FEzDescribePlatformIdsIteratorPtr FEzAccountGameSessionDomain::PlatformIds(
+    ) const
+    {
+        return MakeShared<Gs2::UE5::Account::Domain::Iterator::FEzDescribePlatformIdsIterator>(
+            Domain,
+            GameSession,
+            ConnectionValue
+        );
+    }
+
+    Gs2::Core::Domain::CallbackID FEzAccountGameSessionDomain::SubscribePlatformIds(TFunction<void()> Callback)
+    {
+        return Domain->SubscribePlatformIds(
+            Callback
+        );
+    }
+
+    void FEzAccountGameSessionDomain::UnsubscribePlatformIds(Gs2::Core::Domain::CallbackID CallbackId)
+    {
+        Domain->UnsubscribePlatformIds(
+            CallbackId
+        );
+    }
+
+    Gs2::UE5::Account::Domain::Model::FEzPlatformIdGameSessionDomainPtr FEzAccountGameSessionDomain::PlatformId(
+        const int32 Type,
+        const FString UserIdentifier
+    ) const
+    {
+        return MakeShared<Gs2::UE5::Account::Domain::Model::FEzPlatformIdGameSessionDomain>(
+            Domain->PlatformId(
+                Type,
+                UserIdentifier
+            ),
+            GameSession,
+            ConnectionValue
+        );
+    }
+
     FEzAccountGameSessionDomain::FModelTask::FModelTask(
         TSharedPtr<FEzAccountGameSessionDomain> Self
     ): Self(Self)

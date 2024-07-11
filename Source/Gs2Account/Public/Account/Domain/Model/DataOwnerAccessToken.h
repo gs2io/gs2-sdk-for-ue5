@@ -25,6 +25,8 @@
 #include "Account/Domain/Iterator/DescribeAccountsIterator.h"
 #include "Account/Domain/Iterator/DescribeTakeOversIterator.h"
 #include "Account/Domain/Iterator/DescribeTakeOversByUserIdIterator.h"
+#include "Account/Domain/Iterator/DescribePlatformIdsIterator.h"
+#include "Account/Domain/Iterator/DescribePlatformIdsByUserIdIterator.h"
 
 namespace Gs2::Core::Domain
 {
@@ -45,6 +47,8 @@ namespace Gs2::Account::Domain::Model
     class FAccountAccessTokenDomain;
     class FTakeOverDomain;
     class FTakeOverAccessTokenDomain;
+    class FPlatformIdDomain;
+    class FPlatformIdAccessTokenDomain;
     class FDataOwnerDomain;
     class FDataOwnerAccessTokenDomain;
 

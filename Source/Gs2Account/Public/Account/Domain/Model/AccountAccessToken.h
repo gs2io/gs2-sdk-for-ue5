@@ -25,6 +25,8 @@
 #include "Account/Domain/Iterator/DescribeAccountsIterator.h"
 #include "Account/Domain/Iterator/DescribeTakeOversIterator.h"
 #include "Account/Domain/Iterator/DescribeTakeOversByUserIdIterator.h"
+#include "Account/Domain/Iterator/DescribePlatformIdsIterator.h"
+#include "Account/Domain/Iterator/DescribePlatformIdsByUserIdIterator.h"
 
 namespace Gs2::Core::Domain
 {
@@ -45,6 +47,8 @@ namespace Gs2::Account::Domain::Model
     class FAccountAccessTokenDomain;
     class FTakeOverDomain;
     class FTakeOverAccessTokenDomain;
+    class FPlatformIdDomain;
+    class FPlatformIdAccessTokenDomain;
     class FDataOwnerDomain;
     class FDataOwnerAccessTokenDomain;
 
@@ -113,6 +117,22 @@ namespace Gs2::Account::Domain::Model
         );
 
         TSharedPtr<Gs2::Account::Domain::Model::FDataOwnerAccessTokenDomain> DataOwner(
+        );
+
+        Gs2::Account::Domain::Iterator::FDescribePlatformIdsIteratorPtr PlatformIds(
+        ) const;
+
+        Gs2::Core::Domain::CallbackID SubscribePlatformIds(
+            TFunction<void()> Callback
+        );
+
+        void UnsubscribePlatformIds(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
+
+        TSharedPtr<Gs2::Account::Domain::Model::FPlatformIdAccessTokenDomain> PlatformId(
+            const int32 Type,
+            const FString UserIdentifier
         );
 
         static FString CreateCacheParentKey(

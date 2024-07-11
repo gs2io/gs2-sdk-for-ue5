@@ -20,8 +20,11 @@
 #include "Account/Domain/Model/Account.h"
 #include "Account/Model/Gs2AccountEzAccount.h"
 #include "Account/Model/Gs2AccountEzTakeOver.h"
+#include "Account/Model/Gs2AccountEzPlatformId.h"
+#include "Account/Model/Gs2AccountEzPlatformUser.h"
 #include "Account/Model/Gs2AccountEzBanStatus.h"
 #include "Gs2AccountEzTakeOverDomain.h"
+#include "Gs2AccountEzPlatformIdDomain.h"
 #include "Gs2AccountEzAccountDomain.h"
 #include "Gs2AccountEzAccountDomain.h"
 #include "Gs2AccountEzAccountGameSessionDomain.h"
@@ -78,6 +81,11 @@ namespace Gs2::UE5::Account::Domain::Model
 
         Gs2::UE5::Account::Domain::Model::FEzTakeOverDomainPtr TakeOver(
             const int32 Type
+        ) const;
+
+        Gs2::UE5::Account::Domain::Model::FEzPlatformIdDomainPtr PlatformId(
+            const int32 Type,
+            const FString UserIdentifier
         ) const;
 
         class EZGS2_API FModelTask :

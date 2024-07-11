@@ -325,6 +325,105 @@ namespace Gs2::Account
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::WebSocket::FDescribePlatformIdsTask>> FGs2AccountWebSocketClient::DescribePlatformIds(
+        const Request::FDescribePlatformIdsRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FDescribePlatformIdsTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FDescribePlatformIdsByUserIdTask>> FGs2AccountWebSocketClient::DescribePlatformIdsByUserId(
+        const Request::FDescribePlatformIdsByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FDescribePlatformIdsByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FCreatePlatformIdTask>> FGs2AccountWebSocketClient::CreatePlatformId(
+        const Request::FCreatePlatformIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FCreatePlatformIdTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FCreatePlatformIdByUserIdTask>> FGs2AccountWebSocketClient::CreatePlatformIdByUserId(
+        const Request::FCreatePlatformIdByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FCreatePlatformIdByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FGetPlatformIdTask>> FGs2AccountWebSocketClient::GetPlatformId(
+        const Request::FGetPlatformIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FGetPlatformIdTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FGetPlatformIdByUserIdTask>> FGs2AccountWebSocketClient::GetPlatformIdByUserId(
+        const Request::FGetPlatformIdByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FGetPlatformIdByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FFindPlatformIdTask>> FGs2AccountWebSocketClient::FindPlatformId(
+        const Request::FFindPlatformIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FFindPlatformIdTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FFindPlatformIdByUserIdTask>> FGs2AccountWebSocketClient::FindPlatformIdByUserId(
+        const Request::FFindPlatformIdByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FFindPlatformIdByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FDeletePlatformIdTask>> FGs2AccountWebSocketClient::DeletePlatformId(
+        const Request::FDeletePlatformIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FDeletePlatformIdTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FDeletePlatformIdByUserIdentifierTask>> FGs2AccountWebSocketClient::DeletePlatformIdByUserIdentifier(
+        const Request::FDeletePlatformIdByUserIdentifierRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FDeletePlatformIdByUserIdentifierTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FDeletePlatformIdByUserIdTask>> FGs2AccountWebSocketClient::DeletePlatformIdByUserId(
+        const Request::FDeletePlatformIdByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FDeletePlatformIdByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::WebSocket::FGetDataOwnerByUserIdTask>> FGs2AccountWebSocketClient::GetDataOwnerByUserId(
         const Request::FGetDataOwnerByUserIdRequestPtr Request) const
     {

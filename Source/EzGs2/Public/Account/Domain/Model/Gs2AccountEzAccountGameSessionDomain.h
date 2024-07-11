@@ -20,9 +20,13 @@
 #include "Account/Domain/Model/AccountAccessToken.h"
 #include "Account/Model/Gs2AccountEzAccount.h"
 #include "Account/Model/Gs2AccountEzTakeOver.h"
+#include "Account/Model/Gs2AccountEzPlatformId.h"
+#include "Account/Model/Gs2AccountEzPlatformUser.h"
 #include "Account/Model/Gs2AccountEzBanStatus.h"
 #include "Gs2AccountEzTakeOverGameSessionDomain.h"
 #include "Account/Domain/Iterator/Gs2AccountEzDescribeTakeOversIterator.h"
+#include "Gs2AccountEzPlatformIdGameSessionDomain.h"
+#include "Account/Domain/Iterator/Gs2AccountEzDescribePlatformIdsIterator.h"
 #include "Gs2AccountEzAccountGameSessionDomain.h"
 #include "Util/Net/GameSession.h"
 #include "Util/Net/Gs2Connection.h"
@@ -60,6 +64,18 @@ namespace Gs2::UE5::Account::Domain::Model
 
         Gs2::UE5::Account::Domain::Model::FEzTakeOverGameSessionDomainPtr TakeOver(
             const int32 Type
+        ) const;
+
+        Gs2::UE5::Account::Domain::Iterator::FEzDescribePlatformIdsIteratorPtr PlatformIds(
+        ) const;
+
+        Gs2::Core::Domain::CallbackID SubscribePlatformIds(TFunction<void()> Callback);
+
+        void UnsubscribePlatformIds(Gs2::Core::Domain::CallbackID CallbackId);
+
+        Gs2::UE5::Account::Domain::Model::FEzPlatformIdGameSessionDomainPtr PlatformId(
+            const int32 Type,
+            const FString UserIdentifier
         ) const;
 
         class EZGS2_API FModelTask :

@@ -138,6 +138,20 @@ namespace Gs2::UE5::Account::Domain::Model
         );
     }
 
+    Gs2::UE5::Account::Domain::Model::FEzPlatformIdDomainPtr FEzAccountDomain::PlatformId(
+        const int32 Type,
+        const FString UserIdentifier
+    ) const
+    {
+        return MakeShared<Gs2::UE5::Account::Domain::Model::FEzPlatformIdDomain>(
+            Domain->PlatformId(
+                Type,
+                UserIdentifier
+            ),
+            ConnectionValue
+        );
+    }
+
     FEzAccountDomain::FModelTask::FModelTask(
         TSharedPtr<FEzAccountDomain> Self
     ): Self(Self)

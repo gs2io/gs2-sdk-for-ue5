@@ -12,6 +12,8 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
+ *
+ * deny overwrite
  */
 
 // ReSharper disable CppUnusedIncludeDirective
@@ -24,6 +26,8 @@
 #include "Account/Domain/Iterator/DescribeAccountsIterator.h"
 #include "Account/Domain/Iterator/DescribeTakeOversIterator.h"
 #include "Account/Domain/Iterator/DescribeTakeOversByUserIdIterator.h"
+#include "Account/Domain/Iterator/DescribePlatformIdsIterator.h"
+#include "Account/Domain/Iterator/DescribePlatformIdsByUserIdIterator.h"
 
 namespace Gs2::Core::Domain
 {
@@ -44,6 +48,8 @@ namespace Gs2::Account::Domain::Model
     class FAccountAccessTokenDomain;
     class FTakeOverDomain;
     class FTakeOverAccessTokenDomain;
+    class FPlatformIdDomain;
+    class FPlatformIdAccessTokenDomain;
     class FDataOwnerDomain;
     class FDataOwnerAccessTokenDomain;
 
@@ -278,6 +284,32 @@ namespace Gs2::Account::Domain::Model
 
         TSharedPtr<FAsyncTask<FDoTakeOverTask>> DoTakeOver(
             Request::FDoTakeOverRequestPtr Request
+        );
+
+        class GS2ACCOUNT_API FDeletePlatformIdByUserIdentifierTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Account::Domain::Model::FPlatformIdDomain>,
+            public TSharedFromThis<FDeletePlatformIdByUserIdentifierTask>
+        {
+            const TSharedPtr<FNamespaceDomain> Self;
+            const Request::FDeletePlatformIdByUserIdentifierRequestPtr Request;
+        public:
+            explicit FDeletePlatformIdByUserIdentifierTask(
+                const TSharedPtr<FNamespaceDomain>& Self,
+                const Request::FDeletePlatformIdByUserIdentifierRequestPtr Request
+            );
+
+            FDeletePlatformIdByUserIdentifierTask(
+                const FDeletePlatformIdByUserIdentifierTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Account::Domain::Model::FPlatformIdDomain>> Result
+            ) override;
+        };
+        friend FDeletePlatformIdByUserIdentifierTask;
+
+        TSharedPtr<FAsyncTask<FDeletePlatformIdByUserIdentifierTask>> DeletePlatformIdByUserIdentifier(
+            Request::FDeletePlatformIdByUserIdentifierRequestPtr Request
         );
 
         Gs2::Account::Domain::Iterator::FDescribeAccountsIteratorPtr Accounts(

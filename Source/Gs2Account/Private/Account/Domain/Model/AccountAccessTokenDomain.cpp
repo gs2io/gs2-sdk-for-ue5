@@ -31,6 +31,8 @@
 #include "Account/Domain/Model/AccountAccessToken.h"
 #include "Account/Domain/Model/TakeOver.h"
 #include "Account/Domain/Model/TakeOverAccessToken.h"
+#include "Account/Domain/Model/PlatformId.h"
+#include "Account/Domain/Model/PlatformIdAccessToken.h"
 #include "Account/Domain/Model/DataOwner.h"
 #include "Account/Domain/Model/DataOwnerAccessToken.h"
 
@@ -136,6 +138,62 @@ namespace Gs2::Account::Domain::Model
             Service,
             NamespaceName,
             AccessToken
+        );
+    }
+
+    Gs2::Account::Domain::Iterator::FDescribePlatformIdsIteratorPtr FAccountAccessTokenDomain::PlatformIds(
+    ) const
+    {
+        return MakeShared<Gs2::Account::Domain::Iterator::FDescribePlatformIdsIterator>(
+            Gs2,
+            Client,
+            NamespaceName,
+            AccessToken
+        );
+    }
+
+    Gs2::Core::Domain::CallbackID FAccountAccessTokenDomain::SubscribePlatformIds(
+    TFunction<void()> Callback
+    )
+    {
+        return Gs2->Cache->ListSubscribe(
+            Gs2::Account::Model::FPlatformId::TypeName,
+            Gs2::Account::Domain::Model::FAccountDomain::CreateCacheParentKey(
+                NamespaceName,
+                UserId(),
+                "PlatformId"
+            ),
+            Callback
+        );
+    }
+
+    void FAccountAccessTokenDomain::UnsubscribePlatformIds(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Gs2->Cache->ListUnsubscribe(
+            Gs2::Account::Model::FPlatformId::TypeName,
+            Gs2::Account::Domain::Model::FAccountDomain::CreateCacheParentKey(
+                NamespaceName,
+                UserId(),
+                "PlatformId"
+            ),
+            CallbackID
+        );
+    }
+
+    TSharedPtr<Gs2::Account::Domain::Model::FPlatformIdAccessTokenDomain> FAccountAccessTokenDomain::PlatformId(
+        const int32 Type,
+        const FString UserIdentifier
+    )
+    {
+        return MakeShared<Gs2::Account::Domain::Model::FPlatformIdAccessTokenDomain>(
+            Gs2,
+            Service,
+            NamespaceName,
+            AccessToken,
+            Type,
+            UserIdentifier == TEXT("") ? TOptional<FString>() : TOptional<FString>(UserIdentifier)
         );
     }
 
