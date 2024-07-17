@@ -14,7 +14,7 @@
  * permissions and limitations under the License.
  */
 
-#include "Identifier/Task/Rest/LoginByUserTask.h"
+#include "Identifier/Task/Rest/DisableMfaTask.h"
 
 #include "HttpManager.h"
 #include "HttpModule.h"
@@ -25,21 +25,21 @@
 
 namespace Gs2::Identifier::Task::Rest
 {
-    FLoginByUserTask::FLoginByUserTask(
+    FDisableMfaTask::FDisableMfaTask(
         const Core::Net::Rest::FGs2RestSessionPtr Session,
-        const Request::FLoginByUserRequestPtr Request
+        const Request::FDisableMfaRequestPtr Request
     ): Session(Session), Request(Request)
     {
     }
 
-    FLoginByUserTask::FLoginByUserTask(
-        const FLoginByUserTask& From
+    FDisableMfaTask::FDisableMfaTask(
+        const FDisableMfaTask& From
     ): TGs2Future(From), Session(From.Session), Request(From.Request)
     {
     }
 
-    Core::Model::FGs2ErrorPtr FLoginByUserTask::Action(
-        const TSharedPtr<Result::FLoginByUserResultPtr> Result
+    Core::Model::FGs2ErrorPtr FDisableMfaTask::Action(
+        const TSharedPtr<Result::FDisableMfaResultPtr> Result
     )
     {
 
@@ -69,40 +69,30 @@ namespace Gs2::Identifier::Task::Rest
             auto Url = Core::FGs2Constant::EndpointHost
                 .Replace(TEXT("{service}"), TEXT("identifier"))
                 .Replace(TEXT("{region}"), *this->Session->RegionName())
-                .Append("/projectToken/login/user");
+                .Append("/user/{userName}/mfa");
+
+            Url = Url.Replace(
+                TEXT("{userName}"),
+                !this->Request->GetUserName().IsSet() || this->Request->GetUserName().GetValue().Len() == 0 ?
+                    TEXT("null") : ToCStr(*this->Request->GetUserName())
+            );
+
+            TArray<FString> queryStrings;
+            if (this->Request->GetContextStack().IsSet()) {
+                queryStrings.Add("contextStack=" + FGenericPlatformHttp::UrlEncode(*this->Request->GetContextStack().GetValue()));
+            }
+            Url += "?" + FString::Join(queryStrings, TEXT("&"));
 
             request->SetURL(Url);
 
-            request->SetVerb(TEXT("POST"));
-
-            FString Body;
-            const TSharedRef<TJsonWriter<TCHAR>> Writer = TJsonWriterFactory<TCHAR>::Create(&Body);
-            const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
-            if (this->Request->GetUserName().IsSet())
-            {
-                JsonRootObject->SetStringField("userName", this->Request->GetUserName().GetValue());
-            }
-            if (this->Request->GetPassword().IsSet())
-            {
-                JsonRootObject->SetStringField("password", this->Request->GetPassword().GetValue());
-            }
-            if (this->Request->GetOtp().IsSet())
-            {
-                JsonRootObject->SetStringField("otp", this->Request->GetOtp().GetValue());
-            }
-            if (this->Request->GetContextStack().IsSet())
-            {
-                JsonRootObject->SetStringField("contextStack", this->Request->GetContextStack().GetValue());
-            }
-            FJsonSerializer::Serialize(JsonRootObject.ToSharedRef(), Writer);
-            request->SetContentAsString(Body);
+            request->SetVerb(TEXT("DELETE"));
 
             request->SetHeader("X-GS2-CLIENT-ID", this->Session->Credential()->ClientId());
             request->SetHeader("Authorization", "Bearer " + this->Session->Credential()->ProjectToken());
             request->SetHeader("Content-Type", "application/json");
 
             request->ProcessRequest();
-            UE_LOG(Gs2Log, VeryVerbose, TEXT("[%s] %s %s"), TEXT("POST"), ToCStr(Url), ToCStr(Body));
+            UE_LOG(Gs2Log, VeryVerbose, TEXT("[%s] %s"), TEXT("DELETE"), ToCStr(Url));
         }
 
         if (FPlatformTLS::GetCurrentThreadId() == GGameThreadId)
@@ -126,7 +116,7 @@ namespace Gs2::Identifier::Task::Rest
                 FJsonSerializer::Deserialize(JsonReader, JsonRootObject))
             {
                 auto Details = TArray<TSharedPtr<Core::Model::FGs2ErrorDetail>>();
-                *Result = Result::FLoginByUserResult::FromJson(JsonRootObject);
+                *Result = Result::FDisableMfaResult::FromJson(JsonRootObject);
                 return nullptr;
             }
             const auto Details = MakeShared<TArray<TSharedPtr<Core::Model::FGs2ErrorDetail>>>();

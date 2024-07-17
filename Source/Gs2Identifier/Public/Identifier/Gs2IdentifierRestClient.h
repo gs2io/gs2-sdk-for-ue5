@@ -54,6 +54,12 @@
 #include "Task/Rest/CreatePasswordTask.h"
 #include "Request/GetPasswordRequest.h"
 #include "Task/Rest/GetPasswordTask.h"
+#include "Request/EnableMfaRequest.h"
+#include "Task/Rest/EnableMfaTask.h"
+#include "Request/ChallengeMfaRequest.h"
+#include "Task/Rest/ChallengeMfaTask.h"
+#include "Request/DisableMfaRequest.h"
+#include "Task/Rest/DisableMfaTask.h"
 #include "Request/DeletePasswordRequest.h"
 #include "Task/Rest/DeletePasswordTask.h"
 #include "Request/GetHasSecurityPolicyRequest.h"
@@ -148,6 +154,18 @@ namespace Gs2::Identifier
 
         TSharedPtr<FAsyncTask<Task::Rest::FGetPasswordTask>> GetPassword(
             const Request::FGetPasswordRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FEnableMfaTask>> EnableMfa(
+            const Request::FEnableMfaRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FChallengeMfaTask>> ChallengeMfa(
+            const Request::FChallengeMfaRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FDisableMfaTask>> DisableMfa(
+            const Request::FDisableMfaRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::Rest::FDeletePasswordTask>> DeletePassword(

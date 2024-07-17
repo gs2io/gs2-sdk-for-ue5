@@ -18,6 +18,7 @@
 
 #include "CoreMinimal.h"
 #include "Core/Gs2Object.h"
+#include "TwoFactorAuthenticationSetting.h"
 
 namespace Gs2::Identifier::Model
 {
@@ -26,6 +27,8 @@ namespace Gs2::Identifier::Model
         TOptional<FString> PasswordIdValue;
         TOptional<FString> UserIdValue;
         TOptional<FString> UserNameValue;
+        TOptional<FString> EnableTwoFactorAuthenticationValue;
+        TSharedPtr<FTwoFactorAuthenticationSetting> TwoFactorAuthenticationSettingValue;
         TOptional<int64> CreatedAtValue;
         TOptional<int64> RevisionValue;
 
@@ -39,12 +42,16 @@ namespace Gs2::Identifier::Model
         TSharedPtr<FPassword> WithPasswordId(const TOptional<FString> PasswordId);
         TSharedPtr<FPassword> WithUserId(const TOptional<FString> UserId);
         TSharedPtr<FPassword> WithUserName(const TOptional<FString> UserName);
+        TSharedPtr<FPassword> WithEnableTwoFactorAuthentication(const TOptional<FString> EnableTwoFactorAuthentication);
+        TSharedPtr<FPassword> WithTwoFactorAuthenticationSetting(const TSharedPtr<FTwoFactorAuthenticationSetting> TwoFactorAuthenticationSetting);
         TSharedPtr<FPassword> WithCreatedAt(const TOptional<int64> CreatedAt);
         TSharedPtr<FPassword> WithRevision(const TOptional<int64> Revision);
 
         TOptional<FString> GetPasswordId() const;
         TOptional<FString> GetUserId() const;
         TOptional<FString> GetUserName() const;
+        TOptional<FString> GetEnableTwoFactorAuthentication() const;
+        TSharedPtr<FTwoFactorAuthenticationSetting> GetTwoFactorAuthenticationSetting() const;
         TOptional<int64> GetCreatedAt() const;
         FString GetCreatedAtString() const;
         TOptional<int64> GetRevision() const;

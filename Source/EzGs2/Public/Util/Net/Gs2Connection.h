@@ -27,7 +27,7 @@ namespace Gs2::UE5::Util
 		Gs2::Core::Net::WebSocket::FGs2WebSocketSessionPtr WebSocketSession();
 		Gs2::Core::Model::ERegion Region() const;
 		
-		class FConnectTask final :
+		class EZGS2_API FConnectTask final :
 			public Gs2::Core::Util::TGs2Future<void>,
 			public TSharedFromThis<FConnectTask>
 		{
@@ -45,7 +45,7 @@ namespace Gs2::UE5::Util
 
 		TSharedPtr<FAsyncTask<FConnectTask>> Connect();
         
-		class FDisconnectTask final :
+		class EZGS2_API FDisconnectTask final :
 			public Gs2::Core::Util::TGs2Future<void>,
 			public TSharedFromThis<FDisconnectTask>
 		{
@@ -63,7 +63,7 @@ namespace Gs2::UE5::Util
 
 		TSharedPtr<FAsyncTask<FDisconnectTask>> Disconnect();
 
-        class FRunTask final :
+        class EZGS2_API FRunTask final :
             public Gs2::Core::Util::TGs2Future<void>,
             public TSharedFromThis<FRunTask>
         {

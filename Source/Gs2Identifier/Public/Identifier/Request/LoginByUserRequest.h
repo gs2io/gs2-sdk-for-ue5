@@ -27,6 +27,7 @@ namespace Gs2::Identifier::Request
         TOptional<FString> ContextStackValue;
         TOptional<FString> UserNameValue;
         TOptional<FString> PasswordValue;
+        TOptional<FString> OtpValue;
         
     public:
         
@@ -39,10 +40,12 @@ namespace Gs2::Identifier::Request
         TSharedPtr<FLoginByUserRequest> WithContextStack(const TOptional<FString> ContextStack);
         TSharedPtr<FLoginByUserRequest> WithUserName(const TOptional<FString> UserName);
         TSharedPtr<FLoginByUserRequest> WithPassword(const TOptional<FString> Password);
+        TSharedPtr<FLoginByUserRequest> WithOtp(const TOptional<FString> Otp);
 
         TOptional<FString> GetContextStack() const;
         TOptional<FString> GetUserName() const;
         TOptional<FString> GetPassword() const;
+        TOptional<FString> GetOtp() const;
 
         static TSharedPtr<FLoginByUserRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;

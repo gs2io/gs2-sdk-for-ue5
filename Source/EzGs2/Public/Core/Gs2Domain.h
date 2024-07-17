@@ -132,7 +132,7 @@ namespace Gs2::UE5::Core::Domain
         );
         ~FGs2Domain() = default;
         
-        class FLoginTask final :
+        class EZGS2_API FLoginTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::Util::FGameSession>,
             public TSharedFromThis<FLoginTask>
         {

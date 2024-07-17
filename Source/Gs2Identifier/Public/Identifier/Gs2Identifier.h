@@ -23,6 +23,7 @@
 #include "Model/Password.h"
 #include "Model/AttachSecurityPolicy.h"
 #include "Model/ProjectToken.h"
+#include "Model/TwoFactorAuthenticationSetting.h"
 
 // DescribeUsers
 #include "Request/DescribeUsersRequest.h"
@@ -131,6 +132,24 @@
 #include "Result/GetPasswordResult.h"
 #include "Task/Rest/GetPasswordTask.h"
 #include "Task/WebSocket/GetPasswordTask.h"
+
+// EnableMfa
+#include "Request/EnableMfaRequest.h"
+#include "Result/EnableMfaResult.h"
+#include "Task/Rest/EnableMfaTask.h"
+#include "Task/WebSocket/EnableMfaTask.h"
+
+// ChallengeMfa
+#include "Request/ChallengeMfaRequest.h"
+#include "Result/ChallengeMfaResult.h"
+#include "Task/Rest/ChallengeMfaTask.h"
+#include "Task/WebSocket/ChallengeMfaTask.h"
+
+// DisableMfa
+#include "Request/DisableMfaRequest.h"
+#include "Result/DisableMfaResult.h"
+#include "Task/Rest/DisableMfaTask.h"
+#include "Task/WebSocket/DisableMfaTask.h"
 
 // DeletePassword
 #include "Request/DeletePasswordRequest.h"

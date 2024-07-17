@@ -181,6 +181,33 @@ namespace Gs2::Identifier
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::WebSocket::FEnableMfaTask>> FGs2IdentifierWebSocketClient::EnableMfa(
+        const Request::FEnableMfaRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FEnableMfaTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FChallengeMfaTask>> FGs2IdentifierWebSocketClient::ChallengeMfa(
+        const Request::FChallengeMfaRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FChallengeMfaTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FDisableMfaTask>> FGs2IdentifierWebSocketClient::DisableMfa(
+        const Request::FDisableMfaRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FDisableMfaTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::WebSocket::FDeletePasswordTask>> FGs2IdentifierWebSocketClient::DeletePassword(
         const Request::FDeletePasswordRequestPtr Request) const
     {

@@ -54,6 +54,12 @@
 #include "Task/WebSocket/CreatePasswordTask.h"
 #include "Request/GetPasswordRequest.h"
 #include "Task/WebSocket/GetPasswordTask.h"
+#include "Request/EnableMfaRequest.h"
+#include "Task/WebSocket/EnableMfaTask.h"
+#include "Request/ChallengeMfaRequest.h"
+#include "Task/WebSocket/ChallengeMfaTask.h"
+#include "Request/DisableMfaRequest.h"
+#include "Task/WebSocket/DisableMfaTask.h"
 #include "Request/DeletePasswordRequest.h"
 #include "Task/WebSocket/DeletePasswordTask.h"
 #include "Request/GetHasSecurityPolicyRequest.h"
@@ -148,6 +154,18 @@ namespace Gs2::Identifier
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FGetPasswordTask>> GetPassword(
             const Request::FGetPasswordRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FEnableMfaTask>> EnableMfa(
+            const Request::FEnableMfaRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FChallengeMfaTask>> ChallengeMfa(
+            const Request::FChallengeMfaRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FDisableMfaTask>> DisableMfa(
+            const Request::FDisableMfaRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FDeletePasswordTask>> DeletePassword(

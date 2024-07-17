@@ -14,27 +14,25 @@
  * permissions and limitations under the License.
  */
 
-#include "Identifier/Request/LoginByUserRequest.h"
+#include "Identifier/Request/ChallengeMfaRequest.h"
 
 namespace Gs2::Identifier::Request
 {
-    FLoginByUserRequest::FLoginByUserRequest():
+    FChallengeMfaRequest::FChallengeMfaRequest():
         UserNameValue(TOptional<FString>()),
-        PasswordValue(TOptional<FString>()),
-        OtpValue(TOptional<FString>())
+        PasscodeValue(TOptional<FString>())
     {
     }
 
-    FLoginByUserRequest::FLoginByUserRequest(
-        const FLoginByUserRequest& From
+    FChallengeMfaRequest::FChallengeMfaRequest(
+        const FChallengeMfaRequest& From
     ):
         UserNameValue(From.UserNameValue),
-        PasswordValue(From.PasswordValue),
-        OtpValue(From.OtpValue)
+        PasscodeValue(From.PasscodeValue)
     {
     }
 
-    TSharedPtr<FLoginByUserRequest> FLoginByUserRequest::WithContextStack(
+    TSharedPtr<FChallengeMfaRequest> FChallengeMfaRequest::WithContextStack(
         const TOptional<FString> ContextStack
     )
     {
@@ -42,7 +40,7 @@ namespace Gs2::Identifier::Request
         return SharedThis(this);
     }
 
-    TSharedPtr<FLoginByUserRequest> FLoginByUserRequest::WithUserName(
+    TSharedPtr<FChallengeMfaRequest> FChallengeMfaRequest::WithUserName(
         const TOptional<FString> UserName
     )
     {
@@ -50,48 +48,35 @@ namespace Gs2::Identifier::Request
         return SharedThis(this);
     }
 
-    TSharedPtr<FLoginByUserRequest> FLoginByUserRequest::WithPassword(
-        const TOptional<FString> Password
+    TSharedPtr<FChallengeMfaRequest> FChallengeMfaRequest::WithPasscode(
+        const TOptional<FString> Passcode
     )
     {
-        this->PasswordValue = Password;
+        this->PasscodeValue = Passcode;
         return SharedThis(this);
     }
 
-    TSharedPtr<FLoginByUserRequest> FLoginByUserRequest::WithOtp(
-        const TOptional<FString> Otp
-    )
-    {
-        this->OtpValue = Otp;
-        return SharedThis(this);
-    }
-
-    TOptional<FString> FLoginByUserRequest::GetContextStack() const
+    TOptional<FString> FChallengeMfaRequest::GetContextStack() const
     {
         return ContextStackValue;
     }
 
-    TOptional<FString> FLoginByUserRequest::GetUserName() const
+    TOptional<FString> FChallengeMfaRequest::GetUserName() const
     {
         return UserNameValue;
     }
 
-    TOptional<FString> FLoginByUserRequest::GetPassword() const
+    TOptional<FString> FChallengeMfaRequest::GetPasscode() const
     {
-        return PasswordValue;
+        return PasscodeValue;
     }
 
-    TOptional<FString> FLoginByUserRequest::GetOtp() const
-    {
-        return OtpValue;
-    }
-
-    TSharedPtr<FLoginByUserRequest> FLoginByUserRequest::FromJson(const TSharedPtr<FJsonObject> Data)
+    TSharedPtr<FChallengeMfaRequest> FChallengeMfaRequest::FromJson(const TSharedPtr<FJsonObject> Data)
     {
         if (Data == nullptr) {
             return nullptr;
         }
-        return MakeShared<FLoginByUserRequest>()
+        return MakeShared<FChallengeMfaRequest>()
             ->WithContextStack(Data->HasField(ANSI_TO_TCHAR("contextStack")) ? TOptional<FString>(Data->GetStringField(ANSI_TO_TCHAR("contextStack"))) : TOptional<FString>())
             ->WithUserName(Data->HasField(ANSI_TO_TCHAR("userName")) ? [Data]() -> TOptional<FString>
               {
@@ -102,19 +87,10 @@ namespace Gs2::Identifier::Request
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
-            ->WithPassword(Data->HasField(ANSI_TO_TCHAR("password")) ? [Data]() -> TOptional<FString>
+            ->WithPasscode(Data->HasField(ANSI_TO_TCHAR("passcode")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
-                    if (Data->TryGetStringField(ANSI_TO_TCHAR("password"), v))
-                  {
-                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
-                  }
-                  return TOptional<FString>();
-              }() : TOptional<FString>())
-            ->WithOtp(Data->HasField(ANSI_TO_TCHAR("otp")) ? [Data]() -> TOptional<FString>
-              {
-                  FString v("");
-                    if (Data->TryGetStringField(ANSI_TO_TCHAR("otp"), v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("passcode"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
@@ -122,7 +98,7 @@ namespace Gs2::Identifier::Request
               }() : TOptional<FString>());
     }
 
-    TSharedPtr<FJsonObject> FLoginByUserRequest::ToJson() const
+    TSharedPtr<FJsonObject> FChallengeMfaRequest::ToJson() const
     {
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (ContextStackValue.IsSet())
@@ -133,13 +109,9 @@ namespace Gs2::Identifier::Request
         {
             JsonRootObject->SetStringField("userName", UserNameValue.GetValue());
         }
-        if (PasswordValue.IsSet())
+        if (PasscodeValue.IsSet())
         {
-            JsonRootObject->SetStringField("password", PasswordValue.GetValue());
-        }
-        if (OtpValue.IsSet())
-        {
-            JsonRootObject->SetStringField("otp", OtpValue.GetValue());
+            JsonRootObject->SetStringField("passcode", PasscodeValue.GetValue());
         }
         return JsonRootObject;
     }

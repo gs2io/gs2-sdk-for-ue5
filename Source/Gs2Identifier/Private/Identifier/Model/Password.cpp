@@ -22,6 +22,8 @@ namespace Gs2::Identifier::Model
         PasswordIdValue(TOptional<FString>()),
         UserIdValue(TOptional<FString>()),
         UserNameValue(TOptional<FString>()),
+        EnableTwoFactorAuthenticationValue(TOptional<FString>()),
+        TwoFactorAuthenticationSettingValue(nullptr),
         CreatedAtValue(TOptional<int64>()),
         RevisionValue(TOptional<int64>())
     {
@@ -33,6 +35,8 @@ namespace Gs2::Identifier::Model
         PasswordIdValue(From.PasswordIdValue),
         UserIdValue(From.UserIdValue),
         UserNameValue(From.UserNameValue),
+        EnableTwoFactorAuthenticationValue(From.EnableTwoFactorAuthenticationValue),
+        TwoFactorAuthenticationSettingValue(From.TwoFactorAuthenticationSettingValue),
         CreatedAtValue(From.CreatedAtValue),
         RevisionValue(From.RevisionValue)
     {
@@ -62,6 +66,22 @@ namespace Gs2::Identifier::Model
         return SharedThis(this);
     }
 
+    TSharedPtr<FPassword> FPassword::WithEnableTwoFactorAuthentication(
+        const TOptional<FString> EnableTwoFactorAuthentication
+    )
+    {
+        this->EnableTwoFactorAuthenticationValue = EnableTwoFactorAuthentication;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FPassword> FPassword::WithTwoFactorAuthenticationSetting(
+        const TSharedPtr<FTwoFactorAuthenticationSetting> TwoFactorAuthenticationSetting
+    )
+    {
+        this->TwoFactorAuthenticationSettingValue = TwoFactorAuthenticationSetting;
+        return SharedThis(this);
+    }
+
     TSharedPtr<FPassword> FPassword::WithCreatedAt(
         const TOptional<int64> CreatedAt
     )
@@ -88,6 +108,14 @@ namespace Gs2::Identifier::Model
     TOptional<FString> FPassword::GetUserName() const
     {
         return UserNameValue;
+    }
+    TOptional<FString> FPassword::GetEnableTwoFactorAuthentication() const
+    {
+        return EnableTwoFactorAuthenticationValue;
+    }
+    TSharedPtr<FTwoFactorAuthenticationSetting> FPassword::GetTwoFactorAuthenticationSetting() const
+    {
+        return TwoFactorAuthenticationSettingValue;
     }
     TOptional<int64> FPassword::GetCreatedAt() const
     {
@@ -171,6 +199,23 @@ namespace Gs2::Identifier::Model
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
+            ->WithEnableTwoFactorAuthentication(Data->HasField(ANSI_TO_TCHAR("enableTwoFactorAuthentication")) ? [Data]() -> TOptional<FString>
+                {
+                    FString v("");
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("enableTwoFactorAuthentication"), v))
+                    {
+                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                    }
+                    return TOptional<FString>();
+                }() : TOptional<FString>())
+            ->WithTwoFactorAuthenticationSetting(Data->HasField(ANSI_TO_TCHAR("twoFactorAuthenticationSetting")) ? [Data]() -> Model::FTwoFactorAuthenticationSettingPtr
+                {
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("twoFactorAuthenticationSetting")))
+                    {
+                        return nullptr;
+                    }
+                    return Model::FTwoFactorAuthenticationSetting::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("twoFactorAuthenticationSetting")));
+                 }() : nullptr)
             ->WithCreatedAt(Data->HasField(ANSI_TO_TCHAR("createdAt")) ? [Data]() -> TOptional<int64>
                 {
                     int64 v;
@@ -205,6 +250,14 @@ namespace Gs2::Identifier::Model
         if (UserNameValue.IsSet())
         {
             JsonRootObject->SetStringField("userName", UserNameValue.GetValue());
+        }
+        if (EnableTwoFactorAuthenticationValue.IsSet())
+        {
+            JsonRootObject->SetStringField("enableTwoFactorAuthentication", EnableTwoFactorAuthenticationValue.GetValue());
+        }
+        if (TwoFactorAuthenticationSettingValue != nullptr && TwoFactorAuthenticationSettingValue.IsValid())
+        {
+            JsonRootObject->SetObjectField("twoFactorAuthenticationSetting", TwoFactorAuthenticationSettingValue->ToJson());
         }
         if (CreatedAtValue.IsSet())
         {

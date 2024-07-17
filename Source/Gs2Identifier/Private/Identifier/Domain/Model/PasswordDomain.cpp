@@ -190,6 +190,199 @@ namespace Gs2::Identifier::Domain::Model
         return Gs2::Core::Util::New<FAsyncTask<FGetTask>>(this->AsShared(), Request);
     }
 
+    FPasswordDomain::FEnableMfaTask::FEnableMfaTask(
+        const TSharedPtr<FPasswordDomain>& Self,
+        const Request::FEnableMfaRequestPtr Request
+    ): Self(Self), Request(Request)
+    {
+
+    }
+
+    FPasswordDomain::FEnableMfaTask::FEnableMfaTask(
+        const FEnableMfaTask& From
+    ): TGs2Future(From), Self(From.Self), Request(From.Request)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FPasswordDomain::FEnableMfaTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::Identifier::Domain::Model::FPasswordDomain>> Result
+    )
+    {
+        Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
+            ->WithUserName(Self->UserName);
+        const auto Future = Self->Client->EnableMfa(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto RequestModel = Request;
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
+        if (ResultModel != nullptr) {
+            
+            if (ResultModel->GetItem() != nullptr)
+            {
+                const auto ParentKey = Gs2::Identifier::Domain::Model::FUserDomain::CreateCacheParentKey(
+                    Self->UserName,
+                    "Password"
+                );
+                const auto Key = Gs2::Identifier::Domain::Model::FPasswordDomain::CreateCacheKey(
+                );
+                Self->Gs2->Cache->Put(
+                    Gs2::Identifier::Model::FPassword::TypeName,
+                    ParentKey,
+                    Key,
+                    ResultModel->GetItem(),
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+            }
+        }
+        auto Domain = Self;
+        if (ResultModel != nullptr)
+        {
+            Domain->ChallengeToken = *ResultModel->GetChallengeToken();
+        }
+
+        *Result = Domain;
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FPasswordDomain::FEnableMfaTask>> FPasswordDomain::EnableMfa(
+        Request::FEnableMfaRequestPtr Request
+    ) {
+        return Gs2::Core::Util::New<FAsyncTask<FEnableMfaTask>>(this->AsShared(), Request);
+    }
+
+    FPasswordDomain::FChallengeMfaTask::FChallengeMfaTask(
+        const TSharedPtr<FPasswordDomain>& Self,
+        const Request::FChallengeMfaRequestPtr Request
+    ): Self(Self), Request(Request)
+    {
+
+    }
+
+    FPasswordDomain::FChallengeMfaTask::FChallengeMfaTask(
+        const FChallengeMfaTask& From
+    ): TGs2Future(From), Self(From.Self), Request(From.Request)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FPasswordDomain::FChallengeMfaTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::Identifier::Domain::Model::FPasswordDomain>> Result
+    )
+    {
+        Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
+            ->WithUserName(Self->UserName);
+        const auto Future = Self->Client->ChallengeMfa(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto RequestModel = Request;
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
+        if (ResultModel != nullptr) {
+            
+            if (ResultModel->GetItem() != nullptr)
+            {
+                const auto ParentKey = Gs2::Identifier::Domain::Model::FUserDomain::CreateCacheParentKey(
+                    Self->UserName,
+                    "Password"
+                );
+                const auto Key = Gs2::Identifier::Domain::Model::FPasswordDomain::CreateCacheKey(
+                );
+                Self->Gs2->Cache->Put(
+                    Gs2::Identifier::Model::FPassword::TypeName,
+                    ParentKey,
+                    Key,
+                    ResultModel->GetItem(),
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+            }
+        }
+        auto Domain = Self;
+
+        *Result = Domain;
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FPasswordDomain::FChallengeMfaTask>> FPasswordDomain::ChallengeMfa(
+        Request::FChallengeMfaRequestPtr Request
+    ) {
+        return Gs2::Core::Util::New<FAsyncTask<FChallengeMfaTask>>(this->AsShared(), Request);
+    }
+
+    FPasswordDomain::FDisableMfaTask::FDisableMfaTask(
+        const TSharedPtr<FPasswordDomain>& Self,
+        const Request::FDisableMfaRequestPtr Request
+    ): Self(Self), Request(Request)
+    {
+
+    }
+
+    FPasswordDomain::FDisableMfaTask::FDisableMfaTask(
+        const FDisableMfaTask& From
+    ): TGs2Future(From), Self(From.Self), Request(From.Request)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FPasswordDomain::FDisableMfaTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::Identifier::Domain::Model::FPasswordDomain>> Result
+    )
+    {
+        Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
+            ->WithUserName(Self->UserName);
+        const auto Future = Self->Client->DisableMfa(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto RequestModel = Request;
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
+        if (ResultModel != nullptr) {
+            
+            if (ResultModel->GetItem() != nullptr)
+            {
+                const auto ParentKey = Gs2::Identifier::Domain::Model::FUserDomain::CreateCacheParentKey(
+                    Self->UserName,
+                    "Password"
+                );
+                const auto Key = Gs2::Identifier::Domain::Model::FPasswordDomain::CreateCacheKey(
+                );
+                Self->Gs2->Cache->Put(
+                    Gs2::Identifier::Model::FPassword::TypeName,
+                    ParentKey,
+                    Key,
+                    ResultModel->GetItem(),
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+            }
+        }
+        auto Domain = Self;
+
+        *Result = Domain;
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FPasswordDomain::FDisableMfaTask>> FPasswordDomain::DisableMfa(
+        Request::FDisableMfaRequestPtr Request
+    ) {
+        return Gs2::Core::Util::New<FAsyncTask<FDisableMfaTask>>(this->AsShared(), Request);
+    }
+
     FPasswordDomain::FDeleteTask::FDeleteTask(
         const TSharedPtr<FPasswordDomain>& Self,
         const Request::FDeletePasswordRequestPtr Request

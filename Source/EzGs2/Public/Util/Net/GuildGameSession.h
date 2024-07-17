@@ -34,7 +34,7 @@ namespace Gs2::UE5::Util
 		virtual Gs2::Auth::Model::FAccessTokenPtr AccessToken() override;
 		void SetAccessToken( TSharedPtr<Gs2::Auth::Model::FAccessToken> AccessToken );
 	
-		class FRefreshTask final :
+		class EZGS2_API FRefreshTask final :
 			public Gs2::Core::Util::TGs2Future<void>,
 			public TSharedFromThis<FRefreshTask>
 		{
@@ -52,7 +52,7 @@ namespace Gs2::UE5::Util
 
 		TSharedPtr<FAsyncTask<FRefreshTask>> Refresh();
 
-		class FRefreshIfNeedRefreshTask final :
+		class EZGS2_API FRefreshIfNeedRefreshTask final :
 			public Gs2::Core::Util::TGs2Future<bool>,
 			public TSharedFromThis<FRefreshIfNeedRefreshTask>
 		{

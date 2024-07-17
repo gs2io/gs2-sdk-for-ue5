@@ -54,6 +54,11 @@ namespace Gs2::Identifier::Domain::Model
         const Gs2::Identifier::FGs2IdentifierRestClientPtr Client;
 
         public:
+        TOptional<FString> ChallengeToken;
+        TOptional<FString> GetChallengeToken() const
+        {
+            return ChallengeToken;
+        }
         TOptional<FString> UserName;
     private:
 
@@ -122,6 +127,84 @@ namespace Gs2::Identifier::Domain::Model
 
         TSharedPtr<FAsyncTask<FGetTask>> Get(
             Request::FGetPasswordRequestPtr Request
+        );
+
+        class GS2IDENTIFIER_API FEnableMfaTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Identifier::Domain::Model::FPasswordDomain>,
+            public TSharedFromThis<FEnableMfaTask>
+        {
+            const TSharedPtr<FPasswordDomain> Self;
+            const Request::FEnableMfaRequestPtr Request;
+        public:
+            explicit FEnableMfaTask(
+                const TSharedPtr<FPasswordDomain>& Self,
+                const Request::FEnableMfaRequestPtr Request
+            );
+
+            FEnableMfaTask(
+                const FEnableMfaTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Identifier::Domain::Model::FPasswordDomain>> Result
+            ) override;
+        };
+        friend FEnableMfaTask;
+
+        TSharedPtr<FAsyncTask<FEnableMfaTask>> EnableMfa(
+            Request::FEnableMfaRequestPtr Request
+        );
+
+        class GS2IDENTIFIER_API FChallengeMfaTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Identifier::Domain::Model::FPasswordDomain>,
+            public TSharedFromThis<FChallengeMfaTask>
+        {
+            const TSharedPtr<FPasswordDomain> Self;
+            const Request::FChallengeMfaRequestPtr Request;
+        public:
+            explicit FChallengeMfaTask(
+                const TSharedPtr<FPasswordDomain>& Self,
+                const Request::FChallengeMfaRequestPtr Request
+            );
+
+            FChallengeMfaTask(
+                const FChallengeMfaTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Identifier::Domain::Model::FPasswordDomain>> Result
+            ) override;
+        };
+        friend FChallengeMfaTask;
+
+        TSharedPtr<FAsyncTask<FChallengeMfaTask>> ChallengeMfa(
+            Request::FChallengeMfaRequestPtr Request
+        );
+
+        class GS2IDENTIFIER_API FDisableMfaTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Identifier::Domain::Model::FPasswordDomain>,
+            public TSharedFromThis<FDisableMfaTask>
+        {
+            const TSharedPtr<FPasswordDomain> Self;
+            const Request::FDisableMfaRequestPtr Request;
+        public:
+            explicit FDisableMfaTask(
+                const TSharedPtr<FPasswordDomain>& Self,
+                const Request::FDisableMfaRequestPtr Request
+            );
+
+            FDisableMfaTask(
+                const FDisableMfaTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Identifier::Domain::Model::FPasswordDomain>> Result
+            ) override;
+        };
+        friend FDisableMfaTask;
+
+        TSharedPtr<FAsyncTask<FDisableMfaTask>> DisableMfa(
+            Request::FDisableMfaRequestPtr Request
         );
 
         class GS2IDENTIFIER_API FDeleteTask final :
