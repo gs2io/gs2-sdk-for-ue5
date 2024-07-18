@@ -50,6 +50,7 @@
 #include "News/Domain/EzGs2News.h"
 #include "Quest/Domain/EzGs2Quest.h"
 #include "Ranking/Domain/EzGs2Ranking.h"
+#include "Ranking2/Domain/EzGs2Ranking2.h"
 #include "Realtime/Domain/EzGs2Realtime.h"
 #include "Schedule/Domain/EzGs2Schedule.h"
 #include "SeasonRating/Domain/EzGs2SeasonRating.h"
@@ -110,6 +111,7 @@ namespace Gs2::UE5::Core::Domain
         Gs2::UE5::News::Domain::FEzGs2NewsPtr News;
         Gs2::UE5::Quest::Domain::FEzGs2QuestPtr Quest;
         Gs2::UE5::Ranking::Domain::FEzGs2RankingPtr Ranking;
+        Gs2::UE5::Ranking2::Domain::FEzGs2Ranking2Ptr Ranking2;
         Gs2::UE5::Realtime::Domain::FEzGs2RealtimePtr Realtime;
         Gs2::UE5::Schedule::Domain::FEzGs2SchedulePtr Schedule;
         Gs2::UE5::SeasonRating::Domain::FEzGs2SeasonRatingPtr SeasonRating;

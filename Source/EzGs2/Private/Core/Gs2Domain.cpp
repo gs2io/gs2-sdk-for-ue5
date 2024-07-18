@@ -51,6 +51,7 @@ namespace Gs2::UE5::Core::Domain
         News = MakeShared<Gs2::UE5::News::Domain::FEzGs2News>(Super->News, Connection);
         Quest = MakeShared<Gs2::UE5::Quest::Domain::FEzGs2Quest>(Super->Quest, Connection);
         Ranking = MakeShared<Gs2::UE5::Ranking::Domain::FEzGs2Ranking>(Super->Ranking, Connection);
+        Ranking2 = MakeShared<Gs2::UE5::Ranking2::Domain::FEzGs2Ranking2>(Super->Ranking2, Connection);
         Realtime = MakeShared<Gs2::UE5::Realtime::Domain::FEzGs2Realtime>(Super->Realtime, Connection);
         Schedule = MakeShared<Gs2::UE5::Schedule::Domain::FEzGs2Schedule>(Super->Schedule, Connection);
         SeasonRating = MakeShared<Gs2::UE5::SeasonRating::Domain::FEzGs2SeasonRating>(Super->SeasonRating, Connection);
@@ -114,6 +115,7 @@ namespace Gs2::UE5::Core::Domain
         News(From.News),
         Quest(From.Quest),
         Ranking(From.Ranking),
+        Ranking2(From.Ranking2),
         Realtime(From.Realtime),
         Schedule(From.Schedule),
         SeasonRating(From.SeasonRating),
