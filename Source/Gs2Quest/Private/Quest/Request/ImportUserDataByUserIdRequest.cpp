@@ -66,14 +66,6 @@ namespace Gs2::Quest::Request
         return SharedThis(this);
     }
 
-    TSharedPtr<FImportUserDataByUserIdRequest> FImportUserDataByUserIdRequest::WithDuplicationAvoider(
-        const TOptional<FString> DuplicationAvoider
-    )
-    {
-        this->DuplicationAvoiderValue = DuplicationAvoider;
-        return SharedThis(this);
-    }
-
     TOptional<FString> FImportUserDataByUserIdRequest::GetContextStack() const
     {
         return ContextStackValue;
@@ -92,11 +84,6 @@ namespace Gs2::Quest::Request
     TOptional<FString> FImportUserDataByUserIdRequest::GetTimeOffsetToken() const
     {
         return TimeOffsetTokenValue;
-    }
-
-    TOptional<FString> FImportUserDataByUserIdRequest::GetDuplicationAvoider() const
-    {
-        return DuplicationAvoiderValue;
     }
 
     TSharedPtr<FImportUserDataByUserIdRequest> FImportUserDataByUserIdRequest::FromJson(const TSharedPtr<FJsonObject> Data)
@@ -132,8 +119,7 @@ namespace Gs2::Quest::Request
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
-              }() : TOptional<FString>())
-          ->WithDuplicationAvoider(Data->HasField(ANSI_TO_TCHAR("duplicationAvoider")) ? TOptional<FString>(Data->GetStringField(ANSI_TO_TCHAR("duplicationAvoider"))) : TOptional<FString>());
+              }() : TOptional<FString>());
     }
 
     TSharedPtr<FJsonObject> FImportUserDataByUserIdRequest::ToJson() const
@@ -154,10 +140,6 @@ namespace Gs2::Quest::Request
         if (TimeOffsetTokenValue.IsSet())
         {
             JsonRootObject->SetStringField("timeOffsetToken", TimeOffsetTokenValue.GetValue());
-        }
-        if (DuplicationAvoiderValue.IsSet())
-        {
-            JsonRootObject->SetStringField("duplicationAvoider", DuplicationAvoiderValue.GetValue());
         }
         return JsonRootObject;
     }

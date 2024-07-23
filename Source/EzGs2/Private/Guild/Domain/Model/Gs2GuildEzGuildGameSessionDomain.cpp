@@ -12,14 +12,13 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
- *
- * deny overwrite
  */
 
 #include "Guild/Domain/Model/Gs2GuildEzGuildGameSessionDomain.h"
 
 namespace Gs2::UE5::Guild::Domain::Model
 {
+
     TOptional<FString> FEzGuildGameSessionDomain::NamespaceName() const
     {
         return Domain->NamespaceName;
@@ -37,7 +36,7 @@ namespace Gs2::UE5::Guild::Domain::Model
 
     FEzGuildGameSessionDomain::FEzGuildGameSessionDomain(
         Gs2::Guild::Domain::Model::FGuildAccessTokenDomainPtr Domain,
-        Gs2::UE5::Util::FGuildGameSessionPtr GameSession,
+        Gs2::UE5::Util::IGameSessionPtr GameSession,
         Gs2::UE5::Util::FGs2ConnectionPtr Connection
     ):
         Domain(Domain),
@@ -47,30 +46,57 @@ namespace Gs2::UE5::Guild::Domain::Model
 
     }
 
-    Gs2::UE5::Guild::Domain::Model::FEzReceiveMemberRequestGameSessionDomainPtr FEzGuildGameSessionDomain::ReceiveMemberRequest(
-        const FString FromUserId
-    ) const
+    FEzGuildGameSessionDomain::FDeleteGuildTask::FDeleteGuildTask(
+        TSharedPtr<FEzGuildGameSessionDomain> Self
+    ): Self(Self)
     {
-        return MakeShared<Gs2::UE5::Guild::Domain::Model::FEzReceiveMemberRequestGameSessionDomain>(
-            Domain->ReceiveMemberRequest(
-                FromUserId
-            ),
-            GameSession,
-            ConnectionValue
+
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FEzGuildGameSessionDomain::FDeleteGuildTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::UE5::Guild::Domain::Model::FEzGuildGameSessionDomain>> Result
+    )
+    {
+        const auto Future = Self->ConnectionValue->Run(
+            [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
+                const auto Task = Self->Domain->Update(
+                    MakeShared<Gs2::Guild::Request::FUpdateGuildRequest>()
+                );
+                Task->StartSynchronousTask();
+                if (Task->GetTask().IsError())
+                {
+                    Task->EnsureCompletion();
+                    return Task->GetTask().Error();
+                }
+                *Result = MakeShared<Gs2::UE5::Guild::Domain::Model::FEzGuildGameSessionDomain>(
+                    Task->GetTask().Result(),
+                    Self->GameSession,
+                    Self->ConnectionValue
+                );
+                Task->EnsureCompletion();
+                return nullptr;
+            },
+            nullptr
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            Future->EnsureCompletion();
+            return Future->GetTask().Error();
+        }
+        Future->EnsureCompletion();
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FEzGuildGameSessionDomain::FDeleteGuildTask>> FEzGuildGameSessionDomain::DeleteGuild(
+    )
+    {
+        return Gs2::Core::Util::New<FAsyncTask<FDeleteGuildTask>>(
+            this->AsShared()
         );
     }
 
-    Gs2::UE5::Guild::Domain::Iterator::FEzDescribeReceiveMemberRequestsIteratorPtr FEzGuildGameSessionDomain::ReceiveMemberRequests(
-    ) const
-    {
-        return MakeShared<Gs2::UE5::Guild::Domain::Iterator::FEzDescribeReceiveMemberRequestsIterator>(
-            Domain,
-            GameSession,
-            ConnectionValue
-        );
-    }
-
-    FEzGuildGameSessionDomain::FUpdateTask::FUpdateTask(
+    FEzGuildGameSessionDomain::FUpdateGuildTask::FUpdateGuildTask(
         TSharedPtr<FEzGuildGameSessionDomain> Self,
         FString DisplayName,
         FString JoinPolicy,
@@ -85,8 +111,8 @@ namespace Gs2::UE5::Guild::Domain::Model
     {
 
     }
-    
-    Gs2::Core::Model::FGs2ErrorPtr FEzGuildGameSessionDomain::FUpdateTask::Action(
+
+    Gs2::Core::Model::FGs2ErrorPtr FEzGuildGameSessionDomain::FUpdateGuildTask::Action(
         TSharedPtr<TSharedPtr<Gs2::UE5::Guild::Domain::Model::FEzGuildGameSessionDomain>> Result
     )
     {
@@ -138,8 +164,8 @@ namespace Gs2::UE5::Guild::Domain::Model
         Future->EnsureCompletion();
         return nullptr;
     }
-    
-    TSharedPtr<FAsyncTask<FEzGuildGameSessionDomain::FUpdateTask>> FEzGuildGameSessionDomain::Update(
+
+    TSharedPtr<FAsyncTask<FEzGuildGameSessionDomain::FUpdateGuildTask>> FEzGuildGameSessionDomain::UpdateGuild(
         FString DisplayName,
         FString JoinPolicy,
         TOptional<int32> Attribute1,
@@ -151,7 +177,7 @@ namespace Gs2::UE5::Guild::Domain::Model
         TOptional<FString> GuildMemberDefaultRole
     )
     {
-        return Gs2::Core::Util::New<FAsyncTask<FUpdateTask>>(
+        return Gs2::Core::Util::New<FAsyncTask<FUpdateGuildTask>>(
             this->AsShared(),
             DisplayName,
             JoinPolicy,
@@ -165,23 +191,23 @@ namespace Gs2::UE5::Guild::Domain::Model
         );
     }
 
-    FEzGuildGameSessionDomain::FDeleteMemberTask::FDeleteMemberTask(
+    FEzGuildGameSessionDomain::FAddIgnoreUserTask::FAddIgnoreUserTask(
         TSharedPtr<FEzGuildGameSessionDomain> Self,
-        FString TargetUserId
-    ): Self(Self), TargetUserId(TargetUserId)
+        FString UserId
+    ): Self(Self), UserId(UserId)
     {
 
     }
-    
-    Gs2::Core::Model::FGs2ErrorPtr FEzGuildGameSessionDomain::FDeleteMemberTask::Action(
-        TSharedPtr<TSharedPtr<Gs2::UE5::Guild::Domain::Model::FEzGuildGameSessionDomain>> Result
+
+    Gs2::Core::Model::FGs2ErrorPtr FEzGuildGameSessionDomain::FAddIgnoreUserTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::UE5::Guild::Domain::Model::FEzIgnoreUserGameSessionDomain>> Result
     )
     {
         const auto Future = Self->ConnectionValue->Run(
             [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
-                const auto Task = Self->Domain->DeleteMember(
-                    MakeShared<Gs2::Guild::Request::FDeleteMemberRequest>()
-                        ->WithTargetUserId(TargetUserId)
+                const auto Task = Self->Domain->AddIgnoreUser(
+                    MakeShared<Gs2::Guild::Request::FAddIgnoreUserRequest>()
+                        ->WithUserId(UserId)
                 );
                 Task->StartSynchronousTask();
                 if (Task->GetTask().IsError())
@@ -189,7 +215,7 @@ namespace Gs2::UE5::Guild::Domain::Model
                     Task->EnsureCompletion();
                     return Task->GetTask().Error();
                 }
-                *Result = MakeShared<Gs2::UE5::Guild::Domain::Model::FEzGuildGameSessionDomain>(
+                *Result = MakeShared<Gs2::UE5::Guild::Domain::Model::FEzIgnoreUserGameSessionDomain>(
                     Task->GetTask().Result(),
                     Self->GameSession,
                     Self->ConnectionValue
@@ -208,122 +234,89 @@ namespace Gs2::UE5::Guild::Domain::Model
         Future->EnsureCompletion();
         return nullptr;
     }
-    
-    TSharedPtr<FAsyncTask<FEzGuildGameSessionDomain::FDeleteMemberTask>> FEzGuildGameSessionDomain::DeleteMember(
-        FString TargetUserId
+
+    TSharedPtr<FAsyncTask<FEzGuildGameSessionDomain::FAddIgnoreUserTask>> FEzGuildGameSessionDomain::AddIgnoreUser(
+        FString UserId
     )
     {
-        return Gs2::Core::Util::New<FAsyncTask<FDeleteMemberTask>>(
+        return Gs2::Core::Util::New<FAsyncTask<FAddIgnoreUserTask>>(
             this->AsShared(),
-            TargetUserId
+            UserId
         );
     }
 
-    FEzGuildGameSessionDomain::FUpdateMemberRoleTask::FUpdateMemberRoleTask(
-        TSharedPtr<FEzGuildGameSessionDomain> Self,
-        FString TargetUserId,
-        FString RoleName
-    ): Self(Self), TargetUserId(TargetUserId), RoleName(RoleName)
+    Gs2::UE5::Guild::Domain::Iterator::FEzDescribeReceiveRequestsIteratorPtr FEzGuildGameSessionDomain::ReceiveRequests(
+    ) const
     {
-
-    }
-    
-    Gs2::Core::Model::FGs2ErrorPtr FEzGuildGameSessionDomain::FUpdateMemberRoleTask::Action(
-        TSharedPtr<TSharedPtr<Gs2::UE5::Guild::Domain::Model::FEzGuildGameSessionDomain>> Result
-    )
-    {
-        const auto Future = Self->ConnectionValue->Run(
-            [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
-                const auto Task = Self->Domain->UpdateMemberRole(
-                    MakeShared<Gs2::Guild::Request::FUpdateMemberRoleRequest>()
-                        ->WithTargetUserId(TargetUserId)
-                        ->WithRoleName(RoleName)
-                );
-                Task->StartSynchronousTask();
-                if (Task->GetTask().IsError())
-                {
-                    Task->EnsureCompletion();
-                    return Task->GetTask().Error();
-                }
-                *Result = MakeShared<Gs2::UE5::Guild::Domain::Model::FEzGuildGameSessionDomain>(
-                    Task->GetTask().Result(),
-                    Self->GameSession,
-                    Self->ConnectionValue
-                );
-                Task->EnsureCompletion();
-                return nullptr;
-            },
-            nullptr
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            Future->EnsureCompletion();
-            return Future->GetTask().Error();
-        }
-        Future->EnsureCompletion();
-        return nullptr;
-    }
-    
-    TSharedPtr<FAsyncTask<FEzGuildGameSessionDomain::FUpdateMemberRoleTask>> FEzGuildGameSessionDomain::UpdateMemberRole(
-        FString TargetUserId,
-        FString RoleName
-    )
-    {
-        return Gs2::Core::Util::New<FAsyncTask<FUpdateMemberRoleTask>>(
-            this->AsShared(),
-            TargetUserId,
-            RoleName
+        return MakeShared<Gs2::UE5::Guild::Domain::Iterator::FEzDescribeReceiveRequestsIterator>(
+            Domain,
+            GameSession,
+            ConnectionValue
         );
     }
 
-    FEzGuildGameSessionDomain::FDeleteTask::FDeleteTask(
-        TSharedPtr<FEzGuildGameSessionDomain> Self
-    ): Self(Self)
+    Gs2::Core::Domain::CallbackID FEzGuildGameSessionDomain::SubscribeReceiveRequests(TFunction<void()> Callback)
     {
-
-    }
-    
-    Gs2::Core::Model::FGs2ErrorPtr FEzGuildGameSessionDomain::FDeleteTask::Action(
-        TSharedPtr<TSharedPtr<Gs2::UE5::Guild::Domain::Model::FEzGuildGameSessionDomain>> Result
-    )
-    {
-        const auto Future = Self->ConnectionValue->Run(
-            [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
-                const auto Task = Self->Domain->Delete(
-                    MakeShared<Gs2::Guild::Request::FDeleteGuildRequest>()
-                );
-                Task->StartSynchronousTask();
-                if (Task->GetTask().IsError())
-                {
-                    Task->EnsureCompletion();
-                    return Task->GetTask().Error();
-                }
-                *Result = MakeShared<Gs2::UE5::Guild::Domain::Model::FEzGuildGameSessionDomain>(
-                    Task->GetTask().Result(),
-                    Self->GameSession,
-                    Self->ConnectionValue
-                );
-                Task->EnsureCompletion();
-                return nullptr;
-            },
-            nullptr
+        return Domain->SubscribeReceiveRequests(
+            Callback
         );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            Future->EnsureCompletion();
-            return Future->GetTask().Error();
-        }
-        Future->EnsureCompletion();
-        return nullptr;
     }
-    
-    TSharedPtr<FAsyncTask<FEzGuildGameSessionDomain::FDeleteTask>> FEzGuildGameSessionDomain::Delete()
+
+    void FEzGuildGameSessionDomain::UnsubscribeReceiveRequests(Gs2::Core::Domain::CallbackID CallbackId)
     {
-        return Gs2::Core::Util::New<FAsyncTask<FDeleteTask>>(this->AsShared());
+        Domain->UnsubscribeReceiveRequests(
+            CallbackId
+        );
     }
-    
+
+    Gs2::UE5::Guild::Domain::Model::FEzReceiveMemberRequestGameSessionDomainPtr FEzGuildGameSessionDomain::ReceiveMemberRequest(
+        const FString FromUserId
+    ) const
+    {
+        return MakeShared<Gs2::UE5::Guild::Domain::Model::FEzReceiveMemberRequestGameSessionDomain>(
+            Domain->ReceiveMemberRequest(
+                FromUserId
+            ),
+            GameSession,
+            ConnectionValue
+        );
+    }
+
+    Gs2::UE5::Guild::Domain::Iterator::FEzDescribeIgnoreUsersIteratorPtr FEzGuildGameSessionDomain::IgnoreUsers(
+    ) const
+    {
+        return MakeShared<Gs2::UE5::Guild::Domain::Iterator::FEzDescribeIgnoreUsersIterator>(
+            Domain,
+            GameSession,
+            ConnectionValue
+        );
+    }
+
+    Gs2::Core::Domain::CallbackID FEzGuildGameSessionDomain::SubscribeIgnoreUsers(TFunction<void()> Callback)
+    {
+        return Domain->SubscribeIgnoreUsers(
+            Callback
+        );
+    }
+
+    void FEzGuildGameSessionDomain::UnsubscribeIgnoreUsers(Gs2::Core::Domain::CallbackID CallbackId)
+    {
+        Domain->UnsubscribeIgnoreUsers(
+            CallbackId
+        );
+    }
+
+    Gs2::UE5::Guild::Domain::Model::FEzIgnoreUserGameSessionDomainPtr FEzGuildGameSessionDomain::IgnoreUser(
+    ) const
+    {
+        return MakeShared<Gs2::UE5::Guild::Domain::Model::FEzIgnoreUserGameSessionDomain>(
+            Domain->IgnoreUser(
+            ),
+            GameSession,
+            ConnectionValue
+        );
+    }
+
     FEzGuildGameSessionDomain::FModelTask::FModelTask(
         TSharedPtr<FEzGuildGameSessionDomain> Self
     ): Self(Self)
@@ -360,11 +353,8 @@ namespace Gs2::UE5::Guild::Domain::Model
         return nullptr;
     }
 
-    TSharedPtr<FAsyncTask<FEzGuildGameSessionDomain::FModelTask>> FEzGuildGameSessionDomain::Model()
-    {
-        return Gs2::Core::Util::New<FAsyncTask<FModelTask>>(
-            this->AsShared()
-        );
+    TSharedPtr<FAsyncTask<FEzGuildGameSessionDomain::FModelTask>> FEzGuildGameSessionDomain::Model() {
+        return Gs2::Core::Util::New<FAsyncTask<FModelTask>>(this->AsShared());
     }
 
     Gs2::Core::Domain::CallbackID FEzGuildGameSessionDomain::Subscribe(TFunction<void(Gs2::UE5::Guild::Model::FEzGuildPtr)> Callback)

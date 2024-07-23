@@ -102,8 +102,8 @@ namespace Gs2::Quest::Domain::Model
         Request
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
-            ->WithAccessToken(Self->AccessToken->GetToken())
-            ->WithQuestGroupName(Self->QuestGroupName);
+            ->WithQuestGroupName(Self->QuestGroupName)
+            ->WithAccessToken(Self->AccessToken->GetToken());
         const auto Future = Self->Client->GetCompletedQuestList(
             Request
         );

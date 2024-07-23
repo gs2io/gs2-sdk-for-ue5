@@ -94,8 +94,8 @@ namespace Gs2::Lock::Domain::Model
         Request
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
-            ->WithUserId(Self->UserId)
-            ->WithPropertyId(Self->PropertyId);
+            ->WithPropertyId(Self->PropertyId)
+            ->WithUserId(Self->UserId);
         const auto Future = Self->Client->LockByUserId(
             Request
         );
@@ -161,8 +161,8 @@ namespace Gs2::Lock::Domain::Model
         Request
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
-            ->WithUserId(Self->UserId)
-            ->WithPropertyId(Self->PropertyId);
+            ->WithPropertyId(Self->PropertyId)
+            ->WithUserId(Self->UserId);
         const auto Future = Self->Client->UnlockByUserId(
             Request
         );

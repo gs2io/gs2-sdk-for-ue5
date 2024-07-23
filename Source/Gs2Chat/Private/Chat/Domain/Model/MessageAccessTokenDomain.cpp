@@ -106,10 +106,10 @@ namespace Gs2::Chat::Domain::Model
         Request
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
-            ->WithAccessToken(Self->AccessToken->GetToken())
             ->WithRoomName(Self->RoomName)
+            ->WithMessageName(Self->MessageName)
             ->WithPassword(Self->Password)
-            ->WithMessageName(Self->MessageName);
+            ->WithAccessToken(Self->AccessToken->GetToken());
         const auto Future = Self->Client->GetMessage(
             Request
         );

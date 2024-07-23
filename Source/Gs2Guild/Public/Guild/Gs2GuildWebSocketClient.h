@@ -166,6 +166,22 @@
 #include "Task/WebSocket/DeleteRequestTask.h"
 #include "Request/DeleteRequestByUserIdRequest.h"
 #include "Task/WebSocket/DeleteRequestByUserIdTask.h"
+#include "Request/DescribeIgnoreUsersRequest.h"
+#include "Task/WebSocket/DescribeIgnoreUsersTask.h"
+#include "Request/DescribeIgnoreUsersByGuildNameRequest.h"
+#include "Task/WebSocket/DescribeIgnoreUsersByGuildNameTask.h"
+#include "Request/GetIgnoreUserRequest.h"
+#include "Task/WebSocket/GetIgnoreUserTask.h"
+#include "Request/GetIgnoreUserByGuildNameRequest.h"
+#include "Task/WebSocket/GetIgnoreUserByGuildNameTask.h"
+#include "Request/AddIgnoreUserRequest.h"
+#include "Task/WebSocket/AddIgnoreUserTask.h"
+#include "Request/AddIgnoreUserByGuildNameRequest.h"
+#include "Task/WebSocket/AddIgnoreUserByGuildNameTask.h"
+#include "Request/DeleteIgnoreUserRequest.h"
+#include "Task/WebSocket/DeleteIgnoreUserTask.h"
+#include "Request/DeleteIgnoreUserByGuildNameRequest.h"
+#include "Task/WebSocket/DeleteIgnoreUserByGuildNameTask.h"
 
 namespace Gs2::Guild
 {
@@ -472,6 +488,38 @@ namespace Gs2::Guild
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FDeleteRequestByUserIdTask>> DeleteRequestByUserId(
             const Request::FDeleteRequestByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FDescribeIgnoreUsersTask>> DescribeIgnoreUsers(
+            const Request::FDescribeIgnoreUsersRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FDescribeIgnoreUsersByGuildNameTask>> DescribeIgnoreUsersByGuildName(
+            const Request::FDescribeIgnoreUsersByGuildNameRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FGetIgnoreUserTask>> GetIgnoreUser(
+            const Request::FGetIgnoreUserRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FGetIgnoreUserByGuildNameTask>> GetIgnoreUserByGuildName(
+            const Request::FGetIgnoreUserByGuildNameRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FAddIgnoreUserTask>> AddIgnoreUser(
+            const Request::FAddIgnoreUserRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FAddIgnoreUserByGuildNameTask>> AddIgnoreUserByGuildName(
+            const Request::FAddIgnoreUserByGuildNameRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FDeleteIgnoreUserTask>> DeleteIgnoreUser(
+            const Request::FDeleteIgnoreUserRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FDeleteIgnoreUserByGuildNameTask>> DeleteIgnoreUserByGuildName(
+            const Request::FDeleteIgnoreUserByGuildNameRequestPtr Request
         ) const;
     };
     typedef TSharedPtr<FGs2GuildWebSocketClient, ESPMode::ThreadSafe> FGs2GuildWebSocketClientPtr;

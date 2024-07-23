@@ -112,8 +112,8 @@ namespace Gs2::Ranking::Domain::Model
         Request
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
-            ->WithAccessToken(Self->AccessToken->GetToken())
             ->WithCategoryName(Self->CategoryName)
+            ->WithAccessToken(Self->AccessToken->GetToken())
             ->WithScorerUserId(Self->ScorerUserId)
             ->WithUniqueId(Self->UniqueId);
         const auto Future = Self->Client->GetScore(

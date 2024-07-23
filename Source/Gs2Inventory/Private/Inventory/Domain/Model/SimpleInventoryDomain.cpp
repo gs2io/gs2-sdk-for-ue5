@@ -120,8 +120,8 @@ namespace Gs2::Inventory::Domain::Model
         Request
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
-            ->WithUserId(Self->UserId)
-            ->WithInventoryName(Self->InventoryName);
+            ->WithInventoryName(Self->InventoryName)
+            ->WithUserId(Self->UserId);
         const auto Future = Self->Client->AcquireSimpleItemsByUserId(
             Request
         );
@@ -217,8 +217,8 @@ namespace Gs2::Inventory::Domain::Model
         Request
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
-            ->WithUserId(Self->UserId)
-            ->WithInventoryName(Self->InventoryName);
+            ->WithInventoryName(Self->InventoryName)
+            ->WithUserId(Self->UserId);
         const auto Future = Self->Client->ConsumeSimpleItemsByUserId(
             Request
         );
@@ -314,8 +314,8 @@ namespace Gs2::Inventory::Domain::Model
         Request
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
-            ->WithUserId(Self->UserId)
-            ->WithInventoryName(Self->InventoryName);
+            ->WithInventoryName(Self->InventoryName)
+            ->WithUserId(Self->UserId);
         const auto Future = Self->Client->SetSimpleItemsByUserId(
             Request
         );
@@ -411,8 +411,8 @@ namespace Gs2::Inventory::Domain::Model
         Request
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
-            ->WithUserId(Self->UserId)
-            ->WithInventoryName(Self->InventoryName);
+            ->WithInventoryName(Self->InventoryName)
+            ->WithUserId(Self->UserId);
         const auto Future = Self->Client->DeleteSimpleItemsByUserId(
             Request
         );

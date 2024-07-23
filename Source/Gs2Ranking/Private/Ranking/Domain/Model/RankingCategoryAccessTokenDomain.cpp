@@ -12,6 +12,8 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
+ *
+ * deny overwrite
  */
 
 #if defined(_MSC_VER)
@@ -109,8 +111,8 @@ namespace Gs2::Ranking::Domain::Model
         Request
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
-            ->WithAccessToken(Self->AccessToken->GetToken())
-            ->WithCategoryName(Self->CategoryName);
+            ->WithCategoryName(Self->CategoryName)
+            ->WithAccessToken(Self->AccessToken->GetToken());
         const auto Future = Self->Client->Subscribe(
             Request
         );
@@ -186,8 +188,8 @@ namespace Gs2::Ranking::Domain::Model
         Request
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
-            ->WithAccessToken(Self->AccessToken->GetToken())
-            ->WithCategoryName(Self->CategoryName);
+            ->WithCategoryName(Self->CategoryName)
+            ->WithAccessToken(Self->AccessToken->GetToken());
         const auto Future = Self->Client->PutScore(
             Request
         );

@@ -23,6 +23,7 @@
 #include "Guild/Model/Gs2GuildEzReceiveMemberRequest.h"
 #include "Guild/Model/Gs2GuildEzSendMemberRequest.h"
 #include "Guild/Model/Gs2GuildEzJoinedGuild.h"
+#include "Guild/Model/Gs2GuildEzIgnoreUser.h"
 #include "Guild/Model/Gs2GuildEzMember.h"
 #include "Guild/Model/Gs2GuildEzRoleModel.h"
 #include "Gs2GuildEzReceiveMemberRequestDomain.h"
@@ -42,7 +43,6 @@ namespace Gs2::UE5::Guild::Domain::Model
         TOptional<FString> NamespaceName() const;
         TOptional<FString> GuildModelName() const;
         TOptional<FString> GuildName() const;
-        TOptional<FString> TargetGuildName() const;
         TOptional<FString> FromUserId() const;
 
         FEzReceiveMemberRequestDomain(

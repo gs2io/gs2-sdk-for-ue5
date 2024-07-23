@@ -684,4 +684,76 @@ namespace Gs2::Guild
             Request
         );
     }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FDescribeIgnoreUsersTask>> FGs2GuildRestClient::DescribeIgnoreUsers(
+        const Request::FDescribeIgnoreUsersRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FDescribeIgnoreUsersTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FDescribeIgnoreUsersByGuildNameTask>> FGs2GuildRestClient::DescribeIgnoreUsersByGuildName(
+        const Request::FDescribeIgnoreUsersByGuildNameRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FDescribeIgnoreUsersByGuildNameTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FGetIgnoreUserTask>> FGs2GuildRestClient::GetIgnoreUser(
+        const Request::FGetIgnoreUserRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FGetIgnoreUserTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FGetIgnoreUserByGuildNameTask>> FGs2GuildRestClient::GetIgnoreUserByGuildName(
+        const Request::FGetIgnoreUserByGuildNameRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FGetIgnoreUserByGuildNameTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FAddIgnoreUserTask>> FGs2GuildRestClient::AddIgnoreUser(
+        const Request::FAddIgnoreUserRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FAddIgnoreUserTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FAddIgnoreUserByGuildNameTask>> FGs2GuildRestClient::AddIgnoreUserByGuildName(
+        const Request::FAddIgnoreUserByGuildNameRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FAddIgnoreUserByGuildNameTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FDeleteIgnoreUserTask>> FGs2GuildRestClient::DeleteIgnoreUser(
+        const Request::FDeleteIgnoreUserRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FDeleteIgnoreUserTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FDeleteIgnoreUserByGuildNameTask>> FGs2GuildRestClient::DeleteIgnoreUserByGuildName(
+        const Request::FDeleteIgnoreUserByGuildNameRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FDeleteIgnoreUserByGuildNameTask>>(
+            Session,
+            Request
+        );
+    }
 }

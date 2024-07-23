@@ -20,6 +20,7 @@
 #include "Guild/Domain/Gs2Guild.h"
 #include "Util/Net/Gs2Connection.h"
 #include "Guild/Domain/Model/Gs2GuildEzNamespaceDomain.h"
+#include "Guild/Domain/Model/Gs2GuildEzIgnoreUserDomain.h"
 
 namespace Gs2::UE5::Guild::Domain
 {

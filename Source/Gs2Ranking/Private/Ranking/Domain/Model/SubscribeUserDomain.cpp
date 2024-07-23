@@ -113,8 +113,8 @@ namespace Gs2::Ranking::Domain::Model
         Request
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
-            ->WithUserId(Self->UserId)
             ->WithCategoryName(Self->CategoryName)
+            ->WithUserId(Self->UserId)
             ->WithTargetUserId(Self->TargetUserId);
         const auto Future = Self->Client->GetSubscribeByUserId(
             Request
@@ -181,8 +181,8 @@ namespace Gs2::Ranking::Domain::Model
         Request
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
-            ->WithUserId(Self->UserId)
             ->WithCategoryName(Self->CategoryName)
+            ->WithUserId(Self->UserId)
             ->WithTargetUserId(Self->TargetUserId);
         const auto Future = Self->Client->UnsubscribeByUserId(
             Request

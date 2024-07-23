@@ -172,8 +172,8 @@ namespace Gs2::Enchant::Domain::Model
         Request
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
-            ->WithAccessToken(Self->AccessToken->GetToken())
             ->WithParameterName(Self->ParameterName)
+            ->WithAccessToken(Self->AccessToken->GetToken())
             ->WithPropertyId(Self->PropertyId);
         const auto Future = Self->Client->VerifyRarityParameterStatus(
             Request

@@ -121,8 +121,8 @@ namespace Gs2::Inventory::Domain::Model
         Request
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
-            ->WithAccessToken(Self->AccessToken->GetToken())
-            ->WithInventoryName(Self->InventoryName);
+            ->WithInventoryName(Self->InventoryName)
+            ->WithAccessToken(Self->AccessToken->GetToken());
         const auto Future = Self->Client->ConsumeSimpleItems(
             Request
         );

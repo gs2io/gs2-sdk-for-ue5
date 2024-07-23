@@ -101,8 +101,8 @@ namespace Gs2::Limit::Domain::Model
         Request
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
-            ->WithAccessToken(Self->AccessToken->GetToken())
             ->WithLimitName(Self->LimitName)
+            ->WithAccessToken(Self->AccessToken->GetToken())
             ->WithCounterName(Self->CounterName);
         const auto Future = Self->Client->GetCounter(
             Request
@@ -168,9 +168,9 @@ namespace Gs2::Limit::Domain::Model
         Request
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
-            ->WithAccessToken(Self->AccessToken->GetToken())
             ->WithLimitName(Self->LimitName)
-            ->WithCounterName(Self->CounterName);
+            ->WithCounterName(Self->CounterName)
+            ->WithAccessToken(Self->AccessToken->GetToken());
         const auto Future = Self->Client->CountUp(
             Request
         );

@@ -104,8 +104,8 @@ namespace Gs2::Mission::Domain::Model
         Request
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
-            ->WithAccessToken(Self->AccessToken->GetToken())
-            ->WithCounterName(Self->CounterName);
+            ->WithCounterName(Self->CounterName)
+            ->WithAccessToken(Self->AccessToken->GetToken());
         const auto Future = Self->Client->GetCounter(
             Request
         );

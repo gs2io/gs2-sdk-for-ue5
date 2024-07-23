@@ -109,9 +109,9 @@ namespace Gs2::SeasonRating::Domain::Model
         Request
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
-            ->WithAccessToken(Self->AccessToken->GetToken())
             ->WithSeasonName(Self->SeasonName)
             ->WithSessionName(Self->SessionName)
+            ->WithAccessToken(Self->AccessToken->GetToken())
             ->WithNumberOfPlayer(Self->NumberOfPlayer)
             ->WithKeyId(Self->KeyId);
         const auto Future = Self->Client->GetBallot(

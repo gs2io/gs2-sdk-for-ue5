@@ -120,8 +120,8 @@ namespace Gs2::Inventory::Domain::Model
         Request
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
-            ->WithUserId(Self->UserId)
-            ->WithInventoryName(Self->InventoryName);
+            ->WithInventoryName(Self->InventoryName)
+            ->WithUserId(Self->UserId);
         const auto Future = Self->Client->GetInventoryByUserId(
             Request
         );
@@ -185,8 +185,8 @@ namespace Gs2::Inventory::Domain::Model
         Request
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
-            ->WithUserId(Self->UserId)
-            ->WithInventoryName(Self->InventoryName);
+            ->WithInventoryName(Self->InventoryName)
+            ->WithUserId(Self->UserId);
         const auto Future = Self->Client->AddCapacityByUserId(
             Request
         );
@@ -252,8 +252,8 @@ namespace Gs2::Inventory::Domain::Model
         Request
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
-            ->WithUserId(Self->UserId)
-            ->WithInventoryName(Self->InventoryName);
+            ->WithInventoryName(Self->InventoryName)
+            ->WithUserId(Self->UserId);
         const auto Future = Self->Client->SetCapacityByUserId(
             Request
         );
@@ -319,8 +319,8 @@ namespace Gs2::Inventory::Domain::Model
         Request
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
-            ->WithUserId(Self->UserId)
-            ->WithInventoryName(Self->InventoryName);
+            ->WithInventoryName(Self->InventoryName)
+            ->WithUserId(Self->UserId);
         const auto Future = Self->Client->DeleteInventoryByUserId(
             Request
         );
@@ -428,8 +428,8 @@ namespace Gs2::Inventory::Domain::Model
         Request
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
-            ->WithUserId(Self->UserId)
-            ->WithInventoryName(Self->InventoryName);
+            ->WithInventoryName(Self->InventoryName)
+            ->WithUserId(Self->UserId);
         const auto Future = Self->Client->AcquireItemSetWithGradeByUserId(
             Request
         );

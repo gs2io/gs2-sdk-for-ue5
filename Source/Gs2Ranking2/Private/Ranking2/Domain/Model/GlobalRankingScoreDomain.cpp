@@ -126,8 +126,8 @@ namespace Gs2::Ranking2::Domain::Model
         Request
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
-            ->WithUserId(Self->UserId)
             ->WithRankingName(Self->RankingName)
+            ->WithUserId(Self->UserId)
             ->WithSeason(Self->Season);
         const auto Future = Self->Client->GetGlobalRankingScoreByUserId(
             Request
@@ -193,8 +193,8 @@ namespace Gs2::Ranking2::Domain::Model
         Request
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
-            ->WithUserId(Self->UserId)
             ->WithRankingName(Self->RankingName)
+            ->WithUserId(Self->UserId)
             ->WithSeason(Self->Season);
         const auto Future = Self->Client->DeleteGlobalRankingScoreByUserId(
             Request

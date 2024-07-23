@@ -684,4 +684,76 @@ namespace Gs2::Guild
             Request
         );
     }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FDescribeIgnoreUsersTask>> FGs2GuildWebSocketClient::DescribeIgnoreUsers(
+        const Request::FDescribeIgnoreUsersRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FDescribeIgnoreUsersTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FDescribeIgnoreUsersByGuildNameTask>> FGs2GuildWebSocketClient::DescribeIgnoreUsersByGuildName(
+        const Request::FDescribeIgnoreUsersByGuildNameRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FDescribeIgnoreUsersByGuildNameTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FGetIgnoreUserTask>> FGs2GuildWebSocketClient::GetIgnoreUser(
+        const Request::FGetIgnoreUserRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FGetIgnoreUserTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FGetIgnoreUserByGuildNameTask>> FGs2GuildWebSocketClient::GetIgnoreUserByGuildName(
+        const Request::FGetIgnoreUserByGuildNameRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FGetIgnoreUserByGuildNameTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FAddIgnoreUserTask>> FGs2GuildWebSocketClient::AddIgnoreUser(
+        const Request::FAddIgnoreUserRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FAddIgnoreUserTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FAddIgnoreUserByGuildNameTask>> FGs2GuildWebSocketClient::AddIgnoreUserByGuildName(
+        const Request::FAddIgnoreUserByGuildNameRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FAddIgnoreUserByGuildNameTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FDeleteIgnoreUserTask>> FGs2GuildWebSocketClient::DeleteIgnoreUser(
+        const Request::FDeleteIgnoreUserRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FDeleteIgnoreUserTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FDeleteIgnoreUserByGuildNameTask>> FGs2GuildWebSocketClient::DeleteIgnoreUserByGuildName(
+        const Request::FDeleteIgnoreUserByGuildNameRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FDeleteIgnoreUserByGuildNameTask>>(
+            Session,
+            Request
+        );
+    }
 }

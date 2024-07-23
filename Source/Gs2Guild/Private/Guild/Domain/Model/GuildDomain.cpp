@@ -37,6 +37,7 @@
 #include "Guild/Domain/Model/ReceiveMemberRequest.h"
 #include "Guild/Domain/Model/SendMemberRequest.h"
 #include "Guild/Domain/Model/SendMemberRequestAccessToken.h"
+#include "Guild/Domain/Model/IgnoreUser.h"
 
 #include "Core/Domain/Gs2.h"
 #include "Core/Domain/Transaction/JobQueueJobDomainFactory.h"
@@ -536,6 +537,102 @@ namespace Gs2::Guild::Domain::Model
         return Gs2::Core::Util::New<FAsyncTask<FDecreaseMaximumCurrentMaximumMemberCountTask>>(this->AsShared(), Request);
     }
 
+    FGuildDomain::FVerifyCurrentMaximumMemberCountTask::FVerifyCurrentMaximumMemberCountTask(
+        const TSharedPtr<FGuildDomain>& Self,
+        const Request::FVerifyCurrentMaximumMemberCountByGuildNameRequestPtr Request
+    ): Self(Self), Request(Request)
+    {
+
+    }
+
+    FGuildDomain::FVerifyCurrentMaximumMemberCountTask::FVerifyCurrentMaximumMemberCountTask(
+        const FVerifyCurrentMaximumMemberCountTask& From
+    ): TGs2Future(From), Self(From.Self), Request(From.Request)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FGuildDomain::FVerifyCurrentMaximumMemberCountTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::Guild::Domain::Model::FGuildDomain>> Result
+    )
+    {
+        Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
+            ->WithNamespaceName(Self->NamespaceName)
+            ->WithGuildModelName(Self->GuildModelName)
+            ->WithGuildName(Self->GuildName);
+        const auto Future = Self->Client->VerifyCurrentMaximumMemberCountByGuildName(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto RequestModel = Request;
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
+        if (ResultModel != nullptr) {
+            
+        }
+        const auto Domain = Self;
+        *Result = Domain;
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FGuildDomain::FVerifyCurrentMaximumMemberCountTask>> FGuildDomain::VerifyCurrentMaximumMemberCount(
+        Request::FVerifyCurrentMaximumMemberCountByGuildNameRequestPtr Request
+    ) {
+        return Gs2::Core::Util::New<FAsyncTask<FVerifyCurrentMaximumMemberCountTask>>(this->AsShared(), Request);
+    }
+
+    FGuildDomain::FVerifyIncludeMemberTask::FVerifyIncludeMemberTask(
+        const TSharedPtr<FGuildDomain>& Self,
+        const Request::FVerifyIncludeMemberByUserIdRequestPtr Request
+    ): Self(Self), Request(Request)
+    {
+
+    }
+
+    FGuildDomain::FVerifyIncludeMemberTask::FVerifyIncludeMemberTask(
+        const FVerifyIncludeMemberTask& From
+    ): TGs2Future(From), Self(From.Self), Request(From.Request)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FGuildDomain::FVerifyIncludeMemberTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::Guild::Domain::Model::FGuildDomain>> Result
+    )
+    {
+        Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
+            ->WithNamespaceName(Self->NamespaceName)
+            ->WithGuildModelName(Self->GuildModelName)
+            ->WithGuildName(Self->GuildName);
+        const auto Future = Self->Client->VerifyIncludeMemberByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto RequestModel = Request;
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
+        if (ResultModel != nullptr) {
+            
+        }
+        const auto Domain = Self;
+        *Result = Domain;
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FGuildDomain::FVerifyIncludeMemberTask>> FGuildDomain::VerifyIncludeMember(
+        Request::FVerifyIncludeMemberByUserIdRequestPtr Request
+    ) {
+        return Gs2::Core::Util::New<FAsyncTask<FVerifyIncludeMemberTask>>(this->AsShared(), Request);
+    }
+
     FGuildDomain::FSetMaximumCurrentMaximumMemberCountTask::FSetMaximumCurrentMaximumMemberCountTask(
         const TSharedPtr<FGuildDomain>& Self,
         const Request::FSetMaximumCurrentMaximumMemberCountByGuildNameRequestPtr Request
@@ -603,156 +700,6 @@ namespace Gs2::Guild::Domain::Model
         return Gs2::Core::Util::New<FAsyncTask<FSetMaximumCurrentMaximumMemberCountTask>>(this->AsShared(), Request);
     }
 
-    FGuildDomain::FAcceptTask::FAcceptTask(
-        const TSharedPtr<FGuildDomain>& Self,
-        const Request::FAcceptRequestByGuildNameRequestPtr Request
-    ): Self(Self), Request(Request)
-    {
-
-    }
-
-    FGuildDomain::FAcceptTask::FAcceptTask(
-        const FAcceptTask& From
-    ): TGs2Future(From), Self(From.Self), Request(From.Request)
-    {
-    }
-
-    Gs2::Core::Model::FGs2ErrorPtr FGuildDomain::FAcceptTask::Action(
-        TSharedPtr<TSharedPtr<Gs2::Guild::Domain::Model::FReceiveMemberRequestDomain>> Result
-    )
-    {
-        Request
-            ->WithContextStack(Self->Gs2->DefaultContextStack)
-            ->WithNamespaceName(Self->NamespaceName)
-            ->WithGuildModelName(Self->GuildModelName)
-            ->WithGuildName(Self->GuildName);
-        const auto Future = Self->Client->AcceptRequestByGuildName(
-            Request
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            return Future->GetTask().Error();
-        }
-        const auto RequestModel = Request;
-        const auto ResultModel = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::Guild::Domain::Model::FGuildDomain::CreateCacheParentKey(
-                    Self->NamespaceName,
-                    Self->GuildModelName,
-                    Self->GuildName,
-                    "ReceiveMemberRequest"
-                );
-                const auto Key = Gs2::Guild::Domain::Model::FReceiveMemberRequestDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetUserId()
-                );
-                Self->Gs2->Cache->Delete(Gs2::Guild::Model::FReceiveMemberRequest::TypeName, ParentKey, Key);
-            }
-            if (ResultModel->GetGuild() != nullptr)
-            {
-                const auto ParentKey = Gs2::Guild::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
-                    Self->NamespaceName,
-                    "Guild"
-                );
-                const auto Key = Gs2::Guild::Domain::Model::FGuildDomain::CreateCacheKey(
-                    ResultModel->GetGuild()->GetGuildModelName(),
-                    ResultModel->GetGuild()->GetName()
-                );
-                Self->Gs2->Cache->Delete(Gs2::Guild::Model::FGuild::TypeName, ParentKey, Key);
-            }
-        }
-        auto Domain = MakeShared<Gs2::Guild::Domain::Model::FReceiveMemberRequestDomain>(
-            Self->Gs2,
-            Self->Service,
-            Request->GetNamespaceName(),
-            Request->GetGuildModelName(),
-            Request->GetGuildName(),
-            Request->GetFromUserId()
-        );
-
-        *Result = Domain;
-        return nullptr;
-    }
-
-    TSharedPtr<FAsyncTask<FGuildDomain::FAcceptTask>> FGuildDomain::Accept(
-        Request::FAcceptRequestByGuildNameRequestPtr Request
-    ) {
-        return Gs2::Core::Util::New<FAsyncTask<FAcceptTask>>(this->AsShared(), Request);
-    }
-
-    FGuildDomain::FRejectTask::FRejectTask(
-        const TSharedPtr<FGuildDomain>& Self,
-        const Request::FRejectRequestByGuildNameRequestPtr Request
-    ): Self(Self), Request(Request)
-    {
-
-    }
-
-    FGuildDomain::FRejectTask::FRejectTask(
-        const FRejectTask& From
-    ): TGs2Future(From), Self(From.Self), Request(From.Request)
-    {
-    }
-
-    Gs2::Core::Model::FGs2ErrorPtr FGuildDomain::FRejectTask::Action(
-        TSharedPtr<TSharedPtr<Gs2::Guild::Domain::Model::FReceiveMemberRequestDomain>> Result
-    )
-    {
-        Request
-            ->WithContextStack(Self->Gs2->DefaultContextStack)
-            ->WithNamespaceName(Self->NamespaceName)
-            ->WithGuildModelName(Self->GuildModelName)
-            ->WithGuildName(Self->GuildName);
-        const auto Future = Self->Client->RejectRequestByGuildName(
-            Request
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            return Future->GetTask().Error();
-        }
-        const auto RequestModel = Request;
-        const auto ResultModel = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::Guild::Domain::Model::FGuildDomain::CreateCacheParentKey(
-                    Self->NamespaceName,
-                    Self->GuildModelName,
-                    Self->GuildName,
-                    "ReceiveMemberRequest"
-                );
-                const auto Key = Gs2::Guild::Domain::Model::FReceiveMemberRequestDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetUserId()
-                );
-                Self->Gs2->Cache->Delete(Gs2::Guild::Model::FReceiveMemberRequest::TypeName, ParentKey, Key);
-            }
-        }
-        auto Domain = MakeShared<Gs2::Guild::Domain::Model::FReceiveMemberRequestDomain>(
-            Self->Gs2,
-            Self->Service,
-            Request->GetNamespaceName(),
-            Request->GetGuildModelName(),
-            Request->GetGuildName(),
-            Request->GetFromUserId()
-        );
-
-        *Result = Domain;
-        return nullptr;
-    }
-
-    TSharedPtr<FAsyncTask<FGuildDomain::FRejectTask>> FGuildDomain::Reject(
-        Request::FRejectRequestByGuildNameRequestPtr Request
-    ) {
-        return Gs2::Core::Util::New<FAsyncTask<FRejectTask>>(this->AsShared(), Request);
-    }
-
     Gs2::Guild::Domain::Iterator::FDescribeReceiveRequestsByGuildNameIteratorPtr FGuildDomain::ReceiveRequestsByGuildName(
     ) const
     {
@@ -808,6 +755,62 @@ namespace Gs2::Guild::Domain::Model
             GuildModelName,
             GuildName,
             FromUserId == TEXT("") ? TOptional<FString>() : TOptional<FString>(FromUserId)
+        );
+    }
+
+    Gs2::Guild::Domain::Iterator::FDescribeIgnoreUsersByGuildNameIteratorPtr FGuildDomain::IgnoreUsersByGuildName(
+    ) const
+    {
+        return MakeShared<Gs2::Guild::Domain::Iterator::FDescribeIgnoreUsersByGuildNameIterator>(
+            Gs2,
+            Client,
+            NamespaceName,
+            GuildModelName,
+            GuildName
+        );
+    }
+
+    Gs2::Core::Domain::CallbackID FGuildDomain::SubscribeIgnoreUsersByGuildName(
+    TFunction<void()> Callback
+    )
+    {
+        return Gs2->Cache->ListSubscribe(
+            Gs2::Guild::Model::FIgnoreUser::TypeName,
+            Gs2::Guild::Domain::Model::FGuildDomain::CreateCacheParentKey(
+                NamespaceName,
+                GuildModelName,
+                GuildName,
+                "IgnoreUser"
+            ),
+            Callback
+        );
+    }
+
+    void FGuildDomain::UnsubscribeIgnoreUsersByGuildName(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Gs2->Cache->ListUnsubscribe(
+            Gs2::Guild::Model::FIgnoreUser::TypeName,
+            Gs2::Guild::Domain::Model::FGuildDomain::CreateCacheParentKey(
+                NamespaceName,
+                GuildModelName,
+                GuildName,
+                "IgnoreUser"
+            ),
+            CallbackID
+        );
+    }
+
+    TSharedPtr<Gs2::Guild::Domain::Model::FIgnoreUserDomain> FGuildDomain::IgnoreUser(
+    )
+    {
+        return MakeShared<Gs2::Guild::Domain::Model::FIgnoreUserDomain>(
+            Gs2,
+            Service,
+            NamespaceName,
+            GuildModelName,
+            GuildName
         );
     }
 

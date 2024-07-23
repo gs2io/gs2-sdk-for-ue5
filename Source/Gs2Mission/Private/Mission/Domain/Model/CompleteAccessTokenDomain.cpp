@@ -106,8 +106,8 @@ namespace Gs2::Mission::Domain::Model
         Request
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
-            ->WithAccessToken(Self->AccessToken->GetToken())
-            ->WithMissionGroupName(Self->MissionGroupName);
+            ->WithMissionGroupName(Self->MissionGroupName)
+            ->WithAccessToken(Self->AccessToken->GetToken());
 
         if (SpeculativeExecute) {
             const auto SpeculativeExecuteFuture = Transaction::SpeculativeExecutor::FCompleteByUserIdSpeculativeExecutor::Execute(
@@ -196,8 +196,8 @@ namespace Gs2::Mission::Domain::Model
         Request
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
-            ->WithAccessToken(Self->AccessToken->GetToken())
-            ->WithMissionGroupName(Self->MissionGroupName);
+            ->WithMissionGroupName(Self->MissionGroupName)
+            ->WithAccessToken(Self->AccessToken->GetToken());
         const auto Future = Self->Client->GetComplete(
             Request
         );

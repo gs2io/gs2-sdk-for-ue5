@@ -124,8 +124,8 @@ namespace Gs2::Inventory::Domain::Model
         Request
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
-            ->WithUserId(Self->UserId)
             ->WithInventoryName(Self->InventoryName)
+            ->WithUserId(Self->UserId)
             ->WithItemName(Self->ItemName);
         const auto Future = Self->Client->GetBigItemByUserId(
             Request
@@ -209,8 +209,8 @@ namespace Gs2::Inventory::Domain::Model
         Request
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
-            ->WithUserId(Self->UserId)
             ->WithInventoryName(Self->InventoryName)
+            ->WithUserId(Self->UserId)
             ->WithItemName(Self->ItemName);
         const auto Future = Self->Client->AcquireBigItemByUserId(
             Request
@@ -278,8 +278,8 @@ namespace Gs2::Inventory::Domain::Model
         Request
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
-            ->WithUserId(Self->UserId)
             ->WithInventoryName(Self->InventoryName)
+            ->WithUserId(Self->UserId)
             ->WithItemName(Self->ItemName);
         const auto Future = Self->Client->ConsumeBigItemByUserId(
             Request
@@ -347,8 +347,8 @@ namespace Gs2::Inventory::Domain::Model
         Request
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
-            ->WithUserId(Self->UserId)
             ->WithInventoryName(Self->InventoryName)
+            ->WithUserId(Self->UserId)
             ->WithItemName(Self->ItemName);
         const auto Future = Self->Client->SetBigItemByUserId(
             Request
@@ -416,8 +416,8 @@ namespace Gs2::Inventory::Domain::Model
         Request
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
-            ->WithUserId(Self->UserId)
             ->WithInventoryName(Self->InventoryName)
+            ->WithUserId(Self->UserId)
             ->WithItemName(Self->ItemName);
         const auto Future = Self->Client->DeleteBigItemByUserId(
             Request

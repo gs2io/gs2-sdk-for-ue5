@@ -117,8 +117,8 @@ namespace Gs2::Friend::Domain::Model
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithAccessToken(Self->AccessToken->GetToken())
-            ->WithWithProfile(Self->WithProfile)
-            ->WithTargetUserId(Self->TargetUserId);
+            ->WithTargetUserId(Self->TargetUserId)
+            ->WithWithProfile(Self->WithProfile);
         const auto Future = Self->Client->GetFollow(
             Request
         );

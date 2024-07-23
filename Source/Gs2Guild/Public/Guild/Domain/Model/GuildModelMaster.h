@@ -33,6 +33,8 @@
 #include "Guild/Domain/Iterator/DescribeReceiveRequestsByGuildNameIterator.h"
 #include "Guild/Domain/Iterator/DescribeSendRequestsIterator.h"
 #include "Guild/Domain/Iterator/DescribeSendRequestsByUserIdIterator.h"
+#include "Guild/Domain/Iterator/DescribeIgnoreUsersIterator.h"
+#include "Guild/Domain/Iterator/DescribeIgnoreUsersByGuildNameIterator.h"
 
 namespace Gs2::Core::Domain
 {
@@ -60,6 +62,7 @@ namespace Gs2::Guild::Domain::Model
     class FReceiveMemberRequestDomain;
     class FSendMemberRequestDomain;
     class FSendMemberRequestAccessTokenDomain;
+    class FIgnoreUserDomain;
 
     class GS2GUILD_API FGuildModelMasterDomain:
         public TSharedFromThis<FGuildModelMasterDomain>

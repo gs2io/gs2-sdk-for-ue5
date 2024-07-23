@@ -12,6 +12,8 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
+ *
+ * deny overwrite
  */
 
 // ReSharper disable CppUnusedIncludeDirective
@@ -34,6 +36,8 @@
 #include "Guild/Domain/Iterator/DescribeReceiveRequestsByGuildNameIterator.h"
 #include "Guild/Domain/Iterator/DescribeSendRequestsIterator.h"
 #include "Guild/Domain/Iterator/DescribeSendRequestsByUserIdIterator.h"
+#include "Guild/Domain/Iterator/DescribeIgnoreUsersIterator.h"
+#include "Guild/Domain/Iterator/DescribeIgnoreUsersByGuildNameIterator.h"
 
 namespace Gs2::Core::Domain
 {
@@ -61,6 +65,7 @@ namespace Gs2::Guild::Domain::Model
     class FReceiveMemberRequestDomain;
     class FSendMemberRequestDomain;
     class FSendMemberRequestAccessTokenDomain;
+    class FIgnoreUserDomain;
 
     class GS2GUILD_API FJoinedGuildAccessTokenDomain:
         public TSharedFromThis<FJoinedGuildAccessTokenDomain>

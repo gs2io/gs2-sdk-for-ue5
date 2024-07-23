@@ -108,8 +108,8 @@ namespace Gs2::Showcase::Domain::Model
         Request
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
-            ->WithUserId(Self->UserId)
-            ->WithShowcaseName(Self->ShowcaseName);
+            ->WithShowcaseName(Self->ShowcaseName)
+            ->WithUserId(Self->UserId);
         const auto Future = Self->Client->GetShowcaseByUserId(
             Request
         );

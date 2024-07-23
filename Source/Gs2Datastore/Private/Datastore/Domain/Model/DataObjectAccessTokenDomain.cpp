@@ -97,8 +97,8 @@ namespace Gs2::Datastore::Domain::Model
         Request
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
-            ->WithAccessToken(Self->AccessToken->GetToken())
-            ->WithDataObjectName(Self->DataObjectName);
+            ->WithDataObjectName(Self->DataObjectName)
+            ->WithAccessToken(Self->AccessToken->GetToken());
         const auto Future = Self->Client->UpdateDataObject(
             Request
         );
@@ -164,8 +164,8 @@ namespace Gs2::Datastore::Domain::Model
         Request
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
-            ->WithAccessToken(Self->AccessToken->GetToken())
-            ->WithDataObjectName(Self->DataObjectName);
+            ->WithDataObjectName(Self->DataObjectName)
+            ->WithAccessToken(Self->AccessToken->GetToken());
         const auto Future = Self->Client->PrepareReUpload(
             Request
         );
@@ -235,8 +235,8 @@ namespace Gs2::Datastore::Domain::Model
         Request
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
-            ->WithAccessToken(Self->AccessToken->GetToken())
-            ->WithDataObjectName(Self->DataObjectName);
+            ->WithDataObjectName(Self->DataObjectName)
+            ->WithAccessToken(Self->AccessToken->GetToken());
         const auto Future = Self->Client->DoneUpload(
             Request
         );

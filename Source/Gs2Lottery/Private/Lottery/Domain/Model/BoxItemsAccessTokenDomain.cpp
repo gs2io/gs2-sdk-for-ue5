@@ -105,8 +105,8 @@ namespace Gs2::Lottery::Domain::Model
         Request
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
-            ->WithAccessToken(Self->AccessToken->GetToken())
-            ->WithPrizeTableName(Self->PrizeTableName);
+            ->WithPrizeTableName(Self->PrizeTableName)
+            ->WithAccessToken(Self->AccessToken->GetToken());
         const auto Future = Self->Client->GetBox(
             Request
         );
@@ -170,8 +170,8 @@ namespace Gs2::Lottery::Domain::Model
         Request
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
-            ->WithAccessToken(Self->AccessToken->GetToken())
-            ->WithPrizeTableName(Self->PrizeTableName);
+            ->WithPrizeTableName(Self->PrizeTableName)
+            ->WithAccessToken(Self->AccessToken->GetToken());
         const auto Future = Self->Client->ResetBox(
             Request
         );

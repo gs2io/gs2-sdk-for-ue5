@@ -100,8 +100,8 @@ namespace Gs2::Stamina::Domain::Model
         Request
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
-            ->WithUserId(Self->UserId)
-            ->WithStaminaName(Self->StaminaName);
+            ->WithStaminaName(Self->StaminaName)
+            ->WithUserId(Self->UserId);
         const auto Future = Self->Client->GetStaminaByUserId(
             Request
         );
@@ -182,8 +182,8 @@ namespace Gs2::Stamina::Domain::Model
         Request
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
-            ->WithUserId(Self->UserId)
-            ->WithStaminaName(Self->StaminaName);
+            ->WithStaminaName(Self->StaminaName)
+            ->WithUserId(Self->UserId);
         const auto Future = Self->Client->UpdateStaminaByUserId(
             Request
         );
@@ -266,8 +266,8 @@ namespace Gs2::Stamina::Domain::Model
         Request
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
-            ->WithUserId(Self->UserId)
-            ->WithStaminaName(Self->StaminaName);
+            ->WithStaminaName(Self->StaminaName)
+            ->WithUserId(Self->UserId);
         const auto Future = Self->Client->ConsumeStaminaByUserId(
             Request
         );
@@ -350,8 +350,8 @@ namespace Gs2::Stamina::Domain::Model
         Request
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
-            ->WithUserId(Self->UserId)
-            ->WithStaminaName(Self->StaminaName);
+            ->WithStaminaName(Self->StaminaName)
+            ->WithUserId(Self->UserId);
         const auto Future = Self->Client->RecoverStaminaByUserId(
             Request
         );
@@ -438,8 +438,8 @@ namespace Gs2::Stamina::Domain::Model
         Request
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
-            ->WithUserId(Self->UserId)
-            ->WithStaminaName(Self->StaminaName);
+            ->WithStaminaName(Self->StaminaName)
+            ->WithUserId(Self->UserId);
         const auto Future = Self->Client->RaiseMaxValueByUserId(
             Request
         );
@@ -522,8 +522,8 @@ namespace Gs2::Stamina::Domain::Model
         Request
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
-            ->WithUserId(Self->UserId)
-            ->WithStaminaName(Self->StaminaName);
+            ->WithStaminaName(Self->StaminaName)
+            ->WithUserId(Self->UserId);
         const auto Future = Self->Client->DecreaseMaxValueByUserId(
             Request
         );
@@ -606,8 +606,8 @@ namespace Gs2::Stamina::Domain::Model
         Request
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
-            ->WithUserId(Self->UserId)
-            ->WithStaminaName(Self->StaminaName);
+            ->WithStaminaName(Self->StaminaName)
+            ->WithUserId(Self->UserId);
         const auto Future = Self->Client->SetMaxValueByUserId(
             Request
         );
@@ -690,8 +690,8 @@ namespace Gs2::Stamina::Domain::Model
         Request
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
-            ->WithUserId(Self->UserId)
-            ->WithStaminaName(Self->StaminaName);
+            ->WithStaminaName(Self->StaminaName)
+            ->WithUserId(Self->UserId);
         const auto Future = Self->Client->SetRecoverIntervalByUserId(
             Request
         );
@@ -774,8 +774,8 @@ namespace Gs2::Stamina::Domain::Model
         Request
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
-            ->WithUserId(Self->UserId)
-            ->WithStaminaName(Self->StaminaName);
+            ->WithStaminaName(Self->StaminaName)
+            ->WithUserId(Self->UserId);
         const auto Future = Self->Client->SetRecoverValueByUserId(
             Request
         );
@@ -858,8 +858,8 @@ namespace Gs2::Stamina::Domain::Model
         Request
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
-            ->WithUserId(Self->UserId)
-            ->WithStaminaName(Self->StaminaName);
+            ->WithStaminaName(Self->StaminaName)
+            ->WithUserId(Self->UserId);
         const auto Future = Self->Client->DeleteStaminaByUserId(
             Request
         );

@@ -99,8 +99,8 @@ namespace Gs2::Chat::Domain::Model
         Request
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
-            ->WithAccessToken(Self->AccessToken->GetToken())
-            ->WithRoomName(Self->RoomName);
+            ->WithRoomName(Self->RoomName)
+            ->WithAccessToken(Self->AccessToken->GetToken());
         const auto Future = Self->Client->Subscribe(
             Request
         );
@@ -166,8 +166,8 @@ namespace Gs2::Chat::Domain::Model
         Request
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
-            ->WithAccessToken(Self->AccessToken->GetToken())
-            ->WithRoomName(Self->RoomName);
+            ->WithRoomName(Self->RoomName)
+            ->WithAccessToken(Self->AccessToken->GetToken());
         const auto Future = Self->Client->GetSubscribe(
             Request
         );
@@ -231,8 +231,8 @@ namespace Gs2::Chat::Domain::Model
         Request
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
-            ->WithAccessToken(Self->AccessToken->GetToken())
-            ->WithRoomName(Self->RoomName);
+            ->WithRoomName(Self->RoomName)
+            ->WithAccessToken(Self->AccessToken->GetToken());
         const auto Future = Self->Client->UpdateNotificationType(
             Request
         );
@@ -298,8 +298,8 @@ namespace Gs2::Chat::Domain::Model
         Request
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
-            ->WithAccessToken(Self->AccessToken->GetToken())
-            ->WithRoomName(Self->RoomName);
+            ->WithRoomName(Self->RoomName)
+            ->WithAccessToken(Self->AccessToken->GetToken());
         const auto Future = Self->Client->Unsubscribe(
             Request
         );

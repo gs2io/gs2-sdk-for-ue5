@@ -29,6 +29,7 @@
 #include "Model/Member.h"
 #include "Model/ReceiveMemberRequest.h"
 #include "Model/SendMemberRequest.h"
+#include "Model/IgnoreUser.h"
 #include "Model/TransactionSetting.h"
 #include "Model/NotificationSetting.h"
 #include "Model/ScriptSetting.h"
@@ -478,6 +479,54 @@
 #include "Result/DeleteRequestByUserIdResult.h"
 #include "Task/Rest/DeleteRequestByUserIdTask.h"
 #include "Task/WebSocket/DeleteRequestByUserIdTask.h"
+
+// DescribeIgnoreUsers
+#include "Request/DescribeIgnoreUsersRequest.h"
+#include "Result/DescribeIgnoreUsersResult.h"
+#include "Task/Rest/DescribeIgnoreUsersTask.h"
+#include "Task/WebSocket/DescribeIgnoreUsersTask.h"
+
+// DescribeIgnoreUsersByGuildName
+#include "Request/DescribeIgnoreUsersByGuildNameRequest.h"
+#include "Result/DescribeIgnoreUsersByGuildNameResult.h"
+#include "Task/Rest/DescribeIgnoreUsersByGuildNameTask.h"
+#include "Task/WebSocket/DescribeIgnoreUsersByGuildNameTask.h"
+
+// GetIgnoreUser
+#include "Request/GetIgnoreUserRequest.h"
+#include "Result/GetIgnoreUserResult.h"
+#include "Task/Rest/GetIgnoreUserTask.h"
+#include "Task/WebSocket/GetIgnoreUserTask.h"
+
+// GetIgnoreUserByGuildName
+#include "Request/GetIgnoreUserByGuildNameRequest.h"
+#include "Result/GetIgnoreUserByGuildNameResult.h"
+#include "Task/Rest/GetIgnoreUserByGuildNameTask.h"
+#include "Task/WebSocket/GetIgnoreUserByGuildNameTask.h"
+
+// AddIgnoreUser
+#include "Request/AddIgnoreUserRequest.h"
+#include "Result/AddIgnoreUserResult.h"
+#include "Task/Rest/AddIgnoreUserTask.h"
+#include "Task/WebSocket/AddIgnoreUserTask.h"
+
+// AddIgnoreUserByGuildName
+#include "Request/AddIgnoreUserByGuildNameRequest.h"
+#include "Result/AddIgnoreUserByGuildNameResult.h"
+#include "Task/Rest/AddIgnoreUserByGuildNameTask.h"
+#include "Task/WebSocket/AddIgnoreUserByGuildNameTask.h"
+
+// DeleteIgnoreUser
+#include "Request/DeleteIgnoreUserRequest.h"
+#include "Result/DeleteIgnoreUserResult.h"
+#include "Task/Rest/DeleteIgnoreUserTask.h"
+#include "Task/WebSocket/DeleteIgnoreUserTask.h"
+
+// DeleteIgnoreUserByGuildName
+#include "Request/DeleteIgnoreUserByGuildNameRequest.h"
+#include "Result/DeleteIgnoreUserByGuildNameResult.h"
+#include "Task/Rest/DeleteIgnoreUserByGuildNameTask.h"
+#include "Task/WebSocket/DeleteIgnoreUserByGuildNameTask.h"
 
 // Client
 #include "Gs2GuildRestClient.h"

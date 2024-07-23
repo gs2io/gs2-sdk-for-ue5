@@ -101,8 +101,8 @@ namespace Gs2::Quest::Domain::Model
         Request
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
-            ->WithUserId(Self->UserId)
-            ->WithQuestGroupName(Self->QuestGroupName);
+            ->WithQuestGroupName(Self->QuestGroupName)
+            ->WithUserId(Self->UserId);
         const auto Future = Self->Client->GetCompletedQuestListByUserId(
             Request
         );
@@ -166,8 +166,8 @@ namespace Gs2::Quest::Domain::Model
         Request
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
-            ->WithUserId(Self->UserId)
-            ->WithQuestGroupName(Self->QuestGroupName);
+            ->WithQuestGroupName(Self->QuestGroupName)
+            ->WithUserId(Self->UserId);
         const auto Future = Self->Client->DeleteCompletedQuestListByUserId(
             Request
         );

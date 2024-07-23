@@ -99,8 +99,8 @@ namespace Gs2::Version::Domain::Model
         Request
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
-            ->WithUserId(Self->UserId)
-            ->WithVersionName(Self->VersionName);
+            ->WithVersionName(Self->VersionName)
+            ->WithUserId(Self->UserId);
         const auto Future = Self->Client->AcceptByUserId(
             Request
         );

@@ -22,19 +22,22 @@
 
 #include "Core/Domain/Gs2Core.h"
 #include "Auth/Gs2Auth.h"
+#include "Guild/Gs2Guild.h"
 #include "Guild/Domain/Iterator/DescribeNamespacesIterator.h"
 #include "Guild/Domain/Iterator/DescribeGuildModelMastersIterator.h"
 #include "Guild/Domain/Iterator/DescribeGuildModelsIterator.h"
 #include "Guild/Domain/Iterator/SearchGuildsIterator.h"
+#include "Guild/Domain/Iterator/SearchGuildsByUserIdIterator.h"
 #include "Guild/Domain/Iterator/SearchGuildsIterator.h"
-#include "Guild/Domain/Iterator/SearchGuildsIterator.h"
-#include "Guild/Domain/Iterator/SearchGuildsIterator.h"
+#include "Guild/Domain/Iterator/SearchGuildsByUserIdIterator.h"
 #include "Guild/Domain/Iterator/DescribeJoinedGuildsIterator.h"
-#include "Guild/Domain/Iterator/DescribeJoinedGuildsIterator.h"
+#include "Guild/Domain/Iterator/DescribeJoinedGuildsByUserIdIterator.h"
 #include "Guild/Domain/Iterator/DescribeReceiveRequestsIterator.h"
-#include "Guild/Domain/Iterator/DescribeReceiveRequestsIterator.h"
+#include "Guild/Domain/Iterator/DescribeReceiveRequestsByGuildNameIterator.h"
 #include "Guild/Domain/Iterator/DescribeSendRequestsIterator.h"
-#include "Guild/Domain/Iterator/DescribeSendRequestsIterator.h"
+#include "Guild/Domain/Iterator/DescribeSendRequestsByUserIdIterator.h"
+#include "Guild/Domain/Iterator/DescribeIgnoreUsersIterator.h"
+#include "Guild/Domain/Iterator/DescribeIgnoreUsersByGuildNameIterator.h"
 
 namespace Gs2::Core::Domain
 {
@@ -54,7 +57,7 @@ namespace Gs2::Guild::Domain::Model
     class FGuildModelMasterDomain;
     class FGuildModelDomain;
     class FUserDomain;
-    class FUserAccessTokenDomain;
+    class FGuildDomain;
     class FGuildAccessTokenDomain;
     class FJoinedGuildDomain;
     class FJoinedGuildAccessTokenDomain;
@@ -63,6 +66,8 @@ namespace Gs2::Guild::Domain::Model
     class FReceiveMemberRequestAccessTokenDomain;
     class FSendMemberRequestDomain;
     class FSendMemberRequestAccessTokenDomain;
+    class FIgnoreUserDomain;
+    class FIgnoreUserAccessTokenDomain;
 
     class GS2GUILD_API FGuildAccessTokenDomain:
         public TSharedFromThis<FGuildAccessTokenDomain>
@@ -74,11 +79,8 @@ namespace Gs2::Guild::Domain::Model
         public:
         TOptional<FString> NamespaceName;
         TOptional<FString> GuildModelName;
-        const Gs2::Auth::Model::FAccessTokenPtr AccessToken;
-        TOptional<FString> GuildName() const
-        {
-            return AccessToken->GetUserId();
-        }
+        Gs2::Auth::Model::FAccessTokenPtr AccessToken;
+        TOptional<FString> GuildName() const { return AccessToken->GetUserId(); }
     private:
 
         FString ParentKey;
@@ -90,7 +92,7 @@ namespace Gs2::Guild::Domain::Model
             const Guild::Domain::FGs2GuildDomainPtr& Service,
             const TOptional<FString> NamespaceName,
             const TOptional<FString> GuildModelName,
-            const Gs2::Auth::Model::FAccessTokenPtr AccessToken
+            const Gs2::Auth::Model::FAccessTokenPtr& AccessToken
             // ReSharper disable once CppMemberInitializersOrder
         );
 
@@ -124,28 +126,6 @@ namespace Gs2::Guild::Domain::Model
             Request::FGetGuildRequestPtr Request
         );
 
-        class GS2GUILD_API FUpdateByNameTask final :
-            public Gs2::Core::Util::TGs2Future<Gs2::Guild::Domain::Model::FGuildAccessTokenDomain>,
-            public TSharedFromThis<FUpdateByNameTask>
-        {
-            const TSharedPtr<FGuildAccessTokenDomain> Self;
-            const Request::FUpdateGuildByGuildNameRequestPtr Request;
-        public:
-            explicit FUpdateByNameTask(
-                const TSharedPtr<FGuildAccessTokenDomain>& Self,
-                const Request::FUpdateGuildByGuildNameRequestPtr Request
-            );
-
-            FUpdateByNameTask(
-                const FUpdateByNameTask& From
-            );
-
-            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-                TSharedPtr<TSharedPtr<Gs2::Guild::Domain::Model::FGuildAccessTokenDomain>> Result
-            ) override;
-        };
-        friend FUpdateByNameTask;
-        
         class GS2GUILD_API FUpdateTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Guild::Domain::Model::FGuildAccessTokenDomain>,
             public TSharedFromThis<FUpdateTask>
@@ -250,56 +230,56 @@ namespace Gs2::Guild::Domain::Model
             Request::FDeleteGuildRequestPtr Request
         );
 
-        class GS2GUILD_API FAcceptTask final :
-            public Gs2::Core::Util::TGs2Future<Gs2::Guild::Domain::Model::FReceiveMemberRequestDomain>,
-            public TSharedFromThis<FAcceptTask>
+        class GS2GUILD_API FVerifyIncludeMemberTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Guild::Domain::Model::FGuildAccessTokenDomain>,
+            public TSharedFromThis<FVerifyIncludeMemberTask>
         {
             const TSharedPtr<FGuildAccessTokenDomain> Self;
-            const Request::FAcceptRequestRequestPtr Request;
+            const Request::FVerifyIncludeMemberRequestPtr Request;
         public:
-            explicit FAcceptTask(
+            explicit FVerifyIncludeMemberTask(
                 const TSharedPtr<FGuildAccessTokenDomain>& Self,
-                const Request::FAcceptRequestRequestPtr Request
+                const Request::FVerifyIncludeMemberRequestPtr Request
             );
 
-            FAcceptTask(
-                const FAcceptTask& From
+            FVerifyIncludeMemberTask(
+                const FVerifyIncludeMemberTask& From
             );
 
             virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-                TSharedPtr<TSharedPtr<Gs2::Guild::Domain::Model::FReceiveMemberRequestDomain>> Result
+                TSharedPtr<TSharedPtr<Gs2::Guild::Domain::Model::FGuildAccessTokenDomain>> Result
             ) override;
         };
-        friend FAcceptTask;
+        friend FVerifyIncludeMemberTask;
 
-        TSharedPtr<FAsyncTask<FAcceptTask>> Accept(
-            Request::FAcceptRequestRequestPtr Request
+        TSharedPtr<FAsyncTask<FVerifyIncludeMemberTask>> VerifyIncludeMember(
+            Request::FVerifyIncludeMemberRequestPtr Request
         );
 
-        class GS2GUILD_API FRejectTask final :
-            public Gs2::Core::Util::TGs2Future<Gs2::Guild::Domain::Model::FReceiveMemberRequestDomain>,
-            public TSharedFromThis<FRejectTask>
+        class GS2GUILD_API FAddIgnoreUserTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Guild::Domain::Model::FIgnoreUserAccessTokenDomain>,
+            public TSharedFromThis<FAddIgnoreUserTask>
         {
             const TSharedPtr<FGuildAccessTokenDomain> Self;
-            const Request::FRejectRequestRequestPtr Request;
+            const Request::FAddIgnoreUserRequestPtr Request;
         public:
-            explicit FRejectTask(
+            explicit FAddIgnoreUserTask(
                 const TSharedPtr<FGuildAccessTokenDomain>& Self,
-                const Request::FRejectRequestRequestPtr Request
+                const Request::FAddIgnoreUserRequestPtr Request
             );
 
-            FRejectTask(
-                const FRejectTask& From
+            FAddIgnoreUserTask(
+                const FAddIgnoreUserTask& From
             );
 
             virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-                TSharedPtr<TSharedPtr<Gs2::Guild::Domain::Model::FReceiveMemberRequestDomain>> Result
+                TSharedPtr<TSharedPtr<Gs2::Guild::Domain::Model::FIgnoreUserAccessTokenDomain>> Result
             ) override;
         };
-        friend FRejectTask;
+        friend FAddIgnoreUserTask;
 
-        TSharedPtr<FAsyncTask<FRejectTask>> Reject(
-            Request::FRejectRequestRequestPtr Request
+        TSharedPtr<FAsyncTask<FAddIgnoreUserTask>> AddIgnoreUser(
+            Request::FAddIgnoreUserRequestPtr Request
         );
 
         Gs2::Guild::Domain::Iterator::FDescribeReceiveRequestsIteratorPtr ReceiveRequests(
@@ -315,6 +295,20 @@ namespace Gs2::Guild::Domain::Model
 
         TSharedPtr<Gs2::Guild::Domain::Model::FReceiveMemberRequestAccessTokenDomain> ReceiveMemberRequest(
             const FString FromUserId
+        );
+
+        Gs2::Guild::Domain::Iterator::FDescribeIgnoreUsersIteratorPtr IgnoreUsers(
+        ) const;
+
+        Gs2::Core::Domain::CallbackID SubscribeIgnoreUsers(
+            TFunction<void()> Callback
+        );
+
+        void UnsubscribeIgnoreUsers(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
+
+        TSharedPtr<Gs2::Guild::Domain::Model::FIgnoreUserAccessTokenDomain> IgnoreUser(
         );
 
         static FString CreateCacheParentKey(

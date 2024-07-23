@@ -125,8 +125,8 @@ namespace Gs2::Inventory::Domain::Model
         Request
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
-            ->WithAccessToken(Self->AccessToken->GetToken())
             ->WithInventoryName(Self->InventoryName)
+            ->WithAccessToken(Self->AccessToken->GetToken())
             ->WithItemName(Self->ItemName);
         const auto Future = Self->Client->GetBigItem(
             Request
@@ -210,8 +210,8 @@ namespace Gs2::Inventory::Domain::Model
         Request
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
-            ->WithAccessToken(Self->AccessToken->GetToken())
             ->WithInventoryName(Self->InventoryName)
+            ->WithAccessToken(Self->AccessToken->GetToken())
             ->WithItemName(Self->ItemName);
         const auto Future = Self->Client->ConsumeBigItem(
             Request

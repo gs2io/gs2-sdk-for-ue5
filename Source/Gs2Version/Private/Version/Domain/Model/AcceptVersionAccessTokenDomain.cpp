@@ -100,8 +100,8 @@ namespace Gs2::Version::Domain::Model
         Request
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
-            ->WithAccessToken(Self->AccessToken->GetToken())
-            ->WithVersionName(Self->VersionName);
+            ->WithVersionName(Self->VersionName)
+            ->WithAccessToken(Self->AccessToken->GetToken());
         const auto Future = Self->Client->Accept(
             Request
         );

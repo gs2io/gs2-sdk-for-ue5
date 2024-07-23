@@ -111,9 +111,9 @@ namespace Gs2::Showcase::Domain::Model
         Request
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
-            ->WithUserId(Self->UserId)
             ->WithShowcaseName(Self->ShowcaseName)
-            ->WithDisplayItemName(Self->DisplayItemName);
+            ->WithDisplayItemName(Self->DisplayItemName)
+            ->WithUserId(Self->UserId);
         const auto Future = Self->Client->GetRandomDisplayItemByUserId(
             Request
         );
@@ -178,9 +178,9 @@ namespace Gs2::Showcase::Domain::Model
         Request
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
-            ->WithUserId(Self->UserId)
             ->WithShowcaseName(Self->ShowcaseName)
-            ->WithDisplayItemName(Self->DisplayItemName);
+            ->WithDisplayItemName(Self->DisplayItemName)
+            ->WithUserId(Self->UserId);
         const auto Future = Self->Client->RandomShowcaseBuyByUserId(
             Request
         );

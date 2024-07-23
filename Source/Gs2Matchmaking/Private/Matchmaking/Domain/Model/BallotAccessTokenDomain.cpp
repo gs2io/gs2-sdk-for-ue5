@@ -120,9 +120,9 @@ namespace Gs2::Matchmaking::Domain::Model
         Request
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
-            ->WithAccessToken(Self->AccessToken->GetToken())
             ->WithRatingName(Self->RatingName)
             ->WithGatheringName(Self->GatheringName)
+            ->WithAccessToken(Self->AccessToken->GetToken())
             ->WithNumberOfPlayer(Self->NumberOfPlayer)
             ->WithKeyId(Self->KeyId);
         const auto Future = Self->Client->GetBallot(

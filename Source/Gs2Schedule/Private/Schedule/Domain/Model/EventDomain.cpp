@@ -98,8 +98,8 @@ namespace Gs2::Schedule::Domain::Model
         Request
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
-            ->WithUserId(Self->UserId)
-            ->WithEventName(Self->EventName);
+            ->WithEventName(Self->EventName)
+            ->WithUserId(Self->UserId);
         const auto Future = Self->Client->GetEventByUserId(
             Request
         );

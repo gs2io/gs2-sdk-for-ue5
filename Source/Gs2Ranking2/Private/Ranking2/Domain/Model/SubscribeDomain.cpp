@@ -123,8 +123,8 @@ namespace Gs2::Ranking2::Domain::Model
         Request
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
-            ->WithUserId(Self->UserId)
-            ->WithRankingName(Self->RankingName);
+            ->WithRankingName(Self->RankingName)
+            ->WithUserId(Self->UserId);
         const auto Future = Self->Client->AddSubscribeByUserId(
             Request
         );

@@ -101,8 +101,8 @@ namespace Gs2::Stamina::Domain::Model
         Request
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
-            ->WithAccessToken(Self->AccessToken->GetToken())
-            ->WithStaminaName(Self->StaminaName);
+            ->WithStaminaName(Self->StaminaName)
+            ->WithAccessToken(Self->AccessToken->GetToken());
         const auto Future = Self->Client->GetStamina(
             Request
         );
@@ -183,8 +183,8 @@ namespace Gs2::Stamina::Domain::Model
         Request
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
-            ->WithAccessToken(Self->AccessToken->GetToken())
-            ->WithStaminaName(Self->StaminaName);
+            ->WithStaminaName(Self->StaminaName)
+            ->WithAccessToken(Self->AccessToken->GetToken());
         const auto Future = Self->Client->ConsumeStamina(
             Request
         );
@@ -267,8 +267,8 @@ namespace Gs2::Stamina::Domain::Model
         Request
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
-            ->WithAccessToken(Self->AccessToken->GetToken())
-            ->WithStaminaName(Self->StaminaName);
+            ->WithStaminaName(Self->StaminaName)
+            ->WithAccessToken(Self->AccessToken->GetToken());
         const auto Future = Self->Client->SetMaxValueByStatus(
             Request
         );
@@ -351,8 +351,8 @@ namespace Gs2::Stamina::Domain::Model
         Request
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
-            ->WithAccessToken(Self->AccessToken->GetToken())
-            ->WithStaminaName(Self->StaminaName);
+            ->WithStaminaName(Self->StaminaName)
+            ->WithAccessToken(Self->AccessToken->GetToken());
         const auto Future = Self->Client->SetRecoverIntervalByStatus(
             Request
         );
@@ -435,8 +435,8 @@ namespace Gs2::Stamina::Domain::Model
         Request
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
-            ->WithAccessToken(Self->AccessToken->GetToken())
-            ->WithStaminaName(Self->StaminaName);
+            ->WithStaminaName(Self->StaminaName)
+            ->WithAccessToken(Self->AccessToken->GetToken());
         const auto Future = Self->Client->SetRecoverValueByStatus(
             Request
         );

@@ -99,8 +99,8 @@ namespace Gs2::LoginReward::Domain::Model
         Request
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
-            ->WithUserId(Self->UserId)
-            ->WithBonusModelName(Self->BonusModelName);
+            ->WithBonusModelName(Self->BonusModelName)
+            ->WithUserId(Self->UserId);
         const auto Future = Self->Client->GetReceiveStatusByUserId(
             Request
         );
@@ -181,8 +181,8 @@ namespace Gs2::LoginReward::Domain::Model
         Request
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
-            ->WithUserId(Self->UserId)
-            ->WithBonusModelName(Self->BonusModelName);
+            ->WithBonusModelName(Self->BonusModelName)
+            ->WithUserId(Self->UserId);
         const auto Future = Self->Client->DeleteReceiveStatusByUserId(
             Request
         );
@@ -253,8 +253,8 @@ namespace Gs2::LoginReward::Domain::Model
         Request
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
-            ->WithUserId(Self->UserId)
-            ->WithBonusModelName(Self->BonusModelName);
+            ->WithBonusModelName(Self->BonusModelName)
+            ->WithUserId(Self->UserId);
         const auto Future = Self->Client->MarkReceivedByUserId(
             Request
         );
@@ -337,8 +337,8 @@ namespace Gs2::LoginReward::Domain::Model
         Request
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
-            ->WithUserId(Self->UserId)
-            ->WithBonusModelName(Self->BonusModelName);
+            ->WithBonusModelName(Self->BonusModelName)
+            ->WithUserId(Self->UserId);
         const auto Future = Self->Client->UnmarkReceivedByUserId(
             Request
         );

@@ -100,8 +100,8 @@ namespace Gs2::LoginReward::Domain::Model
         Request
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
-            ->WithAccessToken(Self->AccessToken->GetToken())
-            ->WithBonusModelName(Self->BonusModelName);
+            ->WithBonusModelName(Self->BonusModelName)
+            ->WithAccessToken(Self->AccessToken->GetToken());
         const auto Future = Self->Client->GetReceiveStatus(
             Request
         );
@@ -182,8 +182,8 @@ namespace Gs2::LoginReward::Domain::Model
         Request
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
-            ->WithAccessToken(Self->AccessToken->GetToken())
-            ->WithBonusModelName(Self->BonusModelName);
+            ->WithBonusModelName(Self->BonusModelName)
+            ->WithAccessToken(Self->AccessToken->GetToken());
         const auto Future = Self->Client->MarkReceived(
             Request
         );

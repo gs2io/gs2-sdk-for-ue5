@@ -113,9 +113,9 @@ namespace Gs2::Showcase::Domain::Model
         Request
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
-            ->WithAccessToken(Self->AccessToken->GetToken())
             ->WithShowcaseName(Self->ShowcaseName)
-            ->WithDisplayItemName(Self->DisplayItemName);
+            ->WithDisplayItemName(Self->DisplayItemName)
+            ->WithAccessToken(Self->AccessToken->GetToken());
         const auto Future = Self->Client->GetRandomDisplayItem(
             Request
         );
@@ -181,9 +181,9 @@ namespace Gs2::Showcase::Domain::Model
         Request
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
-            ->WithAccessToken(Self->AccessToken->GetToken())
             ->WithShowcaseName(Self->ShowcaseName)
-            ->WithDisplayItemName(Self->DisplayItemName);
+            ->WithDisplayItemName(Self->DisplayItemName)
+            ->WithAccessToken(Self->AccessToken->GetToken());
 
         if (SpeculativeExecute) {
             const auto SpeculativeExecuteFuture = Transaction::SpeculativeExecutor::FRandomShowcaseBuyByUserIdSpeculativeExecutor::Execute(

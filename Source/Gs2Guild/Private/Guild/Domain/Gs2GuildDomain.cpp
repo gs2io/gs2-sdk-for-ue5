@@ -35,6 +35,7 @@
 #include "Guild/Domain/Model/CurrentGuildMaster.h"
 #include "Guild/Domain/Model/ReceiveMemberRequest.h"
 #include "Guild/Domain/Model/SendMemberRequest.h"
+#include "Guild/Domain/Model/IgnoreUser.h"
 #include "Core/Domain/Gs2.h"
 
 namespace Gs2::Guild::Domain

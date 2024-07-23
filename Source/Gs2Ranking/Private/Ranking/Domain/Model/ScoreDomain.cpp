@@ -111,8 +111,8 @@ namespace Gs2::Ranking::Domain::Model
         Request
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
-            ->WithUserId(Self->UserId)
             ->WithCategoryName(Self->CategoryName)
+            ->WithUserId(Self->UserId)
             ->WithScorerUserId(Self->ScorerUserId)
             ->WithUniqueId(Self->UniqueId);
         const auto Future = Self->Client->GetScoreByUserId(

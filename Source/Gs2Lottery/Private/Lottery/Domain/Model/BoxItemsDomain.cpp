@@ -104,8 +104,8 @@ namespace Gs2::Lottery::Domain::Model
         Request
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
-            ->WithUserId(Self->UserId)
-            ->WithPrizeTableName(Self->PrizeTableName);
+            ->WithPrizeTableName(Self->PrizeTableName)
+            ->WithUserId(Self->UserId);
         const auto Future = Self->Client->GetBoxByUserId(
             Request
         );
@@ -169,8 +169,8 @@ namespace Gs2::Lottery::Domain::Model
         Request
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
-            ->WithUserId(Self->UserId)
-            ->WithPrizeTableName(Self->PrizeTableName);
+            ->WithPrizeTableName(Self->PrizeTableName)
+            ->WithUserId(Self->UserId);
         const auto Future = Self->Client->ResetBoxByUserId(
             Request
         );

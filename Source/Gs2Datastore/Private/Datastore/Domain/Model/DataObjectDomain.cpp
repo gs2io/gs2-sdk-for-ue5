@@ -96,8 +96,8 @@ namespace Gs2::Datastore::Domain::Model
         Request
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
-            ->WithUserId(Self->UserId)
-            ->WithDataObjectName(Self->DataObjectName);
+            ->WithDataObjectName(Self->DataObjectName)
+            ->WithUserId(Self->UserId);
         const auto Future = Self->Client->UpdateDataObjectByUserId(
             Request
         );
@@ -163,8 +163,8 @@ namespace Gs2::Datastore::Domain::Model
         Request
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
-            ->WithUserId(Self->UserId)
-            ->WithDataObjectName(Self->DataObjectName);
+            ->WithDataObjectName(Self->DataObjectName)
+            ->WithUserId(Self->UserId);
         const auto Future = Self->Client->PrepareReUploadByUserId(
             Request
         );
@@ -234,8 +234,8 @@ namespace Gs2::Datastore::Domain::Model
         Request
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
-            ->WithUserId(Self->UserId)
-            ->WithDataObjectName(Self->DataObjectName);
+            ->WithDataObjectName(Self->DataObjectName)
+            ->WithUserId(Self->UserId);
         const auto Future = Self->Client->DoneUploadByUserId(
             Request
         );

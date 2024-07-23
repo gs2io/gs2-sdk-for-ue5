@@ -31,7 +31,6 @@ namespace Gs2::Ranking::Request
         TOptional<int64> ScoreValue;
         TOptional<FString> MetadataValue;
         TOptional<FString> TimeOffsetTokenValue;
-        TOptional<FString> DuplicationAvoiderValue;
         
     public:
         
@@ -48,7 +47,6 @@ namespace Gs2::Ranking::Request
         TSharedPtr<FPutScoreByUserIdRequest> WithScore(const TOptional<int64> Score);
         TSharedPtr<FPutScoreByUserIdRequest> WithMetadata(const TOptional<FString> Metadata);
         TSharedPtr<FPutScoreByUserIdRequest> WithTimeOffsetToken(const TOptional<FString> TimeOffsetToken);
-        TSharedPtr<FPutScoreByUserIdRequest> WithDuplicationAvoider(const TOptional<FString> DuplicationAvoider);
 
         TOptional<FString> GetContextStack() const;
         TOptional<FString> GetNamespaceName() const;
@@ -58,7 +56,6 @@ namespace Gs2::Ranking::Request
         FString GetScoreString() const;
         TOptional<FString> GetMetadata() const;
         TOptional<FString> GetTimeOffsetToken() const;
-        TOptional<FString> GetDuplicationAvoider() const;
 
         static TSharedPtr<FPutScoreByUserIdRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;

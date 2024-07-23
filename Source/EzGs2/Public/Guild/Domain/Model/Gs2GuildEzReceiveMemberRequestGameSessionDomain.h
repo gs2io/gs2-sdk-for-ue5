@@ -12,8 +12,6 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
- *
- * deny overwrite
  */
 
 #pragma once
@@ -25,6 +23,7 @@
 #include "Guild/Model/Gs2GuildEzReceiveMemberRequest.h"
 #include "Guild/Model/Gs2GuildEzSendMemberRequest.h"
 #include "Guild/Model/Gs2GuildEzJoinedGuild.h"
+#include "Guild/Model/Gs2GuildEzIgnoreUser.h"
 #include "Guild/Model/Gs2GuildEzMember.h"
 #include "Guild/Model/Gs2GuildEzRoleModel.h"
 #include "Gs2GuildEzReceiveMemberRequestGameSessionDomain.h"
@@ -44,7 +43,7 @@ namespace Gs2::UE5::Guild::Domain::Model
 
         public:
         TOptional<FString> NamespaceName() const;
-        TOptional<FString> UserId() const;
+        TOptional<FString> GuildModelName() const;
         TOptional<FString> GuildName() const;
         TOptional<FString> FromUserId() const;
 
@@ -54,14 +53,14 @@ namespace Gs2::UE5::Guild::Domain::Model
             Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
 
-        class EZGS2_API FAcceptTask :
+        class EZGS2_API FAcceptRequestTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::Guild::Domain::Model::FEzReceiveMemberRequestGameSessionDomain>,
-            public TSharedFromThis<FAcceptTask>
+            public TSharedFromThis<FAcceptRequestTask>
         {
             TSharedPtr<FEzReceiveMemberRequestGameSessionDomain> Self;
 
         public:
-            explicit FAcceptTask(
+            explicit FAcceptRequestTask(
                 TSharedPtr<FEzReceiveMemberRequestGameSessionDomain> Self
             );
 
@@ -69,9 +68,31 @@ namespace Gs2::UE5::Guild::Domain::Model
                 TSharedPtr<TSharedPtr<Gs2::UE5::Guild::Domain::Model::FEzReceiveMemberRequestGameSessionDomain>> Result
             ) override;
         };
+        friend FAcceptRequestTask;
 
-        TSharedPtr<FAsyncTask<FAcceptTask>> Accept();
-        
+        TSharedPtr<FAsyncTask<FAcceptRequestTask>> AcceptRequest(
+        );
+
+        class EZGS2_API FRejectRequestTask :
+            public Gs2::Core::Util::TGs2Future<Gs2::UE5::Guild::Domain::Model::FEzReceiveMemberRequestGameSessionDomain>,
+            public TSharedFromThis<FRejectRequestTask>
+        {
+            TSharedPtr<FEzReceiveMemberRequestGameSessionDomain> Self;
+
+        public:
+            explicit FRejectRequestTask(
+                TSharedPtr<FEzReceiveMemberRequestGameSessionDomain> Self
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::UE5::Guild::Domain::Model::FEzReceiveMemberRequestGameSessionDomain>> Result
+            ) override;
+        };
+        friend FRejectRequestTask;
+
+        TSharedPtr<FAsyncTask<FRejectRequestTask>> RejectRequest(
+        );
+
         class EZGS2_API FModelTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::Guild::Model::FEzReceiveMemberRequest>,
             public TSharedFromThis<FModelTask>

@@ -128,8 +128,8 @@ namespace Gs2::Ranking2::Domain::Model
         Request
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
-            ->WithAccessToken(Self->AccessToken->GetToken())
             ->WithRankingName(Self->RankingName)
+            ->WithAccessToken(Self->AccessToken->GetToken())
             ->WithSeason(Self->Season);
         const auto Future = Self->Client->CreateGlobalRankingReceivedReward(
             Request
@@ -306,8 +306,8 @@ namespace Gs2::Ranking2::Domain::Model
         Request
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
-            ->WithAccessToken(Self->AccessToken->GetToken())
             ->WithRankingName(Self->RankingName)
+            ->WithAccessToken(Self->AccessToken->GetToken())
             ->WithSeason(Self->Season);
         const auto Future = Self->Client->GetGlobalRankingReceivedReward(
             Request

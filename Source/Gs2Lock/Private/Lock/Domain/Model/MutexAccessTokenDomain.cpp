@@ -95,8 +95,8 @@ namespace Gs2::Lock::Domain::Model
         Request
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
-            ->WithAccessToken(Self->AccessToken->GetToken())
-            ->WithPropertyId(Self->PropertyId);
+            ->WithPropertyId(Self->PropertyId)
+            ->WithAccessToken(Self->AccessToken->GetToken());
         const auto Future = Self->Client->Lock(
             Request
         );
@@ -162,8 +162,8 @@ namespace Gs2::Lock::Domain::Model
         Request
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
-            ->WithAccessToken(Self->AccessToken->GetToken())
-            ->WithPropertyId(Self->PropertyId);
+            ->WithPropertyId(Self->PropertyId)
+            ->WithAccessToken(Self->AccessToken->GetToken());
         const auto Future = Self->Client->Unlock(
             Request
         );

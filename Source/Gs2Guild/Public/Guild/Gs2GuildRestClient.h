@@ -166,6 +166,22 @@
 #include "Task/Rest/DeleteRequestTask.h"
 #include "Request/DeleteRequestByUserIdRequest.h"
 #include "Task/Rest/DeleteRequestByUserIdTask.h"
+#include "Request/DescribeIgnoreUsersRequest.h"
+#include "Task/Rest/DescribeIgnoreUsersTask.h"
+#include "Request/DescribeIgnoreUsersByGuildNameRequest.h"
+#include "Task/Rest/DescribeIgnoreUsersByGuildNameTask.h"
+#include "Request/GetIgnoreUserRequest.h"
+#include "Task/Rest/GetIgnoreUserTask.h"
+#include "Request/GetIgnoreUserByGuildNameRequest.h"
+#include "Task/Rest/GetIgnoreUserByGuildNameTask.h"
+#include "Request/AddIgnoreUserRequest.h"
+#include "Task/Rest/AddIgnoreUserTask.h"
+#include "Request/AddIgnoreUserByGuildNameRequest.h"
+#include "Task/Rest/AddIgnoreUserByGuildNameTask.h"
+#include "Request/DeleteIgnoreUserRequest.h"
+#include "Task/Rest/DeleteIgnoreUserTask.h"
+#include "Request/DeleteIgnoreUserByGuildNameRequest.h"
+#include "Task/Rest/DeleteIgnoreUserByGuildNameTask.h"
 
 namespace Gs2::Guild
 {
@@ -472,6 +488,38 @@ namespace Gs2::Guild
 
         TSharedPtr<FAsyncTask<Task::Rest::FDeleteRequestByUserIdTask>> DeleteRequestByUserId(
             const Request::FDeleteRequestByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FDescribeIgnoreUsersTask>> DescribeIgnoreUsers(
+            const Request::FDescribeIgnoreUsersRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FDescribeIgnoreUsersByGuildNameTask>> DescribeIgnoreUsersByGuildName(
+            const Request::FDescribeIgnoreUsersByGuildNameRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FGetIgnoreUserTask>> GetIgnoreUser(
+            const Request::FGetIgnoreUserRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FGetIgnoreUserByGuildNameTask>> GetIgnoreUserByGuildName(
+            const Request::FGetIgnoreUserByGuildNameRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FAddIgnoreUserTask>> AddIgnoreUser(
+            const Request::FAddIgnoreUserRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FAddIgnoreUserByGuildNameTask>> AddIgnoreUserByGuildName(
+            const Request::FAddIgnoreUserByGuildNameRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FDeleteIgnoreUserTask>> DeleteIgnoreUser(
+            const Request::FDeleteIgnoreUserRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FDeleteIgnoreUserByGuildNameTask>> DeleteIgnoreUserByGuildName(
+            const Request::FDeleteIgnoreUserByGuildNameRequestPtr Request
         ) const;
     };
     typedef TSharedPtr<FGs2GuildRestClient, ESPMode::ThreadSafe> FGs2GuildRestClientPtr;

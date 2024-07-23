@@ -56,14 +56,6 @@ namespace Gs2::Ranking2::Request
         return SharedThis(this);
     }
 
-    TSharedPtr<FCleanUserDataByUserIdRequest> FCleanUserDataByUserIdRequest::WithDuplicationAvoider(
-        const TOptional<FString> DuplicationAvoider
-    )
-    {
-        this->DuplicationAvoiderValue = DuplicationAvoider;
-        return SharedThis(this);
-    }
-
     TOptional<FString> FCleanUserDataByUserIdRequest::GetContextStack() const
     {
         return ContextStackValue;
@@ -77,11 +69,6 @@ namespace Gs2::Ranking2::Request
     TOptional<FString> FCleanUserDataByUserIdRequest::GetTimeOffsetToken() const
     {
         return TimeOffsetTokenValue;
-    }
-
-    TOptional<FString> FCleanUserDataByUserIdRequest::GetDuplicationAvoider() const
-    {
-        return DuplicationAvoiderValue;
     }
 
     TSharedPtr<FCleanUserDataByUserIdRequest> FCleanUserDataByUserIdRequest::FromJson(const TSharedPtr<FJsonObject> Data)
@@ -108,8 +95,7 @@ namespace Gs2::Ranking2::Request
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
-              }() : TOptional<FString>())
-          ->WithDuplicationAvoider(Data->HasField(ANSI_TO_TCHAR("duplicationAvoider")) ? TOptional<FString>(Data->GetStringField(ANSI_TO_TCHAR("duplicationAvoider"))) : TOptional<FString>());
+              }() : TOptional<FString>());
     }
 
     TSharedPtr<FJsonObject> FCleanUserDataByUserIdRequest::ToJson() const
@@ -126,10 +112,6 @@ namespace Gs2::Ranking2::Request
         if (TimeOffsetTokenValue.IsSet())
         {
             JsonRootObject->SetStringField("timeOffsetToken", TimeOffsetTokenValue.GetValue());
-        }
-        if (DuplicationAvoiderValue.IsSet())
-        {
-            JsonRootObject->SetStringField("duplicationAvoider", DuplicationAvoiderValue.GetValue());
         }
         return JsonRootObject;
     }

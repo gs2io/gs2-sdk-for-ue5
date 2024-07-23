@@ -191,11 +191,11 @@ namespace Gs2::Matchmaking::Domain::Model
         Request
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
-            ->WithUserId(Self->UserId)
             ->WithSeasonName(Self->SeasonName)
             ->WithSeason(Self->Season)
             ->WithTier(Self->Tier)
-            ->WithSeasonGatheringName(Self->SeasonGatheringName);
+            ->WithSeasonGatheringName(Self->SeasonGatheringName)
+            ->WithUserId(Self->UserId);
         const auto Future = Self->Client->VerifyIncludeParticipantByUserId(
             Request
         );

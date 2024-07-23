@@ -102,9 +102,9 @@ namespace Gs2::Chat::Domain::Model
         Request
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
-            ->WithAccessToken(Self->AccessToken->GetToken())
             ->WithRoomName(Self->RoomName)
-            ->WithPassword(Self->Password);
+            ->WithPassword(Self->Password)
+            ->WithAccessToken(Self->AccessToken->GetToken());
         const auto Future = Self->Client->UpdateRoom(
             Request
         );
@@ -170,8 +170,8 @@ namespace Gs2::Chat::Domain::Model
         Request
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
-            ->WithAccessToken(Self->AccessToken->GetToken())
-            ->WithRoomName(Self->RoomName);
+            ->WithRoomName(Self->RoomName)
+            ->WithAccessToken(Self->AccessToken->GetToken());
         const auto Future = Self->Client->DeleteRoom(
             Request
         );
@@ -231,8 +231,8 @@ namespace Gs2::Chat::Domain::Model
         Request
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
-            ->WithAccessToken(Self->AccessToken->GetToken())
             ->WithRoomName(Self->RoomName)
+            ->WithAccessToken(Self->AccessToken->GetToken())
             ->WithPassword(Self->Password);
         const auto Future = Self->Client->Post(
             Request

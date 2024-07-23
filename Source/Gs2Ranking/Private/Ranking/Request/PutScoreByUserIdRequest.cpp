@@ -96,14 +96,6 @@ namespace Gs2::Ranking::Request
         return SharedThis(this);
     }
 
-    TSharedPtr<FPutScoreByUserIdRequest> FPutScoreByUserIdRequest::WithDuplicationAvoider(
-        const TOptional<FString> DuplicationAvoider
-    )
-    {
-        this->DuplicationAvoiderValue = DuplicationAvoider;
-        return SharedThis(this);
-    }
-
     TOptional<FString> FPutScoreByUserIdRequest::GetContextStack() const
     {
         return ContextStackValue;
@@ -146,11 +138,6 @@ namespace Gs2::Ranking::Request
     TOptional<FString> FPutScoreByUserIdRequest::GetTimeOffsetToken() const
     {
         return TimeOffsetTokenValue;
-    }
-
-    TOptional<FString> FPutScoreByUserIdRequest::GetDuplicationAvoider() const
-    {
-        return DuplicationAvoiderValue;
     }
 
     TSharedPtr<FPutScoreByUserIdRequest> FPutScoreByUserIdRequest::FromJson(const TSharedPtr<FJsonObject> Data)
@@ -213,8 +200,7 @@ namespace Gs2::Ranking::Request
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
-              }() : TOptional<FString>())
-          ->WithDuplicationAvoider(Data->HasField(ANSI_TO_TCHAR("duplicationAvoider")) ? TOptional<FString>(Data->GetStringField(ANSI_TO_TCHAR("duplicationAvoider"))) : TOptional<FString>());
+              }() : TOptional<FString>());
     }
 
     TSharedPtr<FJsonObject> FPutScoreByUserIdRequest::ToJson() const
@@ -247,10 +233,6 @@ namespace Gs2::Ranking::Request
         if (TimeOffsetTokenValue.IsSet())
         {
             JsonRootObject->SetStringField("timeOffsetToken", TimeOffsetTokenValue.GetValue());
-        }
-        if (DuplicationAvoiderValue.IsSet())
-        {
-            JsonRootObject->SetStringField("duplicationAvoider", DuplicationAvoiderValue.GetValue());
         }
         return JsonRootObject;
     }

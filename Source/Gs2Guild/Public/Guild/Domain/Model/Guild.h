@@ -35,6 +35,8 @@
 #include "Guild/Domain/Iterator/DescribeReceiveRequestsByGuildNameIterator.h"
 #include "Guild/Domain/Iterator/DescribeSendRequestsIterator.h"
 #include "Guild/Domain/Iterator/DescribeSendRequestsByUserIdIterator.h"
+#include "Guild/Domain/Iterator/DescribeIgnoreUsersIterator.h"
+#include "Guild/Domain/Iterator/DescribeIgnoreUsersByGuildNameIterator.h"
 
 namespace Gs2::Core::Domain
 {
@@ -62,6 +64,7 @@ namespace Gs2::Guild::Domain::Model
     class FReceiveMemberRequestDomain;
     class FSendMemberRequestDomain;
     class FSendMemberRequestAccessTokenDomain;
+    class FIgnoreUserDomain;
 
     class GS2GUILD_API FGuildDomain:
         public TSharedFromThis<FGuildDomain>
@@ -275,6 +278,58 @@ namespace Gs2::Guild::Domain::Model
             Request::FDecreaseMaximumCurrentMaximumMemberCountByGuildNameRequestPtr Request
         );
 
+        class GS2GUILD_API FVerifyCurrentMaximumMemberCountTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Guild::Domain::Model::FGuildDomain>,
+            public TSharedFromThis<FVerifyCurrentMaximumMemberCountTask>
+        {
+            const TSharedPtr<FGuildDomain> Self;
+            const Request::FVerifyCurrentMaximumMemberCountByGuildNameRequestPtr Request;
+        public:
+            explicit FVerifyCurrentMaximumMemberCountTask(
+                const TSharedPtr<FGuildDomain>& Self,
+                const Request::FVerifyCurrentMaximumMemberCountByGuildNameRequestPtr Request
+            );
+
+            FVerifyCurrentMaximumMemberCountTask(
+                const FVerifyCurrentMaximumMemberCountTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Guild::Domain::Model::FGuildDomain>> Result
+            ) override;
+        };
+        friend FVerifyCurrentMaximumMemberCountTask;
+
+        TSharedPtr<FAsyncTask<FVerifyCurrentMaximumMemberCountTask>> VerifyCurrentMaximumMemberCount(
+            Request::FVerifyCurrentMaximumMemberCountByGuildNameRequestPtr Request
+        );
+
+        class GS2GUILD_API FVerifyIncludeMemberTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Guild::Domain::Model::FGuildDomain>,
+            public TSharedFromThis<FVerifyIncludeMemberTask>
+        {
+            const TSharedPtr<FGuildDomain> Self;
+            const Request::FVerifyIncludeMemberByUserIdRequestPtr Request;
+        public:
+            explicit FVerifyIncludeMemberTask(
+                const TSharedPtr<FGuildDomain>& Self,
+                const Request::FVerifyIncludeMemberByUserIdRequestPtr Request
+            );
+
+            FVerifyIncludeMemberTask(
+                const FVerifyIncludeMemberTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Guild::Domain::Model::FGuildDomain>> Result
+            ) override;
+        };
+        friend FVerifyIncludeMemberTask;
+
+        TSharedPtr<FAsyncTask<FVerifyIncludeMemberTask>> VerifyIncludeMember(
+            Request::FVerifyIncludeMemberByUserIdRequestPtr Request
+        );
+
         class GS2GUILD_API FSetMaximumCurrentMaximumMemberCountTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Guild::Domain::Model::FGuildDomain>,
             public TSharedFromThis<FSetMaximumCurrentMaximumMemberCountTask>
@@ -301,58 +356,6 @@ namespace Gs2::Guild::Domain::Model
             Request::FSetMaximumCurrentMaximumMemberCountByGuildNameRequestPtr Request
         );
 
-        class GS2GUILD_API FAcceptTask final :
-            public Gs2::Core::Util::TGs2Future<Gs2::Guild::Domain::Model::FReceiveMemberRequestDomain>,
-            public TSharedFromThis<FAcceptTask>
-        {
-            const TSharedPtr<FGuildDomain> Self;
-            const Request::FAcceptRequestByGuildNameRequestPtr Request;
-        public:
-            explicit FAcceptTask(
-                const TSharedPtr<FGuildDomain>& Self,
-                const Request::FAcceptRequestByGuildNameRequestPtr Request
-            );
-
-            FAcceptTask(
-                const FAcceptTask& From
-            );
-
-            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-                TSharedPtr<TSharedPtr<Gs2::Guild::Domain::Model::FReceiveMemberRequestDomain>> Result
-            ) override;
-        };
-        friend FAcceptTask;
-
-        TSharedPtr<FAsyncTask<FAcceptTask>> Accept(
-            Request::FAcceptRequestByGuildNameRequestPtr Request
-        );
-
-        class GS2GUILD_API FRejectTask final :
-            public Gs2::Core::Util::TGs2Future<Gs2::Guild::Domain::Model::FReceiveMemberRequestDomain>,
-            public TSharedFromThis<FRejectTask>
-        {
-            const TSharedPtr<FGuildDomain> Self;
-            const Request::FRejectRequestByGuildNameRequestPtr Request;
-        public:
-            explicit FRejectTask(
-                const TSharedPtr<FGuildDomain>& Self,
-                const Request::FRejectRequestByGuildNameRequestPtr Request
-            );
-
-            FRejectTask(
-                const FRejectTask& From
-            );
-
-            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-                TSharedPtr<TSharedPtr<Gs2::Guild::Domain::Model::FReceiveMemberRequestDomain>> Result
-            ) override;
-        };
-        friend FRejectTask;
-
-        TSharedPtr<FAsyncTask<FRejectTask>> Reject(
-            Request::FRejectRequestByGuildNameRequestPtr Request
-        );
-
         Gs2::Guild::Domain::Iterator::FDescribeReceiveRequestsByGuildNameIteratorPtr ReceiveRequestsByGuildName(
         ) const;
 
@@ -366,6 +369,20 @@ namespace Gs2::Guild::Domain::Model
 
         TSharedPtr<Gs2::Guild::Domain::Model::FReceiveMemberRequestDomain> ReceiveMemberRequest(
             const FString FromUserId
+        );
+
+        Gs2::Guild::Domain::Iterator::FDescribeIgnoreUsersByGuildNameIteratorPtr IgnoreUsersByGuildName(
+        ) const;
+
+        Gs2::Core::Domain::CallbackID SubscribeIgnoreUsersByGuildName(
+            TFunction<void()> Callback
+        );
+
+        void UnsubscribeIgnoreUsersByGuildName(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
+
+        TSharedPtr<Gs2::Guild::Domain::Model::FIgnoreUserDomain> IgnoreUser(
         );
 
         static FString CreateCacheParentKey(

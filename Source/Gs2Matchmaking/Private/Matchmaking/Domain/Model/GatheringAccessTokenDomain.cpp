@@ -111,8 +111,8 @@ namespace Gs2::Matchmaking::Domain::Model
         Request
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
-            ->WithAccessToken(Self->AccessToken->GetToken())
-            ->WithGatheringName(Self->GatheringName);
+            ->WithGatheringName(Self->GatheringName)
+            ->WithAccessToken(Self->AccessToken->GetToken());
         const auto Future = Self->Client->UpdateGathering(
             Request
         );
@@ -178,8 +178,8 @@ namespace Gs2::Matchmaking::Domain::Model
         Request
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
-            ->WithAccessToken(Self->AccessToken->GetToken())
-            ->WithGatheringName(Self->GatheringName);
+            ->WithGatheringName(Self->GatheringName)
+            ->WithAccessToken(Self->AccessToken->GetToken());
         const auto Future = Self->Client->Ping(
             Request
         );
@@ -245,8 +245,8 @@ namespace Gs2::Matchmaking::Domain::Model
         Request
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
-            ->WithAccessToken(Self->AccessToken->GetToken())
-            ->WithGatheringName(Self->GatheringName);
+            ->WithGatheringName(Self->GatheringName)
+            ->WithAccessToken(Self->AccessToken->GetToken());
         const auto Future = Self->Client->CancelMatchmaking(
             Request
         );
@@ -306,8 +306,8 @@ namespace Gs2::Matchmaking::Domain::Model
         Request
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
-            ->WithAccessToken(Self->AccessToken->GetToken())
-            ->WithGatheringName(Self->GatheringName);
+            ->WithGatheringName(Self->GatheringName)
+            ->WithAccessToken(Self->AccessToken->GetToken());
         const auto Future = Self->Client->EarlyComplete(
             Request
         );

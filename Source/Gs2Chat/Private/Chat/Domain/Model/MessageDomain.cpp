@@ -105,10 +105,10 @@ namespace Gs2::Chat::Domain::Model
         Request
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
-            ->WithUserId(Self->UserId)
             ->WithRoomName(Self->RoomName)
+            ->WithMessageName(Self->MessageName)
             ->WithPassword(Self->Password)
-            ->WithMessageName(Self->MessageName);
+            ->WithUserId(Self->UserId);
         const auto Future = Self->Client->GetMessageByUserId(
             Request
         );
@@ -173,8 +173,8 @@ namespace Gs2::Chat::Domain::Model
         Request
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
-            ->WithUserId(Self->UserId)
             ->WithRoomName(Self->RoomName)
+            ->WithUserId(Self->UserId)
             ->WithMessageName(Self->MessageName);
         const auto Future = Self->Client->DeleteMessage(
             Request

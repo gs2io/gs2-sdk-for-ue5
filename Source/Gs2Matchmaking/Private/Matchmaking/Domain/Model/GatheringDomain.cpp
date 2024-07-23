@@ -110,8 +110,8 @@ namespace Gs2::Matchmaking::Domain::Model
         Request
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
-            ->WithUserId(Self->UserId)
-            ->WithGatheringName(Self->GatheringName);
+            ->WithGatheringName(Self->GatheringName)
+            ->WithUserId(Self->UserId);
         const auto Future = Self->Client->UpdateGatheringByUserId(
             Request
         );
@@ -177,8 +177,8 @@ namespace Gs2::Matchmaking::Domain::Model
         Request
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
-            ->WithUserId(Self->UserId)
-            ->WithGatheringName(Self->GatheringName);
+            ->WithGatheringName(Self->GatheringName)
+            ->WithUserId(Self->UserId);
         const auto Future = Self->Client->PingByUserId(
             Request
         );
@@ -308,8 +308,8 @@ namespace Gs2::Matchmaking::Domain::Model
         Request
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
-            ->WithUserId(Self->UserId)
-            ->WithGatheringName(Self->GatheringName);
+            ->WithGatheringName(Self->GatheringName)
+            ->WithUserId(Self->UserId);
         const auto Future = Self->Client->CancelMatchmakingByUserId(
             Request
         );
@@ -369,8 +369,8 @@ namespace Gs2::Matchmaking::Domain::Model
         Request
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
-            ->WithUserId(Self->UserId)
-            ->WithGatheringName(Self->GatheringName);
+            ->WithGatheringName(Self->GatheringName)
+            ->WithUserId(Self->UserId);
         const auto Future = Self->Client->EarlyCompleteByUserId(
             Request
         );

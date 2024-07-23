@@ -103,8 +103,8 @@ namespace Gs2::Mission::Domain::Model
         Request
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
-            ->WithUserId(Self->UserId)
-            ->WithCounterName(Self->CounterName);
+            ->WithCounterName(Self->CounterName)
+            ->WithUserId(Self->UserId);
         const auto Future = Self->Client->IncreaseCounterByUserId(
             Request
         );
@@ -193,8 +193,8 @@ namespace Gs2::Mission::Domain::Model
         Request
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
-            ->WithUserId(Self->UserId)
-            ->WithCounterName(Self->CounterName);
+            ->WithCounterName(Self->CounterName)
+            ->WithUserId(Self->UserId);
         const auto Future = Self->Client->SetCounterByUserId(
             Request
         );
@@ -279,8 +279,8 @@ namespace Gs2::Mission::Domain::Model
         Request
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
-            ->WithUserId(Self->UserId)
-            ->WithCounterName(Self->CounterName);
+            ->WithCounterName(Self->CounterName)
+            ->WithUserId(Self->UserId);
         const auto Future = Self->Client->DecreaseCounterByUserId(
             Request
         );
@@ -365,8 +365,8 @@ namespace Gs2::Mission::Domain::Model
         Request
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
-            ->WithUserId(Self->UserId)
-            ->WithCounterName(Self->CounterName);
+            ->WithCounterName(Self->CounterName)
+            ->WithUserId(Self->UserId);
         const auto Future = Self->Client->GetCounterByUserId(
             Request
         );

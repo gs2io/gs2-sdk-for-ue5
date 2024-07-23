@@ -165,9 +165,9 @@ namespace Gs2::Chat::Domain::Model
         Request
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
-            ->WithUserId(Self->UserId)
             ->WithRoomName(Self->RoomName)
-            ->WithPassword(Self->Password);
+            ->WithPassword(Self->Password)
+            ->WithUserId(Self->UserId);
         const auto Future = Self->Client->UpdateRoomFromBackend(
             Request
         );
@@ -233,8 +233,8 @@ namespace Gs2::Chat::Domain::Model
         Request
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
-            ->WithUserId(Self->UserId)
-            ->WithRoomName(Self->RoomName);
+            ->WithRoomName(Self->RoomName)
+            ->WithUserId(Self->UserId);
         const auto Future = Self->Client->DeleteRoomFromBackend(
             Request
         );
@@ -294,8 +294,8 @@ namespace Gs2::Chat::Domain::Model
         Request
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
-            ->WithUserId(Self->UserId)
             ->WithRoomName(Self->RoomName)
+            ->WithUserId(Self->UserId)
             ->WithPassword(Self->Password);
         const auto Future = Self->Client->PostByUserId(
             Request

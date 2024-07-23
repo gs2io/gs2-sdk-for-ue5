@@ -122,11 +122,11 @@ namespace Gs2::Matchmaking::Domain::Model
         Request
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
-            ->WithAccessToken(Self->AccessToken->GetToken())
             ->WithSeasonName(Self->SeasonName)
             ->WithSeason(Self->Season)
             ->WithTier(Self->Tier)
-            ->WithSeasonGatheringName(Self->SeasonGatheringName);
+            ->WithSeasonGatheringName(Self->SeasonGatheringName)
+            ->WithAccessToken(Self->AccessToken->GetToken());
         const auto Future = Self->Client->VerifyIncludeParticipant(
             Request
         );

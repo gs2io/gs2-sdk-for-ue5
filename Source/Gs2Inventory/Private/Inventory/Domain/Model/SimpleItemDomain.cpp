@@ -124,8 +124,8 @@ namespace Gs2::Inventory::Domain::Model
         Request
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
-            ->WithUserId(Self->UserId)
             ->WithInventoryName(Self->InventoryName)
+            ->WithUserId(Self->UserId)
             ->WithItemName(Self->ItemName);
         const auto Future = Self->Client->GetSimpleItemByUserId(
             Request
@@ -209,8 +209,8 @@ namespace Gs2::Inventory::Domain::Model
         Request
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
-            ->WithUserId(Self->UserId)
             ->WithInventoryName(Self->InventoryName)
+            ->WithUserId(Self->UserId)
             ->WithItemName(Self->ItemName);
         const auto Future = Self->Client->GetSimpleItemWithSignatureByUserId(
             Request

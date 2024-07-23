@@ -129,9 +129,9 @@ namespace Gs2::Ranking2::Domain::Model
         Request
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
-            ->WithUserId(Self->UserId)
             ->WithRankingName(Self->RankingName)
             ->WithClusterName(Self->ClusterName)
+            ->WithUserId(Self->UserId)
             ->WithSeason(Self->Season);
         const auto Future = Self->Client->CreateClusterRankingReceivedRewardByUserId(
             Request
@@ -288,9 +288,9 @@ namespace Gs2::Ranking2::Domain::Model
         Request
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
-            ->WithUserId(Self->UserId)
             ->WithRankingName(Self->RankingName)
             ->WithClusterName(Self->ClusterName)
+            ->WithUserId(Self->UserId)
             ->WithSeason(Self->Season);
         const auto Future = Self->Client->GetClusterRankingReceivedRewardByUserId(
             Request
@@ -357,9 +357,9 @@ namespace Gs2::Ranking2::Domain::Model
         Request
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
-            ->WithUserId(Self->UserId)
             ->WithRankingName(Self->RankingName)
             ->WithClusterName(Self->ClusterName)
+            ->WithUserId(Self->UserId)
             ->WithSeason(Self->Season);
         const auto Future = Self->Client->DeleteClusterRankingReceivedRewardByUserId(
             Request
