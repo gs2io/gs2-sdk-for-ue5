@@ -18,6 +18,7 @@
 
 #include "CoreMinimal.h"
 #include "../Model/NotificationSetting.h"
+#include "../Model/ScriptSetting.h"
 #include "../Model/LogSetting.h"
 
 namespace Gs2::Guild::Request
@@ -34,6 +35,10 @@ namespace Gs2::Guild::Request
         TSharedPtr<Model::FNotificationSetting> ChangeMemberNotificationValue;
         TSharedPtr<Model::FNotificationSetting> ReceiveRequestNotificationValue;
         TSharedPtr<Model::FNotificationSetting> RemoveRequestNotificationValue;
+        TSharedPtr<Model::FScriptSetting> CreateGuildScriptValue;
+        TSharedPtr<Model::FScriptSetting> JoinGuildScriptValue;
+        TSharedPtr<Model::FScriptSetting> LeaveGuildScriptValue;
+        TSharedPtr<Model::FScriptSetting> ChangeRoleScriptValue;
         TSharedPtr<Model::FLogSetting> LogSettingValue;
         
     public:
@@ -52,6 +57,10 @@ namespace Gs2::Guild::Request
         TSharedPtr<FUpdateNamespaceRequest> WithChangeMemberNotification(const TSharedPtr<Model::FNotificationSetting> ChangeMemberNotification);
         TSharedPtr<FUpdateNamespaceRequest> WithReceiveRequestNotification(const TSharedPtr<Model::FNotificationSetting> ReceiveRequestNotification);
         TSharedPtr<FUpdateNamespaceRequest> WithRemoveRequestNotification(const TSharedPtr<Model::FNotificationSetting> RemoveRequestNotification);
+        TSharedPtr<FUpdateNamespaceRequest> WithCreateGuildScript(const TSharedPtr<Model::FScriptSetting> CreateGuildScript);
+        TSharedPtr<FUpdateNamespaceRequest> WithJoinGuildScript(const TSharedPtr<Model::FScriptSetting> JoinGuildScript);
+        TSharedPtr<FUpdateNamespaceRequest> WithLeaveGuildScript(const TSharedPtr<Model::FScriptSetting> LeaveGuildScript);
+        TSharedPtr<FUpdateNamespaceRequest> WithChangeRoleScript(const TSharedPtr<Model::FScriptSetting> ChangeRoleScript);
         TSharedPtr<FUpdateNamespaceRequest> WithLogSetting(const TSharedPtr<Model::FLogSetting> LogSetting);
 
         TOptional<FString> GetContextStack() const;
@@ -62,6 +71,10 @@ namespace Gs2::Guild::Request
         TSharedPtr<Model::FNotificationSetting> GetChangeMemberNotification() const;
         TSharedPtr<Model::FNotificationSetting> GetReceiveRequestNotification() const;
         TSharedPtr<Model::FNotificationSetting> GetRemoveRequestNotification() const;
+        TSharedPtr<Model::FScriptSetting> GetCreateGuildScript() const;
+        TSharedPtr<Model::FScriptSetting> GetJoinGuildScript() const;
+        TSharedPtr<Model::FScriptSetting> GetLeaveGuildScript() const;
+        TSharedPtr<Model::FScriptSetting> GetChangeRoleScript() const;
         TSharedPtr<Model::FLogSetting> GetLogSetting() const;
 
         static TSharedPtr<FUpdateNamespaceRequest> FromJson(const TSharedPtr<FJsonObject> Data);

@@ -32,6 +32,7 @@ namespace Gs2::Guild::Request
         TOptional<FString> MetadataValue;
         TOptional<int32> DefaultMaximumMemberCountValue;
         TOptional<int32> MaximumMemberCountValue;
+        TOptional<int32> InactivityPeriodDaysValue;
         TSharedPtr<TArray<TSharedPtr<Model::FRoleModel>>> RolesValue;
         TOptional<FString> GuildMasterRoleValue;
         TOptional<FString> GuildMemberDefaultRoleValue;
@@ -52,6 +53,7 @@ namespace Gs2::Guild::Request
         TSharedPtr<FUpdateGuildModelMasterRequest> WithMetadata(const TOptional<FString> Metadata);
         TSharedPtr<FUpdateGuildModelMasterRequest> WithDefaultMaximumMemberCount(const TOptional<int32> DefaultMaximumMemberCount);
         TSharedPtr<FUpdateGuildModelMasterRequest> WithMaximumMemberCount(const TOptional<int32> MaximumMemberCount);
+        TSharedPtr<FUpdateGuildModelMasterRequest> WithInactivityPeriodDays(const TOptional<int32> InactivityPeriodDays);
         TSharedPtr<FUpdateGuildModelMasterRequest> WithRoles(const TSharedPtr<TArray<TSharedPtr<Model::FRoleModel>>> Roles);
         TSharedPtr<FUpdateGuildModelMasterRequest> WithGuildMasterRole(const TOptional<FString> GuildMasterRole);
         TSharedPtr<FUpdateGuildModelMasterRequest> WithGuildMemberDefaultRole(const TOptional<FString> GuildMemberDefaultRole);
@@ -65,7 +67,9 @@ namespace Gs2::Guild::Request
         TOptional<int32> GetDefaultMaximumMemberCount() const;
         FString GetDefaultMaximumMemberCountString() const;
         TOptional<int32> GetMaximumMemberCount() const;
-        FString GetMaximumMemberCountString() const;TSharedPtr<TArray<TSharedPtr<Model::FRoleModel>>> GetRoles() const;
+        FString GetMaximumMemberCountString() const;
+        TOptional<int32> GetInactivityPeriodDays() const;
+        FString GetInactivityPeriodDaysString() const;TSharedPtr<TArray<TSharedPtr<Model::FRoleModel>>> GetRoles() const;
         TOptional<FString> GetGuildMasterRole() const;
         TOptional<FString> GetGuildMemberDefaultRole() const;
         TOptional<int32> GetRejoinCoolTimeMinutes() const;

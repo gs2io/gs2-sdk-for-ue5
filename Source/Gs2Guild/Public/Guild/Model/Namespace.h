@@ -19,6 +19,7 @@
 #include "CoreMinimal.h"
 #include "Core/Gs2Object.h"
 #include "NotificationSetting.h"
+#include "ScriptSetting.h"
 #include "LogSetting.h"
 
 namespace Gs2::Guild::Model
@@ -33,6 +34,10 @@ namespace Gs2::Guild::Model
         TSharedPtr<FNotificationSetting> ChangeMemberNotificationValue;
         TSharedPtr<FNotificationSetting> ReceiveRequestNotificationValue;
         TSharedPtr<FNotificationSetting> RemoveRequestNotificationValue;
+        TSharedPtr<FScriptSetting> CreateGuildScriptValue;
+        TSharedPtr<FScriptSetting> JoinGuildScriptValue;
+        TSharedPtr<FScriptSetting> LeaveGuildScriptValue;
+        TSharedPtr<FScriptSetting> ChangeRoleScriptValue;
         TSharedPtr<FLogSetting> LogSettingValue;
         TOptional<int64> CreatedAtValue;
         TOptional<int64> UpdatedAtValue;
@@ -53,6 +58,10 @@ namespace Gs2::Guild::Model
         TSharedPtr<FNamespace> WithChangeMemberNotification(const TSharedPtr<FNotificationSetting> ChangeMemberNotification);
         TSharedPtr<FNamespace> WithReceiveRequestNotification(const TSharedPtr<FNotificationSetting> ReceiveRequestNotification);
         TSharedPtr<FNamespace> WithRemoveRequestNotification(const TSharedPtr<FNotificationSetting> RemoveRequestNotification);
+        TSharedPtr<FNamespace> WithCreateGuildScript(const TSharedPtr<FScriptSetting> CreateGuildScript);
+        TSharedPtr<FNamespace> WithJoinGuildScript(const TSharedPtr<FScriptSetting> JoinGuildScript);
+        TSharedPtr<FNamespace> WithLeaveGuildScript(const TSharedPtr<FScriptSetting> LeaveGuildScript);
+        TSharedPtr<FNamespace> WithChangeRoleScript(const TSharedPtr<FScriptSetting> ChangeRoleScript);
         TSharedPtr<FNamespace> WithLogSetting(const TSharedPtr<FLogSetting> LogSetting);
         TSharedPtr<FNamespace> WithCreatedAt(const TOptional<int64> CreatedAt);
         TSharedPtr<FNamespace> WithUpdatedAt(const TOptional<int64> UpdatedAt);
@@ -66,6 +75,10 @@ namespace Gs2::Guild::Model
         TSharedPtr<FNotificationSetting> GetChangeMemberNotification() const;
         TSharedPtr<FNotificationSetting> GetReceiveRequestNotification() const;
         TSharedPtr<FNotificationSetting> GetRemoveRequestNotification() const;
+        TSharedPtr<FScriptSetting> GetCreateGuildScript() const;
+        TSharedPtr<FScriptSetting> GetJoinGuildScript() const;
+        TSharedPtr<FScriptSetting> GetLeaveGuildScript() const;
+        TSharedPtr<FScriptSetting> GetChangeRoleScript() const;
         TSharedPtr<FLogSetting> GetLogSetting() const;
         TOptional<int64> GetCreatedAt() const;
         FString GetCreatedAtString() const;

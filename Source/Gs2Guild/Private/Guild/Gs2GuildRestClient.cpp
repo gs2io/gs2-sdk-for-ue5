@@ -505,6 +505,42 @@ namespace Gs2::Guild
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::Rest::FGetLastGuildMasterActivityTask>> FGs2GuildRestClient::GetLastGuildMasterActivity(
+        const Request::FGetLastGuildMasterActivityRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FGetLastGuildMasterActivityTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FGetLastGuildMasterActivityByGuildNameTask>> FGs2GuildRestClient::GetLastGuildMasterActivityByGuildName(
+        const Request::FGetLastGuildMasterActivityByGuildNameRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FGetLastGuildMasterActivityByGuildNameTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FPromoteSeniorMemberTask>> FGs2GuildRestClient::PromoteSeniorMember(
+        const Request::FPromoteSeniorMemberRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FPromoteSeniorMemberTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FPromoteSeniorMemberByGuildNameTask>> FGs2GuildRestClient::PromoteSeniorMemberByGuildName(
+        const Request::FPromoteSeniorMemberByGuildNameRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FPromoteSeniorMemberByGuildNameTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::Rest::FExportMasterTask>> FGs2GuildRestClient::ExportMaster(
         const Request::FExportMasterRequestPtr Request) const
     {

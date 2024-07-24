@@ -59,6 +59,8 @@ namespace Gs2::Guild::Domain::Model
     class FGuildAccessTokenDomain;
     class FJoinedGuildDomain;
     class FJoinedGuildAccessTokenDomain;
+    class FLastGuildMasterActivityDomain;
+    class FLastGuildMasterActivityAccessTokenDomain;
     class FCurrentGuildMasterDomain;
     class FReceiveMemberRequestDomain;
     class FReceiveMemberRequestAccessTokenDomain;

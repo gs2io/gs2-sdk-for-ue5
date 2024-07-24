@@ -27,6 +27,10 @@ namespace Gs2::Guild::Model
         ChangeMemberNotificationValue(nullptr),
         ReceiveRequestNotificationValue(nullptr),
         RemoveRequestNotificationValue(nullptr),
+        CreateGuildScriptValue(nullptr),
+        JoinGuildScriptValue(nullptr),
+        LeaveGuildScriptValue(nullptr),
+        ChangeRoleScriptValue(nullptr),
         LogSettingValue(nullptr),
         CreatedAtValue(TOptional<int64>()),
         UpdatedAtValue(TOptional<int64>()),
@@ -45,6 +49,10 @@ namespace Gs2::Guild::Model
         ChangeMemberNotificationValue(From.ChangeMemberNotificationValue),
         ReceiveRequestNotificationValue(From.ReceiveRequestNotificationValue),
         RemoveRequestNotificationValue(From.RemoveRequestNotificationValue),
+        CreateGuildScriptValue(From.CreateGuildScriptValue),
+        JoinGuildScriptValue(From.JoinGuildScriptValue),
+        LeaveGuildScriptValue(From.LeaveGuildScriptValue),
+        ChangeRoleScriptValue(From.ChangeRoleScriptValue),
         LogSettingValue(From.LogSettingValue),
         CreatedAtValue(From.CreatedAtValue),
         UpdatedAtValue(From.UpdatedAtValue),
@@ -116,6 +124,38 @@ namespace Gs2::Guild::Model
         return SharedThis(this);
     }
 
+    TSharedPtr<FNamespace> FNamespace::WithCreateGuildScript(
+        const TSharedPtr<FScriptSetting> CreateGuildScript
+    )
+    {
+        this->CreateGuildScriptValue = CreateGuildScript;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FNamespace> FNamespace::WithJoinGuildScript(
+        const TSharedPtr<FScriptSetting> JoinGuildScript
+    )
+    {
+        this->JoinGuildScriptValue = JoinGuildScript;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FNamespace> FNamespace::WithLeaveGuildScript(
+        const TSharedPtr<FScriptSetting> LeaveGuildScript
+    )
+    {
+        this->LeaveGuildScriptValue = LeaveGuildScript;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FNamespace> FNamespace::WithChangeRoleScript(
+        const TSharedPtr<FScriptSetting> ChangeRoleScript
+    )
+    {
+        this->ChangeRoleScriptValue = ChangeRoleScript;
+        return SharedThis(this);
+    }
+
     TSharedPtr<FNamespace> FNamespace::WithLogSetting(
         const TSharedPtr<FLogSetting> LogSetting
     )
@@ -178,6 +218,22 @@ namespace Gs2::Guild::Model
     TSharedPtr<FNotificationSetting> FNamespace::GetRemoveRequestNotification() const
     {
         return RemoveRequestNotificationValue;
+    }
+    TSharedPtr<FScriptSetting> FNamespace::GetCreateGuildScript() const
+    {
+        return CreateGuildScriptValue;
+    }
+    TSharedPtr<FScriptSetting> FNamespace::GetJoinGuildScript() const
+    {
+        return JoinGuildScriptValue;
+    }
+    TSharedPtr<FScriptSetting> FNamespace::GetLeaveGuildScript() const
+    {
+        return LeaveGuildScriptValue;
+    }
+    TSharedPtr<FScriptSetting> FNamespace::GetChangeRoleScript() const
+    {
+        return ChangeRoleScriptValue;
     }
     TSharedPtr<FLogSetting> FNamespace::GetLogSetting() const
     {
@@ -329,6 +385,38 @@ namespace Gs2::Guild::Model
                     }
                     return Model::FNotificationSetting::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("removeRequestNotification")));
                  }() : nullptr)
+            ->WithCreateGuildScript(Data->HasField(ANSI_TO_TCHAR("createGuildScript")) ? [Data]() -> Model::FScriptSettingPtr
+                {
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("createGuildScript")))
+                    {
+                        return nullptr;
+                    }
+                    return Model::FScriptSetting::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("createGuildScript")));
+                 }() : nullptr)
+            ->WithJoinGuildScript(Data->HasField(ANSI_TO_TCHAR("joinGuildScript")) ? [Data]() -> Model::FScriptSettingPtr
+                {
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("joinGuildScript")))
+                    {
+                        return nullptr;
+                    }
+                    return Model::FScriptSetting::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("joinGuildScript")));
+                 }() : nullptr)
+            ->WithLeaveGuildScript(Data->HasField(ANSI_TO_TCHAR("leaveGuildScript")) ? [Data]() -> Model::FScriptSettingPtr
+                {
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("leaveGuildScript")))
+                    {
+                        return nullptr;
+                    }
+                    return Model::FScriptSetting::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("leaveGuildScript")));
+                 }() : nullptr)
+            ->WithChangeRoleScript(Data->HasField(ANSI_TO_TCHAR("changeRoleScript")) ? [Data]() -> Model::FScriptSettingPtr
+                {
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("changeRoleScript")))
+                    {
+                        return nullptr;
+                    }
+                    return Model::FScriptSetting::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("changeRoleScript")));
+                 }() : nullptr)
             ->WithLogSetting(Data->HasField(ANSI_TO_TCHAR("logSetting")) ? [Data]() -> Model::FLogSettingPtr
                 {
                     if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("logSetting")))
@@ -400,6 +488,22 @@ namespace Gs2::Guild::Model
         if (RemoveRequestNotificationValue != nullptr && RemoveRequestNotificationValue.IsValid())
         {
             JsonRootObject->SetObjectField("removeRequestNotification", RemoveRequestNotificationValue->ToJson());
+        }
+        if (CreateGuildScriptValue != nullptr && CreateGuildScriptValue.IsValid())
+        {
+            JsonRootObject->SetObjectField("createGuildScript", CreateGuildScriptValue->ToJson());
+        }
+        if (JoinGuildScriptValue != nullptr && JoinGuildScriptValue.IsValid())
+        {
+            JsonRootObject->SetObjectField("joinGuildScript", JoinGuildScriptValue->ToJson());
+        }
+        if (LeaveGuildScriptValue != nullptr && LeaveGuildScriptValue.IsValid())
+        {
+            JsonRootObject->SetObjectField("leaveGuildScript", LeaveGuildScriptValue->ToJson());
+        }
+        if (ChangeRoleScriptValue != nullptr && ChangeRoleScriptValue.IsValid())
+        {
+            JsonRootObject->SetObjectField("changeRoleScript", ChangeRoleScriptValue->ToJson());
         }
         if (LogSettingValue != nullptr && LogSettingValue.IsValid())
         {

@@ -24,6 +24,7 @@
 #include "Model/SendBox.h"
 #include "Model/Guild.h"
 #include "Model/JoinedGuild.h"
+#include "Model/LastGuildMasterActivity.h"
 #include "Model/CurrentGuildMaster.h"
 #include "Model/RoleModel.h"
 #include "Model/Member.h"
@@ -359,6 +360,30 @@
 #include "Result/WithdrawalByUserIdResult.h"
 #include "Task/Rest/WithdrawalByUserIdTask.h"
 #include "Task/WebSocket/WithdrawalByUserIdTask.h"
+
+// GetLastGuildMasterActivity
+#include "Request/GetLastGuildMasterActivityRequest.h"
+#include "Result/GetLastGuildMasterActivityResult.h"
+#include "Task/Rest/GetLastGuildMasterActivityTask.h"
+#include "Task/WebSocket/GetLastGuildMasterActivityTask.h"
+
+// GetLastGuildMasterActivityByGuildName
+#include "Request/GetLastGuildMasterActivityByGuildNameRequest.h"
+#include "Result/GetLastGuildMasterActivityByGuildNameResult.h"
+#include "Task/Rest/GetLastGuildMasterActivityByGuildNameTask.h"
+#include "Task/WebSocket/GetLastGuildMasterActivityByGuildNameTask.h"
+
+// PromoteSeniorMember
+#include "Request/PromoteSeniorMemberRequest.h"
+#include "Result/PromoteSeniorMemberResult.h"
+#include "Task/Rest/PromoteSeniorMemberTask.h"
+#include "Task/WebSocket/PromoteSeniorMemberTask.h"
+
+// PromoteSeniorMemberByGuildName
+#include "Request/PromoteSeniorMemberByGuildNameRequest.h"
+#include "Result/PromoteSeniorMemberByGuildNameResult.h"
+#include "Task/Rest/PromoteSeniorMemberByGuildNameTask.h"
+#include "Task/WebSocket/PromoteSeniorMemberByGuildNameTask.h"
 
 // ExportMaster
 #include "Request/ExportMasterRequest.h"

@@ -145,25 +145,9 @@ namespace Gs2::Matchmaking::Domain::Iterator
             Arr->Add(R->GetItem());
             Range = Arr;
             auto Item = R->GetItem();
-            Self->Gs2->Cache->Put(
-                Gs2::Matchmaking::Model::FSeasonGathering::TypeName,
-                ListParentKey,
-                Gs2::Matchmaking::Domain::Model::FSeasonGatheringDomain::CreateCacheKey(
-                    FString::FromInt(*Item->GetTier()),
-                    Item->GetName()
-                ),
-                Item,
-                FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-            );
             RangeIteratorOpt = Range->CreateIterator();
             MatchmakingContextToken = R->GetMatchmakingContextToken();
             bLast = !MatchmakingContextToken.IsSet();
-            if (bLast) {
-                Self->Gs2->Cache->SetListCached(
-                    Gs2::Matchmaking::Model::FSeasonGathering::TypeName,
-                    ListParentKey
-                );
-            }
         }
 
         bEnd = bLast && !*RangeIteratorOpt;

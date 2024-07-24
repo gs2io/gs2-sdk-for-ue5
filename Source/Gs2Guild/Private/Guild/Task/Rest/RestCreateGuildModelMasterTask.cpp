@@ -104,6 +104,10 @@ namespace Gs2::Guild::Task::Rest
             {
                 JsonRootObject->SetNumberField("maximumMemberCount", this->Request->GetMaximumMemberCount().GetValue());
             }
+            if (this->Request->GetInactivityPeriodDays().IsSet())
+            {
+                JsonRootObject->SetNumberField("inactivityPeriodDays", this->Request->GetInactivityPeriodDays().GetValue());
+            }
             if (this->Request->GetRoles() != nullptr && this->Request->GetRoles().IsValid())
             {
                 TArray<TSharedPtr<FJsonValue>> v;

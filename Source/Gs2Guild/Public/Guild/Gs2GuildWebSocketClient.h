@@ -126,6 +126,14 @@
 #include "Task/WebSocket/WithdrawalTask.h"
 #include "Request/WithdrawalByUserIdRequest.h"
 #include "Task/WebSocket/WithdrawalByUserIdTask.h"
+#include "Request/GetLastGuildMasterActivityRequest.h"
+#include "Task/WebSocket/GetLastGuildMasterActivityTask.h"
+#include "Request/GetLastGuildMasterActivityByGuildNameRequest.h"
+#include "Task/WebSocket/GetLastGuildMasterActivityByGuildNameTask.h"
+#include "Request/PromoteSeniorMemberRequest.h"
+#include "Task/WebSocket/PromoteSeniorMemberTask.h"
+#include "Request/PromoteSeniorMemberByGuildNameRequest.h"
+#include "Task/WebSocket/PromoteSeniorMemberByGuildNameTask.h"
 #include "Request/ExportMasterRequest.h"
 #include "Task/WebSocket/ExportMasterTask.h"
 #include "Request/GetCurrentGuildMasterRequest.h"
@@ -408,6 +416,22 @@ namespace Gs2::Guild
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FWithdrawalByUserIdTask>> WithdrawalByUserId(
             const Request::FWithdrawalByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FGetLastGuildMasterActivityTask>> GetLastGuildMasterActivity(
+            const Request::FGetLastGuildMasterActivityRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FGetLastGuildMasterActivityByGuildNameTask>> GetLastGuildMasterActivityByGuildName(
+            const Request::FGetLastGuildMasterActivityByGuildNameRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FPromoteSeniorMemberTask>> PromoteSeniorMember(
+            const Request::FPromoteSeniorMemberRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FPromoteSeniorMemberByGuildNameTask>> PromoteSeniorMemberByGuildName(
+            const Request::FPromoteSeniorMemberByGuildNameRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FExportMasterTask>> ExportMaster(

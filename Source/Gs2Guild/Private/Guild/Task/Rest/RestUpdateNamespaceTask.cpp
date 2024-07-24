@@ -108,6 +108,22 @@ namespace Gs2::Guild::Task::Rest
             {
                 JsonRootObject->SetObjectField("removeRequestNotification", this->Request->GetRemoveRequestNotification()->ToJson());
             }
+            if (this->Request->GetCreateGuildScript() != nullptr && this->Request->GetCreateGuildScript().IsValid())
+            {
+                JsonRootObject->SetObjectField("createGuildScript", this->Request->GetCreateGuildScript()->ToJson());
+            }
+            if (this->Request->GetJoinGuildScript() != nullptr && this->Request->GetJoinGuildScript().IsValid())
+            {
+                JsonRootObject->SetObjectField("joinGuildScript", this->Request->GetJoinGuildScript()->ToJson());
+            }
+            if (this->Request->GetLeaveGuildScript() != nullptr && this->Request->GetLeaveGuildScript().IsValid())
+            {
+                JsonRootObject->SetObjectField("leaveGuildScript", this->Request->GetLeaveGuildScript()->ToJson());
+            }
+            if (this->Request->GetChangeRoleScript() != nullptr && this->Request->GetChangeRoleScript().IsValid())
+            {
+                JsonRootObject->SetObjectField("changeRoleScript", this->Request->GetChangeRoleScript()->ToJson());
+            }
             if (this->Request->GetLogSetting() != nullptr && this->Request->GetLogSetting().IsValid())
             {
                 JsonRootObject->SetObjectField("logSetting", this->Request->GetLogSetting()->ToJson());

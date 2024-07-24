@@ -505,6 +505,42 @@ namespace Gs2::Guild
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::WebSocket::FGetLastGuildMasterActivityTask>> FGs2GuildWebSocketClient::GetLastGuildMasterActivity(
+        const Request::FGetLastGuildMasterActivityRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FGetLastGuildMasterActivityTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FGetLastGuildMasterActivityByGuildNameTask>> FGs2GuildWebSocketClient::GetLastGuildMasterActivityByGuildName(
+        const Request::FGetLastGuildMasterActivityByGuildNameRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FGetLastGuildMasterActivityByGuildNameTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FPromoteSeniorMemberTask>> FGs2GuildWebSocketClient::PromoteSeniorMember(
+        const Request::FPromoteSeniorMemberRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FPromoteSeniorMemberTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FPromoteSeniorMemberByGuildNameTask>> FGs2GuildWebSocketClient::PromoteSeniorMemberByGuildName(
+        const Request::FPromoteSeniorMemberByGuildNameRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FPromoteSeniorMemberByGuildNameTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::WebSocket::FExportMasterTask>> FGs2GuildWebSocketClient::ExportMaster(
         const Request::FExportMasterRequestPtr Request) const
     {

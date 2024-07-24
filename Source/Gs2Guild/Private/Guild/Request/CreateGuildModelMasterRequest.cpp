@@ -25,6 +25,7 @@ namespace Gs2::Guild::Request
         MetadataValue(TOptional<FString>()),
         DefaultMaximumMemberCountValue(TOptional<int32>()),
         MaximumMemberCountValue(TOptional<int32>()),
+        InactivityPeriodDaysValue(TOptional<int32>()),
         RolesValue(nullptr),
         GuildMasterRoleValue(TOptional<FString>()),
         GuildMemberDefaultRoleValue(TOptional<FString>()),
@@ -41,6 +42,7 @@ namespace Gs2::Guild::Request
         MetadataValue(From.MetadataValue),
         DefaultMaximumMemberCountValue(From.DefaultMaximumMemberCountValue),
         MaximumMemberCountValue(From.MaximumMemberCountValue),
+        InactivityPeriodDaysValue(From.InactivityPeriodDaysValue),
         RolesValue(From.RolesValue),
         GuildMasterRoleValue(From.GuildMasterRoleValue),
         GuildMemberDefaultRoleValue(From.GuildMemberDefaultRoleValue),
@@ -101,6 +103,14 @@ namespace Gs2::Guild::Request
     )
     {
         this->MaximumMemberCountValue = MaximumMemberCount;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FCreateGuildModelMasterRequest> FCreateGuildModelMasterRequest::WithInactivityPeriodDays(
+        const TOptional<int32> InactivityPeriodDays
+    )
+    {
+        this->InactivityPeriodDaysValue = InactivityPeriodDays;
         return SharedThis(this);
     }
 
@@ -187,6 +197,20 @@ namespace Gs2::Guild::Request
             return FString("null");
         }
         return FString::Printf(TEXT("%d"), MaximumMemberCountValue.GetValue());
+    }
+
+    TOptional<int32> FCreateGuildModelMasterRequest::GetInactivityPeriodDays() const
+    {
+        return InactivityPeriodDaysValue;
+    }
+
+    FString FCreateGuildModelMasterRequest::GetInactivityPeriodDaysString() const
+    {
+        if (!InactivityPeriodDaysValue.IsSet())
+        {
+            return FString("null");
+        }
+        return FString::Printf(TEXT("%d"), InactivityPeriodDaysValue.GetValue());
     }
 
     TSharedPtr<TArray<TSharedPtr<Model::FRoleModel>>> FCreateGuildModelMasterRequest::GetRoles() const
@@ -283,6 +307,15 @@ namespace Gs2::Guild::Request
                   }
                   return TOptional<int32>();
               }() : TOptional<int32>())
+            ->WithInactivityPeriodDays(Data->HasField(ANSI_TO_TCHAR("inactivityPeriodDays")) ? [Data]() -> TOptional<int32>
+              {
+                  int32 v;
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("inactivityPeriodDays"), v))
+                  {
+                        return TOptional(v);
+                  }
+                  return TOptional<int32>();
+              }() : TOptional<int32>())
           ->WithRoles(Data->HasField(ANSI_TO_TCHAR("roles")) ? [Data]() -> TSharedPtr<TArray<Model::FRoleModelPtr>>
               {
                   auto v = MakeShared<TArray<Model::FRoleModelPtr>>();
@@ -354,6 +387,10 @@ namespace Gs2::Guild::Request
         if (MaximumMemberCountValue.IsSet())
         {
             JsonRootObject->SetNumberField("maximumMemberCount", MaximumMemberCountValue.GetValue());
+        }
+        if (InactivityPeriodDaysValue.IsSet())
+        {
+            JsonRootObject->SetNumberField("inactivityPeriodDays", InactivityPeriodDaysValue.GetValue());
         }
         if (RolesValue != nullptr && RolesValue.IsValid())
         {

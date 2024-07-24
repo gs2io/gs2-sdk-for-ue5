@@ -29,6 +29,7 @@ namespace Gs2::Guild::Model
         TOptional<FString> MetadataValue;
         TOptional<int32> DefaultMaximumMemberCountValue;
         TOptional<int32> MaximumMemberCountValue;
+        TOptional<int32> InactivityPeriodDaysValue;
         TSharedPtr<TArray<TSharedPtr<FRoleModel>>> RolesValue;
         TOptional<FString> GuildMasterRoleValue;
         TOptional<FString> GuildMemberDefaultRoleValue;
@@ -46,6 +47,7 @@ namespace Gs2::Guild::Model
         TSharedPtr<FGuildModel> WithMetadata(const TOptional<FString> Metadata);
         TSharedPtr<FGuildModel> WithDefaultMaximumMemberCount(const TOptional<int32> DefaultMaximumMemberCount);
         TSharedPtr<FGuildModel> WithMaximumMemberCount(const TOptional<int32> MaximumMemberCount);
+        TSharedPtr<FGuildModel> WithInactivityPeriodDays(const TOptional<int32> InactivityPeriodDays);
         TSharedPtr<FGuildModel> WithRoles(const TSharedPtr<TArray<TSharedPtr<FRoleModel>>> Roles);
         TSharedPtr<FGuildModel> WithGuildMasterRole(const TOptional<FString> GuildMasterRole);
         TSharedPtr<FGuildModel> WithGuildMemberDefaultRole(const TOptional<FString> GuildMemberDefaultRole);
@@ -58,6 +60,8 @@ namespace Gs2::Guild::Model
         FString GetDefaultMaximumMemberCountString() const;
         TOptional<int32> GetMaximumMemberCount() const;
         FString GetMaximumMemberCountString() const;
+        TOptional<int32> GetInactivityPeriodDays() const;
+        FString GetInactivityPeriodDaysString() const;
         TSharedPtr<TArray<TSharedPtr<FRoleModel>>> GetRoles() const;
         TOptional<FString> GetGuildMasterRole() const;
         TOptional<FString> GetGuildMemberDefaultRole() const;
