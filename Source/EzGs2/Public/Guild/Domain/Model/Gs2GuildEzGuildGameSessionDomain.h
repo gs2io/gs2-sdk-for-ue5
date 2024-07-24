@@ -24,12 +24,14 @@
 #include "Guild/Model/Gs2GuildEzSendMemberRequest.h"
 #include "Guild/Model/Gs2GuildEzJoinedGuild.h"
 #include "Guild/Model/Gs2GuildEzIgnoreUser.h"
+#include "Guild/Model/Gs2GuildEzLastGuildMasterActivity.h"
 #include "Guild/Model/Gs2GuildEzMember.h"
 #include "Guild/Model/Gs2GuildEzRoleModel.h"
 #include "Gs2GuildEzReceiveMemberRequestGameSessionDomain.h"
 #include "Guild/Domain/Iterator/Gs2GuildEzDescribeReceiveRequestsIterator.h"
 #include "Gs2GuildEzIgnoreUserGameSessionDomain.h"
 #include "Guild/Domain/Iterator/Gs2GuildEzDescribeIgnoreUsersIterator.h"
+#include "Gs2GuildEzLastGuildMasterActivityGameSessionDomain.h"
 #include "Gs2GuildEzGuildGameSessionDomain.h"
 #include "Guild/Domain/Iterator/Gs2GuildEzSearchGuildsIterator.h"
 #include "Util/Net/GameSession.h"
@@ -146,6 +148,26 @@ namespace Gs2::UE5::Guild::Domain::Model
             FString UserId
         );
 
+        class EZGS2_API FPromoteSeniorMemberTask :
+            public Gs2::Core::Util::TGs2Future<Gs2::UE5::Guild::Domain::Model::FEzLastGuildMasterActivityGameSessionDomain>,
+            public TSharedFromThis<FPromoteSeniorMemberTask>
+        {
+            TSharedPtr<FEzGuildGameSessionDomain> Self;
+
+        public:
+            explicit FPromoteSeniorMemberTask(
+                TSharedPtr<FEzGuildGameSessionDomain> Self
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::UE5::Guild::Domain::Model::FEzLastGuildMasterActivityGameSessionDomain>> Result
+            ) override;
+        };
+        friend FPromoteSeniorMemberTask;
+
+        TSharedPtr<FAsyncTask<FPromoteSeniorMemberTask>> PromoteSeniorMember(
+        );
+
         Gs2::UE5::Guild::Domain::Iterator::FEzDescribeReceiveRequestsIteratorPtr ReceiveRequests(
         ) const;
 
@@ -165,6 +187,9 @@ namespace Gs2::UE5::Guild::Domain::Model
         void UnsubscribeIgnoreUsers(Gs2::Core::Domain::CallbackID CallbackId);
 
         Gs2::UE5::Guild::Domain::Model::FEzIgnoreUserGameSessionDomainPtr IgnoreUser(
+        ) const;
+
+        Gs2::UE5::Guild::Domain::Model::FEzLastGuildMasterActivityGameSessionDomainPtr LastGuildMasterActivity(
         ) const;
 
         class EZGS2_API FModelTask :

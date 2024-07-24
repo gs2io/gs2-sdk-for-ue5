@@ -61,6 +61,8 @@ namespace Gs2::Guild::Domain::Model
     class FGuildAccessTokenDomain;
     class FJoinedGuildDomain;
     class FJoinedGuildAccessTokenDomain;
+    class FLastGuildMasterActivityDomain;
+    class FLastGuildMasterActivityAccessTokenDomain;
     class FCurrentGuildMasterDomain;
     class FReceiveMemberRequestDomain;
     class FReceiveMemberRequestAccessTokenDomain;
@@ -282,6 +284,58 @@ namespace Gs2::Guild::Domain::Model
             Request::FAddIgnoreUserRequestPtr Request
         );
 
+        class GS2GUILD_API FGetLastGuildMasterActivityTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Guild::Model::FLastGuildMasterActivity>,
+            public TSharedFromThis<FGetLastGuildMasterActivityTask>
+        {
+            const TSharedPtr<FGuildAccessTokenDomain> Self;
+            const Request::FGetLastGuildMasterActivityRequestPtr Request;
+        public:
+            explicit FGetLastGuildMasterActivityTask(
+                const TSharedPtr<FGuildAccessTokenDomain>& Self,
+                const Request::FGetLastGuildMasterActivityRequestPtr Request
+            );
+
+            FGetLastGuildMasterActivityTask(
+                const FGetLastGuildMasterActivityTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Guild::Model::FLastGuildMasterActivity>> Result
+            ) override;
+        };
+        friend FGetLastGuildMasterActivityTask;
+
+        TSharedPtr<FAsyncTask<FGetLastGuildMasterActivityTask>> GetLastGuildMasterActivity(
+            Request::FGetLastGuildMasterActivityRequestPtr Request
+        );
+
+        class GS2GUILD_API FPromoteSeniorMemberTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Guild::Domain::Model::FLastGuildMasterActivityAccessTokenDomain>,
+            public TSharedFromThis<FPromoteSeniorMemberTask>
+        {
+            const TSharedPtr<FGuildAccessTokenDomain> Self;
+            const Request::FPromoteSeniorMemberRequestPtr Request;
+        public:
+            explicit FPromoteSeniorMemberTask(
+                const TSharedPtr<FGuildAccessTokenDomain>& Self,
+                const Request::FPromoteSeniorMemberRequestPtr Request
+            );
+
+            FPromoteSeniorMemberTask(
+                const FPromoteSeniorMemberTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Guild::Domain::Model::FLastGuildMasterActivityAccessTokenDomain>> Result
+            ) override;
+        };
+        friend FPromoteSeniorMemberTask;
+
+        TSharedPtr<FAsyncTask<FPromoteSeniorMemberTask>> PromoteSeniorMember(
+            Request::FPromoteSeniorMemberRequestPtr Request
+        );
+
         Gs2::Guild::Domain::Iterator::FDescribeReceiveRequestsIteratorPtr ReceiveRequests(
         ) const;
 
@@ -309,6 +363,9 @@ namespace Gs2::Guild::Domain::Model
         );
 
         TSharedPtr<Gs2::Guild::Domain::Model::FIgnoreUserAccessTokenDomain> IgnoreUser(
+        );
+
+        TSharedPtr<Gs2::Guild::Domain::Model::FLastGuildMasterActivityAccessTokenDomain> LastGuildMasterActivity(
         );
 
         static FString CreateCacheParentKey(

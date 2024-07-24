@@ -24,6 +24,7 @@
 #include "Guild/Model/Gs2GuildEzSendMemberRequest.h"
 #include "Guild/Model/Gs2GuildEzJoinedGuild.h"
 #include "Guild/Model/Gs2GuildEzIgnoreUser.h"
+#include "Guild/Model/Gs2GuildEzLastGuildMasterActivity.h"
 #include "Guild/Model/Gs2GuildEzMember.h"
 #include "Guild/Model/Gs2GuildEzRoleModel.h"
 #include "Gs2GuildEzSendMemberRequestGameSessionDomain.h"

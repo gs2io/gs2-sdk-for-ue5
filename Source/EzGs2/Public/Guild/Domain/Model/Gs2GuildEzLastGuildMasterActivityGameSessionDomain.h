@@ -17,7 +17,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Guild/Domain/Model/SendMemberRequest.h"
+#include "Guild/Domain/Model/LastGuildMasterActivityAccessToken.h"
 #include "Guild/Model/Gs2GuildEzGuildModel.h"
 #include "Guild/Model/Gs2GuildEzGuild.h"
 #include "Guild/Model/Gs2GuildEzReceiveMemberRequest.h"
@@ -27,52 +27,53 @@
 #include "Guild/Model/Gs2GuildEzLastGuildMasterActivity.h"
 #include "Guild/Model/Gs2GuildEzMember.h"
 #include "Guild/Model/Gs2GuildEzRoleModel.h"
-#include "Gs2GuildEzSendMemberRequestDomain.h"
+#include "Gs2GuildEzLastGuildMasterActivityGameSessionDomain.h"
 #include "Util/Net/GameSession.h"
 #include "Util/Net/Gs2Connection.h"
 
 namespace Gs2::UE5::Guild::Domain::Model
 {
 
-    class EZGS2_API FEzSendMemberRequestDomain final :
-        public TSharedFromThis<FEzSendMemberRequestDomain>
+    class EZGS2_API FEzLastGuildMasterActivityGameSessionDomain final :
+        public TSharedFromThis<FEzLastGuildMasterActivityGameSessionDomain>
     {
-        Gs2::Guild::Domain::Model::FSendMemberRequestDomainPtr Domain;
+        Gs2::Guild::Domain::Model::FLastGuildMasterActivityAccessTokenDomainPtr Domain;
+        Gs2::UE5::Util::IGameSessionPtr GameSession;
         Gs2::UE5::Util::FGs2ConnectionPtr ConnectionValue;
 
         public:
         TOptional<FString> NamespaceName() const;
-        TOptional<FString> UserId() const;
         TOptional<FString> GuildModelName() const;
         TOptional<FString> GuildName() const;
 
-        FEzSendMemberRequestDomain(
-            Gs2::Guild::Domain::Model::FSendMemberRequestDomainPtr Domain,
+        FEzLastGuildMasterActivityGameSessionDomain(
+            Gs2::Guild::Domain::Model::FLastGuildMasterActivityAccessTokenDomainPtr Domain,
+            Gs2::UE5::Util::IGameSessionPtr GameSession,
             Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
 
         class EZGS2_API FModelTask :
-            public Gs2::Core::Util::TGs2Future<Gs2::UE5::Guild::Model::FEzSendMemberRequest>,
+            public Gs2::Core::Util::TGs2Future<Gs2::UE5::Guild::Model::FEzLastGuildMasterActivity>,
             public TSharedFromThis<FModelTask>
         {
-            TSharedPtr<FEzSendMemberRequestDomain> Self;
+            TSharedPtr<FEzLastGuildMasterActivityGameSessionDomain> Self;
 
         public:
             explicit FModelTask(
-                TSharedPtr<FEzSendMemberRequestDomain> Self
+                TSharedPtr<FEzLastGuildMasterActivityGameSessionDomain> Self
             );
 
             virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-                TSharedPtr<Gs2::UE5::Guild::Model::FEzSendMemberRequestPtr> Result
+                TSharedPtr<Gs2::UE5::Guild::Model::FEzLastGuildMasterActivityPtr> Result
             ) override;
         };
 
         TSharedPtr<FAsyncTask<FModelTask>> Model();
 
-        Gs2::Core::Domain::CallbackID Subscribe(TFunction<void(Gs2::UE5::Guild::Model::FEzSendMemberRequestPtr)> Callback);
+        Gs2::Core::Domain::CallbackID Subscribe(TFunction<void(Gs2::UE5::Guild::Model::FEzLastGuildMasterActivityPtr)> Callback);
 
         void Unsubscribe(Gs2::Core::Domain::CallbackID CallbackId);
 
     };
-    typedef TSharedPtr<FEzSendMemberRequestDomain> FEzSendMemberRequestDomainPtr;
+    typedef TSharedPtr<FEzLastGuildMasterActivityGameSessionDomain> FEzLastGuildMasterActivityGameSessionDomainPtr;
 }

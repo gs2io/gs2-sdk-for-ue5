@@ -245,6 +245,56 @@ namespace Gs2::UE5::Guild::Domain::Model
         );
     }
 
+    FEzGuildGameSessionDomain::FPromoteSeniorMemberTask::FPromoteSeniorMemberTask(
+        TSharedPtr<FEzGuildGameSessionDomain> Self
+    ): Self(Self)
+    {
+
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FEzGuildGameSessionDomain::FPromoteSeniorMemberTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::UE5::Guild::Domain::Model::FEzLastGuildMasterActivityGameSessionDomain>> Result
+    )
+    {
+        const auto Future = Self->ConnectionValue->Run(
+            [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
+                const auto Task = Self->Domain->PromoteSeniorMember(
+                    MakeShared<Gs2::Guild::Request::FPromoteSeniorMemberRequest>()
+                );
+                Task->StartSynchronousTask();
+                if (Task->GetTask().IsError())
+                {
+                    Task->EnsureCompletion();
+                    return Task->GetTask().Error();
+                }
+                *Result = MakeShared<Gs2::UE5::Guild::Domain::Model::FEzLastGuildMasterActivityGameSessionDomain>(
+                    Task->GetTask().Result(),
+                    Self->GameSession,
+                    Self->ConnectionValue
+                );
+                Task->EnsureCompletion();
+                return nullptr;
+            },
+            nullptr
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            Future->EnsureCompletion();
+            return Future->GetTask().Error();
+        }
+        Future->EnsureCompletion();
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FEzGuildGameSessionDomain::FPromoteSeniorMemberTask>> FEzGuildGameSessionDomain::PromoteSeniorMember(
+    )
+    {
+        return Gs2::Core::Util::New<FAsyncTask<FPromoteSeniorMemberTask>>(
+            this->AsShared()
+        );
+    }
+
     Gs2::UE5::Guild::Domain::Iterator::FEzDescribeReceiveRequestsIteratorPtr FEzGuildGameSessionDomain::ReceiveRequests(
     ) const
     {
@@ -311,6 +361,17 @@ namespace Gs2::UE5::Guild::Domain::Model
     {
         return MakeShared<Gs2::UE5::Guild::Domain::Model::FEzIgnoreUserGameSessionDomain>(
             Domain->IgnoreUser(
+            ),
+            GameSession,
+            ConnectionValue
+        );
+    }
+
+    Gs2::UE5::Guild::Domain::Model::FEzLastGuildMasterActivityGameSessionDomainPtr FEzGuildGameSessionDomain::LastGuildMasterActivity(
+    ) const
+    {
+        return MakeShared<Gs2::UE5::Guild::Domain::Model::FEzLastGuildMasterActivityGameSessionDomain>(
+            Domain->LastGuildMasterActivity(
             ),
             GameSession,
             ConnectionValue
