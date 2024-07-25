@@ -731,40 +731,6 @@ namespace Gs2::Experience::Domain
                 );
             }
         }
-        if (Method == "VerifyRankByUserId") {
-            TSharedPtr<FJsonObject> RequestModelJson;
-            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Request);
-                !FJsonSerializer::Deserialize(JsonReader, RequestModelJson))
-            {
-                return;
-            }
-            TSharedPtr<FJsonObject> ResultModelJson;
-            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Result);
-                !FJsonSerializer::Deserialize(JsonReader, ResultModelJson))
-            {
-                return;
-            }
-            const auto RequestModel = Gs2::Experience::Request::FVerifyRankByUserIdRequest::FromJson(RequestModelJson);
-            const auto ResultModel = Gs2::Experience::Result::FVerifyRankByUserIdResult::FromJson(ResultModelJson);
-            
-        }
-        if (Method == "VerifyRankCapByUserId") {
-            TSharedPtr<FJsonObject> RequestModelJson;
-            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Request);
-                !FJsonSerializer::Deserialize(JsonReader, RequestModelJson))
-            {
-                return;
-            }
-            TSharedPtr<FJsonObject> ResultModelJson;
-            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Result);
-                !FJsonSerializer::Deserialize(JsonReader, ResultModelJson))
-            {
-                return;
-            }
-            const auto RequestModel = Gs2::Experience::Request::FVerifyRankCapByUserIdRequest::FromJson(RequestModelJson);
-            const auto ResultModel = Gs2::Experience::Result::FVerifyRankCapByUserIdResult::FromJson(ResultModelJson);
-            
-        }
     }
 
     void FGs2ExperienceDomain::UpdateCacheFromJobResult(

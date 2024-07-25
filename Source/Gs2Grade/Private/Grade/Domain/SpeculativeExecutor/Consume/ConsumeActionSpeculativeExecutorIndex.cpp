@@ -24,8 +24,6 @@
 
 #include "Grade/Domain/SpeculativeExecutor/Consume/ConsumeActionSpeculativeExecutorIndex.h"
 #include "Grade/Domain/SpeculativeExecutor/Consume/SubGradeByUserIdSpeculativeExecutor.h"
-#include "Grade/Domain/SpeculativeExecutor/Consume/VerifyGradeByUserIdSpeculativeExecutor.h"
-#include "Grade/Domain/SpeculativeExecutor/Consume/VerifyGradeUpMaterialByUserIdSpeculativeExecutor.h"
 
 #include "Core/Domain/Gs2.h"
 
@@ -76,50 +74,6 @@ namespace Gs2::Grade::Domain::SpeculativeExecutor
             auto Request = Request::FSubGradeByUserIdRequest::FromJson(RequestModelJson);
             Request = FSubGradeByUserIdSpeculativeExecutor::Rate(Request, Rate);
             auto Future = FSubGradeByUserIdSpeculativeExecutor::Execute(
-                Domain,
-                Service,
-                AccessToken,
-                Request
-            );
-            Future->StartSynchronousTask();
-            if (Future->GetTask().IsError())
-            {
-                return Future->GetTask().Error();
-            }
-            *Result = Future->GetTask().Result();
-        }
-        if (FVerifyGradeByUserIdSpeculativeExecutor::Action() == NewConsumeAction->GetAction()) {
-            TSharedPtr<FJsonObject> RequestModelJson;
-            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(NewConsumeAction->GetRequest().IsSet() ? *NewConsumeAction->GetRequest() : "{}");
-                !FJsonSerializer::Deserialize(JsonReader, RequestModelJson))
-            {
-                return nullptr;
-            }
-            auto Request = Request::FVerifyGradeByUserIdRequest::FromJson(RequestModelJson);
-            Request = FVerifyGradeByUserIdSpeculativeExecutor::Rate(Request, Rate);
-            auto Future = FVerifyGradeByUserIdSpeculativeExecutor::Execute(
-                Domain,
-                Service,
-                AccessToken,
-                Request
-            );
-            Future->StartSynchronousTask();
-            if (Future->GetTask().IsError())
-            {
-                return Future->GetTask().Error();
-            }
-            *Result = Future->GetTask().Result();
-        }
-        if (FVerifyGradeUpMaterialByUserIdSpeculativeExecutor::Action() == NewConsumeAction->GetAction()) {
-            TSharedPtr<FJsonObject> RequestModelJson;
-            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(NewConsumeAction->GetRequest().IsSet() ? *NewConsumeAction->GetRequest() : "{}");
-                !FJsonSerializer::Deserialize(JsonReader, RequestModelJson))
-            {
-                return nullptr;
-            }
-            auto Request = Request::FVerifyGradeUpMaterialByUserIdRequest::FromJson(RequestModelJson);
-            Request = FVerifyGradeUpMaterialByUserIdSpeculativeExecutor::Rate(Request, Rate);
-            auto Future = FVerifyGradeUpMaterialByUserIdSpeculativeExecutor::Execute(
                 Domain,
                 Service,
                 AccessToken,

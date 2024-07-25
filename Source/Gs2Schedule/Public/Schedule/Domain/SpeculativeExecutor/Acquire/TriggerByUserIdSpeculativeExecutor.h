@@ -21,6 +21,7 @@
 #include "Core/Domain/Gs2Core.h"
 #include "Core/Model/AcquireAction.h"
 #include "Core/Model/ConsumeAction.h"
+#include "Core/Model/VerifyAction.h"
 #include "Schedule/Model/Trigger.h"
 #include "Schedule/Request/TriggerByUserIdRequest.h"
 #include "Math/BigInt.h"

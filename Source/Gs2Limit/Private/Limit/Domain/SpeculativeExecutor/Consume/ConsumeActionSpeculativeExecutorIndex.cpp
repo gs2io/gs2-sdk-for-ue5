@@ -24,7 +24,6 @@
 
 #include "Limit/Domain/SpeculativeExecutor/Consume/ConsumeActionSpeculativeExecutorIndex.h"
 #include "Limit/Domain/SpeculativeExecutor/Consume/CountUpByUserIdSpeculativeExecutor.h"
-#include "Limit/Domain/SpeculativeExecutor/Consume/VerifyCounterByUserIdSpeculativeExecutor.h"
 
 #include "Core/Domain/Gs2.h"
 
@@ -75,28 +74,6 @@ namespace Gs2::Limit::Domain::SpeculativeExecutor
             auto Request = Request::FCountUpByUserIdRequest::FromJson(RequestModelJson);
             Request = FCountUpByUserIdSpeculativeExecutor::Rate(Request, Rate);
             auto Future = FCountUpByUserIdSpeculativeExecutor::Execute(
-                Domain,
-                Service,
-                AccessToken,
-                Request
-            );
-            Future->StartSynchronousTask();
-            if (Future->GetTask().IsError())
-            {
-                return Future->GetTask().Error();
-            }
-            *Result = Future->GetTask().Result();
-        }
-        if (FVerifyCounterByUserIdSpeculativeExecutor::Action() == NewConsumeAction->GetAction()) {
-            TSharedPtr<FJsonObject> RequestModelJson;
-            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(NewConsumeAction->GetRequest().IsSet() ? *NewConsumeAction->GetRequest() : "{}");
-                !FJsonSerializer::Deserialize(JsonReader, RequestModelJson))
-            {
-                return nullptr;
-            }
-            auto Request = Request::FVerifyCounterByUserIdRequest::FromJson(RequestModelJson);
-            Request = FVerifyCounterByUserIdSpeculativeExecutor::Rate(Request, Rate);
-            auto Future = FVerifyCounterByUserIdSpeculativeExecutor::Execute(
                 Domain,
                 Service,
                 AccessToken,

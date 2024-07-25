@@ -23,7 +23,6 @@
 #endif
 
 #include "Enchant/Domain/SpeculativeExecutor/Consume/ConsumeActionSpeculativeExecutorIndex.h"
-#include "Enchant/Domain/SpeculativeExecutor/Consume/VerifyRarityParameterStatusByUserIdSpeculativeExecutor.h"
 
 #include "Core/Domain/Gs2.h"
 
@@ -64,28 +63,6 @@ namespace Gs2::Enchant::Domain::SpeculativeExecutor
         auto NewConsumeAction = ConsumeAction->WithAction(ConsumeAction->GetAction()->Replace(TEXT("{region}"), ToCStr(Domain->RestSession->RegionName())));
         NewConsumeAction = ConsumeAction->WithAction(NewConsumeAction->GetAction()->Replace(TEXT("{ownerId}"), ToCStr(Domain->RestSession->OwnerId())));
         NewConsumeAction = ConsumeAction->WithAction(NewConsumeAction->GetAction()->Replace(TEXT("{userId}"), ToCStr(AccessToken->GetUserId().IsSet() ? *AccessToken->GetUserId() : "")));
-        if (FVerifyRarityParameterStatusByUserIdSpeculativeExecutor::Action() == NewConsumeAction->GetAction()) {
-            TSharedPtr<FJsonObject> RequestModelJson;
-            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(NewConsumeAction->GetRequest().IsSet() ? *NewConsumeAction->GetRequest() : "{}");
-                !FJsonSerializer::Deserialize(JsonReader, RequestModelJson))
-            {
-                return nullptr;
-            }
-            auto Request = Request::FVerifyRarityParameterStatusByUserIdRequest::FromJson(RequestModelJson);
-            Request = FVerifyRarityParameterStatusByUserIdSpeculativeExecutor::Rate(Request, Rate);
-            auto Future = FVerifyRarityParameterStatusByUserIdSpeculativeExecutor::Execute(
-                Domain,
-                Service,
-                AccessToken,
-                Request
-            );
-            Future->StartSynchronousTask();
-            if (Future->GetTask().IsError())
-            {
-                return Future->GetTask().Error();
-            }
-            *Result = Future->GetTask().Result();
-        }
         return nullptr;
     }
 

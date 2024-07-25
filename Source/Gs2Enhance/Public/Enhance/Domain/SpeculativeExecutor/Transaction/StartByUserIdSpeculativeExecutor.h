@@ -21,6 +21,7 @@
 #include "Core/Domain/Gs2Core.h"
 #include "Core/Model/AcquireAction.h"
 #include "Core/Model/ConsumeAction.h"
+#include "Core/Model/VerifyAction.h"
 #include "Enhance/Domain/Gs2Enhance.h"
 #include "Enhance/Request/StartByUserIdRequest.h"
 #include "Math/BigInt.h"

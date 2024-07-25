@@ -567,23 +567,6 @@ namespace Gs2::Dictionary::Domain
                 }
             }
         }
-        if (Method == "VerifyEntryByUserId") {
-            TSharedPtr<FJsonObject> RequestModelJson;
-            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Request);
-                !FJsonSerializer::Deserialize(JsonReader, RequestModelJson))
-            {
-                return;
-            }
-            TSharedPtr<FJsonObject> ResultModelJson;
-            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Result);
-                !FJsonSerializer::Deserialize(JsonReader, ResultModelJson))
-            {
-                return;
-            }
-            const auto RequestModel = Gs2::Dictionary::Request::FVerifyEntryByUserIdRequest::FromJson(RequestModelJson);
-            const auto ResultModel = Gs2::Dictionary::Result::FVerifyEntryByUserIdResult::FromJson(ResultModelJson);
-            
-        }
     }
 
     void FGs2DictionaryDomain::UpdateCacheFromJobResult(

@@ -21,6 +21,7 @@
 #include "Core/Domain/Gs2Core.h"
 #include "Core/Model/AcquireAction.h"
 #include "Core/Model/ConsumeAction.h"
+#include "Core/Model/VerifyAction.h"
 #include "Inventory/Model/ItemSet.h"
 #include "Inventory/Request/AcquireItemSetWithGradeByUserIdRequest.h"
 #include "Math/BigInt.h"

@@ -25,8 +25,6 @@
 #include "Experience/Domain/SpeculativeExecutor/Consume/ConsumeActionSpeculativeExecutorIndex.h"
 #include "Experience/Domain/SpeculativeExecutor/Consume/SubExperienceByUserIdSpeculativeExecutor.h"
 #include "Experience/Domain/SpeculativeExecutor/Consume/SubRankCapByUserIdSpeculativeExecutor.h"
-#include "Experience/Domain/SpeculativeExecutor/Consume/VerifyRankByUserIdSpeculativeExecutor.h"
-#include "Experience/Domain/SpeculativeExecutor/Consume/VerifyRankCapByUserIdSpeculativeExecutor.h"
 
 #include "Core/Domain/Gs2.h"
 
@@ -99,50 +97,6 @@ namespace Gs2::Experience::Domain::SpeculativeExecutor
             auto Request = Request::FSubRankCapByUserIdRequest::FromJson(RequestModelJson);
             Request = FSubRankCapByUserIdSpeculativeExecutor::Rate(Request, Rate);
             auto Future = FSubRankCapByUserIdSpeculativeExecutor::Execute(
-                Domain,
-                Service,
-                AccessToken,
-                Request
-            );
-            Future->StartSynchronousTask();
-            if (Future->GetTask().IsError())
-            {
-                return Future->GetTask().Error();
-            }
-            *Result = Future->GetTask().Result();
-        }
-        if (FVerifyRankByUserIdSpeculativeExecutor::Action() == NewConsumeAction->GetAction()) {
-            TSharedPtr<FJsonObject> RequestModelJson;
-            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(NewConsumeAction->GetRequest().IsSet() ? *NewConsumeAction->GetRequest() : "{}");
-                !FJsonSerializer::Deserialize(JsonReader, RequestModelJson))
-            {
-                return nullptr;
-            }
-            auto Request = Request::FVerifyRankByUserIdRequest::FromJson(RequestModelJson);
-            Request = FVerifyRankByUserIdSpeculativeExecutor::Rate(Request, Rate);
-            auto Future = FVerifyRankByUserIdSpeculativeExecutor::Execute(
-                Domain,
-                Service,
-                AccessToken,
-                Request
-            );
-            Future->StartSynchronousTask();
-            if (Future->GetTask().IsError())
-            {
-                return Future->GetTask().Error();
-            }
-            *Result = Future->GetTask().Result();
-        }
-        if (FVerifyRankCapByUserIdSpeculativeExecutor::Action() == NewConsumeAction->GetAction()) {
-            TSharedPtr<FJsonObject> RequestModelJson;
-            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(NewConsumeAction->GetRequest().IsSet() ? *NewConsumeAction->GetRequest() : "{}");
-                !FJsonSerializer::Deserialize(JsonReader, RequestModelJson))
-            {
-                return nullptr;
-            }
-            auto Request = Request::FVerifyRankCapByUserIdRequest::FromJson(RequestModelJson);
-            Request = FVerifyRankCapByUserIdSpeculativeExecutor::Rate(Request, Rate);
-            auto Future = FVerifyRankCapByUserIdSpeculativeExecutor::Execute(
                 Domain,
                 Service,
                 AccessToken,

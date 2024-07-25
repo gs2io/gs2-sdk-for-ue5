@@ -21,6 +21,7 @@
 #include "Core/Domain/Gs2Core.h"
 #include "Core/Model/AcquireAction.h"
 #include "Core/Model/ConsumeAction.h"
+#include "Core/Model/VerifyAction.h"
 #include "Inbox/Domain/Gs2Inbox.h"
 #include "Inbox/Request/ReadMessageByUserIdRequest.h"
 #include "Math/BigInt.h"

@@ -1094,23 +1094,6 @@ namespace Gs2::Inventory::Domain
         const FString Request,
         const FString Result
     ) {
-        if (Method == "VerifyInventoryCurrentMaxCapacityByUserId") {
-            TSharedPtr<FJsonObject> RequestModelJson;
-            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Request);
-                !FJsonSerializer::Deserialize(JsonReader, RequestModelJson))
-            {
-                return;
-            }
-            TSharedPtr<FJsonObject> ResultModelJson;
-            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Result);
-                !FJsonSerializer::Deserialize(JsonReader, ResultModelJson))
-            {
-                return;
-            }
-            const auto RequestModel = Gs2::Inventory::Request::FVerifyInventoryCurrentMaxCapacityByUserIdRequest::FromJson(RequestModelJson);
-            const auto ResultModel = Gs2::Inventory::Result::FVerifyInventoryCurrentMaxCapacityByUserIdResult::FromJson(ResultModelJson);
-            
-        }
         if (Method == "ConsumeItemSetByUserId") {
             TSharedPtr<FJsonObject> RequestModelJson;
             if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Request);
@@ -1255,96 +1238,6 @@ namespace Gs2::Inventory::Domain
                 }
             }
         }
-        if (Method == "VerifyItemSetByUserId") {
-            TSharedPtr<FJsonObject> RequestModelJson;
-            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Request);
-                !FJsonSerializer::Deserialize(JsonReader, RequestModelJson))
-            {
-                return;
-            }
-            TSharedPtr<FJsonObject> ResultModelJson;
-            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Result);
-                !FJsonSerializer::Deserialize(JsonReader, ResultModelJson))
-            {
-                return;
-            }
-            const auto RequestModel = Gs2::Inventory::Request::FVerifyItemSetByUserIdRequest::FromJson(RequestModelJson);
-            const auto ResultModel = Gs2::Inventory::Result::FVerifyItemSetByUserIdResult::FromJson(ResultModelJson);
-            
-        }
-        if (Method == "VerifyReferenceOfByUserId") {
-            TSharedPtr<FJsonObject> RequestModelJson;
-            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Request);
-                !FJsonSerializer::Deserialize(JsonReader, RequestModelJson))
-            {
-                return;
-            }
-            TSharedPtr<FJsonObject> ResultModelJson;
-            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Result);
-                !FJsonSerializer::Deserialize(JsonReader, ResultModelJson))
-            {
-                return;
-            }
-            const auto RequestModel = Gs2::Inventory::Request::FVerifyReferenceOfByUserIdRequest::FromJson(RequestModelJson);
-            const auto ResultModel = Gs2::Inventory::Result::FVerifyReferenceOfByUserIdResult::FromJson(ResultModelJson);
-            
-            if (ResultModel->GetItemSet() != nullptr)
-            {
-                const auto ParentKey = Gs2::Inventory::Domain::Model::FInventoryDomain::CreateCacheParentKey(
-                    RequestModel->GetNamespaceName(),
-                    RequestModel->GetUserId(),
-                    RequestModel->GetInventoryName(),
-                    "ItemSet"
-                );
-                const auto Key = Gs2::Inventory::Domain::Model::FItemSetDomain::CreateCacheKey(
-                    ResultModel->GetItemSet()->GetItemName(),
-                    ResultModel->GetItemSet()->GetName()
-                );
-                Gs2->Cache->Put(
-                    Gs2::Inventory::Model::FItemSet::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItemSet(),
-                    ResultModel->GetItemSet()->GetExpiresAt().IsSet() && *ResultModel->GetItemSet()->GetExpiresAt() != 0 ? FDateTime::FromUnixTimestamp(*ResultModel->GetItemSet()->GetExpiresAt() / 1000) : FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
-            if (ResultModel->GetItemModel() != nullptr)
-            {
-                const auto ParentKey = Gs2::Inventory::Domain::Model::FInventoryModelDomain::CreateCacheParentKey(
-                    RequestModel->GetNamespaceName(),
-                    RequestModel->GetInventoryName(),
-                    "ItemModel"
-                );
-                const auto Key = Gs2::Inventory::Domain::Model::FItemModelDomain::CreateCacheKey(
-                    ResultModel->GetItemModel()->GetName()
-                );
-                Gs2->Cache->Put(
-                    Gs2::Inventory::Model::FItemModel::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItemModel(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
-            if (ResultModel->GetInventory() != nullptr)
-            {
-                const auto ParentKey = Gs2::Inventory::Domain::Model::FUserDomain::CreateCacheParentKey(
-                    RequestModel->GetNamespaceName(),
-                    RequestModel->GetUserId(),
-                    "Inventory"
-                );
-                const auto Key = Gs2::Inventory::Domain::Model::FInventoryDomain::CreateCacheKey(
-                    ResultModel->GetInventory()->GetInventoryName()
-                );
-                Gs2->Cache->Put(
-                    Gs2::Inventory::Model::FInventory::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetInventory(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
-        }
         if (Method == "ConsumeSimpleItemsByUserId") {
             TSharedPtr<FJsonObject> RequestModelJson;
             if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Request);
@@ -1382,23 +1275,6 @@ namespace Gs2::Inventory::Domain
                 }
             }
         }
-        if (Method == "VerifySimpleItemByUserId") {
-            TSharedPtr<FJsonObject> RequestModelJson;
-            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Request);
-                !FJsonSerializer::Deserialize(JsonReader, RequestModelJson))
-            {
-                return;
-            }
-            TSharedPtr<FJsonObject> ResultModelJson;
-            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Result);
-                !FJsonSerializer::Deserialize(JsonReader, ResultModelJson))
-            {
-                return;
-            }
-            const auto RequestModel = Gs2::Inventory::Request::FVerifySimpleItemByUserIdRequest::FromJson(RequestModelJson);
-            const auto ResultModel = Gs2::Inventory::Result::FVerifySimpleItemByUserIdResult::FromJson(ResultModelJson);
-            
-        }
         if (Method == "ConsumeBigItemByUserId") {
             TSharedPtr<FJsonObject> RequestModelJson;
             if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Request);
@@ -1434,23 +1310,6 @@ namespace Gs2::Inventory::Domain
                     FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
                 );
             }
-        }
-        if (Method == "VerifyBigItemByUserId") {
-            TSharedPtr<FJsonObject> RequestModelJson;
-            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Request);
-                !FJsonSerializer::Deserialize(JsonReader, RequestModelJson))
-            {
-                return;
-            }
-            TSharedPtr<FJsonObject> ResultModelJson;
-            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Result);
-                !FJsonSerializer::Deserialize(JsonReader, ResultModelJson))
-            {
-                return;
-            }
-            const auto RequestModel = Gs2::Inventory::Request::FVerifyBigItemByUserIdRequest::FromJson(RequestModelJson);
-            const auto ResultModel = Gs2::Inventory::Result::FVerifyBigItemByUserIdResult::FromJson(ResultModelJson);
-            
         }
     }
 

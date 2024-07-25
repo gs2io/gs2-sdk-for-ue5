@@ -23,7 +23,6 @@
 #endif
 
 #include "Matchmaking/Domain/SpeculativeExecutor/Consume/ConsumeActionSpeculativeExecutorIndex.h"
-#include "Matchmaking/Domain/SpeculativeExecutor/Consume/VerifyIncludeParticipantByUserIdSpeculativeExecutor.h"
 
 #include "Core/Domain/Gs2.h"
 
@@ -64,28 +63,6 @@ namespace Gs2::Matchmaking::Domain::SpeculativeExecutor
         auto NewConsumeAction = ConsumeAction->WithAction(ConsumeAction->GetAction()->Replace(TEXT("{region}"), ToCStr(Domain->RestSession->RegionName())));
         NewConsumeAction = ConsumeAction->WithAction(NewConsumeAction->GetAction()->Replace(TEXT("{ownerId}"), ToCStr(Domain->RestSession->OwnerId())));
         NewConsumeAction = ConsumeAction->WithAction(NewConsumeAction->GetAction()->Replace(TEXT("{userId}"), ToCStr(AccessToken->GetUserId().IsSet() ? *AccessToken->GetUserId() : "")));
-        if (FVerifyIncludeParticipantByUserIdSpeculativeExecutor::Action() == NewConsumeAction->GetAction()) {
-            TSharedPtr<FJsonObject> RequestModelJson;
-            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(NewConsumeAction->GetRequest().IsSet() ? *NewConsumeAction->GetRequest() : "{}");
-                !FJsonSerializer::Deserialize(JsonReader, RequestModelJson))
-            {
-                return nullptr;
-            }
-            auto Request = Request::FVerifyIncludeParticipantByUserIdRequest::FromJson(RequestModelJson);
-            Request = FVerifyIncludeParticipantByUserIdSpeculativeExecutor::Rate(Request, Rate);
-            auto Future = FVerifyIncludeParticipantByUserIdSpeculativeExecutor::Execute(
-                Domain,
-                Service,
-                AccessToken,
-                Request
-            );
-            Future->StartSynchronousTask();
-            if (Future->GetTask().IsError())
-            {
-                return Future->GetTask().Error();
-            }
-            *Result = Future->GetTask().Result();
-        }
         return nullptr;
     }
 

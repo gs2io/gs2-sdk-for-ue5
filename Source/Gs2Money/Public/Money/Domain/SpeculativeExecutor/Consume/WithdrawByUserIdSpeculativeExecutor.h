@@ -21,6 +21,7 @@
 #include "Core/Domain/Gs2Core.h"
 #include "Core/Model/AcquireAction.h"
 #include "Core/Model/ConsumeAction.h"
+#include "Core/Model/VerifyAction.h"
 #include "Money/Model/Wallet.h"
 #include "Money/Request/WithdrawByUserIdRequest.h"
 #include "Math/BigInt.h"

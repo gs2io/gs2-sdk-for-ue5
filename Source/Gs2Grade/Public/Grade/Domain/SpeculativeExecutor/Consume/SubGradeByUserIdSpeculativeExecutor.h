@@ -21,6 +21,7 @@
 #include "Core/Domain/Gs2Core.h"
 #include "Core/Model/AcquireAction.h"
 #include "Core/Model/ConsumeAction.h"
+#include "Core/Model/VerifyAction.h"
 #include "Grade/Model/Status.h"
 #include "Grade/Request/SubGradeByUserIdRequest.h"
 #include "Math/BigInt.h"

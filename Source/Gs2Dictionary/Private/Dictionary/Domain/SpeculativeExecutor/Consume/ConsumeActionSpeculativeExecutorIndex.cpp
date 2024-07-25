@@ -24,7 +24,6 @@
 
 #include "Dictionary/Domain/SpeculativeExecutor/Consume/ConsumeActionSpeculativeExecutorIndex.h"
 #include "Dictionary/Domain/SpeculativeExecutor/Consume/DeleteEntriesByUserIdSpeculativeExecutor.h"
-#include "Dictionary/Domain/SpeculativeExecutor/Consume/VerifyEntryByUserIdSpeculativeExecutor.h"
 
 #include "Core/Domain/Gs2.h"
 
@@ -75,28 +74,6 @@ namespace Gs2::Dictionary::Domain::SpeculativeExecutor
             auto Request = Request::FDeleteEntriesByUserIdRequest::FromJson(RequestModelJson);
             Request = FDeleteEntriesByUserIdSpeculativeExecutor::Rate(Request, Rate);
             auto Future = FDeleteEntriesByUserIdSpeculativeExecutor::Execute(
-                Domain,
-                Service,
-                AccessToken,
-                Request
-            );
-            Future->StartSynchronousTask();
-            if (Future->GetTask().IsError())
-            {
-                return Future->GetTask().Error();
-            }
-            *Result = Future->GetTask().Result();
-        }
-        if (FVerifyEntryByUserIdSpeculativeExecutor::Action() == NewConsumeAction->GetAction()) {
-            TSharedPtr<FJsonObject> RequestModelJson;
-            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(NewConsumeAction->GetRequest().IsSet() ? *NewConsumeAction->GetRequest() : "{}");
-                !FJsonSerializer::Deserialize(JsonReader, RequestModelJson))
-            {
-                return nullptr;
-            }
-            auto Request = Request::FVerifyEntryByUserIdRequest::FromJson(RequestModelJson);
-            Request = FVerifyEntryByUserIdSpeculativeExecutor::Rate(Request, Rate);
-            auto Future = FVerifyEntryByUserIdSpeculativeExecutor::Execute(
                 Domain,
                 Service,
                 AccessToken,

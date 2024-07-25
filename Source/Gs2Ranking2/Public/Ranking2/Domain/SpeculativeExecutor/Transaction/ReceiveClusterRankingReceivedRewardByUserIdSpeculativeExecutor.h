@@ -21,6 +21,7 @@
 #include "Core/Domain/Gs2Core.h"
 #include "Core/Model/AcquireAction.h"
 #include "Core/Model/ConsumeAction.h"
+#include "Core/Model/VerifyAction.h"
 #include "Ranking2/Domain/Gs2Ranking2.h"
 #include "Ranking2/Request/ReceiveClusterRankingReceivedRewardByUserIdRequest.h"
 #include "Math/BigInt.h"

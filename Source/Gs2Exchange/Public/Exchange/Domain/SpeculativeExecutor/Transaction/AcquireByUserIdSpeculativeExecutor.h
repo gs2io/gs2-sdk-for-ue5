@@ -21,6 +21,7 @@
 #include "Core/Domain/Gs2Core.h"
 #include "Core/Model/AcquireAction.h"
 #include "Core/Model/ConsumeAction.h"
+#include "Core/Model/VerifyAction.h"
 #include "Exchange/Domain/Gs2Exchange.h"
 #include "Exchange/Request/AcquireByUserIdRequest.h"
 #include "Math/BigInt.h"
