@@ -91,6 +91,9 @@ namespace Gs2::Schedule::Task::Rest
             if (this->Request->GetContextStack().IsSet()) {
                 queryStrings.Add("contextStack=" + FGenericPlatformHttp::UrlEncode(*this->Request->GetContextStack().GetValue()));
             }
+            if (this->Request->GetIsInSchedule().IsSet()) {
+                queryStrings.Add("isInSchedule=" + this->Request->GetIsInScheduleString());
+            }
             Url += "?" + FString::Join(queryStrings, TEXT("&"));
 
             request->SetURL(Url);
