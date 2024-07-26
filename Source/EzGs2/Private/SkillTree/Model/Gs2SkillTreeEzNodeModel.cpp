@@ -35,6 +35,14 @@ namespace Gs2::UE5::SkillTree::Model
         return SharedThis(this);
     }
 
+    TSharedPtr<FEzNodeModel> FEzNodeModel::WithReleaseVerifyActions(
+        const TSharedPtr<TArray<TSharedPtr<Gs2::UE5::SkillTree::Model::FEzVerifyAction>>> ReleaseVerifyActions
+    )
+    {
+        this->ReleaseVerifyActionsValue = ReleaseVerifyActions;
+        return SharedThis(this);
+    }
+
     TSharedPtr<FEzNodeModel> FEzNodeModel::WithReleaseConsumeActions(
         const TSharedPtr<TArray<TSharedPtr<Gs2::UE5::SkillTree::Model::FEzConsumeAction>>> ReleaseConsumeActions
     )
@@ -66,6 +74,10 @@ namespace Gs2::UE5::SkillTree::Model
     {
         return MetadataValue;
     }
+    TSharedPtr<TArray<TSharedPtr<Gs2::UE5::SkillTree::Model::FEzVerifyAction>>> FEzNodeModel::GetReleaseVerifyActions() const
+    {
+        return ReleaseVerifyActionsValue;
+    }
     TSharedPtr<TArray<TSharedPtr<Gs2::UE5::SkillTree::Model::FEzConsumeAction>>> FEzNodeModel::GetReleaseConsumeActions() const
     {
         return ReleaseConsumeActionsValue;
@@ -93,6 +105,20 @@ namespace Gs2::UE5::SkillTree::Model
         return MakeShared<Gs2::SkillTree::Model::FNodeModel>()
             ->WithName(NameValue)
             ->WithMetadata(MetadataValue)
+            ->WithReleaseVerifyActions([&]
+                {
+                    auto v = MakeShared<TArray<TSharedPtr<Gs2::SkillTree::Model::FVerifyAction>>>();
+                    if (ReleaseVerifyActionsValue == nullptr)
+                    {
+                        return v;
+                    }
+                    for (auto v2 : *ReleaseVerifyActionsValue)
+                    {
+                        v->Add(v2->ToModel());
+                    }
+                    return v;
+                }()
+            )
             ->WithReleaseConsumeActions([&]
                 {
                     auto v = MakeShared<TArray<TSharedPtr<Gs2::SkillTree::Model::FConsumeAction>>>();
@@ -133,6 +159,20 @@ namespace Gs2::UE5::SkillTree::Model
         return MakeShared<FEzNodeModel>()
             ->WithName(Model->GetName())
             ->WithMetadata(Model->GetMetadata())
+            ->WithReleaseVerifyActions([&]
+                {
+                    auto v = MakeShared<TArray<TSharedPtr<FEzVerifyAction>>>();
+                    if (Model->GetReleaseVerifyActions() == nullptr)
+                    {
+                        return v;
+                    }
+                    for (auto v2 : *Model->GetReleaseVerifyActions())
+                    {
+                        v->Add(FEzVerifyAction::FromModel(v2));
+                    }
+                    return v;
+                }()
+            )
             ->WithReleaseConsumeActions([&]
                 {
                     auto v = MakeShared<TArray<TSharedPtr<FEzConsumeAction>>>();

@@ -19,7 +19,7 @@
 #include "CoreMinimal.h"
 #include "Mission/Model/MissionTaskModel.h"
 #include "Gs2MissionEzTargetCounterModel.h"
-#include "Gs2MissionEzConsumeAction.h"
+#include "Gs2MissionEzVerifyAction.h"
 #include "Gs2MissionEzAcquireAction.h"
 
 namespace Gs2::UE5::Mission::Model
@@ -30,7 +30,7 @@ namespace Gs2::UE5::Mission::Model
         TOptional<FString> MetadataValue;
         TOptional<FString> VerifyCompleteTypeValue;
         TSharedPtr<Gs2::UE5::Mission::Model::FEzTargetCounterModel> TargetCounterValue;
-        TSharedPtr<TArray<TSharedPtr<Gs2::UE5::Mission::Model::FEzConsumeAction>>> VerifyCompleteConsumeActionsValue;
+        TSharedPtr<TArray<TSharedPtr<Gs2::UE5::Mission::Model::FEzVerifyAction>>> VerifyCompleteConsumeActionsValue;
         TSharedPtr<TArray<TSharedPtr<Gs2::UE5::Mission::Model::FEzAcquireAction>>> CompleteAcquireActionsValue;
         TOptional<FString> ChallengePeriodEventIdValue;
         TOptional<FString> PremiseMissionTaskNameValue;
@@ -43,7 +43,7 @@ namespace Gs2::UE5::Mission::Model
         TSharedPtr<FEzMissionTaskModel> WithMetadata(const TOptional<FString> Metadata);
         TSharedPtr<FEzMissionTaskModel> WithVerifyCompleteType(const TOptional<FString> VerifyCompleteType);
         TSharedPtr<FEzMissionTaskModel> WithTargetCounter(const TSharedPtr<Gs2::UE5::Mission::Model::FEzTargetCounterModel> TargetCounter);
-        TSharedPtr<FEzMissionTaskModel> WithVerifyCompleteConsumeActions(const TSharedPtr<TArray<TSharedPtr<Gs2::UE5::Mission::Model::FEzConsumeAction>>> VerifyCompleteConsumeActions);
+        TSharedPtr<FEzMissionTaskModel> WithVerifyCompleteConsumeActions(const TSharedPtr<TArray<TSharedPtr<Gs2::UE5::Mission::Model::FEzVerifyAction>>> VerifyCompleteConsumeActions);
         TSharedPtr<FEzMissionTaskModel> WithCompleteAcquireActions(const TSharedPtr<TArray<TSharedPtr<Gs2::UE5::Mission::Model::FEzAcquireAction>>> CompleteAcquireActions);
         TSharedPtr<FEzMissionTaskModel> WithChallengePeriodEventId(const TOptional<FString> ChallengePeriodEventId);
         TSharedPtr<FEzMissionTaskModel> WithPremiseMissionTaskName(const TOptional<FString> PremiseMissionTaskName);
@@ -59,7 +59,7 @@ namespace Gs2::UE5::Mission::Model
 
         TSharedPtr<Gs2::UE5::Mission::Model::FEzTargetCounterModel> GetTargetCounter() const;
 
-        TSharedPtr<TArray<TSharedPtr<Gs2::UE5::Mission::Model::FEzConsumeAction>>> GetVerifyCompleteConsumeActions() const;
+        TSharedPtr<TArray<TSharedPtr<Gs2::UE5::Mission::Model::FEzVerifyAction>>> GetVerifyCompleteConsumeActions() const;
 
         TSharedPtr<TArray<TSharedPtr<Gs2::UE5::Mission::Model::FEzAcquireAction>>> GetCompleteAcquireActions() const;
 

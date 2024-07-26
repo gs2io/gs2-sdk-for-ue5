@@ -24,6 +24,7 @@
 #include "Exchange/Model/Gs2ExchangeEzConfig.h"
 #include "Exchange/Model/Gs2ExchangeEzAcquireAction.h"
 #include "Exchange/Model/Gs2ExchangeEzConsumeAction.h"
+#include "Exchange/Model/Gs2ExchangeEzVerifyAction.h"
 #include "Gs2ExchangeEzRateModelDomain.h"
 #include "Exchange/Domain/Iterator/Gs2ExchangeEzDescribeRateModelsIterator.h"
 #include "Gs2ExchangeEzUserDomain.h"

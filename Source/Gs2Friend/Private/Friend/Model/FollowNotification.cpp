@@ -30,6 +30,17 @@ namespace Gs2::Friend::Model
         return NamespaceNameValue;
     }
 
+    TSharedPtr<FFollowNotification> FFollowNotification::WithUserId(
+        const TOptional<FString> UserId
+    ) {
+        UserIdValue = UserId;
+        return SharedThis(this);
+    }
+    TOptional<FString> FFollowNotification::GetUserId() const
+    {
+        return UserIdValue;
+    }
+
     TSharedPtr<FFollowNotification> FFollowNotification::WithFromUserId(
         const TOptional<FString> FromUserId
     ) {
@@ -51,6 +62,15 @@ namespace Gs2::Friend::Model
                 {
                     FString v("");
                     if (Data->TryGetStringField(ANSI_TO_TCHAR("namespaceName"), v))
+                    {
+                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                    }
+                    return TOptional<FString>();
+                }() : TOptional<FString>())
+            ->WithUserId(Data->HasField(ANSI_TO_TCHAR("userId")) ? [Data]() -> TOptional<FString>
+                {
+                    FString v("");
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("userId"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }

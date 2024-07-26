@@ -190,6 +190,15 @@ namespace Gs2::Distributor
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::WebSocket::FRunVerifyTaskTask>> FGs2DistributorWebSocketClient::RunVerifyTask(
+        const Request::FRunVerifyTaskRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FRunVerifyTaskTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::WebSocket::FRunStampTaskTask>> FGs2DistributorWebSocketClient::RunStampTask(
         const Request::FRunStampTaskRequestPtr Request) const
     {
@@ -212,6 +221,15 @@ namespace Gs2::Distributor
         const Request::FRunStampSheetExpressRequestPtr Request) const
     {
         return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FRunStampSheetExpressTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FRunVerifyTaskWithoutNamespaceTask>> FGs2DistributorWebSocketClient::RunVerifyTaskWithoutNamespace(
+        const Request::FRunVerifyTaskWithoutNamespaceRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FRunVerifyTaskWithoutNamespaceTask>>(
             Session,
             Request
         );

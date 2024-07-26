@@ -28,6 +28,7 @@ namespace Gs2::LoginReward::Model
         RepeatValue(TOptional<FString>()),
         RewardsValue(nullptr),
         MissedReceiveReliefValue(TOptional<FString>()),
+        MissedReceiveReliefVerifyActionsValue(nullptr),
         MissedReceiveReliefConsumeActionsValue(nullptr)
     {
     }
@@ -44,6 +45,7 @@ namespace Gs2::LoginReward::Model
         RepeatValue(From.RepeatValue),
         RewardsValue(From.RewardsValue),
         MissedReceiveReliefValue(From.MissedReceiveReliefValue),
+        MissedReceiveReliefVerifyActionsValue(From.MissedReceiveReliefVerifyActionsValue),
         MissedReceiveReliefConsumeActionsValue(From.MissedReceiveReliefConsumeActionsValue)
     {
     }
@@ -120,6 +122,14 @@ namespace Gs2::LoginReward::Model
         return SharedThis(this);
     }
 
+    TSharedPtr<FBonusModel> FBonusModel::WithMissedReceiveReliefVerifyActions(
+        const TSharedPtr<TArray<TSharedPtr<Model::FVerifyAction>>> MissedReceiveReliefVerifyActions
+    )
+    {
+        this->MissedReceiveReliefVerifyActionsValue = MissedReceiveReliefVerifyActions;
+        return SharedThis(this);
+    }
+
     TSharedPtr<FBonusModel> FBonusModel::WithMissedReceiveReliefConsumeActions(
         const TSharedPtr<TArray<TSharedPtr<Model::FConsumeAction>>> MissedReceiveReliefConsumeActions
     )
@@ -171,6 +181,10 @@ namespace Gs2::LoginReward::Model
     TOptional<FString> FBonusModel::GetMissedReceiveRelief() const
     {
         return MissedReceiveReliefValue;
+    }
+    TSharedPtr<TArray<TSharedPtr<Model::FVerifyAction>>> FBonusModel::GetMissedReceiveReliefVerifyActions() const
+    {
+        return MissedReceiveReliefVerifyActionsValue;
     }
     TSharedPtr<TArray<TSharedPtr<Model::FConsumeAction>>> FBonusModel::GetMissedReceiveReliefConsumeActions() const
     {
@@ -311,6 +325,18 @@ namespace Gs2::LoginReward::Model
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
+            ->WithMissedReceiveReliefVerifyActions(Data->HasField(ANSI_TO_TCHAR("missedReceiveReliefVerifyActions")) ? [Data]() -> TSharedPtr<TArray<Model::FVerifyActionPtr>>
+                {
+                    auto v = MakeShared<TArray<Model::FVerifyActionPtr>>();
+                    if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("missedReceiveReliefVerifyActions")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("missedReceiveReliefVerifyActions")))
+                    {
+                        for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("missedReceiveReliefVerifyActions")))
+                        {
+                            v->Add(Model::FVerifyAction::FromJson(JsonObjectValue->AsObject()));
+                        }
+                    }
+                    return v;
+                 }() : MakeShared<TArray<Model::FVerifyActionPtr>>())
             ->WithMissedReceiveReliefConsumeActions(Data->HasField(ANSI_TO_TCHAR("missedReceiveReliefConsumeActions")) ? [Data]() -> TSharedPtr<TArray<Model::FConsumeActionPtr>>
                 {
                     auto v = MakeShared<TArray<Model::FConsumeActionPtr>>();
@@ -368,6 +394,15 @@ namespace Gs2::LoginReward::Model
         if (MissedReceiveReliefValue.IsSet())
         {
             JsonRootObject->SetStringField("missedReceiveRelief", MissedReceiveReliefValue.GetValue());
+        }
+        if (MissedReceiveReliefVerifyActionsValue != nullptr && MissedReceiveReliefVerifyActionsValue.IsValid())
+        {
+            TArray<TSharedPtr<FJsonValue>> v;
+            for (auto JsonObjectValue : *MissedReceiveReliefVerifyActionsValue)
+            {
+                v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
+            }
+            JsonRootObject->SetArrayField("missedReceiveReliefVerifyActions", v);
         }
         if (MissedReceiveReliefConsumeActionsValue != nullptr && MissedReceiveReliefConsumeActionsValue.IsValid())
         {

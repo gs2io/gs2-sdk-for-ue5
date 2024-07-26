@@ -32,7 +32,10 @@ namespace Gs2::Friend::Model
         UpdateProfileScriptValue(nullptr),
         FollowNotificationValue(nullptr),
         ReceiveRequestNotificationValue(nullptr),
+        CancelRequestNotificationValue(nullptr),
         AcceptRequestNotificationValue(nullptr),
+        RejectRequestNotificationValue(nullptr),
+        DeleteFriendNotificationValue(nullptr),
         LogSettingValue(nullptr),
         CreatedAtValue(TOptional<int64>()),
         UpdatedAtValue(TOptional<int64>()),
@@ -56,7 +59,10 @@ namespace Gs2::Friend::Model
         UpdateProfileScriptValue(From.UpdateProfileScriptValue),
         FollowNotificationValue(From.FollowNotificationValue),
         ReceiveRequestNotificationValue(From.ReceiveRequestNotificationValue),
+        CancelRequestNotificationValue(From.CancelRequestNotificationValue),
         AcceptRequestNotificationValue(From.AcceptRequestNotificationValue),
+        RejectRequestNotificationValue(From.RejectRequestNotificationValue),
+        DeleteFriendNotificationValue(From.DeleteFriendNotificationValue),
         LogSettingValue(From.LogSettingValue),
         CreatedAtValue(From.CreatedAtValue),
         UpdatedAtValue(From.UpdatedAtValue),
@@ -168,11 +174,35 @@ namespace Gs2::Friend::Model
         return SharedThis(this);
     }
 
+    TSharedPtr<FNamespace> FNamespace::WithCancelRequestNotification(
+        const TSharedPtr<FNotificationSetting> CancelRequestNotification
+    )
+    {
+        this->CancelRequestNotificationValue = CancelRequestNotification;
+        return SharedThis(this);
+    }
+
     TSharedPtr<FNamespace> FNamespace::WithAcceptRequestNotification(
         const TSharedPtr<FNotificationSetting> AcceptRequestNotification
     )
     {
         this->AcceptRequestNotificationValue = AcceptRequestNotification;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FNamespace> FNamespace::WithRejectRequestNotification(
+        const TSharedPtr<FNotificationSetting> RejectRequestNotification
+    )
+    {
+        this->RejectRequestNotificationValue = RejectRequestNotification;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FNamespace> FNamespace::WithDeleteFriendNotification(
+        const TSharedPtr<FNotificationSetting> DeleteFriendNotification
+    )
+    {
+        this->DeleteFriendNotificationValue = DeleteFriendNotification;
         return SharedThis(this);
     }
 
@@ -259,9 +289,21 @@ namespace Gs2::Friend::Model
     {
         return ReceiveRequestNotificationValue;
     }
+    TSharedPtr<FNotificationSetting> FNamespace::GetCancelRequestNotification() const
+    {
+        return CancelRequestNotificationValue;
+    }
     TSharedPtr<FNotificationSetting> FNamespace::GetAcceptRequestNotification() const
     {
         return AcceptRequestNotificationValue;
+    }
+    TSharedPtr<FNotificationSetting> FNamespace::GetRejectRequestNotification() const
+    {
+        return RejectRequestNotificationValue;
+    }
+    TSharedPtr<FNotificationSetting> FNamespace::GetDeleteFriendNotification() const
+    {
+        return DeleteFriendNotificationValue;
     }
     TSharedPtr<FLogSetting> FNamespace::GetLogSetting() const
     {
@@ -453,6 +495,14 @@ namespace Gs2::Friend::Model
                     }
                     return Model::FNotificationSetting::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("receiveRequestNotification")));
                  }() : nullptr)
+            ->WithCancelRequestNotification(Data->HasField(ANSI_TO_TCHAR("cancelRequestNotification")) ? [Data]() -> Model::FNotificationSettingPtr
+                {
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("cancelRequestNotification")))
+                    {
+                        return nullptr;
+                    }
+                    return Model::FNotificationSetting::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("cancelRequestNotification")));
+                 }() : nullptr)
             ->WithAcceptRequestNotification(Data->HasField(ANSI_TO_TCHAR("acceptRequestNotification")) ? [Data]() -> Model::FNotificationSettingPtr
                 {
                     if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("acceptRequestNotification")))
@@ -460,6 +510,22 @@ namespace Gs2::Friend::Model
                         return nullptr;
                     }
                     return Model::FNotificationSetting::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("acceptRequestNotification")));
+                 }() : nullptr)
+            ->WithRejectRequestNotification(Data->HasField(ANSI_TO_TCHAR("rejectRequestNotification")) ? [Data]() -> Model::FNotificationSettingPtr
+                {
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("rejectRequestNotification")))
+                    {
+                        return nullptr;
+                    }
+                    return Model::FNotificationSetting::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("rejectRequestNotification")));
+                 }() : nullptr)
+            ->WithDeleteFriendNotification(Data->HasField(ANSI_TO_TCHAR("deleteFriendNotification")) ? [Data]() -> Model::FNotificationSettingPtr
+                {
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("deleteFriendNotification")))
+                    {
+                        return nullptr;
+                    }
+                    return Model::FNotificationSetting::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("deleteFriendNotification")));
                  }() : nullptr)
             ->WithLogSetting(Data->HasField(ANSI_TO_TCHAR("logSetting")) ? [Data]() -> Model::FLogSettingPtr
                 {
@@ -553,9 +619,21 @@ namespace Gs2::Friend::Model
         {
             JsonRootObject->SetObjectField("receiveRequestNotification", ReceiveRequestNotificationValue->ToJson());
         }
+        if (CancelRequestNotificationValue != nullptr && CancelRequestNotificationValue.IsValid())
+        {
+            JsonRootObject->SetObjectField("cancelRequestNotification", CancelRequestNotificationValue->ToJson());
+        }
         if (AcceptRequestNotificationValue != nullptr && AcceptRequestNotificationValue.IsValid())
         {
             JsonRootObject->SetObjectField("acceptRequestNotification", AcceptRequestNotificationValue->ToJson());
+        }
+        if (RejectRequestNotificationValue != nullptr && RejectRequestNotificationValue.IsValid())
+        {
+            JsonRootObject->SetObjectField("rejectRequestNotification", RejectRequestNotificationValue->ToJson());
+        }
+        if (DeleteFriendNotificationValue != nullptr && DeleteFriendNotificationValue.IsValid())
+        {
+            JsonRootObject->SetObjectField("deleteFriendNotification", DeleteFriendNotificationValue->ToJson());
         }
         if (LogSettingValue != nullptr && LogSettingValue.IsValid())
         {

@@ -533,6 +533,24 @@ namespace Gs2::Friend::Domain
             }
             AcceptRequestNotificationEvent.Broadcast(Gs2::Friend::Model::FAcceptRequestNotification::FromJson(PayloadJson));
         }
+        if (Action == "RejectRequest") {
+            TSharedPtr<FJsonObject> PayloadJson;
+            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Payload);
+                !FJsonSerializer::Deserialize(JsonReader, PayloadJson))
+            {
+                return;
+            }
+            RejectRequestNotificationEvent.Broadcast(Gs2::Friend::Model::FRejectRequestNotification::FromJson(PayloadJson));
+        }
+        if (Action == "DeleteFriend") {
+            TSharedPtr<FJsonObject> PayloadJson;
+            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Payload);
+                !FJsonSerializer::Deserialize(JsonReader, PayloadJson))
+            {
+                return;
+            }
+            DeleteFriendNotificationEvent.Broadcast(Gs2::Friend::Model::FDeleteFriendNotification::FromJson(PayloadJson));
+        }
         if (Action == "ReceiveRequest") {
             TSharedPtr<FJsonObject> PayloadJson;
             if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Payload);
@@ -541,6 +559,15 @@ namespace Gs2::Friend::Domain
                 return;
             }
             ReceiveRequestNotificationEvent.Broadcast(Gs2::Friend::Model::FReceiveRequestNotification::FromJson(PayloadJson));
+        }
+        if (Action == "CancelRequest") {
+            TSharedPtr<FJsonObject> PayloadJson;
+            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Payload);
+                !FJsonSerializer::Deserialize(JsonReader, PayloadJson))
+            {
+                return;
+            }
+            CancelRequestNotificationEvent.Broadcast(Gs2::Friend::Model::FCancelRequestNotification::FromJson(PayloadJson));
         }
     }
 
@@ -554,9 +581,24 @@ namespace Gs2::Friend::Domain
         return AcceptRequestNotificationEvent;
     }
 
+    FRejectRequestNotificationEvent& FGs2FriendDomain::OnRejectRequestNotification()
+    {
+        return RejectRequestNotificationEvent;
+    }
+
+    FDeleteFriendNotificationEvent& FGs2FriendDomain::OnDeleteFriendNotification()
+    {
+        return DeleteFriendNotificationEvent;
+    }
+
     FReceiveRequestNotificationEvent& FGs2FriendDomain::OnReceiveRequestNotification()
     {
         return ReceiveRequestNotificationEvent;
+    }
+
+    FCancelRequestNotificationEvent& FGs2FriendDomain::OnCancelRequestNotification()
+    {
+        return CancelRequestNotificationEvent;
     }
 }
 

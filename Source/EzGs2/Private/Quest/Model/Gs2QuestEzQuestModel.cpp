@@ -67,6 +67,14 @@ namespace Gs2::UE5::Quest::Model
         return SharedThis(this);
     }
 
+    TSharedPtr<FEzQuestModel> FEzQuestModel::WithVerifyActions(
+        const TSharedPtr<TArray<TSharedPtr<Gs2::UE5::Quest::Model::FEzVerifyAction>>> VerifyActions
+    )
+    {
+        this->VerifyActionsValue = VerifyActions;
+        return SharedThis(this);
+    }
+
     TSharedPtr<FEzQuestModel> FEzQuestModel::WithConsumeActions(
         const TSharedPtr<TArray<TSharedPtr<Gs2::UE5::Quest::Model::FEzConsumeAction>>> ConsumeActions
     )
@@ -114,6 +122,10 @@ namespace Gs2::UE5::Quest::Model
     {
         return FirstCompleteAcquireActionsValue;
     }
+    TSharedPtr<TArray<TSharedPtr<Gs2::UE5::Quest::Model::FEzVerifyAction>>> FEzQuestModel::GetVerifyActions() const
+    {
+        return VerifyActionsValue;
+    }
     TSharedPtr<TArray<TSharedPtr<Gs2::UE5::Quest::Model::FEzConsumeAction>>> FEzQuestModel::GetConsumeActions() const
     {
         return ConsumeActionsValue;
@@ -156,6 +168,20 @@ namespace Gs2::UE5::Quest::Model
                         return v;
                     }
                     for (auto v2 : *FirstCompleteAcquireActionsValue)
+                    {
+                        v->Add(v2->ToModel());
+                    }
+                    return v;
+                }()
+            )
+            ->WithVerifyActions([&]
+                {
+                    auto v = MakeShared<TArray<TSharedPtr<Gs2::Quest::Model::FVerifyAction>>>();
+                    if (VerifyActionsValue == nullptr)
+                    {
+                        return v;
+                    }
+                    for (auto v2 : *VerifyActionsValue)
                     {
                         v->Add(v2->ToModel());
                     }
@@ -228,6 +254,20 @@ namespace Gs2::UE5::Quest::Model
                     for (auto v2 : *Model->GetFirstCompleteAcquireActions())
                     {
                         v->Add(FEzAcquireAction::FromModel(v2));
+                    }
+                    return v;
+                }()
+            )
+            ->WithVerifyActions([&]
+                {
+                    auto v = MakeShared<TArray<TSharedPtr<FEzVerifyAction>>>();
+                    if (Model->GetVerifyActions() == nullptr)
+                    {
+                        return v;
+                    }
+                    for (auto v2 : *Model->GetVerifyActions())
+                    {
+                        v->Add(FEzVerifyAction::FromModel(v2));
                     }
                     return v;
                 }()

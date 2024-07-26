@@ -29,6 +29,7 @@ namespace Gs2::LoginReward::Model
         RepeatValue(TOptional<FString>()),
         RewardsValue(nullptr),
         MissedReceiveReliefValue(TOptional<FString>()),
+        MissedReceiveReliefVerifyActionsValue(nullptr),
         MissedReceiveReliefConsumeActionsValue(nullptr),
         CreatedAtValue(TOptional<int64>()),
         UpdatedAtValue(TOptional<int64>()),
@@ -49,6 +50,7 @@ namespace Gs2::LoginReward::Model
         RepeatValue(From.RepeatValue),
         RewardsValue(From.RewardsValue),
         MissedReceiveReliefValue(From.MissedReceiveReliefValue),
+        MissedReceiveReliefVerifyActionsValue(From.MissedReceiveReliefVerifyActionsValue),
         MissedReceiveReliefConsumeActionsValue(From.MissedReceiveReliefConsumeActionsValue),
         CreatedAtValue(From.CreatedAtValue),
         UpdatedAtValue(From.UpdatedAtValue),
@@ -136,6 +138,14 @@ namespace Gs2::LoginReward::Model
         return SharedThis(this);
     }
 
+    TSharedPtr<FBonusModelMaster> FBonusModelMaster::WithMissedReceiveReliefVerifyActions(
+        const TSharedPtr<TArray<TSharedPtr<Model::FVerifyAction>>> MissedReceiveReliefVerifyActions
+    )
+    {
+        this->MissedReceiveReliefVerifyActionsValue = MissedReceiveReliefVerifyActions;
+        return SharedThis(this);
+    }
+
     TSharedPtr<FBonusModelMaster> FBonusModelMaster::WithMissedReceiveReliefConsumeActions(
         const TSharedPtr<TArray<TSharedPtr<Model::FConsumeAction>>> MissedReceiveReliefConsumeActions
     )
@@ -215,6 +225,10 @@ namespace Gs2::LoginReward::Model
     TOptional<FString> FBonusModelMaster::GetMissedReceiveRelief() const
     {
         return MissedReceiveReliefValue;
+    }
+    TSharedPtr<TArray<TSharedPtr<Model::FVerifyAction>>> FBonusModelMaster::GetMissedReceiveReliefVerifyActions() const
+    {
+        return MissedReceiveReliefVerifyActionsValue;
     }
     TSharedPtr<TArray<TSharedPtr<Model::FConsumeAction>>> FBonusModelMaster::GetMissedReceiveReliefConsumeActions() const
     {
@@ -403,6 +417,18 @@ namespace Gs2::LoginReward::Model
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
+            ->WithMissedReceiveReliefVerifyActions(Data->HasField(ANSI_TO_TCHAR("missedReceiveReliefVerifyActions")) ? [Data]() -> TSharedPtr<TArray<Model::FVerifyActionPtr>>
+                {
+                    auto v = MakeShared<TArray<Model::FVerifyActionPtr>>();
+                    if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("missedReceiveReliefVerifyActions")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("missedReceiveReliefVerifyActions")))
+                    {
+                        for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("missedReceiveReliefVerifyActions")))
+                        {
+                            v->Add(Model::FVerifyAction::FromJson(JsonObjectValue->AsObject()));
+                        }
+                    }
+                    return v;
+                 }() : MakeShared<TArray<Model::FVerifyActionPtr>>())
             ->WithMissedReceiveReliefConsumeActions(Data->HasField(ANSI_TO_TCHAR("missedReceiveReliefConsumeActions")) ? [Data]() -> TSharedPtr<TArray<Model::FConsumeActionPtr>>
                 {
                     auto v = MakeShared<TArray<Model::FConsumeActionPtr>>();
@@ -491,6 +517,15 @@ namespace Gs2::LoginReward::Model
         if (MissedReceiveReliefValue.IsSet())
         {
             JsonRootObject->SetStringField("missedReceiveRelief", MissedReceiveReliefValue.GetValue());
+        }
+        if (MissedReceiveReliefVerifyActionsValue != nullptr && MissedReceiveReliefVerifyActionsValue.IsValid())
+        {
+            TArray<TSharedPtr<FJsonValue>> v;
+            for (auto JsonObjectValue : *MissedReceiveReliefVerifyActionsValue)
+            {
+                v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
+            }
+            JsonRootObject->SetArrayField("missedReceiveReliefVerifyActions", v);
         }
         if (MissedReceiveReliefConsumeActionsValue != nullptr && MissedReceiveReliefConsumeActionsValue.IsValid())
         {

@@ -52,7 +52,7 @@ namespace Gs2::UE5::Mission::Model
     }
 
     TSharedPtr<FEzMissionTaskModel> FEzMissionTaskModel::WithVerifyCompleteConsumeActions(
-        const TSharedPtr<TArray<TSharedPtr<Gs2::UE5::Mission::Model::FEzConsumeAction>>> VerifyCompleteConsumeActions
+        const TSharedPtr<TArray<TSharedPtr<Gs2::UE5::Mission::Model::FEzVerifyAction>>> VerifyCompleteConsumeActions
     )
     {
         this->VerifyCompleteConsumeActionsValue = VerifyCompleteConsumeActions;
@@ -122,7 +122,7 @@ namespace Gs2::UE5::Mission::Model
     {
         return TargetCounterValue;
     }
-    TSharedPtr<TArray<TSharedPtr<Gs2::UE5::Mission::Model::FEzConsumeAction>>> FEzMissionTaskModel::GetVerifyCompleteConsumeActions() const
+    TSharedPtr<TArray<TSharedPtr<Gs2::UE5::Mission::Model::FEzVerifyAction>>> FEzMissionTaskModel::GetVerifyCompleteConsumeActions() const
     {
         return VerifyCompleteConsumeActionsValue;
     }
@@ -169,7 +169,7 @@ namespace Gs2::UE5::Mission::Model
             ->WithTargetCounter(TargetCounterValue == nullptr ? nullptr : TargetCounterValue->ToModel())
             ->WithVerifyCompleteConsumeActions([&]
                 {
-                    auto v = MakeShared<TArray<TSharedPtr<Gs2::Mission::Model::FConsumeAction>>>();
+                    auto v = MakeShared<TArray<TSharedPtr<Gs2::Mission::Model::FVerifyAction>>>();
                     if (VerifyCompleteConsumeActionsValue == nullptr)
                     {
                         return v;
@@ -215,14 +215,14 @@ namespace Gs2::UE5::Mission::Model
             ->WithTargetCounter(Model->GetTargetCounter() != nullptr ? Gs2::UE5::Mission::Model::FEzTargetCounterModel::FromModel(Model->GetTargetCounter()) : nullptr)
             ->WithVerifyCompleteConsumeActions([&]
                 {
-                    auto v = MakeShared<TArray<TSharedPtr<FEzConsumeAction>>>();
+                    auto v = MakeShared<TArray<TSharedPtr<FEzVerifyAction>>>();
                     if (Model->GetVerifyCompleteConsumeActions() == nullptr)
                     {
                         return v;
                     }
                     for (auto v2 : *Model->GetVerifyCompleteConsumeActions())
                     {
-                        v->Add(FEzConsumeAction::FromModel(v2));
+                        v->Add(FEzVerifyAction::FromModel(v2));
                     }
                     return v;
                 }()

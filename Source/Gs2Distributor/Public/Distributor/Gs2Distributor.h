@@ -24,6 +24,7 @@
 #include "Model/StampSheetResult.h"
 #include "Model/AcquireAction.h"
 #include "Model/ConsumeAction.h"
+#include "Model/VerifyAction.h"
 #include "Model/Config.h"
 #include "Model/GitHubCheckoutSetting.h"
 #include "Model/DistributeResource.h"
@@ -144,6 +145,12 @@
 #include "Task/Rest/DistributeWithoutOverflowProcessTask.h"
 #include "Task/WebSocket/DistributeWithoutOverflowProcessTask.h"
 
+// RunVerifyTask
+#include "Request/RunVerifyTaskRequest.h"
+#include "Result/RunVerifyTaskResult.h"
+#include "Task/Rest/RunVerifyTaskTask.h"
+#include "Task/WebSocket/RunVerifyTaskTask.h"
+
 // RunStampTask
 #include "Request/RunStampTaskRequest.h"
 #include "Result/RunStampTaskResult.h"
@@ -161,6 +168,12 @@
 #include "Result/RunStampSheetExpressResult.h"
 #include "Task/Rest/RunStampSheetExpressTask.h"
 #include "Task/WebSocket/RunStampSheetExpressTask.h"
+
+// RunVerifyTaskWithoutNamespace
+#include "Request/RunVerifyTaskWithoutNamespaceRequest.h"
+#include "Result/RunVerifyTaskWithoutNamespaceResult.h"
+#include "Task/Rest/RunVerifyTaskWithoutNamespaceTask.h"
+#include "Task/WebSocket/RunVerifyTaskWithoutNamespaceTask.h"
 
 // RunStampTaskWithoutNamespace
 #include "Request/RunStampTaskWithoutNamespaceRequest.h"

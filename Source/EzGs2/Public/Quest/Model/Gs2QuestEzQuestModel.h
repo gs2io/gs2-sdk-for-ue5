@@ -20,6 +20,7 @@
 #include "Quest/Model/QuestModel.h"
 #include "Gs2QuestEzContents.h"
 #include "Gs2QuestEzAcquireAction.h"
+#include "Gs2QuestEzVerifyAction.h"
 #include "Gs2QuestEzConsumeAction.h"
 #include "Gs2QuestEzAcquireAction.h"
 
@@ -33,6 +34,7 @@ namespace Gs2::UE5::Quest::Model
         TSharedPtr<TArray<TSharedPtr<Gs2::UE5::Quest::Model::FEzContents>>> ContentsValue;
         TOptional<FString> ChallengePeriodEventIdValue;
         TSharedPtr<TArray<TSharedPtr<Gs2::UE5::Quest::Model::FEzAcquireAction>>> FirstCompleteAcquireActionsValue;
+        TSharedPtr<TArray<TSharedPtr<Gs2::UE5::Quest::Model::FEzVerifyAction>>> VerifyActionsValue;
         TSharedPtr<TArray<TSharedPtr<Gs2::UE5::Quest::Model::FEzConsumeAction>>> ConsumeActionsValue;
         TSharedPtr<TArray<TSharedPtr<Gs2::UE5::Quest::Model::FEzAcquireAction>>> FailedAcquireActionsValue;
         TSharedPtr<TArray<FString>> PremiseQuestNamesValue;
@@ -44,6 +46,7 @@ namespace Gs2::UE5::Quest::Model
         TSharedPtr<FEzQuestModel> WithContents(const TSharedPtr<TArray<TSharedPtr<Gs2::UE5::Quest::Model::FEzContents>>> Contents);
         TSharedPtr<FEzQuestModel> WithChallengePeriodEventId(const TOptional<FString> ChallengePeriodEventId);
         TSharedPtr<FEzQuestModel> WithFirstCompleteAcquireActions(const TSharedPtr<TArray<TSharedPtr<Gs2::UE5::Quest::Model::FEzAcquireAction>>> FirstCompleteAcquireActions);
+        TSharedPtr<FEzQuestModel> WithVerifyActions(const TSharedPtr<TArray<TSharedPtr<Gs2::UE5::Quest::Model::FEzVerifyAction>>> VerifyActions);
         TSharedPtr<FEzQuestModel> WithConsumeActions(const TSharedPtr<TArray<TSharedPtr<Gs2::UE5::Quest::Model::FEzConsumeAction>>> ConsumeActions);
         TSharedPtr<FEzQuestModel> WithFailedAcquireActions(const TSharedPtr<TArray<TSharedPtr<Gs2::UE5::Quest::Model::FEzAcquireAction>>> FailedAcquireActions);
         TSharedPtr<FEzQuestModel> WithPremiseQuestNames(const TSharedPtr<TArray<FString>> PremiseQuestNames);
@@ -59,6 +62,8 @@ namespace Gs2::UE5::Quest::Model
         TOptional<FString> GetChallengePeriodEventId() const;
 
         TSharedPtr<TArray<TSharedPtr<Gs2::UE5::Quest::Model::FEzAcquireAction>>> GetFirstCompleteAcquireActions() const;
+
+        TSharedPtr<TArray<TSharedPtr<Gs2::UE5::Quest::Model::FEzVerifyAction>>> GetVerifyActions() const;
 
         TSharedPtr<TArray<TSharedPtr<Gs2::UE5::Quest::Model::FEzConsumeAction>>> GetConsumeActions() const;
 

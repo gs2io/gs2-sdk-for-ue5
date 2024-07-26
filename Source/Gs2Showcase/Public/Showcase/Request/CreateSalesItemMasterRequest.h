@@ -17,6 +17,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "../Model/VerifyAction.h"
 #include "../Model/ConsumeAction.h"
 #include "../Model/AcquireAction.h"
 
@@ -31,6 +32,7 @@ namespace Gs2::Showcase::Request
         TOptional<FString> NameValue;
         TOptional<FString> DescriptionValue;
         TOptional<FString> MetadataValue;
+        TSharedPtr<TArray<TSharedPtr<Model::FVerifyAction>>> VerifyActionsValue;
         TSharedPtr<TArray<TSharedPtr<Model::FConsumeAction>>> ConsumeActionsValue;
         TSharedPtr<TArray<TSharedPtr<Model::FAcquireAction>>> AcquireActionsValue;
         
@@ -47,6 +49,7 @@ namespace Gs2::Showcase::Request
         TSharedPtr<FCreateSalesItemMasterRequest> WithName(const TOptional<FString> Name);
         TSharedPtr<FCreateSalesItemMasterRequest> WithDescription(const TOptional<FString> Description);
         TSharedPtr<FCreateSalesItemMasterRequest> WithMetadata(const TOptional<FString> Metadata);
+        TSharedPtr<FCreateSalesItemMasterRequest> WithVerifyActions(const TSharedPtr<TArray<TSharedPtr<Model::FVerifyAction>>> VerifyActions);
         TSharedPtr<FCreateSalesItemMasterRequest> WithConsumeActions(const TSharedPtr<TArray<TSharedPtr<Model::FConsumeAction>>> ConsumeActions);
         TSharedPtr<FCreateSalesItemMasterRequest> WithAcquireActions(const TSharedPtr<TArray<TSharedPtr<Model::FAcquireAction>>> AcquireActions);
 
@@ -54,7 +57,7 @@ namespace Gs2::Showcase::Request
         TOptional<FString> GetNamespaceName() const;
         TOptional<FString> GetName() const;
         TOptional<FString> GetDescription() const;
-        TOptional<FString> GetMetadata() const;TSharedPtr<TArray<TSharedPtr<Model::FConsumeAction>>> GetConsumeActions() const;TSharedPtr<TArray<TSharedPtr<Model::FAcquireAction>>> GetAcquireActions() const;
+        TOptional<FString> GetMetadata() const;TSharedPtr<TArray<TSharedPtr<Model::FVerifyAction>>> GetVerifyActions() const;TSharedPtr<TArray<TSharedPtr<Model::FConsumeAction>>> GetConsumeActions() const;TSharedPtr<TArray<TSharedPtr<Model::FAcquireAction>>> GetAcquireActions() const;
 
         static TSharedPtr<FCreateSalesItemMasterRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;

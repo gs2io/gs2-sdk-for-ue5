@@ -19,7 +19,7 @@
 #include "CoreMinimal.h"
 #include "Mission/Domain/Model/Gs2MissionEzMissionTaskModelDomain.h"
 #include "Mission/Model/Gs2MissionTargetCounterModel.h"
-#include "Mission/Model/Gs2MissionConsumeAction.h"
+#include "Mission/Model/Gs2MissionVerifyAction.h"
 #include "Mission/Model/Gs2MissionAcquireAction.h"
 #include "Core/BpGs2Constant.h"
 #include "Gs2MissionMissionTaskModel.generated.h"
@@ -46,7 +46,7 @@ struct FGs2MissionMissionTaskModelValue
     UPROPERTY(Category = Gs2, BlueprintReadOnly)
     FGs2MissionTargetCounterModel TargetCounter = FGs2MissionTargetCounterModel();
     UPROPERTY(Category = Gs2, BlueprintReadOnly)
-    TArray<FGs2MissionConsumeAction> VerifyCompleteConsumeActions = TArray<FGs2MissionConsumeAction>();
+    TArray<FGs2MissionVerifyAction> VerifyCompleteConsumeActions = TArray<FGs2MissionVerifyAction>();
     UPROPERTY(Category = Gs2, BlueprintReadOnly)
     TArray<FGs2MissionAcquireAction> CompleteAcquireActions = TArray<FGs2MissionAcquireAction>();
     UPROPERTY(Category = Gs2, BlueprintReadOnly)
@@ -76,13 +76,13 @@ inline FGs2MissionMissionTaskModelValue EzMissionTaskModelToFGs2MissionMissionTa
     Value.TargetCounter = Model->GetTargetCounter() ? EzTargetCounterModelToFGs2MissionTargetCounterModel(Model->GetTargetCounter()) : FGs2MissionTargetCounterModel();
     Value.VerifyCompleteConsumeActions = Model->GetVerifyCompleteConsumeActions() ? [&]
     {
-        TArray<FGs2MissionConsumeAction> r;
+        TArray<FGs2MissionVerifyAction> r;
         for (auto v : *Model->GetVerifyCompleteConsumeActions())
         {
-            r.Add(EzConsumeActionToFGs2MissionConsumeAction(v));
+            r.Add(EzVerifyActionToFGs2MissionVerifyAction(v));
         }
         return r;
-    }() : TArray<FGs2MissionConsumeAction>();
+    }() : TArray<FGs2MissionVerifyAction>();
     Value.CompleteAcquireActions = Model->GetCompleteAcquireActions() ? [&]
     {
         TArray<FGs2MissionAcquireAction> r;
@@ -110,9 +110,9 @@ inline Gs2::UE5::Mission::Model::FEzMissionTaskModelPtr FGs2MissionMissionTaskMo
         ->WithVerifyCompleteType(Model.VerifyCompleteType)
         ->WithTargetCounter(FGs2MissionTargetCounterModelToEzTargetCounterModel(Model.TargetCounter))
         ->WithVerifyCompleteConsumeActions([&]{
-            auto r = MakeShared<TArray<Gs2::UE5::Mission::Model::FEzConsumeActionPtr>>();
+            auto r = MakeShared<TArray<Gs2::UE5::Mission::Model::FEzVerifyActionPtr>>();
             for (auto v : Model.VerifyCompleteConsumeActions) {
-                r->Add(FGs2MissionConsumeActionToEzConsumeAction(v));
+                r->Add(FGs2MissionVerifyActionToEzVerifyAction(v));
             }
             return r;
         }())

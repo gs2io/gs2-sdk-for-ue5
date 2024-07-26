@@ -25,6 +25,7 @@
 #include "Showcase/Model/Gs2ShowcaseEzRandomDisplayItem.h"
 #include "Showcase/Model/Gs2ShowcaseEzConfig.h"
 #include "Showcase/Model/Gs2ShowcaseEzConsumeAction.h"
+#include "Showcase/Model/Gs2ShowcaseEzVerifyAction.h"
 #include "Showcase/Model/Gs2ShowcaseEzAcquireAction.h"
 #include "Gs2ShowcaseEzRandomDisplayItemDomain.h"
 #include "Util/Net/GameSession.h"

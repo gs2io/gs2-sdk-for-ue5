@@ -18,6 +18,7 @@
 
 #include "CoreMinimal.h"
 #include "Showcase/Model/SalesItem.h"
+#include "Gs2ShowcaseEzVerifyAction.h"
 #include "Gs2ShowcaseEzConsumeAction.h"
 #include "Gs2ShowcaseEzAcquireAction.h"
 
@@ -27,18 +28,22 @@ namespace Gs2::UE5::Showcase::Model
 	{
         TOptional<FString> NameValue;
         TOptional<FString> MetadataValue;
+        TSharedPtr<TArray<TSharedPtr<Gs2::UE5::Showcase::Model::FEzVerifyAction>>> VerifyActionsValue;
         TSharedPtr<TArray<TSharedPtr<Gs2::UE5::Showcase::Model::FEzConsumeAction>>> ConsumeActionsValue;
         TSharedPtr<TArray<TSharedPtr<Gs2::UE5::Showcase::Model::FEzAcquireAction>>> AcquireActionsValue;
 
 	public:
         TSharedPtr<FEzSalesItem> WithName(const TOptional<FString> Name);
         TSharedPtr<FEzSalesItem> WithMetadata(const TOptional<FString> Metadata);
+        TSharedPtr<FEzSalesItem> WithVerifyActions(const TSharedPtr<TArray<TSharedPtr<Gs2::UE5::Showcase::Model::FEzVerifyAction>>> VerifyActions);
         TSharedPtr<FEzSalesItem> WithConsumeActions(const TSharedPtr<TArray<TSharedPtr<Gs2::UE5::Showcase::Model::FEzConsumeAction>>> ConsumeActions);
         TSharedPtr<FEzSalesItem> WithAcquireActions(const TSharedPtr<TArray<TSharedPtr<Gs2::UE5::Showcase::Model::FEzAcquireAction>>> AcquireActions);
 
         TOptional<FString> GetName() const;
 
         TOptional<FString> GetMetadata() const;
+
+        TSharedPtr<TArray<TSharedPtr<Gs2::UE5::Showcase::Model::FEzVerifyAction>>> GetVerifyActions() const;
 
         TSharedPtr<TArray<TSharedPtr<Gs2::UE5::Showcase::Model::FEzConsumeAction>>> GetConsumeActions() const;
 

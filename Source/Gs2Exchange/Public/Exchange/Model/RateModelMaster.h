@@ -18,6 +18,7 @@
 
 #include "CoreMinimal.h"
 #include "Core/Gs2Object.h"
+#include "VerifyAction.h"
 #include "ConsumeAction.h"
 #include "AcquireAction.h"
 
@@ -29,6 +30,7 @@ namespace Gs2::Exchange::Model
         TOptional<FString> NameValue;
         TOptional<FString> DescriptionValue;
         TOptional<FString> MetadataValue;
+        TSharedPtr<TArray<TSharedPtr<FVerifyAction>>> VerifyActionsValue;
         TSharedPtr<TArray<TSharedPtr<FConsumeAction>>> ConsumeActionsValue;
         TOptional<FString> TimingTypeValue;
         TOptional<int32> LockTimeValue;
@@ -48,6 +50,7 @@ namespace Gs2::Exchange::Model
         TSharedPtr<FRateModelMaster> WithName(const TOptional<FString> Name);
         TSharedPtr<FRateModelMaster> WithDescription(const TOptional<FString> Description);
         TSharedPtr<FRateModelMaster> WithMetadata(const TOptional<FString> Metadata);
+        TSharedPtr<FRateModelMaster> WithVerifyActions(const TSharedPtr<TArray<TSharedPtr<FVerifyAction>>> VerifyActions);
         TSharedPtr<FRateModelMaster> WithConsumeActions(const TSharedPtr<TArray<TSharedPtr<FConsumeAction>>> ConsumeActions);
         TSharedPtr<FRateModelMaster> WithTimingType(const TOptional<FString> TimingType);
         TSharedPtr<FRateModelMaster> WithLockTime(const TOptional<int32> LockTime);
@@ -60,6 +63,7 @@ namespace Gs2::Exchange::Model
         TOptional<FString> GetName() const;
         TOptional<FString> GetDescription() const;
         TOptional<FString> GetMetadata() const;
+        TSharedPtr<TArray<TSharedPtr<FVerifyAction>>> GetVerifyActions() const;
         TSharedPtr<TArray<TSharedPtr<FConsumeAction>>> GetConsumeActions() const;
         TOptional<FString> GetTimingType() const;
         TOptional<int32> GetLockTime() const;

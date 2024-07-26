@@ -51,6 +51,14 @@ namespace Gs2::UE5::Exchange::Model
         return SharedThis(this);
     }
 
+    TSharedPtr<FEzRateModel> FEzRateModel::WithVerifyActions(
+        const TSharedPtr<TArray<TSharedPtr<Gs2::UE5::Exchange::Model::FEzVerifyAction>>> VerifyActions
+    )
+    {
+        this->VerifyActionsValue = VerifyActions;
+        return SharedThis(this);
+    }
+
     TSharedPtr<FEzRateModel> FEzRateModel::WithConsumeActions(
         const TSharedPtr<TArray<TSharedPtr<Gs2::UE5::Exchange::Model::FEzConsumeAction>>> ConsumeActions
     )
@@ -91,6 +99,10 @@ namespace Gs2::UE5::Exchange::Model
         }
         return FString::Printf(TEXT("%d"), LockTimeValue.GetValue());
     }
+    TSharedPtr<TArray<TSharedPtr<Gs2::UE5::Exchange::Model::FEzVerifyAction>>> FEzRateModel::GetVerifyActions() const
+    {
+        return VerifyActionsValue;
+    }
     TSharedPtr<TArray<TSharedPtr<Gs2::UE5::Exchange::Model::FEzConsumeAction>>> FEzRateModel::GetConsumeActions() const
     {
         return ConsumeActionsValue;
@@ -107,6 +119,20 @@ namespace Gs2::UE5::Exchange::Model
             ->WithMetadata(MetadataValue)
             ->WithTimingType(TimingTypeValue)
             ->WithLockTime(LockTimeValue)
+            ->WithVerifyActions([&]
+                {
+                    auto v = MakeShared<TArray<TSharedPtr<Gs2::Exchange::Model::FVerifyAction>>>();
+                    if (VerifyActionsValue == nullptr)
+                    {
+                        return v;
+                    }
+                    for (auto v2 : *VerifyActionsValue)
+                    {
+                        v->Add(v2->ToModel());
+                    }
+                    return v;
+                }()
+            )
             ->WithConsumeActions([&]
                 {
                     auto v = MakeShared<TArray<TSharedPtr<Gs2::Exchange::Model::FConsumeAction>>>();
@@ -148,6 +174,20 @@ namespace Gs2::UE5::Exchange::Model
             ->WithMetadata(Model->GetMetadata())
             ->WithTimingType(Model->GetTimingType())
             ->WithLockTime(Model->GetLockTime())
+            ->WithVerifyActions([&]
+                {
+                    auto v = MakeShared<TArray<TSharedPtr<FEzVerifyAction>>>();
+                    if (Model->GetVerifyActions() == nullptr)
+                    {
+                        return v;
+                    }
+                    for (auto v2 : *Model->GetVerifyActions())
+                    {
+                        v->Add(FEzVerifyAction::FromModel(v2));
+                    }
+                    return v;
+                }()
+            )
             ->WithConsumeActions([&]
                 {
                     auto v = MakeShared<TArray<TSharedPtr<FEzConsumeAction>>>();

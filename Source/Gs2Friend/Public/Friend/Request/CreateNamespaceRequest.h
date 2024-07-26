@@ -40,7 +40,10 @@ namespace Gs2::Friend::Request
         TSharedPtr<Model::FScriptSetting> UpdateProfileScriptValue;
         TSharedPtr<Model::FNotificationSetting> FollowNotificationValue;
         TSharedPtr<Model::FNotificationSetting> ReceiveRequestNotificationValue;
+        TSharedPtr<Model::FNotificationSetting> CancelRequestNotificationValue;
         TSharedPtr<Model::FNotificationSetting> AcceptRequestNotificationValue;
+        TSharedPtr<Model::FNotificationSetting> RejectRequestNotificationValue;
+        TSharedPtr<Model::FNotificationSetting> DeleteFriendNotificationValue;
         TSharedPtr<Model::FLogSetting> LogSettingValue;
         
     public:
@@ -64,7 +67,10 @@ namespace Gs2::Friend::Request
         TSharedPtr<FCreateNamespaceRequest> WithUpdateProfileScript(const TSharedPtr<Model::FScriptSetting> UpdateProfileScript);
         TSharedPtr<FCreateNamespaceRequest> WithFollowNotification(const TSharedPtr<Model::FNotificationSetting> FollowNotification);
         TSharedPtr<FCreateNamespaceRequest> WithReceiveRequestNotification(const TSharedPtr<Model::FNotificationSetting> ReceiveRequestNotification);
+        TSharedPtr<FCreateNamespaceRequest> WithCancelRequestNotification(const TSharedPtr<Model::FNotificationSetting> CancelRequestNotification);
         TSharedPtr<FCreateNamespaceRequest> WithAcceptRequestNotification(const TSharedPtr<Model::FNotificationSetting> AcceptRequestNotification);
+        TSharedPtr<FCreateNamespaceRequest> WithRejectRequestNotification(const TSharedPtr<Model::FNotificationSetting> RejectRequestNotification);
+        TSharedPtr<FCreateNamespaceRequest> WithDeleteFriendNotification(const TSharedPtr<Model::FNotificationSetting> DeleteFriendNotification);
         TSharedPtr<FCreateNamespaceRequest> WithLogSetting(const TSharedPtr<Model::FLogSetting> LogSetting);
 
         TOptional<FString> GetContextStack() const;
@@ -80,7 +86,10 @@ namespace Gs2::Friend::Request
         TSharedPtr<Model::FScriptSetting> GetUpdateProfileScript() const;
         TSharedPtr<Model::FNotificationSetting> GetFollowNotification() const;
         TSharedPtr<Model::FNotificationSetting> GetReceiveRequestNotification() const;
+        TSharedPtr<Model::FNotificationSetting> GetCancelRequestNotification() const;
         TSharedPtr<Model::FNotificationSetting> GetAcceptRequestNotification() const;
+        TSharedPtr<Model::FNotificationSetting> GetRejectRequestNotification() const;
+        TSharedPtr<Model::FNotificationSetting> GetDeleteFriendNotification() const;
         TSharedPtr<Model::FLogSetting> GetLogSetting() const;
 
         static TSharedPtr<FCreateNamespaceRequest> FromJson(const TSharedPtr<FJsonObject> Data);

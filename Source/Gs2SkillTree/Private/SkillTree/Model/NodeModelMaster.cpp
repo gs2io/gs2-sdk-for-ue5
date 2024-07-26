@@ -23,6 +23,7 @@ namespace Gs2::SkillTree::Model
         NameValue(TOptional<FString>()),
         DescriptionValue(TOptional<FString>()),
         MetadataValue(TOptional<FString>()),
+        ReleaseVerifyActionsValue(nullptr),
         ReleaseConsumeActionsValue(nullptr),
         RestrainReturnRateValue(TOptional<float>()),
         PremiseNodeNamesValue(nullptr),
@@ -39,6 +40,7 @@ namespace Gs2::SkillTree::Model
         NameValue(From.NameValue),
         DescriptionValue(From.DescriptionValue),
         MetadataValue(From.MetadataValue),
+        ReleaseVerifyActionsValue(From.ReleaseVerifyActionsValue),
         ReleaseConsumeActionsValue(From.ReleaseConsumeActionsValue),
         RestrainReturnRateValue(From.RestrainReturnRateValue),
         PremiseNodeNamesValue(From.PremiseNodeNamesValue),
@@ -77,6 +79,14 @@ namespace Gs2::SkillTree::Model
     )
     {
         this->MetadataValue = Metadata;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FNodeModelMaster> FNodeModelMaster::WithReleaseVerifyActions(
+        const TSharedPtr<TArray<TSharedPtr<Model::FVerifyAction>>> ReleaseVerifyActions
+    )
+    {
+        this->ReleaseVerifyActionsValue = ReleaseVerifyActions;
         return SharedThis(this);
     }
 
@@ -142,6 +152,10 @@ namespace Gs2::SkillTree::Model
     TOptional<FString> FNodeModelMaster::GetMetadata() const
     {
         return MetadataValue;
+    }
+    TSharedPtr<TArray<TSharedPtr<Model::FVerifyAction>>> FNodeModelMaster::GetReleaseVerifyActions() const
+    {
+        return ReleaseVerifyActionsValue;
     }
     TSharedPtr<TArray<TSharedPtr<Model::FConsumeAction>>> FNodeModelMaster::GetReleaseConsumeActions() const
     {
@@ -290,6 +304,18 @@ namespace Gs2::SkillTree::Model
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
+            ->WithReleaseVerifyActions(Data->HasField(ANSI_TO_TCHAR("releaseVerifyActions")) ? [Data]() -> TSharedPtr<TArray<Model::FVerifyActionPtr>>
+                {
+                    auto v = MakeShared<TArray<Model::FVerifyActionPtr>>();
+                    if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("releaseVerifyActions")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("releaseVerifyActions")))
+                    {
+                        for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("releaseVerifyActions")))
+                        {
+                            v->Add(Model::FVerifyAction::FromJson(JsonObjectValue->AsObject()));
+                        }
+                    }
+                    return v;
+                 }() : MakeShared<TArray<Model::FVerifyActionPtr>>())
             ->WithReleaseConsumeActions(Data->HasField(ANSI_TO_TCHAR("releaseConsumeActions")) ? [Data]() -> TSharedPtr<TArray<Model::FConsumeActionPtr>>
                 {
                     auto v = MakeShared<TArray<Model::FConsumeActionPtr>>();
@@ -370,6 +396,15 @@ namespace Gs2::SkillTree::Model
         if (MetadataValue.IsSet())
         {
             JsonRootObject->SetStringField("metadata", MetadataValue.GetValue());
+        }
+        if (ReleaseVerifyActionsValue != nullptr && ReleaseVerifyActionsValue.IsValid())
+        {
+            TArray<TSharedPtr<FJsonValue>> v;
+            for (auto JsonObjectValue : *ReleaseVerifyActionsValue)
+            {
+                v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
+            }
+            JsonRootObject->SetArrayField("releaseVerifyActions", v);
         }
         if (ReleaseConsumeActionsValue != nullptr && ReleaseConsumeActionsValue.IsValid())
         {

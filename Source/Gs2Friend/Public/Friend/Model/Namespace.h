@@ -39,7 +39,10 @@ namespace Gs2::Friend::Model
         TSharedPtr<FScriptSetting> UpdateProfileScriptValue;
         TSharedPtr<FNotificationSetting> FollowNotificationValue;
         TSharedPtr<FNotificationSetting> ReceiveRequestNotificationValue;
+        TSharedPtr<FNotificationSetting> CancelRequestNotificationValue;
         TSharedPtr<FNotificationSetting> AcceptRequestNotificationValue;
+        TSharedPtr<FNotificationSetting> RejectRequestNotificationValue;
+        TSharedPtr<FNotificationSetting> DeleteFriendNotificationValue;
         TSharedPtr<FLogSetting> LogSettingValue;
         TOptional<int64> CreatedAtValue;
         TOptional<int64> UpdatedAtValue;
@@ -65,7 +68,10 @@ namespace Gs2::Friend::Model
         TSharedPtr<FNamespace> WithUpdateProfileScript(const TSharedPtr<FScriptSetting> UpdateProfileScript);
         TSharedPtr<FNamespace> WithFollowNotification(const TSharedPtr<FNotificationSetting> FollowNotification);
         TSharedPtr<FNamespace> WithReceiveRequestNotification(const TSharedPtr<FNotificationSetting> ReceiveRequestNotification);
+        TSharedPtr<FNamespace> WithCancelRequestNotification(const TSharedPtr<FNotificationSetting> CancelRequestNotification);
         TSharedPtr<FNamespace> WithAcceptRequestNotification(const TSharedPtr<FNotificationSetting> AcceptRequestNotification);
+        TSharedPtr<FNamespace> WithRejectRequestNotification(const TSharedPtr<FNotificationSetting> RejectRequestNotification);
+        TSharedPtr<FNamespace> WithDeleteFriendNotification(const TSharedPtr<FNotificationSetting> DeleteFriendNotification);
         TSharedPtr<FNamespace> WithLogSetting(const TSharedPtr<FLogSetting> LogSetting);
         TSharedPtr<FNamespace> WithCreatedAt(const TOptional<int64> CreatedAt);
         TSharedPtr<FNamespace> WithUpdatedAt(const TOptional<int64> UpdatedAt);
@@ -84,7 +90,10 @@ namespace Gs2::Friend::Model
         TSharedPtr<FScriptSetting> GetUpdateProfileScript() const;
         TSharedPtr<FNotificationSetting> GetFollowNotification() const;
         TSharedPtr<FNotificationSetting> GetReceiveRequestNotification() const;
+        TSharedPtr<FNotificationSetting> GetCancelRequestNotification() const;
         TSharedPtr<FNotificationSetting> GetAcceptRequestNotification() const;
+        TSharedPtr<FNotificationSetting> GetRejectRequestNotification() const;
+        TSharedPtr<FNotificationSetting> GetDeleteFriendNotification() const;
         TSharedPtr<FLogSetting> GetLogSetting() const;
         TOptional<int64> GetCreatedAt() const;
         FString GetCreatedAtString() const;

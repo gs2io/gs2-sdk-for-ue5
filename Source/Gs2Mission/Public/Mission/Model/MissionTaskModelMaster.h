@@ -19,7 +19,7 @@
 #include "CoreMinimal.h"
 #include "Core/Gs2Object.h"
 #include "TargetCounterModel.h"
-#include "ConsumeAction.h"
+#include "VerifyAction.h"
 #include "AcquireAction.h"
 
 namespace Gs2::Mission::Model
@@ -32,7 +32,7 @@ namespace Gs2::Mission::Model
         TOptional<FString> DescriptionValue;
         TOptional<FString> VerifyCompleteTypeValue;
         TSharedPtr<FTargetCounterModel> TargetCounterValue;
-        TSharedPtr<TArray<TSharedPtr<FConsumeAction>>> VerifyCompleteConsumeActionsValue;
+        TSharedPtr<TArray<TSharedPtr<FVerifyAction>>> VerifyCompleteConsumeActionsValue;
         TSharedPtr<TArray<TSharedPtr<FAcquireAction>>> CompleteAcquireActionsValue;
         TOptional<FString> ChallengePeriodEventIdValue;
         TOptional<FString> PremiseMissionTaskNameValue;
@@ -56,7 +56,7 @@ namespace Gs2::Mission::Model
         TSharedPtr<FMissionTaskModelMaster> WithDescription(const TOptional<FString> Description);
         TSharedPtr<FMissionTaskModelMaster> WithVerifyCompleteType(const TOptional<FString> VerifyCompleteType);
         TSharedPtr<FMissionTaskModelMaster> WithTargetCounter(const TSharedPtr<FTargetCounterModel> TargetCounter);
-        TSharedPtr<FMissionTaskModelMaster> WithVerifyCompleteConsumeActions(const TSharedPtr<TArray<TSharedPtr<FConsumeAction>>> VerifyCompleteConsumeActions);
+        TSharedPtr<FMissionTaskModelMaster> WithVerifyCompleteConsumeActions(const TSharedPtr<TArray<TSharedPtr<FVerifyAction>>> VerifyCompleteConsumeActions);
         TSharedPtr<FMissionTaskModelMaster> WithCompleteAcquireActions(const TSharedPtr<TArray<TSharedPtr<FAcquireAction>>> CompleteAcquireActions);
         TSharedPtr<FMissionTaskModelMaster> WithChallengePeriodEventId(const TOptional<FString> ChallengePeriodEventId);
         TSharedPtr<FMissionTaskModelMaster> WithPremiseMissionTaskName(const TOptional<FString> PremiseMissionTaskName);
@@ -73,7 +73,7 @@ namespace Gs2::Mission::Model
         TOptional<FString> GetDescription() const;
         TOptional<FString> GetVerifyCompleteType() const;
         TSharedPtr<FTargetCounterModel> GetTargetCounter() const;
-        TSharedPtr<TArray<TSharedPtr<FConsumeAction>>> GetVerifyCompleteConsumeActions() const;
+        TSharedPtr<TArray<TSharedPtr<FVerifyAction>>> GetVerifyCompleteConsumeActions() const;
         TSharedPtr<TArray<TSharedPtr<FAcquireAction>>> GetCompleteAcquireActions() const;
         TOptional<FString> GetChallengePeriodEventId() const;
         TOptional<FString> GetPremiseMissionTaskName() const;

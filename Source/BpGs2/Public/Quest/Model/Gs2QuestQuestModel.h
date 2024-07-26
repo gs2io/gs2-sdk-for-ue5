@@ -20,6 +20,7 @@
 #include "Quest/Domain/Model/Gs2QuestEzQuestModelDomain.h"
 #include "Quest/Model/Gs2QuestContents.h"
 #include "Quest/Model/Gs2QuestAcquireAction.h"
+#include "Quest/Model/Gs2QuestVerifyAction.h"
 #include "Quest/Model/Gs2QuestConsumeAction.h"
 #include "Quest/Model/Gs2QuestAcquireAction.h"
 #include "Core/BpGs2Constant.h"
@@ -50,6 +51,8 @@ struct FGs2QuestQuestModelValue
     FString ChallengePeriodEventId = "";
     UPROPERTY(Category = Gs2, BlueprintReadOnly)
     TArray<FGs2QuestAcquireAction> FirstCompleteAcquireActions = TArray<FGs2QuestAcquireAction>();
+    UPROPERTY(Category = Gs2, BlueprintReadOnly)
+    TArray<FGs2QuestVerifyAction> VerifyActions = TArray<FGs2QuestVerifyAction>();
     UPROPERTY(Category = Gs2, BlueprintReadOnly)
     TArray<FGs2QuestConsumeAction> ConsumeActions = TArray<FGs2QuestConsumeAction>();
     UPROPERTY(Category = Gs2, BlueprintReadOnly)
@@ -89,6 +92,15 @@ inline FGs2QuestQuestModelValue EzQuestModelToFGs2QuestQuestModelValue(
         }
         return r;
     }() : TArray<FGs2QuestAcquireAction>();
+    Value.VerifyActions = Model->GetVerifyActions() ? [&]
+    {
+        TArray<FGs2QuestVerifyAction> r;
+        for (auto v : *Model->GetVerifyActions())
+        {
+            r.Add(EzVerifyActionToFGs2QuestVerifyAction(v));
+        }
+        return r;
+    }() : TArray<FGs2QuestVerifyAction>();
     Value.ConsumeActions = Model->GetConsumeActions() ? [&]
     {
         TArray<FGs2QuestConsumeAction> r;
@@ -139,6 +151,13 @@ inline Gs2::UE5::Quest::Model::FEzQuestModelPtr FGs2QuestQuestModelValueToEzQues
             auto r = MakeShared<TArray<Gs2::UE5::Quest::Model::FEzAcquireActionPtr>>();
             for (auto v : Model.FirstCompleteAcquireActions) {
                 r->Add(FGs2QuestAcquireActionToEzAcquireAction(v));
+            }
+            return r;
+        }())
+        ->WithVerifyActions([&]{
+            auto r = MakeShared<TArray<Gs2::UE5::Quest::Model::FEzVerifyActionPtr>>();
+            for (auto v : Model.VerifyActions) {
+                r->Add(FGs2QuestVerifyActionToEzVerifyAction(v));
             }
             return r;
         }())

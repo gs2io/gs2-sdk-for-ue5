@@ -18,6 +18,7 @@
 
 #include "CoreMinimal.h"
 #include "../Model/Reward.h"
+#include "../Model/VerifyAction.h"
 #include "../Model/ConsumeAction.h"
 
 namespace Gs2::LoginReward::Request
@@ -37,6 +38,7 @@ namespace Gs2::LoginReward::Request
         TOptional<FString> RepeatValue;
         TSharedPtr<TArray<TSharedPtr<Model::FReward>>> RewardsValue;
         TOptional<FString> MissedReceiveReliefValue;
+        TSharedPtr<TArray<TSharedPtr<Model::FVerifyAction>>> MissedReceiveReliefVerifyActionsValue;
         TSharedPtr<TArray<TSharedPtr<Model::FConsumeAction>>> MissedReceiveReliefConsumeActionsValue;
         
     public:
@@ -58,6 +60,7 @@ namespace Gs2::LoginReward::Request
         TSharedPtr<FUpdateBonusModelMasterRequest> WithRepeat(const TOptional<FString> Repeat);
         TSharedPtr<FUpdateBonusModelMasterRequest> WithRewards(const TSharedPtr<TArray<TSharedPtr<Model::FReward>>> Rewards);
         TSharedPtr<FUpdateBonusModelMasterRequest> WithMissedReceiveRelief(const TOptional<FString> MissedReceiveRelief);
+        TSharedPtr<FUpdateBonusModelMasterRequest> WithMissedReceiveReliefVerifyActions(const TSharedPtr<TArray<TSharedPtr<Model::FVerifyAction>>> MissedReceiveReliefVerifyActions);
         TSharedPtr<FUpdateBonusModelMasterRequest> WithMissedReceiveReliefConsumeActions(const TSharedPtr<TArray<TSharedPtr<Model::FConsumeAction>>> MissedReceiveReliefConsumeActions);
 
         TOptional<FString> GetContextStack() const;
@@ -70,7 +73,7 @@ namespace Gs2::LoginReward::Request
         TOptional<int32> GetResetHour() const;
         FString GetResetHourString() const;
         TOptional<FString> GetRepeat() const;TSharedPtr<TArray<TSharedPtr<Model::FReward>>> GetRewards() const;
-        TOptional<FString> GetMissedReceiveRelief() const;TSharedPtr<TArray<TSharedPtr<Model::FConsumeAction>>> GetMissedReceiveReliefConsumeActions() const;
+        TOptional<FString> GetMissedReceiveRelief() const;TSharedPtr<TArray<TSharedPtr<Model::FVerifyAction>>> GetMissedReceiveReliefVerifyActions() const;TSharedPtr<TArray<TSharedPtr<Model::FConsumeAction>>> GetMissedReceiveReliefConsumeActions() const;
 
         static TSharedPtr<FUpdateBonusModelMasterRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;

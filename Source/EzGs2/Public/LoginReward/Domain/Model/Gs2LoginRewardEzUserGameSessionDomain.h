@@ -23,6 +23,7 @@
 #include "LoginReward/Model/Gs2LoginRewardEzReward.h"
 #include "LoginReward/Model/Gs2LoginRewardEzConfig.h"
 #include "LoginReward/Model/Gs2LoginRewardEzConsumeAction.h"
+#include "LoginReward/Model/Gs2LoginRewardEzVerifyAction.h"
 #include "LoginReward/Model/Gs2LoginRewardEzAcquireAction.h"
 #include "Gs2LoginRewardEzBonusGameSessionDomain.h"
 #include "Gs2LoginRewardEzReceiveStatusGameSessionDomain.h"

@@ -37,6 +37,8 @@ struct FGs2FriendFollowNotification
     UPROPERTY(Category = Gs2, BlueprintReadWrite)
     FString NamespaceName = "";
     UPROPERTY(Category = Gs2, BlueprintReadWrite)
+    FString UserId = "";
+    UPROPERTY(Category = Gs2, BlueprintReadWrite)
     FString FromUserId = "";
 };
 
@@ -46,6 +48,7 @@ inline FGs2FriendFollowNotification EzFollowNotificationToFGs2FriendFollowNotifi
 {
     FGs2FriendFollowNotification Value;
     Value.NamespaceName = Model->GetNamespaceName() ? *Model->GetNamespaceName() : "";
+    Value.UserId = Model->GetUserId() ? *Model->GetUserId() : "";
     Value.FromUserId = Model->GetFromUserId() ? *Model->GetFromUserId() : "";
     return Value;
 }
@@ -70,6 +73,8 @@ struct FGs2FriendAcceptRequestNotification
     UPROPERTY(Category = Gs2, BlueprintReadWrite)
     FString NamespaceName = "";
     UPROPERTY(Category = Gs2, BlueprintReadWrite)
+    FString UserId = "";
+    UPROPERTY(Category = Gs2, BlueprintReadWrite)
     FString TargetUserId = "";
 };
 
@@ -79,6 +84,7 @@ inline FGs2FriendAcceptRequestNotification EzAcceptRequestNotificationToFGs2Frie
 {
     FGs2FriendAcceptRequestNotification Value;
     Value.NamespaceName = Model->GetNamespaceName() ? *Model->GetNamespaceName() : "";
+    Value.UserId = Model->GetUserId() ? *Model->GetUserId() : "";
     Value.TargetUserId = Model->GetTargetUserId() ? *Model->GetTargetUserId() : "";
     return Value;
 }
@@ -96,12 +102,86 @@ struct FBpFriendAcceptRequestNotificationEvent
 };
 
 USTRUCT(BlueprintType)
+struct FGs2FriendRejectRequestNotification
+{
+    GENERATED_BODY()
+
+    UPROPERTY(Category = Gs2, BlueprintReadWrite)
+    FString NamespaceName = "";
+    UPROPERTY(Category = Gs2, BlueprintReadWrite)
+    FString UserId = "";
+    UPROPERTY(Category = Gs2, BlueprintReadWrite)
+    FString TargetUserId = "";
+};
+
+inline FGs2FriendRejectRequestNotification EzRejectRequestNotificationToFGs2FriendRejectRequestNotification(
+    const Gs2::Friend::Model::FRejectRequestNotificationPtr Model
+)
+{
+    FGs2FriendRejectRequestNotification Value;
+    Value.NamespaceName = Model->GetNamespaceName() ? *Model->GetNamespaceName() : "";
+    Value.UserId = Model->GetUserId() ? *Model->GetUserId() : "";
+    Value.TargetUserId = Model->GetTargetUserId() ? *Model->GetTargetUserId() : "";
+    return Value;
+}
+
+UDELEGATE(BlueprintAuthorityOnly)
+DECLARE_DYNAMIC_DELEGATE_OneParam(FEzFriendRejectRequestNotificationEvent, FGs2FriendRejectRequestNotification, Notification);
+
+USTRUCT(BlueprintType)
+struct FBpFriendRejectRequestNotificationEvent
+{
+    GENERATED_BODY()
+
+    UPROPERTY(Category = Gs2, BlueprintReadWrite)
+    FEzFriendRejectRequestNotificationEvent Value;
+};
+
+USTRUCT(BlueprintType)
+struct FGs2FriendDeleteFriendNotification
+{
+    GENERATED_BODY()
+
+    UPROPERTY(Category = Gs2, BlueprintReadWrite)
+    FString NamespaceName = "";
+    UPROPERTY(Category = Gs2, BlueprintReadWrite)
+    FString UserId = "";
+    UPROPERTY(Category = Gs2, BlueprintReadWrite)
+    FString FromUserId = "";
+};
+
+inline FGs2FriendDeleteFriendNotification EzDeleteFriendNotificationToFGs2FriendDeleteFriendNotification(
+    const Gs2::Friend::Model::FDeleteFriendNotificationPtr Model
+)
+{
+    FGs2FriendDeleteFriendNotification Value;
+    Value.NamespaceName = Model->GetNamespaceName() ? *Model->GetNamespaceName() : "";
+    Value.UserId = Model->GetUserId() ? *Model->GetUserId() : "";
+    Value.FromUserId = Model->GetFromUserId() ? *Model->GetFromUserId() : "";
+    return Value;
+}
+
+UDELEGATE(BlueprintAuthorityOnly)
+DECLARE_DYNAMIC_DELEGATE_OneParam(FEzFriendDeleteFriendNotificationEvent, FGs2FriendDeleteFriendNotification, Notification);
+
+USTRUCT(BlueprintType)
+struct FBpFriendDeleteFriendNotificationEvent
+{
+    GENERATED_BODY()
+
+    UPROPERTY(Category = Gs2, BlueprintReadWrite)
+    FEzFriendDeleteFriendNotificationEvent Value;
+};
+
+USTRUCT(BlueprintType)
 struct FGs2FriendReceiveRequestNotification
 {
     GENERATED_BODY()
 
     UPROPERTY(Category = Gs2, BlueprintReadWrite)
     FString NamespaceName = "";
+    UPROPERTY(Category = Gs2, BlueprintReadWrite)
+    FString UserId = "";
     UPROPERTY(Category = Gs2, BlueprintReadWrite)
     FString FromUserId = "";
 };
@@ -112,6 +192,7 @@ inline FGs2FriendReceiveRequestNotification EzReceiveRequestNotificationToFGs2Fr
 {
     FGs2FriendReceiveRequestNotification Value;
     Value.NamespaceName = Model->GetNamespaceName() ? *Model->GetNamespaceName() : "";
+    Value.UserId = Model->GetUserId() ? *Model->GetUserId() : "";
     Value.FromUserId = Model->GetFromUserId() ? *Model->GetFromUserId() : "";
     return Value;
 }
@@ -128,6 +209,42 @@ struct FBpFriendReceiveRequestNotificationEvent
     FEzFriendReceiveRequestNotificationEvent Value;
 };
 
+USTRUCT(BlueprintType)
+struct FGs2FriendCancelRequestNotification
+{
+    GENERATED_BODY()
+
+    UPROPERTY(Category = Gs2, BlueprintReadWrite)
+    FString NamespaceName = "";
+    UPROPERTY(Category = Gs2, BlueprintReadWrite)
+    FString UserId = "";
+    UPROPERTY(Category = Gs2, BlueprintReadWrite)
+    FString FromUserId = "";
+};
+
+inline FGs2FriendCancelRequestNotification EzCancelRequestNotificationToFGs2FriendCancelRequestNotification(
+    const Gs2::Friend::Model::FCancelRequestNotificationPtr Model
+)
+{
+    FGs2FriendCancelRequestNotification Value;
+    Value.NamespaceName = Model->GetNamespaceName() ? *Model->GetNamespaceName() : "";
+    Value.UserId = Model->GetUserId() ? *Model->GetUserId() : "";
+    Value.FromUserId = Model->GetFromUserId() ? *Model->GetFromUserId() : "";
+    return Value;
+}
+
+UDELEGATE(BlueprintAuthorityOnly)
+DECLARE_DYNAMIC_DELEGATE_OneParam(FEzFriendCancelRequestNotificationEvent, FGs2FriendCancelRequestNotification, Notification);
+
+USTRUCT(BlueprintType)
+struct FBpFriendCancelRequestNotificationEvent
+{
+    GENERATED_BODY()
+
+    UPROPERTY(Category = Gs2, BlueprintReadWrite)
+    FEzFriendCancelRequestNotificationEvent Value;
+};
+
 UCLASS()
 class BPGS2_API UGs2FriendFunctionLibrary : public UBlueprintFunctionLibrary
 {
@@ -139,7 +256,10 @@ public:
         FGs2Client Client,
         FBpFriendFollowNotificationEvent FollowNotification,
         FBpFriendAcceptRequestNotificationEvent AcceptRequestNotification,
-        FBpFriendReceiveRequestNotificationEvent ReceiveRequestNotification
+        FBpFriendRejectRequestNotificationEvent RejectRequestNotification,
+        FBpFriendDeleteFriendNotificationEvent DeleteFriendNotification,
+        FBpFriendReceiveRequestNotificationEvent ReceiveRequestNotification,
+        FBpFriendCancelRequestNotificationEvent CancelRequestNotification
     );
 
     UFUNCTION(BlueprintCallable, DisplayName="Gs2::Friend::Namespace", Category="Game Server Services|GS2-Friend|Namespace", meta=(WorldContext="WorldContextObject"))

@@ -23,6 +23,7 @@
 #include "Mission/Model/Gs2MissionEzConfig.h"
 #include "Mission/Model/Gs2MissionEzAcquireAction.h"
 #include "Mission/Model/Gs2MissionEzConsumeAction.h"
+#include "Mission/Model/Gs2MissionEzVerifyAction.h"
 #include "Mission/Model/Gs2MissionEzCounter.h"
 #include "Mission/Model/Gs2MissionEzCounterModel.h"
 #include "Mission/Model/Gs2MissionEzMissionGroupModel.h"

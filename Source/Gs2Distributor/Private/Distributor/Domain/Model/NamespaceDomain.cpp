@@ -283,6 +283,7 @@ namespace Gs2::Distributor::Domain::Model
             }
         }
         auto Domain = Self;
+
         *Result = Domain;
         return nullptr;
     }

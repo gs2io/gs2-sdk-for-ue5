@@ -33,6 +33,7 @@
 #include "Model/TargetCounterModel.h"
 #include "Model/AcquireAction.h"
 #include "Model/ConsumeAction.h"
+#include "Model/VerifyAction.h"
 #include "Model/Config.h"
 #include "Model/LogSetting.h"
 #include "Model/GitHubCheckoutSetting.h"

@@ -19,6 +19,7 @@
 #include "CoreMinimal.h"
 #include "Core/Gs2Object.h"
 #include "Reward.h"
+#include "VerifyAction.h"
 #include "ConsumeAction.h"
 
 namespace Gs2::LoginReward::Model
@@ -34,6 +35,7 @@ namespace Gs2::LoginReward::Model
         TOptional<FString> RepeatValue;
         TSharedPtr<TArray<TSharedPtr<FReward>>> RewardsValue;
         TOptional<FString> MissedReceiveReliefValue;
+        TSharedPtr<TArray<TSharedPtr<FVerifyAction>>> MissedReceiveReliefVerifyActionsValue;
         TSharedPtr<TArray<TSharedPtr<FConsumeAction>>> MissedReceiveReliefConsumeActionsValue;
 
     public:
@@ -52,6 +54,7 @@ namespace Gs2::LoginReward::Model
         TSharedPtr<FBonusModel> WithRepeat(const TOptional<FString> Repeat);
         TSharedPtr<FBonusModel> WithRewards(const TSharedPtr<TArray<TSharedPtr<FReward>>> Rewards);
         TSharedPtr<FBonusModel> WithMissedReceiveRelief(const TOptional<FString> MissedReceiveRelief);
+        TSharedPtr<FBonusModel> WithMissedReceiveReliefVerifyActions(const TSharedPtr<TArray<TSharedPtr<FVerifyAction>>> MissedReceiveReliefVerifyActions);
         TSharedPtr<FBonusModel> WithMissedReceiveReliefConsumeActions(const TSharedPtr<TArray<TSharedPtr<FConsumeAction>>> MissedReceiveReliefConsumeActions);
 
         TOptional<FString> GetBonusModelId() const;
@@ -64,6 +67,7 @@ namespace Gs2::LoginReward::Model
         TOptional<FString> GetRepeat() const;
         TSharedPtr<TArray<TSharedPtr<FReward>>> GetRewards() const;
         TOptional<FString> GetMissedReceiveRelief() const;
+        TSharedPtr<TArray<TSharedPtr<FVerifyAction>>> GetMissedReceiveReliefVerifyActions() const;
         TSharedPtr<TArray<TSharedPtr<FConsumeAction>>> GetMissedReceiveReliefConsumeActions() const;
 
         static TOptional<FString> GetRegionFromGrn(const FString Grn);

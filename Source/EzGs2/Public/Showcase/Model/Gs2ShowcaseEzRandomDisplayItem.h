@@ -18,6 +18,7 @@
 
 #include "CoreMinimal.h"
 #include "Showcase/Model/RandomDisplayItem.h"
+#include "Gs2ShowcaseEzVerifyAction.h"
 #include "Gs2ShowcaseEzConsumeAction.h"
 #include "Gs2ShowcaseEzAcquireAction.h"
 
@@ -27,6 +28,7 @@ namespace Gs2::UE5::Showcase::Model
 	{
         TOptional<FString> NameValue;
         TOptional<FString> MetadataValue;
+        TSharedPtr<TArray<TSharedPtr<Gs2::UE5::Showcase::Model::FEzVerifyAction>>> VerifyActionsValue;
         TSharedPtr<TArray<TSharedPtr<Gs2::UE5::Showcase::Model::FEzConsumeAction>>> ConsumeActionsValue;
         TSharedPtr<TArray<TSharedPtr<Gs2::UE5::Showcase::Model::FEzAcquireAction>>> AcquireActionsValue;
         TOptional<int32> CurrentPurchaseCountValue;
@@ -35,6 +37,7 @@ namespace Gs2::UE5::Showcase::Model
 	public:
         TSharedPtr<FEzRandomDisplayItem> WithName(const TOptional<FString> Name);
         TSharedPtr<FEzRandomDisplayItem> WithMetadata(const TOptional<FString> Metadata);
+        TSharedPtr<FEzRandomDisplayItem> WithVerifyActions(const TSharedPtr<TArray<TSharedPtr<Gs2::UE5::Showcase::Model::FEzVerifyAction>>> VerifyActions);
         TSharedPtr<FEzRandomDisplayItem> WithConsumeActions(const TSharedPtr<TArray<TSharedPtr<Gs2::UE5::Showcase::Model::FEzConsumeAction>>> ConsumeActions);
         TSharedPtr<FEzRandomDisplayItem> WithAcquireActions(const TSharedPtr<TArray<TSharedPtr<Gs2::UE5::Showcase::Model::FEzAcquireAction>>> AcquireActions);
         TSharedPtr<FEzRandomDisplayItem> WithCurrentPurchaseCount(const TOptional<int32> CurrentPurchaseCount);
@@ -43,6 +46,8 @@ namespace Gs2::UE5::Showcase::Model
         TOptional<FString> GetName() const;
 
         TOptional<FString> GetMetadata() const;
+
+        TSharedPtr<TArray<TSharedPtr<Gs2::UE5::Showcase::Model::FEzVerifyAction>>> GetVerifyActions() const;
 
         TSharedPtr<TArray<TSharedPtr<Gs2::UE5::Showcase::Model::FEzConsumeAction>>> GetConsumeActions() const;
 

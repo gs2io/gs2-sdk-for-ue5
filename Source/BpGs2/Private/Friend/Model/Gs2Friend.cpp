@@ -22,7 +22,10 @@ FGs2Friend UGs2FriendFunctionLibrary::Service(
     FGs2Client Client,
     FBpFriendFollowNotificationEvent FollowNotification,
     FBpFriendAcceptRequestNotificationEvent AcceptRequestNotification,
-    FBpFriendReceiveRequestNotificationEvent ReceiveRequestNotification
+    FBpFriendRejectRequestNotificationEvent RejectRequestNotification,
+    FBpFriendDeleteFriendNotificationEvent DeleteFriendNotification,
+    FBpFriendReceiveRequestNotificationEvent ReceiveRequestNotification,
+    FBpFriendCancelRequestNotificationEvent CancelRequestNotification
 )
 {
     FGs2Friend Return;
@@ -38,9 +41,21 @@ FGs2Friend UGs2FriendFunctionLibrary::Service(
     {
         AcceptRequestNotification.Value.Execute(EzAcceptRequestNotificationToFGs2FriendAcceptRequestNotification(Notification));
     });
+    Client.Value->Friend->OnRejectRequestNotification().AddLambda([&RejectRequestNotification](auto Notification)
+    {
+        RejectRequestNotification.Value.Execute(EzRejectRequestNotificationToFGs2FriendRejectRequestNotification(Notification));
+    });
+    Client.Value->Friend->OnDeleteFriendNotification().AddLambda([&DeleteFriendNotification](auto Notification)
+    {
+        DeleteFriendNotification.Value.Execute(EzDeleteFriendNotificationToFGs2FriendDeleteFriendNotification(Notification));
+    });
     Client.Value->Friend->OnReceiveRequestNotification().AddLambda([&ReceiveRequestNotification](auto Notification)
     {
         ReceiveRequestNotification.Value.Execute(EzReceiveRequestNotificationToFGs2FriendReceiveRequestNotification(Notification));
+    });
+    Client.Value->Friend->OnCancelRequestNotification().AddLambda([&CancelRequestNotification](auto Notification)
+    {
+        CancelRequestNotification.Value.Execute(EzCancelRequestNotificationToFGs2FriendCancelRequestNotification(Notification));
     });
     Return.Value = Client.Value->Friend;
     return Return;

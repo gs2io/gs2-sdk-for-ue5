@@ -20,6 +20,7 @@
 #include "Quest/Domain/Model/CompletedQuestList.h"
 #include "Quest/Model/Gs2QuestEzContents.h"
 #include "Quest/Model/Gs2QuestEzConsumeAction.h"
+#include "Quest/Model/Gs2QuestEzVerifyAction.h"
 #include "Quest/Model/Gs2QuestEzAcquireAction.h"
 #include "Quest/Model/Gs2QuestEzReward.h"
 #include "Quest/Model/Gs2QuestEzConfig.h"

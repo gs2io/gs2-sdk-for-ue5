@@ -18,6 +18,7 @@
 
 #include "CoreMinimal.h"
 #include "Showcase/Domain/Model/Gs2ShowcaseEzRandomDisplayItemGameSessionDomain.h"
+#include "Showcase/Model/Gs2ShowcaseVerifyAction.h"
 #include "Showcase/Model/Gs2ShowcaseConsumeAction.h"
 #include "Showcase/Model/Gs2ShowcaseAcquireAction.h"
 #include "Core/BpGs2Constant.h"
@@ -41,6 +42,8 @@ struct FGs2ShowcaseRandomDisplayItemValue
     UPROPERTY(Category = Gs2, BlueprintReadOnly)
     FString Metadata = "";
     UPROPERTY(Category = Gs2, BlueprintReadOnly)
+    TArray<FGs2ShowcaseVerifyAction> VerifyActions = TArray<FGs2ShowcaseVerifyAction>();
+    UPROPERTY(Category = Gs2, BlueprintReadOnly)
     TArray<FGs2ShowcaseConsumeAction> ConsumeActions = TArray<FGs2ShowcaseConsumeAction>();
     UPROPERTY(Category = Gs2, BlueprintReadOnly)
     TArray<FGs2ShowcaseAcquireAction> AcquireActions = TArray<FGs2ShowcaseAcquireAction>();
@@ -61,6 +64,15 @@ inline FGs2ShowcaseRandomDisplayItemValue EzRandomDisplayItemToFGs2ShowcaseRando
     }
     Value.Name = Model->GetName() ? *Model->GetName() : "";
     Value.Metadata = Model->GetMetadata() ? *Model->GetMetadata() : "";
+    Value.VerifyActions = Model->GetVerifyActions() ? [&]
+    {
+        TArray<FGs2ShowcaseVerifyAction> r;
+        for (auto v : *Model->GetVerifyActions())
+        {
+            r.Add(EzVerifyActionToFGs2ShowcaseVerifyAction(v));
+        }
+        return r;
+    }() : TArray<FGs2ShowcaseVerifyAction>();
     Value.ConsumeActions = Model->GetConsumeActions() ? [&]
     {
         TArray<FGs2ShowcaseConsumeAction> r;
@@ -91,6 +103,13 @@ inline Gs2::UE5::Showcase::Model::FEzRandomDisplayItemPtr FGs2ShowcaseRandomDisp
     return MakeShared<Gs2::UE5::Showcase::Model::FEzRandomDisplayItem>()
         ->WithName(Model.Name)
         ->WithMetadata(Model.Metadata)
+        ->WithVerifyActions([&]{
+            auto r = MakeShared<TArray<Gs2::UE5::Showcase::Model::FEzVerifyActionPtr>>();
+            for (auto v : Model.VerifyActions) {
+                r->Add(FGs2ShowcaseVerifyActionToEzVerifyAction(v));
+            }
+            return r;
+        }())
         ->WithConsumeActions([&]{
             auto r = MakeShared<TArray<Gs2::UE5::Showcase::Model::FEzConsumeActionPtr>>();
             for (auto v : Model.ConsumeActions) {

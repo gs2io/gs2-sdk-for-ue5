@@ -18,6 +18,7 @@
 
 #include "CoreMinimal.h"
 #include "SkillTree/Model/NodeModel.h"
+#include "Gs2SkillTreeEzVerifyAction.h"
 #include "Gs2SkillTreeEzConsumeAction.h"
 #include "Gs2SkillTreeEzAcquireAction.h"
 
@@ -27,6 +28,7 @@ namespace Gs2::UE5::SkillTree::Model
 	{
         TOptional<FString> NameValue;
         TOptional<FString> MetadataValue;
+        TSharedPtr<TArray<TSharedPtr<Gs2::UE5::SkillTree::Model::FEzVerifyAction>>> ReleaseVerifyActionsValue;
         TSharedPtr<TArray<TSharedPtr<Gs2::UE5::SkillTree::Model::FEzConsumeAction>>> ReleaseConsumeActionsValue;
         TSharedPtr<TArray<TSharedPtr<Gs2::UE5::SkillTree::Model::FEzAcquireAction>>> ReturnAcquireActionsValue;
         TOptional<float> RestrainReturnRateValue;
@@ -34,6 +36,7 @@ namespace Gs2::UE5::SkillTree::Model
 	public:
         TSharedPtr<FEzNodeModel> WithName(const TOptional<FString> Name);
         TSharedPtr<FEzNodeModel> WithMetadata(const TOptional<FString> Metadata);
+        TSharedPtr<FEzNodeModel> WithReleaseVerifyActions(const TSharedPtr<TArray<TSharedPtr<Gs2::UE5::SkillTree::Model::FEzVerifyAction>>> ReleaseVerifyActions);
         TSharedPtr<FEzNodeModel> WithReleaseConsumeActions(const TSharedPtr<TArray<TSharedPtr<Gs2::UE5::SkillTree::Model::FEzConsumeAction>>> ReleaseConsumeActions);
         TSharedPtr<FEzNodeModel> WithReturnAcquireActions(const TSharedPtr<TArray<TSharedPtr<Gs2::UE5::SkillTree::Model::FEzAcquireAction>>> ReturnAcquireActions);
         TSharedPtr<FEzNodeModel> WithRestrainReturnRate(const TOptional<float> RestrainReturnRate);
@@ -41,6 +44,8 @@ namespace Gs2::UE5::SkillTree::Model
         TOptional<FString> GetName() const;
 
         TOptional<FString> GetMetadata() const;
+
+        TSharedPtr<TArray<TSharedPtr<Gs2::UE5::SkillTree::Model::FEzVerifyAction>>> GetReleaseVerifyActions() const;
 
         TSharedPtr<TArray<TSharedPtr<Gs2::UE5::SkillTree::Model::FEzConsumeAction>>> GetReleaseConsumeActions() const;
 

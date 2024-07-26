@@ -19,6 +19,7 @@
 #include "CoreMinimal.h"
 #include "LoginReward/Domain/Model/Gs2LoginRewardEzBonusModelDomain.h"
 #include "LoginReward/Model/Gs2LoginRewardReward.h"
+#include "LoginReward/Model/Gs2LoginRewardVerifyAction.h"
 #include "LoginReward/Model/Gs2LoginRewardConsumeAction.h"
 #include "Core/BpGs2Constant.h"
 #include "Gs2LoginRewardBonusModel.generated.h"
@@ -53,6 +54,8 @@ struct FGs2LoginRewardBonusModelValue
     UPROPERTY(Category = Gs2, BlueprintReadOnly)
     FString MissedReceiveRelief = "";
     UPROPERTY(Category = Gs2, BlueprintReadOnly)
+    TArray<FGs2LoginRewardVerifyAction> MissedReceiveReliefVerifyActions = TArray<FGs2LoginRewardVerifyAction>();
+    UPROPERTY(Category = Gs2, BlueprintReadOnly)
     TArray<FGs2LoginRewardConsumeAction> MissedReceiveReliefConsumeActions = TArray<FGs2LoginRewardConsumeAction>();
 };
 
@@ -81,6 +84,15 @@ inline FGs2LoginRewardBonusModelValue EzBonusModelToFGs2LoginRewardBonusModelVal
         return r;
     }() : TArray<FGs2LoginRewardReward>();
     Value.MissedReceiveRelief = Model->GetMissedReceiveRelief() ? *Model->GetMissedReceiveRelief() : "";
+    Value.MissedReceiveReliefVerifyActions = Model->GetMissedReceiveReliefVerifyActions() ? [&]
+    {
+        TArray<FGs2LoginRewardVerifyAction> r;
+        for (auto v : *Model->GetMissedReceiveReliefVerifyActions())
+        {
+            r.Add(EzVerifyActionToFGs2LoginRewardVerifyAction(v));
+        }
+        return r;
+    }() : TArray<FGs2LoginRewardVerifyAction>();
     Value.MissedReceiveReliefConsumeActions = Model->GetMissedReceiveReliefConsumeActions() ? [&]
     {
         TArray<FGs2LoginRewardConsumeAction> r;
@@ -112,6 +124,13 @@ inline Gs2::UE5::LoginReward::Model::FEzBonusModelPtr FGs2LoginRewardBonusModelV
             return r;
         }())
         ->WithMissedReceiveRelief(Model.MissedReceiveRelief)
+        ->WithMissedReceiveReliefVerifyActions([&]{
+            auto r = MakeShared<TArray<Gs2::UE5::LoginReward::Model::FEzVerifyActionPtr>>();
+            for (auto v : Model.MissedReceiveReliefVerifyActions) {
+                r->Add(FGs2LoginRewardVerifyActionToEzVerifyAction(v));
+            }
+            return r;
+        }())
         ->WithMissedReceiveReliefConsumeActions([&]{
             auto r = MakeShared<TArray<Gs2::UE5::LoginReward::Model::FEzConsumeActionPtr>>();
             for (auto v : Model.MissedReceiveReliefConsumeActions) {

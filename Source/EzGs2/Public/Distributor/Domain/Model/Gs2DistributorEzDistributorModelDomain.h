@@ -24,6 +24,7 @@
 #include "Distributor/Model/Gs2DistributorEzStampSheetResult.h"
 #include "Distributor/Model/Gs2DistributorEzAcquireAction.h"
 #include "Distributor/Model/Gs2DistributorEzConsumeAction.h"
+#include "Distributor/Model/Gs2DistributorEzVerifyAction.h"
 #include "Gs2DistributorEzDistributorModelDomain.h"
 #include "Distributor/Domain/Iterator/Gs2DistributorEzDescribeDistributorModelsIterator.h"
 #include "Util/Net/GameSession.h"

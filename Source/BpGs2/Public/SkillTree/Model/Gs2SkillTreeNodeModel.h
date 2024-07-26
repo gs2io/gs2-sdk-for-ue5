@@ -18,6 +18,7 @@
 
 #include "CoreMinimal.h"
 #include "SkillTree/Domain/Model/Gs2SkillTreeEzNodeModelDomain.h"
+#include "SkillTree/Model/Gs2SkillTreeVerifyAction.h"
 #include "SkillTree/Model/Gs2SkillTreeConsumeAction.h"
 #include "SkillTree/Model/Gs2SkillTreeAcquireAction.h"
 #include "Core/BpGs2Constant.h"
@@ -41,6 +42,8 @@ struct FGs2SkillTreeNodeModelValue
     UPROPERTY(Category = Gs2, BlueprintReadOnly)
     FString Metadata = "";
     UPROPERTY(Category = Gs2, BlueprintReadOnly)
+    TArray<FGs2SkillTreeVerifyAction> ReleaseVerifyActions = TArray<FGs2SkillTreeVerifyAction>();
+    UPROPERTY(Category = Gs2, BlueprintReadOnly)
     TArray<FGs2SkillTreeConsumeAction> ReleaseConsumeActions = TArray<FGs2SkillTreeConsumeAction>();
     UPROPERTY(Category = Gs2, BlueprintReadOnly)
     TArray<FGs2SkillTreeAcquireAction> ReturnAcquireActions = TArray<FGs2SkillTreeAcquireAction>();
@@ -59,6 +62,15 @@ inline FGs2SkillTreeNodeModelValue EzNodeModelToFGs2SkillTreeNodeModelValue(
     }
     Value.Name = Model->GetName() ? *Model->GetName() : "";
     Value.Metadata = Model->GetMetadata() ? *Model->GetMetadata() : "";
+    Value.ReleaseVerifyActions = Model->GetReleaseVerifyActions() ? [&]
+    {
+        TArray<FGs2SkillTreeVerifyAction> r;
+        for (auto v : *Model->GetReleaseVerifyActions())
+        {
+            r.Add(EzVerifyActionToFGs2SkillTreeVerifyAction(v));
+        }
+        return r;
+    }() : TArray<FGs2SkillTreeVerifyAction>();
     Value.ReleaseConsumeActions = Model->GetReleaseConsumeActions() ? [&]
     {
         TArray<FGs2SkillTreeConsumeAction> r;
@@ -88,6 +100,13 @@ inline Gs2::UE5::SkillTree::Model::FEzNodeModelPtr FGs2SkillTreeNodeModelValueTo
     return MakeShared<Gs2::UE5::SkillTree::Model::FEzNodeModel>()
         ->WithName(Model.Name)
         ->WithMetadata(Model.Metadata)
+        ->WithReleaseVerifyActions([&]{
+            auto r = MakeShared<TArray<Gs2::UE5::SkillTree::Model::FEzVerifyActionPtr>>();
+            for (auto v : Model.ReleaseVerifyActions) {
+                r->Add(FGs2SkillTreeVerifyActionToEzVerifyAction(v));
+            }
+            return r;
+        }())
         ->WithReleaseConsumeActions([&]{
             auto r = MakeShared<TArray<Gs2::UE5::SkillTree::Model::FEzConsumeActionPtr>>();
             for (auto v : Model.ReleaseConsumeActions) {

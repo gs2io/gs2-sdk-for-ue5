@@ -23,6 +23,7 @@ namespace Gs2::Showcase::Request
         NameValue(TOptional<FString>()),
         DescriptionValue(TOptional<FString>()),
         MetadataValue(TOptional<FString>()),
+        VerifyActionsValue(nullptr),
         ConsumeActionsValue(nullptr),
         AcquireActionsValue(nullptr)
     {
@@ -35,6 +36,7 @@ namespace Gs2::Showcase::Request
         NameValue(From.NameValue),
         DescriptionValue(From.DescriptionValue),
         MetadataValue(From.MetadataValue),
+        VerifyActionsValue(From.VerifyActionsValue),
         ConsumeActionsValue(From.ConsumeActionsValue),
         AcquireActionsValue(From.AcquireActionsValue)
     {
@@ -80,6 +82,14 @@ namespace Gs2::Showcase::Request
         return SharedThis(this);
     }
 
+    TSharedPtr<FCreateSalesItemMasterRequest> FCreateSalesItemMasterRequest::WithVerifyActions(
+        const TSharedPtr<TArray<TSharedPtr<Model::FVerifyAction>>> VerifyActions
+    )
+    {
+        this->VerifyActionsValue = VerifyActions;
+        return SharedThis(this);
+    }
+
     TSharedPtr<FCreateSalesItemMasterRequest> FCreateSalesItemMasterRequest::WithConsumeActions(
         const TSharedPtr<TArray<TSharedPtr<Model::FConsumeAction>>> ConsumeActions
     )
@@ -119,6 +129,15 @@ namespace Gs2::Showcase::Request
     TOptional<FString> FCreateSalesItemMasterRequest::GetMetadata() const
     {
         return MetadataValue;
+    }
+
+    TSharedPtr<TArray<TSharedPtr<Model::FVerifyAction>>> FCreateSalesItemMasterRequest::GetVerifyActions() const
+    {
+        if (!VerifyActionsValue.IsValid())
+        {
+            return nullptr;
+        }
+        return VerifyActionsValue;
     }
 
     TSharedPtr<TArray<TSharedPtr<Model::FConsumeAction>>> FCreateSalesItemMasterRequest::GetConsumeActions() const
@@ -182,6 +201,18 @@ namespace Gs2::Showcase::Request
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
+          ->WithVerifyActions(Data->HasField(ANSI_TO_TCHAR("verifyActions")) ? [Data]() -> TSharedPtr<TArray<Model::FVerifyActionPtr>>
+              {
+                  auto v = MakeShared<TArray<Model::FVerifyActionPtr>>();
+                  if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("verifyActions")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("verifyActions")))
+                  {
+                      for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("verifyActions")))
+                      {
+                          v->Add(Model::FVerifyAction::FromJson(JsonObjectValue->AsObject()));
+                      }
+                  }
+                  return v;
+              }() : MakeShared<TArray<Model::FVerifyActionPtr>>())
           ->WithConsumeActions(Data->HasField(ANSI_TO_TCHAR("consumeActions")) ? [Data]() -> TSharedPtr<TArray<Model::FConsumeActionPtr>>
               {
                   auto v = MakeShared<TArray<Model::FConsumeActionPtr>>();
@@ -230,6 +261,15 @@ namespace Gs2::Showcase::Request
         if (MetadataValue.IsSet())
         {
             JsonRootObject->SetStringField("metadata", MetadataValue.GetValue());
+        }
+        if (VerifyActionsValue != nullptr && VerifyActionsValue.IsValid())
+        {
+            TArray<TSharedPtr<FJsonValue>> v;
+            for (auto JsonObjectValue : *VerifyActionsValue)
+            {
+                v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
+            }
+            JsonRootObject->SetArrayField("verifyActions", v);
         }
         if (ConsumeActionsValue != nullptr && ConsumeActionsValue.IsValid())
         {

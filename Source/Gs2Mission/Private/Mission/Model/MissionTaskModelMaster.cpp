@@ -109,7 +109,7 @@ namespace Gs2::Mission::Model
     }
 
     TSharedPtr<FMissionTaskModelMaster> FMissionTaskModelMaster::WithVerifyCompleteConsumeActions(
-        const TSharedPtr<TArray<TSharedPtr<Model::FConsumeAction>>> VerifyCompleteConsumeActions
+        const TSharedPtr<TArray<TSharedPtr<Model::FVerifyAction>>> VerifyCompleteConsumeActions
     )
     {
         this->VerifyCompleteConsumeActionsValue = VerifyCompleteConsumeActions;
@@ -211,7 +211,7 @@ namespace Gs2::Mission::Model
     {
         return TargetCounterValue;
     }
-    TSharedPtr<TArray<TSharedPtr<Model::FConsumeAction>>> FMissionTaskModelMaster::GetVerifyCompleteConsumeActions() const
+    TSharedPtr<TArray<TSharedPtr<Model::FVerifyAction>>> FMissionTaskModelMaster::GetVerifyCompleteConsumeActions() const
     {
         return VerifyCompleteConsumeActionsValue;
     }
@@ -402,18 +402,18 @@ namespace Gs2::Mission::Model
                     }
                     return Model::FTargetCounterModel::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("targetCounter")));
                  }() : nullptr)
-            ->WithVerifyCompleteConsumeActions(Data->HasField(ANSI_TO_TCHAR("verifyCompleteConsumeActions")) ? [Data]() -> TSharedPtr<TArray<Model::FConsumeActionPtr>>
+            ->WithVerifyCompleteConsumeActions(Data->HasField(ANSI_TO_TCHAR("verifyCompleteConsumeActions")) ? [Data]() -> TSharedPtr<TArray<Model::FVerifyActionPtr>>
                 {
-                    auto v = MakeShared<TArray<Model::FConsumeActionPtr>>();
+                    auto v = MakeShared<TArray<Model::FVerifyActionPtr>>();
                     if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("verifyCompleteConsumeActions")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("verifyCompleteConsumeActions")))
                     {
                         for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("verifyCompleteConsumeActions")))
                         {
-                            v->Add(Model::FConsumeAction::FromJson(JsonObjectValue->AsObject()));
+                            v->Add(Model::FVerifyAction::FromJson(JsonObjectValue->AsObject()));
                         }
                     }
                     return v;
-                 }() : MakeShared<TArray<Model::FConsumeActionPtr>>())
+                 }() : MakeShared<TArray<Model::FVerifyActionPtr>>())
             ->WithCompleteAcquireActions(Data->HasField(ANSI_TO_TCHAR("completeAcquireActions")) ? [Data]() -> TSharedPtr<TArray<Model::FAcquireActionPtr>>
                 {
                     auto v = MakeShared<TArray<Model::FAcquireActionPtr>>();

@@ -83,6 +83,14 @@ namespace Gs2::UE5::LoginReward::Model
         return SharedThis(this);
     }
 
+    TSharedPtr<FEzBonusModel> FEzBonusModel::WithMissedReceiveReliefVerifyActions(
+        const TSharedPtr<TArray<TSharedPtr<Gs2::UE5::LoginReward::Model::FEzVerifyAction>>> MissedReceiveReliefVerifyActions
+    )
+    {
+        this->MissedReceiveReliefVerifyActionsValue = MissedReceiveReliefVerifyActions;
+        return SharedThis(this);
+    }
+
     TSharedPtr<FEzBonusModel> FEzBonusModel::WithMissedReceiveReliefConsumeActions(
         const TSharedPtr<TArray<TSharedPtr<Gs2::UE5::LoginReward::Model::FEzConsumeAction>>> MissedReceiveReliefConsumeActions
     )
@@ -131,6 +139,10 @@ namespace Gs2::UE5::LoginReward::Model
     {
         return MissedReceiveReliefValue;
     }
+    TSharedPtr<TArray<TSharedPtr<Gs2::UE5::LoginReward::Model::FEzVerifyAction>>> FEzBonusModel::GetMissedReceiveReliefVerifyActions() const
+    {
+        return MissedReceiveReliefVerifyActionsValue;
+    }
     TSharedPtr<TArray<TSharedPtr<Gs2::UE5::LoginReward::Model::FEzConsumeAction>>> FEzBonusModel::GetMissedReceiveReliefConsumeActions() const
     {
         return MissedReceiveReliefConsumeActionsValue;
@@ -160,6 +172,20 @@ namespace Gs2::UE5::LoginReward::Model
                 }()
             )
             ->WithMissedReceiveRelief(MissedReceiveReliefValue)
+            ->WithMissedReceiveReliefVerifyActions([&]
+                {
+                    auto v = MakeShared<TArray<TSharedPtr<Gs2::LoginReward::Model::FVerifyAction>>>();
+                    if (MissedReceiveReliefVerifyActionsValue == nullptr)
+                    {
+                        return v;
+                    }
+                    for (auto v2 : *MissedReceiveReliefVerifyActionsValue)
+                    {
+                        v->Add(v2->ToModel());
+                    }
+                    return v;
+                }()
+            )
             ->WithMissedReceiveReliefConsumeActions([&]
                 {
                     auto v = MakeShared<TArray<TSharedPtr<Gs2::LoginReward::Model::FConsumeAction>>>();
@@ -204,6 +230,20 @@ namespace Gs2::UE5::LoginReward::Model
                 }()
             )
             ->WithMissedReceiveRelief(Model->GetMissedReceiveRelief())
+            ->WithMissedReceiveReliefVerifyActions([&]
+                {
+                    auto v = MakeShared<TArray<TSharedPtr<FEzVerifyAction>>>();
+                    if (Model->GetMissedReceiveReliefVerifyActions() == nullptr)
+                    {
+                        return v;
+                    }
+                    for (auto v2 : *Model->GetMissedReceiveReliefVerifyActions())
+                    {
+                        v->Add(FEzVerifyAction::FromModel(v2));
+                    }
+                    return v;
+                }()
+            )
             ->WithMissedReceiveReliefConsumeActions([&]
                 {
                     auto v = MakeShared<TArray<TSharedPtr<FEzConsumeAction>>>();

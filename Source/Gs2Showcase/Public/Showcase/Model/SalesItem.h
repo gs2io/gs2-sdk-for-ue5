@@ -18,6 +18,7 @@
 
 #include "CoreMinimal.h"
 #include "Core/Gs2Object.h"
+#include "VerifyAction.h"
 #include "ConsumeAction.h"
 #include "AcquireAction.h"
 
@@ -27,6 +28,7 @@ namespace Gs2::Showcase::Model
     {
         TOptional<FString> NameValue;
         TOptional<FString> MetadataValue;
+        TSharedPtr<TArray<TSharedPtr<FVerifyAction>>> VerifyActionsValue;
         TSharedPtr<TArray<TSharedPtr<FConsumeAction>>> ConsumeActionsValue;
         TSharedPtr<TArray<TSharedPtr<FAcquireAction>>> AcquireActionsValue;
 
@@ -39,11 +41,13 @@ namespace Gs2::Showcase::Model
 
         TSharedPtr<FSalesItem> WithName(const TOptional<FString> Name);
         TSharedPtr<FSalesItem> WithMetadata(const TOptional<FString> Metadata);
+        TSharedPtr<FSalesItem> WithVerifyActions(const TSharedPtr<TArray<TSharedPtr<FVerifyAction>>> VerifyActions);
         TSharedPtr<FSalesItem> WithConsumeActions(const TSharedPtr<TArray<TSharedPtr<FConsumeAction>>> ConsumeActions);
         TSharedPtr<FSalesItem> WithAcquireActions(const TSharedPtr<TArray<TSharedPtr<FAcquireAction>>> AcquireActions);
 
         TOptional<FString> GetName() const;
         TOptional<FString> GetMetadata() const;
+        TSharedPtr<TArray<TSharedPtr<FVerifyAction>>> GetVerifyActions() const;
         TSharedPtr<TArray<TSharedPtr<FConsumeAction>>> GetConsumeActions() const;
         TSharedPtr<TArray<TSharedPtr<FAcquireAction>>> GetAcquireActions() const;
 

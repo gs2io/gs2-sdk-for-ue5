@@ -18,6 +18,7 @@
 
 #include "CoreMinimal.h"
 #include "../Model/AcquireAction.h"
+#include "../Model/VerifyAction.h"
 #include "../Model/ConsumeAction.h"
 
 namespace Gs2::Exchange::Request
@@ -34,6 +35,7 @@ namespace Gs2::Exchange::Request
         TOptional<FString> TimingTypeValue;
         TOptional<int32> LockTimeValue;
         TSharedPtr<TArray<TSharedPtr<Model::FAcquireAction>>> AcquireActionsValue;
+        TSharedPtr<TArray<TSharedPtr<Model::FVerifyAction>>> VerifyActionsValue;
         TSharedPtr<TArray<TSharedPtr<Model::FConsumeAction>>> ConsumeActionsValue;
         
     public:
@@ -52,6 +54,7 @@ namespace Gs2::Exchange::Request
         TSharedPtr<FUpdateRateModelMasterRequest> WithTimingType(const TOptional<FString> TimingType);
         TSharedPtr<FUpdateRateModelMasterRequest> WithLockTime(const TOptional<int32> LockTime);
         TSharedPtr<FUpdateRateModelMasterRequest> WithAcquireActions(const TSharedPtr<TArray<TSharedPtr<Model::FAcquireAction>>> AcquireActions);
+        TSharedPtr<FUpdateRateModelMasterRequest> WithVerifyActions(const TSharedPtr<TArray<TSharedPtr<Model::FVerifyAction>>> VerifyActions);
         TSharedPtr<FUpdateRateModelMasterRequest> WithConsumeActions(const TSharedPtr<TArray<TSharedPtr<Model::FConsumeAction>>> ConsumeActions);
 
         TOptional<FString> GetContextStack() const;
@@ -61,7 +64,7 @@ namespace Gs2::Exchange::Request
         TOptional<FString> GetMetadata() const;
         TOptional<FString> GetTimingType() const;
         TOptional<int32> GetLockTime() const;
-        FString GetLockTimeString() const;TSharedPtr<TArray<TSharedPtr<Model::FAcquireAction>>> GetAcquireActions() const;TSharedPtr<TArray<TSharedPtr<Model::FConsumeAction>>> GetConsumeActions() const;
+        FString GetLockTimeString() const;TSharedPtr<TArray<TSharedPtr<Model::FAcquireAction>>> GetAcquireActions() const;TSharedPtr<TArray<TSharedPtr<Model::FVerifyAction>>> GetVerifyActions() const;TSharedPtr<TArray<TSharedPtr<Model::FConsumeAction>>> GetConsumeActions() const;
 
         static TSharedPtr<FUpdateRateModelMasterRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;

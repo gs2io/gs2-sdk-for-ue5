@@ -22,8 +22,11 @@ namespace Gs2::Distributor::Model
         StampSheetResultIdValue(TOptional<FString>()),
         UserIdValue(TOptional<FString>()),
         TransactionIdValue(TOptional<FString>()),
+        VerifyTaskRequestsValue(nullptr),
         TaskRequestsValue(nullptr),
         SheetRequestValue(nullptr),
+        VerifyTaskResultCodesValue(nullptr),
+        VerifyTaskResultsValue(nullptr),
         TaskResultCodesValue(nullptr),
         TaskResultsValue(nullptr),
         SheetResultCodeValue(TOptional<int32>()),
@@ -40,8 +43,11 @@ namespace Gs2::Distributor::Model
         StampSheetResultIdValue(From.StampSheetResultIdValue),
         UserIdValue(From.UserIdValue),
         TransactionIdValue(From.TransactionIdValue),
+        VerifyTaskRequestsValue(From.VerifyTaskRequestsValue),
         TaskRequestsValue(From.TaskRequestsValue),
         SheetRequestValue(From.SheetRequestValue),
+        VerifyTaskResultCodesValue(From.VerifyTaskResultCodesValue),
+        VerifyTaskResultsValue(From.VerifyTaskResultsValue),
         TaskResultCodesValue(From.TaskResultCodesValue),
         TaskResultsValue(From.TaskResultsValue),
         SheetResultCodeValue(From.SheetResultCodeValue),
@@ -76,6 +82,14 @@ namespace Gs2::Distributor::Model
         return SharedThis(this);
     }
 
+    TSharedPtr<FStampSheetResult> FStampSheetResult::WithVerifyTaskRequests(
+        const TSharedPtr<TArray<TSharedPtr<Model::FVerifyAction>>> VerifyTaskRequests
+    )
+    {
+        this->VerifyTaskRequestsValue = VerifyTaskRequests;
+        return SharedThis(this);
+    }
+
     TSharedPtr<FStampSheetResult> FStampSheetResult::WithTaskRequests(
         const TSharedPtr<TArray<TSharedPtr<Model::FConsumeAction>>> TaskRequests
     )
@@ -89,6 +103,22 @@ namespace Gs2::Distributor::Model
     )
     {
         this->SheetRequestValue = SheetRequest;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FStampSheetResult> FStampSheetResult::WithVerifyTaskResultCodes(
+        const TSharedPtr<TArray<int32>> VerifyTaskResultCodes
+    )
+    {
+        this->VerifyTaskResultCodesValue = VerifyTaskResultCodes;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FStampSheetResult> FStampSheetResult::WithVerifyTaskResults(
+        const TSharedPtr<TArray<FString>> VerifyTaskResults
+    )
+    {
+        this->VerifyTaskResultsValue = VerifyTaskResults;
         return SharedThis(this);
     }
 
@@ -159,6 +189,10 @@ namespace Gs2::Distributor::Model
     {
         return TransactionIdValue;
     }
+    TSharedPtr<TArray<TSharedPtr<Model::FVerifyAction>>> FStampSheetResult::GetVerifyTaskRequests() const
+    {
+        return VerifyTaskRequestsValue;
+    }
     TSharedPtr<TArray<TSharedPtr<Model::FConsumeAction>>> FStampSheetResult::GetTaskRequests() const
     {
         return TaskRequestsValue;
@@ -166,6 +200,14 @@ namespace Gs2::Distributor::Model
     TSharedPtr<FAcquireAction> FStampSheetResult::GetSheetRequest() const
     {
         return SheetRequestValue;
+    }
+    TSharedPtr<TArray<int32>> FStampSheetResult::GetVerifyTaskResultCodes() const
+    {
+        return VerifyTaskResultCodesValue;
+    }
+    TSharedPtr<TArray<FString>> FStampSheetResult::GetVerifyTaskResults() const
+    {
+        return VerifyTaskResultsValue;
     }
     TSharedPtr<TArray<int32>> FStampSheetResult::GetTaskResultCodes() const
     {
@@ -311,6 +353,18 @@ namespace Gs2::Distributor::Model
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
+            ->WithVerifyTaskRequests(Data->HasField(ANSI_TO_TCHAR("verifyTaskRequests")) ? [Data]() -> TSharedPtr<TArray<Model::FVerifyActionPtr>>
+                {
+                    auto v = MakeShared<TArray<Model::FVerifyActionPtr>>();
+                    if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("verifyTaskRequests")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("verifyTaskRequests")))
+                    {
+                        for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("verifyTaskRequests")))
+                        {
+                            v->Add(Model::FVerifyAction::FromJson(JsonObjectValue->AsObject()));
+                        }
+                    }
+                    return v;
+                 }() : MakeShared<TArray<Model::FVerifyActionPtr>>())
             ->WithTaskRequests(Data->HasField(ANSI_TO_TCHAR("taskRequests")) ? [Data]() -> TSharedPtr<TArray<Model::FConsumeActionPtr>>
                 {
                     auto v = MakeShared<TArray<Model::FConsumeActionPtr>>();
@@ -331,6 +385,30 @@ namespace Gs2::Distributor::Model
                     }
                     return Model::FAcquireAction::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("sheetRequest")));
                  }() : nullptr)
+            ->WithVerifyTaskResultCodes(Data->HasField(ANSI_TO_TCHAR("verifyTaskResultCodes")) ? [Data]() -> TSharedPtr<TArray<int32>>
+                {
+                    auto v = MakeShared<TArray<int32>>();
+                    if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("verifyTaskResultCodes")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("verifyTaskResultCodes")))
+                    {
+                        for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("verifyTaskResultCodes")))
+                        {
+                            v->Add(JsonObjectValue->AsNumber());
+                        }
+                    }
+                    return v;
+                 }() : MakeShared<TArray<int32>>())
+            ->WithVerifyTaskResults(Data->HasField(ANSI_TO_TCHAR("verifyTaskResults")) ? [Data]() -> TSharedPtr<TArray<FString>>
+                {
+                    auto v = MakeShared<TArray<FString>>();
+                    if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("verifyTaskResults")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("verifyTaskResults")))
+                    {
+                        for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("verifyTaskResults")))
+                        {
+                            v->Add(JsonObjectValue->AsString());
+                        }
+                    }
+                    return v;
+                 }() : MakeShared<TArray<FString>>())
             ->WithTaskResultCodes(Data->HasField(ANSI_TO_TCHAR("taskResultCodes")) ? [Data]() -> TSharedPtr<TArray<int32>>
                 {
                     auto v = MakeShared<TArray<int32>>();
@@ -417,6 +495,15 @@ namespace Gs2::Distributor::Model
         {
             JsonRootObject->SetStringField("transactionId", TransactionIdValue.GetValue());
         }
+        if (VerifyTaskRequestsValue != nullptr && VerifyTaskRequestsValue.IsValid())
+        {
+            TArray<TSharedPtr<FJsonValue>> v;
+            for (auto JsonObjectValue : *VerifyTaskRequestsValue)
+            {
+                v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
+            }
+            JsonRootObject->SetArrayField("verifyTaskRequests", v);
+        }
         if (TaskRequestsValue != nullptr && TaskRequestsValue.IsValid())
         {
             TArray<TSharedPtr<FJsonValue>> v;
@@ -429,6 +516,24 @@ namespace Gs2::Distributor::Model
         if (SheetRequestValue != nullptr && SheetRequestValue.IsValid())
         {
             JsonRootObject->SetObjectField("sheetRequest", SheetRequestValue->ToJson());
+        }
+        if (VerifyTaskResultCodesValue != nullptr && VerifyTaskResultCodesValue.IsValid())
+        {
+            TArray<TSharedPtr<FJsonValue>> v;
+            for (auto JsonObjectValue : *VerifyTaskResultCodesValue)
+            {
+                v.Add(MakeShared<FJsonValueNumber>(JsonObjectValue));
+            }
+            JsonRootObject->SetArrayField("verifyTaskResultCodes", v);
+        }
+        if (VerifyTaskResultsValue != nullptr && VerifyTaskResultsValue.IsValid())
+        {
+            TArray<TSharedPtr<FJsonValue>> v;
+            for (auto JsonObjectValue : *VerifyTaskResultsValue)
+            {
+                v.Add(MakeShared<FJsonValueString>(JsonObjectValue));
+            }
+            JsonRootObject->SetArrayField("verifyTaskResults", v);
         }
         if (TaskResultCodesValue != nullptr && TaskResultCodesValue.IsValid())
         {

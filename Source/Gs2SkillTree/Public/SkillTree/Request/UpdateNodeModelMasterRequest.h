@@ -17,6 +17,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "../Model/VerifyAction.h"
 #include "../Model/ConsumeAction.h"
 
 namespace Gs2::SkillTree::Request
@@ -30,6 +31,7 @@ namespace Gs2::SkillTree::Request
         TOptional<FString> NodeModelNameValue;
         TOptional<FString> DescriptionValue;
         TOptional<FString> MetadataValue;
+        TSharedPtr<TArray<TSharedPtr<Model::FVerifyAction>>> ReleaseVerifyActionsValue;
         TSharedPtr<TArray<TSharedPtr<Model::FConsumeAction>>> ReleaseConsumeActionsValue;
         TOptional<float> RestrainReturnRateValue;
         TSharedPtr<TArray<FString>> PremiseNodeNamesValue;
@@ -47,6 +49,7 @@ namespace Gs2::SkillTree::Request
         TSharedPtr<FUpdateNodeModelMasterRequest> WithNodeModelName(const TOptional<FString> NodeModelName);
         TSharedPtr<FUpdateNodeModelMasterRequest> WithDescription(const TOptional<FString> Description);
         TSharedPtr<FUpdateNodeModelMasterRequest> WithMetadata(const TOptional<FString> Metadata);
+        TSharedPtr<FUpdateNodeModelMasterRequest> WithReleaseVerifyActions(const TSharedPtr<TArray<TSharedPtr<Model::FVerifyAction>>> ReleaseVerifyActions);
         TSharedPtr<FUpdateNodeModelMasterRequest> WithReleaseConsumeActions(const TSharedPtr<TArray<TSharedPtr<Model::FConsumeAction>>> ReleaseConsumeActions);
         TSharedPtr<FUpdateNodeModelMasterRequest> WithRestrainReturnRate(const TOptional<float> RestrainReturnRate);
         TSharedPtr<FUpdateNodeModelMasterRequest> WithPremiseNodeNames(
@@ -56,7 +59,7 @@ namespace Gs2::SkillTree::Request
         TOptional<FString> GetNamespaceName() const;
         TOptional<FString> GetNodeModelName() const;
         TOptional<FString> GetDescription() const;
-        TOptional<FString> GetMetadata() const;TSharedPtr<TArray<TSharedPtr<Model::FConsumeAction>>> GetReleaseConsumeActions() const;
+        TOptional<FString> GetMetadata() const;TSharedPtr<TArray<TSharedPtr<Model::FVerifyAction>>> GetReleaseVerifyActions() const;TSharedPtr<TArray<TSharedPtr<Model::FConsumeAction>>> GetReleaseConsumeActions() const;
         TOptional<float> GetRestrainReturnRate() const;
         FString GetRestrainReturnRateString() const;
         TSharedPtr<TArray<FString>> GetPremiseNodeNames() const;

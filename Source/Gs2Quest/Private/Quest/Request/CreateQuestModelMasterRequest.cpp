@@ -27,6 +27,7 @@ namespace Gs2::Quest::Request
         ContentsValue(nullptr),
         ChallengePeriodEventIdValue(TOptional<FString>()),
         FirstCompleteAcquireActionsValue(nullptr),
+        VerifyActionsValue(nullptr),
         ConsumeActionsValue(nullptr),
         FailedAcquireActionsValue(nullptr),
         PremiseQuestNamesValue(nullptr)
@@ -44,6 +45,7 @@ namespace Gs2::Quest::Request
         ContentsValue(From.ContentsValue),
         ChallengePeriodEventIdValue(From.ChallengePeriodEventIdValue),
         FirstCompleteAcquireActionsValue(From.FirstCompleteAcquireActionsValue),
+        VerifyActionsValue(From.VerifyActionsValue),
         ConsumeActionsValue(From.ConsumeActionsValue),
         FailedAcquireActionsValue(From.FailedAcquireActionsValue),
         PremiseQuestNamesValue(From.PremiseQuestNamesValue)
@@ -122,6 +124,14 @@ namespace Gs2::Quest::Request
         return SharedThis(this);
     }
 
+    TSharedPtr<FCreateQuestModelMasterRequest> FCreateQuestModelMasterRequest::WithVerifyActions(
+        const TSharedPtr<TArray<TSharedPtr<Model::FVerifyAction>>> VerifyActions
+    )
+    {
+        this->VerifyActionsValue = VerifyActions;
+        return SharedThis(this);
+    }
+
     TSharedPtr<FCreateQuestModelMasterRequest> FCreateQuestModelMasterRequest::WithConsumeActions(
         const TSharedPtr<TArray<TSharedPtr<Model::FConsumeAction>>> ConsumeActions
     )
@@ -197,6 +207,15 @@ namespace Gs2::Quest::Request
             return nullptr;
         }
         return FirstCompleteAcquireActionsValue;
+    }
+
+    TSharedPtr<TArray<TSharedPtr<Model::FVerifyAction>>> FCreateQuestModelMasterRequest::GetVerifyActions() const
+    {
+        if (!VerifyActionsValue.IsValid())
+        {
+            return nullptr;
+        }
+        return VerifyActionsValue;
     }
 
     TSharedPtr<TArray<TSharedPtr<Model::FConsumeAction>>> FCreateQuestModelMasterRequest::GetConsumeActions() const
@@ -311,6 +330,18 @@ namespace Gs2::Quest::Request
                   }
                   return v;
               }() : MakeShared<TArray<Model::FAcquireActionPtr>>())
+          ->WithVerifyActions(Data->HasField(ANSI_TO_TCHAR("verifyActions")) ? [Data]() -> TSharedPtr<TArray<Model::FVerifyActionPtr>>
+              {
+                  auto v = MakeShared<TArray<Model::FVerifyActionPtr>>();
+                  if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("verifyActions")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("verifyActions")))
+                  {
+                      for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("verifyActions")))
+                      {
+                          v->Add(Model::FVerifyAction::FromJson(JsonObjectValue->AsObject()));
+                      }
+                  }
+                  return v;
+              }() : MakeShared<TArray<Model::FVerifyActionPtr>>())
           ->WithConsumeActions(Data->HasField(ANSI_TO_TCHAR("consumeActions")) ? [Data]() -> TSharedPtr<TArray<Model::FConsumeActionPtr>>
               {
                   auto v = MakeShared<TArray<Model::FConsumeActionPtr>>();
@@ -397,6 +428,15 @@ namespace Gs2::Quest::Request
                 v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
             }
             JsonRootObject->SetArrayField("firstCompleteAcquireActions", v);
+        }
+        if (VerifyActionsValue != nullptr && VerifyActionsValue.IsValid())
+        {
+            TArray<TSharedPtr<FJsonValue>> v;
+            for (auto JsonObjectValue : *VerifyActionsValue)
+            {
+                v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
+            }
+            JsonRootObject->SetArrayField("verifyActions", v);
         }
         if (ConsumeActionsValue != nullptr && ConsumeActionsValue.IsValid())
         {

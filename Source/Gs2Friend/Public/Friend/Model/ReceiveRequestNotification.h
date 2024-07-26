@@ -22,12 +22,18 @@ namespace Gs2::Friend::Model
 	{
 	public:
         TOptional<FString> NamespaceNameValue;
+        TOptional<FString> UserIdValue;
         TOptional<FString> FromUserIdValue;
 
         TSharedPtr<FReceiveRequestNotification> WithNamespaceName(
             const TOptional<FString> NamespaceName
         );
         TOptional<FString> GetNamespaceName() const;
+
+        TSharedPtr<FReceiveRequestNotification> WithUserId(
+            const TOptional<FString> UserId
+        );
+        TOptional<FString> GetUserId() const;
 
         TSharedPtr<FReceiveRequestNotification> WithFromUserId(
             const TOptional<FString> FromUserId

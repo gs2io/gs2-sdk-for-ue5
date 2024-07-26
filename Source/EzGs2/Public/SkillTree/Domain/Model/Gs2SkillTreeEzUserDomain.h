@@ -23,6 +23,7 @@
 #include "SkillTree/Model/Gs2SkillTreeEzConfig.h"
 #include "SkillTree/Model/Gs2SkillTreeEzAcquireAction.h"
 #include "SkillTree/Model/Gs2SkillTreeEzConsumeAction.h"
+#include "SkillTree/Model/Gs2SkillTreeEzVerifyAction.h"
 #include "Gs2SkillTreeEzStatusDomain.h"
 #include "Gs2SkillTreeEzUserDomain.h"
 #include "Gs2SkillTreeEzUserDomain.h"

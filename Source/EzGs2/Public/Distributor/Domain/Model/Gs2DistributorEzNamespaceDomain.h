@@ -24,6 +24,7 @@
 #include "Distributor/Model/Gs2DistributorEzStampSheetResult.h"
 #include "Distributor/Model/Gs2DistributorEzAcquireAction.h"
 #include "Distributor/Model/Gs2DistributorEzConsumeAction.h"
+#include "Distributor/Model/Gs2DistributorEzVerifyAction.h"
 #include "Gs2DistributorEzDistributorModelDomain.h"
 #include "Distributor/Domain/Iterator/Gs2DistributorEzDescribeDistributorModelsIterator.h"
 #include "Gs2DistributorEzUserDomain.h"
@@ -47,6 +48,8 @@ namespace Gs2::UE5::Distributor::Domain::Model
         TOptional<FString> Result() const;
         TOptional<FString> ContextStack() const;
         TOptional<int32> StatusCode() const;
+        TSharedPtr<TArray<int32>> VerifyTaskResultCodes() const;
+        TSharedPtr<TArray<FString>> VerifyTaskResults() const;
         TSharedPtr<TArray<int32>> TaskResultCodes() const;
         TSharedPtr<TArray<FString>> TaskResults() const;
         TOptional<int32> SheetResultCode() const;

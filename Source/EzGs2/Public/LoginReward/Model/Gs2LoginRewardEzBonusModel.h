@@ -19,6 +19,7 @@
 #include "CoreMinimal.h"
 #include "LoginReward/Model/BonusModel.h"
 #include "Gs2LoginRewardEzReward.h"
+#include "Gs2LoginRewardEzVerifyAction.h"
 #include "Gs2LoginRewardEzConsumeAction.h"
 
 namespace Gs2::UE5::LoginReward::Model
@@ -33,6 +34,7 @@ namespace Gs2::UE5::LoginReward::Model
         TOptional<FString> RepeatValue;
         TSharedPtr<TArray<TSharedPtr<Gs2::UE5::LoginReward::Model::FEzReward>>> RewardsValue;
         TOptional<FString> MissedReceiveReliefValue;
+        TSharedPtr<TArray<TSharedPtr<Gs2::UE5::LoginReward::Model::FEzVerifyAction>>> MissedReceiveReliefVerifyActionsValue;
         TSharedPtr<TArray<TSharedPtr<Gs2::UE5::LoginReward::Model::FEzConsumeAction>>> MissedReceiveReliefConsumeActionsValue;
 
 	public:
@@ -44,6 +46,7 @@ namespace Gs2::UE5::LoginReward::Model
         TSharedPtr<FEzBonusModel> WithRepeat(const TOptional<FString> Repeat);
         TSharedPtr<FEzBonusModel> WithRewards(const TSharedPtr<TArray<TSharedPtr<Gs2::UE5::LoginReward::Model::FEzReward>>> Rewards);
         TSharedPtr<FEzBonusModel> WithMissedReceiveRelief(const TOptional<FString> MissedReceiveRelief);
+        TSharedPtr<FEzBonusModel> WithMissedReceiveReliefVerifyActions(const TSharedPtr<TArray<TSharedPtr<Gs2::UE5::LoginReward::Model::FEzVerifyAction>>> MissedReceiveReliefVerifyActions);
         TSharedPtr<FEzBonusModel> WithMissedReceiveReliefConsumeActions(const TSharedPtr<TArray<TSharedPtr<Gs2::UE5::LoginReward::Model::FEzConsumeAction>>> MissedReceiveReliefConsumeActions);
 
         TOptional<FString> GetName() const;
@@ -62,6 +65,8 @@ namespace Gs2::UE5::LoginReward::Model
         TSharedPtr<TArray<TSharedPtr<Gs2::UE5::LoginReward::Model::FEzReward>>> GetRewards() const;
 
         TOptional<FString> GetMissedReceiveRelief() const;
+
+        TSharedPtr<TArray<TSharedPtr<Gs2::UE5::LoginReward::Model::FEzVerifyAction>>> GetMissedReceiveReliefVerifyActions() const;
 
         TSharedPtr<TArray<TSharedPtr<Gs2::UE5::LoginReward::Model::FEzConsumeAction>>> GetMissedReceiveReliefConsumeActions() const;
 

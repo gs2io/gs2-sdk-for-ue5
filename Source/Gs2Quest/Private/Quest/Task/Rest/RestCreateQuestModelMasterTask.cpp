@@ -123,6 +123,15 @@ namespace Gs2::Quest::Task::Rest
                 }
                 JsonRootObject->SetArrayField("firstCompleteAcquireActions", v);
             }
+            if (this->Request->GetVerifyActions() != nullptr && this->Request->GetVerifyActions().IsValid())
+            {
+                TArray<TSharedPtr<FJsonValue>> v;
+                for (auto JsonObjectValue : *this->Request->GetVerifyActions())
+                {
+                    v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
+                }
+                JsonRootObject->SetArrayField("verifyActions", v);
+            }
             if (this->Request->GetConsumeActions() != nullptr && this->Request->GetConsumeActions().IsValid())
             {
                 TArray<TSharedPtr<FJsonValue>> v;

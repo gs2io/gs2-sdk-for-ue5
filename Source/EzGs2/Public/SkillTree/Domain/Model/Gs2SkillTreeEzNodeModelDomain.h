@@ -23,6 +23,7 @@
 #include "SkillTree/Model/Gs2SkillTreeEzConfig.h"
 #include "SkillTree/Model/Gs2SkillTreeEzAcquireAction.h"
 #include "SkillTree/Model/Gs2SkillTreeEzConsumeAction.h"
+#include "SkillTree/Model/Gs2SkillTreeEzVerifyAction.h"
 #include "Gs2SkillTreeEzNodeModelDomain.h"
 #include "SkillTree/Domain/Iterator/Gs2SkillTreeEzDescribeNodeModelsIterator.h"
 #include "Util/Net/GameSession.h"

@@ -18,6 +18,7 @@
 
 #include "CoreMinimal.h"
 #include "Core/Gs2Object.h"
+#include "VerifyAction.h"
 #include "ConsumeAction.h"
 #include "AcquireAction.h"
 
@@ -28,6 +29,7 @@ namespace Gs2::SkillTree::Model
         TOptional<FString> NodeModelIdValue;
         TOptional<FString> NameValue;
         TOptional<FString> MetadataValue;
+        TSharedPtr<TArray<TSharedPtr<FVerifyAction>>> ReleaseVerifyActionsValue;
         TSharedPtr<TArray<TSharedPtr<FConsumeAction>>> ReleaseConsumeActionsValue;
         TSharedPtr<TArray<TSharedPtr<FAcquireAction>>> ReturnAcquireActionsValue;
         TOptional<float> RestrainReturnRateValue;
@@ -43,6 +45,7 @@ namespace Gs2::SkillTree::Model
         TSharedPtr<FNodeModel> WithNodeModelId(const TOptional<FString> NodeModelId);
         TSharedPtr<FNodeModel> WithName(const TOptional<FString> Name);
         TSharedPtr<FNodeModel> WithMetadata(const TOptional<FString> Metadata);
+        TSharedPtr<FNodeModel> WithReleaseVerifyActions(const TSharedPtr<TArray<TSharedPtr<FVerifyAction>>> ReleaseVerifyActions);
         TSharedPtr<FNodeModel> WithReleaseConsumeActions(const TSharedPtr<TArray<TSharedPtr<FConsumeAction>>> ReleaseConsumeActions);
         TSharedPtr<FNodeModel> WithReturnAcquireActions(const TSharedPtr<TArray<TSharedPtr<FAcquireAction>>> ReturnAcquireActions);
         TSharedPtr<FNodeModel> WithRestrainReturnRate(const TOptional<float> RestrainReturnRate);
@@ -51,6 +54,7 @@ namespace Gs2::SkillTree::Model
         TOptional<FString> GetNodeModelId() const;
         TOptional<FString> GetName() const;
         TOptional<FString> GetMetadata() const;
+        TSharedPtr<TArray<TSharedPtr<FVerifyAction>>> GetReleaseVerifyActions() const;
         TSharedPtr<TArray<TSharedPtr<FConsumeAction>>> GetReleaseConsumeActions() const;
         TSharedPtr<TArray<TSharedPtr<FAcquireAction>>> GetReturnAcquireActions() const;
         TOptional<float> GetRestrainReturnRate() const;

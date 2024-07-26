@@ -19,6 +19,7 @@
 #include "CoreMinimal.h"
 #include "../Model/Contents.h"
 #include "../Model/AcquireAction.h"
+#include "../Model/VerifyAction.h"
 #include "../Model/ConsumeAction.h"
 
 namespace Gs2::Quest::Request
@@ -36,6 +37,7 @@ namespace Gs2::Quest::Request
         TSharedPtr<TArray<TSharedPtr<Model::FContents>>> ContentsValue;
         TOptional<FString> ChallengePeriodEventIdValue;
         TSharedPtr<TArray<TSharedPtr<Model::FAcquireAction>>> FirstCompleteAcquireActionsValue;
+        TSharedPtr<TArray<TSharedPtr<Model::FVerifyAction>>> VerifyActionsValue;
         TSharedPtr<TArray<TSharedPtr<Model::FConsumeAction>>> ConsumeActionsValue;
         TSharedPtr<TArray<TSharedPtr<Model::FAcquireAction>>> FailedAcquireActionsValue;
         TSharedPtr<TArray<FString>> PremiseQuestNamesValue;
@@ -57,6 +59,7 @@ namespace Gs2::Quest::Request
         TSharedPtr<FCreateQuestModelMasterRequest> WithContents(const TSharedPtr<TArray<TSharedPtr<Model::FContents>>> Contents);
         TSharedPtr<FCreateQuestModelMasterRequest> WithChallengePeriodEventId(const TOptional<FString> ChallengePeriodEventId);
         TSharedPtr<FCreateQuestModelMasterRequest> WithFirstCompleteAcquireActions(const TSharedPtr<TArray<TSharedPtr<Model::FAcquireAction>>> FirstCompleteAcquireActions);
+        TSharedPtr<FCreateQuestModelMasterRequest> WithVerifyActions(const TSharedPtr<TArray<TSharedPtr<Model::FVerifyAction>>> VerifyActions);
         TSharedPtr<FCreateQuestModelMasterRequest> WithConsumeActions(const TSharedPtr<TArray<TSharedPtr<Model::FConsumeAction>>> ConsumeActions);
         TSharedPtr<FCreateQuestModelMasterRequest> WithFailedAcquireActions(const TSharedPtr<TArray<TSharedPtr<Model::FAcquireAction>>> FailedAcquireActions);
         TSharedPtr<FCreateQuestModelMasterRequest> WithPremiseQuestNames(
@@ -68,7 +71,7 @@ namespace Gs2::Quest::Request
         TOptional<FString> GetName() const;
         TOptional<FString> GetDescription() const;
         TOptional<FString> GetMetadata() const;TSharedPtr<TArray<TSharedPtr<Model::FContents>>> GetContents() const;
-        TOptional<FString> GetChallengePeriodEventId() const;TSharedPtr<TArray<TSharedPtr<Model::FAcquireAction>>> GetFirstCompleteAcquireActions() const;TSharedPtr<TArray<TSharedPtr<Model::FConsumeAction>>> GetConsumeActions() const;TSharedPtr<TArray<TSharedPtr<Model::FAcquireAction>>> GetFailedAcquireActions() const;
+        TOptional<FString> GetChallengePeriodEventId() const;TSharedPtr<TArray<TSharedPtr<Model::FAcquireAction>>> GetFirstCompleteAcquireActions() const;TSharedPtr<TArray<TSharedPtr<Model::FVerifyAction>>> GetVerifyActions() const;TSharedPtr<TArray<TSharedPtr<Model::FConsumeAction>>> GetConsumeActions() const;TSharedPtr<TArray<TSharedPtr<Model::FAcquireAction>>> GetFailedAcquireActions() const;
         TSharedPtr<TArray<FString>> GetPremiseQuestNames() const;
 
         static TSharedPtr<FCreateQuestModelMasterRequest> FromJson(const TSharedPtr<FJsonObject> Data);

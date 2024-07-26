@@ -35,6 +35,14 @@ namespace Gs2::UE5::Showcase::Model
         return SharedThis(this);
     }
 
+    TSharedPtr<FEzRandomDisplayItem> FEzRandomDisplayItem::WithVerifyActions(
+        const TSharedPtr<TArray<TSharedPtr<Gs2::UE5::Showcase::Model::FEzVerifyAction>>> VerifyActions
+    )
+    {
+        this->VerifyActionsValue = VerifyActions;
+        return SharedThis(this);
+    }
+
     TSharedPtr<FEzRandomDisplayItem> FEzRandomDisplayItem::WithConsumeActions(
         const TSharedPtr<TArray<TSharedPtr<Gs2::UE5::Showcase::Model::FEzConsumeAction>>> ConsumeActions
     )
@@ -73,6 +81,10 @@ namespace Gs2::UE5::Showcase::Model
     TOptional<FString> FEzRandomDisplayItem::GetMetadata() const
     {
         return MetadataValue;
+    }
+    TSharedPtr<TArray<TSharedPtr<Gs2::UE5::Showcase::Model::FEzVerifyAction>>> FEzRandomDisplayItem::GetVerifyActions() const
+    {
+        return VerifyActionsValue;
     }
     TSharedPtr<TArray<TSharedPtr<Gs2::UE5::Showcase::Model::FEzConsumeAction>>> FEzRandomDisplayItem::GetConsumeActions() const
     {
@@ -114,6 +126,20 @@ namespace Gs2::UE5::Showcase::Model
         return MakeShared<Gs2::Showcase::Model::FRandomDisplayItem>()
             ->WithName(NameValue)
             ->WithMetadata(MetadataValue)
+            ->WithVerifyActions([&]
+                {
+                    auto v = MakeShared<TArray<TSharedPtr<Gs2::Showcase::Model::FVerifyAction>>>();
+                    if (VerifyActionsValue == nullptr)
+                    {
+                        return v;
+                    }
+                    for (auto v2 : *VerifyActionsValue)
+                    {
+                        v->Add(v2->ToModel());
+                    }
+                    return v;
+                }()
+            )
             ->WithConsumeActions([&]
                 {
                     auto v = MakeShared<TArray<TSharedPtr<Gs2::Showcase::Model::FConsumeAction>>>();
@@ -155,6 +181,20 @@ namespace Gs2::UE5::Showcase::Model
         return MakeShared<FEzRandomDisplayItem>()
             ->WithName(Model->GetName())
             ->WithMetadata(Model->GetMetadata())
+            ->WithVerifyActions([&]
+                {
+                    auto v = MakeShared<TArray<TSharedPtr<FEzVerifyAction>>>();
+                    if (Model->GetVerifyActions() == nullptr)
+                    {
+                        return v;
+                    }
+                    for (auto v2 : *Model->GetVerifyActions())
+                    {
+                        v->Add(FEzVerifyAction::FromModel(v2));
+                    }
+                    return v;
+                }()
+            )
             ->WithConsumeActions([&]
                 {
                     auto v = MakeShared<TArray<TSharedPtr<FEzConsumeAction>>>();

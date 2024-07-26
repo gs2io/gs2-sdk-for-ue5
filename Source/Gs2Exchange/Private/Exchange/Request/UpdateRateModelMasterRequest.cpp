@@ -26,6 +26,7 @@ namespace Gs2::Exchange::Request
         TimingTypeValue(TOptional<FString>()),
         LockTimeValue(TOptional<int32>()),
         AcquireActionsValue(nullptr),
+        VerifyActionsValue(nullptr),
         ConsumeActionsValue(nullptr)
     {
     }
@@ -40,6 +41,7 @@ namespace Gs2::Exchange::Request
         TimingTypeValue(From.TimingTypeValue),
         LockTimeValue(From.LockTimeValue),
         AcquireActionsValue(From.AcquireActionsValue),
+        VerifyActionsValue(From.VerifyActionsValue),
         ConsumeActionsValue(From.ConsumeActionsValue)
     {
     }
@@ -108,6 +110,14 @@ namespace Gs2::Exchange::Request
         return SharedThis(this);
     }
 
+    TSharedPtr<FUpdateRateModelMasterRequest> FUpdateRateModelMasterRequest::WithVerifyActions(
+        const TSharedPtr<TArray<TSharedPtr<Model::FVerifyAction>>> VerifyActions
+    )
+    {
+        this->VerifyActionsValue = VerifyActions;
+        return SharedThis(this);
+    }
+
     TSharedPtr<FUpdateRateModelMasterRequest> FUpdateRateModelMasterRequest::WithConsumeActions(
         const TSharedPtr<TArray<TSharedPtr<Model::FConsumeAction>>> ConsumeActions
     )
@@ -167,6 +177,15 @@ namespace Gs2::Exchange::Request
             return nullptr;
         }
         return AcquireActionsValue;
+    }
+
+    TSharedPtr<TArray<TSharedPtr<Model::FVerifyAction>>> FUpdateRateModelMasterRequest::GetVerifyActions() const
+    {
+        if (!VerifyActionsValue.IsValid())
+        {
+            return nullptr;
+        }
+        return VerifyActionsValue;
     }
 
     TSharedPtr<TArray<TSharedPtr<Model::FConsumeAction>>> FUpdateRateModelMasterRequest::GetConsumeActions() const
@@ -251,6 +270,18 @@ namespace Gs2::Exchange::Request
                   }
                   return v;
               }() : MakeShared<TArray<Model::FAcquireActionPtr>>())
+          ->WithVerifyActions(Data->HasField(ANSI_TO_TCHAR("verifyActions")) ? [Data]() -> TSharedPtr<TArray<Model::FVerifyActionPtr>>
+              {
+                  auto v = MakeShared<TArray<Model::FVerifyActionPtr>>();
+                  if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("verifyActions")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("verifyActions")))
+                  {
+                      for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("verifyActions")))
+                      {
+                          v->Add(Model::FVerifyAction::FromJson(JsonObjectValue->AsObject()));
+                      }
+                  }
+                  return v;
+              }() : MakeShared<TArray<Model::FVerifyActionPtr>>())
           ->WithConsumeActions(Data->HasField(ANSI_TO_TCHAR("consumeActions")) ? [Data]() -> TSharedPtr<TArray<Model::FConsumeActionPtr>>
               {
                   auto v = MakeShared<TArray<Model::FConsumeActionPtr>>();
@@ -304,6 +335,15 @@ namespace Gs2::Exchange::Request
                 v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
             }
             JsonRootObject->SetArrayField("acquireActions", v);
+        }
+        if (VerifyActionsValue != nullptr && VerifyActionsValue.IsValid())
+        {
+            TArray<TSharedPtr<FJsonValue>> v;
+            for (auto JsonObjectValue : *VerifyActionsValue)
+            {
+                v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
+            }
+            JsonRootObject->SetArrayField("verifyActions", v);
         }
         if (ConsumeActionsValue != nullptr && ConsumeActionsValue.IsValid())
         {

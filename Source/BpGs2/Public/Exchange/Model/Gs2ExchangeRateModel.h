@@ -18,6 +18,7 @@
 
 #include "CoreMinimal.h"
 #include "Exchange/Domain/Model/Gs2ExchangeEzRateModelDomain.h"
+#include "Exchange/Model/Gs2ExchangeVerifyAction.h"
 #include "Exchange/Model/Gs2ExchangeConsumeAction.h"
 #include "Exchange/Model/Gs2ExchangeAcquireAction.h"
 #include "Core/BpGs2Constant.h"
@@ -45,6 +46,8 @@ struct FGs2ExchangeRateModelValue
     UPROPERTY(Category = Gs2, BlueprintReadOnly)
     int32 LockTime = 0;
     UPROPERTY(Category = Gs2, BlueprintReadOnly)
+    TArray<FGs2ExchangeVerifyAction> VerifyActions = TArray<FGs2ExchangeVerifyAction>();
+    UPROPERTY(Category = Gs2, BlueprintReadOnly)
     TArray<FGs2ExchangeConsumeAction> ConsumeActions = TArray<FGs2ExchangeConsumeAction>();
     UPROPERTY(Category = Gs2, BlueprintReadOnly)
     TArray<FGs2ExchangeAcquireAction> AcquireActions = TArray<FGs2ExchangeAcquireAction>();
@@ -63,6 +66,15 @@ inline FGs2ExchangeRateModelValue EzRateModelToFGs2ExchangeRateModelValue(
     Value.Metadata = Model->GetMetadata() ? *Model->GetMetadata() : "";
     Value.TimingType = Model->GetTimingType() ? *Model->GetTimingType() : "";
     Value.LockTime = Model->GetLockTime() ? *Model->GetLockTime() : 0;
+    Value.VerifyActions = Model->GetVerifyActions() ? [&]
+    {
+        TArray<FGs2ExchangeVerifyAction> r;
+        for (auto v : *Model->GetVerifyActions())
+        {
+            r.Add(EzVerifyActionToFGs2ExchangeVerifyAction(v));
+        }
+        return r;
+    }() : TArray<FGs2ExchangeVerifyAction>();
     Value.ConsumeActions = Model->GetConsumeActions() ? [&]
     {
         TArray<FGs2ExchangeConsumeAction> r;
@@ -93,6 +105,13 @@ inline Gs2::UE5::Exchange::Model::FEzRateModelPtr FGs2ExchangeRateModelValueToEz
         ->WithMetadata(Model.Metadata)
         ->WithTimingType(Model.TimingType)
         ->WithLockTime(Model.LockTime)
+        ->WithVerifyActions([&]{
+            auto r = MakeShared<TArray<Gs2::UE5::Exchange::Model::FEzVerifyActionPtr>>();
+            for (auto v : Model.VerifyActions) {
+                r->Add(FGs2ExchangeVerifyActionToEzVerifyAction(v));
+            }
+            return r;
+        }())
         ->WithConsumeActions([&]{
             auto r = MakeShared<TArray<Gs2::UE5::Exchange::Model::FEzConsumeActionPtr>>();
             for (auto v : Model.ConsumeActions) {

@@ -51,8 +51,23 @@ namespace Gs2::UE5::Friend::Domain
         return AcceptRequestNotificationEvent;
     }
 
+    FRejectRequestNotificationEvent& FEzGs2Friend::OnRejectRequestNotification()
+    {
+        return RejectRequestNotificationEvent;
+    }
+
+    FDeleteFriendNotificationEvent& FEzGs2Friend::OnDeleteFriendNotification()
+    {
+        return DeleteFriendNotificationEvent;
+    }
+
     FReceiveRequestNotificationEvent& FEzGs2Friend::OnReceiveRequestNotification()
     {
         return ReceiveRequestNotificationEvent;
+    }
+
+    FCancelRequestNotificationEvent& FEzGs2Friend::OnCancelRequestNotification()
+    {
+        return CancelRequestNotificationEvent;
     }
 }

@@ -26,6 +26,7 @@
 #include "Model/Await.h"
 #include "Model/AcquireAction.h"
 #include "Model/ConsumeAction.h"
+#include "Model/VerifyAction.h"
 #include "Model/Config.h"
 #include "Model/GitHubCheckoutSetting.h"
 #include "Model/ScriptSetting.h"

@@ -19,6 +19,7 @@
 #include "CoreMinimal.h"
 #include "Core/Gs2Object.h"
 #include "Reward.h"
+#include "VerifyAction.h"
 #include "ConsumeAction.h"
 
 namespace Gs2::LoginReward::Model
@@ -35,6 +36,7 @@ namespace Gs2::LoginReward::Model
         TOptional<FString> RepeatValue;
         TSharedPtr<TArray<TSharedPtr<FReward>>> RewardsValue;
         TOptional<FString> MissedReceiveReliefValue;
+        TSharedPtr<TArray<TSharedPtr<FVerifyAction>>> MissedReceiveReliefVerifyActionsValue;
         TSharedPtr<TArray<TSharedPtr<FConsumeAction>>> MissedReceiveReliefConsumeActionsValue;
         TOptional<int64> CreatedAtValue;
         TOptional<int64> UpdatedAtValue;
@@ -57,6 +59,7 @@ namespace Gs2::LoginReward::Model
         TSharedPtr<FBonusModelMaster> WithRepeat(const TOptional<FString> Repeat);
         TSharedPtr<FBonusModelMaster> WithRewards(const TSharedPtr<TArray<TSharedPtr<FReward>>> Rewards);
         TSharedPtr<FBonusModelMaster> WithMissedReceiveRelief(const TOptional<FString> MissedReceiveRelief);
+        TSharedPtr<FBonusModelMaster> WithMissedReceiveReliefVerifyActions(const TSharedPtr<TArray<TSharedPtr<FVerifyAction>>> MissedReceiveReliefVerifyActions);
         TSharedPtr<FBonusModelMaster> WithMissedReceiveReliefConsumeActions(const TSharedPtr<TArray<TSharedPtr<FConsumeAction>>> MissedReceiveReliefConsumeActions);
         TSharedPtr<FBonusModelMaster> WithCreatedAt(const TOptional<int64> CreatedAt);
         TSharedPtr<FBonusModelMaster> WithUpdatedAt(const TOptional<int64> UpdatedAt);
@@ -73,6 +76,7 @@ namespace Gs2::LoginReward::Model
         TOptional<FString> GetRepeat() const;
         TSharedPtr<TArray<TSharedPtr<FReward>>> GetRewards() const;
         TOptional<FString> GetMissedReceiveRelief() const;
+        TSharedPtr<TArray<TSharedPtr<FVerifyAction>>> GetMissedReceiveReliefVerifyActions() const;
         TSharedPtr<TArray<TSharedPtr<FConsumeAction>>> GetMissedReceiveReliefConsumeActions() const;
         TOptional<int64> GetCreatedAt() const;
         FString GetCreatedAtString() const;

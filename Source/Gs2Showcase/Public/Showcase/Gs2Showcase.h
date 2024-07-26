@@ -33,6 +33,7 @@
 #include "Model/RandomDisplayItem.h"
 #include "Model/RandomDisplayItemModel.h"
 #include "Model/ConsumeAction.h"
+#include "Model/VerifyAction.h"
 #include "Model/AcquireAction.h"
 #include "Model/Config.h"
 #include "Model/GitHubCheckoutSetting.h"

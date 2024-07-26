@@ -60,6 +60,8 @@ namespace Gs2::Distributor::Domain::Model
         TOptional<FString> Result;
         TOptional<FString> ContextStack;
         TOptional<int32> StatusCode;
+        TSharedPtr<TArray<int32>> VerifyTaskResultCodes;
+        TSharedPtr<TArray<FString>> VerifyTaskResults;
         TSharedPtr<TArray<int32>> TaskResultCodes;
         TSharedPtr<TArray<FString>> TaskResults;
         TOptional<int32> SheetResultCode;
@@ -79,6 +81,14 @@ namespace Gs2::Distributor::Domain::Model
         TOptional<int32> GetStatusCode() const
         {
             return StatusCode;
+        }
+        TSharedPtr<TArray<int32>> GetVerifyTaskResultCodes() const
+        {
+            return VerifyTaskResultCodes;
+        }
+        TSharedPtr<TArray<FString>> GetVerifyTaskResults() const
+        {
+            return VerifyTaskResults;
         }
         TSharedPtr<TArray<int32>> GetTaskResultCodes() const
         {

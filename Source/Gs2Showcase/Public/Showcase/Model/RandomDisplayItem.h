@@ -18,6 +18,7 @@
 
 #include "CoreMinimal.h"
 #include "Core/Gs2Object.h"
+#include "VerifyAction.h"
 #include "ConsumeAction.h"
 #include "AcquireAction.h"
 
@@ -28,6 +29,7 @@ namespace Gs2::Showcase::Model
         TOptional<FString> ShowcaseNameValue;
         TOptional<FString> NameValue;
         TOptional<FString> MetadataValue;
+        TSharedPtr<TArray<TSharedPtr<FVerifyAction>>> VerifyActionsValue;
         TSharedPtr<TArray<TSharedPtr<FConsumeAction>>> ConsumeActionsValue;
         TSharedPtr<TArray<TSharedPtr<FAcquireAction>>> AcquireActionsValue;
         TOptional<int32> CurrentPurchaseCountValue;
@@ -43,6 +45,7 @@ namespace Gs2::Showcase::Model
         TSharedPtr<FRandomDisplayItem> WithShowcaseName(const TOptional<FString> ShowcaseName);
         TSharedPtr<FRandomDisplayItem> WithName(const TOptional<FString> Name);
         TSharedPtr<FRandomDisplayItem> WithMetadata(const TOptional<FString> Metadata);
+        TSharedPtr<FRandomDisplayItem> WithVerifyActions(const TSharedPtr<TArray<TSharedPtr<FVerifyAction>>> VerifyActions);
         TSharedPtr<FRandomDisplayItem> WithConsumeActions(const TSharedPtr<TArray<TSharedPtr<FConsumeAction>>> ConsumeActions);
         TSharedPtr<FRandomDisplayItem> WithAcquireActions(const TSharedPtr<TArray<TSharedPtr<FAcquireAction>>> AcquireActions);
         TSharedPtr<FRandomDisplayItem> WithCurrentPurchaseCount(const TOptional<int32> CurrentPurchaseCount);
@@ -51,6 +54,7 @@ namespace Gs2::Showcase::Model
         TOptional<FString> GetShowcaseName() const;
         TOptional<FString> GetName() const;
         TOptional<FString> GetMetadata() const;
+        TSharedPtr<TArray<TSharedPtr<FVerifyAction>>> GetVerifyActions() const;
         TSharedPtr<TArray<TSharedPtr<FConsumeAction>>> GetConsumeActions() const;
         TSharedPtr<TArray<TSharedPtr<FAcquireAction>>> GetAcquireActions() const;
         TOptional<int32> GetCurrentPurchaseCount() const;

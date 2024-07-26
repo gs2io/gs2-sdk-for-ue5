@@ -190,6 +190,15 @@ namespace Gs2::Distributor
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::Rest::FRunVerifyTaskTask>> FGs2DistributorRestClient::RunVerifyTask(
+        const Request::FRunVerifyTaskRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FRunVerifyTaskTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::Rest::FRunStampTaskTask>> FGs2DistributorRestClient::RunStampTask(
         const Request::FRunStampTaskRequestPtr Request) const
     {
@@ -212,6 +221,15 @@ namespace Gs2::Distributor
         const Request::FRunStampSheetExpressRequestPtr Request) const
     {
         return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FRunStampSheetExpressTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FRunVerifyTaskWithoutNamespaceTask>> FGs2DistributorRestClient::RunVerifyTaskWithoutNamespace(
+        const Request::FRunVerifyTaskWithoutNamespaceRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FRunVerifyTaskWithoutNamespaceTask>>(
             Session,
             Request
         );

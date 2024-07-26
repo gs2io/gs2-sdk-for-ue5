@@ -125,6 +125,15 @@ namespace Gs2::LoginReward::Task::Rest
             {
                 JsonRootObject->SetStringField("missedReceiveRelief", this->Request->GetMissedReceiveRelief().GetValue());
             }
+            if (this->Request->GetMissedReceiveReliefVerifyActions() != nullptr && this->Request->GetMissedReceiveReliefVerifyActions().IsValid())
+            {
+                TArray<TSharedPtr<FJsonValue>> v;
+                for (auto JsonObjectValue : *this->Request->GetMissedReceiveReliefVerifyActions())
+                {
+                    v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
+                }
+                JsonRootObject->SetArrayField("missedReceiveReliefVerifyActions", v);
+            }
             if (this->Request->GetMissedReceiveReliefConsumeActions() != nullptr && this->Request->GetMissedReceiveReliefConsumeActions().IsValid())
             {
                 TArray<TSharedPtr<FJsonValue>> v;

@@ -18,7 +18,7 @@
 
 #include "CoreMinimal.h"
 #include "../Model/TargetCounterModel.h"
-#include "../Model/ConsumeAction.h"
+#include "../Model/VerifyAction.h"
 #include "../Model/AcquireAction.h"
 
 namespace Gs2::Mission::Request
@@ -35,7 +35,7 @@ namespace Gs2::Mission::Request
         TOptional<FString> DescriptionValue;
         TOptional<FString> VerifyCompleteTypeValue;
         TSharedPtr<Model::FTargetCounterModel> TargetCounterValue;
-        TSharedPtr<TArray<TSharedPtr<Model::FConsumeAction>>> VerifyCompleteConsumeActionsValue;
+        TSharedPtr<TArray<TSharedPtr<Model::FVerifyAction>>> VerifyCompleteConsumeActionsValue;
         TSharedPtr<TArray<TSharedPtr<Model::FAcquireAction>>> CompleteAcquireActionsValue;
         TOptional<FString> ChallengePeriodEventIdValue;
         TOptional<FString> PremiseMissionTaskNameValue;
@@ -59,7 +59,7 @@ namespace Gs2::Mission::Request
         TSharedPtr<FUpdateMissionTaskModelMasterRequest> WithDescription(const TOptional<FString> Description);
         TSharedPtr<FUpdateMissionTaskModelMasterRequest> WithVerifyCompleteType(const TOptional<FString> VerifyCompleteType);
         TSharedPtr<FUpdateMissionTaskModelMasterRequest> WithTargetCounter(const TSharedPtr<Model::FTargetCounterModel> TargetCounter);
-        TSharedPtr<FUpdateMissionTaskModelMasterRequest> WithVerifyCompleteConsumeActions(const TSharedPtr<TArray<TSharedPtr<Model::FConsumeAction>>> VerifyCompleteConsumeActions);
+        TSharedPtr<FUpdateMissionTaskModelMasterRequest> WithVerifyCompleteConsumeActions(const TSharedPtr<TArray<TSharedPtr<Model::FVerifyAction>>> VerifyCompleteConsumeActions);
         TSharedPtr<FUpdateMissionTaskModelMasterRequest> WithCompleteAcquireActions(const TSharedPtr<TArray<TSharedPtr<Model::FAcquireAction>>> CompleteAcquireActions);
         TSharedPtr<FUpdateMissionTaskModelMasterRequest> WithChallengePeriodEventId(const TOptional<FString> ChallengePeriodEventId);
         TSharedPtr<FUpdateMissionTaskModelMasterRequest> WithPremiseMissionTaskName(const TOptional<FString> PremiseMissionTaskName);
@@ -74,7 +74,7 @@ namespace Gs2::Mission::Request
         TOptional<FString> GetMetadata() const;
         TOptional<FString> GetDescription() const;
         TOptional<FString> GetVerifyCompleteType() const;
-        TSharedPtr<Model::FTargetCounterModel> GetTargetCounter() const;TSharedPtr<TArray<TSharedPtr<Model::FConsumeAction>>> GetVerifyCompleteConsumeActions() const;TSharedPtr<TArray<TSharedPtr<Model::FAcquireAction>>> GetCompleteAcquireActions() const;
+        TSharedPtr<Model::FTargetCounterModel> GetTargetCounter() const;TSharedPtr<TArray<TSharedPtr<Model::FVerifyAction>>> GetVerifyCompleteConsumeActions() const;TSharedPtr<TArray<TSharedPtr<Model::FAcquireAction>>> GetCompleteAcquireActions() const;
         TOptional<FString> GetChallengePeriodEventId() const;
         TOptional<FString> GetPremiseMissionTaskName() const;
         TOptional<FString> GetCounterName() const;

@@ -113,6 +113,15 @@ namespace Gs2::Exchange::Task::Rest
                 }
                 JsonRootObject->SetArrayField("acquireActions", v);
             }
+            if (this->Request->GetVerifyActions() != nullptr && this->Request->GetVerifyActions().IsValid())
+            {
+                TArray<TSharedPtr<FJsonValue>> v;
+                for (auto JsonObjectValue : *this->Request->GetVerifyActions())
+                {
+                    v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
+                }
+                JsonRootObject->SetArrayField("verifyActions", v);
+            }
             if (this->Request->GetConsumeActions() != nullptr && this->Request->GetConsumeActions().IsValid())
             {
                 TArray<TSharedPtr<FJsonValue>> v;

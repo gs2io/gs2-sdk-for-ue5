@@ -123,8 +123,73 @@ namespace Gs2::Core::Domain
 		{
 			return nullptr;
 		}
+        auto VerifyTasks = StampSheetPayloadJson->GetArrayField(ANSI_TO_TCHAR("verifyTasks"));
         auto StampTasks = StampSheetPayloadJson->GetArrayField(ANSI_TO_TCHAR("tasks"));
         TOptional<FString> contextStack;
+        for (auto i = 0; i < VerifyTasks.Num(); i++)
+        {
+        	auto VerifyTask = VerifyTasks[i]->AsString();
+        	TSharedPtr<FJsonObject> stampTaskJson;
+        	if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(VerifyTask);
+				!FJsonSerializer::Deserialize(JsonReader, stampTaskJson))
+        	{
+        		return nullptr;
+        	}
+        	auto VerifyTaskPayload = stampTaskJson->GetStringField(ANSI_TO_TCHAR("body"));
+        	TSharedPtr<FJsonObject> stampTaskPayloadJson;
+        	if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(VerifyTaskPayload);
+				!FJsonSerializer::Deserialize(JsonReader, stampTaskPayloadJson))
+        	{
+        		return nullptr;
+        	}
+        	if (!Gs2->TransactionConfiguration.IsValid() || !Gs2->TransactionConfiguration->NamespaceName.IsSet() || Gs2->TransactionConfiguration->NamespaceName->IsEmpty())
+            {
+                auto Future = Client->RunVerifyTaskWithoutNamespace(
+                    MakeShared<Gs2::Distributor::Request::FRunVerifyTaskWithoutNamespaceRequest>()
+                            ->WithContextStack(contextStack)
+                            ->WithVerifyTask(VerifyTasks[i]->AsString())
+                            ->WithKeyId(StampSheetEncryptionKeyId)
+                            );
+            	Future->StartSynchronousTask();
+            	if (Future->GetTask().IsError())
+            	{
+            		return Future->GetTask().Error();
+            	}
+            	const auto FutureResult = Future->GetTask().Result();
+                contextStack = FutureResult->GetContextStack();
+            }
+            else
+            {
+                auto Future = Client->RunVerifyTask(
+                    MakeShared<Gs2::Distributor::Request::FRunVerifyTaskRequest>()
+                        ->WithContextStack(contextStack)
+                        ->WithNamespaceName(Gs2->TransactionConfiguration->NamespaceName)
+                        ->WithVerifyTask(VerifyTasks[i]->AsString())
+                        ->WithKeyId(StampSheetEncryptionKeyId)
+                        );
+            	Future->StartSynchronousTask();
+            	if (Future->GetTask().IsError())
+            	{
+                    if (Future->GetTask().Error()->IsChildOf(Gs2::Core::Model::FNotFoundError::Class))
+                    {
+                    	if (Gs2->TransactionConfiguration.IsValid()) {
+                    		Gs2->TransactionConfiguration->NamespaceName = TOptional<FString>();
+                    		auto Future2 = Wait(All);
+                    		Future2->StartSynchronousTask();
+                    		if (Future2->GetTask().IsError())
+                    		{
+                    			return Future2->GetTask().Error();
+                    		}
+                    		*Result = Future2->GetTask().Result();
+                    		return nullptr;
+                    	}
+                    }
+            		return Future->GetTask().Error();
+            	}
+                auto FutureResult = Future->GetTask().Result();
+                contextStack = FutureResult->GetContextStack();
+            }
+        }
         for (auto i = 0; i < StampTasks.Num(); i++)
         {
         	auto StampTask = StampTasks[i]->AsString();

@@ -24,6 +24,7 @@
 #include "Exchange/Model/Gs2ExchangeEzConfig.h"
 #include "Exchange/Model/Gs2ExchangeEzAcquireAction.h"
 #include "Exchange/Model/Gs2ExchangeEzConsumeAction.h"
+#include "Exchange/Model/Gs2ExchangeEzVerifyAction.h"
 #include "Gs2ExchangeEzAwaitDomain.h"
 #include "Util/Net/GameSession.h"
 #include "Util/Net/Gs2Connection.h"

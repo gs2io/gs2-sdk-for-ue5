@@ -18,6 +18,7 @@
 
 #include "CoreMinimal.h"
 #include "Core/Gs2Object.h"
+#include "VerifyAction.h"
 #include "ConsumeAction.h"
 #include "AcquireAction.h"
 
@@ -28,8 +29,11 @@ namespace Gs2::Distributor::Model
         TOptional<FString> StampSheetResultIdValue;
         TOptional<FString> UserIdValue;
         TOptional<FString> TransactionIdValue;
+        TSharedPtr<TArray<TSharedPtr<FVerifyAction>>> VerifyTaskRequestsValue;
         TSharedPtr<TArray<TSharedPtr<FConsumeAction>>> TaskRequestsValue;
         TSharedPtr<FAcquireAction> SheetRequestValue;
+        TSharedPtr<TArray<int32>> VerifyTaskResultCodesValue;
+        TSharedPtr<TArray<FString>> VerifyTaskResultsValue;
         TSharedPtr<TArray<int32>> TaskResultCodesValue;
         TSharedPtr<TArray<FString>> TaskResultsValue;
         TOptional<int32> SheetResultCodeValue;
@@ -48,8 +52,11 @@ namespace Gs2::Distributor::Model
         TSharedPtr<FStampSheetResult> WithStampSheetResultId(const TOptional<FString> StampSheetResultId);
         TSharedPtr<FStampSheetResult> WithUserId(const TOptional<FString> UserId);
         TSharedPtr<FStampSheetResult> WithTransactionId(const TOptional<FString> TransactionId);
+        TSharedPtr<FStampSheetResult> WithVerifyTaskRequests(const TSharedPtr<TArray<TSharedPtr<FVerifyAction>>> VerifyTaskRequests);
         TSharedPtr<FStampSheetResult> WithTaskRequests(const TSharedPtr<TArray<TSharedPtr<FConsumeAction>>> TaskRequests);
         TSharedPtr<FStampSheetResult> WithSheetRequest(const TSharedPtr<FAcquireAction> SheetRequest);
+        TSharedPtr<FStampSheetResult> WithVerifyTaskResultCodes(const TSharedPtr<TArray<int32>> VerifyTaskResultCodes);
+        TSharedPtr<FStampSheetResult> WithVerifyTaskResults(const TSharedPtr<TArray<FString>> VerifyTaskResults);
         TSharedPtr<FStampSheetResult> WithTaskResultCodes(const TSharedPtr<TArray<int32>> TaskResultCodes);
         TSharedPtr<FStampSheetResult> WithTaskResults(const TSharedPtr<TArray<FString>> TaskResults);
         TSharedPtr<FStampSheetResult> WithSheetResultCode(const TOptional<int32> SheetResultCode);
@@ -61,8 +68,11 @@ namespace Gs2::Distributor::Model
         TOptional<FString> GetStampSheetResultId() const;
         TOptional<FString> GetUserId() const;
         TOptional<FString> GetTransactionId() const;
+        TSharedPtr<TArray<TSharedPtr<FVerifyAction>>> GetVerifyTaskRequests() const;
         TSharedPtr<TArray<TSharedPtr<FConsumeAction>>> GetTaskRequests() const;
         TSharedPtr<FAcquireAction> GetSheetRequest() const;
+        TSharedPtr<TArray<int32>> GetVerifyTaskResultCodes() const;
+        TSharedPtr<TArray<FString>> GetVerifyTaskResults() const;
         TSharedPtr<TArray<int32>> GetTaskResultCodes() const;
         TSharedPtr<TArray<FString>> GetTaskResults() const;
         TOptional<int32> GetSheetResultCode() const;

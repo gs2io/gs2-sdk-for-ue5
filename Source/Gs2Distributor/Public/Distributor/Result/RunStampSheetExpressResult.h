@@ -22,6 +22,8 @@ namespace Gs2::Distributor::Result
 {
     class GS2DISTRIBUTOR_API FRunStampSheetExpressResult final : public TSharedFromThis<FRunStampSheetExpressResult>
     {
+        TSharedPtr<TArray<int32>> VerifyTaskResultCodesValue;
+        TSharedPtr<TArray<FString>> VerifyTaskResultsValue;
         TSharedPtr<TArray<int32>> TaskResultCodesValue;
         TSharedPtr<TArray<FString>> TaskResultsValue;
         TOptional<int32> SheetResultCodeValue;
@@ -35,11 +37,15 @@ namespace Gs2::Distributor::Result
         );
         ~FRunStampSheetExpressResult() = default;
 
+        TSharedPtr<FRunStampSheetExpressResult> WithVerifyTaskResultCodes(const TSharedPtr<TArray<int32>> VerifyTaskResultCodes);
+        TSharedPtr<FRunStampSheetExpressResult> WithVerifyTaskResults(const TSharedPtr<TArray<FString>> VerifyTaskResults);
         TSharedPtr<FRunStampSheetExpressResult> WithTaskResultCodes(const TSharedPtr<TArray<int32>> TaskResultCodes);
         TSharedPtr<FRunStampSheetExpressResult> WithTaskResults(const TSharedPtr<TArray<FString>> TaskResults);
         TSharedPtr<FRunStampSheetExpressResult> WithSheetResultCode(const TOptional<int32> SheetResultCode);
         TSharedPtr<FRunStampSheetExpressResult> WithSheetResult(const TOptional<FString> SheetResult);
 
+        TSharedPtr<TArray<int32>> GetVerifyTaskResultCodes() const;
+        TSharedPtr<TArray<FString>> GetVerifyTaskResults() const;
         TSharedPtr<TArray<int32>> GetTaskResultCodes() const;
         TSharedPtr<TArray<FString>> GetTaskResults() const;
         TOptional<int32> GetSheetResultCode() const;

@@ -96,6 +96,15 @@ namespace Gs2::SkillTree::Task::Rest
             {
                 JsonRootObject->SetStringField("metadata", this->Request->GetMetadata().GetValue());
             }
+            if (this->Request->GetReleaseVerifyActions() != nullptr && this->Request->GetReleaseVerifyActions().IsValid())
+            {
+                TArray<TSharedPtr<FJsonValue>> v;
+                for (auto JsonObjectValue : *this->Request->GetReleaseVerifyActions())
+                {
+                    v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
+                }
+                JsonRootObject->SetArrayField("releaseVerifyActions", v);
+            }
             if (this->Request->GetReleaseConsumeActions() != nullptr && this->Request->GetReleaseConsumeActions().IsValid())
             {
                 TArray<TSharedPtr<FJsonValue>> v;

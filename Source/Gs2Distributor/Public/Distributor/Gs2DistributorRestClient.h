@@ -56,12 +56,16 @@
 #include "Task/Rest/DistributeTask.h"
 #include "Request/DistributeWithoutOverflowProcessRequest.h"
 #include "Task/Rest/DistributeWithoutOverflowProcessTask.h"
+#include "Request/RunVerifyTaskRequest.h"
+#include "Task/Rest/RunVerifyTaskTask.h"
 #include "Request/RunStampTaskRequest.h"
 #include "Task/Rest/RunStampTaskTask.h"
 #include "Request/RunStampSheetRequest.h"
 #include "Task/Rest/RunStampSheetTask.h"
 #include "Request/RunStampSheetExpressRequest.h"
 #include "Task/Rest/RunStampSheetExpressTask.h"
+#include "Request/RunVerifyTaskWithoutNamespaceRequest.h"
+#include "Task/Rest/RunVerifyTaskWithoutNamespaceTask.h"
 #include "Request/RunStampTaskWithoutNamespaceRequest.h"
 #include "Task/Rest/RunStampTaskWithoutNamespaceTask.h"
 #include "Request/RunStampSheetWithoutNamespaceRequest.h"
@@ -164,6 +168,10 @@ namespace Gs2::Distributor
             const Request::FDistributeWithoutOverflowProcessRequestPtr Request
         ) const;
 
+        TSharedPtr<FAsyncTask<Task::Rest::FRunVerifyTaskTask>> RunVerifyTask(
+            const Request::FRunVerifyTaskRequestPtr Request
+        ) const;
+
         TSharedPtr<FAsyncTask<Task::Rest::FRunStampTaskTask>> RunStampTask(
             const Request::FRunStampTaskRequestPtr Request
         ) const;
@@ -174,6 +182,10 @@ namespace Gs2::Distributor
 
         TSharedPtr<FAsyncTask<Task::Rest::FRunStampSheetExpressTask>> RunStampSheetExpress(
             const Request::FRunStampSheetExpressRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FRunVerifyTaskWithoutNamespaceTask>> RunVerifyTaskWithoutNamespace(
+            const Request::FRunVerifyTaskWithoutNamespaceRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::Rest::FRunStampTaskWithoutNamespaceTask>> RunStampTaskWithoutNamespace(

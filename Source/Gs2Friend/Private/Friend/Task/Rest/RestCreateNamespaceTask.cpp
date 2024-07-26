@@ -126,9 +126,21 @@ namespace Gs2::Friend::Task::Rest
             {
                 JsonRootObject->SetObjectField("receiveRequestNotification", this->Request->GetReceiveRequestNotification()->ToJson());
             }
+            if (this->Request->GetCancelRequestNotification() != nullptr && this->Request->GetCancelRequestNotification().IsValid())
+            {
+                JsonRootObject->SetObjectField("cancelRequestNotification", this->Request->GetCancelRequestNotification()->ToJson());
+            }
             if (this->Request->GetAcceptRequestNotification() != nullptr && this->Request->GetAcceptRequestNotification().IsValid())
             {
                 JsonRootObject->SetObjectField("acceptRequestNotification", this->Request->GetAcceptRequestNotification()->ToJson());
+            }
+            if (this->Request->GetRejectRequestNotification() != nullptr && this->Request->GetRejectRequestNotification().IsValid())
+            {
+                JsonRootObject->SetObjectField("rejectRequestNotification", this->Request->GetRejectRequestNotification()->ToJson());
+            }
+            if (this->Request->GetDeleteFriendNotification() != nullptr && this->Request->GetDeleteFriendNotification().IsValid())
+            {
+                JsonRootObject->SetObjectField("deleteFriendNotification", this->Request->GetDeleteFriendNotification()->ToJson());
             }
             if (this->Request->GetLogSetting() != nullptr && this->Request->GetLogSetting().IsValid())
             {

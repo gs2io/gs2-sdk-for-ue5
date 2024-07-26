@@ -39,6 +39,16 @@ namespace Gs2::UE5::Distributor::Domain::Model
         return Domain->StatusCode;
     }
 
+    TSharedPtr<TArray<int32>> FEzDistributeDomain::VerifyTaskResultCodes() const
+    {
+        return Domain->VerifyTaskResultCodes;
+    }
+
+    TSharedPtr<TArray<FString>> FEzDistributeDomain::VerifyTaskResults() const
+    {
+        return Domain->VerifyTaskResults;
+    }
+
     TSharedPtr<TArray<int32>> FEzDistributeDomain::TaskResultCodes() const
     {
         return Domain->TaskResultCodes;

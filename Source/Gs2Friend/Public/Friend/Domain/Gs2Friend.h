@@ -64,7 +64,10 @@
 // Notification
 #include "Friend/Model/FollowNotification.h"
 #include "Friend/Model/AcceptRequestNotification.h"
+#include "Friend/Model/RejectRequestNotification.h"
+#include "Friend/Model/DeleteFriendNotification.h"
 #include "Friend/Model/ReceiveRequestNotification.h"
+#include "Friend/Model/CancelRequestNotification.h"
 
 namespace Gs2::Core::Domain
 {
@@ -76,14 +79,20 @@ namespace Gs2::Friend::Domain
 {
     DECLARE_EVENT_OneParam(FGs2FriendDomain, FFollowNotificationEvent, Gs2::Friend::Model::FFollowNotificationPtr);
     DECLARE_EVENT_OneParam(FGs2FriendDomain, FAcceptRequestNotificationEvent, Gs2::Friend::Model::FAcceptRequestNotificationPtr);
+    DECLARE_EVENT_OneParam(FGs2FriendDomain, FRejectRequestNotificationEvent, Gs2::Friend::Model::FRejectRequestNotificationPtr);
+    DECLARE_EVENT_OneParam(FGs2FriendDomain, FDeleteFriendNotificationEvent, Gs2::Friend::Model::FDeleteFriendNotificationPtr);
     DECLARE_EVENT_OneParam(FGs2FriendDomain, FReceiveRequestNotificationEvent, Gs2::Friend::Model::FReceiveRequestNotificationPtr);
+    DECLARE_EVENT_OneParam(FGs2FriendDomain, FCancelRequestNotificationEvent, Gs2::Friend::Model::FCancelRequestNotificationPtr);
 
     class GS2FRIEND_API FGs2FriendDomain:
         public TSharedFromThis<FGs2FriendDomain>
     {
         FFollowNotificationEvent FollowNotificationEvent;
         FAcceptRequestNotificationEvent AcceptRequestNotificationEvent;
+        FRejectRequestNotificationEvent RejectRequestNotificationEvent;
+        FDeleteFriendNotificationEvent DeleteFriendNotificationEvent;
         FReceiveRequestNotificationEvent ReceiveRequestNotificationEvent;
+        FCancelRequestNotificationEvent CancelRequestNotificationEvent;
         const Core::Domain::FGs2Ptr Gs2;
         const Gs2::Friend::FGs2FriendRestClientPtr Client;
 
@@ -360,7 +369,10 @@ namespace Gs2::Friend::Domain
         );
         FFollowNotificationEvent& OnFollowNotification();
         FAcceptRequestNotificationEvent& OnAcceptRequestNotification();
+        FRejectRequestNotificationEvent& OnRejectRequestNotification();
+        FDeleteFriendNotificationEvent& OnDeleteFriendNotification();
         FReceiveRequestNotificationEvent& OnReceiveRequestNotification();
+        FCancelRequestNotificationEvent& OnCancelRequestNotification();
 
         void HandleNotification(
             const FString Action,

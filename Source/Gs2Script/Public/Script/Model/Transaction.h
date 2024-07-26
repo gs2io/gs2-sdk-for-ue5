@@ -18,6 +18,7 @@
 
 #include "CoreMinimal.h"
 #include "Core/Gs2Object.h"
+#include "VerifyAction.h"
 #include "ConsumeAction.h"
 #include "AcquireAction.h"
 
@@ -26,6 +27,7 @@ namespace Gs2::Script::Model
     class GS2SCRIPT_API FTransaction final : public Gs2Object, public TSharedFromThis<FTransaction>
     {
         TOptional<FString> TransactionIdValue;
+        TSharedPtr<TArray<TSharedPtr<FVerifyAction>>> VerifyActionsValue;
         TSharedPtr<TArray<TSharedPtr<FConsumeAction>>> ConsumeActionsValue;
         TSharedPtr<TArray<TSharedPtr<FAcquireAction>>> AcquireActionsValue;
 
@@ -37,10 +39,12 @@ namespace Gs2::Script::Model
         virtual ~FTransaction() override = default;
 
         TSharedPtr<FTransaction> WithTransactionId(const TOptional<FString> TransactionId);
+        TSharedPtr<FTransaction> WithVerifyActions(const TSharedPtr<TArray<TSharedPtr<FVerifyAction>>> VerifyActions);
         TSharedPtr<FTransaction> WithConsumeActions(const TSharedPtr<TArray<TSharedPtr<FConsumeAction>>> ConsumeActions);
         TSharedPtr<FTransaction> WithAcquireActions(const TSharedPtr<TArray<TSharedPtr<FAcquireAction>>> AcquireActions);
 
         TOptional<FString> GetTransactionId() const;
+        TSharedPtr<TArray<TSharedPtr<FVerifyAction>>> GetVerifyActions() const;
         TSharedPtr<TArray<TSharedPtr<FConsumeAction>>> GetConsumeActions() const;
         TSharedPtr<TArray<TSharedPtr<FAcquireAction>>> GetAcquireActions() const;
 
