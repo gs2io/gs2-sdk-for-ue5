@@ -244,6 +244,15 @@ namespace Gs2::Grade
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::WebSocket::FSubGradeTask>> FGs2GradeWebSocketClient::SubGrade(
+        const Request::FSubGradeRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FSubGradeTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::WebSocket::FSubGradeByUserIdTask>> FGs2GradeWebSocketClient::SubGradeByUserId(
         const Request::FSubGradeByUserIdRequestPtr Request) const
     {

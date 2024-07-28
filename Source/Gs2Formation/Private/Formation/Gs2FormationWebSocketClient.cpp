@@ -406,6 +406,15 @@ namespace Gs2::Formation
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::WebSocket::FSubMoldCapacityTask>> FGs2FormationWebSocketClient::SubMoldCapacity(
+        const Request::FSubMoldCapacityRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FSubMoldCapacityTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::WebSocket::FSubMoldCapacityByUserIdTask>> FGs2FormationWebSocketClient::SubMoldCapacityByUserId(
         const Request::FSubMoldCapacityByUserIdRequestPtr Request) const
     {

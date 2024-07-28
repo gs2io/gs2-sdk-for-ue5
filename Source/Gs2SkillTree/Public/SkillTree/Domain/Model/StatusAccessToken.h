@@ -120,6 +120,32 @@ namespace Gs2::SkillTree::Domain::Model
             bool SpeculativeExecute = true
         );
 
+        class GS2SKILLTREE_API FMarkRestrainTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::SkillTree::Domain::Model::FStatusAccessTokenDomain>,
+            public TSharedFromThis<FMarkRestrainTask>
+        {
+            const TSharedPtr<FStatusAccessTokenDomain> Self;
+            const Request::FMarkRestrainRequestPtr Request;
+        public:
+            explicit FMarkRestrainTask(
+                const TSharedPtr<FStatusAccessTokenDomain>& Self,
+                const Request::FMarkRestrainRequestPtr Request
+            );
+
+            FMarkRestrainTask(
+                const FMarkRestrainTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::SkillTree::Domain::Model::FStatusAccessTokenDomain>> Result
+            ) override;
+        };
+        friend FMarkRestrainTask;
+
+        TSharedPtr<FAsyncTask<FMarkRestrainTask>> MarkRestrain(
+            Request::FMarkRestrainRequestPtr Request
+        );
+
         class GS2SKILLTREE_API FRestrainTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::SkillTree::Domain::Model::FStatusAccessTokenDomain>,
             public TSharedFromThis<FRestrainTask>

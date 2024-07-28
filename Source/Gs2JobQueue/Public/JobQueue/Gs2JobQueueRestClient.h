@@ -54,6 +54,8 @@
 #include "Task/Rest/RunTask.h"
 #include "Request/RunByUserIdRequest.h"
 #include "Task/Rest/RunByUserIdTask.h"
+#include "Request/DeleteJobRequest.h"
+#include "Task/Rest/DeleteJobTask.h"
 #include "Request/DeleteJobByUserIdRequest.h"
 #include "Task/Rest/DeleteJobByUserIdTask.h"
 #include "Request/PushByStampSheetRequest.h"
@@ -152,6 +154,10 @@ namespace Gs2::JobQueue
 
         TSharedPtr<FAsyncTask<Task::Rest::FRunByUserIdTask>> RunByUserId(
             const Request::FRunByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FDeleteJobTask>> DeleteJob(
+            const Request::FDeleteJobRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::Rest::FDeleteJobByUserIdTask>> DeleteJobByUserId(

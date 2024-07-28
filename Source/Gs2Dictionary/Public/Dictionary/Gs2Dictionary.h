@@ -207,6 +207,12 @@
 #include "Task/Rest/VerifyEntryByUserIdTask.h"
 #include "Task/WebSocket/VerifyEntryByUserIdTask.h"
 
+// DeleteEntries
+#include "Request/DeleteEntriesRequest.h"
+#include "Result/DeleteEntriesResult.h"
+#include "Task/Rest/DeleteEntriesTask.h"
+#include "Task/WebSocket/DeleteEntriesTask.h"
+
 // DeleteEntriesByUserId
 #include "Request/DeleteEntriesByUserIdRequest.h"
 #include "Result/DeleteEntriesByUserIdResult.h"

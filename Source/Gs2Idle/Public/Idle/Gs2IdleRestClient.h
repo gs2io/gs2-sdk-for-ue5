@@ -76,6 +76,8 @@
 #include "Task/Rest/ReceiveByUserIdTask.h"
 #include "Request/IncreaseMaximumIdleMinutesByUserIdRequest.h"
 #include "Task/Rest/IncreaseMaximumIdleMinutesByUserIdTask.h"
+#include "Request/DecreaseMaximumIdleMinutesRequest.h"
+#include "Task/Rest/DecreaseMaximumIdleMinutesTask.h"
 #include "Request/DecreaseMaximumIdleMinutesByUserIdRequest.h"
 #include "Task/Rest/DecreaseMaximumIdleMinutesByUserIdTask.h"
 #include "Request/SetMaximumIdleMinutesByUserIdRequest.h"
@@ -222,6 +224,10 @@ namespace Gs2::Idle
 
         TSharedPtr<FAsyncTask<Task::Rest::FIncreaseMaximumIdleMinutesByUserIdTask>> IncreaseMaximumIdleMinutesByUserId(
             const Request::FIncreaseMaximumIdleMinutesByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FDecreaseMaximumIdleMinutesTask>> DecreaseMaximumIdleMinutes(
+            const Request::FDecreaseMaximumIdleMinutesRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::Rest::FDecreaseMaximumIdleMinutesByUserIdTask>> DecreaseMaximumIdleMinutesByUserId(

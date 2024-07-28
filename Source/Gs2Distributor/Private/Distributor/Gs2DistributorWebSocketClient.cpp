@@ -280,6 +280,60 @@ namespace Gs2::Distributor
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::WebSocket::FIfExpressionByUserIdTask>> FGs2DistributorWebSocketClient::IfExpressionByUserId(
+        const Request::FIfExpressionByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FIfExpressionByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FAndExpressionByUserIdTask>> FGs2DistributorWebSocketClient::AndExpressionByUserId(
+        const Request::FAndExpressionByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FAndExpressionByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FOrExpressionByUserIdTask>> FGs2DistributorWebSocketClient::OrExpressionByUserId(
+        const Request::FOrExpressionByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FOrExpressionByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FIfExpressionByUserByStampTaskTask>> FGs2DistributorWebSocketClient::IfExpressionByUserByStampTask(
+        const Request::FIfExpressionByUserByStampTaskRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FIfExpressionByUserByStampTaskTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FAndExpressionByUserByStampTaskTask>> FGs2DistributorWebSocketClient::AndExpressionByUserByStampTask(
+        const Request::FAndExpressionByUserByStampTaskRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FAndExpressionByUserByStampTaskTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FOrExpressionByUserByStampTaskTask>> FGs2DistributorWebSocketClient::OrExpressionByUserByStampTask(
+        const Request::FOrExpressionByUserByStampTaskRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FOrExpressionByUserByStampTaskTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::WebSocket::FGetStampSheetResultTask>> FGs2DistributorWebSocketClient::GetStampSheetResult(
         const Request::FGetStampSheetResultRequestPtr Request) const
     {

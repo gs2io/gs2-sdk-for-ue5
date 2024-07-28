@@ -25,7 +25,6 @@
 #include "Exchange/Domain/SpeculativeExecutor/Acquire/AcquireActionSpeculativeExecutorIndex.h"
 #include "Exchange/Domain/SpeculativeExecutor/Acquire/ExchangeByUserIdSpeculativeExecutor.h"
 #include "Exchange/Domain/SpeculativeExecutor/Acquire/IncrementalExchangeByUserIdSpeculativeExecutor.h"
-#include "Exchange/Domain/SpeculativeExecutor/Acquire/UnlockIncrementalExchangeByUserIdSpeculativeExecutor.h"
 #include "Exchange/Domain/SpeculativeExecutor/Acquire/CreateAwaitByUserIdSpeculativeExecutor.h"
 #include "Exchange/Domain/SpeculativeExecutor/Acquire/SkipByUserIdSpeculativeExecutor.h"
 
@@ -100,28 +99,6 @@ namespace Gs2::Exchange::Domain::SpeculativeExecutor
             auto Request = Request::FIncrementalExchangeByUserIdRequest::FromJson(RequestModelJson);
             Request = FIncrementalExchangeByUserIdSpeculativeExecutor::Rate(Request, Rate);
             auto Future = FIncrementalExchangeByUserIdSpeculativeExecutor::Execute(
-                Domain,
-                Service,
-                AccessToken,
-                Request
-            );
-            Future->StartSynchronousTask();
-            if (Future->GetTask().IsError())
-            {
-                return Future->GetTask().Error();
-            }
-            *Result = Future->GetTask().Result();
-        }
-        if (FUnlockIncrementalExchangeByUserIdSpeculativeExecutor::Action() == NewAcquireAction->GetAction()) {
-            TSharedPtr<FJsonObject> RequestModelJson;
-            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(NewAcquireAction->GetRequest().IsSet() ? *NewAcquireAction->GetRequest() : "{}");
-                !FJsonSerializer::Deserialize(JsonReader, RequestModelJson))
-            {
-                return nullptr;
-            }
-            auto Request = Request::FUnlockIncrementalExchangeByUserIdRequest::FromJson(RequestModelJson);
-            Request = FUnlockIncrementalExchangeByUserIdSpeculativeExecutor::Rate(Request, Rate);
-            auto Future = FUnlockIncrementalExchangeByUserIdSpeculativeExecutor::Execute(
                 Domain,
                 Service,
                 AccessToken,

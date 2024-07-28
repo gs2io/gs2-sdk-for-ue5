@@ -247,6 +247,12 @@
 #include "Task/Rest/AddExperienceByUserIdTask.h"
 #include "Task/WebSocket/AddExperienceByUserIdTask.h"
 
+// SubExperience
+#include "Request/SubExperienceRequest.h"
+#include "Result/SubExperienceResult.h"
+#include "Task/Rest/SubExperienceTask.h"
+#include "Task/WebSocket/SubExperienceTask.h"
+
 // SubExperienceByUserId
 #include "Request/SubExperienceByUserIdRequest.h"
 #include "Result/SubExperienceByUserIdResult.h"
@@ -264,6 +270,12 @@
 #include "Result/AddRankCapByUserIdResult.h"
 #include "Task/Rest/AddRankCapByUserIdTask.h"
 #include "Task/WebSocket/AddRankCapByUserIdTask.h"
+
+// SubRankCap
+#include "Request/SubRankCapRequest.h"
+#include "Result/SubRankCapResult.h"
+#include "Task/Rest/SubRankCapTask.h"
+#include "Task/WebSocket/SubRankCapTask.h"
 
 // SubRankCapByUserId
 #include "Request/SubRankCapByUserIdRequest.h"

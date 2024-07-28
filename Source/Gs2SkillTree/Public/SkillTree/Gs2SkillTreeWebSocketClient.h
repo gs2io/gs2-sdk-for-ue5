@@ -64,6 +64,8 @@
 #include "Task/WebSocket/ReleaseTask.h"
 #include "Request/ReleaseByUserIdRequest.h"
 #include "Task/WebSocket/ReleaseByUserIdTask.h"
+#include "Request/MarkRestrainRequest.h"
+#include "Task/WebSocket/MarkRestrainTask.h"
 #include "Request/MarkRestrainByUserIdRequest.h"
 #include "Task/WebSocket/MarkRestrainByUserIdTask.h"
 #include "Request/RestrainRequest.h"
@@ -196,6 +198,10 @@ namespace Gs2::SkillTree
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FReleaseByUserIdTask>> ReleaseByUserId(
             const Request::FReleaseByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FMarkRestrainTask>> MarkRestrain(
+            const Request::FMarkRestrainRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FMarkRestrainByUserIdTask>> MarkRestrainByUserId(

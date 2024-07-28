@@ -157,6 +157,58 @@ namespace Gs2::Experience::Domain::Model
             Request::FGetStatusWithSignatureRequestPtr Request
         );
 
+        class GS2EXPERIENCE_API FSubExperienceTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Experience::Domain::Model::FStatusAccessTokenDomain>,
+            public TSharedFromThis<FSubExperienceTask>
+        {
+            const TSharedPtr<FStatusAccessTokenDomain> Self;
+            const Request::FSubExperienceRequestPtr Request;
+        public:
+            explicit FSubExperienceTask(
+                const TSharedPtr<FStatusAccessTokenDomain>& Self,
+                const Request::FSubExperienceRequestPtr Request
+            );
+
+            FSubExperienceTask(
+                const FSubExperienceTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Experience::Domain::Model::FStatusAccessTokenDomain>> Result
+            ) override;
+        };
+        friend FSubExperienceTask;
+
+        TSharedPtr<FAsyncTask<FSubExperienceTask>> SubExperience(
+            Request::FSubExperienceRequestPtr Request
+        );
+
+        class GS2EXPERIENCE_API FSubRankCapTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Experience::Domain::Model::FStatusAccessTokenDomain>,
+            public TSharedFromThis<FSubRankCapTask>
+        {
+            const TSharedPtr<FStatusAccessTokenDomain> Self;
+            const Request::FSubRankCapRequestPtr Request;
+        public:
+            explicit FSubRankCapTask(
+                const TSharedPtr<FStatusAccessTokenDomain>& Self,
+                const Request::FSubRankCapRequestPtr Request
+            );
+
+            FSubRankCapTask(
+                const FSubRankCapTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Experience::Domain::Model::FStatusAccessTokenDomain>> Result
+            ) override;
+        };
+        friend FSubRankCapTask;
+
+        TSharedPtr<FAsyncTask<FSubRankCapTask>> SubRankCap(
+            Request::FSubRankCapRequestPtr Request
+        );
+
         class GS2EXPERIENCE_API FVerifyRankTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Experience::Domain::Model::FStatusAccessTokenDomain>,
             public TSharedFromThis<FVerifyRankTask>

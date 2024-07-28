@@ -29,6 +29,7 @@
 #include "Showcase/Model/Gs2ShowcaseEzAcquireAction.h"
 #include "Gs2ShowcaseEzShowcaseGameSessionDomain.h"
 #include "Gs2ShowcaseEzRandomShowcaseGameSessionDomain.h"
+#include "Gs2ShowcaseEzRandomShowcaseStatusGameSessionDomain.h"
 #include "Gs2ShowcaseEzUserGameSessionDomain.h"
 #include "Util/Net/GameSession.h"
 #include "Util/Net/Gs2Connection.h"
@@ -58,6 +59,10 @@ namespace Gs2::UE5::Showcase::Domain::Model
         ) const;
 
         Gs2::UE5::Showcase::Domain::Model::FEzRandomShowcaseGameSessionDomainPtr RandomShowcase(
+            const FString ShowcaseName
+        ) const;
+
+        Gs2::UE5::Showcase::Domain::Model::FEzRandomShowcaseStatusGameSessionDomainPtr RandomShowcaseStatus(
             const FString ShowcaseName
         ) const;
 

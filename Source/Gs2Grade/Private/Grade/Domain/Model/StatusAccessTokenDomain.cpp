@@ -148,6 +148,98 @@ namespace Gs2::Grade::Domain::Model
         return Gs2::Core::Util::New<FAsyncTask<FGetTask>>(this->AsShared(), Request);
     }
 
+    FStatusAccessTokenDomain::FSubGradeTask::FSubGradeTask(
+        const TSharedPtr<FStatusAccessTokenDomain>& Self,
+        const Request::FSubGradeRequestPtr Request
+    ): Self(Self), Request(Request)
+    {
+
+    }
+
+    FStatusAccessTokenDomain::FSubGradeTask::FSubGradeTask(
+        const FSubGradeTask& From
+    ): TGs2Future(From), Self(From.Self), Request(From.Request)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FStatusAccessTokenDomain::FSubGradeTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::Grade::Domain::Model::FStatusAccessTokenDomain>> Result
+    )
+    {
+        Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
+            ->WithNamespaceName(Self->NamespaceName)
+            ->WithAccessToken(Self->AccessToken->GetToken())
+            ->WithGradeName(Self->GradeName)
+            ->WithPropertyId(Self->PropertyId);
+        const auto Future = Self->Client->SubGrade(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto RequestModel = Request;
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
+        if (ResultModel != nullptr) {
+            
+            if (ResultModel->GetItem() != nullptr)
+            {
+                const auto ParentKey = Gs2::Grade::Domain::Model::FUserDomain::CreateCacheParentKey(
+                    Self->NamespaceName,
+                    Self->UserId(),
+                    "Status"
+                );
+                const auto Key = Gs2::Grade::Domain::Model::FStatusDomain::CreateCacheKey(
+                    ResultModel->GetItem()->GetGradeName(),
+                    ResultModel->GetItem()->GetPropertyId()
+                );
+                Self->Gs2->Cache->Put(
+                    Gs2::Grade::Model::FStatus::TypeName,
+                    ParentKey,
+                    Key,
+                    ResultModel->GetItem(),
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+            }
+            if (ResultModel->GetExperienceStatus() != nullptr)
+            {
+                const auto ParentKey = Gs2::Grade::Domain::Model::FUserDomain::CreateCacheParentKey(
+                    Self->NamespaceName,
+                    Self->UserId(),
+                    "Status"
+                );
+                const auto Key = Gs2::Experience::Domain::Model::FStatusDomain::CreateCacheKey(
+                    ResultModel->GetExperienceStatus()->GetExperienceName(),
+                    ResultModel->GetExperienceStatus()->GetPropertyId()
+                );
+                Self->Gs2->Cache->Put(
+                    Gs2::Experience::Model::FStatus::TypeName,
+                    ParentKey,
+                    Key,
+                    ResultModel->GetExperienceStatus(),
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+            }
+        }
+        auto Domain = Self;
+        if (ResultModel != nullptr)
+        {
+            Domain->ExperienceNamespaceName = *ResultModel->GetExperienceNamespaceName();
+        }
+
+        *Result = Domain;
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FStatusAccessTokenDomain::FSubGradeTask>> FStatusAccessTokenDomain::SubGrade(
+        Request::FSubGradeRequestPtr Request
+    ) {
+        return Gs2::Core::Util::New<FAsyncTask<FSubGradeTask>>(this->AsShared(), Request);
+    }
+
     FStatusAccessTokenDomain::FApplyRankCapTask::FApplyRankCapTask(
         const TSharedPtr<FStatusAccessTokenDomain>& Self,
         const Request::FApplyRankCapRequestPtr Request

@@ -76,6 +76,8 @@
 #include "Task/WebSocket/ReceiveByUserIdTask.h"
 #include "Request/IncreaseMaximumIdleMinutesByUserIdRequest.h"
 #include "Task/WebSocket/IncreaseMaximumIdleMinutesByUserIdTask.h"
+#include "Request/DecreaseMaximumIdleMinutesRequest.h"
+#include "Task/WebSocket/DecreaseMaximumIdleMinutesTask.h"
 #include "Request/DecreaseMaximumIdleMinutesByUserIdRequest.h"
 #include "Task/WebSocket/DecreaseMaximumIdleMinutesByUserIdTask.h"
 #include "Request/SetMaximumIdleMinutesByUserIdRequest.h"
@@ -222,6 +224,10 @@ namespace Gs2::Idle
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FIncreaseMaximumIdleMinutesByUserIdTask>> IncreaseMaximumIdleMinutesByUserId(
             const Request::FIncreaseMaximumIdleMinutesByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FDecreaseMaximumIdleMinutesTask>> DecreaseMaximumIdleMinutes(
+            const Request::FDecreaseMaximumIdleMinutesRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FDecreaseMaximumIdleMinutesByUserIdTask>> DecreaseMaximumIdleMinutesByUserId(

@@ -98,6 +98,7 @@ namespace Gs2::Idle::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithAccessToken(Self->AccessToken->GetToken())
             ->WithCategoryName(Self->CategoryName);
@@ -162,6 +163,7 @@ namespace Gs2::Idle::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithAccessToken(Self->AccessToken->GetToken())
             ->WithCategoryName(Self->CategoryName);
@@ -227,6 +229,7 @@ namespace Gs2::Idle::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithAccessToken(Self->AccessToken->GetToken())
             ->WithCategoryName(Self->CategoryName);
@@ -263,6 +266,24 @@ namespace Gs2::Idle::Domain::Model
         Future->EnsureCompletion();
         if (ResultModel != nullptr) {
             
+            if (ResultModel->GetStatus() != nullptr)
+            {
+                const auto ParentKey = Gs2::Idle::Domain::Model::FUserDomain::CreateCacheParentKey(
+                    Self->NamespaceName,
+                    Self->UserId(),
+                    "Status"
+                );
+                const auto Key = Gs2::Idle::Domain::Model::FStatusDomain::CreateCacheKey(
+                    ResultModel->GetStatus()->GetCategoryName()
+                );
+                Self->Gs2->Cache->Put(
+                    Gs2::Idle::Model::FStatus::TypeName,
+                    ParentKey,
+                    Key,
+                    ResultModel->GetStatus(),
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+            }
         }
         if (ResultModel && ResultModel->GetStampSheet())
         {
@@ -295,6 +316,73 @@ namespace Gs2::Idle::Domain::Model
         bool SpeculativeExecute
     ) {
         return Gs2::Core::Util::New<FAsyncTask<FReceiveTask>>(this->AsShared(), Request, SpeculativeExecute);
+    }
+
+    FStatusAccessTokenDomain::FDecreaseMaximumIdleMinutesTask::FDecreaseMaximumIdleMinutesTask(
+        const TSharedPtr<FStatusAccessTokenDomain>& Self,
+        const Request::FDecreaseMaximumIdleMinutesRequestPtr Request
+    ): Self(Self), Request(Request)
+    {
+
+    }
+
+    FStatusAccessTokenDomain::FDecreaseMaximumIdleMinutesTask::FDecreaseMaximumIdleMinutesTask(
+        const FDecreaseMaximumIdleMinutesTask& From
+    ): TGs2Future(From), Self(From.Self), Request(From.Request)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FStatusAccessTokenDomain::FDecreaseMaximumIdleMinutesTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::Idle::Domain::Model::FStatusAccessTokenDomain>> Result
+    )
+    {
+        Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
+            ->WithNamespaceName(Self->NamespaceName)
+            ->WithAccessToken(Self->AccessToken->GetToken())
+            ->WithCategoryName(Self->CategoryName);
+        const auto Future = Self->Client->DecreaseMaximumIdleMinutes(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto RequestModel = Request;
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
+        if (ResultModel != nullptr) {
+            
+            if (ResultModel->GetItem() != nullptr)
+            {
+                const auto ParentKey = Gs2::Idle::Domain::Model::FUserDomain::CreateCacheParentKey(
+                    Self->NamespaceName,
+                    Self->UserId(),
+                    "Status"
+                );
+                const auto Key = Gs2::Idle::Domain::Model::FStatusDomain::CreateCacheKey(
+                    ResultModel->GetItem()->GetCategoryName()
+                );
+                Self->Gs2->Cache->Put(
+                    Gs2::Idle::Model::FStatus::TypeName,
+                    ParentKey,
+                    Key,
+                    ResultModel->GetItem(),
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+            }
+        }
+        auto Domain = Self;
+
+        *Result = Domain;
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FStatusAccessTokenDomain::FDecreaseMaximumIdleMinutesTask>> FStatusAccessTokenDomain::DecreaseMaximumIdleMinutes(
+        Request::FDecreaseMaximumIdleMinutesRequestPtr Request
+    ) {
+        return Gs2::Core::Util::New<FAsyncTask<FDecreaseMaximumIdleMinutesTask>>(this->AsShared(), Request);
     }
 
     FString FStatusAccessTokenDomain::CreateCacheParentKey(

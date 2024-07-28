@@ -66,6 +66,14 @@ namespace Gs2::Distributor::Request
         return SharedThis(this);
     }
 
+    TSharedPtr<FSetTransactionDefaultConfigByUserIdRequest> FSetTransactionDefaultConfigByUserIdRequest::WithDuplicationAvoider(
+        const TOptional<FString> DuplicationAvoider
+    )
+    {
+        this->DuplicationAvoiderValue = DuplicationAvoider;
+        return SharedThis(this);
+    }
+
     TOptional<FString> FSetTransactionDefaultConfigByUserIdRequest::GetContextStack() const
     {
         return ContextStackValue;
@@ -88,6 +96,11 @@ namespace Gs2::Distributor::Request
     TOptional<FString> FSetTransactionDefaultConfigByUserIdRequest::GetTimeOffsetToken() const
     {
         return TimeOffsetTokenValue;
+    }
+
+    TOptional<FString> FSetTransactionDefaultConfigByUserIdRequest::GetDuplicationAvoider() const
+    {
+        return DuplicationAvoiderValue;
     }
 
     TSharedPtr<FSetTransactionDefaultConfigByUserIdRequest> FSetTransactionDefaultConfigByUserIdRequest::FromJson(const TSharedPtr<FJsonObject> Data)
@@ -126,7 +139,8 @@ namespace Gs2::Distributor::Request
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
-              }() : TOptional<FString>());
+              }() : TOptional<FString>())
+          ->WithDuplicationAvoider(Data->HasField(ANSI_TO_TCHAR("duplicationAvoider")) ? TOptional<FString>(Data->GetStringField(ANSI_TO_TCHAR("duplicationAvoider"))) : TOptional<FString>());
     }
 
     TSharedPtr<FJsonObject> FSetTransactionDefaultConfigByUserIdRequest::ToJson() const
@@ -152,6 +166,10 @@ namespace Gs2::Distributor::Request
         if (TimeOffsetTokenValue.IsSet())
         {
             JsonRootObject->SetStringField("timeOffsetToken", TimeOffsetTokenValue.GetValue());
+        }
+        if (DuplicationAvoiderValue.IsSet())
+        {
+            JsonRootObject->SetStringField("duplicationAvoider", DuplicationAvoiderValue.GetValue());
         }
         return JsonRootObject;
     }

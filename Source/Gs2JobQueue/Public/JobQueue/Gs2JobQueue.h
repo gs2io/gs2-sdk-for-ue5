@@ -134,6 +134,12 @@
 #include "Task/Rest/RunByUserIdTask.h"
 #include "Task/WebSocket/RunByUserIdTask.h"
 
+// DeleteJob
+#include "Request/DeleteJobRequest.h"
+#include "Result/DeleteJobResult.h"
+#include "Task/Rest/DeleteJobTask.h"
+#include "Task/WebSocket/DeleteJobTask.h"
+
 // DeleteJobByUserId
 #include "Request/DeleteJobByUserIdRequest.h"
 #include "Result/DeleteJobByUserIdResult.h"

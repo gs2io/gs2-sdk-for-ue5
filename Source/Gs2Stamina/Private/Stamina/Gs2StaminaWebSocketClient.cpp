@@ -451,6 +451,15 @@ namespace Gs2::Stamina
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::WebSocket::FDecreaseMaxValueTask>> FGs2StaminaWebSocketClient::DecreaseMaxValue(
+        const Request::FDecreaseMaxValueRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FDecreaseMaxValueTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::WebSocket::FDecreaseMaxValueByUserIdTask>> FGs2StaminaWebSocketClient::DecreaseMaxValueByUserId(
         const Request::FDecreaseMaxValueByUserIdRequestPtr Request) const
     {

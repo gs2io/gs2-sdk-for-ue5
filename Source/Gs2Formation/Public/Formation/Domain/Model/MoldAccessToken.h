@@ -137,6 +137,32 @@ namespace Gs2::Formation::Domain::Model
             Request::FGetMoldRequestPtr Request
         );
 
+        class GS2FORMATION_API FSubCapacityTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Formation::Domain::Model::FMoldAccessTokenDomain>,
+            public TSharedFromThis<FSubCapacityTask>
+        {
+            const TSharedPtr<FMoldAccessTokenDomain> Self;
+            const Request::FSubMoldCapacityRequestPtr Request;
+        public:
+            explicit FSubCapacityTask(
+                const TSharedPtr<FMoldAccessTokenDomain>& Self,
+                const Request::FSubMoldCapacityRequestPtr Request
+            );
+
+            FSubCapacityTask(
+                const FSubCapacityTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Formation::Domain::Model::FMoldAccessTokenDomain>> Result
+            ) override;
+        };
+        friend FSubCapacityTask;
+
+        TSharedPtr<FAsyncTask<FSubCapacityTask>> SubCapacity(
+            Request::FSubMoldCapacityRequestPtr Request
+        );
+
         class GS2FORMATION_API FDeleteTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Formation::Domain::Model::FMoldAccessTokenDomain>,
             public TSharedFromThis<FDeleteTask>

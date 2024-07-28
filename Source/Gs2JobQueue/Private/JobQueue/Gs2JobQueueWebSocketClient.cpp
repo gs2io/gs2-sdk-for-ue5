@@ -181,6 +181,15 @@ namespace Gs2::JobQueue
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::WebSocket::FDeleteJobTask>> FGs2JobQueueWebSocketClient::DeleteJob(
+        const Request::FDeleteJobRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FDeleteJobTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::WebSocket::FDeleteJobByUserIdTask>> FGs2JobQueueWebSocketClient::DeleteJobByUserId(
         const Request::FDeleteJobByUserIdRequestPtr Request) const
     {

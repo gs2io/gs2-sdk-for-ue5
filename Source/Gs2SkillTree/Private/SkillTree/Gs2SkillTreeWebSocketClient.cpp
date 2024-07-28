@@ -226,6 +226,15 @@ namespace Gs2::SkillTree
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::WebSocket::FMarkRestrainTask>> FGs2SkillTreeWebSocketClient::MarkRestrain(
+        const Request::FMarkRestrainRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FMarkRestrainTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::WebSocket::FMarkRestrainByUserIdTask>> FGs2SkillTreeWebSocketClient::MarkRestrainByUserId(
         const Request::FMarkRestrainByUserIdRequestPtr Request) const
     {

@@ -104,6 +104,8 @@
 #include "Task/WebSocket/SetMoldCapacityByUserIdTask.h"
 #include "Request/AddMoldCapacityByUserIdRequest.h"
 #include "Task/WebSocket/AddMoldCapacityByUserIdTask.h"
+#include "Request/SubMoldCapacityRequest.h"
+#include "Task/WebSocket/SubMoldCapacityTask.h"
 #include "Request/SubMoldCapacityByUserIdRequest.h"
 #include "Task/WebSocket/SubMoldCapacityByUserIdTask.h"
 #include "Request/DeleteMoldRequest.h"
@@ -348,6 +350,10 @@ namespace Gs2::Formation
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FAddMoldCapacityByUserIdTask>> AddMoldCapacityByUserId(
             const Request::FAddMoldCapacityByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FSubMoldCapacityTask>> SubMoldCapacity(
+            const Request::FSubMoldCapacityRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FSubMoldCapacityByUserIdTask>> SubMoldCapacityByUserId(

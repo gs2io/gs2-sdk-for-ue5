@@ -189,6 +189,73 @@ namespace Gs2::SkillTree::Domain::Model
         return Gs2::Core::Util::New<FAsyncTask<FReleaseTask>>(this->AsShared(), Request, SpeculativeExecute);
     }
 
+    FStatusAccessTokenDomain::FMarkRestrainTask::FMarkRestrainTask(
+        const TSharedPtr<FStatusAccessTokenDomain>& Self,
+        const Request::FMarkRestrainRequestPtr Request
+    ): Self(Self), Request(Request)
+    {
+
+    }
+
+    FStatusAccessTokenDomain::FMarkRestrainTask::FMarkRestrainTask(
+        const FMarkRestrainTask& From
+    ): TGs2Future(From), Self(From.Self), Request(From.Request)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FStatusAccessTokenDomain::FMarkRestrainTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::SkillTree::Domain::Model::FStatusAccessTokenDomain>> Result
+    )
+    {
+        Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
+            ->WithNamespaceName(Self->NamespaceName)
+            ->WithAccessToken(Self->AccessToken->GetToken())
+            ->WithPropertyId(Self->PropertyId);
+        const auto Future = Self->Client->MarkRestrain(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto RequestModel = Request;
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
+        if (ResultModel != nullptr) {
+            
+            if (ResultModel->GetItem() != nullptr)
+            {
+                const auto ParentKey = Gs2::SkillTree::Domain::Model::FUserDomain::CreateCacheParentKey(
+                    Self->NamespaceName,
+                    Self->UserId(),
+                    "Status"
+                );
+                const auto Key = Gs2::SkillTree::Domain::Model::FStatusDomain::CreateCacheKey(
+                    ResultModel->GetItem()->GetPropertyId()
+                );
+                Self->Gs2->Cache->Put(
+                    Gs2::SkillTree::Model::FStatus::TypeName,
+                    ParentKey,
+                    Key,
+                    ResultModel->GetItem(),
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+            }
+        }
+        auto Domain = Self;
+
+        *Result = Domain;
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FStatusAccessTokenDomain::FMarkRestrainTask>> FStatusAccessTokenDomain::MarkRestrain(
+        Request::FMarkRestrainRequestPtr Request
+    ) {
+        return Gs2::Core::Util::New<FAsyncTask<FMarkRestrainTask>>(this->AsShared(), Request);
+    }
+
     FStatusAccessTokenDomain::FRestrainTask::FRestrainTask(
         const TSharedPtr<FStatusAccessTokenDomain>& Self,
         const Request::FRestrainRequestPtr Request,

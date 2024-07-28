@@ -110,6 +110,32 @@ namespace Gs2::Dictionary::Domain::Model
             Request::FVerifyEntryRequestPtr Request
         );
 
+        class GS2DICTIONARY_API FDeleteEntriesTask final :
+            public Gs2::Core::Util::TGs2Future<TArray<TSharedPtr<Gs2::Dictionary::Domain::Model::FEntryAccessTokenDomain>>>,
+            public TSharedFromThis<FDeleteEntriesTask>
+        {
+            const TSharedPtr<FUserAccessTokenDomain> Self;
+            const Request::FDeleteEntriesRequestPtr Request;
+        public:
+            explicit FDeleteEntriesTask(
+                const TSharedPtr<FUserAccessTokenDomain>& Self,
+                const Request::FDeleteEntriesRequestPtr Request
+            );
+
+            FDeleteEntriesTask(
+                const FDeleteEntriesTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<TArray<TSharedPtr<Gs2::Dictionary::Domain::Model::FEntryAccessTokenDomain>>>> Result
+            ) override;
+        };
+        friend FDeleteEntriesTask;
+
+        TSharedPtr<FAsyncTask<FDeleteEntriesTask>> DeleteEntries(
+            Request::FDeleteEntriesRequestPtr Request
+        );
+
         Gs2::Dictionary::Domain::Iterator::FDescribeEntriesIteratorPtr Entries(
         ) const;
 

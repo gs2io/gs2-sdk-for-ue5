@@ -247,6 +247,12 @@
 #include "Task/Rest/IncreaseMaximumCurrentMaximumMemberCountByGuildNameTask.h"
 #include "Task/WebSocket/IncreaseMaximumCurrentMaximumMemberCountByGuildNameTask.h"
 
+// DecreaseMaximumCurrentMaximumMemberCount
+#include "Request/DecreaseMaximumCurrentMaximumMemberCountRequest.h"
+#include "Result/DecreaseMaximumCurrentMaximumMemberCountResult.h"
+#include "Task/Rest/DecreaseMaximumCurrentMaximumMemberCountTask.h"
+#include "Task/WebSocket/DecreaseMaximumCurrentMaximumMemberCountTask.h"
+
 // DecreaseMaximumCurrentMaximumMemberCountByGuildName
 #include "Request/DecreaseMaximumCurrentMaximumMemberCountByGuildNameRequest.h"
 #include "Result/DecreaseMaximumCurrentMaximumMemberCountByGuildNameResult.h"

@@ -104,6 +104,8 @@
 #include "Task/Rest/UpdateRandomShowcaseMasterTask.h"
 #include "Request/DeleteRandomShowcaseMasterRequest.h"
 #include "Task/Rest/DeleteRandomShowcaseMasterTask.h"
+#include "Request/IncrementPurchaseCountRequest.h"
+#include "Task/Rest/IncrementPurchaseCountTask.h"
 #include "Request/IncrementPurchaseCountByUserIdRequest.h"
 #include "Task/Rest/IncrementPurchaseCountByUserIdTask.h"
 #include "Request/DecrementPurchaseCountByUserIdRequest.h"
@@ -310,6 +312,10 @@ namespace Gs2::Showcase
 
         TSharedPtr<FAsyncTask<Task::Rest::FDeleteRandomShowcaseMasterTask>> DeleteRandomShowcaseMaster(
             const Request::FDeleteRandomShowcaseMasterRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FIncrementPurchaseCountTask>> IncrementPurchaseCount(
+            const Request::FIncrementPurchaseCountRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::Rest::FIncrementPurchaseCountByUserIdTask>> IncrementPurchaseCountByUserId(

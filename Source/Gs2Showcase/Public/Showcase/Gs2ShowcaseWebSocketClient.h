@@ -104,6 +104,8 @@
 #include "Task/WebSocket/UpdateRandomShowcaseMasterTask.h"
 #include "Request/DeleteRandomShowcaseMasterRequest.h"
 #include "Task/WebSocket/DeleteRandomShowcaseMasterTask.h"
+#include "Request/IncrementPurchaseCountRequest.h"
+#include "Task/WebSocket/IncrementPurchaseCountTask.h"
 #include "Request/IncrementPurchaseCountByUserIdRequest.h"
 #include "Task/WebSocket/IncrementPurchaseCountByUserIdTask.h"
 #include "Request/DecrementPurchaseCountByUserIdRequest.h"
@@ -310,6 +312,10 @@ namespace Gs2::Showcase
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FDeleteRandomShowcaseMasterTask>> DeleteRandomShowcaseMaster(
             const Request::FDeleteRandomShowcaseMasterRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FIncrementPurchaseCountTask>> IncrementPurchaseCount(
+            const Request::FIncrementPurchaseCountRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FIncrementPurchaseCountByUserIdTask>> IncrementPurchaseCountByUserId(

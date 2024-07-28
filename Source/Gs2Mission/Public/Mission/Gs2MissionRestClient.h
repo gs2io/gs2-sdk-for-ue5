@@ -36,6 +36,8 @@
 #include "Task/Rest/GetCompleteByUserIdTask.h"
 #include "Request/DeleteCompleteByUserIdRequest.h"
 #include "Task/Rest/DeleteCompleteByUserIdTask.h"
+#include "Request/VerifyCompleteRequest.h"
+#include "Task/Rest/VerifyCompleteTask.h"
 #include "Request/VerifyCompleteByUserIdRequest.h"
 #include "Task/Rest/VerifyCompleteByUserIdTask.h"
 #include "Request/ReceiveByStampTaskRequest.h"
@@ -98,6 +100,8 @@
 #include "Task/Rest/IncreaseCounterByUserIdTask.h"
 #include "Request/SetCounterByUserIdRequest.h"
 #include "Task/Rest/SetCounterByUserIdTask.h"
+#include "Request/DecreaseCounterRequest.h"
+#include "Task/Rest/DecreaseCounterTask.h"
 #include "Request/DecreaseCounterByUserIdRequest.h"
 #include "Task/Rest/DecreaseCounterByUserIdTask.h"
 #include "Request/GetCounterRequest.h"
@@ -194,6 +198,10 @@ namespace Gs2::Mission
 
         TSharedPtr<FAsyncTask<Task::Rest::FDeleteCompleteByUserIdTask>> DeleteCompleteByUserId(
             const Request::FDeleteCompleteByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FVerifyCompleteTask>> VerifyComplete(
+            const Request::FVerifyCompleteRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::Rest::FVerifyCompleteByUserIdTask>> VerifyCompleteByUserId(
@@ -318,6 +326,10 @@ namespace Gs2::Mission
 
         TSharedPtr<FAsyncTask<Task::Rest::FSetCounterByUserIdTask>> SetCounterByUserId(
             const Request::FSetCounterByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FDecreaseCounterTask>> DecreaseCounter(
+            const Request::FDecreaseCounterRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::Rest::FDecreaseCounterByUserIdTask>> DecreaseCounterByUserId(

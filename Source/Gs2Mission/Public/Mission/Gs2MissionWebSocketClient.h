@@ -36,6 +36,8 @@
 #include "Task/WebSocket/GetCompleteByUserIdTask.h"
 #include "Request/DeleteCompleteByUserIdRequest.h"
 #include "Task/WebSocket/DeleteCompleteByUserIdTask.h"
+#include "Request/VerifyCompleteRequest.h"
+#include "Task/WebSocket/VerifyCompleteTask.h"
 #include "Request/VerifyCompleteByUserIdRequest.h"
 #include "Task/WebSocket/VerifyCompleteByUserIdTask.h"
 #include "Request/ReceiveByStampTaskRequest.h"
@@ -98,6 +100,8 @@
 #include "Task/WebSocket/IncreaseCounterByUserIdTask.h"
 #include "Request/SetCounterByUserIdRequest.h"
 #include "Task/WebSocket/SetCounterByUserIdTask.h"
+#include "Request/DecreaseCounterRequest.h"
+#include "Task/WebSocket/DecreaseCounterTask.h"
 #include "Request/DecreaseCounterByUserIdRequest.h"
 #include "Task/WebSocket/DecreaseCounterByUserIdTask.h"
 #include "Request/GetCounterRequest.h"
@@ -194,6 +198,10 @@ namespace Gs2::Mission
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FDeleteCompleteByUserIdTask>> DeleteCompleteByUserId(
             const Request::FDeleteCompleteByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FVerifyCompleteTask>> VerifyComplete(
+            const Request::FVerifyCompleteRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FVerifyCompleteByUserIdTask>> VerifyCompleteByUserId(
@@ -318,6 +326,10 @@ namespace Gs2::Mission
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FSetCounterByUserIdTask>> SetCounterByUserId(
             const Request::FSetCounterByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FDecreaseCounterTask>> DecreaseCounter(
+            const Request::FDecreaseCounterRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FDecreaseCounterByUserIdTask>> DecreaseCounterByUserId(

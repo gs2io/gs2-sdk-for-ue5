@@ -78,6 +78,8 @@
 #include "Task/WebSocket/VerifyEntryTask.h"
 #include "Request/VerifyEntryByUserIdRequest.h"
 #include "Task/WebSocket/VerifyEntryByUserIdTask.h"
+#include "Request/DeleteEntriesRequest.h"
+#include "Task/WebSocket/DeleteEntriesTask.h"
 #include "Request/DeleteEntriesByUserIdRequest.h"
 #include "Task/WebSocket/DeleteEntriesByUserIdTask.h"
 #include "Request/AddEntriesByStampSheetRequest.h"
@@ -224,6 +226,10 @@ namespace Gs2::Dictionary
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FVerifyEntryByUserIdTask>> VerifyEntryByUserId(
             const Request::FVerifyEntryByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FDeleteEntriesTask>> DeleteEntries(
+            const Request::FDeleteEntriesRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FDeleteEntriesByUserIdTask>> DeleteEntriesByUserId(

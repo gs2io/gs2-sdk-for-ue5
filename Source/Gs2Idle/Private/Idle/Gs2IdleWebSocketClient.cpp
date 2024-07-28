@@ -280,6 +280,15 @@ namespace Gs2::Idle
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::WebSocket::FDecreaseMaximumIdleMinutesTask>> FGs2IdleWebSocketClient::DecreaseMaximumIdleMinutes(
+        const Request::FDecreaseMaximumIdleMinutesRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FDecreaseMaximumIdleMinutesTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::WebSocket::FDecreaseMaximumIdleMinutesByUserIdTask>> FGs2IdleWebSocketClient::DecreaseMaximumIdleMinutesByUserId(
         const Request::FDecreaseMaximumIdleMinutesByUserIdRequestPtr Request) const
     {

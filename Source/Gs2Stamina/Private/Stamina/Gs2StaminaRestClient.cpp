@@ -451,6 +451,15 @@ namespace Gs2::Stamina
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::Rest::FDecreaseMaxValueTask>> FGs2StaminaRestClient::DecreaseMaxValue(
+        const Request::FDecreaseMaxValueRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FDecreaseMaxValueTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::Rest::FDecreaseMaxValueByUserIdTask>> FGs2StaminaRestClient::DecreaseMaxValueByUserId(
         const Request::FDecreaseMaxValueByUserIdRequestPtr Request) const
     {

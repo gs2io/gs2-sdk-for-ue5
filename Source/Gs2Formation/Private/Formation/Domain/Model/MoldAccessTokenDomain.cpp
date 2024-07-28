@@ -167,6 +167,90 @@ namespace Gs2::Formation::Domain::Model
         return Gs2::Core::Util::New<FAsyncTask<FGetTask>>(this->AsShared(), Request);
     }
 
+    FMoldAccessTokenDomain::FSubCapacityTask::FSubCapacityTask(
+        const TSharedPtr<FMoldAccessTokenDomain>& Self,
+        const Request::FSubMoldCapacityRequestPtr Request
+    ): Self(Self), Request(Request)
+    {
+
+    }
+
+    FMoldAccessTokenDomain::FSubCapacityTask::FSubCapacityTask(
+        const FSubCapacityTask& From
+    ): TGs2Future(From), Self(From.Self), Request(From.Request)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FMoldAccessTokenDomain::FSubCapacityTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::Formation::Domain::Model::FMoldAccessTokenDomain>> Result
+    )
+    {
+        Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
+            ->WithNamespaceName(Self->NamespaceName)
+            ->WithAccessToken(Self->AccessToken->GetToken())
+            ->WithMoldModelName(Self->MoldModelName);
+        const auto Future = Self->Client->SubMoldCapacity(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto RequestModel = Request;
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
+        if (ResultModel != nullptr) {
+            
+            if (ResultModel->GetItem() != nullptr)
+            {
+                const auto ParentKey = Gs2::Formation::Domain::Model::FUserDomain::CreateCacheParentKey(
+                    Self->NamespaceName,
+                    Self->UserId(),
+                    "Mold"
+                );
+                const auto Key = Gs2::Formation::Domain::Model::FMoldDomain::CreateCacheKey(
+                    ResultModel->GetItem()->GetName()
+                );
+                Self->Gs2->Cache->Put(
+                    Gs2::Formation::Model::FMold::TypeName,
+                    ParentKey,
+                    Key,
+                    ResultModel->GetItem(),
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+            }
+            if (ResultModel->GetMoldModel() != nullptr)
+            {
+                const auto ParentKey = Gs2::Formation::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                    Self->NamespaceName,
+                    "MoldModel"
+                );
+                const auto Key = Gs2::Formation::Domain::Model::FMoldModelDomain::CreateCacheKey(
+                    ResultModel->GetMoldModel()->GetName()
+                );
+                Self->Gs2->Cache->Put(
+                    Gs2::Formation::Model::FMoldModel::TypeName,
+                    ParentKey,
+                    Key,
+                    ResultModel->GetMoldModel(),
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+            }
+        }
+        auto Domain = Self;
+
+        *Result = Domain;
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FMoldAccessTokenDomain::FSubCapacityTask>> FMoldAccessTokenDomain::SubCapacity(
+        Request::FSubMoldCapacityRequestPtr Request
+    ) {
+        return Gs2::Core::Util::New<FAsyncTask<FSubCapacityTask>>(this->AsShared(), Request);
+    }
+
     FMoldAccessTokenDomain::FDeleteTask::FDeleteTask(
         const TSharedPtr<FMoldAccessTokenDomain>& Self,
         const Request::FDeleteMoldRequestPtr Request

@@ -56,6 +56,14 @@ namespace Gs2::Distributor::Request
         return SharedThis(this);
     }
 
+    TSharedPtr<FSetTransactionDefaultConfigRequest> FSetTransactionDefaultConfigRequest::WithDuplicationAvoider(
+        const TOptional<FString> DuplicationAvoider
+    )
+    {
+        this->DuplicationAvoiderValue = DuplicationAvoider;
+        return SharedThis(this);
+    }
+
     TOptional<FString> FSetTransactionDefaultConfigRequest::GetContextStack() const
     {
         return ContextStackValue;
@@ -73,6 +81,11 @@ namespace Gs2::Distributor::Request
             return nullptr;
         }
         return ConfigValue;
+    }
+
+    TOptional<FString> FSetTransactionDefaultConfigRequest::GetDuplicationAvoider() const
+    {
+        return DuplicationAvoiderValue;
     }
 
     TSharedPtr<FSetTransactionDefaultConfigRequest> FSetTransactionDefaultConfigRequest::FromJson(const TSharedPtr<FJsonObject> Data)
@@ -102,7 +115,8 @@ namespace Gs2::Distributor::Request
                       }
                   }
                   return v;
-              }() : MakeShared<TArray<Model::FConfigPtr>>());
+              }() : MakeShared<TArray<Model::FConfigPtr>>())
+          ->WithDuplicationAvoider(Data->HasField(ANSI_TO_TCHAR("duplicationAvoider")) ? TOptional<FString>(Data->GetStringField(ANSI_TO_TCHAR("duplicationAvoider"))) : TOptional<FString>());
     }
 
     TSharedPtr<FJsonObject> FSetTransactionDefaultConfigRequest::ToJson() const
@@ -124,6 +138,10 @@ namespace Gs2::Distributor::Request
                 v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
             }
             JsonRootObject->SetArrayField("config", v);
+        }
+        if (DuplicationAvoiderValue.IsSet())
+        {
+            JsonRootObject->SetStringField("duplicationAvoider", DuplicationAvoiderValue.GetValue());
         }
         return JsonRootObject;
     }

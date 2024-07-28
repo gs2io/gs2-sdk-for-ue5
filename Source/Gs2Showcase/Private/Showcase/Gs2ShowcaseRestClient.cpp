@@ -406,6 +406,15 @@ namespace Gs2::Showcase
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::Rest::FIncrementPurchaseCountTask>> FGs2ShowcaseRestClient::IncrementPurchaseCount(
+        const Request::FIncrementPurchaseCountRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FIncrementPurchaseCountTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::Rest::FIncrementPurchaseCountByUserIdTask>> FGs2ShowcaseRestClient::IncrementPurchaseCountByUserId(
         const Request::FIncrementPurchaseCountByUserIdRequestPtr Request) const
     {

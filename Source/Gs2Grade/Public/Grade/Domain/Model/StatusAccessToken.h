@@ -124,6 +124,32 @@ namespace Gs2::Grade::Domain::Model
             Request::FGetStatusRequestPtr Request
         );
 
+        class GS2GRADE_API FSubGradeTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Grade::Domain::Model::FStatusAccessTokenDomain>,
+            public TSharedFromThis<FSubGradeTask>
+        {
+            const TSharedPtr<FStatusAccessTokenDomain> Self;
+            const Request::FSubGradeRequestPtr Request;
+        public:
+            explicit FSubGradeTask(
+                const TSharedPtr<FStatusAccessTokenDomain>& Self,
+                const Request::FSubGradeRequestPtr Request
+            );
+
+            FSubGradeTask(
+                const FSubGradeTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Grade::Domain::Model::FStatusAccessTokenDomain>> Result
+            ) override;
+        };
+        friend FSubGradeTask;
+
+        TSharedPtr<FAsyncTask<FSubGradeTask>> SubGrade(
+            Request::FSubGradeRequestPtr Request
+        );
+
         class GS2GRADE_API FApplyRankCapTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Grade::Domain::Model::FStatusAccessTokenDomain>,
             public TSharedFromThis<FApplyRankCapTask>

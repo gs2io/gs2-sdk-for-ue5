@@ -244,6 +244,15 @@ namespace Gs2::Grade
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::Rest::FSubGradeTask>> FGs2GradeRestClient::SubGrade(
+        const Request::FSubGradeRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FSubGradeTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::Rest::FSubGradeByUserIdTask>> FGs2GradeRestClient::SubGradeByUserId(
         const Request::FSubGradeByUserIdRequestPtr Request) const
     {

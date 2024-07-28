@@ -78,6 +78,8 @@
 #include "Task/Rest/VerifyEntryTask.h"
 #include "Request/VerifyEntryByUserIdRequest.h"
 #include "Task/Rest/VerifyEntryByUserIdTask.h"
+#include "Request/DeleteEntriesRequest.h"
+#include "Task/Rest/DeleteEntriesTask.h"
 #include "Request/DeleteEntriesByUserIdRequest.h"
 #include "Task/Rest/DeleteEntriesByUserIdTask.h"
 #include "Request/AddEntriesByStampSheetRequest.h"
@@ -224,6 +226,10 @@ namespace Gs2::Dictionary
 
         TSharedPtr<FAsyncTask<Task::Rest::FVerifyEntryByUserIdTask>> VerifyEntryByUserId(
             const Request::FVerifyEntryByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FDeleteEntriesTask>> DeleteEntries(
+            const Request::FDeleteEntriesRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::Rest::FDeleteEntriesByUserIdTask>> DeleteEntriesByUserId(

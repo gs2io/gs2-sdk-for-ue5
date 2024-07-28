@@ -23,6 +23,8 @@
 #endif
 
 #include "Distributor/Domain/SpeculativeExecutor/Verify/VerifyActionSpeculativeExecutorIndex.h"
+#include "Distributor/Domain/SpeculativeExecutor/Verify/AndExpressionByUserIdSpeculativeExecutor.h"
+#include "Distributor/Domain/SpeculativeExecutor/Verify/OrExpressionByUserIdSpeculativeExecutor.h"
 
 #include "Core/Domain/Gs2.h"
 
@@ -63,6 +65,50 @@ namespace Gs2::Distributor::Domain::SpeculativeExecutor
         auto NewVerifyAction = VerifyAction->WithAction(VerifyAction->GetAction()->Replace(TEXT("{region}"), ToCStr(Domain->RestSession->RegionName())));
         NewVerifyAction = VerifyAction->WithAction(NewVerifyAction->GetAction()->Replace(TEXT("{ownerId}"), ToCStr(Domain->RestSession->OwnerId())));
         NewVerifyAction = VerifyAction->WithAction(NewVerifyAction->GetAction()->Replace(TEXT("{userId}"), ToCStr(AccessToken->GetUserId().IsSet() ? *AccessToken->GetUserId() : "")));
+        if (FAndExpressionByUserIdSpeculativeExecutor::Action() == NewVerifyAction->GetAction()) {
+            TSharedPtr<FJsonObject> RequestModelJson;
+            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(NewVerifyAction->GetRequest().IsSet() ? *NewVerifyAction->GetRequest() : "{}");
+                !FJsonSerializer::Deserialize(JsonReader, RequestModelJson))
+            {
+                return nullptr;
+            }
+            auto Request = Request::FAndExpressionByUserIdRequest::FromJson(RequestModelJson);
+            Request = FAndExpressionByUserIdSpeculativeExecutor::Rate(Request, Rate);
+            auto Future = FAndExpressionByUserIdSpeculativeExecutor::Execute(
+                Domain,
+                Service,
+                AccessToken,
+                Request
+            );
+            Future->StartSynchronousTask();
+            if (Future->GetTask().IsError())
+            {
+                return Future->GetTask().Error();
+            }
+            *Result = Future->GetTask().Result();
+        }
+        if (FOrExpressionByUserIdSpeculativeExecutor::Action() == NewVerifyAction->GetAction()) {
+            TSharedPtr<FJsonObject> RequestModelJson;
+            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(NewVerifyAction->GetRequest().IsSet() ? *NewVerifyAction->GetRequest() : "{}");
+                !FJsonSerializer::Deserialize(JsonReader, RequestModelJson))
+            {
+                return nullptr;
+            }
+            auto Request = Request::FOrExpressionByUserIdRequest::FromJson(RequestModelJson);
+            Request = FOrExpressionByUserIdSpeculativeExecutor::Rate(Request, Rate);
+            auto Future = FOrExpressionByUserIdSpeculativeExecutor::Execute(
+                Domain,
+                Service,
+                AccessToken,
+                Request
+            );
+            Future->StartSynchronousTask();
+            if (Future->GetTask().IsError())
+            {
+                return Future->GetTask().Error();
+            }
+            *Result = Future->GetTask().Result();
+        }
         return nullptr;
     }
 

@@ -145,32 +145,6 @@ namespace Gs2::Exchange::Domain::Model
             Request::FIncrementalExchangeByUserIdRequestPtr Request
         );
 
-        class GS2EXCHANGE_API FUnlockIncrementalTask final :
-            public Gs2::Core::Util::TGs2Future<Gs2::Exchange::Domain::Model::FIncrementalRateModelDomain>,
-            public TSharedFromThis<FUnlockIncrementalTask>
-        {
-            const TSharedPtr<FExchangeDomain> Self;
-            const Request::FUnlockIncrementalExchangeByUserIdRequestPtr Request;
-        public:
-            explicit FUnlockIncrementalTask(
-                const TSharedPtr<FExchangeDomain>& Self,
-                const Request::FUnlockIncrementalExchangeByUserIdRequestPtr Request
-            );
-
-            FUnlockIncrementalTask(
-                const FUnlockIncrementalTask& From
-            );
-
-            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-                TSharedPtr<TSharedPtr<Gs2::Exchange::Domain::Model::FIncrementalRateModelDomain>> Result
-            ) override;
-        };
-        friend FUnlockIncrementalTask;
-
-        TSharedPtr<FAsyncTask<FUnlockIncrementalTask>> UnlockIncremental(
-            Request::FUnlockIncrementalExchangeByUserIdRequestPtr Request
-        );
-
         static FString CreateCacheParentKey(
             TOptional<FString> NamespaceName,
             TOptional<FString> UserId,

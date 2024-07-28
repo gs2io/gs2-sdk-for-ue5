@@ -299,6 +299,12 @@
 #include "Task/Rest/DeleteRandomShowcaseMasterTask.h"
 #include "Task/WebSocket/DeleteRandomShowcaseMasterTask.h"
 
+// IncrementPurchaseCount
+#include "Request/IncrementPurchaseCountRequest.h"
+#include "Result/IncrementPurchaseCountResult.h"
+#include "Task/Rest/IncrementPurchaseCountTask.h"
+#include "Task/WebSocket/IncrementPurchaseCountTask.h"
+
 // IncrementPurchaseCountByUserId
 #include "Request/IncrementPurchaseCountByUserIdRequest.h"
 #include "Result/IncrementPurchaseCountByUserIdResult.h"

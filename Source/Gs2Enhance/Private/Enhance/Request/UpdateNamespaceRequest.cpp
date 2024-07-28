@@ -21,10 +21,10 @@ namespace Gs2::Enhance::Request
     FUpdateNamespaceRequest::FUpdateNamespaceRequest():
         NamespaceNameValue(TOptional<FString>()),
         DescriptionValue(TOptional<FString>()),
-        EnableDirectEnhanceValue(TOptional<bool>()),
         TransactionSettingValue(nullptr),
         EnhanceScriptValue(nullptr),
         LogSettingValue(nullptr),
+        EnableDirectEnhanceValue(TOptional<bool>()),
         QueueNamespaceIdValue(TOptional<FString>()),
         KeyIdValue(TOptional<FString>())
     {
@@ -35,10 +35,10 @@ namespace Gs2::Enhance::Request
     ):
         NamespaceNameValue(From.NamespaceNameValue),
         DescriptionValue(From.DescriptionValue),
-        EnableDirectEnhanceValue(From.EnableDirectEnhanceValue),
         TransactionSettingValue(From.TransactionSettingValue),
         EnhanceScriptValue(From.EnhanceScriptValue),
         LogSettingValue(From.LogSettingValue),
+        EnableDirectEnhanceValue(From.EnableDirectEnhanceValue),
         QueueNamespaceIdValue(From.QueueNamespaceIdValue),
         KeyIdValue(From.KeyIdValue)
     {
@@ -68,14 +68,6 @@ namespace Gs2::Enhance::Request
         return SharedThis(this);
     }
 
-    TSharedPtr<FUpdateNamespaceRequest> FUpdateNamespaceRequest::WithEnableDirectEnhance(
-        const TOptional<bool> EnableDirectEnhance
-    )
-    {
-        this->EnableDirectEnhanceValue = EnableDirectEnhance;
-        return SharedThis(this);
-    }
-
     TSharedPtr<FUpdateNamespaceRequest> FUpdateNamespaceRequest::WithTransactionSetting(
         const TSharedPtr<Model::FTransactionSetting> TransactionSetting
     )
@@ -97,6 +89,14 @@ namespace Gs2::Enhance::Request
     )
     {
         this->LogSettingValue = LogSetting;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FUpdateNamespaceRequest> FUpdateNamespaceRequest::WithEnableDirectEnhance(
+        const TOptional<bool> EnableDirectEnhance
+    )
+    {
+        this->EnableDirectEnhanceValue = EnableDirectEnhance;
         return SharedThis(this);
     }
 
@@ -131,20 +131,6 @@ namespace Gs2::Enhance::Request
         return DescriptionValue;
     }
 
-    TOptional<bool> FUpdateNamespaceRequest::GetEnableDirectEnhance() const
-    {
-        return EnableDirectEnhanceValue;
-    }
-
-    FString FUpdateNamespaceRequest::GetEnableDirectEnhanceString() const
-    {
-        if (!EnableDirectEnhanceValue.IsSet())
-        {
-            return FString("null");
-        }
-        return FString(EnableDirectEnhanceValue.GetValue() ? "true" : "false");
-    }
-
     TSharedPtr<Model::FTransactionSetting> FUpdateNamespaceRequest::GetTransactionSetting() const
     {
         if (!TransactionSettingValue.IsValid())
@@ -170,6 +156,20 @@ namespace Gs2::Enhance::Request
             return nullptr;
         }
         return LogSettingValue;
+    }
+
+    TOptional<bool> FUpdateNamespaceRequest::GetEnableDirectEnhance() const
+    {
+        return EnableDirectEnhanceValue;
+    }
+
+    FString FUpdateNamespaceRequest::GetEnableDirectEnhanceString() const
+    {
+        if (!EnableDirectEnhanceValue.IsSet())
+        {
+            return FString("null");
+        }
+        return FString(EnableDirectEnhanceValue.GetValue() ? "true" : "false");
     }
 
     TOptional<FString> FUpdateNamespaceRequest::GetQueueNamespaceId() const
@@ -207,15 +207,6 @@ namespace Gs2::Enhance::Request
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
-            ->WithEnableDirectEnhance(Data->HasField(ANSI_TO_TCHAR("enableDirectEnhance")) ? [Data]() -> TOptional<bool>
-              {
-                  bool v;
-                    if (Data->TryGetBoolField(ANSI_TO_TCHAR("enableDirectEnhance"), v))
-                  {
-                        return TOptional(v);
-                  }
-                  return TOptional<bool>();
-              }() : TOptional<bool>())
           ->WithTransactionSetting(Data->HasField(ANSI_TO_TCHAR("transactionSetting")) ? [Data]() -> Model::FTransactionSettingPtr
               {
                   if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("transactionSetting")))
@@ -240,6 +231,15 @@ namespace Gs2::Enhance::Request
                   }
                   return Model::FLogSetting::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("logSetting")));
               }() : nullptr)
+            ->WithEnableDirectEnhance(Data->HasField(ANSI_TO_TCHAR("enableDirectEnhance")) ? [Data]() -> TOptional<bool>
+              {
+                  bool v;
+                    if (Data->TryGetBoolField(ANSI_TO_TCHAR("enableDirectEnhance"), v))
+                  {
+                        return TOptional(v);
+                  }
+                  return TOptional<bool>();
+              }() : TOptional<bool>())
             ->WithQueueNamespaceId(Data->HasField(ANSI_TO_TCHAR("queueNamespaceId")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
@@ -275,10 +275,6 @@ namespace Gs2::Enhance::Request
         {
             JsonRootObject->SetStringField("description", DescriptionValue.GetValue());
         }
-        if (EnableDirectEnhanceValue.IsSet())
-        {
-            JsonRootObject->SetBoolField("enableDirectEnhance", EnableDirectEnhanceValue.GetValue());
-        }
         if (TransactionSettingValue != nullptr && TransactionSettingValue.IsValid())
         {
             JsonRootObject->SetObjectField("transactionSetting", TransactionSettingValue->ToJson());
@@ -290,6 +286,10 @@ namespace Gs2::Enhance::Request
         if (LogSettingValue != nullptr && LogSettingValue.IsValid())
         {
             JsonRootObject->SetObjectField("logSetting", LogSettingValue->ToJson());
+        }
+        if (EnableDirectEnhanceValue.IsSet())
+        {
+            JsonRootObject->SetBoolField("enableDirectEnhance", EnableDirectEnhanceValue.GetValue());
         }
         if (QueueNamespaceIdValue.IsSet())
         {

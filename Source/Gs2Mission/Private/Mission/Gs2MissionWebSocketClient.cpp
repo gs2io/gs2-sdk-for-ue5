@@ -100,6 +100,15 @@ namespace Gs2::Mission
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::WebSocket::FVerifyCompleteTask>> FGs2MissionWebSocketClient::VerifyComplete(
+        const Request::FVerifyCompleteRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FVerifyCompleteTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::WebSocket::FVerifyCompleteByUserIdTask>> FGs2MissionWebSocketClient::VerifyCompleteByUserId(
         const Request::FVerifyCompleteByUserIdRequestPtr Request) const
     {
@@ -374,6 +383,15 @@ namespace Gs2::Mission
         const Request::FSetCounterByUserIdRequestPtr Request) const
     {
         return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FSetCounterByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FDecreaseCounterTask>> FGs2MissionWebSocketClient::DecreaseCounter(
+        const Request::FDecreaseCounterRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FDecreaseCounterTask>>(
             Session,
             Request
         );

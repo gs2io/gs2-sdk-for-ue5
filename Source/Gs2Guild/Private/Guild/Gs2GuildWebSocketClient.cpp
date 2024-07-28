@@ -334,6 +334,15 @@ namespace Gs2::Guild
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::WebSocket::FDecreaseMaximumCurrentMaximumMemberCountTask>> FGs2GuildWebSocketClient::DecreaseMaximumCurrentMaximumMemberCount(
+        const Request::FDecreaseMaximumCurrentMaximumMemberCountRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FDecreaseMaximumCurrentMaximumMemberCountTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::WebSocket::FDecreaseMaximumCurrentMaximumMemberCountByGuildNameTask>> FGs2GuildWebSocketClient::DecreaseMaximumCurrentMaximumMemberCountByGuildName(
         const Request::FDecreaseMaximumCurrentMaximumMemberCountByGuildNameRequestPtr Request) const
     {

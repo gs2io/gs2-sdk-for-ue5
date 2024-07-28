@@ -88,6 +88,8 @@
 #include "Task/WebSocket/DeleteGuildByGuildNameTask.h"
 #include "Request/IncreaseMaximumCurrentMaximumMemberCountByGuildNameRequest.h"
 #include "Task/WebSocket/IncreaseMaximumCurrentMaximumMemberCountByGuildNameTask.h"
+#include "Request/DecreaseMaximumCurrentMaximumMemberCountRequest.h"
+#include "Task/WebSocket/DecreaseMaximumCurrentMaximumMemberCountTask.h"
 #include "Request/DecreaseMaximumCurrentMaximumMemberCountByGuildNameRequest.h"
 #include "Task/WebSocket/DecreaseMaximumCurrentMaximumMemberCountByGuildNameTask.h"
 #include "Request/VerifyCurrentMaximumMemberCountRequest.h"
@@ -340,6 +342,10 @@ namespace Gs2::Guild
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FIncreaseMaximumCurrentMaximumMemberCountByGuildNameTask>> IncreaseMaximumCurrentMaximumMemberCountByGuildName(
             const Request::FIncreaseMaximumCurrentMaximumMemberCountByGuildNameRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FDecreaseMaximumCurrentMaximumMemberCountTask>> DecreaseMaximumCurrentMaximumMemberCount(
+            const Request::FDecreaseMaximumCurrentMaximumMemberCountRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FDecreaseMaximumCurrentMaximumMemberCountByGuildNameTask>> DecreaseMaximumCurrentMaximumMemberCountByGuildName(

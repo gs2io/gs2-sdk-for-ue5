@@ -29,12 +29,12 @@ namespace Gs2::Enhance::Model
         TOptional<FString> NamespaceIdValue;
         TOptional<FString> NameValue;
         TOptional<FString> DescriptionValue;
-        TOptional<bool> EnableDirectEnhanceValue;
         TSharedPtr<FTransactionSetting> TransactionSettingValue;
         TSharedPtr<FScriptSetting> EnhanceScriptValue;
         TSharedPtr<FLogSetting> LogSettingValue;
         TOptional<int64> CreatedAtValue;
         TOptional<int64> UpdatedAtValue;
+        TOptional<bool> EnableDirectEnhanceValue;
         TOptional<FString> QueueNamespaceIdValue;
         TOptional<FString> KeyIdValue;
         TOptional<int64> RevisionValue;
@@ -49,12 +49,12 @@ namespace Gs2::Enhance::Model
         TSharedPtr<FNamespace> WithNamespaceId(const TOptional<FString> NamespaceId);
         TSharedPtr<FNamespace> WithName(const TOptional<FString> Name);
         TSharedPtr<FNamespace> WithDescription(const TOptional<FString> Description);
-        TSharedPtr<FNamespace> WithEnableDirectEnhance(const TOptional<bool> EnableDirectEnhance);
         TSharedPtr<FNamespace> WithTransactionSetting(const TSharedPtr<FTransactionSetting> TransactionSetting);
         TSharedPtr<FNamespace> WithEnhanceScript(const TSharedPtr<FScriptSetting> EnhanceScript);
         TSharedPtr<FNamespace> WithLogSetting(const TSharedPtr<FLogSetting> LogSetting);
         TSharedPtr<FNamespace> WithCreatedAt(const TOptional<int64> CreatedAt);
         TSharedPtr<FNamespace> WithUpdatedAt(const TOptional<int64> UpdatedAt);
+        TSharedPtr<FNamespace> WithEnableDirectEnhance(const TOptional<bool> EnableDirectEnhance);
         TSharedPtr<FNamespace> WithQueueNamespaceId(const TOptional<FString> QueueNamespaceId);
         TSharedPtr<FNamespace> WithKeyId(const TOptional<FString> KeyId);
         TSharedPtr<FNamespace> WithRevision(const TOptional<int64> Revision);
@@ -62,8 +62,6 @@ namespace Gs2::Enhance::Model
         TOptional<FString> GetNamespaceId() const;
         TOptional<FString> GetName() const;
         TOptional<FString> GetDescription() const;
-        TOptional<bool> GetEnableDirectEnhance() const;
-        FString GetEnableDirectEnhanceString() const;
         TSharedPtr<FTransactionSetting> GetTransactionSetting() const;
         TSharedPtr<FScriptSetting> GetEnhanceScript() const;
         TSharedPtr<FLogSetting> GetLogSetting() const;
@@ -71,6 +69,8 @@ namespace Gs2::Enhance::Model
         FString GetCreatedAtString() const;
         TOptional<int64> GetUpdatedAt() const;
         FString GetUpdatedAtString() const;
+        TOptional<bool> GetEnableDirectEnhance() const;
+        FString GetEnableDirectEnhanceString() const;
         TOptional<FString> GetQueueNamespaceId() const;
         TOptional<FString> GetKeyId() const;
         TOptional<int64> GetRevision() const;

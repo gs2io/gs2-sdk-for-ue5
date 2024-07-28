@@ -114,6 +114,8 @@
 #include "Task/Rest/RecoverStaminaByUserIdTask.h"
 #include "Request/RaiseMaxValueByUserIdRequest.h"
 #include "Task/Rest/RaiseMaxValueByUserIdTask.h"
+#include "Request/DecreaseMaxValueRequest.h"
+#include "Task/Rest/DecreaseMaxValueTask.h"
 #include "Request/DecreaseMaxValueByUserIdRequest.h"
 #include "Task/Rest/DecreaseMaxValueByUserIdTask.h"
 #include "Request/SetMaxValueByUserIdRequest.h"
@@ -346,6 +348,10 @@ namespace Gs2::Stamina
 
         TSharedPtr<FAsyncTask<Task::Rest::FRaiseMaxValueByUserIdTask>> RaiseMaxValueByUserId(
             const Request::FRaiseMaxValueByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FDecreaseMaxValueTask>> DecreaseMaxValue(
+            const Request::FDecreaseMaxValueRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::Rest::FDecreaseMaxValueByUserIdTask>> DecreaseMaxValueByUserId(

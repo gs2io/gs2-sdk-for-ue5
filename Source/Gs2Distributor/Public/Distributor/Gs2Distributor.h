@@ -205,6 +205,42 @@
 #include "Task/Rest/SetTransactionDefaultConfigByUserIdTask.h"
 #include "Task/WebSocket/SetTransactionDefaultConfigByUserIdTask.h"
 
+// IfExpressionByUserId
+#include "Request/IfExpressionByUserIdRequest.h"
+#include "Result/IfExpressionByUserIdResult.h"
+#include "Task/Rest/IfExpressionByUserIdTask.h"
+#include "Task/WebSocket/IfExpressionByUserIdTask.h"
+
+// AndExpressionByUserId
+#include "Request/AndExpressionByUserIdRequest.h"
+#include "Result/AndExpressionByUserIdResult.h"
+#include "Task/Rest/AndExpressionByUserIdTask.h"
+#include "Task/WebSocket/AndExpressionByUserIdTask.h"
+
+// OrExpressionByUserId
+#include "Request/OrExpressionByUserIdRequest.h"
+#include "Result/OrExpressionByUserIdResult.h"
+#include "Task/Rest/OrExpressionByUserIdTask.h"
+#include "Task/WebSocket/OrExpressionByUserIdTask.h"
+
+// IfExpressionByUserByStampTask
+#include "Request/IfExpressionByUserByStampTaskRequest.h"
+#include "Result/IfExpressionByUserByStampTaskResult.h"
+#include "Task/Rest/IfExpressionByUserByStampTaskTask.h"
+#include "Task/WebSocket/IfExpressionByUserByStampTaskTask.h"
+
+// AndExpressionByUserByStampTask
+#include "Request/AndExpressionByUserByStampTaskRequest.h"
+#include "Result/AndExpressionByUserByStampTaskResult.h"
+#include "Task/Rest/AndExpressionByUserByStampTaskTask.h"
+#include "Task/WebSocket/AndExpressionByUserByStampTaskTask.h"
+
+// OrExpressionByUserByStampTask
+#include "Request/OrExpressionByUserByStampTaskRequest.h"
+#include "Result/OrExpressionByUserByStampTaskResult.h"
+#include "Task/Rest/OrExpressionByUserByStampTaskTask.h"
+#include "Task/WebSocket/OrExpressionByUserByStampTaskTask.h"
+
 // GetStampSheetResult
 #include "Request/GetStampSheetResultRequest.h"
 #include "Result/GetStampSheetResultResult.h"

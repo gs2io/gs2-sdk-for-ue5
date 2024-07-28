@@ -280,6 +280,60 @@ namespace Gs2::Distributor
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::Rest::FIfExpressionByUserIdTask>> FGs2DistributorRestClient::IfExpressionByUserId(
+        const Request::FIfExpressionByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FIfExpressionByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FAndExpressionByUserIdTask>> FGs2DistributorRestClient::AndExpressionByUserId(
+        const Request::FAndExpressionByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FAndExpressionByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FOrExpressionByUserIdTask>> FGs2DistributorRestClient::OrExpressionByUserId(
+        const Request::FOrExpressionByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FOrExpressionByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FIfExpressionByUserByStampTaskTask>> FGs2DistributorRestClient::IfExpressionByUserByStampTask(
+        const Request::FIfExpressionByUserByStampTaskRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FIfExpressionByUserByStampTaskTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FAndExpressionByUserByStampTaskTask>> FGs2DistributorRestClient::AndExpressionByUserByStampTask(
+        const Request::FAndExpressionByUserByStampTaskRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FAndExpressionByUserByStampTaskTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FOrExpressionByUserByStampTaskTask>> FGs2DistributorRestClient::OrExpressionByUserByStampTask(
+        const Request::FOrExpressionByUserByStampTaskRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FOrExpressionByUserByStampTaskTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::Rest::FGetStampSheetResultTask>> FGs2DistributorRestClient::GetStampSheetResult(
         const Request::FGetStampSheetResultRequestPtr Request) const
     {

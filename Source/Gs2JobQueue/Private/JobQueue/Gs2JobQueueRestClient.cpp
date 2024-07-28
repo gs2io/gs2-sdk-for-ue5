@@ -181,6 +181,15 @@ namespace Gs2::JobQueue
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::Rest::FDeleteJobTask>> FGs2JobQueueRestClient::DeleteJob(
+        const Request::FDeleteJobRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FDeleteJobTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::Rest::FDeleteJobByUserIdTask>> FGs2JobQueueRestClient::DeleteJobByUserId(
         const Request::FDeleteJobByUserIdRequestPtr Request) const
     {

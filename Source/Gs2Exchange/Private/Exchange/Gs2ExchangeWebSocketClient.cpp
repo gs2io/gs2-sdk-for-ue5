@@ -316,24 +316,6 @@ namespace Gs2::Exchange
         );
     }
 
-    TSharedPtr<FAsyncTask<Task::WebSocket::FUnlockIncrementalExchangeByUserIdTask>> FGs2ExchangeWebSocketClient::UnlockIncrementalExchangeByUserId(
-        const Request::FUnlockIncrementalExchangeByUserIdRequestPtr Request) const
-    {
-        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FUnlockIncrementalExchangeByUserIdTask>>(
-            Session,
-            Request
-        );
-    }
-
-    TSharedPtr<FAsyncTask<Task::WebSocket::FUnlockIncrementalExchangeByStampSheetTask>> FGs2ExchangeWebSocketClient::UnlockIncrementalExchangeByStampSheet(
-        const Request::FUnlockIncrementalExchangeByStampSheetRequestPtr Request) const
-    {
-        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FUnlockIncrementalExchangeByStampSheetTask>>(
-            Session,
-            Request
-        );
-    }
-
     TSharedPtr<FAsyncTask<Task::WebSocket::FExportMasterTask>> FGs2ExchangeWebSocketClient::ExportMaster(
         const Request::FExportMasterRequestPtr Request) const
     {

@@ -66,4 +66,17 @@ namespace Gs2::UE5::Showcase::Domain::Model
             ConnectionValue
         );
     }
+
+    Gs2::UE5::Showcase::Domain::Model::FEzRandomShowcaseStatusGameSessionDomainPtr FEzUserGameSessionDomain::RandomShowcaseStatus(
+        const FString ShowcaseName
+    ) const
+    {
+        return MakeShared<Gs2::UE5::Showcase::Domain::Model::FEzRandomShowcaseStatusGameSessionDomain>(
+            Domain->RandomShowcaseStatus(
+                ShowcaseName
+            ),
+            GameSession,
+            ConnectionValue
+        );
+    }
 }

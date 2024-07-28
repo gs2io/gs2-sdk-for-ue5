@@ -231,18 +231,6 @@
 #include "Task/Rest/IncrementalExchangeByStampSheetTask.h"
 #include "Task/WebSocket/IncrementalExchangeByStampSheetTask.h"
 
-// UnlockIncrementalExchangeByUserId
-#include "Request/UnlockIncrementalExchangeByUserIdRequest.h"
-#include "Result/UnlockIncrementalExchangeByUserIdResult.h"
-#include "Task/Rest/UnlockIncrementalExchangeByUserIdTask.h"
-#include "Task/WebSocket/UnlockIncrementalExchangeByUserIdTask.h"
-
-// UnlockIncrementalExchangeByStampSheet
-#include "Request/UnlockIncrementalExchangeByStampSheetRequest.h"
-#include "Result/UnlockIncrementalExchangeByStampSheetResult.h"
-#include "Task/Rest/UnlockIncrementalExchangeByStampSheetTask.h"
-#include "Task/WebSocket/UnlockIncrementalExchangeByStampSheetTask.h"
-
 // ExportMaster
 #include "Request/ExportMasterRequest.h"
 #include "Result/ExportMasterResult.h"

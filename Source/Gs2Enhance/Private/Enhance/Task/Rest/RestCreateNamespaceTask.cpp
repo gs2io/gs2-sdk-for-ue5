@@ -86,10 +86,6 @@ namespace Gs2::Enhance::Task::Rest
             {
                 JsonRootObject->SetStringField("description", this->Request->GetDescription().GetValue());
             }
-            if (this->Request->GetEnableDirectEnhance().IsSet())
-            {
-                JsonRootObject->SetBoolField("enableDirectEnhance", this->Request->GetEnableDirectEnhance().GetValue());
-            }
             if (this->Request->GetTransactionSetting() != nullptr && this->Request->GetTransactionSetting().IsValid())
             {
                 JsonRootObject->SetObjectField("transactionSetting", this->Request->GetTransactionSetting()->ToJson());
@@ -101,6 +97,10 @@ namespace Gs2::Enhance::Task::Rest
             if (this->Request->GetLogSetting() != nullptr && this->Request->GetLogSetting().IsValid())
             {
                 JsonRootObject->SetObjectField("logSetting", this->Request->GetLogSetting()->ToJson());
+            }
+            if (this->Request->GetEnableDirectEnhance().IsSet())
+            {
+                JsonRootObject->SetBoolField("enableDirectEnhance", this->Request->GetEnableDirectEnhance().GetValue());
             }
             if (this->Request->GetQueueNamespaceId().IsSet())
             {

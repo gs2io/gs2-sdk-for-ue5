@@ -316,24 +316,6 @@ namespace Gs2::Exchange
         );
     }
 
-    TSharedPtr<FAsyncTask<Task::Rest::FUnlockIncrementalExchangeByUserIdTask>> FGs2ExchangeRestClient::UnlockIncrementalExchangeByUserId(
-        const Request::FUnlockIncrementalExchangeByUserIdRequestPtr Request) const
-    {
-        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FUnlockIncrementalExchangeByUserIdTask>>(
-            Session,
-            Request
-        );
-    }
-
-    TSharedPtr<FAsyncTask<Task::Rest::FUnlockIncrementalExchangeByStampSheetTask>> FGs2ExchangeRestClient::UnlockIncrementalExchangeByStampSheet(
-        const Request::FUnlockIncrementalExchangeByStampSheetRequestPtr Request) const
-    {
-        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FUnlockIncrementalExchangeByStampSheetTask>>(
-            Session,
-            Request
-        );
-    }
-
     TSharedPtr<FAsyncTask<Task::Rest::FExportMasterTask>> FGs2ExchangeRestClient::ExportMaster(
         const Request::FExportMasterRequestPtr Request) const
     {

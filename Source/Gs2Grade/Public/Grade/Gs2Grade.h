@@ -181,6 +181,12 @@
 #include "Task/Rest/AddGradeByUserIdTask.h"
 #include "Task/WebSocket/AddGradeByUserIdTask.h"
 
+// SubGrade
+#include "Request/SubGradeRequest.h"
+#include "Result/SubGradeResult.h"
+#include "Task/Rest/SubGradeTask.h"
+#include "Task/WebSocket/SubGradeTask.h"
+
 // SubGradeByUserId
 #include "Request/SubGradeByUserIdRequest.h"
 #include "Result/SubGradeByUserIdResult.h"

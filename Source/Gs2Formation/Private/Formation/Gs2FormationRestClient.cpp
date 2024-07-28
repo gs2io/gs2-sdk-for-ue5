@@ -406,6 +406,15 @@ namespace Gs2::Formation
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::Rest::FSubMoldCapacityTask>> FGs2FormationRestClient::SubMoldCapacity(
+        const Request::FSubMoldCapacityRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FSubMoldCapacityTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::Rest::FSubMoldCapacityByUserIdTask>> FGs2FormationRestClient::SubMoldCapacityByUserId(
         const Request::FSubMoldCapacityByUserIdRequestPtr Request) const
     {

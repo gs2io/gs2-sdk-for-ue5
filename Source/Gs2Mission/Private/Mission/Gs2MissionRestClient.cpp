@@ -100,6 +100,15 @@ namespace Gs2::Mission
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::Rest::FVerifyCompleteTask>> FGs2MissionRestClient::VerifyComplete(
+        const Request::FVerifyCompleteRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FVerifyCompleteTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::Rest::FVerifyCompleteByUserIdTask>> FGs2MissionRestClient::VerifyCompleteByUserId(
         const Request::FVerifyCompleteByUserIdRequestPtr Request) const
     {
@@ -374,6 +383,15 @@ namespace Gs2::Mission
         const Request::FSetCounterByUserIdRequestPtr Request) const
     {
         return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FSetCounterByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FDecreaseCounterTask>> FGs2MissionRestClient::DecreaseCounter(
+        const Request::FDecreaseCounterRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FDecreaseCounterTask>>(
             Session,
             Request
         );

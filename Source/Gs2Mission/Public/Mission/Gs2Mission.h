@@ -94,6 +94,12 @@
 #include "Task/Rest/DeleteCompleteByUserIdTask.h"
 #include "Task/WebSocket/DeleteCompleteByUserIdTask.h"
 
+// VerifyComplete
+#include "Request/VerifyCompleteRequest.h"
+#include "Result/VerifyCompleteResult.h"
+#include "Task/Rest/VerifyCompleteTask.h"
+#include "Task/WebSocket/VerifyCompleteTask.h"
+
 // VerifyCompleteByUserId
 #include "Request/VerifyCompleteByUserIdRequest.h"
 #include "Result/VerifyCompleteByUserIdResult.h"
@@ -279,6 +285,12 @@
 #include "Result/SetCounterByUserIdResult.h"
 #include "Task/Rest/SetCounterByUserIdTask.h"
 #include "Task/WebSocket/SetCounterByUserIdTask.h"
+
+// DecreaseCounter
+#include "Request/DecreaseCounterRequest.h"
+#include "Result/DecreaseCounterResult.h"
+#include "Task/Rest/DecreaseCounterTask.h"
+#include "Task/WebSocket/DecreaseCounterTask.h"
 
 // DecreaseCounterByUserId
 #include "Request/DecreaseCounterByUserIdRequest.h"

@@ -28,6 +28,7 @@ namespace Gs2::Distributor::Request
         TOptional<FString> ContextStackValue;
         TOptional<FString> AccessTokenValue;
         TSharedPtr<TArray<TSharedPtr<Model::FConfig>>> ConfigValue;
+        TOptional<FString> DuplicationAvoiderValue;
         
     public:
         
@@ -40,9 +41,11 @@ namespace Gs2::Distributor::Request
         TSharedPtr<FSetTransactionDefaultConfigRequest> WithContextStack(const TOptional<FString> ContextStack);
         TSharedPtr<FSetTransactionDefaultConfigRequest> WithAccessToken(const TOptional<FString> AccessToken);
         TSharedPtr<FSetTransactionDefaultConfigRequest> WithConfig(const TSharedPtr<TArray<TSharedPtr<Model::FConfig>>> Config);
+        TSharedPtr<FSetTransactionDefaultConfigRequest> WithDuplicationAvoider(const TOptional<FString> DuplicationAvoider);
 
         TOptional<FString> GetContextStack() const;
         TOptional<FString> GetAccessToken() const;TSharedPtr<TArray<TSharedPtr<Model::FConfig>>> GetConfig() const;
+        TOptional<FString> GetDuplicationAvoider() const;
 
         static TSharedPtr<FSetTransactionDefaultConfigRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;

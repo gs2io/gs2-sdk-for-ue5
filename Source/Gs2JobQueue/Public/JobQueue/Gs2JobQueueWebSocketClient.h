@@ -54,6 +54,8 @@
 #include "Task/WebSocket/RunTask.h"
 #include "Request/RunByUserIdRequest.h"
 #include "Task/WebSocket/RunByUserIdTask.h"
+#include "Request/DeleteJobRequest.h"
+#include "Task/WebSocket/DeleteJobTask.h"
 #include "Request/DeleteJobByUserIdRequest.h"
 #include "Task/WebSocket/DeleteJobByUserIdTask.h"
 #include "Request/PushByStampSheetRequest.h"
@@ -152,6 +154,10 @@ namespace Gs2::JobQueue
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FRunByUserIdTask>> RunByUserId(
             const Request::FRunByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FDeleteJobTask>> DeleteJob(
+            const Request::FDeleteJobRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FDeleteJobByUserIdTask>> DeleteJobByUserId(

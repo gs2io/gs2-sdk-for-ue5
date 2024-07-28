@@ -169,6 +169,12 @@
 #include "Task/Rest/ReleaseByUserIdTask.h"
 #include "Task/WebSocket/ReleaseByUserIdTask.h"
 
+// MarkRestrain
+#include "Request/MarkRestrainRequest.h"
+#include "Result/MarkRestrainResult.h"
+#include "Task/Rest/MarkRestrainTask.h"
+#include "Task/WebSocket/MarkRestrainTask.h"
+
 // MarkRestrainByUserId
 #include "Request/MarkRestrainByUserIdRequest.h"
 #include "Result/MarkRestrainByUserIdResult.h"

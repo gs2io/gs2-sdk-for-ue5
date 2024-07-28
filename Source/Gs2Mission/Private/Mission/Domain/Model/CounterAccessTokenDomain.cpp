@@ -83,6 +83,92 @@ namespace Gs2::Mission::Domain::Model
 
     }
 
+    FCounterAccessTokenDomain::FDecreaseTask::FDecreaseTask(
+        const TSharedPtr<FCounterAccessTokenDomain>& Self,
+        const Request::FDecreaseCounterRequestPtr Request
+    ): Self(Self), Request(Request)
+    {
+
+    }
+
+    FCounterAccessTokenDomain::FDecreaseTask::FDecreaseTask(
+        const FDecreaseTask& From
+    ): TGs2Future(From), Self(From.Self), Request(From.Request)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FCounterAccessTokenDomain::FDecreaseTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::Mission::Domain::Model::FCounterAccessTokenDomain>> Result
+    )
+    {
+        Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
+            ->WithNamespaceName(Self->NamespaceName)
+            ->WithCounterName(Self->CounterName)
+            ->WithAccessToken(Self->AccessToken->GetToken());
+        const auto Future = Self->Client->DecreaseCounter(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto RequestModel = Request;
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
+        if (ResultModel != nullptr) {
+            
+            if (ResultModel->GetItem() != nullptr)
+            {
+                const auto ParentKey = Gs2::Mission::Domain::Model::FUserDomain::CreateCacheParentKey(
+                    Self->NamespaceName,
+                    Self->UserId(),
+                    "Counter"
+                );
+                const auto Key = Gs2::Mission::Domain::Model::FCounterDomain::CreateCacheKey(
+                    ResultModel->GetItem()->GetName()
+                );
+                Self->Gs2->Cache->Put(
+                    Gs2::Mission::Model::FCounter::TypeName,
+                    ParentKey,
+                    Key,
+                    ResultModel->GetItem(),
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+            }{
+                for (auto Item : *ResultModel->GetChangedCompletes())
+                {
+                    const auto ParentKey = Gs2::Mission::Domain::Model::FUserDomain::CreateCacheParentKey(
+                        Self->NamespaceName,
+                        Self->UserId(),
+                        "Complete"
+                    );
+                    const auto Key = Gs2::Mission::Domain::Model::FCompleteDomain::CreateCacheKey(
+                        Item->GetMissionGroupName()
+                    );
+                    Self->Gs2->Cache->Put(
+                        Gs2::Mission::Model::FComplete::TypeName,
+                        ParentKey,
+                        Key,
+                        Item,
+                        Item->GetNextResetAt().IsSet() ? FDateTime::FromUnixTimestamp(*Item->GetNextResetAt()/1000) : FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                    );
+                }
+            }
+        }
+        auto Domain = Self;
+
+        *Result = Domain;
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FCounterAccessTokenDomain::FDecreaseTask>> FCounterAccessTokenDomain::Decrease(
+        Request::FDecreaseCounterRequestPtr Request
+    ) {
+        return Gs2::Core::Util::New<FAsyncTask<FDecreaseTask>>(this->AsShared(), Request);
+    }
+
     FCounterAccessTokenDomain::FGetTask::FGetTask(
         const TSharedPtr<FCounterAccessTokenDomain>& Self,
         const Request::FGetCounterRequestPtr Request

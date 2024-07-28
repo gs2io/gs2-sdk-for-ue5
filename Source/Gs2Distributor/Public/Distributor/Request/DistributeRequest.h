@@ -31,6 +31,7 @@ namespace Gs2::Distributor::Request
         TOptional<FString> UserIdValue;
         TSharedPtr<Model::FDistributeResource> DistributeResourceValue;
         TOptional<FString> TimeOffsetTokenValue;
+        TOptional<FString> DuplicationAvoiderValue;
         
     public:
         
@@ -46,6 +47,7 @@ namespace Gs2::Distributor::Request
         TSharedPtr<FDistributeRequest> WithUserId(const TOptional<FString> UserId);
         TSharedPtr<FDistributeRequest> WithDistributeResource(const TSharedPtr<Model::FDistributeResource> DistributeResource);
         TSharedPtr<FDistributeRequest> WithTimeOffsetToken(const TOptional<FString> TimeOffsetToken);
+        TSharedPtr<FDistributeRequest> WithDuplicationAvoider(const TOptional<FString> DuplicationAvoider);
 
         TOptional<FString> GetContextStack() const;
         TOptional<FString> GetNamespaceName() const;
@@ -53,6 +55,7 @@ namespace Gs2::Distributor::Request
         TOptional<FString> GetUserId() const;
         TSharedPtr<Model::FDistributeResource> GetDistributeResource() const;
         TOptional<FString> GetTimeOffsetToken() const;
+        TOptional<FString> GetDuplicationAvoider() const;
 
         static TSharedPtr<FDistributeRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;

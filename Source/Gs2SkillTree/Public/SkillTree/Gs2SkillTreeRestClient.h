@@ -64,6 +64,8 @@
 #include "Task/Rest/ReleaseTask.h"
 #include "Request/ReleaseByUserIdRequest.h"
 #include "Task/Rest/ReleaseByUserIdTask.h"
+#include "Request/MarkRestrainRequest.h"
+#include "Task/Rest/MarkRestrainTask.h"
 #include "Request/MarkRestrainByUserIdRequest.h"
 #include "Task/Rest/MarkRestrainByUserIdTask.h"
 #include "Request/RestrainRequest.h"
@@ -196,6 +198,10 @@ namespace Gs2::SkillTree
 
         TSharedPtr<FAsyncTask<Task::Rest::FReleaseByUserIdTask>> ReleaseByUserId(
             const Request::FReleaseByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FMarkRestrainTask>> MarkRestrain(
+            const Request::FMarkRestrainRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::Rest::FMarkRestrainByUserIdTask>> MarkRestrainByUserId(

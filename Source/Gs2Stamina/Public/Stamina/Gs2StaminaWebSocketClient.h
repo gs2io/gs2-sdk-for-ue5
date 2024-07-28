@@ -114,6 +114,8 @@
 #include "Task/WebSocket/RecoverStaminaByUserIdTask.h"
 #include "Request/RaiseMaxValueByUserIdRequest.h"
 #include "Task/WebSocket/RaiseMaxValueByUserIdTask.h"
+#include "Request/DecreaseMaxValueRequest.h"
+#include "Task/WebSocket/DecreaseMaxValueTask.h"
 #include "Request/DecreaseMaxValueByUserIdRequest.h"
 #include "Task/WebSocket/DecreaseMaxValueByUserIdTask.h"
 #include "Request/SetMaxValueByUserIdRequest.h"
@@ -346,6 +348,10 @@ namespace Gs2::Stamina
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FRaiseMaxValueByUserIdTask>> RaiseMaxValueByUserId(
             const Request::FRaiseMaxValueByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FDecreaseMaxValueTask>> DecreaseMaxValue(
+            const Request::FDecreaseMaxValueRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FDecreaseMaxValueByUserIdTask>> DecreaseMaxValueByUserId(

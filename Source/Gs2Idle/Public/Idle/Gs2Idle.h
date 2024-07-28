@@ -204,6 +204,12 @@
 #include "Task/Rest/IncreaseMaximumIdleMinutesByUserIdTask.h"
 #include "Task/WebSocket/IncreaseMaximumIdleMinutesByUserIdTask.h"
 
+// DecreaseMaximumIdleMinutes
+#include "Request/DecreaseMaximumIdleMinutesRequest.h"
+#include "Result/DecreaseMaximumIdleMinutesResult.h"
+#include "Task/Rest/DecreaseMaximumIdleMinutesTask.h"
+#include "Task/WebSocket/DecreaseMaximumIdleMinutesTask.h"
+
 // DecreaseMaximumIdleMinutesByUserId
 #include "Request/DecreaseMaximumIdleMinutesByUserIdRequest.h"
 #include "Result/DecreaseMaximumIdleMinutesByUserIdResult.h"

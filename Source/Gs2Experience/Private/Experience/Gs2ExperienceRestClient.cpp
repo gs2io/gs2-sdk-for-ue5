@@ -343,6 +343,15 @@ namespace Gs2::Experience
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::Rest::FSubExperienceTask>> FGs2ExperienceRestClient::SubExperience(
+        const Request::FSubExperienceRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FSubExperienceTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::Rest::FSubExperienceByUserIdTask>> FGs2ExperienceRestClient::SubExperienceByUserId(
         const Request::FSubExperienceByUserIdRequestPtr Request) const
     {
@@ -365,6 +374,15 @@ namespace Gs2::Experience
         const Request::FAddRankCapByUserIdRequestPtr Request) const
     {
         return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FAddRankCapByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FSubRankCapTask>> FGs2ExperienceRestClient::SubRankCap(
+        const Request::FSubRankCapRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FSubRankCapTask>>(
             Session,
             Request
         );

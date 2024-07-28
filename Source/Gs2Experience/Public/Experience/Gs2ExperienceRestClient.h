@@ -90,12 +90,16 @@
 #include "Task/Rest/GetStatusWithSignatureByUserIdTask.h"
 #include "Request/AddExperienceByUserIdRequest.h"
 #include "Task/Rest/AddExperienceByUserIdTask.h"
+#include "Request/SubExperienceRequest.h"
+#include "Task/Rest/SubExperienceTask.h"
 #include "Request/SubExperienceByUserIdRequest.h"
 #include "Task/Rest/SubExperienceByUserIdTask.h"
 #include "Request/SetExperienceByUserIdRequest.h"
 #include "Task/Rest/SetExperienceByUserIdTask.h"
 #include "Request/AddRankCapByUserIdRequest.h"
 #include "Task/Rest/AddRankCapByUserIdTask.h"
+#include "Request/SubRankCapRequest.h"
+#include "Task/Rest/SubRankCapTask.h"
 #include "Request/SubRankCapByUserIdRequest.h"
 #include "Task/Rest/SubRankCapByUserIdTask.h"
 #include "Request/SetRankCapByUserIdRequest.h"
@@ -286,6 +290,10 @@ namespace Gs2::Experience
             const Request::FAddExperienceByUserIdRequestPtr Request
         ) const;
 
+        TSharedPtr<FAsyncTask<Task::Rest::FSubExperienceTask>> SubExperience(
+            const Request::FSubExperienceRequestPtr Request
+        ) const;
+
         TSharedPtr<FAsyncTask<Task::Rest::FSubExperienceByUserIdTask>> SubExperienceByUserId(
             const Request::FSubExperienceByUserIdRequestPtr Request
         ) const;
@@ -296,6 +304,10 @@ namespace Gs2::Experience
 
         TSharedPtr<FAsyncTask<Task::Rest::FAddRankCapByUserIdTask>> AddRankCapByUserId(
             const Request::FAddRankCapByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FSubRankCapTask>> SubRankCap(
+            const Request::FSubRankCapRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::Rest::FSubRankCapByUserIdTask>> SubRankCapByUserId(

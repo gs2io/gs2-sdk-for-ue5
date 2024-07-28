@@ -90,12 +90,16 @@
 #include "Task/WebSocket/GetStatusWithSignatureByUserIdTask.h"
 #include "Request/AddExperienceByUserIdRequest.h"
 #include "Task/WebSocket/AddExperienceByUserIdTask.h"
+#include "Request/SubExperienceRequest.h"
+#include "Task/WebSocket/SubExperienceTask.h"
 #include "Request/SubExperienceByUserIdRequest.h"
 #include "Task/WebSocket/SubExperienceByUserIdTask.h"
 #include "Request/SetExperienceByUserIdRequest.h"
 #include "Task/WebSocket/SetExperienceByUserIdTask.h"
 #include "Request/AddRankCapByUserIdRequest.h"
 #include "Task/WebSocket/AddRankCapByUserIdTask.h"
+#include "Request/SubRankCapRequest.h"
+#include "Task/WebSocket/SubRankCapTask.h"
 #include "Request/SubRankCapByUserIdRequest.h"
 #include "Task/WebSocket/SubRankCapByUserIdTask.h"
 #include "Request/SetRankCapByUserIdRequest.h"
@@ -286,6 +290,10 @@ namespace Gs2::Experience
             const Request::FAddExperienceByUserIdRequestPtr Request
         ) const;
 
+        TSharedPtr<FAsyncTask<Task::WebSocket::FSubExperienceTask>> SubExperience(
+            const Request::FSubExperienceRequestPtr Request
+        ) const;
+
         TSharedPtr<FAsyncTask<Task::WebSocket::FSubExperienceByUserIdTask>> SubExperienceByUserId(
             const Request::FSubExperienceByUserIdRequestPtr Request
         ) const;
@@ -296,6 +304,10 @@ namespace Gs2::Experience
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FAddRankCapByUserIdTask>> AddRankCapByUserId(
             const Request::FAddRankCapByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FSubRankCapTask>> SubRankCap(
+            const Request::FSubRankCapRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FSubRankCapByUserIdTask>> SubRankCapByUserId(

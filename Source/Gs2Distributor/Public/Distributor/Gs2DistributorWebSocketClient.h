@@ -76,6 +76,18 @@
 #include "Task/WebSocket/SetTransactionDefaultConfigTask.h"
 #include "Request/SetTransactionDefaultConfigByUserIdRequest.h"
 #include "Task/WebSocket/SetTransactionDefaultConfigByUserIdTask.h"
+#include "Request/IfExpressionByUserIdRequest.h"
+#include "Task/WebSocket/IfExpressionByUserIdTask.h"
+#include "Request/AndExpressionByUserIdRequest.h"
+#include "Task/WebSocket/AndExpressionByUserIdTask.h"
+#include "Request/OrExpressionByUserIdRequest.h"
+#include "Task/WebSocket/OrExpressionByUserIdTask.h"
+#include "Request/IfExpressionByUserByStampTaskRequest.h"
+#include "Task/WebSocket/IfExpressionByUserByStampTaskTask.h"
+#include "Request/AndExpressionByUserByStampTaskRequest.h"
+#include "Task/WebSocket/AndExpressionByUserByStampTaskTask.h"
+#include "Request/OrExpressionByUserByStampTaskRequest.h"
+#include "Task/WebSocket/OrExpressionByUserByStampTaskTask.h"
 #include "Request/GetStampSheetResultRequest.h"
 #include "Task/WebSocket/GetStampSheetResultTask.h"
 #include "Request/GetStampSheetResultByUserIdRequest.h"
@@ -206,6 +218,30 @@ namespace Gs2::Distributor
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FSetTransactionDefaultConfigByUserIdTask>> SetTransactionDefaultConfigByUserId(
             const Request::FSetTransactionDefaultConfigByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FIfExpressionByUserIdTask>> IfExpressionByUserId(
+            const Request::FIfExpressionByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FAndExpressionByUserIdTask>> AndExpressionByUserId(
+            const Request::FAndExpressionByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FOrExpressionByUserIdTask>> OrExpressionByUserId(
+            const Request::FOrExpressionByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FIfExpressionByUserByStampTaskTask>> IfExpressionByUserByStampTask(
+            const Request::FIfExpressionByUserByStampTaskRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FAndExpressionByUserByStampTaskTask>> AndExpressionByUserByStampTask(
+            const Request::FAndExpressionByUserByStampTaskRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FOrExpressionByUserByStampTaskTask>> OrExpressionByUserByStampTask(
+            const Request::FOrExpressionByUserByStampTaskRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FGetStampSheetResultTask>> GetStampSheetResult(

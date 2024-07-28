@@ -84,10 +84,6 @@
 #include "Task/WebSocket/IncrementalExchangeByUserIdTask.h"
 #include "Request/IncrementalExchangeByStampSheetRequest.h"
 #include "Task/WebSocket/IncrementalExchangeByStampSheetTask.h"
-#include "Request/UnlockIncrementalExchangeByUserIdRequest.h"
-#include "Task/WebSocket/UnlockIncrementalExchangeByUserIdTask.h"
-#include "Request/UnlockIncrementalExchangeByStampSheetRequest.h"
-#include "Task/WebSocket/UnlockIncrementalExchangeByStampSheetTask.h"
 #include "Request/ExportMasterRequest.h"
 #include "Task/WebSocket/ExportMasterTask.h"
 #include "Request/GetCurrentRateMasterRequest.h"
@@ -266,14 +262,6 @@ namespace Gs2::Exchange
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FIncrementalExchangeByStampSheetTask>> IncrementalExchangeByStampSheet(
             const Request::FIncrementalExchangeByStampSheetRequestPtr Request
-        ) const;
-
-        TSharedPtr<FAsyncTask<Task::WebSocket::FUnlockIncrementalExchangeByUserIdTask>> UnlockIncrementalExchangeByUserId(
-            const Request::FUnlockIncrementalExchangeByUserIdRequestPtr Request
-        ) const;
-
-        TSharedPtr<FAsyncTask<Task::WebSocket::FUnlockIncrementalExchangeByStampSheetTask>> UnlockIncrementalExchangeByStampSheet(
-            const Request::FUnlockIncrementalExchangeByStampSheetRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FExportMasterTask>> ExportMaster(

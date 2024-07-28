@@ -296,6 +296,12 @@
 #include "Task/Rest/AddMoldCapacityByUserIdTask.h"
 #include "Task/WebSocket/AddMoldCapacityByUserIdTask.h"
 
+// SubMoldCapacity
+#include "Request/SubMoldCapacityRequest.h"
+#include "Result/SubMoldCapacityResult.h"
+#include "Task/Rest/SubMoldCapacityTask.h"
+#include "Task/WebSocket/SubMoldCapacityTask.h"
+
 // SubMoldCapacityByUserId
 #include "Request/SubMoldCapacityByUserIdRequest.h"
 #include "Result/SubMoldCapacityByUserIdResult.h"

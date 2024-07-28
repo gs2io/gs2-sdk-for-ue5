@@ -174,6 +174,32 @@ namespace Gs2::Idle::Domain::Model
             bool SpeculativeExecute = true
         );
 
+        class GS2IDLE_API FDecreaseMaximumIdleMinutesTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Idle::Domain::Model::FStatusAccessTokenDomain>,
+            public TSharedFromThis<FDecreaseMaximumIdleMinutesTask>
+        {
+            const TSharedPtr<FStatusAccessTokenDomain> Self;
+            const Request::FDecreaseMaximumIdleMinutesRequestPtr Request;
+        public:
+            explicit FDecreaseMaximumIdleMinutesTask(
+                const TSharedPtr<FStatusAccessTokenDomain>& Self,
+                const Request::FDecreaseMaximumIdleMinutesRequestPtr Request
+            );
+
+            FDecreaseMaximumIdleMinutesTask(
+                const FDecreaseMaximumIdleMinutesTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Idle::Domain::Model::FStatusAccessTokenDomain>> Result
+            ) override;
+        };
+        friend FDecreaseMaximumIdleMinutesTask;
+
+        TSharedPtr<FAsyncTask<FDecreaseMaximumIdleMinutesTask>> DecreaseMaximumIdleMinutes(
+            Request::FDecreaseMaximumIdleMinutesRequestPtr Request
+        );
+
         static FString CreateCacheParentKey(
             TOptional<FString> NamespaceName,
             TOptional<FString> UserId,

@@ -120,6 +120,97 @@ namespace Gs2::Dictionary::Domain::Model
         return Gs2::Core::Util::New<FAsyncTask<FVerifyEntryTask>>(this->AsShared(), Request);
     }
 
+    FUserAccessTokenDomain::FDeleteEntriesTask::FDeleteEntriesTask(
+        const TSharedPtr<FUserAccessTokenDomain>& Self,
+        const Request::FDeleteEntriesRequestPtr Request
+    ): Self(Self), Request(Request)
+    {
+
+    }
+
+    FUserAccessTokenDomain::FDeleteEntriesTask::FDeleteEntriesTask(
+        const FDeleteEntriesTask& From
+    ): TGs2Future(From), Self(From.Self), Request(From.Request)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FUserAccessTokenDomain::FDeleteEntriesTask::Action(
+        TSharedPtr<TSharedPtr<TArray<TSharedPtr<Gs2::Dictionary::Domain::Model::FEntryAccessTokenDomain>>>> Result
+    )
+    {
+        Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
+            ->WithNamespaceName(Self->NamespaceName)
+            ->WithAccessToken(Self->AccessToken->GetToken());
+        const auto Future = Self->Client->DeleteEntries(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto RequestModel = Request;
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
+        if (ResultModel != nullptr) {
+            {
+                for (auto Item : *ResultModel->GetItems())
+                {
+                    const auto ParentKey = Gs2::Dictionary::Domain::Model::FUserDomain::CreateCacheParentKey(
+                        Self->NamespaceName,
+                        Self->UserId(),
+                        "Entry"
+                    );
+                    const auto Key = Gs2::Dictionary::Domain::Model::FEntryDomain::CreateCacheKey(
+                        Item->GetName()
+                    );
+                    Self->Gs2->Cache->Delete(
+                        Gs2::Dictionary::Model::FEntry::TypeName,
+                        ParentKey,
+                        Key
+                    );
+                }
+            }
+        }
+        auto Domain = MakeShared<TArray<TSharedPtr<Gs2::Dictionary::Domain::Model::FEntryAccessTokenDomain>>>();
+        for (auto i=0; i<ResultModel->GetItems()->Num(); i++)
+        {
+            Domain->Add(
+                MakeShared<Gs2::Dictionary::Domain::Model::FEntryAccessTokenDomain>(
+                    Self->Gs2,
+                    Self->Service,
+                    Request->GetNamespaceName(),
+                    Self->AccessToken,
+                    (*ResultModel->GetItems())[i]->GetName()
+                )
+            );
+            const auto ParentKey = Gs2::Dictionary::Domain::Model::FUserDomain::CreateCacheParentKey(
+                Self->NamespaceName,
+                Self->UserId(),
+                "Entry"
+            );
+            const auto Key = Gs2::Dictionary::Domain::Model::FEntryDomain::CreateCacheKey(
+                (*ResultModel->GetItems())[i]->GetName()
+            );
+            Self->Gs2->Cache->Put(
+                Gs2::Dictionary::Model::FEntry::TypeName,
+                ParentKey,
+                Key,
+                (*ResultModel->GetItems())[i],
+                FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+            );
+        }
+        *Result = Domain;
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FUserAccessTokenDomain::FDeleteEntriesTask>> FUserAccessTokenDomain::DeleteEntries(
+        Request::FDeleteEntriesRequestPtr Request
+    ) {
+        return Gs2::Core::Util::New<FAsyncTask<FDeleteEntriesTask>>(this->AsShared(), Request);
+    }
+
     Gs2::Dictionary::Domain::Iterator::FDescribeEntriesIteratorPtr FUserAccessTokenDomain::Entries(
     ) const
     {

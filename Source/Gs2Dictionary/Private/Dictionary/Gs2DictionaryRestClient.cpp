@@ -289,6 +289,15 @@ namespace Gs2::Dictionary
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::Rest::FDeleteEntriesTask>> FGs2DictionaryRestClient::DeleteEntries(
+        const Request::FDeleteEntriesRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FDeleteEntriesTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::Rest::FDeleteEntriesByUserIdTask>> FGs2DictionaryRestClient::DeleteEntriesByUserId(
         const Request::FDeleteEntriesByUserIdRequestPtr Request) const
     {

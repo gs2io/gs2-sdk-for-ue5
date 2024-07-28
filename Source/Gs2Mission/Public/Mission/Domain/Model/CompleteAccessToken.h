@@ -158,6 +158,32 @@ namespace Gs2::Mission::Domain::Model
             Request::FGetCompleteRequestPtr Request
         );
 
+        class GS2MISSION_API FVerifyTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Mission::Domain::Model::FCompleteAccessTokenDomain>,
+            public TSharedFromThis<FVerifyTask>
+        {
+            const TSharedPtr<FCompleteAccessTokenDomain> Self;
+            const Request::FVerifyCompleteRequestPtr Request;
+        public:
+            explicit FVerifyTask(
+                const TSharedPtr<FCompleteAccessTokenDomain>& Self,
+                const Request::FVerifyCompleteRequestPtr Request
+            );
+
+            FVerifyTask(
+                const FVerifyTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Mission::Domain::Model::FCompleteAccessTokenDomain>> Result
+            ) override;
+        };
+        friend FVerifyTask;
+
+        TSharedPtr<FAsyncTask<FVerifyTask>> Verify(
+            Request::FVerifyCompleteRequestPtr Request
+        );
+
         static FString CreateCacheParentKey(
             TOptional<FString> NamespaceName,
             TOptional<FString> UserId,

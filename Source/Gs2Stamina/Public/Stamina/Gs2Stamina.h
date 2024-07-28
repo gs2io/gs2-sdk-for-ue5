@@ -320,6 +320,12 @@
 #include "Task/Rest/RaiseMaxValueByUserIdTask.h"
 #include "Task/WebSocket/RaiseMaxValueByUserIdTask.h"
 
+// DecreaseMaxValue
+#include "Request/DecreaseMaxValueRequest.h"
+#include "Result/DecreaseMaxValueResult.h"
+#include "Task/Rest/DecreaseMaxValueTask.h"
+#include "Task/WebSocket/DecreaseMaxValueTask.h"
+
 // DecreaseMaxValueByUserId
 #include "Request/DecreaseMaxValueByUserIdRequest.h"
 #include "Result/DecreaseMaxValueByUserIdResult.h"

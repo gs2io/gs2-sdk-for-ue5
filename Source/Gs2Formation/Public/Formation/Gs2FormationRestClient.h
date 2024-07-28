@@ -104,6 +104,8 @@
 #include "Task/Rest/SetMoldCapacityByUserIdTask.h"
 #include "Request/AddMoldCapacityByUserIdRequest.h"
 #include "Task/Rest/AddMoldCapacityByUserIdTask.h"
+#include "Request/SubMoldCapacityRequest.h"
+#include "Task/Rest/SubMoldCapacityTask.h"
 #include "Request/SubMoldCapacityByUserIdRequest.h"
 #include "Task/Rest/SubMoldCapacityByUserIdTask.h"
 #include "Request/DeleteMoldRequest.h"
@@ -348,6 +350,10 @@ namespace Gs2::Formation
 
         TSharedPtr<FAsyncTask<Task::Rest::FAddMoldCapacityByUserIdTask>> AddMoldCapacityByUserId(
             const Request::FAddMoldCapacityByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FSubMoldCapacityTask>> SubMoldCapacity(
+            const Request::FSubMoldCapacityRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::Rest::FSubMoldCapacityByUserIdTask>> SubMoldCapacityByUserId(

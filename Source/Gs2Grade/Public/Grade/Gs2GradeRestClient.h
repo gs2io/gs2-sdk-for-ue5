@@ -68,6 +68,8 @@
 #include "Task/Rest/GetStatusByUserIdTask.h"
 #include "Request/AddGradeByUserIdRequest.h"
 #include "Task/Rest/AddGradeByUserIdTask.h"
+#include "Request/SubGradeRequest.h"
+#include "Task/Rest/SubGradeTask.h"
 #include "Request/SubGradeByUserIdRequest.h"
 #include "Task/Rest/SubGradeByUserIdTask.h"
 #include "Request/SetGradeByUserIdRequest.h"
@@ -218,6 +220,10 @@ namespace Gs2::Grade
 
         TSharedPtr<FAsyncTask<Task::Rest::FAddGradeByUserIdTask>> AddGradeByUserId(
             const Request::FAddGradeByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FSubGradeTask>> SubGrade(
+            const Request::FSubGradeRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::Rest::FSubGradeByUserIdTask>> SubGradeByUserId(

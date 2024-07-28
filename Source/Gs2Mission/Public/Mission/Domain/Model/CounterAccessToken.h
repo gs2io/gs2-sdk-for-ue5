@@ -98,6 +98,32 @@ namespace Gs2::Mission::Domain::Model
             const FCounterAccessTokenDomain& From
         );
 
+        class GS2MISSION_API FDecreaseTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Mission::Domain::Model::FCounterAccessTokenDomain>,
+            public TSharedFromThis<FDecreaseTask>
+        {
+            const TSharedPtr<FCounterAccessTokenDomain> Self;
+            const Request::FDecreaseCounterRequestPtr Request;
+        public:
+            explicit FDecreaseTask(
+                const TSharedPtr<FCounterAccessTokenDomain>& Self,
+                const Request::FDecreaseCounterRequestPtr Request
+            );
+
+            FDecreaseTask(
+                const FDecreaseTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Mission::Domain::Model::FCounterAccessTokenDomain>> Result
+            ) override;
+        };
+        friend FDecreaseTask;
+
+        TSharedPtr<FAsyncTask<FDecreaseTask>> Decrease(
+            Request::FDecreaseCounterRequestPtr Request
+        );
+
         class GS2MISSION_API FGetTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Mission::Model::FCounter>,
             public TSharedFromThis<FGetTask>

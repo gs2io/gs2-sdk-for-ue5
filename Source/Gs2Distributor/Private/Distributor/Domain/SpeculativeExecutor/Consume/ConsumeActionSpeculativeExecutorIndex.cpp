@@ -23,6 +23,7 @@
 #endif
 
 #include "Distributor/Domain/SpeculativeExecutor/Consume/ConsumeActionSpeculativeExecutorIndex.h"
+#include "Distributor/Domain/SpeculativeExecutor/Consume/IfExpressionByUserIdSpeculativeExecutor.h"
 
 #include "Core/Domain/Gs2.h"
 
@@ -63,6 +64,28 @@ namespace Gs2::Distributor::Domain::SpeculativeExecutor
         auto NewConsumeAction = ConsumeAction->WithAction(ConsumeAction->GetAction()->Replace(TEXT("{region}"), ToCStr(Domain->RestSession->RegionName())));
         NewConsumeAction = ConsumeAction->WithAction(NewConsumeAction->GetAction()->Replace(TEXT("{ownerId}"), ToCStr(Domain->RestSession->OwnerId())));
         NewConsumeAction = ConsumeAction->WithAction(NewConsumeAction->GetAction()->Replace(TEXT("{userId}"), ToCStr(AccessToken->GetUserId().IsSet() ? *AccessToken->GetUserId() : "")));
+        if (FIfExpressionByUserIdSpeculativeExecutor::Action() == NewConsumeAction->GetAction()) {
+            TSharedPtr<FJsonObject> RequestModelJson;
+            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(NewConsumeAction->GetRequest().IsSet() ? *NewConsumeAction->GetRequest() : "{}");
+                !FJsonSerializer::Deserialize(JsonReader, RequestModelJson))
+            {
+                return nullptr;
+            }
+            auto Request = Request::FIfExpressionByUserIdRequest::FromJson(RequestModelJson);
+            Request = FIfExpressionByUserIdSpeculativeExecutor::Rate(Request, Rate);
+            auto Future = FIfExpressionByUserIdSpeculativeExecutor::Execute(
+                Domain,
+                Service,
+                AccessToken,
+                Request
+            );
+            Future->StartSynchronousTask();
+            if (Future->GetTask().IsError())
+            {
+                return Future->GetTask().Error();
+            }
+            *Result = Future->GetTask().Result();
+        }
         return nullptr;
     }
 

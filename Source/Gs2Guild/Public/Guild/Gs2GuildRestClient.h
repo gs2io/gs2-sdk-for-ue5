@@ -88,6 +88,8 @@
 #include "Task/Rest/DeleteGuildByGuildNameTask.h"
 #include "Request/IncreaseMaximumCurrentMaximumMemberCountByGuildNameRequest.h"
 #include "Task/Rest/IncreaseMaximumCurrentMaximumMemberCountByGuildNameTask.h"
+#include "Request/DecreaseMaximumCurrentMaximumMemberCountRequest.h"
+#include "Task/Rest/DecreaseMaximumCurrentMaximumMemberCountTask.h"
 #include "Request/DecreaseMaximumCurrentMaximumMemberCountByGuildNameRequest.h"
 #include "Task/Rest/DecreaseMaximumCurrentMaximumMemberCountByGuildNameTask.h"
 #include "Request/VerifyCurrentMaximumMemberCountRequest.h"
@@ -340,6 +342,10 @@ namespace Gs2::Guild
 
         TSharedPtr<FAsyncTask<Task::Rest::FIncreaseMaximumCurrentMaximumMemberCountByGuildNameTask>> IncreaseMaximumCurrentMaximumMemberCountByGuildName(
             const Request::FIncreaseMaximumCurrentMaximumMemberCountByGuildNameRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FDecreaseMaximumCurrentMaximumMemberCountTask>> DecreaseMaximumCurrentMaximumMemberCount(
+            const Request::FDecreaseMaximumCurrentMaximumMemberCountRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::Rest::FDecreaseMaximumCurrentMaximumMemberCountByGuildNameTask>> DecreaseMaximumCurrentMaximumMemberCountByGuildName(

@@ -95,6 +95,32 @@ namespace Gs2::Showcase::Domain::Model
             const FRandomShowcaseStatusAccessTokenDomain& From
         );
 
+        class GS2SHOWCASE_API FIncrementPurchaseCountTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Showcase::Domain::Model::FRandomDisplayItemAccessTokenDomain>,
+            public TSharedFromThis<FIncrementPurchaseCountTask>
+        {
+            const TSharedPtr<FRandomShowcaseStatusAccessTokenDomain> Self;
+            const Request::FIncrementPurchaseCountRequestPtr Request;
+        public:
+            explicit FIncrementPurchaseCountTask(
+                const TSharedPtr<FRandomShowcaseStatusAccessTokenDomain>& Self,
+                const Request::FIncrementPurchaseCountRequestPtr Request
+            );
+
+            FIncrementPurchaseCountTask(
+                const FIncrementPurchaseCountTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Showcase::Domain::Model::FRandomDisplayItemAccessTokenDomain>> Result
+            ) override;
+        };
+        friend FIncrementPurchaseCountTask;
+
+        TSharedPtr<FAsyncTask<FIncrementPurchaseCountTask>> IncrementPurchaseCount(
+            Request::FIncrementPurchaseCountRequestPtr Request
+        );
+
         static FString CreateCacheParentKey(
             TOptional<FString> NamespaceName,
             TOptional<FString> UserId,

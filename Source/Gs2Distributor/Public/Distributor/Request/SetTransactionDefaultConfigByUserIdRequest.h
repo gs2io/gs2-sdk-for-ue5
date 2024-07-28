@@ -29,6 +29,7 @@ namespace Gs2::Distributor::Request
         TOptional<FString> UserIdValue;
         TSharedPtr<TArray<TSharedPtr<Model::FConfig>>> ConfigValue;
         TOptional<FString> TimeOffsetTokenValue;
+        TOptional<FString> DuplicationAvoiderValue;
         
     public:
         
@@ -42,10 +43,12 @@ namespace Gs2::Distributor::Request
         TSharedPtr<FSetTransactionDefaultConfigByUserIdRequest> WithUserId(const TOptional<FString> UserId);
         TSharedPtr<FSetTransactionDefaultConfigByUserIdRequest> WithConfig(const TSharedPtr<TArray<TSharedPtr<Model::FConfig>>> Config);
         TSharedPtr<FSetTransactionDefaultConfigByUserIdRequest> WithTimeOffsetToken(const TOptional<FString> TimeOffsetToken);
+        TSharedPtr<FSetTransactionDefaultConfigByUserIdRequest> WithDuplicationAvoider(const TOptional<FString> DuplicationAvoider);
 
         TOptional<FString> GetContextStack() const;
         TOptional<FString> GetUserId() const;TSharedPtr<TArray<TSharedPtr<Model::FConfig>>> GetConfig() const;
         TOptional<FString> GetTimeOffsetToken() const;
+        TOptional<FString> GetDuplicationAvoider() const;
 
         static TSharedPtr<FSetTransactionDefaultConfigByUserIdRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;

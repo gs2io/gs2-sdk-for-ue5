@@ -84,10 +84,6 @@
 #include "Task/Rest/IncrementalExchangeByUserIdTask.h"
 #include "Request/IncrementalExchangeByStampSheetRequest.h"
 #include "Task/Rest/IncrementalExchangeByStampSheetTask.h"
-#include "Request/UnlockIncrementalExchangeByUserIdRequest.h"
-#include "Task/Rest/UnlockIncrementalExchangeByUserIdTask.h"
-#include "Request/UnlockIncrementalExchangeByStampSheetRequest.h"
-#include "Task/Rest/UnlockIncrementalExchangeByStampSheetTask.h"
 #include "Request/ExportMasterRequest.h"
 #include "Task/Rest/ExportMasterTask.h"
 #include "Request/GetCurrentRateMasterRequest.h"
@@ -266,14 +262,6 @@ namespace Gs2::Exchange
 
         TSharedPtr<FAsyncTask<Task::Rest::FIncrementalExchangeByStampSheetTask>> IncrementalExchangeByStampSheet(
             const Request::FIncrementalExchangeByStampSheetRequestPtr Request
-        ) const;
-
-        TSharedPtr<FAsyncTask<Task::Rest::FUnlockIncrementalExchangeByUserIdTask>> UnlockIncrementalExchangeByUserId(
-            const Request::FUnlockIncrementalExchangeByUserIdRequestPtr Request
-        ) const;
-
-        TSharedPtr<FAsyncTask<Task::Rest::FUnlockIncrementalExchangeByStampSheetTask>> UnlockIncrementalExchangeByStampSheet(
-            const Request::FUnlockIncrementalExchangeByStampSheetRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::Rest::FExportMasterTask>> ExportMaster(

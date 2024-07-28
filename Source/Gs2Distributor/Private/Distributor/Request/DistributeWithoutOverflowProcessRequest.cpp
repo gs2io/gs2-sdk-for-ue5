@@ -66,6 +66,14 @@ namespace Gs2::Distributor::Request
         return SharedThis(this);
     }
 
+    TSharedPtr<FDistributeWithoutOverflowProcessRequest> FDistributeWithoutOverflowProcessRequest::WithDuplicationAvoider(
+        const TOptional<FString> DuplicationAvoider
+    )
+    {
+        this->DuplicationAvoiderValue = DuplicationAvoider;
+        return SharedThis(this);
+    }
+
     TOptional<FString> FDistributeWithoutOverflowProcessRequest::GetContextStack() const
     {
         return ContextStackValue;
@@ -88,6 +96,11 @@ namespace Gs2::Distributor::Request
     TOptional<FString> FDistributeWithoutOverflowProcessRequest::GetTimeOffsetToken() const
     {
         return TimeOffsetTokenValue;
+    }
+
+    TOptional<FString> FDistributeWithoutOverflowProcessRequest::GetDuplicationAvoider() const
+    {
+        return DuplicationAvoiderValue;
     }
 
     TSharedPtr<FDistributeWithoutOverflowProcessRequest> FDistributeWithoutOverflowProcessRequest::FromJson(const TSharedPtr<FJsonObject> Data)
@@ -122,7 +135,8 @@ namespace Gs2::Distributor::Request
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
-              }() : TOptional<FString>());
+              }() : TOptional<FString>())
+          ->WithDuplicationAvoider(Data->HasField(ANSI_TO_TCHAR("duplicationAvoider")) ? TOptional<FString>(Data->GetStringField(ANSI_TO_TCHAR("duplicationAvoider"))) : TOptional<FString>());
     }
 
     TSharedPtr<FJsonObject> FDistributeWithoutOverflowProcessRequest::ToJson() const
@@ -143,6 +157,10 @@ namespace Gs2::Distributor::Request
         if (TimeOffsetTokenValue.IsSet())
         {
             JsonRootObject->SetStringField("timeOffsetToken", TimeOffsetTokenValue.GetValue());
+        }
+        if (DuplicationAvoiderValue.IsSet())
+        {
+            JsonRootObject->SetStringField("duplicationAvoider", DuplicationAvoiderValue.GetValue());
         }
         return JsonRootObject;
     }
