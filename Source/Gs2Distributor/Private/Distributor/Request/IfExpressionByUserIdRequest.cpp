@@ -24,6 +24,7 @@ namespace Gs2::Distributor::Request
         ConditionValue(nullptr),
         TrueActionsValue(nullptr),
         FalseActionsValue(nullptr),
+        MultiplyValueSpecifyingQuantityValue(TOptional<bool>()),
         TimeOffsetTokenValue(TOptional<FString>())
     {
     }
@@ -36,6 +37,7 @@ namespace Gs2::Distributor::Request
         ConditionValue(From.ConditionValue),
         TrueActionsValue(From.TrueActionsValue),
         FalseActionsValue(From.FalseActionsValue),
+        MultiplyValueSpecifyingQuantityValue(From.MultiplyValueSpecifyingQuantityValue),
         TimeOffsetTokenValue(From.TimeOffsetTokenValue)
     {
     }
@@ -85,6 +87,14 @@ namespace Gs2::Distributor::Request
     )
     {
         this->FalseActionsValue = FalseActions;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FIfExpressionByUserIdRequest> FIfExpressionByUserIdRequest::WithMultiplyValueSpecifyingQuantity(
+        const TOptional<bool> MultiplyValueSpecifyingQuantity
+    )
+    {
+        this->MultiplyValueSpecifyingQuantityValue = MultiplyValueSpecifyingQuantity;
         return SharedThis(this);
     }
 
@@ -144,6 +154,20 @@ namespace Gs2::Distributor::Request
             return nullptr;
         }
         return FalseActionsValue;
+    }
+
+    TOptional<bool> FIfExpressionByUserIdRequest::GetMultiplyValueSpecifyingQuantity() const
+    {
+        return MultiplyValueSpecifyingQuantityValue;
+    }
+
+    FString FIfExpressionByUserIdRequest::GetMultiplyValueSpecifyingQuantityString() const
+    {
+        if (!MultiplyValueSpecifyingQuantityValue.IsSet())
+        {
+            return FString("null");
+        }
+        return FString(MultiplyValueSpecifyingQuantityValue.GetValue() ? "true" : "false");
     }
 
     TOptional<FString> FIfExpressionByUserIdRequest::GetTimeOffsetToken() const
@@ -213,6 +237,15 @@ namespace Gs2::Distributor::Request
                   }
                   return v;
               }() : MakeShared<TArray<Model::FConsumeActionPtr>>())
+            ->WithMultiplyValueSpecifyingQuantity(Data->HasField(ANSI_TO_TCHAR("multiplyValueSpecifyingQuantity")) ? [Data]() -> TOptional<bool>
+              {
+                  bool v;
+                    if (Data->TryGetBoolField(ANSI_TO_TCHAR("multiplyValueSpecifyingQuantity"), v))
+                  {
+                        return TOptional(v);
+                  }
+                  return TOptional<bool>();
+              }() : TOptional<bool>())
             ->WithTimeOffsetToken(Data->HasField(ANSI_TO_TCHAR("timeOffsetToken")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
@@ -261,6 +294,10 @@ namespace Gs2::Distributor::Request
                 v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
             }
             JsonRootObject->SetArrayField("falseActions", v);
+        }
+        if (MultiplyValueSpecifyingQuantityValue.IsSet())
+        {
+            JsonRootObject->SetBoolField("multiplyValueSpecifyingQuantity", MultiplyValueSpecifyingQuantityValue.GetValue());
         }
         if (TimeOffsetTokenValue.IsSet())
         {

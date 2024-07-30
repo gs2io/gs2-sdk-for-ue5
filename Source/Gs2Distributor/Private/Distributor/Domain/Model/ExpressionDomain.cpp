@@ -22,8 +22,7 @@
 #pragma clang diagnostic ignored "-Wshadow" // declaration shadows a field of
 #endif
 
-#include "Distributor/Domain/Model/UserAccessToken.h"
-#include "Distributor/Domain/Model/User.h"
+#include "Distributor/Domain/Model/Expression.h"
 #include "Distributor/Domain/Model/Namespace.h"
 #include "Distributor/Domain/Model/DistributorModelMaster.h"
 #include "Distributor/Domain/Model/DistributorModel.h"
@@ -38,74 +37,54 @@
 #include "Core/Domain/Gs2.h"
 #include "Core/Domain/Transaction/JobQueueJobDomainFactory.h"
 #include "Core/Domain/Transaction/InternalTransactionDomainFactory.h"
-#include "Core/Domain/Transaction/ManualTransactionAccessTokenDomain.h"
+#include "Core/Domain/Transaction/ManualTransactionDomain.h"
 
 namespace Gs2::Distributor::Domain::Model
 {
 
-    FUserAccessTokenDomain::FUserAccessTokenDomain(
+    FExpressionDomain::FExpressionDomain(
         const Core::Domain::FGs2Ptr& Gs2,
         const Distributor::Domain::FGs2DistributorDomainPtr& Service,
-        const TOptional<FString> NamespaceName,
-        const Gs2::Auth::Model::FAccessTokenPtr& AccessToken
+        const TOptional<FString> NamespaceName
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
         Service(Service),
         Client(MakeShared<Gs2::Distributor::FGs2DistributorRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
-        AccessToken(AccessToken),
         ParentKey(Gs2::Distributor::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
             NamespaceName,
-            "User"
+            "Expression"
         ))
     {
     }
 
-    FUserAccessTokenDomain::FUserAccessTokenDomain(
-        const FUserAccessTokenDomain& From
+    FExpressionDomain::FExpressionDomain(
+        const FExpressionDomain& From
     ):
         Gs2(From.Gs2),
         Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
-        AccessToken(From.AccessToken),
         ParentKey(From.ParentKey)
     {
 
     }
 
-    TSharedPtr<Gs2::Distributor::Domain::Model::FStampSheetResultAccessTokenDomain> FUserAccessTokenDomain::StampSheetResult(
-        const FString TransactionId
-    )
-    {
-        return MakeShared<Gs2::Distributor::Domain::Model::FStampSheetResultAccessTokenDomain>(
-            Gs2,
-            Service,
-            NamespaceName,
-            AccessToken,
-            TransactionId == TEXT("") ? TOptional<FString>() : TOptional<FString>(TransactionId)
-        );
-    }
-
-    FString FUserAccessTokenDomain::CreateCacheParentKey(
+    FString FExpressionDomain::CreateCacheParentKey(
         TOptional<FString> NamespaceName,
-        TOptional<FString> UserId,
         FString ChildType
     )
     {
         return FString("") +
             (NamespaceName.IsSet() ? *NamespaceName : "null") + ":" +
-            (UserId.IsSet() ? *UserId : "null") + ":" +
             ChildType;
     }
 
-    FString FUserAccessTokenDomain::CreateCacheKey(
-        TOptional<FString> UserId
+    FString FExpressionDomain::CreateCacheKey(
     )
     {
-        return FString("") +
-            (UserId.IsSet() ? *UserId : "null");
+        return "Singleton";
     }
 }
 

@@ -49,64 +49,14 @@ namespace Gs2::Distributor::Domain::Model
     class FStampSheetResultDomain;
     class FStampSheetResultAccessTokenDomain;
 
-    class GS2DISTRIBUTOR_API FDistributeDomain:
-        public TSharedFromThis<FDistributeDomain>
+    class GS2DISTRIBUTOR_API FExpressionDomain:
+        public TSharedFromThis<FExpressionDomain>
     {
         const Core::Domain::FGs2Ptr Gs2;
         const Distributor::Domain::FGs2DistributorDomainPtr Service;
         const Gs2::Distributor::FGs2DistributorRestClientPtr Client;
 
         public:
-        TOptional<FString> InboxNamespaceId;
-        TOptional<FString> Result;
-        TOptional<FString> ContextStack;
-        TOptional<int32> StatusCode;
-        TSharedPtr<TArray<int32>> VerifyTaskResultCodes;
-        TSharedPtr<TArray<FString>> VerifyTaskResults;
-        TSharedPtr<TArray<int32>> TaskResultCodes;
-        TSharedPtr<TArray<FString>> TaskResults;
-        TOptional<int32> SheetResultCode;
-        TOptional<FString> SheetResult;
-        TOptional<FString> GetInboxNamespaceId() const
-        {
-            return InboxNamespaceId;
-        }
-        TOptional<FString> GetResult() const
-        {
-            return Result;
-        }
-        TOptional<FString> GetContextStack() const
-        {
-            return ContextStack;
-        }
-        TOptional<int32> GetStatusCode() const
-        {
-            return StatusCode;
-        }
-        TSharedPtr<TArray<int32>> GetVerifyTaskResultCodes() const
-        {
-            return VerifyTaskResultCodes;
-        }
-        TSharedPtr<TArray<FString>> GetVerifyTaskResults() const
-        {
-            return VerifyTaskResults;
-        }
-        TSharedPtr<TArray<int32>> GetTaskResultCodes() const
-        {
-            return TaskResultCodes;
-        }
-        TSharedPtr<TArray<FString>> GetTaskResults() const
-        {
-            return TaskResults;
-        }
-        TOptional<int32> GetSheetResultCode() const
-        {
-            return SheetResultCode;
-        }
-        TOptional<FString> GetSheetResult() const
-        {
-            return SheetResult;
-        }
         TOptional<FString> NamespaceName;
     private:
 
@@ -114,15 +64,15 @@ namespace Gs2::Distributor::Domain::Model
 
     public:
 
-        FDistributeDomain(
+        FExpressionDomain(
             const Core::Domain::FGs2Ptr& Gs2,
             const Distributor::Domain::FGs2DistributorDomainPtr& Service,
             const TOptional<FString> NamespaceName
             // ReSharper disable once CppMemberInitializersOrder
         );
 
-        FDistributeDomain(
-            const FDistributeDomain& From
+        FExpressionDomain(
+            const FExpressionDomain& From
         );
 
         static FString CreateCacheParentKey(
@@ -135,5 +85,5 @@ namespace Gs2::Distributor::Domain::Model
 
     };
 
-    typedef TSharedPtr<FDistributeDomain> FDistributeDomainPtr;
+    typedef TSharedPtr<FExpressionDomain> FExpressionDomainPtr;
 }

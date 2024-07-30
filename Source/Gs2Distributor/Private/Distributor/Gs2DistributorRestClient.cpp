@@ -307,28 +307,28 @@ namespace Gs2::Distributor
         );
     }
 
-    TSharedPtr<FAsyncTask<Task::Rest::FIfExpressionByUserByStampTaskTask>> FGs2DistributorRestClient::IfExpressionByUserByStampTask(
-        const Request::FIfExpressionByUserByStampTaskRequestPtr Request) const
+    TSharedPtr<FAsyncTask<Task::Rest::FIfExpressionByStampTaskTask>> FGs2DistributorRestClient::IfExpressionByStampTask(
+        const Request::FIfExpressionByStampTaskRequestPtr Request) const
     {
-        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FIfExpressionByUserByStampTaskTask>>(
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FIfExpressionByStampTaskTask>>(
             Session,
             Request
         );
     }
 
-    TSharedPtr<FAsyncTask<Task::Rest::FAndExpressionByUserByStampTaskTask>> FGs2DistributorRestClient::AndExpressionByUserByStampTask(
-        const Request::FAndExpressionByUserByStampTaskRequestPtr Request) const
+    TSharedPtr<FAsyncTask<Task::Rest::FAndExpressionByStampTaskTask>> FGs2DistributorRestClient::AndExpressionByStampTask(
+        const Request::FAndExpressionByStampTaskRequestPtr Request) const
     {
-        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FAndExpressionByUserByStampTaskTask>>(
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FAndExpressionByStampTaskTask>>(
             Session,
             Request
         );
     }
 
-    TSharedPtr<FAsyncTask<Task::Rest::FOrExpressionByUserByStampTaskTask>> FGs2DistributorRestClient::OrExpressionByUserByStampTask(
-        const Request::FOrExpressionByUserByStampTaskRequestPtr Request) const
+    TSharedPtr<FAsyncTask<Task::Rest::FOrExpressionByStampTaskTask>> FGs2DistributorRestClient::OrExpressionByStampTask(
+        const Request::FOrExpressionByStampTaskRequestPtr Request) const
     {
-        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FOrExpressionByUserByStampTaskTask>>(
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FOrExpressionByStampTaskTask>>(
             Session,
             Request
         );

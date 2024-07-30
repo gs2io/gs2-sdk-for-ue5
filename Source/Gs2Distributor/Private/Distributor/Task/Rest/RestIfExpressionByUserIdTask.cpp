@@ -110,6 +110,10 @@ namespace Gs2::Distributor::Task::Rest
                 }
                 JsonRootObject->SetArrayField("falseActions", v);
             }
+            if (this->Request->GetMultiplyValueSpecifyingQuantity().IsSet())
+            {
+                JsonRootObject->SetBoolField("multiplyValueSpecifyingQuantity", this->Request->GetMultiplyValueSpecifyingQuantity().GetValue());
+            }
             if (this->Request->GetContextStack().IsSet())
             {
                 JsonRootObject->SetStringField("contextStack", this->Request->GetContextStack().GetValue());

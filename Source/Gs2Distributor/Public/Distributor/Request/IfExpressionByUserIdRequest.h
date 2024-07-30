@@ -32,6 +32,7 @@ namespace Gs2::Distributor::Request
         TSharedPtr<Model::FVerifyAction> ConditionValue;
         TSharedPtr<TArray<TSharedPtr<Model::FConsumeAction>>> TrueActionsValue;
         TSharedPtr<TArray<TSharedPtr<Model::FConsumeAction>>> FalseActionsValue;
+        TOptional<bool> MultiplyValueSpecifyingQuantityValue;
         TOptional<FString> TimeOffsetTokenValue;
         TOptional<FString> DuplicationAvoiderValue;
         
@@ -49,6 +50,7 @@ namespace Gs2::Distributor::Request
         TSharedPtr<FIfExpressionByUserIdRequest> WithCondition(const TSharedPtr<Model::FVerifyAction> Condition);
         TSharedPtr<FIfExpressionByUserIdRequest> WithTrueActions(const TSharedPtr<TArray<TSharedPtr<Model::FConsumeAction>>> TrueActions);
         TSharedPtr<FIfExpressionByUserIdRequest> WithFalseActions(const TSharedPtr<TArray<TSharedPtr<Model::FConsumeAction>>> FalseActions);
+        TSharedPtr<FIfExpressionByUserIdRequest> WithMultiplyValueSpecifyingQuantity(const TOptional<bool> MultiplyValueSpecifyingQuantity);
         TSharedPtr<FIfExpressionByUserIdRequest> WithTimeOffsetToken(const TOptional<FString> TimeOffsetToken);
         TSharedPtr<FIfExpressionByUserIdRequest> WithDuplicationAvoider(const TOptional<FString> DuplicationAvoider);
 
@@ -56,6 +58,8 @@ namespace Gs2::Distributor::Request
         TOptional<FString> GetNamespaceName() const;
         TOptional<FString> GetUserId() const;
         TSharedPtr<Model::FVerifyAction> GetCondition() const;TSharedPtr<TArray<TSharedPtr<Model::FConsumeAction>>> GetTrueActions() const;TSharedPtr<TArray<TSharedPtr<Model::FConsumeAction>>> GetFalseActions() const;
+        TOptional<bool> GetMultiplyValueSpecifyingQuantity() const;
+        FString GetMultiplyValueSpecifyingQuantityString() const;
         TOptional<FString> GetTimeOffsetToken() const;
         TOptional<FString> GetDuplicationAvoider() const;
 

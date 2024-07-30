@@ -82,12 +82,12 @@
 #include "Task/Rest/AndExpressionByUserIdTask.h"
 #include "Request/OrExpressionByUserIdRequest.h"
 #include "Task/Rest/OrExpressionByUserIdTask.h"
-#include "Request/IfExpressionByUserByStampTaskRequest.h"
-#include "Task/Rest/IfExpressionByUserByStampTaskTask.h"
-#include "Request/AndExpressionByUserByStampTaskRequest.h"
-#include "Task/Rest/AndExpressionByUserByStampTaskTask.h"
-#include "Request/OrExpressionByUserByStampTaskRequest.h"
-#include "Task/Rest/OrExpressionByUserByStampTaskTask.h"
+#include "Request/IfExpressionByStampTaskRequest.h"
+#include "Task/Rest/IfExpressionByStampTaskTask.h"
+#include "Request/AndExpressionByStampTaskRequest.h"
+#include "Task/Rest/AndExpressionByStampTaskTask.h"
+#include "Request/OrExpressionByStampTaskRequest.h"
+#include "Task/Rest/OrExpressionByStampTaskTask.h"
 #include "Request/GetStampSheetResultRequest.h"
 #include "Task/Rest/GetStampSheetResultTask.h"
 #include "Request/GetStampSheetResultByUserIdRequest.h"
@@ -232,16 +232,16 @@ namespace Gs2::Distributor
             const Request::FOrExpressionByUserIdRequestPtr Request
         ) const;
 
-        TSharedPtr<FAsyncTask<Task::Rest::FIfExpressionByUserByStampTaskTask>> IfExpressionByUserByStampTask(
-            const Request::FIfExpressionByUserByStampTaskRequestPtr Request
+        TSharedPtr<FAsyncTask<Task::Rest::FIfExpressionByStampTaskTask>> IfExpressionByStampTask(
+            const Request::FIfExpressionByStampTaskRequestPtr Request
         ) const;
 
-        TSharedPtr<FAsyncTask<Task::Rest::FAndExpressionByUserByStampTaskTask>> AndExpressionByUserByStampTask(
-            const Request::FAndExpressionByUserByStampTaskRequestPtr Request
+        TSharedPtr<FAsyncTask<Task::Rest::FAndExpressionByStampTaskTask>> AndExpressionByStampTask(
+            const Request::FAndExpressionByStampTaskRequestPtr Request
         ) const;
 
-        TSharedPtr<FAsyncTask<Task::Rest::FOrExpressionByUserByStampTaskTask>> OrExpressionByUserByStampTask(
-            const Request::FOrExpressionByUserByStampTaskRequestPtr Request
+        TSharedPtr<FAsyncTask<Task::Rest::FOrExpressionByStampTaskTask>> OrExpressionByStampTask(
+            const Request::FOrExpressionByStampTaskRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::Rest::FGetStampSheetResultTask>> GetStampSheetResult(

@@ -51,12 +51,12 @@ namespace Gs2::Distributor::Task::WebSocket
             Session->Credential()->ClientId(),
             Session->Credential()->ProjectToken(),
             "distributor",
-            "distribute",
+            "expression",
             "orExpressionByUserId"
         );
         Session->Send(RequestPayload);
 
-        UE_LOG(Gs2Log, VeryVerbose, TEXT("[%s:%s:%s] %s"), TEXT("distributor"), TEXT("distribute"), TEXT("orExpressionByUserId"), ToCStr(RequestPayload->Payload()));
+        UE_LOG(Gs2Log, VeryVerbose, TEXT("[%s:%s:%s] %s"), TEXT("distributor"), TEXT("expression"), TEXT("orExpressionByUserId"), ToCStr(RequestPayload->Payload()));
 
         while (!Session->IsConnected() || !Session->IsComplete(RequestPayload->TaskId()))
         {

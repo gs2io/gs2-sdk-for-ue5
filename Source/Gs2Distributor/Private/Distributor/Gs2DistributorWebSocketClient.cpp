@@ -307,28 +307,28 @@ namespace Gs2::Distributor
         );
     }
 
-    TSharedPtr<FAsyncTask<Task::WebSocket::FIfExpressionByUserByStampTaskTask>> FGs2DistributorWebSocketClient::IfExpressionByUserByStampTask(
-        const Request::FIfExpressionByUserByStampTaskRequestPtr Request) const
+    TSharedPtr<FAsyncTask<Task::WebSocket::FIfExpressionByStampTaskTask>> FGs2DistributorWebSocketClient::IfExpressionByStampTask(
+        const Request::FIfExpressionByStampTaskRequestPtr Request) const
     {
-        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FIfExpressionByUserByStampTaskTask>>(
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FIfExpressionByStampTaskTask>>(
             Session,
             Request
         );
     }
 
-    TSharedPtr<FAsyncTask<Task::WebSocket::FAndExpressionByUserByStampTaskTask>> FGs2DistributorWebSocketClient::AndExpressionByUserByStampTask(
-        const Request::FAndExpressionByUserByStampTaskRequestPtr Request) const
+    TSharedPtr<FAsyncTask<Task::WebSocket::FAndExpressionByStampTaskTask>> FGs2DistributorWebSocketClient::AndExpressionByStampTask(
+        const Request::FAndExpressionByStampTaskRequestPtr Request) const
     {
-        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FAndExpressionByUserByStampTaskTask>>(
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FAndExpressionByStampTaskTask>>(
             Session,
             Request
         );
     }
 
-    TSharedPtr<FAsyncTask<Task::WebSocket::FOrExpressionByUserByStampTaskTask>> FGs2DistributorWebSocketClient::OrExpressionByUserByStampTask(
-        const Request::FOrExpressionByUserByStampTaskRequestPtr Request) const
+    TSharedPtr<FAsyncTask<Task::WebSocket::FOrExpressionByStampTaskTask>> FGs2DistributorWebSocketClient::OrExpressionByStampTask(
+        const Request::FOrExpressionByStampTaskRequestPtr Request) const
     {
-        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FOrExpressionByUserByStampTaskTask>>(
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FOrExpressionByStampTaskTask>>(
             Session,
             Request
         );

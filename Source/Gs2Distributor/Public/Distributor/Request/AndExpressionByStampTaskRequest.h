@@ -20,9 +20,9 @@
 
 namespace Gs2::Distributor::Request
 {
-    class FAndExpressionByUserByStampTaskRequest;
+    class FAndExpressionByStampTaskRequest;
 
-    class GS2DISTRIBUTOR_API FAndExpressionByUserByStampTaskRequest final : public TSharedFromThis<FAndExpressionByUserByStampTaskRequest>
+    class GS2DISTRIBUTOR_API FAndExpressionByStampTaskRequest final : public TSharedFromThis<FAndExpressionByStampTaskRequest>
     {
         TOptional<FString> ContextStackValue;
         TOptional<FString> StampTaskValue;
@@ -30,22 +30,22 @@ namespace Gs2::Distributor::Request
         
     public:
         
-        FAndExpressionByUserByStampTaskRequest();
-        FAndExpressionByUserByStampTaskRequest(
-            const FAndExpressionByUserByStampTaskRequest& From
+        FAndExpressionByStampTaskRequest();
+        FAndExpressionByStampTaskRequest(
+            const FAndExpressionByStampTaskRequest& From
         );
-        ~FAndExpressionByUserByStampTaskRequest() = default;
+        ~FAndExpressionByStampTaskRequest() = default;
 
-        TSharedPtr<FAndExpressionByUserByStampTaskRequest> WithContextStack(const TOptional<FString> ContextStack);
-        TSharedPtr<FAndExpressionByUserByStampTaskRequest> WithStampTask(const TOptional<FString> StampTask);
-        TSharedPtr<FAndExpressionByUserByStampTaskRequest> WithKeyId(const TOptional<FString> KeyId);
+        TSharedPtr<FAndExpressionByStampTaskRequest> WithContextStack(const TOptional<FString> ContextStack);
+        TSharedPtr<FAndExpressionByStampTaskRequest> WithStampTask(const TOptional<FString> StampTask);
+        TSharedPtr<FAndExpressionByStampTaskRequest> WithKeyId(const TOptional<FString> KeyId);
 
         TOptional<FString> GetContextStack() const;
         TOptional<FString> GetStampTask() const;
         TOptional<FString> GetKeyId() const;
 
-        static TSharedPtr<FAndExpressionByUserByStampTaskRequest> FromJson(const TSharedPtr<FJsonObject> Data);
+        static TSharedPtr<FAndExpressionByStampTaskRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;
     };
-    typedef TSharedPtr<FAndExpressionByUserByStampTaskRequest, ESPMode::ThreadSafe> FAndExpressionByUserByStampTaskRequestPtr;
+    typedef TSharedPtr<FAndExpressionByStampTaskRequest, ESPMode::ThreadSafe> FAndExpressionByStampTaskRequestPtr;
 }

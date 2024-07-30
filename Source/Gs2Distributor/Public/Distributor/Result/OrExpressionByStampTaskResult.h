@@ -20,24 +20,24 @@
 
 namespace Gs2::Distributor::Result
 {
-    class GS2DISTRIBUTOR_API FAndExpressionByUserByStampTaskResult final : public TSharedFromThis<FAndExpressionByUserByStampTaskResult>
+    class GS2DISTRIBUTOR_API FOrExpressionByStampTaskResult final : public TSharedFromThis<FOrExpressionByStampTaskResult>
     {
         TOptional<FString> NewContextStackValue;
         
     public:
         
-        FAndExpressionByUserByStampTaskResult();
-        FAndExpressionByUserByStampTaskResult(
-            const FAndExpressionByUserByStampTaskResult& From
+        FOrExpressionByStampTaskResult();
+        FOrExpressionByStampTaskResult(
+            const FOrExpressionByStampTaskResult& From
         );
-        ~FAndExpressionByUserByStampTaskResult() = default;
+        ~FOrExpressionByStampTaskResult() = default;
 
-        TSharedPtr<FAndExpressionByUserByStampTaskResult> WithNewContextStack(const TOptional<FString> NewContextStack);
+        TSharedPtr<FOrExpressionByStampTaskResult> WithNewContextStack(const TOptional<FString> NewContextStack);
 
         TOptional<FString> GetNewContextStack() const;
 
-        static TSharedPtr<FAndExpressionByUserByStampTaskResult> FromJson(const TSharedPtr<FJsonObject> Data);
+        static TSharedPtr<FOrExpressionByStampTaskResult> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;
     };
-    typedef TSharedPtr<FAndExpressionByUserByStampTaskResult, ESPMode::ThreadSafe> FAndExpressionByUserByStampTaskResultPtr;
+    typedef TSharedPtr<FOrExpressionByStampTaskResult, ESPMode::ThreadSafe> FOrExpressionByStampTaskResultPtr;
 }

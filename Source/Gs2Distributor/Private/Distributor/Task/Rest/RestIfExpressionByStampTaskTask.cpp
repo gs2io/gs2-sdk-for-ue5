@@ -14,7 +14,7 @@
  * permissions and limitations under the License.
  */
 
-#include "Distributor/Task/Rest/OrExpressionByUserByStampTaskTask.h"
+#include "Distributor/Task/Rest/IfExpressionByStampTaskTask.h"
 
 #include "HttpManager.h"
 #include "HttpModule.h"
@@ -25,21 +25,21 @@
 
 namespace Gs2::Distributor::Task::Rest
 {
-    FOrExpressionByUserByStampTaskTask::FOrExpressionByUserByStampTaskTask(
+    FIfExpressionByStampTaskTask::FIfExpressionByStampTaskTask(
         const Core::Net::Rest::FGs2RestSessionPtr Session,
-        const Request::FOrExpressionByUserByStampTaskRequestPtr Request
+        const Request::FIfExpressionByStampTaskRequestPtr Request
     ): Session(Session), Request(Request)
     {
     }
 
-    FOrExpressionByUserByStampTaskTask::FOrExpressionByUserByStampTaskTask(
-        const FOrExpressionByUserByStampTaskTask& From
+    FIfExpressionByStampTaskTask::FIfExpressionByStampTaskTask(
+        const FIfExpressionByStampTaskTask& From
     ): TGs2Future(From), Session(From.Session), Request(From.Request)
     {
     }
 
-    Core::Model::FGs2ErrorPtr FOrExpressionByUserByStampTaskTask::Action(
-        const TSharedPtr<Result::FOrExpressionByUserByStampTaskResultPtr> Result
+    Core::Model::FGs2ErrorPtr FIfExpressionByStampTaskTask::Action(
+        const TSharedPtr<Result::FIfExpressionByStampTaskResultPtr> Result
     )
     {
 
@@ -69,7 +69,7 @@ namespace Gs2::Distributor::Task::Rest
             auto Url = Core::FGs2Constant::EndpointHost
                 .Replace(TEXT("{service}"), TEXT("distributor"))
                 .Replace(TEXT("{region}"), *this->Session->RegionName())
-                .Append("/stamp/expression/or");
+                .Append("/stamp/expression/if");
 
             request->SetURL(Url);
 
@@ -122,7 +122,7 @@ namespace Gs2::Distributor::Task::Rest
                 FJsonSerializer::Deserialize(JsonReader, JsonRootObject))
             {
                 auto Details = TArray<TSharedPtr<Core::Model::FGs2ErrorDetail>>();
-                *Result = Result::FOrExpressionByUserByStampTaskResult::FromJson(JsonRootObject);
+                *Result = Result::FIfExpressionByStampTaskResult::FromJson(JsonRootObject);
                 return nullptr;
             }
             const auto Details = MakeShared<TArray<TSharedPtr<Core::Model::FGs2ErrorDetail>>>();

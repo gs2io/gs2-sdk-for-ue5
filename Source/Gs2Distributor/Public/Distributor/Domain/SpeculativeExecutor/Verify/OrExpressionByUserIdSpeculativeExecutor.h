@@ -11,7 +11,9 @@
  * or in the "license" file accompanying this file. This file is distributed
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
- * permissions and limitations under the License.
+* permissions and limitations under the License.
+ *
+ * deny overwrite
  */
 
 // ReSharper disable CppUnusedIncludeDirective
@@ -22,7 +24,6 @@
 #include "Core/Model/AcquireAction.h"
 #include "Core/Model/ConsumeAction.h"
 #include "Core/Model/VerifyAction.h"
-#include "Distributor/Model/Distribute.h"
 #include "Distributor/Request/OrExpressionByUserIdRequest.h"
 #include "Math/BigInt.h"
 
@@ -43,13 +44,6 @@ namespace Gs2::Distributor::Domain::SpeculativeExecutor
 
     class GS2DISTRIBUTOR_API FOrExpressionByUserIdSpeculativeExecutor
     {
-        static Gs2::Core::Model::FGs2ErrorPtr Transform(
-            const Gs2::Core::Domain::FGs2Ptr& Domain,
-            const Gs2::Auth::Model::FAccessTokenPtr& AccessToken,
-            const Gs2::Distributor::Request::FOrExpressionByUserIdRequestPtr& Request,
-            Gs2::Distributor::Model::FDistributePtr Item
-        );
-
     public:
 
         static FString Action();

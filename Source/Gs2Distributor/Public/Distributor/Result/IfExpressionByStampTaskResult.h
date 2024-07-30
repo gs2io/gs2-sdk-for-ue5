@@ -20,24 +20,24 @@
 
 namespace Gs2::Distributor::Result
 {
-    class GS2DISTRIBUTOR_API FIfExpressionByUserByStampTaskResult final : public TSharedFromThis<FIfExpressionByUserByStampTaskResult>
+    class GS2DISTRIBUTOR_API FIfExpressionByStampTaskResult final : public TSharedFromThis<FIfExpressionByStampTaskResult>
     {
         TOptional<FString> NewContextStackValue;
         
     public:
         
-        FIfExpressionByUserByStampTaskResult();
-        FIfExpressionByUserByStampTaskResult(
-            const FIfExpressionByUserByStampTaskResult& From
+        FIfExpressionByStampTaskResult();
+        FIfExpressionByStampTaskResult(
+            const FIfExpressionByStampTaskResult& From
         );
-        ~FIfExpressionByUserByStampTaskResult() = default;
+        ~FIfExpressionByStampTaskResult() = default;
 
-        TSharedPtr<FIfExpressionByUserByStampTaskResult> WithNewContextStack(const TOptional<FString> NewContextStack);
+        TSharedPtr<FIfExpressionByStampTaskResult> WithNewContextStack(const TOptional<FString> NewContextStack);
 
         TOptional<FString> GetNewContextStack() const;
 
-        static TSharedPtr<FIfExpressionByUserByStampTaskResult> FromJson(const TSharedPtr<FJsonObject> Data);
+        static TSharedPtr<FIfExpressionByStampTaskResult> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;
     };
-    typedef TSharedPtr<FIfExpressionByUserByStampTaskResult, ESPMode::ThreadSafe> FIfExpressionByUserByStampTaskResultPtr;
+    typedef TSharedPtr<FIfExpressionByStampTaskResult, ESPMode::ThreadSafe> FIfExpressionByStampTaskResultPtr;
 }

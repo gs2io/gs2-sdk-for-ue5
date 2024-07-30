@@ -14,25 +14,25 @@
  * permissions and limitations under the License.
  */
 
-#include "Distributor/Request/IfExpressionByUserByStampTaskRequest.h"
+#include "Distributor/Request/AndExpressionByStampTaskRequest.h"
 
 namespace Gs2::Distributor::Request
 {
-    FIfExpressionByUserByStampTaskRequest::FIfExpressionByUserByStampTaskRequest():
+    FAndExpressionByStampTaskRequest::FAndExpressionByStampTaskRequest():
         StampTaskValue(TOptional<FString>()),
         KeyIdValue(TOptional<FString>())
     {
     }
 
-    FIfExpressionByUserByStampTaskRequest::FIfExpressionByUserByStampTaskRequest(
-        const FIfExpressionByUserByStampTaskRequest& From
+    FAndExpressionByStampTaskRequest::FAndExpressionByStampTaskRequest(
+        const FAndExpressionByStampTaskRequest& From
     ):
         StampTaskValue(From.StampTaskValue),
         KeyIdValue(From.KeyIdValue)
     {
     }
 
-    TSharedPtr<FIfExpressionByUserByStampTaskRequest> FIfExpressionByUserByStampTaskRequest::WithContextStack(
+    TSharedPtr<FAndExpressionByStampTaskRequest> FAndExpressionByStampTaskRequest::WithContextStack(
         const TOptional<FString> ContextStack
     )
     {
@@ -40,7 +40,7 @@ namespace Gs2::Distributor::Request
         return SharedThis(this);
     }
 
-    TSharedPtr<FIfExpressionByUserByStampTaskRequest> FIfExpressionByUserByStampTaskRequest::WithStampTask(
+    TSharedPtr<FAndExpressionByStampTaskRequest> FAndExpressionByStampTaskRequest::WithStampTask(
         const TOptional<FString> StampTask
     )
     {
@@ -48,7 +48,7 @@ namespace Gs2::Distributor::Request
         return SharedThis(this);
     }
 
-    TSharedPtr<FIfExpressionByUserByStampTaskRequest> FIfExpressionByUserByStampTaskRequest::WithKeyId(
+    TSharedPtr<FAndExpressionByStampTaskRequest> FAndExpressionByStampTaskRequest::WithKeyId(
         const TOptional<FString> KeyId
     )
     {
@@ -56,27 +56,27 @@ namespace Gs2::Distributor::Request
         return SharedThis(this);
     }
 
-    TOptional<FString> FIfExpressionByUserByStampTaskRequest::GetContextStack() const
+    TOptional<FString> FAndExpressionByStampTaskRequest::GetContextStack() const
     {
         return ContextStackValue;
     }
 
-    TOptional<FString> FIfExpressionByUserByStampTaskRequest::GetStampTask() const
+    TOptional<FString> FAndExpressionByStampTaskRequest::GetStampTask() const
     {
         return StampTaskValue;
     }
 
-    TOptional<FString> FIfExpressionByUserByStampTaskRequest::GetKeyId() const
+    TOptional<FString> FAndExpressionByStampTaskRequest::GetKeyId() const
     {
         return KeyIdValue;
     }
 
-    TSharedPtr<FIfExpressionByUserByStampTaskRequest> FIfExpressionByUserByStampTaskRequest::FromJson(const TSharedPtr<FJsonObject> Data)
+    TSharedPtr<FAndExpressionByStampTaskRequest> FAndExpressionByStampTaskRequest::FromJson(const TSharedPtr<FJsonObject> Data)
     {
         if (Data == nullptr) {
             return nullptr;
         }
-        return MakeShared<FIfExpressionByUserByStampTaskRequest>()
+        return MakeShared<FAndExpressionByStampTaskRequest>()
             ->WithContextStack(Data->HasField(ANSI_TO_TCHAR("contextStack")) ? TOptional<FString>(Data->GetStringField(ANSI_TO_TCHAR("contextStack"))) : TOptional<FString>())
             ->WithStampTask(Data->HasField(ANSI_TO_TCHAR("stampTask")) ? [Data]() -> TOptional<FString>
               {
@@ -98,7 +98,7 @@ namespace Gs2::Distributor::Request
               }() : TOptional<FString>());
     }
 
-    TSharedPtr<FJsonObject> FIfExpressionByUserByStampTaskRequest::ToJson() const
+    TSharedPtr<FJsonObject> FAndExpressionByStampTaskRequest::ToJson() const
     {
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (ContextStackValue.IsSet())

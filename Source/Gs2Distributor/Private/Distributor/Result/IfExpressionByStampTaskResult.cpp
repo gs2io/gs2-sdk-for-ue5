@@ -14,23 +14,23 @@
  * permissions and limitations under the License.
  */
 
-#include "Distributor/Result/OrExpressionByUserByStampTaskResult.h"
+#include "Distributor/Result/IfExpressionByStampTaskResult.h"
 
 namespace Gs2::Distributor::Result
 {
-    FOrExpressionByUserByStampTaskResult::FOrExpressionByUserByStampTaskResult():
+    FIfExpressionByStampTaskResult::FIfExpressionByStampTaskResult():
         NewContextStackValue(TOptional<FString>())
     {
     }
 
-    FOrExpressionByUserByStampTaskResult::FOrExpressionByUserByStampTaskResult(
-        const FOrExpressionByUserByStampTaskResult& From
+    FIfExpressionByStampTaskResult::FIfExpressionByStampTaskResult(
+        const FIfExpressionByStampTaskResult& From
     ):
         NewContextStackValue(From.NewContextStackValue)
     {
     }
 
-    TSharedPtr<FOrExpressionByUserByStampTaskResult> FOrExpressionByUserByStampTaskResult::WithNewContextStack(
+    TSharedPtr<FIfExpressionByStampTaskResult> FIfExpressionByStampTaskResult::WithNewContextStack(
         const TOptional<FString> NewContextStack
     )
     {
@@ -38,17 +38,17 @@ namespace Gs2::Distributor::Result
         return SharedThis(this);
     }
 
-    TOptional<FString> FOrExpressionByUserByStampTaskResult::GetNewContextStack() const
+    TOptional<FString> FIfExpressionByStampTaskResult::GetNewContextStack() const
     {
         return NewContextStackValue;
     }
 
-    TSharedPtr<FOrExpressionByUserByStampTaskResult> FOrExpressionByUserByStampTaskResult::FromJson(const TSharedPtr<FJsonObject> Data)
+    TSharedPtr<FIfExpressionByStampTaskResult> FIfExpressionByStampTaskResult::FromJson(const TSharedPtr<FJsonObject> Data)
     {
         if (Data == nullptr) {
             return nullptr;
         }
-        return MakeShared<FOrExpressionByUserByStampTaskResult>()
+        return MakeShared<FIfExpressionByStampTaskResult>()
             ->WithNewContextStack(Data->HasField(ANSI_TO_TCHAR("newContextStack")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
@@ -60,7 +60,7 @@ namespace Gs2::Distributor::Result
                 }() : TOptional<FString>());
     }
 
-    TSharedPtr<FJsonObject> FOrExpressionByUserByStampTaskResult::ToJson() const
+    TSharedPtr<FJsonObject> FIfExpressionByStampTaskResult::ToJson() const
     {
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (NewContextStackValue.IsSet())

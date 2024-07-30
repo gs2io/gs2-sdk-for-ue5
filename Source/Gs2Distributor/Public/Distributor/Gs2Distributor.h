@@ -223,23 +223,23 @@
 #include "Task/Rest/OrExpressionByUserIdTask.h"
 #include "Task/WebSocket/OrExpressionByUserIdTask.h"
 
-// IfExpressionByUserByStampTask
-#include "Request/IfExpressionByUserByStampTaskRequest.h"
-#include "Result/IfExpressionByUserByStampTaskResult.h"
-#include "Task/Rest/IfExpressionByUserByStampTaskTask.h"
-#include "Task/WebSocket/IfExpressionByUserByStampTaskTask.h"
+// IfExpressionByStampTask
+#include "Request/IfExpressionByStampTaskRequest.h"
+#include "Result/IfExpressionByStampTaskResult.h"
+#include "Task/Rest/IfExpressionByStampTaskTask.h"
+#include "Task/WebSocket/IfExpressionByStampTaskTask.h"
 
-// AndExpressionByUserByStampTask
-#include "Request/AndExpressionByUserByStampTaskRequest.h"
-#include "Result/AndExpressionByUserByStampTaskResult.h"
-#include "Task/Rest/AndExpressionByUserByStampTaskTask.h"
-#include "Task/WebSocket/AndExpressionByUserByStampTaskTask.h"
+// AndExpressionByStampTask
+#include "Request/AndExpressionByStampTaskRequest.h"
+#include "Result/AndExpressionByStampTaskResult.h"
+#include "Task/Rest/AndExpressionByStampTaskTask.h"
+#include "Task/WebSocket/AndExpressionByStampTaskTask.h"
 
-// OrExpressionByUserByStampTask
-#include "Request/OrExpressionByUserByStampTaskRequest.h"
-#include "Result/OrExpressionByUserByStampTaskResult.h"
-#include "Task/Rest/OrExpressionByUserByStampTaskTask.h"
-#include "Task/WebSocket/OrExpressionByUserByStampTaskTask.h"
+// OrExpressionByStampTask
+#include "Request/OrExpressionByStampTaskRequest.h"
+#include "Result/OrExpressionByStampTaskResult.h"
+#include "Task/Rest/OrExpressionByStampTaskTask.h"
+#include "Task/WebSocket/OrExpressionByStampTaskTask.h"
 
 // GetStampSheetResult
 #include "Request/GetStampSheetResultRequest.h"

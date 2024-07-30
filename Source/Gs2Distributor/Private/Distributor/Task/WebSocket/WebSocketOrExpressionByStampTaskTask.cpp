@@ -14,7 +14,7 @@
  * permissions and limitations under the License.
  */
 
-#include "Distributor/Task/WebSocket/IfExpressionByUserByStampTaskTask.h"
+#include "Distributor/Task/WebSocket/OrExpressionByStampTaskTask.h"
 
 #include "Containers/BackgroundableTicker.h"
 #include "Core/Gs2Constant.h"
@@ -23,21 +23,21 @@
 
 namespace Gs2::Distributor::Task::WebSocket
 {
-    FIfExpressionByUserByStampTaskTask::FIfExpressionByUserByStampTaskTask(
+    FOrExpressionByStampTaskTask::FOrExpressionByStampTaskTask(
         const Core::Net::WebSocket::FGs2WebSocketSessionPtr Session,
-        const Request::FIfExpressionByUserByStampTaskRequestPtr Request
+        const Request::FOrExpressionByStampTaskRequestPtr Request
     ): Session(Session), Request(Request)
     {
     }
 
-    FIfExpressionByUserByStampTaskTask::FIfExpressionByUserByStampTaskTask(
-        const FIfExpressionByUserByStampTaskTask& From
+    FOrExpressionByStampTaskTask::FOrExpressionByStampTaskTask(
+        const FOrExpressionByStampTaskTask& From
     ): TGs2Future(From), Session(From.Session), Request(From.Request)
     {
     }
 
-    Core::Model::FGs2ErrorPtr FIfExpressionByUserByStampTaskTask::Action(
-        const TSharedPtr<Result::FIfExpressionByUserByStampTaskResultPtr> Result
+    Core::Model::FGs2ErrorPtr FOrExpressionByStampTaskTask::Action(
+        const TSharedPtr<Result::FOrExpressionByStampTaskResultPtr> Result
     )
     {
         if (this->Session->Credential()->ProjectToken().Len() == 0)
@@ -51,12 +51,12 @@ namespace Gs2::Distributor::Task::WebSocket
             Session->Credential()->ClientId(),
             Session->Credential()->ProjectToken(),
             "distributor",
-            "distribute",
-            "ifExpressionByUserByStampTask"
+            "expression",
+            "orExpressionByStampTask"
         );
         Session->Send(RequestPayload);
 
-        UE_LOG(Gs2Log, VeryVerbose, TEXT("[%s:%s:%s] %s"), TEXT("distributor"), TEXT("distribute"), TEXT("ifExpressionByUserByStampTask"), ToCStr(RequestPayload->Payload()));
+        UE_LOG(Gs2Log, VeryVerbose, TEXT("[%s:%s:%s] %s"), TEXT("distributor"), TEXT("expression"), TEXT("orExpressionByStampTask"), ToCStr(RequestPayload->Payload()));
 
         while (!Session->IsConnected() || !Session->IsComplete(RequestPayload->TaskId()))
         {
@@ -70,7 +70,7 @@ namespace Gs2::Distributor::Task::WebSocket
             return WebSocketResult->Error();
         }
 
-        *Result = Result::FIfExpressionByUserByStampTaskResult::FromJson(WebSocketResult->Body());
+        *Result = Result::FOrExpressionByStampTaskResult::FromJson(WebSocketResult->Body());
 
         return nullptr;
     }

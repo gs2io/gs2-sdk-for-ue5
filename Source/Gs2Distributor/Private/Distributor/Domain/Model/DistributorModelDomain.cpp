@@ -28,6 +28,7 @@
 #include "Distributor/Domain/Model/DistributorModel.h"
 #include "Distributor/Domain/Model/CurrentDistributorMaster.h"
 #include "Distributor/Domain/Model/Distribute.h"
+#include "Distributor/Domain/Model/Expression.h"
 #include "Distributor/Domain/Model/User.h"
 #include "Distributor/Domain/Model/UserAccessToken.h"
 #include "Distributor/Domain/Model/StampSheetResult.h"

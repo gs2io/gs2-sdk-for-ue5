@@ -44,6 +44,7 @@ namespace Gs2::Distributor::Domain::Model
     class FDistributorModelDomain;
     class FCurrentDistributorMasterDomain;
     class FDistributeDomain;
+    class FExpressionDomain;
     class FUserDomain;
     class FUserAccessTokenDomain;
     class FStampSheetResultDomain;

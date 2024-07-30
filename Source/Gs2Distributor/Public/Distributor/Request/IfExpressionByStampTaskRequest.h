@@ -20,9 +20,9 @@
 
 namespace Gs2::Distributor::Request
 {
-    class FIfExpressionByUserByStampTaskRequest;
+    class FIfExpressionByStampTaskRequest;
 
-    class GS2DISTRIBUTOR_API FIfExpressionByUserByStampTaskRequest final : public TSharedFromThis<FIfExpressionByUserByStampTaskRequest>
+    class GS2DISTRIBUTOR_API FIfExpressionByStampTaskRequest final : public TSharedFromThis<FIfExpressionByStampTaskRequest>
     {
         TOptional<FString> ContextStackValue;
         TOptional<FString> StampTaskValue;
@@ -30,22 +30,22 @@ namespace Gs2::Distributor::Request
         
     public:
         
-        FIfExpressionByUserByStampTaskRequest();
-        FIfExpressionByUserByStampTaskRequest(
-            const FIfExpressionByUserByStampTaskRequest& From
+        FIfExpressionByStampTaskRequest();
+        FIfExpressionByStampTaskRequest(
+            const FIfExpressionByStampTaskRequest& From
         );
-        ~FIfExpressionByUserByStampTaskRequest() = default;
+        ~FIfExpressionByStampTaskRequest() = default;
 
-        TSharedPtr<FIfExpressionByUserByStampTaskRequest> WithContextStack(const TOptional<FString> ContextStack);
-        TSharedPtr<FIfExpressionByUserByStampTaskRequest> WithStampTask(const TOptional<FString> StampTask);
-        TSharedPtr<FIfExpressionByUserByStampTaskRequest> WithKeyId(const TOptional<FString> KeyId);
+        TSharedPtr<FIfExpressionByStampTaskRequest> WithContextStack(const TOptional<FString> ContextStack);
+        TSharedPtr<FIfExpressionByStampTaskRequest> WithStampTask(const TOptional<FString> StampTask);
+        TSharedPtr<FIfExpressionByStampTaskRequest> WithKeyId(const TOptional<FString> KeyId);
 
         TOptional<FString> GetContextStack() const;
         TOptional<FString> GetStampTask() const;
         TOptional<FString> GetKeyId() const;
 
-        static TSharedPtr<FIfExpressionByUserByStampTaskRequest> FromJson(const TSharedPtr<FJsonObject> Data);
+        static TSharedPtr<FIfExpressionByStampTaskRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;
     };
-    typedef TSharedPtr<FIfExpressionByUserByStampTaskRequest, ESPMode::ThreadSafe> FIfExpressionByUserByStampTaskRequestPtr;
+    typedef TSharedPtr<FIfExpressionByStampTaskRequest, ESPMode::ThreadSafe> FIfExpressionByStampTaskRequestPtr;
 }
