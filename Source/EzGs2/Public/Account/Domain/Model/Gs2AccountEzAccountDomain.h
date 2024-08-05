@@ -44,6 +44,7 @@ namespace Gs2::UE5::Account::Domain::Model
         TSharedPtr<TArray<TSharedPtr<Gs2::UE5::Account::Model::FEzBanStatus>>> BanStatuses() const;
         TOptional<FString> Body() const;
         TOptional<FString> Signature() const;
+        TOptional<FString> AuthorizationUrl() const;
         TOptional<FString> NextPageToken() const;
         TOptional<FString> NamespaceName() const;
         TOptional<FString> UserId() const;

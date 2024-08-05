@@ -12,8 +12,6 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
- *
- * deny overwrite
  */
 
 // ReSharper disable CppUnusedIncludeDirective
@@ -22,13 +20,14 @@
 
 #include "Core/Domain/Gs2Core.h"
 #include "Auth/Gs2Auth.h"
-#include "Account/Domain/Gs2Account.h"
 #include "Account/Domain/Iterator/DescribeNamespacesIterator.h"
 #include "Account/Domain/Iterator/DescribeAccountsIterator.h"
 #include "Account/Domain/Iterator/DescribeTakeOversIterator.h"
 #include "Account/Domain/Iterator/DescribeTakeOversByUserIdIterator.h"
 #include "Account/Domain/Iterator/DescribePlatformIdsIterator.h"
 #include "Account/Domain/Iterator/DescribePlatformIdsByUserIdIterator.h"
+#include "Account/Domain/Iterator/DescribeTakeOverTypeModelsIterator.h"
+#include "Account/Domain/Iterator/DescribeTakeOverTypeModelMastersIterator.h"
 
 namespace Gs2::Core::Domain
 {
@@ -53,6 +52,9 @@ namespace Gs2::Account::Domain::Model
     class FPlatformIdAccessTokenDomain;
     class FDataOwnerDomain;
     class FDataOwnerAccessTokenDomain;
+    class FTakeOverTypeModelDomain;
+    class FTakeOverTypeModelMasterDomain;
+    class FCurrentModelMasterDomain;
 
     class GS2ACCOUNT_API FAccountDomain:
         public TSharedFromThis<FAccountDomain>
@@ -65,6 +67,7 @@ namespace Gs2::Account::Domain::Model
         TSharedPtr<TArray<TSharedPtr<Gs2::Account::Model::FBanStatus>>> BanStatuses;
         TOptional<FString> Body;
         TOptional<FString> Signature;
+        TOptional<FString> AuthorizationUrl;
         TOptional<FString> NextPageToken;
         TSharedPtr<TArray<TSharedPtr<Gs2::Account::Model::FBanStatus>>> GetBanStatuses() const
         {
@@ -77,6 +80,10 @@ namespace Gs2::Account::Domain::Model
         TOptional<FString> GetSignature() const
         {
             return Signature;
+        }
+        TOptional<FString> GetAuthorizationUrl() const
+        {
+            return AuthorizationUrl;
         }
         TOptional<FString> GetNextPageToken() const
         {
@@ -282,6 +289,58 @@ namespace Gs2::Account::Domain::Model
 
         TSharedPtr<FAsyncTask<FAuthenticationTask>> Authentication(
             Request::FAuthenticationRequestPtr Request
+        );
+
+        class GS2ACCOUNT_API FCreateTakeOverOpenIdConnectAndTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Account::Domain::Model::FTakeOverDomain>,
+            public TSharedFromThis<FCreateTakeOverOpenIdConnectAndTask>
+        {
+            const TSharedPtr<FAccountDomain> Self;
+            const Request::FCreateTakeOverOpenIdConnectAndByUserIdRequestPtr Request;
+        public:
+            explicit FCreateTakeOverOpenIdConnectAndTask(
+                const TSharedPtr<FAccountDomain>& Self,
+                const Request::FCreateTakeOverOpenIdConnectAndByUserIdRequestPtr Request
+            );
+
+            FCreateTakeOverOpenIdConnectAndTask(
+                const FCreateTakeOverOpenIdConnectAndTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Account::Domain::Model::FTakeOverDomain>> Result
+            ) override;
+        };
+        friend FCreateTakeOverOpenIdConnectAndTask;
+
+        TSharedPtr<FAsyncTask<FCreateTakeOverOpenIdConnectAndTask>> CreateTakeOverOpenIdConnectAnd(
+            Request::FCreateTakeOverOpenIdConnectAndByUserIdRequestPtr Request
+        );
+
+        class GS2ACCOUNT_API FDeleteTakeOverByUserIdentifierTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Account::Domain::Model::FTakeOverDomain>,
+            public TSharedFromThis<FDeleteTakeOverByUserIdentifierTask>
+        {
+            const TSharedPtr<FAccountDomain> Self;
+            const Request::FDeleteTakeOverByUserIdentifierRequestPtr Request;
+        public:
+            explicit FDeleteTakeOverByUserIdentifierTask(
+                const TSharedPtr<FAccountDomain>& Self,
+                const Request::FDeleteTakeOverByUserIdentifierRequestPtr Request
+            );
+
+            FDeleteTakeOverByUserIdentifierTask(
+                const FDeleteTakeOverByUserIdentifierTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Account::Domain::Model::FTakeOverDomain>> Result
+            ) override;
+        };
+        friend FDeleteTakeOverByUserIdentifierTask;
+
+        TSharedPtr<FAsyncTask<FDeleteTakeOverByUserIdentifierTask>> DeleteTakeOverByUserIdentifier(
+            Request::FDeleteTakeOverByUserIdentifierRequestPtr Request
         );
 
         class GS2ACCOUNT_API FDeleteTakeOverTask final :

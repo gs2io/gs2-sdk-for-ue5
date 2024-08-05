@@ -33,6 +33,9 @@
 #include "Account/Domain/Model/PlatformIdAccessToken.h"
 #include "Account/Domain/Model/DataOwner.h"
 #include "Account/Domain/Model/DataOwnerAccessToken.h"
+#include "Account/Domain/Model/TakeOverTypeModel.h"
+#include "Account/Domain/Model/TakeOverTypeModelMaster.h"
+#include "Account/Domain/Model/CurrentModelMaster.h"
 
 #include "Core/Domain/Gs2.h"
 #include "Core/Domain/Transaction/JobQueueJobDomainFactory.h"
@@ -143,6 +146,73 @@ namespace Gs2::Account::Domain::Model
         Request::FCreateTakeOverRequestPtr Request
     ) {
         return Gs2::Core::Util::New<FAsyncTask<FCreateTask>>(this->AsShared(), Request);
+    }
+
+    FTakeOverAccessTokenDomain::FCreateOpenIdConnectTask::FCreateOpenIdConnectTask(
+        const TSharedPtr<FTakeOverAccessTokenDomain>& Self,
+        const Request::FCreateTakeOverOpenIdConnectRequestPtr Request
+    ): Self(Self), Request(Request)
+    {
+
+    }
+
+    FTakeOverAccessTokenDomain::FCreateOpenIdConnectTask::FCreateOpenIdConnectTask(
+        const FCreateOpenIdConnectTask& From
+    ): TGs2Future(From), Self(From.Self), Request(From.Request)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FTakeOverAccessTokenDomain::FCreateOpenIdConnectTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::Account::Domain::Model::FTakeOverAccessTokenDomain>> Result
+    )
+    {
+        Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
+            ->WithNamespaceName(Self->NamespaceName)
+            ->WithAccessToken(Self->AccessToken->GetToken())
+            ->WithType(Self->Type);
+        const auto Future = Self->Client->CreateTakeOverOpenIdConnect(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto RequestModel = Request;
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
+        if (ResultModel != nullptr) {
+            
+            if (ResultModel->GetItem() != nullptr)
+            {
+                const auto ParentKey = Gs2::Account::Domain::Model::FAccountDomain::CreateCacheParentKey(
+                    Self->NamespaceName,
+                    Self->UserId(),
+                    "TakeOver"
+                );
+                const auto Key = Gs2::Account::Domain::Model::FTakeOverDomain::CreateCacheKey(
+                    ResultModel->GetItem()->GetType().IsSet() ? FString::FromInt(*ResultModel->GetItem()->GetType()) : TOptional<FString>()
+                );
+                Self->Gs2->Cache->Put(
+                    Gs2::Account::Model::FTakeOver::TypeName,
+                    ParentKey,
+                    Key,
+                    ResultModel->GetItem(),
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+            }
+        }
+        auto Domain = Self;
+
+        *Result = Domain;
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FTakeOverAccessTokenDomain::FCreateOpenIdConnectTask>> FTakeOverAccessTokenDomain::CreateOpenIdConnect(
+        Request::FCreateTakeOverOpenIdConnectRequestPtr Request
+    ) {
+        return Gs2::Core::Util::New<FAsyncTask<FCreateOpenIdConnectTask>>(this->AsShared(), Request);
     }
 
     FTakeOverAccessTokenDomain::FGetTask::FGetTask(

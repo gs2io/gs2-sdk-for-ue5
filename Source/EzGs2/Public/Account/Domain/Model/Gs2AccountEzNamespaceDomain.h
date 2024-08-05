@@ -101,6 +101,32 @@ namespace Gs2::UE5::Account::Domain::Model
             FString Password
         );
 
+        class EZGS2_API FDoTakeOverOpenIdConnectTask :
+            public Gs2::Core::Util::TGs2Future<Gs2::UE5::Account::Domain::Model::FEzAccountDomain>,
+            public TSharedFromThis<FDoTakeOverOpenIdConnectTask>
+        {
+            TSharedPtr<FEzNamespaceDomain> Self;
+            int32 Type;
+            FString IdToken;
+
+        public:
+            explicit FDoTakeOverOpenIdConnectTask(
+                TSharedPtr<FEzNamespaceDomain> Self,
+                int32 Type,
+                FString IdToken
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::UE5::Account::Domain::Model::FEzAccountDomain>> Result
+            ) override;
+        };
+        friend FDoTakeOverOpenIdConnectTask;
+
+        TSharedPtr<FAsyncTask<FDoTakeOverOpenIdConnectTask>> DoTakeOverOpenIdConnect(
+            int32 Type,
+            FString IdToken
+        );
+
         Gs2::UE5::Account::Domain::Model::FEzAccountDomainPtr Account(
             const FString UserId
         ) const;

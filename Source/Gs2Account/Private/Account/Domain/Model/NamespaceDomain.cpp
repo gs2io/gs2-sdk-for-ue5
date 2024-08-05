@@ -34,6 +34,9 @@
 #include "Account/Domain/Model/PlatformIdAccessToken.h"
 #include "Account/Domain/Model/DataOwner.h"
 #include "Account/Domain/Model/DataOwnerAccessToken.h"
+#include "Account/Domain/Model/TakeOverTypeModel.h"
+#include "Account/Domain/Model/TakeOverTypeModelMaster.h"
+#include "Account/Domain/Model/CurrentModelMaster.h"
 
 #include "Core/Domain/Gs2.h"
 #include "Core/Domain/Transaction/JobQueueJobDomainFactory.h"
@@ -363,71 +366,6 @@ namespace Gs2::Account::Domain::Model
         return Gs2::Core::Util::New<FAsyncTask<FCreateAccountTask>>(this->AsShared(), Request);
     }
 
-    FNamespaceDomain::FDeleteTakeOverByUserIdentifierTask::FDeleteTakeOverByUserIdentifierTask(
-        const TSharedPtr<FNamespaceDomain>& Self,
-        const Request::FDeleteTakeOverByUserIdentifierRequestPtr Request
-    ): Self(Self), Request(Request)
-    {
-
-    }
-
-    FNamespaceDomain::FDeleteTakeOverByUserIdentifierTask::FDeleteTakeOverByUserIdentifierTask(
-        const FDeleteTakeOverByUserIdentifierTask& From
-    ): TGs2Future(From), Self(From.Self), Request(From.Request)
-    {
-    }
-
-    Gs2::Core::Model::FGs2ErrorPtr FNamespaceDomain::FDeleteTakeOverByUserIdentifierTask::Action(
-        TSharedPtr<TSharedPtr<Gs2::Account::Domain::Model::FTakeOverDomain>> Result
-    )
-    {
-        Request
-            ->WithContextStack(Self->Gs2->DefaultContextStack)
-            ->WithNamespaceName(Self->NamespaceName);
-        const auto Future = Self->Client->DeleteTakeOverByUserIdentifier(
-            Request
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            return Future->GetTask().Error();
-        }
-        const auto RequestModel = Request;
-        const auto ResultModel = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::Account::Domain::Model::FAccountDomain::CreateCacheParentKey(
-                    Self->NamespaceName,
-                    ResultModel->GetItem()->GetUserId(),
-                    "TakeOver"
-                );
-                const auto Key = Gs2::Account::Domain::Model::FTakeOverDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetType().IsSet() ? FString::FromInt(*ResultModel->GetItem()->GetType()) : TOptional<FString>()
-                );
-                Self->Gs2->Cache->Delete(Gs2::Account::Model::FTakeOver::TypeName, ParentKey, Key);
-            }
-        }
-        auto Domain = MakeShared<Gs2::Account::Domain::Model::FTakeOverDomain>(
-            Self->Gs2,
-            Self->Service,
-            Request->GetNamespaceName(),
-            ResultModel->GetItem()->GetUserId(),
-            ResultModel->GetItem()->GetType()
-        );
-
-        *Result = Domain;
-        return nullptr;
-    }
-
-    TSharedPtr<FAsyncTask<FNamespaceDomain::FDeleteTakeOverByUserIdentifierTask>> FNamespaceDomain::DeleteTakeOverByUserIdentifier(
-        Request::FDeleteTakeOverByUserIdentifierRequestPtr Request
-    ) {
-        return Gs2::Core::Util::New<FAsyncTask<FDeleteTakeOverByUserIdentifierTask>>(this->AsShared(), Request);
-    }
-
     FNamespaceDomain::FDoTakeOverTask::FDoTakeOverTask(
         const TSharedPtr<FNamespaceDomain>& Self,
         const Request::FDoTakeOverRequestPtr Request
@@ -495,6 +433,75 @@ namespace Gs2::Account::Domain::Model
         Request::FDoTakeOverRequestPtr Request
     ) {
         return Gs2::Core::Util::New<FAsyncTask<FDoTakeOverTask>>(this->AsShared(), Request);
+    }
+
+    FNamespaceDomain::FDoTakeOverOpenIdConnectTask::FDoTakeOverOpenIdConnectTask(
+        const TSharedPtr<FNamespaceDomain>& Self,
+        const Request::FDoTakeOverOpenIdConnectRequestPtr Request
+    ): Self(Self), Request(Request)
+    {
+
+    }
+
+    FNamespaceDomain::FDoTakeOverOpenIdConnectTask::FDoTakeOverOpenIdConnectTask(
+        const FDoTakeOverOpenIdConnectTask& From
+    ): TGs2Future(From), Self(From.Self), Request(From.Request)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FNamespaceDomain::FDoTakeOverOpenIdConnectTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::Account::Domain::Model::FAccountDomain>> Result
+    )
+    {
+        Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
+            ->WithNamespaceName(Self->NamespaceName);
+        const auto Future = Self->Client->DoTakeOverOpenIdConnect(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto RequestModel = Request;
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
+        if (ResultModel != nullptr) {
+            
+            if (ResultModel->GetItem() != nullptr)
+            {
+                const auto ParentKey = Gs2::Account::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                    Self->NamespaceName,
+                    "Account"
+                );
+                const auto Key = Gs2::Account::Domain::Model::FAccountDomain::CreateCacheKey(
+                    ResultModel->GetItem()->GetUserId()
+                );
+                Self->Gs2->Cache->Put(
+                    Gs2::Account::Model::FAccount::TypeName,
+                    ParentKey,
+                    Key,
+                    ResultModel->GetItem(),
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+            }
+        }
+        auto Domain = MakeShared<Gs2::Account::Domain::Model::FAccountDomain>(
+            Self->Gs2,
+            Self->Service,
+            Request->GetNamespaceName(),
+            ResultModel->GetItem()->GetUserId()
+        );
+
+        *Result = Domain;
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FNamespaceDomain::FDoTakeOverOpenIdConnectTask>> FNamespaceDomain::DoTakeOverOpenIdConnect(
+        Request::FDoTakeOverOpenIdConnectRequestPtr Request
+    ) {
+        return Gs2::Core::Util::New<FAsyncTask<FDoTakeOverOpenIdConnectTask>>(this->AsShared(), Request);
     }
 
     FNamespaceDomain::FDeletePlatformIdByUserIdentifierTask::FDeletePlatformIdByUserIdentifierTask(
@@ -626,6 +633,116 @@ namespace Gs2::Account::Domain::Model
         );
     }
 
+    TSharedPtr<Gs2::Account::Domain::Model::FCurrentModelMasterDomain> FNamespaceDomain::CurrentModelMaster(
+    )
+    {
+        return MakeShared<Gs2::Account::Domain::Model::FCurrentModelMasterDomain>(
+            Gs2,
+            Service,
+            NamespaceName
+        );
+    }
+
+    Gs2::Account::Domain::Iterator::FDescribeTakeOverTypeModelsIteratorPtr FNamespaceDomain::TakeOverTypeModels(
+    ) const
+    {
+        return MakeShared<Gs2::Account::Domain::Iterator::FDescribeTakeOverTypeModelsIterator>(
+            Gs2,
+            Client,
+            NamespaceName
+        );
+    }
+
+    Gs2::Core::Domain::CallbackID FNamespaceDomain::SubscribeTakeOverTypeModels(
+    TFunction<void()> Callback
+    )
+    {
+        return Gs2->Cache->ListSubscribe(
+            Gs2::Account::Model::FTakeOverTypeModel::TypeName,
+            Gs2::Account::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                NamespaceName,
+                "TakeOverTypeModel"
+            ),
+            Callback
+        );
+    }
+
+    void FNamespaceDomain::UnsubscribeTakeOverTypeModels(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Gs2->Cache->ListUnsubscribe(
+            Gs2::Account::Model::FTakeOverTypeModel::TypeName,
+            Gs2::Account::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                NamespaceName,
+                "TakeOverTypeModel"
+            ),
+            CallbackID
+        );
+    }
+
+    TSharedPtr<Gs2::Account::Domain::Model::FTakeOverTypeModelDomain> FNamespaceDomain::TakeOverTypeModel(
+        const int32 Type
+    )
+    {
+        return MakeShared<Gs2::Account::Domain::Model::FTakeOverTypeModelDomain>(
+            Gs2,
+            Service,
+            NamespaceName,
+            Type
+        );
+    }
+
+    Gs2::Account::Domain::Iterator::FDescribeTakeOverTypeModelMastersIteratorPtr FNamespaceDomain::TakeOverTypeModelMasters(
+    ) const
+    {
+        return MakeShared<Gs2::Account::Domain::Iterator::FDescribeTakeOverTypeModelMastersIterator>(
+            Gs2,
+            Client,
+            NamespaceName
+        );
+    }
+
+    Gs2::Core::Domain::CallbackID FNamespaceDomain::SubscribeTakeOverTypeModelMasters(
+    TFunction<void()> Callback
+    )
+    {
+        return Gs2->Cache->ListSubscribe(
+            Gs2::Account::Model::FTakeOverTypeModelMaster::TypeName,
+            Gs2::Account::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                NamespaceName,
+                "TakeOverTypeModelMaster"
+            ),
+            Callback
+        );
+    }
+
+    void FNamespaceDomain::UnsubscribeTakeOverTypeModelMasters(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Gs2->Cache->ListUnsubscribe(
+            Gs2::Account::Model::FTakeOverTypeModelMaster::TypeName,
+            Gs2::Account::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                NamespaceName,
+                "TakeOverTypeModelMaster"
+            ),
+            CallbackID
+        );
+    }
+
+    TSharedPtr<Gs2::Account::Domain::Model::FTakeOverTypeModelMasterDomain> FNamespaceDomain::TakeOverTypeModelMaster(
+        const int32 Type
+    )
+    {
+        return MakeShared<Gs2::Account::Domain::Model::FTakeOverTypeModelMasterDomain>(
+            Gs2,
+            Service,
+            NamespaceName,
+            Type
+        );
+    }
+
     FString FNamespaceDomain::CreateCacheParentKey(
         TOptional<FString> NamespaceName,
         FString ChildType
@@ -747,6 +864,71 @@ namespace Gs2::Account::Domain::Model
             ),
             CallbackID
         );
+    }
+    
+    FNamespaceDomain::FDeleteTakeOverByUserIdentifierTask::FDeleteTakeOverByUserIdentifierTask(
+        const TSharedPtr<FNamespaceDomain>& Self,
+        const Request::FDeleteTakeOverByUserIdentifierRequestPtr Request
+    ): Self(Self), Request(Request)
+    {
+
+    }
+
+    FNamespaceDomain::FDeleteTakeOverByUserIdentifierTask::FDeleteTakeOverByUserIdentifierTask(
+        const FDeleteTakeOverByUserIdentifierTask& From
+    ): TGs2Future(From), Self(From.Self), Request(From.Request)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FNamespaceDomain::FDeleteTakeOverByUserIdentifierTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::Account::Domain::Model::FTakeOverDomain>> Result
+    )
+    {
+        Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
+            ->WithNamespaceName(Self->NamespaceName);
+        const auto Future = Self->Client->DeleteTakeOverByUserIdentifier(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto RequestModel = Request;
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
+        if (ResultModel != nullptr) {
+            
+            if (ResultModel->GetItem() != nullptr)
+            {
+                const auto ParentKey = Gs2::Account::Domain::Model::FAccountDomain::CreateCacheParentKey(
+                    Self->NamespaceName,
+                    ResultModel->GetItem()->GetUserId(),
+                    "TakeOver"
+                );
+                const auto Key = Gs2::Account::Domain::Model::FTakeOverDomain::CreateCacheKey(
+                    ResultModel->GetItem()->GetType().IsSet() ? FString::FromInt(*ResultModel->GetItem()->GetType()) : TOptional<FString>()
+                );
+                Self->Gs2->Cache->Delete(Gs2::Account::Model::FTakeOver::TypeName, ParentKey, Key);
+            }
+        }
+        auto Domain = MakeShared<Gs2::Account::Domain::Model::FTakeOverDomain>(
+            Self->Gs2,
+            Self->Service,
+            Request->GetNamespaceName(),
+            ResultModel->GetItem()->GetUserId(),
+            ResultModel->GetItem()->GetType()
+        );
+
+        *Result = Domain;
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FNamespaceDomain::FDeleteTakeOverByUserIdentifierTask>> FNamespaceDomain::DeleteTakeOverByUserIdentifier(
+        Request::FDeleteTakeOverByUserIdentifierRequestPtr Request
+    ) {
+        return Gs2::Core::Util::New<FAsyncTask<FDeleteTakeOverByUserIdentifierTask>>(this->AsShared(), Request);
     }
 }
 

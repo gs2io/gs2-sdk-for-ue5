@@ -70,6 +70,10 @@
 #include "Task/Rest/CreateTakeOverTask.h"
 #include "Request/CreateTakeOverByUserIdRequest.h"
 #include "Task/Rest/CreateTakeOverByUserIdTask.h"
+#include "Request/CreateTakeOverOpenIdConnectRequest.h"
+#include "Task/Rest/CreateTakeOverOpenIdConnectTask.h"
+#include "Request/CreateTakeOverOpenIdConnectAndByUserIdRequest.h"
+#include "Task/Rest/CreateTakeOverOpenIdConnectAndByUserIdTask.h"
 #include "Request/GetTakeOverRequest.h"
 #include "Task/Rest/GetTakeOverTask.h"
 #include "Request/GetTakeOverByUserIdRequest.h"
@@ -86,6 +90,10 @@
 #include "Task/Rest/DeleteTakeOverByUserIdTask.h"
 #include "Request/DoTakeOverRequest.h"
 #include "Task/Rest/DoTakeOverTask.h"
+#include "Request/DoTakeOverOpenIdConnectRequest.h"
+#include "Task/Rest/DoTakeOverOpenIdConnectTask.h"
+#include "Request/GetAuthorizationUrlRequest.h"
+#include "Task/Rest/GetAuthorizationUrlTask.h"
 #include "Request/DescribePlatformIdsRequest.h"
 #include "Task/Rest/DescribePlatformIdsTask.h"
 #include "Request/DescribePlatformIdsByUserIdRequest.h"
@@ -112,6 +120,28 @@
 #include "Task/Rest/GetDataOwnerByUserIdTask.h"
 #include "Request/DeleteDataOwnerByUserIdRequest.h"
 #include "Task/Rest/DeleteDataOwnerByUserIdTask.h"
+#include "Request/DescribeTakeOverTypeModelsRequest.h"
+#include "Task/Rest/DescribeTakeOverTypeModelsTask.h"
+#include "Request/GetTakeOverTypeModelRequest.h"
+#include "Task/Rest/GetTakeOverTypeModelTask.h"
+#include "Request/DescribeTakeOverTypeModelMastersRequest.h"
+#include "Task/Rest/DescribeTakeOverTypeModelMastersTask.h"
+#include "Request/CreateTakeOverTypeModelMasterRequest.h"
+#include "Task/Rest/CreateTakeOverTypeModelMasterTask.h"
+#include "Request/GetTakeOverTypeModelMasterRequest.h"
+#include "Task/Rest/GetTakeOverTypeModelMasterTask.h"
+#include "Request/UpdateTakeOverTypeModelMasterRequest.h"
+#include "Task/Rest/UpdateTakeOverTypeModelMasterTask.h"
+#include "Request/DeleteTakeOverTypeModelMasterRequest.h"
+#include "Task/Rest/DeleteTakeOverTypeModelMasterTask.h"
+#include "Request/ExportMasterRequest.h"
+#include "Task/Rest/ExportMasterTask.h"
+#include "Request/GetCurrentModelMasterRequest.h"
+#include "Task/Rest/GetCurrentModelMasterTask.h"
+#include "Request/UpdateCurrentModelMasterRequest.h"
+#include "Task/Rest/UpdateCurrentModelMasterTask.h"
+#include "Request/UpdateCurrentModelMasterFromGitHubRequest.h"
+#include "Task/Rest/UpdateCurrentModelMasterFromGitHubTask.h"
 
 namespace Gs2::Account
 {
@@ -228,6 +258,14 @@ namespace Gs2::Account
             const Request::FCreateTakeOverByUserIdRequestPtr Request
         ) const;
 
+        TSharedPtr<FAsyncTask<Task::Rest::FCreateTakeOverOpenIdConnectTask>> CreateTakeOverOpenIdConnect(
+            const Request::FCreateTakeOverOpenIdConnectRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FCreateTakeOverOpenIdConnectAndByUserIdTask>> CreateTakeOverOpenIdConnectAndByUserId(
+            const Request::FCreateTakeOverOpenIdConnectAndByUserIdRequestPtr Request
+        ) const;
+
         TSharedPtr<FAsyncTask<Task::Rest::FGetTakeOverTask>> GetTakeOver(
             const Request::FGetTakeOverRequestPtr Request
         ) const;
@@ -258,6 +296,14 @@ namespace Gs2::Account
 
         TSharedPtr<FAsyncTask<Task::Rest::FDoTakeOverTask>> DoTakeOver(
             const Request::FDoTakeOverRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FDoTakeOverOpenIdConnectTask>> DoTakeOverOpenIdConnect(
+            const Request::FDoTakeOverOpenIdConnectRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FGetAuthorizationUrlTask>> GetAuthorizationUrl(
+            const Request::FGetAuthorizationUrlRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::Rest::FDescribePlatformIdsTask>> DescribePlatformIds(
@@ -310,6 +356,50 @@ namespace Gs2::Account
 
         TSharedPtr<FAsyncTask<Task::Rest::FDeleteDataOwnerByUserIdTask>> DeleteDataOwnerByUserId(
             const Request::FDeleteDataOwnerByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FDescribeTakeOverTypeModelsTask>> DescribeTakeOverTypeModels(
+            const Request::FDescribeTakeOverTypeModelsRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FGetTakeOverTypeModelTask>> GetTakeOverTypeModel(
+            const Request::FGetTakeOverTypeModelRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FDescribeTakeOverTypeModelMastersTask>> DescribeTakeOverTypeModelMasters(
+            const Request::FDescribeTakeOverTypeModelMastersRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FCreateTakeOverTypeModelMasterTask>> CreateTakeOverTypeModelMaster(
+            const Request::FCreateTakeOverTypeModelMasterRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FGetTakeOverTypeModelMasterTask>> GetTakeOverTypeModelMaster(
+            const Request::FGetTakeOverTypeModelMasterRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FUpdateTakeOverTypeModelMasterTask>> UpdateTakeOverTypeModelMaster(
+            const Request::FUpdateTakeOverTypeModelMasterRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FDeleteTakeOverTypeModelMasterTask>> DeleteTakeOverTypeModelMaster(
+            const Request::FDeleteTakeOverTypeModelMasterRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FExportMasterTask>> ExportMaster(
+            const Request::FExportMasterRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FGetCurrentModelMasterTask>> GetCurrentModelMaster(
+            const Request::FGetCurrentModelMasterRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FUpdateCurrentModelMasterTask>> UpdateCurrentModelMaster(
+            const Request::FUpdateCurrentModelMasterRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FUpdateCurrentModelMasterFromGitHubTask>> UpdateCurrentModelMasterFromGitHub(
+            const Request::FUpdateCurrentModelMasterFromGitHubRequestPtr Request
         ) const;
     };
     typedef TSharedPtr<FGs2AccountRestClient, ESPMode::ThreadSafe> FGs2AccountRestClientPtr;

@@ -82,6 +82,7 @@ namespace Gs2::Core::Domain
         JobQueue(nullptr),
         Key(nullptr),
         Limit(nullptr),
+        Log(nullptr),
         LoginReward(nullptr),
         Lock(nullptr),
         Lottery(nullptr),
@@ -221,6 +222,14 @@ namespace Gs2::Core::Domain
                     {
                         Limit->HandleNotification(Method, *Message->GetPayload());
                     }
+                    if (Service == "Gs2Log")
+                    {
+                        Log->HandleNotification(Method, *Message->GetPayload());
+                    }
+                    if (Service == "Gs2Log")
+                    {
+                        Log->HandleNotification(Method, *Message->GetPayload());
+                    }
                     if (Service == "Gs2LoginReward")
                     {
                         LoginReward->HandleNotification(Method, *Message->GetPayload());
@@ -347,6 +356,7 @@ namespace Gs2::Core::Domain
         JobQueue(From.JobQueue),
         Key(From.Key),
         Limit(From.Limit),
+        Log(From.Log),
         LoginReward(From.LoginReward),
         Lock(From.Lock),
         Lottery(From.Lottery),
@@ -405,6 +415,7 @@ namespace Gs2::Core::Domain
         JobQueue = MakeShared<JobQueue::Domain::FGs2JobQueueDomain>(SharedThis(this));
         Key = MakeShared<Key::Domain::FGs2KeyDomain>(SharedThis(this));
         Limit = MakeShared<Limit::Domain::FGs2LimitDomain>(SharedThis(this));
+        Log = MakeShared<Log::Domain::FGs2LogDomain>(SharedThis(this));
         LoginReward = MakeShared<LoginReward::Domain::FGs2LoginRewardDomain>(SharedThis(this));
         Lock = MakeShared<Lock::Domain::FGs2LockDomain>(SharedThis(this));
         Lottery = MakeShared<Lottery::Domain::FGs2LotteryDomain>(SharedThis(this));
@@ -461,6 +472,7 @@ namespace Gs2::Core::Domain
         JobQueue->OnIssueTransaction.AddLambda(IssueTransactionAction);
         Key->OnIssueTransaction.AddLambda(IssueTransactionAction);
         Limit->OnIssueTransaction.AddLambda(IssueTransactionAction);
+        Log->OnIssueTransaction.AddLambda(IssueTransactionAction);
         LoginReward->OnIssueTransaction.AddLambda(IssueTransactionAction);
         Lock->OnIssueTransaction.AddLambda(IssueTransactionAction);
         Lottery->OnIssueTransaction.AddLambda(IssueTransactionAction);
@@ -599,6 +611,10 @@ namespace Gs2::Core::Domain
             if (Service == "Gs2Limit")
             {
                 Limit->UpdateCacheFromStampSheet(Method, Request, Result);
+            }
+            if (Service == "Gs2Log")
+            {
+                Log->UpdateCacheFromStampSheet(Method, Request, Result);
             }
             if (Service == "Gs2LoginReward")
             {
@@ -804,6 +820,10 @@ namespace Gs2::Core::Domain
             if (Service == "Gs2Limit")
             {
                 Limit->UpdateCacheFromStampTask(Method, Request, Result);
+            }
+            if (Service == "Gs2Log")
+            {
+                Log->UpdateCacheFromStampTask(Method, Request, Result);
             }
             if (Service == "Gs2LoginReward")
             {
@@ -1028,6 +1048,10 @@ namespace Gs2::Core::Domain
             if (Service == "limit")
             {
                 Limit->UpdateCacheFromJobResult(Method, Job, Result);
+            }
+            if (Service == "log")
+            {
+                Log->UpdateCacheFromJobResult(Method, Job, Result);
             }
             if (Service == "login_reward")
             {

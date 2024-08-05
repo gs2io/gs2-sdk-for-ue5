@@ -39,6 +39,8 @@ namespace Gs2::UE5::Account::Domain::Model
         Gs2::UE5::Util::FGs2ConnectionPtr ConnectionValue;
 
         public:
+        TOptional<FString> AuthorizationUrl() const;
+        TOptional<FString> Payload() const;
         TOptional<FString> NamespaceName() const;
         TOptional<FString> UserId() const;
         TOptional<int32> Type() const;
@@ -73,6 +75,29 @@ namespace Gs2::UE5::Account::Domain::Model
         TSharedPtr<FAsyncTask<FAddTakeOverSettingTask>> AddTakeOverSetting(
             FString UserIdentifier,
             FString Password
+        );
+
+        class EZGS2_API FAddTakeOverSettingOpenIdConnectTask :
+            public Gs2::Core::Util::TGs2Future<Gs2::UE5::Account::Domain::Model::FEzTakeOverGameSessionDomain>,
+            public TSharedFromThis<FAddTakeOverSettingOpenIdConnectTask>
+        {
+            TSharedPtr<FEzTakeOverGameSessionDomain> Self;
+            FString IdToken;
+
+        public:
+            explicit FAddTakeOverSettingOpenIdConnectTask(
+                TSharedPtr<FEzTakeOverGameSessionDomain> Self,
+                FString IdToken
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::UE5::Account::Domain::Model::FEzTakeOverGameSessionDomain>> Result
+            ) override;
+        };
+        friend FAddTakeOverSettingOpenIdConnectTask;
+
+        TSharedPtr<FAsyncTask<FAddTakeOverSettingOpenIdConnectTask>> AddTakeOverSettingOpenIdConnect(
+            FString IdToken
         );
 
         class EZGS2_API FUpdateTakeOverSettingTask :

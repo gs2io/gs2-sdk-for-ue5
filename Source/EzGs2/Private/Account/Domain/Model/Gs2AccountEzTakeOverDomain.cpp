@@ -19,6 +19,16 @@
 namespace Gs2::UE5::Account::Domain::Model
 {
 
+    TOptional<FString> FEzTakeOverDomain::AuthorizationUrl() const
+    {
+        return Domain->AuthorizationUrl;
+    }
+
+    TOptional<FString> FEzTakeOverDomain::Payload() const
+    {
+        return Domain->Payload;
+    }
+
     TOptional<FString> FEzTakeOverDomain::NamespaceName() const
     {
         return Domain->NamespaceName;

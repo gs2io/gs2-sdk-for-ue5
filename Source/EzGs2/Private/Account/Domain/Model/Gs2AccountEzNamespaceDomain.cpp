@@ -169,6 +169,63 @@ namespace Gs2::UE5::Account::Domain::Model
         );
     }
 
+    FEzNamespaceDomain::FDoTakeOverOpenIdConnectTask::FDoTakeOverOpenIdConnectTask(
+        TSharedPtr<FEzNamespaceDomain> Self,
+        int32 Type,
+        FString IdToken
+    ): Self(Self), Type(Type), IdToken(IdToken)
+    {
+
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FEzNamespaceDomain::FDoTakeOverOpenIdConnectTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::UE5::Account::Domain::Model::FEzAccountDomain>> Result
+    )
+    {
+        const auto Future = Self->ConnectionValue->Run(
+            [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
+                const auto Task = Self->Domain->DoTakeOverOpenIdConnect(
+                    MakeShared<Gs2::Account::Request::FDoTakeOverOpenIdConnectRequest>()
+                        ->WithType(Type)
+                        ->WithIdToken(IdToken)
+                );
+                Task->StartSynchronousTask();
+                if (Task->GetTask().IsError())
+                {
+                    Task->EnsureCompletion();
+                    return Task->GetTask().Error();
+                }
+                *Result = MakeShared<Gs2::UE5::Account::Domain::Model::FEzAccountDomain>(
+                    Task->GetTask().Result(),
+                    Self->ConnectionValue
+                );
+                Task->EnsureCompletion();
+                return nullptr;
+            },
+            nullptr
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            Future->EnsureCompletion();
+            return Future->GetTask().Error();
+        }
+        Future->EnsureCompletion();
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FEzNamespaceDomain::FDoTakeOverOpenIdConnectTask>> FEzNamespaceDomain::DoTakeOverOpenIdConnect(
+        int32 Type,
+        FString IdToken
+    )
+    {
+        return Gs2::Core::Util::New<FAsyncTask<FDoTakeOverOpenIdConnectTask>>(
+            this->AsShared(),
+            Type,
+            IdToken
+        );
+    }
+
     Gs2::UE5::Account::Domain::Model::FEzAccountDomainPtr FEzNamespaceDomain::Account(
         const FString UserId
     ) const

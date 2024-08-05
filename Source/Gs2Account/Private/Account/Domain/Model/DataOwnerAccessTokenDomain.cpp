@@ -33,6 +33,9 @@
 #include "Account/Domain/Model/PlatformIdAccessToken.h"
 #include "Account/Domain/Model/DataOwner.h"
 #include "Account/Domain/Model/DataOwnerAccessToken.h"
+#include "Account/Domain/Model/TakeOverTypeModel.h"
+#include "Account/Domain/Model/TakeOverTypeModelMaster.h"
+#include "Account/Domain/Model/CurrentModelMaster.h"
 
 #include "Core/Domain/Gs2.h"
 #include "Core/Domain/Transaction/JobQueueJobDomainFactory.h"

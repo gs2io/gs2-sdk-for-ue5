@@ -31,6 +31,9 @@
 #include "Account/Domain/Model/TakeOver.h"
 #include "Account/Domain/Model/PlatformId.h"
 #include "Account/Domain/Model/DataOwner.h"
+#include "Account/Domain/Model/TakeOverTypeModel.h"
+#include "Account/Domain/Model/TakeOverTypeModelMaster.h"
+#include "Account/Domain/Model/CurrentModelMaster.h"
 #include "Core/Domain/Gs2.h"
 
 namespace Gs2::Account::Domain

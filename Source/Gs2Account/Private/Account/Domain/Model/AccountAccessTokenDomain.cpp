@@ -35,6 +35,9 @@
 #include "Account/Domain/Model/PlatformIdAccessToken.h"
 #include "Account/Domain/Model/DataOwner.h"
 #include "Account/Domain/Model/DataOwnerAccessToken.h"
+#include "Account/Domain/Model/TakeOverTypeModel.h"
+#include "Account/Domain/Model/TakeOverTypeModelMaster.h"
+#include "Account/Domain/Model/CurrentModelMaster.h"
 
 #include "Core/Domain/Gs2.h"
 #include "Core/Domain/Transaction/JobQueueJobDomainFactory.h"
@@ -74,6 +77,60 @@ namespace Gs2::Account::Domain::Model
         ParentKey(From.ParentKey)
     {
 
+    }
+
+    FAccountAccessTokenDomain::FGetAuthorizationUrlTask::FGetAuthorizationUrlTask(
+        const TSharedPtr<FAccountAccessTokenDomain>& Self,
+        const Request::FGetAuthorizationUrlRequestPtr Request
+    ): Self(Self), Request(Request)
+    {
+
+    }
+
+    FAccountAccessTokenDomain::FGetAuthorizationUrlTask::FGetAuthorizationUrlTask(
+        const FGetAuthorizationUrlTask& From
+    ): TGs2Future(From), Self(From.Self), Request(From.Request)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FAccountAccessTokenDomain::FGetAuthorizationUrlTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::Account::Domain::Model::FAccountAccessTokenDomain>> Result
+    )
+    {
+        Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
+            ->WithNamespaceName(Self->NamespaceName)
+            ->WithAccessToken(Self->AccessToken->GetToken());
+        const auto Future = Self->Client->GetAuthorizationUrl(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto RequestModel = Request;
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
+        if (ResultModel != nullptr) {
+            
+        }
+        const auto Domain = Self;
+        if (ResultModel != nullptr)
+        {
+            if (ResultModel->GetAuthorizationUrl().IsSet())
+            {
+                Self->AuthorizationUrl = Domain->AuthorizationUrl = ResultModel->GetAuthorizationUrl();
+            }
+        }
+        *Result = Domain;
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FAccountAccessTokenDomain::FGetAuthorizationUrlTask>> FAccountAccessTokenDomain::GetAuthorizationUrl(
+        Request::FGetAuthorizationUrlRequestPtr Request
+    ) {
+        return Gs2::Core::Util::New<FAsyncTask<FGetAuthorizationUrlTask>>(this->AsShared(), Request);
     }
 
     Gs2::Account::Domain::Iterator::FDescribeTakeOversIteratorPtr FAccountAccessTokenDomain::TakeOvers(

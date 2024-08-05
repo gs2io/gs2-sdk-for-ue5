@@ -26,6 +26,8 @@
 #include "Account/Domain/Iterator/DescribeTakeOversByUserIdIterator.h"
 #include "Account/Domain/Iterator/DescribePlatformIdsIterator.h"
 #include "Account/Domain/Iterator/DescribePlatformIdsByUserIdIterator.h"
+#include "Account/Domain/Iterator/DescribeTakeOverTypeModelsIterator.h"
+#include "Account/Domain/Iterator/DescribeTakeOverTypeModelMastersIterator.h"
 
 namespace Gs2::Core::Domain
 {
@@ -50,6 +52,9 @@ namespace Gs2::Account::Domain::Model
     class FPlatformIdAccessTokenDomain;
     class FDataOwnerDomain;
     class FDataOwnerAccessTokenDomain;
+    class FTakeOverTypeModelDomain;
+    class FTakeOverTypeModelMasterDomain;
+    class FCurrentModelMasterDomain;
 
     class GS2ACCOUNT_API FTakeOverDomain:
         public TSharedFromThis<FTakeOverDomain>
@@ -59,6 +64,16 @@ namespace Gs2::Account::Domain::Model
         const Gs2::Account::FGs2AccountRestClientPtr Client;
 
         public:
+        TOptional<FString> AuthorizationUrl;
+        TOptional<FString> Payload;
+        TOptional<FString> GetAuthorizationUrl() const
+        {
+            return AuthorizationUrl;
+        }
+        TOptional<FString> GetPayload() const
+        {
+            return Payload;
+        }
         TOptional<FString> NamespaceName;
         TOptional<FString> UserId;
         TOptional<int32> Type;

@@ -19,6 +19,16 @@
 namespace Gs2::UE5::Account::Domain::Model
 {
 
+    TOptional<FString> FEzTakeOverGameSessionDomain::AuthorizationUrl() const
+    {
+        return Domain->AuthorizationUrl;
+    }
+
+    TOptional<FString> FEzTakeOverGameSessionDomain::Payload() const
+    {
+        return Domain->Payload;
+    }
+
     TOptional<FString> FEzTakeOverGameSessionDomain::NamespaceName() const
     {
         return Domain->NamespaceName;
@@ -101,6 +111,60 @@ namespace Gs2::UE5::Account::Domain::Model
             this->AsShared(),
             UserIdentifier,
             Password
+        );
+    }
+
+    FEzTakeOverGameSessionDomain::FAddTakeOverSettingOpenIdConnectTask::FAddTakeOverSettingOpenIdConnectTask(
+        TSharedPtr<FEzTakeOverGameSessionDomain> Self,
+        FString IdToken
+    ): Self(Self), IdToken(IdToken)
+    {
+
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FEzTakeOverGameSessionDomain::FAddTakeOverSettingOpenIdConnectTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::UE5::Account::Domain::Model::FEzTakeOverGameSessionDomain>> Result
+    )
+    {
+        const auto Future = Self->ConnectionValue->Run(
+            [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
+                const auto Task = Self->Domain->CreateOpenIdConnect(
+                    MakeShared<Gs2::Account::Request::FCreateTakeOverOpenIdConnectRequest>()
+                        ->WithIdToken(IdToken)
+                );
+                Task->StartSynchronousTask();
+                if (Task->GetTask().IsError())
+                {
+                    Task->EnsureCompletion();
+                    return Task->GetTask().Error();
+                }
+                *Result = MakeShared<Gs2::UE5::Account::Domain::Model::FEzTakeOverGameSessionDomain>(
+                    Task->GetTask().Result(),
+                    Self->GameSession,
+                    Self->ConnectionValue
+                );
+                Task->EnsureCompletion();
+                return nullptr;
+            },
+            nullptr
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            Future->EnsureCompletion();
+            return Future->GetTask().Error();
+        }
+        Future->EnsureCompletion();
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FEzTakeOverGameSessionDomain::FAddTakeOverSettingOpenIdConnectTask>> FEzTakeOverGameSessionDomain::AddTakeOverSettingOpenIdConnect(
+        FString IdToken
+    )
+    {
+        return Gs2::Core::Util::New<FAsyncTask<FAddTakeOverSettingOpenIdConnectTask>>(
+            this->AsShared(),
+            IdToken
         );
     }
 

@@ -27,6 +27,8 @@
 #include "Account/Domain/Iterator/DescribeTakeOversByUserIdIterator.h"
 #include "Account/Domain/Iterator/DescribePlatformIdsIterator.h"
 #include "Account/Domain/Iterator/DescribePlatformIdsByUserIdIterator.h"
+#include "Account/Domain/Iterator/DescribeTakeOverTypeModelsIterator.h"
+#include "Account/Domain/Iterator/DescribeTakeOverTypeModelMastersIterator.h"
 
 namespace Gs2::Core::Domain
 {
@@ -51,6 +53,9 @@ namespace Gs2::Account::Domain::Model
     class FPlatformIdAccessTokenDomain;
     class FDataOwnerDomain;
     class FDataOwnerAccessTokenDomain;
+    class FTakeOverTypeModelDomain;
+    class FTakeOverTypeModelMasterDomain;
+    class FCurrentModelMasterDomain;
 
     class GS2ACCOUNT_API FDataOwnerAccessTokenDomain:
         public TSharedFromThis<FDataOwnerAccessTokenDomain>

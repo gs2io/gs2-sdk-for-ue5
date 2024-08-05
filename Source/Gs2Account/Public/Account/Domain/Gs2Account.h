@@ -33,6 +33,9 @@
 #include "Account/Domain/Model/PlatformIdAccessToken.h"
 #include "Account/Domain/Model/DataOwner.h"
 #include "Account/Domain/Model/DataOwnerAccessToken.h"
+#include "Account/Domain/Model/TakeOverTypeModel.h"
+#include "Account/Domain/Model/TakeOverTypeModelMaster.h"
+#include "Account/Domain/Model/CurrentModelMaster.h"
 
 // Iterator
 #include "Account/Domain/Iterator/DescribeNamespacesIterator.h"
@@ -41,6 +44,8 @@
 #include "Account/Domain/Iterator/DescribeTakeOversByUserIdIterator.h"
 #include "Account/Domain/Iterator/DescribePlatformIdsIterator.h"
 #include "Account/Domain/Iterator/DescribePlatformIdsByUserIdIterator.h"
+#include "Account/Domain/Iterator/DescribeTakeOverTypeModelsIterator.h"
+#include "Account/Domain/Iterator/DescribeTakeOverTypeModelMastersIterator.h"
 
 // Notification
 

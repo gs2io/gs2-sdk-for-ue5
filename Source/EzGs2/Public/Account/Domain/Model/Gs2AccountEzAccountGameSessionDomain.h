@@ -45,6 +45,7 @@ namespace Gs2::UE5::Account::Domain::Model
         TSharedPtr<TArray<TSharedPtr<Gs2::UE5::Account::Model::FEzBanStatus>>> BanStatuses() const;
         TOptional<FString> Body() const;
         TOptional<FString> Signature() const;
+        TOptional<FString> AuthorizationUrl() const;
         TOptional<FString> NextPageToken() const;
         TOptional<FString> NamespaceName() const;
         TOptional<FString> UserId() const;
@@ -53,6 +54,29 @@ namespace Gs2::UE5::Account::Domain::Model
             Gs2::Account::Domain::Model::FAccountAccessTokenDomainPtr Domain,
             Gs2::UE5::Util::IGameSessionPtr GameSession,
             Gs2::UE5::Util::FGs2ConnectionPtr Connection
+        );
+
+        class EZGS2_API FGetAuthorizationUrlTask :
+            public Gs2::Core::Util::TGs2Future<Gs2::UE5::Account::Domain::Model::FEzAccountGameSessionDomain>,
+            public TSharedFromThis<FGetAuthorizationUrlTask>
+        {
+            TSharedPtr<FEzAccountGameSessionDomain> Self;
+            int32 Type;
+
+        public:
+            explicit FGetAuthorizationUrlTask(
+                TSharedPtr<FEzAccountGameSessionDomain> Self,
+                int32 Type
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::UE5::Account::Domain::Model::FEzAccountGameSessionDomain>> Result
+            ) override;
+        };
+        friend FGetAuthorizationUrlTask;
+
+        TSharedPtr<FAsyncTask<FGetAuthorizationUrlTask>> GetAuthorizationUrl(
+            int32 Type
         );
 
         Gs2::UE5::Account::Domain::Iterator::FEzDescribeTakeOversIteratorPtr TakeOvers(

@@ -44,6 +44,11 @@ namespace Gs2::UE5::Account::Domain::Model
         return Domain->Signature;
     }
 
+    TOptional<FString> FEzAccountDomain::AuthorizationUrl() const
+    {
+        return Domain->AuthorizationUrl;
+    }
+
     TOptional<FString> FEzAccountDomain::NextPageToken() const
     {
         return Domain->NextPageToken;

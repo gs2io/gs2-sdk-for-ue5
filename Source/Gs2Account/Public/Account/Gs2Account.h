@@ -22,8 +22,13 @@
 #include "Model/TakeOver.h"
 #include "Model/PlatformId.h"
 #include "Model/DataOwner.h"
+#include "Model/TakeOverTypeModel.h"
+#include "Model/TakeOverTypeModelMaster.h"
+#include "Model/CurrentModelMaster.h"
+#include "Model/OpenIdConnectSetting.h"
 #include "Model/PlatformUser.h"
 #include "Model/BanStatus.h"
+#include "Model/GitHubCheckoutSetting.h"
 #include "Model/ScriptSetting.h"
 #include "Model/LogSetting.h"
 
@@ -183,6 +188,18 @@
 #include "Task/Rest/CreateTakeOverByUserIdTask.h"
 #include "Task/WebSocket/CreateTakeOverByUserIdTask.h"
 
+// CreateTakeOverOpenIdConnect
+#include "Request/CreateTakeOverOpenIdConnectRequest.h"
+#include "Result/CreateTakeOverOpenIdConnectResult.h"
+#include "Task/Rest/CreateTakeOverOpenIdConnectTask.h"
+#include "Task/WebSocket/CreateTakeOverOpenIdConnectTask.h"
+
+// CreateTakeOverOpenIdConnectAndByUserId
+#include "Request/CreateTakeOverOpenIdConnectAndByUserIdRequest.h"
+#include "Result/CreateTakeOverOpenIdConnectAndByUserIdResult.h"
+#include "Task/Rest/CreateTakeOverOpenIdConnectAndByUserIdTask.h"
+#include "Task/WebSocket/CreateTakeOverOpenIdConnectAndByUserIdTask.h"
+
 // GetTakeOver
 #include "Request/GetTakeOverRequest.h"
 #include "Result/GetTakeOverResult.h"
@@ -230,6 +247,18 @@
 #include "Result/DoTakeOverResult.h"
 #include "Task/Rest/DoTakeOverTask.h"
 #include "Task/WebSocket/DoTakeOverTask.h"
+
+// DoTakeOverOpenIdConnect
+#include "Request/DoTakeOverOpenIdConnectRequest.h"
+#include "Result/DoTakeOverOpenIdConnectResult.h"
+#include "Task/Rest/DoTakeOverOpenIdConnectTask.h"
+#include "Task/WebSocket/DoTakeOverOpenIdConnectTask.h"
+
+// GetAuthorizationUrl
+#include "Request/GetAuthorizationUrlRequest.h"
+#include "Result/GetAuthorizationUrlResult.h"
+#include "Task/Rest/GetAuthorizationUrlTask.h"
+#include "Task/WebSocket/GetAuthorizationUrlTask.h"
 
 // DescribePlatformIds
 #include "Request/DescribePlatformIdsRequest.h"
@@ -308,6 +337,72 @@
 #include "Result/DeleteDataOwnerByUserIdResult.h"
 #include "Task/Rest/DeleteDataOwnerByUserIdTask.h"
 #include "Task/WebSocket/DeleteDataOwnerByUserIdTask.h"
+
+// DescribeTakeOverTypeModels
+#include "Request/DescribeTakeOverTypeModelsRequest.h"
+#include "Result/DescribeTakeOverTypeModelsResult.h"
+#include "Task/Rest/DescribeTakeOverTypeModelsTask.h"
+#include "Task/WebSocket/DescribeTakeOverTypeModelsTask.h"
+
+// GetTakeOverTypeModel
+#include "Request/GetTakeOverTypeModelRequest.h"
+#include "Result/GetTakeOverTypeModelResult.h"
+#include "Task/Rest/GetTakeOverTypeModelTask.h"
+#include "Task/WebSocket/GetTakeOverTypeModelTask.h"
+
+// DescribeTakeOverTypeModelMasters
+#include "Request/DescribeTakeOverTypeModelMastersRequest.h"
+#include "Result/DescribeTakeOverTypeModelMastersResult.h"
+#include "Task/Rest/DescribeTakeOverTypeModelMastersTask.h"
+#include "Task/WebSocket/DescribeTakeOverTypeModelMastersTask.h"
+
+// CreateTakeOverTypeModelMaster
+#include "Request/CreateTakeOverTypeModelMasterRequest.h"
+#include "Result/CreateTakeOverTypeModelMasterResult.h"
+#include "Task/Rest/CreateTakeOverTypeModelMasterTask.h"
+#include "Task/WebSocket/CreateTakeOverTypeModelMasterTask.h"
+
+// GetTakeOverTypeModelMaster
+#include "Request/GetTakeOverTypeModelMasterRequest.h"
+#include "Result/GetTakeOverTypeModelMasterResult.h"
+#include "Task/Rest/GetTakeOverTypeModelMasterTask.h"
+#include "Task/WebSocket/GetTakeOverTypeModelMasterTask.h"
+
+// UpdateTakeOverTypeModelMaster
+#include "Request/UpdateTakeOverTypeModelMasterRequest.h"
+#include "Result/UpdateTakeOverTypeModelMasterResult.h"
+#include "Task/Rest/UpdateTakeOverTypeModelMasterTask.h"
+#include "Task/WebSocket/UpdateTakeOverTypeModelMasterTask.h"
+
+// DeleteTakeOverTypeModelMaster
+#include "Request/DeleteTakeOverTypeModelMasterRequest.h"
+#include "Result/DeleteTakeOverTypeModelMasterResult.h"
+#include "Task/Rest/DeleteTakeOverTypeModelMasterTask.h"
+#include "Task/WebSocket/DeleteTakeOverTypeModelMasterTask.h"
+
+// ExportMaster
+#include "Request/ExportMasterRequest.h"
+#include "Result/ExportMasterResult.h"
+#include "Task/Rest/ExportMasterTask.h"
+#include "Task/WebSocket/ExportMasterTask.h"
+
+// GetCurrentModelMaster
+#include "Request/GetCurrentModelMasterRequest.h"
+#include "Result/GetCurrentModelMasterResult.h"
+#include "Task/Rest/GetCurrentModelMasterTask.h"
+#include "Task/WebSocket/GetCurrentModelMasterTask.h"
+
+// UpdateCurrentModelMaster
+#include "Request/UpdateCurrentModelMasterRequest.h"
+#include "Result/UpdateCurrentModelMasterResult.h"
+#include "Task/Rest/UpdateCurrentModelMasterTask.h"
+#include "Task/WebSocket/UpdateCurrentModelMasterTask.h"
+
+// UpdateCurrentModelMasterFromGitHub
+#include "Request/UpdateCurrentModelMasterFromGitHubRequest.h"
+#include "Result/UpdateCurrentModelMasterFromGitHubResult.h"
+#include "Task/Rest/UpdateCurrentModelMasterFromGitHubTask.h"
+#include "Task/WebSocket/UpdateCurrentModelMasterFromGitHubTask.h"
 
 // Client
 #include "Gs2AccountRestClient.h"

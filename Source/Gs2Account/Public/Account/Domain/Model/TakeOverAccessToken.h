@@ -27,6 +27,8 @@
 #include "Account/Domain/Iterator/DescribeTakeOversByUserIdIterator.h"
 #include "Account/Domain/Iterator/DescribePlatformIdsIterator.h"
 #include "Account/Domain/Iterator/DescribePlatformIdsByUserIdIterator.h"
+#include "Account/Domain/Iterator/DescribeTakeOverTypeModelsIterator.h"
+#include "Account/Domain/Iterator/DescribeTakeOverTypeModelMastersIterator.h"
 
 namespace Gs2::Core::Domain
 {
@@ -51,6 +53,9 @@ namespace Gs2::Account::Domain::Model
     class FPlatformIdAccessTokenDomain;
     class FDataOwnerDomain;
     class FDataOwnerAccessTokenDomain;
+    class FTakeOverTypeModelDomain;
+    class FTakeOverTypeModelMasterDomain;
+    class FCurrentModelMasterDomain;
 
     class GS2ACCOUNT_API FTakeOverAccessTokenDomain:
         public TSharedFromThis<FTakeOverAccessTokenDomain>
@@ -60,6 +65,16 @@ namespace Gs2::Account::Domain::Model
         const Gs2::Account::FGs2AccountRestClientPtr Client;
 
         public:
+        TOptional<FString> AuthorizationUrl;
+        TOptional<FString> Payload;
+        TOptional<FString> GetAuthorizationUrl() const
+        {
+            return AuthorizationUrl;
+        }
+        TOptional<FString> GetPayload() const
+        {
+            return Payload;
+        }
         TOptional<FString> NamespaceName;
         Gs2::Auth::Model::FAccessTokenPtr AccessToken;
         TOptional<FString> UserId() const { return AccessToken->GetUserId(); }
@@ -107,6 +122,32 @@ namespace Gs2::Account::Domain::Model
 
         TSharedPtr<FAsyncTask<FCreateTask>> Create(
             Request::FCreateTakeOverRequestPtr Request
+        );
+
+        class GS2ACCOUNT_API FCreateOpenIdConnectTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Account::Domain::Model::FTakeOverAccessTokenDomain>,
+            public TSharedFromThis<FCreateOpenIdConnectTask>
+        {
+            const TSharedPtr<FTakeOverAccessTokenDomain> Self;
+            const Request::FCreateTakeOverOpenIdConnectRequestPtr Request;
+        public:
+            explicit FCreateOpenIdConnectTask(
+                const TSharedPtr<FTakeOverAccessTokenDomain>& Self,
+                const Request::FCreateTakeOverOpenIdConnectRequestPtr Request
+            );
+
+            FCreateOpenIdConnectTask(
+                const FCreateOpenIdConnectTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Account::Domain::Model::FTakeOverAccessTokenDomain>> Result
+            ) override;
+        };
+        friend FCreateOpenIdConnectTask;
+
+        TSharedPtr<FAsyncTask<FCreateOpenIdConnectTask>> CreateOpenIdConnect(
+            Request::FCreateTakeOverOpenIdConnectRequestPtr Request
         );
 
         class GS2ACCOUNT_API FGetTask final :

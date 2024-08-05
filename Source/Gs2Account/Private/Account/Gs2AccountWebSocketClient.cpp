@@ -253,6 +253,24 @@ namespace Gs2::Account
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::WebSocket::FCreateTakeOverOpenIdConnectTask>> FGs2AccountWebSocketClient::CreateTakeOverOpenIdConnect(
+        const Request::FCreateTakeOverOpenIdConnectRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FCreateTakeOverOpenIdConnectTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FCreateTakeOverOpenIdConnectAndByUserIdTask>> FGs2AccountWebSocketClient::CreateTakeOverOpenIdConnectAndByUserId(
+        const Request::FCreateTakeOverOpenIdConnectAndByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FCreateTakeOverOpenIdConnectAndByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::WebSocket::FGetTakeOverTask>> FGs2AccountWebSocketClient::GetTakeOver(
         const Request::FGetTakeOverRequestPtr Request) const
     {
@@ -320,6 +338,24 @@ namespace Gs2::Account
         const Request::FDoTakeOverRequestPtr Request) const
     {
         return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FDoTakeOverTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FDoTakeOverOpenIdConnectTask>> FGs2AccountWebSocketClient::DoTakeOverOpenIdConnect(
+        const Request::FDoTakeOverOpenIdConnectRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FDoTakeOverOpenIdConnectTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FGetAuthorizationUrlTask>> FGs2AccountWebSocketClient::GetAuthorizationUrl(
+        const Request::FGetAuthorizationUrlRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FGetAuthorizationUrlTask>>(
             Session,
             Request
         );
@@ -437,6 +473,105 @@ namespace Gs2::Account
         const Request::FDeleteDataOwnerByUserIdRequestPtr Request) const
     {
         return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FDeleteDataOwnerByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FDescribeTakeOverTypeModelsTask>> FGs2AccountWebSocketClient::DescribeTakeOverTypeModels(
+        const Request::FDescribeTakeOverTypeModelsRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FDescribeTakeOverTypeModelsTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FGetTakeOverTypeModelTask>> FGs2AccountWebSocketClient::GetTakeOverTypeModel(
+        const Request::FGetTakeOverTypeModelRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FGetTakeOverTypeModelTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FDescribeTakeOverTypeModelMastersTask>> FGs2AccountWebSocketClient::DescribeTakeOverTypeModelMasters(
+        const Request::FDescribeTakeOverTypeModelMastersRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FDescribeTakeOverTypeModelMastersTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FCreateTakeOverTypeModelMasterTask>> FGs2AccountWebSocketClient::CreateTakeOverTypeModelMaster(
+        const Request::FCreateTakeOverTypeModelMasterRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FCreateTakeOverTypeModelMasterTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FGetTakeOverTypeModelMasterTask>> FGs2AccountWebSocketClient::GetTakeOverTypeModelMaster(
+        const Request::FGetTakeOverTypeModelMasterRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FGetTakeOverTypeModelMasterTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FUpdateTakeOverTypeModelMasterTask>> FGs2AccountWebSocketClient::UpdateTakeOverTypeModelMaster(
+        const Request::FUpdateTakeOverTypeModelMasterRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FUpdateTakeOverTypeModelMasterTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FDeleteTakeOverTypeModelMasterTask>> FGs2AccountWebSocketClient::DeleteTakeOverTypeModelMaster(
+        const Request::FDeleteTakeOverTypeModelMasterRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FDeleteTakeOverTypeModelMasterTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FExportMasterTask>> FGs2AccountWebSocketClient::ExportMaster(
+        const Request::FExportMasterRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FExportMasterTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FGetCurrentModelMasterTask>> FGs2AccountWebSocketClient::GetCurrentModelMaster(
+        const Request::FGetCurrentModelMasterRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FGetCurrentModelMasterTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FUpdateCurrentModelMasterTask>> FGs2AccountWebSocketClient::UpdateCurrentModelMaster(
+        const Request::FUpdateCurrentModelMasterRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FUpdateCurrentModelMasterTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FUpdateCurrentModelMasterFromGitHubTask>> FGs2AccountWebSocketClient::UpdateCurrentModelMasterFromGitHub(
+        const Request::FUpdateCurrentModelMasterFromGitHubRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FUpdateCurrentModelMasterFromGitHubTask>>(
             Session,
             Request
         );

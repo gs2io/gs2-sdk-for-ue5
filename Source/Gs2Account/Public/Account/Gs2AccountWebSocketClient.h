@@ -70,6 +70,10 @@
 #include "Task/WebSocket/CreateTakeOverTask.h"
 #include "Request/CreateTakeOverByUserIdRequest.h"
 #include "Task/WebSocket/CreateTakeOverByUserIdTask.h"
+#include "Request/CreateTakeOverOpenIdConnectRequest.h"
+#include "Task/WebSocket/CreateTakeOverOpenIdConnectTask.h"
+#include "Request/CreateTakeOverOpenIdConnectAndByUserIdRequest.h"
+#include "Task/WebSocket/CreateTakeOverOpenIdConnectAndByUserIdTask.h"
 #include "Request/GetTakeOverRequest.h"
 #include "Task/WebSocket/GetTakeOverTask.h"
 #include "Request/GetTakeOverByUserIdRequest.h"
@@ -86,6 +90,10 @@
 #include "Task/WebSocket/DeleteTakeOverByUserIdTask.h"
 #include "Request/DoTakeOverRequest.h"
 #include "Task/WebSocket/DoTakeOverTask.h"
+#include "Request/DoTakeOverOpenIdConnectRequest.h"
+#include "Task/WebSocket/DoTakeOverOpenIdConnectTask.h"
+#include "Request/GetAuthorizationUrlRequest.h"
+#include "Task/WebSocket/GetAuthorizationUrlTask.h"
 #include "Request/DescribePlatformIdsRequest.h"
 #include "Task/WebSocket/DescribePlatformIdsTask.h"
 #include "Request/DescribePlatformIdsByUserIdRequest.h"
@@ -112,6 +120,28 @@
 #include "Task/WebSocket/GetDataOwnerByUserIdTask.h"
 #include "Request/DeleteDataOwnerByUserIdRequest.h"
 #include "Task/WebSocket/DeleteDataOwnerByUserIdTask.h"
+#include "Request/DescribeTakeOverTypeModelsRequest.h"
+#include "Task/WebSocket/DescribeTakeOverTypeModelsTask.h"
+#include "Request/GetTakeOverTypeModelRequest.h"
+#include "Task/WebSocket/GetTakeOverTypeModelTask.h"
+#include "Request/DescribeTakeOverTypeModelMastersRequest.h"
+#include "Task/WebSocket/DescribeTakeOverTypeModelMastersTask.h"
+#include "Request/CreateTakeOverTypeModelMasterRequest.h"
+#include "Task/WebSocket/CreateTakeOverTypeModelMasterTask.h"
+#include "Request/GetTakeOverTypeModelMasterRequest.h"
+#include "Task/WebSocket/GetTakeOverTypeModelMasterTask.h"
+#include "Request/UpdateTakeOverTypeModelMasterRequest.h"
+#include "Task/WebSocket/UpdateTakeOverTypeModelMasterTask.h"
+#include "Request/DeleteTakeOverTypeModelMasterRequest.h"
+#include "Task/WebSocket/DeleteTakeOverTypeModelMasterTask.h"
+#include "Request/ExportMasterRequest.h"
+#include "Task/WebSocket/ExportMasterTask.h"
+#include "Request/GetCurrentModelMasterRequest.h"
+#include "Task/WebSocket/GetCurrentModelMasterTask.h"
+#include "Request/UpdateCurrentModelMasterRequest.h"
+#include "Task/WebSocket/UpdateCurrentModelMasterTask.h"
+#include "Request/UpdateCurrentModelMasterFromGitHubRequest.h"
+#include "Task/WebSocket/UpdateCurrentModelMasterFromGitHubTask.h"
 
 namespace Gs2::Account
 {
@@ -228,6 +258,14 @@ namespace Gs2::Account
             const Request::FCreateTakeOverByUserIdRequestPtr Request
         ) const;
 
+        TSharedPtr<FAsyncTask<Task::WebSocket::FCreateTakeOverOpenIdConnectTask>> CreateTakeOverOpenIdConnect(
+            const Request::FCreateTakeOverOpenIdConnectRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FCreateTakeOverOpenIdConnectAndByUserIdTask>> CreateTakeOverOpenIdConnectAndByUserId(
+            const Request::FCreateTakeOverOpenIdConnectAndByUserIdRequestPtr Request
+        ) const;
+
         TSharedPtr<FAsyncTask<Task::WebSocket::FGetTakeOverTask>> GetTakeOver(
             const Request::FGetTakeOverRequestPtr Request
         ) const;
@@ -258,6 +296,14 @@ namespace Gs2::Account
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FDoTakeOverTask>> DoTakeOver(
             const Request::FDoTakeOverRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FDoTakeOverOpenIdConnectTask>> DoTakeOverOpenIdConnect(
+            const Request::FDoTakeOverOpenIdConnectRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FGetAuthorizationUrlTask>> GetAuthorizationUrl(
+            const Request::FGetAuthorizationUrlRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FDescribePlatformIdsTask>> DescribePlatformIds(
@@ -310,6 +356,50 @@ namespace Gs2::Account
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FDeleteDataOwnerByUserIdTask>> DeleteDataOwnerByUserId(
             const Request::FDeleteDataOwnerByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FDescribeTakeOverTypeModelsTask>> DescribeTakeOverTypeModels(
+            const Request::FDescribeTakeOverTypeModelsRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FGetTakeOverTypeModelTask>> GetTakeOverTypeModel(
+            const Request::FGetTakeOverTypeModelRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FDescribeTakeOverTypeModelMastersTask>> DescribeTakeOverTypeModelMasters(
+            const Request::FDescribeTakeOverTypeModelMastersRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FCreateTakeOverTypeModelMasterTask>> CreateTakeOverTypeModelMaster(
+            const Request::FCreateTakeOverTypeModelMasterRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FGetTakeOverTypeModelMasterTask>> GetTakeOverTypeModelMaster(
+            const Request::FGetTakeOverTypeModelMasterRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FUpdateTakeOverTypeModelMasterTask>> UpdateTakeOverTypeModelMaster(
+            const Request::FUpdateTakeOverTypeModelMasterRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FDeleteTakeOverTypeModelMasterTask>> DeleteTakeOverTypeModelMaster(
+            const Request::FDeleteTakeOverTypeModelMasterRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FExportMasterTask>> ExportMaster(
+            const Request::FExportMasterRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FGetCurrentModelMasterTask>> GetCurrentModelMaster(
+            const Request::FGetCurrentModelMasterRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FUpdateCurrentModelMasterTask>> UpdateCurrentModelMaster(
+            const Request::FUpdateCurrentModelMasterRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FUpdateCurrentModelMasterFromGitHubTask>> UpdateCurrentModelMasterFromGitHub(
+            const Request::FUpdateCurrentModelMasterFromGitHubRequestPtr Request
         ) const;
     };
     typedef TSharedPtr<FGs2AccountWebSocketClient, ESPMode::ThreadSafe> FGs2AccountWebSocketClientPtr;

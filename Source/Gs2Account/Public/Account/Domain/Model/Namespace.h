@@ -28,6 +28,8 @@
 #include "Account/Domain/Iterator/DescribeTakeOversByUserIdIterator.h"
 #include "Account/Domain/Iterator/DescribePlatformIdsIterator.h"
 #include "Account/Domain/Iterator/DescribePlatformIdsByUserIdIterator.h"
+#include "Account/Domain/Iterator/DescribeTakeOverTypeModelsIterator.h"
+#include "Account/Domain/Iterator/DescribeTakeOverTypeModelMastersIterator.h"
 
 namespace Gs2::Core::Domain
 {
@@ -52,6 +54,9 @@ namespace Gs2::Account::Domain::Model
     class FPlatformIdAccessTokenDomain;
     class FDataOwnerDomain;
     class FDataOwnerAccessTokenDomain;
+    class FTakeOverTypeModelDomain;
+    class FTakeOverTypeModelMasterDomain;
+    class FCurrentModelMasterDomain;
 
     class GS2ACCOUNT_API FNamespaceDomain:
         public TSharedFromThis<FNamespaceDomain>
@@ -234,32 +239,6 @@ namespace Gs2::Account::Domain::Model
             Request::FCreateAccountRequestPtr Request
         );
 
-        class GS2ACCOUNT_API FDeleteTakeOverByUserIdentifierTask final :
-            public Gs2::Core::Util::TGs2Future<Gs2::Account::Domain::Model::FTakeOverDomain>,
-            public TSharedFromThis<FDeleteTakeOverByUserIdentifierTask>
-        {
-            const TSharedPtr<FNamespaceDomain> Self;
-            const Request::FDeleteTakeOverByUserIdentifierRequestPtr Request;
-        public:
-            explicit FDeleteTakeOverByUserIdentifierTask(
-                const TSharedPtr<FNamespaceDomain>& Self,
-                const Request::FDeleteTakeOverByUserIdentifierRequestPtr Request
-            );
-
-            FDeleteTakeOverByUserIdentifierTask(
-                const FDeleteTakeOverByUserIdentifierTask& From
-            );
-
-            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-                TSharedPtr<TSharedPtr<Gs2::Account::Domain::Model::FTakeOverDomain>> Result
-            ) override;
-        };
-        friend FDeleteTakeOverByUserIdentifierTask;
-
-        TSharedPtr<FAsyncTask<FDeleteTakeOverByUserIdentifierTask>> DeleteTakeOverByUserIdentifier(
-            Request::FDeleteTakeOverByUserIdentifierRequestPtr Request
-        );
-
         class GS2ACCOUNT_API FDoTakeOverTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Account::Domain::Model::FAccountDomain>,
             public TSharedFromThis<FDoTakeOverTask>
@@ -284,6 +263,32 @@ namespace Gs2::Account::Domain::Model
 
         TSharedPtr<FAsyncTask<FDoTakeOverTask>> DoTakeOver(
             Request::FDoTakeOverRequestPtr Request
+        );
+
+        class GS2ACCOUNT_API FDoTakeOverOpenIdConnectTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Account::Domain::Model::FAccountDomain>,
+            public TSharedFromThis<FDoTakeOverOpenIdConnectTask>
+        {
+            const TSharedPtr<FNamespaceDomain> Self;
+            const Request::FDoTakeOverOpenIdConnectRequestPtr Request;
+        public:
+            explicit FDoTakeOverOpenIdConnectTask(
+                const TSharedPtr<FNamespaceDomain>& Self,
+                const Request::FDoTakeOverOpenIdConnectRequestPtr Request
+            );
+
+            FDoTakeOverOpenIdConnectTask(
+                const FDoTakeOverOpenIdConnectTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Account::Domain::Model::FAccountDomain>> Result
+            ) override;
+        };
+        friend FDoTakeOverOpenIdConnectTask;
+
+        TSharedPtr<FAsyncTask<FDoTakeOverOpenIdConnectTask>> DoTakeOverOpenIdConnect(
+            Request::FDoTakeOverOpenIdConnectRequestPtr Request
         );
 
         class GS2ACCOUNT_API FDeletePlatformIdByUserIdentifierTask final :
@@ -331,6 +336,39 @@ namespace Gs2::Account::Domain::Model
             Gs2::Auth::Model::FAccessTokenPtr AccessToken
         );
 
+        TSharedPtr<Gs2::Account::Domain::Model::FCurrentModelMasterDomain> CurrentModelMaster(
+        );
+
+        Gs2::Account::Domain::Iterator::FDescribeTakeOverTypeModelsIteratorPtr TakeOverTypeModels(
+        ) const;
+
+        Gs2::Core::Domain::CallbackID SubscribeTakeOverTypeModels(
+            TFunction<void()> Callback
+        );
+
+        void UnsubscribeTakeOverTypeModels(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
+
+        TSharedPtr<Gs2::Account::Domain::Model::FTakeOverTypeModelDomain> TakeOverTypeModel(
+            const int32 Type
+        );
+
+        Gs2::Account::Domain::Iterator::FDescribeTakeOverTypeModelMastersIteratorPtr TakeOverTypeModelMasters(
+        ) const;
+
+        Gs2::Core::Domain::CallbackID SubscribeTakeOverTypeModelMasters(
+            TFunction<void()> Callback
+        );
+
+        void UnsubscribeTakeOverTypeModelMasters(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
+
+        TSharedPtr<Gs2::Account::Domain::Model::FTakeOverTypeModelMasterDomain> TakeOverTypeModelMaster(
+            const int32 Type
+        );
+
         static FString CreateCacheParentKey(
             TOptional<FString> NamespaceName,
             FString ChildType
@@ -368,6 +406,32 @@ namespace Gs2::Account::Domain::Model
 
         void Unsubscribe(
             Gs2::Core::Domain::CallbackID CallbackID
+        );
+
+        class GS2ACCOUNT_API FDeleteTakeOverByUserIdentifierTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Account::Domain::Model::FTakeOverDomain>,
+            public TSharedFromThis<FDeleteTakeOverByUserIdentifierTask>
+        {
+            const TSharedPtr<FNamespaceDomain> Self;
+            const Request::FDeleteTakeOverByUserIdentifierRequestPtr Request;
+        public:
+            explicit FDeleteTakeOverByUserIdentifierTask(
+                const TSharedPtr<FNamespaceDomain>& Self,
+                const Request::FDeleteTakeOverByUserIdentifierRequestPtr Request
+            );
+
+            FDeleteTakeOverByUserIdentifierTask(
+                const FDeleteTakeOverByUserIdentifierTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Account::Domain::Model::FTakeOverDomain>> Result
+            ) override;
+        };
+        friend FDeleteTakeOverByUserIdentifierTask;
+
+        TSharedPtr<FAsyncTask<FDeleteTakeOverByUserIdentifierTask>> DeleteTakeOverByUserIdentifier(
+            Request::FDeleteTakeOverByUserIdentifierRequestPtr Request
         );
 
     };

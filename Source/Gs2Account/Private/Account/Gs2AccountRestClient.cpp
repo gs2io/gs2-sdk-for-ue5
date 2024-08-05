@@ -253,6 +253,24 @@ namespace Gs2::Account
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::Rest::FCreateTakeOverOpenIdConnectTask>> FGs2AccountRestClient::CreateTakeOverOpenIdConnect(
+        const Request::FCreateTakeOverOpenIdConnectRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FCreateTakeOverOpenIdConnectTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FCreateTakeOverOpenIdConnectAndByUserIdTask>> FGs2AccountRestClient::CreateTakeOverOpenIdConnectAndByUserId(
+        const Request::FCreateTakeOverOpenIdConnectAndByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FCreateTakeOverOpenIdConnectAndByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::Rest::FGetTakeOverTask>> FGs2AccountRestClient::GetTakeOver(
         const Request::FGetTakeOverRequestPtr Request) const
     {
@@ -320,6 +338,24 @@ namespace Gs2::Account
         const Request::FDoTakeOverRequestPtr Request) const
     {
         return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FDoTakeOverTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FDoTakeOverOpenIdConnectTask>> FGs2AccountRestClient::DoTakeOverOpenIdConnect(
+        const Request::FDoTakeOverOpenIdConnectRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FDoTakeOverOpenIdConnectTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FGetAuthorizationUrlTask>> FGs2AccountRestClient::GetAuthorizationUrl(
+        const Request::FGetAuthorizationUrlRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FGetAuthorizationUrlTask>>(
             Session,
             Request
         );
@@ -437,6 +473,105 @@ namespace Gs2::Account
         const Request::FDeleteDataOwnerByUserIdRequestPtr Request) const
     {
         return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FDeleteDataOwnerByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FDescribeTakeOverTypeModelsTask>> FGs2AccountRestClient::DescribeTakeOverTypeModels(
+        const Request::FDescribeTakeOverTypeModelsRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FDescribeTakeOverTypeModelsTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FGetTakeOverTypeModelTask>> FGs2AccountRestClient::GetTakeOverTypeModel(
+        const Request::FGetTakeOverTypeModelRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FGetTakeOverTypeModelTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FDescribeTakeOverTypeModelMastersTask>> FGs2AccountRestClient::DescribeTakeOverTypeModelMasters(
+        const Request::FDescribeTakeOverTypeModelMastersRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FDescribeTakeOverTypeModelMastersTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FCreateTakeOverTypeModelMasterTask>> FGs2AccountRestClient::CreateTakeOverTypeModelMaster(
+        const Request::FCreateTakeOverTypeModelMasterRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FCreateTakeOverTypeModelMasterTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FGetTakeOverTypeModelMasterTask>> FGs2AccountRestClient::GetTakeOverTypeModelMaster(
+        const Request::FGetTakeOverTypeModelMasterRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FGetTakeOverTypeModelMasterTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FUpdateTakeOverTypeModelMasterTask>> FGs2AccountRestClient::UpdateTakeOverTypeModelMaster(
+        const Request::FUpdateTakeOverTypeModelMasterRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FUpdateTakeOverTypeModelMasterTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FDeleteTakeOverTypeModelMasterTask>> FGs2AccountRestClient::DeleteTakeOverTypeModelMaster(
+        const Request::FDeleteTakeOverTypeModelMasterRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FDeleteTakeOverTypeModelMasterTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FExportMasterTask>> FGs2AccountRestClient::ExportMaster(
+        const Request::FExportMasterRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FExportMasterTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FGetCurrentModelMasterTask>> FGs2AccountRestClient::GetCurrentModelMaster(
+        const Request::FGetCurrentModelMasterRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FGetCurrentModelMasterTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FUpdateCurrentModelMasterTask>> FGs2AccountRestClient::UpdateCurrentModelMaster(
+        const Request::FUpdateCurrentModelMasterRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FUpdateCurrentModelMasterTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FUpdateCurrentModelMasterFromGitHubTask>> FGs2AccountRestClient::UpdateCurrentModelMasterFromGitHub(
+        const Request::FUpdateCurrentModelMasterFromGitHubRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FUpdateCurrentModelMasterFromGitHubTask>>(
             Session,
             Request
         );
