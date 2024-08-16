@@ -15,6 +15,7 @@
  */
 
 #include "Chat/Model/Gs2Chat.h"
+#include "Chat/Domain/EzGs2Chat.h"
 #include "Chat/Model/Gs2ChatNamespace.h"
 #include "Core/BpGs2Constant.h"
 

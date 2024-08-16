@@ -23,7 +23,7 @@
 
 namespace Gs2::Core::Domain::Internal
 {
-	class FTransactionDomainFactory
+	class GS2CORE_API FTransactionDomainFactory
 	{
 	public:
 		static FTransactionAccessTokenDomainPtr ToTransaction(

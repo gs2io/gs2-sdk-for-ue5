@@ -3,6 +3,7 @@
 
 #include "Sample/Gs2Tutorial.h"
 
+#include "Account/Domain/EzGs2Account.h"
 #include "Core/Gs2Domain.h"
 #include "Util/Authentication/Gs2AccountAuthenticator.h"
 

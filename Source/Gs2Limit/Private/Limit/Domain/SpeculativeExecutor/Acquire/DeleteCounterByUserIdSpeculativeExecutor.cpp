@@ -25,6 +25,7 @@
 #endif
 
 #include "Limit/Domain/SpeculativeExecutor/Acquire/DeleteCounterByUserIdSpeculativeExecutor.h"
+#include "Limit/Domain/Gs2Limit.h"
 
 #include "Core/Domain/Gs2.h"
 

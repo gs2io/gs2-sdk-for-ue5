@@ -27,6 +27,7 @@
 #include "Experience/Domain/SpeculativeExecutor/Verify/VerifyRankByUserIdSpeculativeExecutor.h"
 
 #include "Core/Domain/Gs2.h"
+#include "Experience/Domain/Gs2Experience.h"
 
 namespace Gs2::Experience::Domain::SpeculativeExecutor
 {

@@ -18,56 +18,302 @@
 
 #include "CoreMinimal.h"
 #include "Gs2Core.h"
-#include "Account/Domain/Gs2Account.h"
-#include "AdReward/Domain/Gs2AdReward.h"
-#include "Auth/Domain/Gs2Auth.h"
-#include "Buff/Domain/Gs2Buff.h"
-#include "Chat/Domain/Gs2Chat.h"
-#include "Datastore/Domain/Gs2Datastore.h"
-#include "Deploy/Domain/Gs2Deploy.h"
-#include "Dictionary/Domain/Gs2Dictionary.h"
-#include "Distributor/Domain/Gs2Distributor.h"
-#include "Enchant/Domain/Gs2Enchant.h"
-#include "Enhance/Domain/Gs2Enhance.h"
-#include "Exchange/Domain/Gs2Exchange.h"
-#include "Experience/Domain/Gs2Experience.h"
-#include "Formation/Domain/Gs2Formation.h"
-#include "Friend/Domain/Gs2Friend.h"
-#include "Gateway/Domain/Gs2Gateway.h"
-#include "Grade/Domain/Gs2Grade.h"
-#include "Guild/Domain/Gs2Guild.h"
-#include "Identifier/Domain/Gs2Identifier.h"
-#include "Idle/Domain/Gs2Idle.h"
-#include "Inbox/Domain/Gs2Inbox.h"
-#include "Inventory/Domain/Gs2Inventory.h"
-#include "JobQueue/Domain/Gs2JobQueue.h"
-#include "Key/Domain/Gs2Key.h"
-#include "Limit/Domain/Gs2Limit.h"
-#include "Log/Domain/Gs2Log.h"
-#include "LoginReward/Domain/Gs2LoginReward.h"
-#include "Lock/Domain/Gs2Lock.h"
-#include "Lottery/Domain/Gs2Lottery.h"
-#include "Matchmaking/Domain/Gs2Matchmaking.h"
 #include "Math/BigInt.h"
-#include "MegaField/Domain/Gs2MegaField.h"
-#include "Mission/Domain/Gs2Mission.h"
-#include "Money/Domain/Gs2Money.h"
-#include "Money2/Domain/Gs2Money2.h"
-#include "News/Domain/Gs2News.h"
-#include "Quest/Domain/Gs2Quest.h"
-#include "Ranking/Domain/Gs2Ranking.h"
-#include "Ranking2/Domain/Gs2Ranking2.h"
-#include "Realtime/Domain/Gs2Realtime.h"
-#include "Schedule/Domain/Gs2Schedule.h"
-#include "Script/Domain/Gs2Script.h"
-#include "SeasonRating/Domain/Gs2SeasonRating.h"
-#include "SerialKey/Domain/Gs2SerialKey.h"
-#include "Showcase/Domain/Gs2Showcase.h"
-#include "SkillTree/Domain/Gs2SkillTree.h"
 #include "SpeculativeExecutor/SpeculativeExecutor.h"
-#include "Stamina/Domain/Gs2Stamina.h"
-#include "StateMachine/Domain/Gs2StateMachine.h"
-#include "Version/Domain/Gs2Version.h"
+
+namespace Gs2::Account::Domain
+{
+    class FGs2AccountDomain;
+    typedef TSharedPtr<FGs2AccountDomain> FGs2AccountDomainPtr;
+}
+
+namespace Gs2::AdReward::Domain
+{
+    class FGs2AdRewardDomain;
+    typedef TSharedPtr<FGs2AdRewardDomain> FGs2AdRewardDomainPtr;
+}
+
+namespace Gs2::Auth::Domain
+{
+    class FGs2AuthDomain;
+    typedef TSharedPtr<FGs2AuthDomain> FGs2AuthDomainPtr;
+}
+
+namespace Gs2::Buff::Domain
+{
+    class FGs2BuffDomain;
+    typedef TSharedPtr<FGs2BuffDomain> FGs2BuffDomainPtr;
+}
+
+namespace Gs2::Chat::Domain
+{
+    class FGs2ChatDomain;
+    typedef TSharedPtr<FGs2ChatDomain> FGs2ChatDomainPtr;
+}
+
+namespace Gs2::Datastore::Domain
+{
+    class FGs2DatastoreDomain;
+    typedef TSharedPtr<FGs2DatastoreDomain> FGs2DatastoreDomainPtr;
+}
+
+namespace Gs2::Deploy::Domain
+{
+    class FGs2DeployDomain;
+    typedef TSharedPtr<FGs2DeployDomain> FGs2DeployDomainPtr;
+}
+
+namespace Gs2::Dictionary::Domain
+{
+    class FGs2DictionaryDomain;
+    typedef TSharedPtr<FGs2DictionaryDomain> FGs2DictionaryDomainPtr;
+}
+
+namespace Gs2::Distributor::Domain
+{
+    class FGs2DistributorDomain;
+    typedef TSharedPtr<FGs2DistributorDomain> FGs2DistributorDomainPtr;
+}
+
+namespace Gs2::Enchant::Domain
+{
+    class FGs2EnchantDomain;
+    typedef TSharedPtr<FGs2EnchantDomain> FGs2EnchantDomainPtr;
+}
+
+namespace Gs2::Enhance::Domain
+{
+    class FGs2EnhanceDomain;
+    typedef TSharedPtr<FGs2EnhanceDomain> FGs2EnhanceDomainPtr;
+}
+
+namespace Gs2::Exchange::Domain
+{
+    class FGs2ExchangeDomain;
+    typedef TSharedPtr<FGs2ExchangeDomain> FGs2ExchangeDomainPtr;
+}
+
+namespace Gs2::Experience::Domain
+{
+    class FGs2ExperienceDomain;
+    typedef TSharedPtr<FGs2ExperienceDomain> FGs2ExperienceDomainPtr;
+}
+
+namespace Gs2::Formation::Domain
+{
+    class FGs2FormationDomain;
+    typedef TSharedPtr<FGs2FormationDomain> FGs2FormationDomainPtr;
+}
+
+namespace Gs2::Friend::Domain
+{
+    class FGs2FriendDomain;
+    typedef TSharedPtr<FGs2FriendDomain> FGs2FriendDomainPtr;
+}
+
+namespace Gs2::Gateway::Domain
+{
+    class FGs2GatewayDomain;
+    typedef TSharedPtr<FGs2GatewayDomain> FGs2GatewayDomainPtr;
+}
+
+namespace Gs2::Grade::Domain
+{
+    class FGs2GradeDomain;
+    typedef TSharedPtr<FGs2GradeDomain> FGs2GradeDomainPtr;
+}
+
+namespace Gs2::Guild::Domain
+{
+    class FGs2GuildDomain;
+    typedef TSharedPtr<FGs2GuildDomain> FGs2GuildDomainPtr;
+}
+
+namespace Gs2::Identifier::Domain
+{
+    class FGs2IdentifierDomain;
+    typedef TSharedPtr<FGs2IdentifierDomain> FGs2IdentifierDomainPtr;
+}
+
+namespace Gs2::Idle::Domain
+{
+    class FGs2IdleDomain;
+    typedef TSharedPtr<FGs2IdleDomain> FGs2IdleDomainPtr;
+}
+
+namespace Gs2::Inbox::Domain
+{
+    class FGs2InboxDomain;
+    typedef TSharedPtr<FGs2InboxDomain> FGs2InboxDomainPtr;
+}
+
+namespace Gs2::Inventory::Domain
+{
+    class FGs2InventoryDomain;
+    typedef TSharedPtr<FGs2InventoryDomain> FGs2InventoryDomainPtr;
+}
+
+namespace Gs2::JobQueue::Domain
+{
+    class FGs2JobQueueDomain;
+    typedef TSharedPtr<FGs2JobQueueDomain> FGs2JobQueueDomainPtr;
+}
+
+namespace Gs2::Key::Domain
+{
+    class FGs2KeyDomain;
+    typedef TSharedPtr<FGs2KeyDomain> FGs2KeyDomainPtr;
+}
+
+namespace Gs2::Limit::Domain
+{
+    class FGs2LimitDomain;
+    typedef TSharedPtr<FGs2LimitDomain> FGs2LimitDomainPtr;
+}
+
+namespace Gs2::Log::Domain
+{
+    class FGs2LogDomain;
+    typedef TSharedPtr<FGs2LogDomain> FGs2LogDomainPtr;
+}
+
+namespace Gs2::LoginReward::Domain
+{
+    class FGs2LoginRewardDomain;
+    typedef TSharedPtr<FGs2LoginRewardDomain> FGs2LoginRewardDomainPtr;
+}
+
+namespace Gs2::Lock::Domain
+{
+    class FGs2LockDomain;
+    typedef TSharedPtr<FGs2LockDomain> FGs2LockDomainPtr;
+}
+
+namespace Gs2::Lock::Domain
+{
+    class FGs2LockDomain;
+    typedef TSharedPtr<FGs2LockDomain> FGs2LockDomainPtr;
+}
+
+namespace Gs2::Lottery::Domain
+{
+    class FGs2LotteryDomain;
+    typedef TSharedPtr<FGs2LotteryDomain> FGs2LotteryDomainPtr;
+}
+
+namespace Gs2::Matchmaking::Domain
+{
+    class FGs2MatchmakingDomain;
+    typedef TSharedPtr<FGs2MatchmakingDomain> FGs2MatchmakingDomainPtr;
+}
+
+namespace Gs2::MegaField::Domain
+{
+    class FGs2MegaFieldDomain;
+    typedef TSharedPtr<FGs2MegaFieldDomain> FGs2MegaFieldDomainPtr;
+}
+
+namespace Gs2::Mission::Domain
+{
+    class FGs2MissionDomain;
+    typedef TSharedPtr<FGs2MissionDomain> FGs2MissionDomainPtr;
+}
+
+namespace Gs2::Money::Domain
+{
+    class FGs2MoneyDomain;
+    typedef TSharedPtr<FGs2MoneyDomain> FGs2MoneyDomainPtr;
+}
+
+namespace Gs2::Money2::Domain
+{
+    class FGs2Money2Domain;
+    typedef TSharedPtr<FGs2Money2Domain> FGs2Money2DomainPtr;
+}
+
+namespace Gs2::News::Domain
+{
+    class FGs2NewsDomain;
+    typedef TSharedPtr<FGs2NewsDomain> FGs2NewsDomainPtr;
+}
+
+namespace Gs2::Quest::Domain
+{
+    class FGs2QuestDomain;
+    typedef TSharedPtr<FGs2QuestDomain> FGs2QuestDomainPtr;
+}
+
+namespace Gs2::Ranking::Domain
+{
+    class FGs2RankingDomain;
+    typedef TSharedPtr<FGs2RankingDomain> FGs2RankingDomainPtr;
+}
+
+namespace Gs2::Ranking2::Domain
+{
+    class FGs2Ranking2Domain;
+    typedef TSharedPtr<FGs2Ranking2Domain> FGs2Ranking2DomainPtr;
+}
+
+namespace Gs2::Realtime::Domain
+{
+    class FGs2RealtimeDomain;
+    typedef TSharedPtr<FGs2RealtimeDomain> FGs2RealtimeDomainPtr;
+}
+
+namespace Gs2::Schedule::Domain
+{
+    class FGs2ScheduleDomain;
+    typedef TSharedPtr<FGs2ScheduleDomain> FGs2ScheduleDomainPtr;
+}
+
+namespace Gs2::Script::Domain
+{
+    class FGs2ScriptDomain;
+    typedef TSharedPtr<FGs2ScriptDomain> FGs2ScriptDomainPtr;
+}
+
+namespace Gs2::SeasonRating::Domain
+{
+    class FGs2SeasonRatingDomain;
+    typedef TSharedPtr<FGs2SeasonRatingDomain> FGs2SeasonRatingDomainPtr;
+}
+
+namespace Gs2::SerialKey::Domain
+{
+    class FGs2SerialKeyDomain;
+    typedef TSharedPtr<FGs2SerialKeyDomain> FGs2SerialKeyDomainPtr;
+}
+
+namespace Gs2::Showcase::Domain
+{
+    class FGs2ShowcaseDomain;
+    typedef TSharedPtr<FGs2ShowcaseDomain> FGs2ShowcaseDomainPtr;
+}
+
+namespace Gs2::SkillTree::Domain
+{
+    class FGs2SkillTreeDomain;
+    typedef TSharedPtr<FGs2SkillTreeDomain> FGs2SkillTreeDomainPtr;
+}
+
+namespace Gs2::Stamina::Domain
+{
+    class FGs2StaminaDomain;
+    typedef TSharedPtr<FGs2StaminaDomain> FGs2StaminaDomainPtr;
+}
+
+namespace Gs2::StateMachine::Domain
+{
+    class FGs2StateMachineDomain;
+    typedef TSharedPtr<FGs2StateMachineDomain> FGs2StateMachineDomainPtr;
+}
+
+namespace Gs2::Version::Domain
+{
+    class FGs2VersionDomain;
+    typedef TSharedPtr<FGs2VersionDomain> FGs2VersionDomainPtr;
+}
 
 namespace Gs2::Core::Domain
 {

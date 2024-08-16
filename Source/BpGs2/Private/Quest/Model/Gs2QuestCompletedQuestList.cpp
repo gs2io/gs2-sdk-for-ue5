@@ -15,5 +15,6 @@
  */
 
 #include "Quest/Model/Gs2QuestCompletedQuestList.h"
+#include "Quest/Domain/EzGs2Quest.h"
 #include "Core/Model/Gs2AccessToken.h"
 #include "Core/BpGs2Constant.h"

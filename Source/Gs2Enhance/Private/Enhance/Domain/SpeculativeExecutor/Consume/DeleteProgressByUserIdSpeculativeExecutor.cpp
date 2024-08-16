@@ -25,6 +25,7 @@
 #endif
 
 #include "Enhance/Domain/SpeculativeExecutor/Consume/DeleteProgressByUserIdSpeculativeExecutor.h"
+#include "Enhance/Domain/Gs2Enhance.h"
 
 #include "Core/Domain/Gs2.h"
 

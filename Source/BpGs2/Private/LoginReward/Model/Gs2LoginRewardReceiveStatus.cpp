@@ -15,5 +15,6 @@
  */
 
 #include "LoginReward/Model/Gs2LoginRewardReceiveStatus.h"
+#include "LoginReward/Domain/EzGs2LoginReward.h"
 #include "Core/Model/Gs2AccessToken.h"
 #include "Core/BpGs2Constant.h"

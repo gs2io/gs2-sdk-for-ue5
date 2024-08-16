@@ -25,6 +25,7 @@
 #endif
 
 #include "Dictionary/Domain/SpeculativeExecutor/Consume/DeleteEntriesByUserIdSpeculativeExecutor.h"
+#include "Dictionary/Domain/Gs2Dictionary.h"
 
 #include "Core/Domain/Gs2.h"
 

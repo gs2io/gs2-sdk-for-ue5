@@ -15,6 +15,7 @@
  */
 
 #include "Account/Model/Gs2Account.h"
+#include "Account/Domain/EzGs2Account.h"
 #include "Account/Model/Gs2AccountNamespace.h"
 #include "Core/BpGs2Constant.h"
 

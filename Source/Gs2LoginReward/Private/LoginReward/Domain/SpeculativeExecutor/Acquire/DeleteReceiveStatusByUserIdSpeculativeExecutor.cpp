@@ -25,6 +25,7 @@
 #endif
 
 #include "LoginReward/Domain/SpeculativeExecutor/Acquire/DeleteReceiveStatusByUserIdSpeculativeExecutor.h"
+#include "LoginReward/Domain/Gs2LoginReward.h"
 
 #include "Core/Domain/Gs2.h"
 

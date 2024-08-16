@@ -15,6 +15,7 @@
  */
 
 #include "JobQueue/Model/Gs2JobQueue.h"
+#include "JobQueue/Domain/EzGs2JobQueue.h"
 #include "JobQueue/Model/Gs2JobQueueNamespace.h"
 #include "Core/BpGs2Constant.h"
 

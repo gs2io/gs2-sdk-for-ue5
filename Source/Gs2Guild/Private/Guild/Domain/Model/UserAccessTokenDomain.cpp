@@ -24,6 +24,7 @@
 #pragma clang diagnostic ignored "-Wshadow" // declaration shadows a field of
 #endif
 
+#include "Auth/Domain/Gs2Auth.h"
 #include "Guild/Domain/Model/UserAccessToken.h"
 #include "Guild/Domain/Model/User.h"
 #include "Guild/Domain/Model/Namespace.h"

@@ -15,6 +15,7 @@
  */
 
 #include "Lottery/Model/Gs2LotteryUser.h"
+#include "Lottery/Domain/EzGs2Lottery.h"
 #include "Lottery/Model/Gs2LotteryBoxItems.h"
 #include "Core/Model/Gs2AccessToken.h"
 #include "Lottery/Model/Gs2LotteryBoxItems.h"

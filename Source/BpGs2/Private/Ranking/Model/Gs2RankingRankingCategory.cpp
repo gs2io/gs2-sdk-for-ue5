@@ -15,6 +15,7 @@
  */
 
 #include "Ranking/Model/Gs2RankingRankingCategory.h"
+#include "Ranking/Domain/EzGs2Ranking.h"
 #include "Ranking/Model/Gs2RankingSubscribeUser.h"
 #include "Ranking/Model/Gs2RankingRanking.h"
 #include "Core/Model/Gs2AccessToken.h"

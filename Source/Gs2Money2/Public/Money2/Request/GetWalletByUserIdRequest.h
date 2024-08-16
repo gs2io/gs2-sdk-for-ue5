@@ -17,6 +17,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Dom/JsonObject.h"
 
 namespace Gs2::Money2::Request
 {
@@ -54,5 +55,5 @@ namespace Gs2::Money2::Request
         static TSharedPtr<FGetWalletByUserIdRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;
     };
-    typedef TSharedPtr<FGetWalletByUserIdRequest, ESPMode::ThreadSafe> FGetWalletByUserIdRequestPtr;
+    typedef TSharedPtr<FGetWalletByUserIdRequest> FGetWalletByUserIdRequestPtr;
 }

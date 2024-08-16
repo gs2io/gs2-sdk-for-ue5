@@ -15,6 +15,7 @@
  */
 
 #include "AdReward/Model/Gs2AdRewardNamespace.h"
+#include "AdReward/Domain/EzGs2AdReward.h"
 #include "Core/Model/Gs2AccessToken.h"
 #include "AdReward/Model/Gs2AdRewardUser.h"
 #include "Core/BpGs2Constant.h"

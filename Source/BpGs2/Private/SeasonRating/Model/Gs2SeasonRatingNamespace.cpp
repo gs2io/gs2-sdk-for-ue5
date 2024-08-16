@@ -15,6 +15,7 @@
  */
 
 #include "SeasonRating/Model/Gs2SeasonRatingNamespace.h"
+#include "SeasonRating/Domain/EzGs2SeasonRating.h"
 #include "SeasonRating/Model/Gs2SeasonRatingSeasonModel.h"
 #include "Core/Model/Gs2AccessToken.h"
 #include "SeasonRating/Model/Gs2SeasonRatingSeasonModel.h"

@@ -17,6 +17,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Dom/JsonObject.h"
 
 namespace Gs2::Guild::Request
 {
@@ -57,5 +58,5 @@ namespace Gs2::Guild::Request
         static TSharedPtr<FDescribeReceiveRequestsByGuildNameRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;
     };
-    typedef TSharedPtr<FDescribeReceiveRequestsByGuildNameRequest, ESPMode::ThreadSafe> FDescribeReceiveRequestsByGuildNameRequestPtr;
+    typedef TSharedPtr<FDescribeReceiveRequestsByGuildNameRequest> FDescribeReceiveRequestsByGuildNameRequestPtr;
 }

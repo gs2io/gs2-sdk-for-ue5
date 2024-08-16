@@ -15,5 +15,6 @@
  */
 
 #include "SeasonRating/Model/Gs2SeasonRatingBallot.h"
+#include "SeasonRating/Domain/EzGs2SeasonRating.h"
 #include "Core/Model/Gs2AccessToken.h"
 #include "Core/BpGs2Constant.h"

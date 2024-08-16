@@ -17,13 +17,18 @@
 #pragma once
 
 #include "JobQueue/Result/PushByUserIdResult.h"
-#include "Auth/Model/AccessToken.h"
 #include "Core/Util/Gs2Future.h"
 
 namespace Gs2::Core::Domain
 {
 	class FGs2;
 	typedef TSharedPtr<FGs2> FGs2Ptr;
+}
+
+namespace Gs2::Auth::Model
+{
+	class FAccessToken;
+	typedef TSharedPtr<FAccessToken> FAccessTokenPtr;
 }
 
 namespace Gs2::Core::Domain

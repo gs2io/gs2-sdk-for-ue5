@@ -27,6 +27,7 @@
 #include "Mission/Domain/SpeculativeExecutor/Acquire/IncreaseCounterByUserIdSpeculativeExecutor.h"
 
 #include "Core/Domain/Gs2.h"
+#include "Mission/Domain/Gs2Mission.h"
 
 namespace Gs2::Mission::Domain::SpeculativeExecutor
 {

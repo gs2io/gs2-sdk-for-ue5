@@ -15,6 +15,7 @@
  */
 
 #include "Version/Model/Gs2VersionUser.h"
+#include "Version/Domain/EzGs2Version.h"
 #include "Version/Model/Gs2VersionAcceptVersion.h"
 #include "Core/Model/Gs2AccessToken.h"
 #include "Version/Model/Gs2VersionAcceptVersion.h"

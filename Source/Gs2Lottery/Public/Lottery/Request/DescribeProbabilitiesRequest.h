@@ -17,6 +17,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Dom/JsonObject.h"
 
 namespace Gs2::Lottery::Request
 {
@@ -50,5 +51,5 @@ namespace Gs2::Lottery::Request
         static TSharedPtr<FDescribeProbabilitiesRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;
     };
-    typedef TSharedPtr<FDescribeProbabilitiesRequest, ESPMode::ThreadSafe> FDescribeProbabilitiesRequestPtr;
+    typedef TSharedPtr<FDescribeProbabilitiesRequest> FDescribeProbabilitiesRequestPtr;
 }

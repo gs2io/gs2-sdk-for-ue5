@@ -495,6 +495,40 @@ namespace Gs2::Friend::Domain
         const FString Request,
         const FString Result
     ) {
+        if (Method == "UpdateProfileByUserId") {
+            TSharedPtr<FJsonObject> RequestModelJson;
+            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Request);
+                !FJsonSerializer::Deserialize(JsonReader, RequestModelJson))
+            {
+                return;
+            }
+            TSharedPtr<FJsonObject> ResultModelJson;
+            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Result);
+                !FJsonSerializer::Deserialize(JsonReader, ResultModelJson))
+            {
+                return;
+            }
+            const auto RequestModel = Gs2::Friend::Request::FUpdateProfileByUserIdRequest::FromJson(RequestModelJson);
+            const auto ResultModel = Gs2::Friend::Result::FUpdateProfileByUserIdResult::FromJson(ResultModelJson);
+            
+            if (ResultModel->GetItem() != nullptr)
+            {
+                const auto ParentKey = Gs2::Friend::Domain::Model::FUserDomain::CreateCacheParentKey(
+                    RequestModel->GetNamespaceName(),
+                    RequestModel->GetUserId(),
+                    "Profile"
+                );
+                const auto Key = Gs2::Friend::Domain::Model::FProfileDomain::CreateCacheKey(
+                );
+                Gs2->Cache->Put(
+                    Gs2::Friend::Model::FProfile::TypeName,
+                    ParentKey,
+                    Key,
+                    ResultModel->GetItem(),
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+            }
+        }
     }
 
     void FGs2FriendDomain::UpdateCacheFromStampTask(
@@ -509,6 +543,48 @@ namespace Gs2::Friend::Domain
         const Gs2::JobQueue::Model::FJobPtr Job,
         const Gs2::JobQueue::Model::FJobResultBodyPtr Result
     ) {
+        if (Method == "update_profile_by_user_id") {
+            TSharedPtr<FJsonObject> RequestModelJson;
+            if (!Job->GetArgs().IsSet())
+            {
+                return;
+            }
+            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(*Job->GetArgs());
+                !FJsonSerializer::Deserialize(JsonReader, RequestModelJson))
+            {
+                return;
+            }
+            TSharedPtr<FJsonObject> ResultModelJson;
+            if (!Result->GetResult().IsSet())
+            {
+                return;
+            }
+            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(*Result->GetResult());
+                !FJsonSerializer::Deserialize(JsonReader, ResultModelJson))
+            {
+                return;
+            }
+            const auto RequestModel = Gs2::Friend::Request::FUpdateProfileByUserIdRequest::FromJson(RequestModelJson);
+            const auto ResultModel = Gs2::Friend::Result::FUpdateProfileByUserIdResult::FromJson(ResultModelJson);
+            
+            if (ResultModel->GetItem() != nullptr)
+            {
+                const auto ParentKey = Gs2::Friend::Domain::Model::FUserDomain::CreateCacheParentKey(
+                    RequestModel->GetNamespaceName(),
+                    RequestModel->GetUserId(),
+                    "Profile"
+                );
+                const auto Key = Gs2::Friend::Domain::Model::FProfileDomain::CreateCacheKey(
+                );
+                Gs2->Cache->Put(
+                    Gs2::Friend::Model::FProfile::TypeName,
+                    ParentKey,
+                    Key,
+                    ResultModel->GetItem(),
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+            }
+        }
     }
 
     void FGs2FriendDomain::HandleNotification(

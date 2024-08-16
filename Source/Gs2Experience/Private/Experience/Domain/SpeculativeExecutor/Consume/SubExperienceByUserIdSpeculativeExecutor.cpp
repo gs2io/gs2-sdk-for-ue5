@@ -27,6 +27,7 @@
 #include "Experience/Domain/SpeculativeExecutor/Consume/SubExperienceByUserIdSpeculativeExecutor.h"
 
 #include "Core/Domain/Gs2.h"
+#include "Experience/Domain/Gs2Experience.h"
 #include "Experience/Model/ExperienceModelEx.h"
 
 namespace Gs2::Experience::Domain::SpeculativeExecutor

@@ -15,6 +15,7 @@
  */
 
 #include "Enhance/Model/Gs2Enhance.h"
+#include "Enhance/Domain/EzGs2Enhance.h"
 #include "Enhance/Model/Gs2EnhanceNamespace.h"
 #include "Core/BpGs2Constant.h"
 

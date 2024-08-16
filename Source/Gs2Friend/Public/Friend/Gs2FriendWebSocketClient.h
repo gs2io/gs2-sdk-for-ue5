@@ -54,6 +54,8 @@
 #include "Task/WebSocket/UpdateProfileByUserIdTask.h"
 #include "Request/DeleteProfileByUserIdRequest.h"
 #include "Task/WebSocket/DeleteProfileByUserIdTask.h"
+#include "Request/UpdateProfileByStampSheetRequest.h"
+#include "Task/WebSocket/UpdateProfileByStampSheetTask.h"
 #include "Request/DescribeFriendsRequest.h"
 #include "Task/WebSocket/DescribeFriendsTask.h"
 #include "Request/DescribeFriendsByUserIdRequest.h"
@@ -210,6 +212,10 @@ namespace Gs2::Friend
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FDeleteProfileByUserIdTask>> DeleteProfileByUserId(
             const Request::FDeleteProfileByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FUpdateProfileByStampSheetTask>> UpdateProfileByStampSheet(
+            const Request::FUpdateProfileByStampSheetRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FDescribeFriendsTask>> DescribeFriends(

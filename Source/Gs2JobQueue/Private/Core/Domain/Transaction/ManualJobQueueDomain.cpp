@@ -17,6 +17,7 @@
 #include "../Public/Core/Domain/Transaction/ManualJobQueueDomain.h"
 
 #include "Core/Domain/Gs2.h"
+#include "JobQueue/Domain/Gs2JobQueue.h"
 #include "JobQueue/Request/RunByUserIdRequest.h"
 
 namespace Gs2::Core::Domain

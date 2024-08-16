@@ -17,6 +17,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Dom/JsonObject.h"
 #include "../Model/GameResult.h"
 
 namespace Gs2::Matchmaking::Request
@@ -56,5 +57,5 @@ namespace Gs2::Matchmaking::Request
         static TSharedPtr<FVoteRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;
     };
-    typedef TSharedPtr<FVoteRequest, ESPMode::ThreadSafe> FVoteRequestPtr;
+    typedef TSharedPtr<FVoteRequest> FVoteRequestPtr;
 }

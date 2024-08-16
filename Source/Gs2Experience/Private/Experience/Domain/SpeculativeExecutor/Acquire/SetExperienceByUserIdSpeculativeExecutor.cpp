@@ -23,6 +23,7 @@
 #endif
 
 #include "Experience/Domain/SpeculativeExecutor/Acquire/SetExperienceByUserIdSpeculativeExecutor.h"
+#include "Experience/Domain/Gs2Experience.h"
 
 #include "Core/Domain/Gs2.h"
 

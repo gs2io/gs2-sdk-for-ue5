@@ -25,6 +25,8 @@
 #endif
 
 #include "JobQueue/Domain/SpeculativeExecutor/Consume/DeleteJobByUserIdSpeculativeExecutor.h"
+#include "JobQueue/Domain/Gs2JobQueue.h"
+
 
 #include "Core/Domain/Gs2.h"
 

@@ -17,7 +17,12 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "WebSocket/Gs2WebSocketSession.h"
+
+namespace Gs2::Core::Net::WebSocket
+{
+    class FGs2WebSocketSession;
+    typedef TSharedPtr<FGs2WebSocketSession> FGs2WebSocketSessionPtr;
+}
 
 namespace Gs2::Core::Net
 {

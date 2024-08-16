@@ -27,6 +27,7 @@
 #include "Showcase/Domain/SpeculativeExecutor/Acquire/DecrementPurchaseCountByUserIdSpeculativeExecutor.h"
 
 #include "Core/Domain/Gs2.h"
+#include "Showcase/Domain/Gs2Showcase.h"
 
 namespace Gs2::Showcase::Domain::SpeculativeExecutor
 {

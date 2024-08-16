@@ -16,11 +16,59 @@
 
 #include "Core/Domain/Gs2.h"
 
+#include "Account/Domain/Gs2Account.h"
+#include "AdReward/Domain/Gs2AdReward.h"
+#include "Auth/Domain/Gs2Auth.h"
+#include "Buff/Domain/Gs2Buff.h"
+#include "Chat/Domain/Gs2Chat.h"
 #include "Core/Gs2Constant.h"
 #include "Core/Net/Rest/Task/RestCloseTask.h"
 #include "Core/Net/WebSocket/Task/WebSocketCloseTask.h"
+#include "Datastore/Domain/Gs2Datastore.h"
+#include "Deploy/Domain/Gs2Deploy.h"
+#include "Dictionary/Domain/Gs2Dictionary.h"
+#include "Distributor/Domain/Gs2Distributor.h"
+#include "Enchant/Domain/Gs2Enchant.h"
+#include "Enhance/Domain/Gs2Enhance.h"
+#include "Exchange/Domain/Gs2Exchange.h"
+#include "Experience/Domain/Gs2Experience.h"
+#include "Formation/Domain/Gs2Formation.h"
+#include "Friend/Domain/Gs2Friend.h"
+#include "Gateway/Domain/Gs2Gateway.h"
+#include "Grade/Domain/Gs2Grade.h"
+#include "Guild/Domain/Gs2Guild.h"
+#include "Identifier/Domain/Gs2Identifier.h"
+#include "Idle/Domain/Gs2Idle.h"
+#include "Inbox/Domain/Gs2Inbox.h"
+#include "Inventory/Domain/Gs2Inventory.h"
+#include "JobQueue/Domain/Gs2JobQueue.h"
 #include "JobQueue/Domain/Model/JobAccessToken.h"
 #include "JobQueue/Domain/Model/UserAccessToken.h"
+#include "Key/Domain/Gs2Key.h"
+#include "Limit/Domain/Gs2Limit.h"
+#include "Lock/Domain/Gs2Lock.h"
+#include "Log/Domain/Gs2Log.h"
+#include "LoginReward/Domain/Gs2LoginReward.h"
+#include "Lottery/Domain/Gs2Lottery.h"
+#include "Matchmaking/Domain/Gs2Matchmaking.h"
+#include "MegaField/Domain/Gs2MegaField.h"
+#include "Mission/Domain/Gs2Mission.h"
+#include "Money/Domain/Gs2Money.h"
+#include "Money2/Domain/Gs2Money2.h"
+#include "News/Domain/Gs2News.h"
+#include "Quest/Domain/Gs2Quest.h"
+#include "Ranking/Domain/Gs2Ranking.h"
+#include "Ranking2/Domain/Gs2Ranking2.h"
+#include "Realtime/Domain/Gs2Realtime.h"
+#include "Schedule/Domain/Gs2Schedule.h"
+#include "Script/Domain/Gs2Script.h"
+#include "SeasonRating/Domain/Gs2SeasonRating.h"
+#include "SerialKey/Domain/Gs2SerialKey.h"
+#include "Showcase/Domain/Gs2Showcase.h"
+#include "SkillTree/Domain/Gs2SkillTree.h"
+#include "Stamina/Domain/Gs2Stamina.h"
+#include "StateMachine/Domain/Gs2StateMachine.h"
+#include "Version/Domain/Gs2Version.h"
 
 
 namespace Gs2::Core::Domain
@@ -221,10 +269,6 @@ namespace Gs2::Core::Domain
                     if (Service == "Gs2Limit")
                     {
                         Limit->HandleNotification(Method, *Message->GetPayload());
-                    }
-                    if (Service == "Gs2Log")
-                    {
-                        Log->HandleNotification(Method, *Message->GetPayload());
                     }
                     if (Service == "Gs2Log")
                     {

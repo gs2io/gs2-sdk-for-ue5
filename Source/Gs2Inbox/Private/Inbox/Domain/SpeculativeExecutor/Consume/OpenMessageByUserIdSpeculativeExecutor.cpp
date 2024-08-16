@@ -27,6 +27,7 @@
 #include "Inbox/Domain/SpeculativeExecutor/Consume/OpenMessageByUserIdSpeculativeExecutor.h"
 
 #include "Core/Domain/Gs2.h"
+#include "Inbox/Domain/Gs2Inbox.h"
 
 namespace Gs2::Inbox::Domain::SpeculativeExecutor
 {

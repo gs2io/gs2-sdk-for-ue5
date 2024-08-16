@@ -17,6 +17,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Dom/JsonObject.h"
 
 namespace Gs2::Friend::Request
 {
@@ -53,5 +54,5 @@ namespace Gs2::Friend::Request
         static TSharedPtr<FDeleteProfileByUserIdRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;
     };
-    typedef TSharedPtr<FDeleteProfileByUserIdRequest, ESPMode::ThreadSafe> FDeleteProfileByUserIdRequestPtr;
+    typedef TSharedPtr<FDeleteProfileByUserIdRequest> FDeleteProfileByUserIdRequestPtr;
 }

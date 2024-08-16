@@ -23,6 +23,7 @@
 #endif
 
 #include "Mission/Domain/SpeculativeExecutor/Acquire/SetCounterByUserIdSpeculativeExecutor.h"
+#include "Mission/Domain/Gs2Mission.h"
 
 #include "Core/Domain/Gs2.h"
 

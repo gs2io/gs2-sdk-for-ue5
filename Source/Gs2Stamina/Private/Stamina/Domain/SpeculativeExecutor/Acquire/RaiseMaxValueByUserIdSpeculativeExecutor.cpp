@@ -27,6 +27,7 @@
 #include "Stamina/Domain/SpeculativeExecutor/Acquire/RaiseMaxValueByUserIdSpeculativeExecutor.h"
 
 #include "Core/Domain/Gs2.h"
+#include "Stamina/Domain/Gs2Stamina.h"
 
 namespace Gs2::Stamina::Domain::SpeculativeExecutor
 {

@@ -23,6 +23,7 @@
 #endif
 
 #include "Friend/Domain/SpeculativeExecutor/Acquire/AcquireActionSpeculativeExecutorIndex.h"
+#include "Friend/Domain/SpeculativeExecutor/Acquire/UpdateProfileByUserIdSpeculativeExecutor.h"
 
 #include "Core/Domain/Gs2.h"
 
@@ -63,6 +64,28 @@ namespace Gs2::Friend::Domain::SpeculativeExecutor
         auto NewAcquireAction = AcquireAction->WithAction(AcquireAction->GetAction()->Replace(TEXT("{region}"), ToCStr(Domain->RestSession->RegionName())));
         NewAcquireAction = AcquireAction->WithAction(NewAcquireAction->GetAction()->Replace(TEXT("{ownerId}"), ToCStr(Domain->RestSession->OwnerId())));
         NewAcquireAction = AcquireAction->WithAction(NewAcquireAction->GetAction()->Replace(TEXT("{userId}"), ToCStr(AccessToken->GetUserId().IsSet() ? *AccessToken->GetUserId() : "")));
+        if (FUpdateProfileByUserIdSpeculativeExecutor::Action() == NewAcquireAction->GetAction()) {
+            TSharedPtr<FJsonObject> RequestModelJson;
+            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(NewAcquireAction->GetRequest().IsSet() ? *NewAcquireAction->GetRequest() : "{}");
+                !FJsonSerializer::Deserialize(JsonReader, RequestModelJson))
+            {
+                return nullptr;
+            }
+            auto Request = Request::FUpdateProfileByUserIdRequest::FromJson(RequestModelJson);
+            Request = FUpdateProfileByUserIdSpeculativeExecutor::Rate(Request, Rate);
+            auto Future = FUpdateProfileByUserIdSpeculativeExecutor::Execute(
+                Domain,
+                Service,
+                AccessToken,
+                Request
+            );
+            Future->StartSynchronousTask();
+            if (Future->GetTask().IsError())
+            {
+                return Future->GetTask().Error();
+            }
+            *Result = Future->GetTask().Result();
+        }
         return nullptr;
     }
 

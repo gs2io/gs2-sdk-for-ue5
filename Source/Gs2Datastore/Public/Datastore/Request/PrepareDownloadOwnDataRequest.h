@@ -17,6 +17,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Dom/JsonObject.h"
 
 namespace Gs2::Datastore::Request
 {
@@ -53,5 +54,5 @@ namespace Gs2::Datastore::Request
         static TSharedPtr<FPrepareDownloadOwnDataRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;
     };
-    typedef TSharedPtr<FPrepareDownloadOwnDataRequest, ESPMode::ThreadSafe> FPrepareDownloadOwnDataRequestPtr;
+    typedef TSharedPtr<FPrepareDownloadOwnDataRequest> FPrepareDownloadOwnDataRequestPtr;
 }

@@ -12,6 +12,8 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
+ *
+ * deny overwrite
  */
 
 #if defined(_MSC_VER)
@@ -33,6 +35,7 @@
 #include "Grade/Domain/Model/Status.h"
 #include "Grade/Domain/Model/CurrentGradeMaster.h"
 #include "Core/Domain/Gs2.h"
+#include "Experience/Domain/Model/Status.h"
 
 namespace Gs2::Grade::Domain
 {

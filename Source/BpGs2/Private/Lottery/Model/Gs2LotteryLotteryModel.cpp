@@ -15,5 +15,6 @@
  */
 
 #include "Lottery/Model/Gs2LotteryLotteryModel.h"
+#include "Lottery/Domain/EzGs2Lottery.h"
 #include "Core/Model/Gs2AccessToken.h"
 #include "Core/BpGs2Constant.h"

@@ -27,6 +27,7 @@
 #include "Idle/Domain/SpeculativeExecutor/Acquire/IncreaseMaximumIdleMinutesByUserIdSpeculativeExecutor.h"
 
 #include "Core/Domain/Gs2.h"
+#include "Idle/Domain/Gs2Idle.h"
 
 namespace Gs2::Idle::Domain::SpeculativeExecutor
 {

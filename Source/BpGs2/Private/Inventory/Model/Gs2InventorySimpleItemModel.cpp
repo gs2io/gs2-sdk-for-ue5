@@ -15,5 +15,6 @@
  */
 
 #include "Inventory/Model/Gs2InventorySimpleItemModel.h"
+#include "Inventory/Domain/EzGs2Inventory.h"
 #include "Core/Model/Gs2AccessToken.h"
 #include "Core/BpGs2Constant.h"

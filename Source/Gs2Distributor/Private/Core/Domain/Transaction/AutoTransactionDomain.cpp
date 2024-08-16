@@ -17,6 +17,7 @@
 #include "../Public/Core/Domain/Transaction/AutoTransactionDomain.h"
 
 #include "Core/Domain/Gs2.h"
+#include "Distributor/Domain/Gs2Distributor.h"
 
 namespace Gs2::Core::Domain
 {

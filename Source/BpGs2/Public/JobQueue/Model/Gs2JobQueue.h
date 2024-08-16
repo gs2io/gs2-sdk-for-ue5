@@ -19,6 +19,8 @@
 #include "CoreMinimal.h"
 
 #include "Core/Model/Gs2Client.h"
+#include "Gs2JobQueue/Public/JobQueue/Model/PushNotification.h"
+#include "Gs2JobQueue/Public/JobQueue/Model/RunNotification.h"
 #include "Gs2JobQueue.generated.h"
 
 USTRUCT(BlueprintType)

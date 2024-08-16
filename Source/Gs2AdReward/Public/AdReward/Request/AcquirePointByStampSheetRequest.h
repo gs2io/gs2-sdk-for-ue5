@@ -17,6 +17,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Dom/JsonObject.h"
 
 namespace Gs2::AdReward::Request
 {
@@ -47,5 +48,5 @@ namespace Gs2::AdReward::Request
         static TSharedPtr<FAcquirePointByStampSheetRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;
     };
-    typedef TSharedPtr<FAcquirePointByStampSheetRequest, ESPMode::ThreadSafe> FAcquirePointByStampSheetRequestPtr;
+    typedef TSharedPtr<FAcquirePointByStampSheetRequest> FAcquirePointByStampSheetRequestPtr;
 }

@@ -27,6 +27,7 @@
 #include "LoginReward/Domain/SpeculativeExecutor/Consume/MarkReceivedByUserIdSpeculativeExecutor.h"
 
 #include "Core/Domain/Gs2.h"
+#include "LoginReward/Domain/Gs2LoginReward.h"
 
 namespace Gs2::LoginReward::Domain::SpeculativeExecutor
 {

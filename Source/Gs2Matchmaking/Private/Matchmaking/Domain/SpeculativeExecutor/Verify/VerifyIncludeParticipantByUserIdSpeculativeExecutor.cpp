@@ -27,6 +27,7 @@
 #include "Matchmaking/Domain/SpeculativeExecutor/Verify/VerifyIncludeParticipantByUserIdSpeculativeExecutor.h"
 
 #include "Core/Domain/Gs2.h"
+#include "Matchmaking/Domain/Gs2Matchmaking.h"
 
 namespace Gs2::Matchmaking::Domain::SpeculativeExecutor
 {

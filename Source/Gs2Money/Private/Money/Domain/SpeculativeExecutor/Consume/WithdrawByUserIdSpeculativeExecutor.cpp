@@ -27,6 +27,7 @@
 #include "Money/Domain/SpeculativeExecutor/Consume/WithdrawByUserIdSpeculativeExecutor.h"
 
 #include "Core/Domain/Gs2.h"
+#include "Money/Domain/Gs2Money.h"
 
 namespace Gs2::Money::Domain::SpeculativeExecutor
 {

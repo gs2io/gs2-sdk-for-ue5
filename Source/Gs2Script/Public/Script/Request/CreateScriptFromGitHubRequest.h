@@ -17,6 +17,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Dom/JsonObject.h"
 #include "../Model/GitHubCheckoutSetting.h"
 
 namespace Gs2::Script::Request
@@ -54,5 +55,5 @@ namespace Gs2::Script::Request
         static TSharedPtr<FCreateScriptFromGitHubRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;
     };
-    typedef TSharedPtr<FCreateScriptFromGitHubRequest, ESPMode::ThreadSafe> FCreateScriptFromGitHubRequestPtr;
+    typedef TSharedPtr<FCreateScriptFromGitHubRequest> FCreateScriptFromGitHubRequestPtr;
 }

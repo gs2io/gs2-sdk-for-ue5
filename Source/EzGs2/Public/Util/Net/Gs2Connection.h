@@ -2,6 +2,7 @@
 
 #include "Core/Net/Rest/Gs2RestSession.h"
 #include "Core/Net/WebSocket/Gs2WebSocketSession.h"
+#include "Core/Util/Gs2Future.h"
 
 namespace Gs2::UE5::Util
 {

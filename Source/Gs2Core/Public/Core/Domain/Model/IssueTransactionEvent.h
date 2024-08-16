@@ -17,10 +17,22 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Auth/Domain/Gs2Auth.h"
-#include "Core/Model/AcquireAction.h"
-#include "Core/Model/ConsumeAction.h"
 #include "Math/BigInt.h"
+
+namespace Gs2::Auth::Model
+{
+    class FAccessToken;
+    typedef TSharedPtr<FAccessToken> FAccessTokenPtr;
+}
+
+namespace Gs2::Core::Model
+{
+    class FConsumeAction;
+    typedef TSharedPtr<FConsumeAction> FConsumeActionPtr;
+
+    class FAcquireAction;
+    typedef TSharedPtr<FAcquireAction> FAcquireActionPtr;
+}
 
 namespace Gs2::Core::Domain::Model
 {

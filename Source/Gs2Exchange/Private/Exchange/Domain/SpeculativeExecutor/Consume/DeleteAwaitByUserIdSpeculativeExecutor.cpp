@@ -25,6 +25,7 @@
 #endif
 
 #include "Exchange/Domain/SpeculativeExecutor/Consume/DeleteAwaitByUserIdSpeculativeExecutor.h"
+#include "Exchange/Domain/Gs2Exchange.h"
 
 #include "Core/Domain/Gs2.h"
 

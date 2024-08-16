@@ -17,6 +17,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Dom/JsonObject.h"
 
 namespace Gs2::Key::Request
 {
@@ -56,5 +57,5 @@ namespace Gs2::Key::Request
         static TSharedPtr<FCreateGitHubApiKeyRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;
     };
-    typedef TSharedPtr<FCreateGitHubApiKeyRequest, ESPMode::ThreadSafe> FCreateGitHubApiKeyRequestPtr;
+    typedef TSharedPtr<FCreateGitHubApiKeyRequest> FCreateGitHubApiKeyRequestPtr;
 }

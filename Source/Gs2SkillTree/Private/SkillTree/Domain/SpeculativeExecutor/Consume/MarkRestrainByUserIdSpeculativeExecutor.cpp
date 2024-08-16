@@ -27,6 +27,7 @@
 #include "SkillTree/Domain/SpeculativeExecutor/Consume/MarkRestrainByUserIdSpeculativeExecutor.h"
 
 #include "Core/Domain/Gs2.h"
+#include "SkillTree/Domain/Gs2SkillTree.h"
 
 namespace Gs2::SkillTree::Domain::SpeculativeExecutor
 {

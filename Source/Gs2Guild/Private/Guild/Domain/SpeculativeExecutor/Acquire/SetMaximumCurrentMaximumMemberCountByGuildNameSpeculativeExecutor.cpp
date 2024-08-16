@@ -27,6 +27,7 @@
 #include "Guild/Domain/SpeculativeExecutor/Acquire/SetMaximumCurrentMaximumMemberCountByGuildNameSpeculativeExecutor.h"
 
 #include "Core/Domain/Gs2.h"
+#include "Guild/Domain/Gs2Guild.h"
 
 namespace Gs2::Guild::Domain::SpeculativeExecutor
 {

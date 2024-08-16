@@ -142,6 +142,12 @@
 #include "Task/Rest/DeleteProfileByUserIdTask.h"
 #include "Task/WebSocket/DeleteProfileByUserIdTask.h"
 
+// UpdateProfileByStampSheet
+#include "Request/UpdateProfileByStampSheetRequest.h"
+#include "Result/UpdateProfileByStampSheetResult.h"
+#include "Task/Rest/UpdateProfileByStampSheetTask.h"
+#include "Task/WebSocket/UpdateProfileByStampSheetTask.h"
+
 // DescribeFriends
 #include "Request/DescribeFriendsRequest.h"
 #include "Result/DescribeFriendsResult.h"

@@ -15,6 +15,7 @@
  */
 
 #include "LoginReward/Model/Gs2LoginRewardNamespace.h"
+#include "LoginReward/Domain/EzGs2LoginReward.h"
 #include "LoginReward/Model/Gs2LoginRewardBonusModel.h"
 #include "Core/Model/Gs2AccessToken.h"
 #include "LoginReward/Model/Gs2LoginRewardUser.h"

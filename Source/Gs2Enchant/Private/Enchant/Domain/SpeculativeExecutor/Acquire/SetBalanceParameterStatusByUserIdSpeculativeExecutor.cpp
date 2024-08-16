@@ -27,6 +27,7 @@
 #include "Enchant/Domain/SpeculativeExecutor/Acquire/SetBalanceParameterStatusByUserIdSpeculativeExecutor.h"
 
 #include "Core/Domain/Gs2.h"
+#include "Enchant/Domain/Gs2Enchant.h"
 
 namespace Gs2::Enchant::Domain::SpeculativeExecutor
 {

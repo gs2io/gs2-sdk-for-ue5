@@ -17,7 +17,12 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Rest/Gs2RestSession.h"
+
+namespace Gs2::Core::Net::Rest
+{
+    class FGs2RestSession;
+    typedef TSharedPtr<FGs2RestSession> FGs2RestSessionPtr;
+}
 
 namespace Gs2::Core::Net
 {

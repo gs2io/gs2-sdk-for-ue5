@@ -17,6 +17,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Dom/JsonObject.h"
 
 namespace Gs2::StateMachine::Request
 {
@@ -53,5 +54,5 @@ namespace Gs2::StateMachine::Request
         static TSharedPtr<FGetStatusByUserIdRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;
     };
-    typedef TSharedPtr<FGetStatusByUserIdRequest, ESPMode::ThreadSafe> FGetStatusByUserIdRequestPtr;
+    typedef TSharedPtr<FGetStatusByUserIdRequest> FGetStatusByUserIdRequestPtr;
 }

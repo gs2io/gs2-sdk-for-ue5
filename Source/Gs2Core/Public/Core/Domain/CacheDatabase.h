@@ -17,12 +17,13 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Core/Gs2Object.h"
-#include "Core/Gs2Constant.h"
 
 typedef FString FTypeName;
 typedef FString FParentCacheKey;
 typedef FString FCacheKey;
+
+class Gs2Object;
+typedef TSharedPtr<Gs2Object> Gs2ObjectPtr;
 
 namespace Gs2::Core::Domain
 {
@@ -32,12 +33,12 @@ namespace Gs2::Core::Domain
     
     class GS2CORE_API FCacheDatabase
     {
-        TMap<FTypeName, TMap<FParentCacheKey, TMap<FCacheKey, TTuple<TSharedPtr<Gs2Object>, int64>>>> Cache;
-        TMap<FTypeName, TMap<FParentCacheKey, TMap<FCacheKey, TMap<CallbackID, TFunction<void(TSharedPtr<Gs2Object>)>>>>> CacheUpdateCallback;
+        TMap<FTypeName, TMap<FParentCacheKey, TMap<FCacheKey, TTuple<Gs2ObjectPtr, int64>>>> Cache;
+        TMap<FTypeName, TMap<FParentCacheKey, TMap<FCacheKey, TMap<CallbackID, TFunction<void(Gs2ObjectPtr)>>>>> CacheUpdateCallback;
         TMap<FTypeName, TSet<FParentCacheKey>> ListCached;
         TMap<FTypeName, TMap<FParentCacheKey, TMap<CallbackID, TFunction<void()>>>> ListCacheUpdateCallback;
         TMap<FTypeName, TSet<FParentCacheKey>> ListCacheUpdateRequired;
-        TMap<FTypeName, TMap<FParentCacheKey, TSharedPtr<Gs2Object>>> ListUpdateContexts;
+        TMap<FTypeName, TMap<FParentCacheKey, Gs2ObjectPtr>> ListUpdateContexts;
 
     public:
         FCacheDatabase();
@@ -52,7 +53,7 @@ namespace Gs2::Core::Domain
         void SetListCached(
             FTypeName Kind,
             FParentCacheKey ParentKey,
-            TSharedPtr<Gs2Object> UpdateContext = nullptr
+            Gs2ObjectPtr UpdateContext = nullptr
         );
         
         void SetListCacheUpdateRequired(
@@ -69,7 +70,7 @@ namespace Gs2::Core::Domain
             FTypeName Kind,
             FParentCacheKey ParentKey,
             FCacheKey Key,
-            TSharedPtr<Gs2Object> Obj,
+            Gs2ObjectPtr Obj,
             FDateTime Ttl
         );
 
@@ -77,7 +78,7 @@ namespace Gs2::Core::Domain
             FTypeName Kind,
             FParentCacheKey ParentKey,
             FCacheKey Key,
-            const TFunction<void(TSharedPtr<Gs2Object>)>& Callback
+            const TFunction<void(Gs2ObjectPtr)>& Callback
         );
 
         void Unsubscribe(
@@ -109,7 +110,7 @@ namespace Gs2::Core::Domain
             FTypeName Kind,
             FParentCacheKey ParentKey,
             FCacheKey Key,
-            TSharedPtr<Gs2Object>* OutObject
+            Gs2ObjectPtr* OutObject
         );
 
         template<class TKind>
@@ -119,7 +120,7 @@ namespace Gs2::Core::Domain
             TSharedPtr<TKind>* OutObject
         )
         {
-            TSharedPtr<Gs2Object> Out;
+            Gs2ObjectPtr Out;
             auto Result = TryGet(TKind::TypeName, ParentKey, Key, &Out);
             *OutObject = StaticCastSharedPtr<TKind>(Out);
             return Result;
@@ -139,7 +140,7 @@ namespace Gs2::Core::Domain
         template<class TKind>
         TSharedPtr<TArray<TSharedPtr<TKind>>> TryGetList(
             FParentCacheKey ParentKey,
-            TSharedPtr<Gs2Object>* OutUpdateContext = nullptr
+            Gs2ObjectPtr* OutUpdateContext = nullptr
         )
         {
             auto* ListCache0 = ListCached.Find(TKind::TypeName);

@@ -17,53 +17,266 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Account/Domain/EzGs2Account.h"
-#include "AdReward/Domain/EzGs2AdReward.h"
-#include "Auth/Domain/EzGs2Auth.h"
-#include "Buff/Domain/EzGs2Buff.h"
-#include "Chat/Domain/EzGs2Chat.h"
 #include "Core/Domain/Gs2.h"
-#include "Datastore/Domain/EzGs2Datastore.h"
-#include "Dictionary/Domain/EzGs2Dictionary.h"
-#include "Distributor/Domain/EzGs2Distributor.h"
-#include "Enchant/Domain/EzGs2Enchant.h"
-#include "Enhance/Domain/EzGs2Enhance.h"
-#include "Exchange/Domain/EzGs2Exchange.h"
-#include "Experience/Domain/EzGs2Experience.h"
-#include "Formation/Domain/EzGs2Formation.h"
-#include "Friend/Domain/EzGs2Friend.h"
-#include "Gateway/Domain/EzGs2Gateway.h"
-#include "Grade/Domain/EzGs2Grade.h"
-#include "Guild/Domain/EzGs2Guild.h"
-#include "Idle/Domain/EzGs2Idle.h"
-#include "Inbox/Domain/EzGs2Inbox.h"
-#include "Inventory/Domain/EzGs2Inventory.h"
-#include "JobQueue/Domain/EzGs2JobQueue.h"
-#include "Limit/Domain/EzGs2Limit.h"
-#include "LoginReward/Domain/EzGs2LoginReward.h"
-#include "Lottery/Domain/EzGs2Lottery.h"
-#include "Matchmaking/Domain/EzGs2Matchmaking.h"
-#include "MegaField/Domain/EzGs2MegaField.h"
-#include "Mission/Domain/EzGs2Mission.h"
-#include "Money/Domain/EzGs2Money.h"
-#include "Money2/Domain/EzGs2Money2.h"
-#include "News/Domain/EzGs2News.h"
-#include "Quest/Domain/EzGs2Quest.h"
-#include "Ranking/Domain/EzGs2Ranking.h"
-#include "Ranking2/Domain/EzGs2Ranking2.h"
-#include "Realtime/Domain/EzGs2Realtime.h"
-#include "Schedule/Domain/EzGs2Schedule.h"
-#include "SeasonRating/Domain/EzGs2SeasonRating.h"
-#include "SerialKey/Domain/EzGs2SerialKey.h"
-#include "Showcase/Domain/EzGs2Showcase.h"
-#include "SkillTree/Domain/EzGs2SkillTree.h"
-#include "Stamina/Domain/EzGs2Stamina.h"
-#include "StateMachine/Domain/EzGs2StateMachine.h"
-#include "Version/Domain/EzGs2Version.h"
+#include "Util/Net/GameSession.h"
+#include "Util/Net/Gs2Connection.h"
 
 namespace Gs2::UE5::Util
 {
+    class IAuthenticator;
     class FProfile;
+}
+
+namespace Gs2::UE5::Account::Domain
+{
+    class FEzGs2Account;
+    typedef TSharedPtr<FEzGs2Account> FEzGs2AccountPtr;
+}
+
+namespace Gs2::UE5::AdReward::Domain
+{
+    class FEzGs2AdReward;
+    typedef TSharedPtr<FEzGs2AdReward> FEzGs2AdRewardPtr;
+}
+
+namespace Gs2::UE5::Auth::Domain
+{
+    class FEzGs2Auth;
+    typedef TSharedPtr<FEzGs2Auth> FEzGs2AuthPtr;
+}
+
+namespace Gs2::UE5::Buff::Domain
+{
+    class FEzGs2Buff;
+    typedef TSharedPtr<FEzGs2Buff> FEzGs2BuffPtr;
+}
+
+namespace Gs2::UE5::Chat::Domain
+{
+    class FEzGs2Chat;
+    typedef TSharedPtr<FEzGs2Chat> FEzGs2ChatPtr;
+}
+
+namespace Gs2::UE5::Datastore::Domain
+{
+    class FEzGs2Datastore;
+    typedef TSharedPtr<FEzGs2Datastore> FEzGs2DatastorePtr;
+}
+
+namespace Gs2::UE5::Dictionary::Domain
+{
+    class FEzGs2Dictionary;
+    typedef TSharedPtr<FEzGs2Dictionary> FEzGs2DictionaryPtr;
+}
+
+namespace Gs2::UE5::Distributor::Domain
+{
+    class FEzGs2Distributor;
+    typedef TSharedPtr<FEzGs2Distributor> FEzGs2DistributorPtr;
+}
+
+namespace Gs2::UE5::Enchant::Domain
+{
+    class FEzGs2Enchant;
+    typedef TSharedPtr<FEzGs2Enchant> FEzGs2EnchantPtr;
+}
+
+namespace Gs2::UE5::Enhance::Domain
+{
+    class FEzGs2Enhance;
+    typedef TSharedPtr<FEzGs2Enhance> FEzGs2EnhancePtr;
+}
+
+namespace Gs2::UE5::Exchange::Domain
+{
+    class FEzGs2Exchange;
+    typedef TSharedPtr<FEzGs2Exchange> FEzGs2ExchangePtr;
+}
+
+namespace Gs2::UE5::Experience::Domain
+{
+    class FEzGs2Experience;
+    typedef TSharedPtr<FEzGs2Experience> FEzGs2ExperiencePtr;
+}
+
+namespace Gs2::UE5::Formation::Domain
+{
+    class FEzGs2Formation;
+    typedef TSharedPtr<FEzGs2Formation> FEzGs2FormationPtr;
+}
+
+namespace Gs2::UE5::Friend::Domain
+{
+    class FEzGs2Friend;
+    typedef TSharedPtr<FEzGs2Friend> FEzGs2FriendPtr;
+}
+
+namespace Gs2::UE5::Gateway::Domain
+{
+    class FEzGs2Gateway;
+    typedef TSharedPtr<FEzGs2Gateway> FEzGs2GatewayPtr;
+}
+
+namespace Gs2::UE5::Grade::Domain
+{
+    class FEzGs2Grade;
+    typedef TSharedPtr<FEzGs2Grade> FEzGs2GradePtr;
+}
+
+namespace Gs2::UE5::Guild::Domain
+{
+    class FEzGs2Guild;
+    typedef TSharedPtr<FEzGs2Guild> FEzGs2GuildPtr;
+}
+
+namespace Gs2::UE5::Idle::Domain
+{
+    class FEzGs2Idle;
+    typedef TSharedPtr<FEzGs2Idle> FEzGs2IdlePtr;
+}
+
+namespace Gs2::UE5::Inbox::Domain
+{
+    class FEzGs2Inbox;
+    typedef TSharedPtr<FEzGs2Inbox> FEzGs2InboxPtr;
+}
+
+namespace Gs2::UE5::Inventory::Domain
+{
+    class FEzGs2Inventory;
+    typedef TSharedPtr<FEzGs2Inventory> FEzGs2InventoryPtr;
+}
+
+namespace Gs2::UE5::JobQueue::Domain
+{
+    class FEzGs2JobQueue;
+    typedef TSharedPtr<FEzGs2JobQueue> FEzGs2JobQueuePtr;
+}
+
+namespace Gs2::UE5::Limit::Domain
+{
+    class FEzGs2Limit;
+    typedef TSharedPtr<FEzGs2Limit> FEzGs2LimitPtr;
+}
+
+namespace Gs2::UE5::LoginReward::Domain
+{
+    class FEzGs2LoginReward;
+    typedef TSharedPtr<FEzGs2LoginReward> FEzGs2LoginRewardPtr;
+}
+
+namespace Gs2::UE5::Lottery::Domain
+{
+    class FEzGs2Lottery;
+    typedef TSharedPtr<FEzGs2Lottery> FEzGs2LotteryPtr;
+}
+
+namespace Gs2::UE5::Matchmaking::Domain
+{
+    class FEzGs2Matchmaking;
+    typedef TSharedPtr<FEzGs2Matchmaking> FEzGs2MatchmakingPtr;
+}
+
+namespace Gs2::UE5::MegaField::Domain
+{
+    class FEzGs2MegaField;
+    typedef TSharedPtr<FEzGs2MegaField> FEzGs2MegaFieldPtr;
+}
+
+namespace Gs2::UE5::Mission::Domain
+{
+    class FEzGs2Mission;
+    typedef TSharedPtr<FEzGs2Mission> FEzGs2MissionPtr;
+}
+
+namespace Gs2::UE5::Money::Domain
+{
+    class FEzGs2Money;
+    typedef TSharedPtr<FEzGs2Money> FEzGs2MoneyPtr;
+}
+
+namespace Gs2::UE5::Money2::Domain
+{
+    class FEzGs2Money2;
+    typedef TSharedPtr<FEzGs2Money2> FEzGs2Money2Ptr;
+}
+
+namespace Gs2::UE5::News::Domain
+{
+    class FEzGs2News;
+    typedef TSharedPtr<FEzGs2News> FEzGs2NewsPtr;
+}
+
+namespace Gs2::UE5::Quest::Domain
+{
+    class FEzGs2Quest;
+    typedef TSharedPtr<FEzGs2Quest> FEzGs2QuestPtr;
+}
+
+namespace Gs2::UE5::Ranking::Domain
+{
+    class FEzGs2Ranking;
+    typedef TSharedPtr<FEzGs2Ranking> FEzGs2RankingPtr;
+}
+
+namespace Gs2::UE5::Ranking2::Domain
+{
+    class FEzGs2Ranking2;
+    typedef TSharedPtr<FEzGs2Ranking2> FEzGs2Ranking2Ptr;
+}
+
+namespace Gs2::UE5::Realtime::Domain
+{
+    class FEzGs2Realtime;
+    typedef TSharedPtr<FEzGs2Realtime> FEzGs2RealtimePtr;
+}
+
+namespace Gs2::UE5::Schedule::Domain
+{
+    class FEzGs2Schedule;
+    typedef TSharedPtr<FEzGs2Schedule> FEzGs2SchedulePtr;
+}
+
+namespace Gs2::UE5::SeasonRating::Domain
+{
+    class FEzGs2SeasonRating;
+    typedef TSharedPtr<FEzGs2SeasonRating> FEzGs2SeasonRatingPtr;
+}
+
+namespace Gs2::UE5::SerialKey::Domain
+{
+    class FEzGs2SerialKey;
+    typedef TSharedPtr<FEzGs2SerialKey> FEzGs2SerialKeyPtr;
+}
+
+namespace Gs2::UE5::Showcase::Domain
+{
+    class FEzGs2Showcase;
+    typedef TSharedPtr<FEzGs2Showcase> FEzGs2ShowcasePtr;
+}
+
+namespace Gs2::UE5::SkillTree::Domain
+{
+    class FEzGs2SkillTree;
+    typedef TSharedPtr<FEzGs2SkillTree> FEzGs2SkillTreePtr;
+}
+
+namespace Gs2::UE5::Stamina::Domain
+{
+    class FEzGs2Stamina;
+    typedef TSharedPtr<FEzGs2Stamina> FEzGs2StaminaPtr;
+}
+
+namespace Gs2::UE5::StateMachine::Domain
+{
+    class FEzGs2StateMachine;
+    typedef TSharedPtr<FEzGs2StateMachine> FEzGs2StateMachinePtr;
+}
+
+namespace Gs2::UE5::Version::Domain
+{
+    class FEzGs2Version;
+    typedef TSharedPtr<FEzGs2Version> FEzGs2VersionPtr;
 }
 
 namespace Gs2::UE5::Core::Domain

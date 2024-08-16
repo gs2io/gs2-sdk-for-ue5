@@ -18,13 +18,9 @@
 
 #include "CoreMinimal.h"
 #include "Core/Model/Gs2Credential.h"
-#include "Task/OpenTask.h"
 
 namespace Gs2::Core::Net
 {
-    /**
-     * 
-     */
     class GS2CORE_API IGs2Session
     {
     public:

@@ -17,6 +17,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Dom/JsonObject.h"
 
 namespace Gs2::Ranking2::Request
 {
@@ -54,5 +55,5 @@ namespace Gs2::Ranking2::Request
         static TSharedPtr<FGetGlobalRankingRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;
     };
-    typedef TSharedPtr<FGetGlobalRankingRequest, ESPMode::ThreadSafe> FGetGlobalRankingRequestPtr;
+    typedef TSharedPtr<FGetGlobalRankingRequest> FGetGlobalRankingRequestPtr;
 }

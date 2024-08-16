@@ -19,6 +19,10 @@
 #include "CoreMinimal.h"
 
 #include "Core/Model/Gs2Client.h"
+#include "Gs2Matchmaking/Public/Matchmaking/Model/JoinNotification.h"
+#include "Gs2Matchmaking/Public/Matchmaking/Model/LeaveNotification.h"
+#include "Gs2Matchmaking/Public/Matchmaking/Model/CompleteNotification.h"
+#include "Gs2Matchmaking/Public/Matchmaking/Model/ChangeRatingNotification.h"
 #include "Gs2Matchmaking.generated.h"
 
 USTRUCT(BlueprintType)

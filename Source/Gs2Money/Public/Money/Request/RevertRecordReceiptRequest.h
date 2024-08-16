@@ -17,6 +17,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Dom/JsonObject.h"
 
 namespace Gs2::Money::Request
 {
@@ -56,5 +57,5 @@ namespace Gs2::Money::Request
         static TSharedPtr<FRevertRecordReceiptRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;
     };
-    typedef TSharedPtr<FRevertRecordReceiptRequest, ESPMode::ThreadSafe> FRevertRecordReceiptRequestPtr;
+    typedef TSharedPtr<FRevertRecordReceiptRequest> FRevertRecordReceiptRequestPtr;
 }

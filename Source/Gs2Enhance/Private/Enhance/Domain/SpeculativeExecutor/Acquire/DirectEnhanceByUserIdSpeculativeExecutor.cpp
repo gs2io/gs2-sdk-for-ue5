@@ -23,6 +23,7 @@
 #endif
 
 #include "Enhance/Domain/SpeculativeExecutor/Acquire/DirectEnhanceByUserIdSpeculativeExecutor.h"
+#include "Enhance/Domain/Gs2Enhance.h"
 #include "Enhance/Domain/SpeculativeExecutor/Transaction/DirectEnhanceByUserIdSpeculativeExecutor.h"
 
 #include "Core/Domain/Gs2.h"

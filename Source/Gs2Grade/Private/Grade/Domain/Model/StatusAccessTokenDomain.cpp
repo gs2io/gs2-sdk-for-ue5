@@ -12,6 +12,8 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
+ *
+ * deny overwrite
  */
 
 #if defined(_MSC_VER)
@@ -38,6 +40,7 @@
 #include "Core/Domain/Transaction/JobQueueJobDomainFactory.h"
 #include "Core/Domain/Transaction/InternalTransactionDomainFactory.h"
 #include "Core/Domain/Transaction/ManualTransactionAccessTokenDomain.h"
+#include "Experience/Domain/Model/Status.h"
 
 namespace Gs2::Grade::Domain::Model
 {

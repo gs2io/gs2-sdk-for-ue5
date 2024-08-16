@@ -27,6 +27,7 @@
 #include "Dictionary/Domain/SpeculativeExecutor/Verify/VerifyEntryByUserIdSpeculativeExecutor.h"
 
 #include "Core/Domain/Gs2.h"
+#include "Dictionary/Domain/Gs2Dictionary.h"
 
 namespace Gs2::Dictionary::Domain::SpeculativeExecutor
 {

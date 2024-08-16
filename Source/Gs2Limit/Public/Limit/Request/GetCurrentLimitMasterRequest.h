@@ -17,6 +17,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Dom/JsonObject.h"
 
 namespace Gs2::Limit::Request
 {
@@ -44,5 +45,5 @@ namespace Gs2::Limit::Request
         static TSharedPtr<FGetCurrentLimitMasterRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;
     };
-    typedef TSharedPtr<FGetCurrentLimitMasterRequest, ESPMode::ThreadSafe> FGetCurrentLimitMasterRequestPtr;
+    typedef TSharedPtr<FGetCurrentLimitMasterRequest> FGetCurrentLimitMasterRequestPtr;
 }

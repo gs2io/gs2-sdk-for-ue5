@@ -17,6 +17,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Dom/JsonObject.h"
 
 namespace Gs2::Enhance::Request
 {
@@ -47,5 +48,5 @@ namespace Gs2::Enhance::Request
         static TSharedPtr<FDeleteUnleashRateModelMasterRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;
     };
-    typedef TSharedPtr<FDeleteUnleashRateModelMasterRequest, ESPMode::ThreadSafe> FDeleteUnleashRateModelMasterRequestPtr;
+    typedef TSharedPtr<FDeleteUnleashRateModelMasterRequest> FDeleteUnleashRateModelMasterRequestPtr;
 }

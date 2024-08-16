@@ -25,6 +25,7 @@
 #endif
 
 #include "Inbox/Domain/SpeculativeExecutor/Consume/DeleteMessageByUserIdSpeculativeExecutor.h"
+#include "Inbox/Domain/Gs2Inbox.h"
 
 #include "Core/Domain/Gs2.h"
 

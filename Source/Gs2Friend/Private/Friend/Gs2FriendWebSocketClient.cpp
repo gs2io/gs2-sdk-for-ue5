@@ -181,6 +181,15 @@ namespace Gs2::Friend
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::WebSocket::FUpdateProfileByStampSheetTask>> FGs2FriendWebSocketClient::UpdateProfileByStampSheet(
+        const Request::FUpdateProfileByStampSheetRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FUpdateProfileByStampSheetTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::WebSocket::FDescribeFriendsTask>> FGs2FriendWebSocketClient::DescribeFriends(
         const Request::FDescribeFriendsRequestPtr Request) const
     {

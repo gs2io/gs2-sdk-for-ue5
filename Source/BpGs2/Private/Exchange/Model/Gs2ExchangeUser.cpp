@@ -15,6 +15,7 @@
  */
 
 #include "Exchange/Model/Gs2ExchangeUser.h"
+#include "Exchange/Domain/EzGs2Exchange.h"
 #include "Exchange/Model/Gs2ExchangeAwait.h"
 #include "Core/Model/Gs2AccessToken.h"
 #include "Exchange/Model/Gs2ExchangeExchange.h"

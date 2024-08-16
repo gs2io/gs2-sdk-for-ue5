@@ -27,6 +27,7 @@
 #include "Limit/Domain/SpeculativeExecutor/Consume/CountUpByUserIdSpeculativeExecutor.h"
 
 #include "Core/Domain/Gs2.h"
+#include "Limit/Domain/Gs2Limit.h"
 
 namespace Gs2::Limit::Domain::SpeculativeExecutor
 {

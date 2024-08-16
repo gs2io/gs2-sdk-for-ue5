@@ -17,6 +17,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Dom/JsonObject.h"
 #include "../Model/GitHubCheckoutSetting.h"
 
 namespace Gs2::Formation::Request
@@ -48,5 +49,5 @@ namespace Gs2::Formation::Request
         static TSharedPtr<FUpdateCurrentFormMasterFromGitHubRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;
     };
-    typedef TSharedPtr<FUpdateCurrentFormMasterFromGitHubRequest, ESPMode::ThreadSafe> FUpdateCurrentFormMasterFromGitHubRequestPtr;
+    typedef TSharedPtr<FUpdateCurrentFormMasterFromGitHubRequest> FUpdateCurrentFormMasterFromGitHubRequestPtr;
 }

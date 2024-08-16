@@ -17,6 +17,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Dom/JsonObject.h"
 #include "../Model/Config.h"
 
 namespace Gs2::Lottery::Request
@@ -67,5 +68,5 @@ namespace Gs2::Lottery::Request
         static TSharedPtr<FDrawWithRandomSeedByUserIdRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;
     };
-    typedef TSharedPtr<FDrawWithRandomSeedByUserIdRequest, ESPMode::ThreadSafe> FDrawWithRandomSeedByUserIdRequestPtr;
+    typedef TSharedPtr<FDrawWithRandomSeedByUserIdRequest> FDrawWithRandomSeedByUserIdRequestPtr;
 }

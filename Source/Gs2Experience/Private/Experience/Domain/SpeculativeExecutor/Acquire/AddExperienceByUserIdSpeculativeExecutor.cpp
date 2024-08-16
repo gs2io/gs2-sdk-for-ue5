@@ -25,6 +25,7 @@
 #endif
 
 #include "Experience/Domain/SpeculativeExecutor/Acquire/AddExperienceByUserIdSpeculativeExecutor.h"
+#include "Experience/Domain/Gs2Experience.h"
 
 #include "Core/Domain/Gs2.h"
 #include "Experience/Model/ExperienceModelEx.h"

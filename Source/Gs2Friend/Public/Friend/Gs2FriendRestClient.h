@@ -54,6 +54,8 @@
 #include "Task/Rest/UpdateProfileByUserIdTask.h"
 #include "Request/DeleteProfileByUserIdRequest.h"
 #include "Task/Rest/DeleteProfileByUserIdTask.h"
+#include "Request/UpdateProfileByStampSheetRequest.h"
+#include "Task/Rest/UpdateProfileByStampSheetTask.h"
 #include "Request/DescribeFriendsRequest.h"
 #include "Task/Rest/DescribeFriendsTask.h"
 #include "Request/DescribeFriendsByUserIdRequest.h"
@@ -210,6 +212,10 @@ namespace Gs2::Friend
 
         TSharedPtr<FAsyncTask<Task::Rest::FDeleteProfileByUserIdTask>> DeleteProfileByUserId(
             const Request::FDeleteProfileByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FUpdateProfileByStampSheetTask>> UpdateProfileByStampSheet(
+            const Request::FUpdateProfileByStampSheetRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::Rest::FDescribeFriendsTask>> DescribeFriends(

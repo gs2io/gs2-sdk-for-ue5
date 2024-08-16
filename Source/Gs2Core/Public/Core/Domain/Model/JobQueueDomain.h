@@ -17,7 +17,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Auth/Model/AccessToken.h"
 
 namespace Gs2::JobQueue::Model
 {
@@ -26,11 +25,6 @@ namespace Gs2::JobQueue::Model
     
     class FJobResultBody;
     typedef TSharedPtr<FJobResultBody> FJobResultBodyPtr;
-}
-
-namespace Gs2::Core::Domain
-{
-    class FGs2;
 }
 
 namespace Gs2::Core::Domain::Model

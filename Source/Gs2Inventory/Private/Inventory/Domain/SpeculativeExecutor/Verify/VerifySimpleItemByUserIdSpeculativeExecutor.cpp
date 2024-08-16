@@ -27,6 +27,7 @@
 #include "Inventory/Domain/SpeculativeExecutor/Verify/VerifySimpleItemByUserIdSpeculativeExecutor.h"
 
 #include "Core/Domain/Gs2.h"
+#include "Inventory/Domain/Gs2Inventory.h"
 
 namespace Gs2::Inventory::Domain::SpeculativeExecutor
 {

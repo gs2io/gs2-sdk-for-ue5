@@ -17,6 +17,8 @@
 
 #include "Core/Domain/CacheDatabase.h"
 
+#include "Gs2Constant.h"
+
 typedef FString FTypeName;
 typedef FString FParentCacheKey;
 typedef FString FCacheKey;
@@ -64,7 +66,7 @@ void FCacheDatabase::Clear()
 void FCacheDatabase::SetListCached(
     FTypeName Kind,
     FParentCacheKey ParentKey,
-    TSharedPtr<Gs2Object> UpdateContext
+    Gs2ObjectPtr UpdateContext
 )
 {
     Ensure(ListCached, Kind).Add(ParentKey);
@@ -119,7 +121,7 @@ void FCacheDatabase::Put(
     FTypeName Kind,
     FParentCacheKey ParentKey,
     FCacheKey Key,
-    TSharedPtr<Gs2Object> Obj,
+    Gs2ObjectPtr Obj,
     FDateTime Ttl
 )
 {
@@ -129,7 +131,7 @@ void FCacheDatabase::Put(
     }
 
     UE_LOG(Gs2Log, VeryVerbose, TEXT("[%s][%s][%s]: Put %p"), ToCStr(Kind), ToCStr(ParentKey), ToCStr(Key), &Obj);
-    Ensure(Ensure(Cache, Kind), ParentKey).Add(Key, TTuple<TSharedPtr<Gs2Object>, int64>(Obj, Ttl.ToUnixTimestamp()));
+    Ensure(Ensure(Cache, Kind), ParentKey).Add(Key, TTuple<Gs2ObjectPtr, int64>(Obj, Ttl.ToUnixTimestamp()));
 
     {
         auto Callbacks = Ensure(Ensure(CacheUpdateCallback, Kind), ParentKey).Find(Key);
@@ -181,7 +183,7 @@ void FCacheDatabase::Delete(
 
 static CallbackID GCallbackID = 1;
 
-CallbackID FCacheDatabase::Subscribe(FTypeName Kind, FParentCacheKey ParentKey, FCacheKey Key, const TFunction<void(TSharedPtr<Gs2Object>)>& Callback)
+CallbackID FCacheDatabase::Subscribe(FTypeName Kind, FParentCacheKey ParentKey, FCacheKey Key, const TFunction<void(Gs2ObjectPtr)>& Callback)
 {
     UE_LOG(Gs2Log, VeryVerbose, TEXT("[%s][%s][%s]: Subscribe(%d)"), ToCStr(Kind), ToCStr(ParentKey), ToCStr(Key), GCallbackID);
     Ensure(Ensure(Ensure(CacheUpdateCallback, Kind), ParentKey), Key).Add(GCallbackID, Callback);
@@ -211,7 +213,7 @@ bool FCacheDatabase::TryGet(
     FTypeName Kind,
     FParentCacheKey ParentKey,
     FCacheKey Key,
-    TSharedPtr<Gs2Object>* OutObject
+    Gs2ObjectPtr* OutObject
 )
 {
     auto* Cache0 = Cache.Find(Kind);

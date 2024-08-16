@@ -15,5 +15,6 @@
  */
 
 #include "Idle/Model/Gs2IdleStatus.h"
+#include "Idle/Domain/EzGs2Idle.h"
 #include "Core/Model/Gs2AccessToken.h"
 #include "Core/BpGs2Constant.h"

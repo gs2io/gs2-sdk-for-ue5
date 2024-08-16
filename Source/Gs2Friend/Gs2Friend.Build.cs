@@ -18,6 +18,7 @@ public class Gs2Friend : ModuleRules
 			"JsonUtilities",
 			"Gs2Core",
 			"Gs2Auth",
+			"Gs2JobQueue",
 		});
 		PublicDependencyModuleNames.AddRange(new string[] {
 			"Core",

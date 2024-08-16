@@ -27,6 +27,7 @@
 #include "Money2/Domain/SpeculativeExecutor/Acquire/DepositByUserIdSpeculativeExecutor.h"
 
 #include "Core/Domain/Gs2.h"
+#include "Money2/Domain/Gs2Money2.h"
 
 namespace Gs2::Money2::Domain::SpeculativeExecutor
 {

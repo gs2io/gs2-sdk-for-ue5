@@ -27,6 +27,7 @@
 #include "Dictionary/Domain/SpeculativeExecutor/Acquire/AddEntriesByUserIdSpeculativeExecutor.h"
 
 #include "Core/Domain/Gs2.h"
+#include "Dictionary/Domain/Gs2Dictionary.h"
 
 namespace Gs2::Dictionary::Domain::SpeculativeExecutor
 {

@@ -17,6 +17,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Async/AsyncWork.h"
 #include "../../Model/Region.h"
 #include "../../Net/Gs2Session.h"
 

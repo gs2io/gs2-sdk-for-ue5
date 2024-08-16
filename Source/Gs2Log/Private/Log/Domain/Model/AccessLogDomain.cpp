@@ -30,6 +30,7 @@
 #include "Log/Domain/Model/ExecuteStampTaskLog.h"
 #include "Log/Domain/Model/InGameLog.h"
 #include "Log/Domain/Model/InGameLogAccessToken.h"
+#include "Log/Domain/Model/AccessLogWithTelemetry.h"
 #include "Log/Domain/Model/User.h"
 #include "Log/Domain/Model/UserAccessToken.h"
 #include "Log/Domain/Model/Insight.h"

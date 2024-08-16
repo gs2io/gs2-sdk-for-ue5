@@ -17,6 +17,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Dom/JsonObject.h"
 
 namespace Gs2::Realtime::Request
 {
@@ -51,5 +52,5 @@ namespace Gs2::Realtime::Request
         static TSharedPtr<FDescribeRoomsRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;
     };
-    typedef TSharedPtr<FDescribeRoomsRequest, ESPMode::ThreadSafe> FDescribeRoomsRequestPtr;
+    typedef TSharedPtr<FDescribeRoomsRequest> FDescribeRoomsRequestPtr;
 }

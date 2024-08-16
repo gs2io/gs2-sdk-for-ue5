@@ -26,6 +26,7 @@
 
 #include "AdReward/Domain/SpeculativeExecutor/Consume/ConsumePointByUserIdSpeculativeExecutor.h"
 
+#include "AdReward/Domain/Gs2AdReward.h"
 #include "Core/Domain/Gs2.h"
 
 namespace Gs2::AdReward::Domain::SpeculativeExecutor

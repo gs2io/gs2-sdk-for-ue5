@@ -17,6 +17,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Dom/JsonObject.h"
 
 namespace Gs2::Stamina::Request
 {
@@ -60,5 +61,5 @@ namespace Gs2::Stamina::Request
         static TSharedPtr<FUpdateMaxStaminaTableMasterRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;
     };
-    typedef TSharedPtr<FUpdateMaxStaminaTableMasterRequest, ESPMode::ThreadSafe> FUpdateMaxStaminaTableMasterRequestPtr;
+    typedef TSharedPtr<FUpdateMaxStaminaTableMasterRequest> FUpdateMaxStaminaTableMasterRequestPtr;
 }

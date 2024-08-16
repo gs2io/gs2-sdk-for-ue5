@@ -17,6 +17,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Dom/JsonObject.h"
 #include "../Model/Config.h"
 
 namespace Gs2::Showcase::Request
@@ -66,5 +67,5 @@ namespace Gs2::Showcase::Request
         static TSharedPtr<FRandomShowcaseBuyByUserIdRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;
     };
-    typedef TSharedPtr<FRandomShowcaseBuyByUserIdRequest, ESPMode::ThreadSafe> FRandomShowcaseBuyByUserIdRequestPtr;
+    typedef TSharedPtr<FRandomShowcaseBuyByUserIdRequest> FRandomShowcaseBuyByUserIdRequestPtr;
 }

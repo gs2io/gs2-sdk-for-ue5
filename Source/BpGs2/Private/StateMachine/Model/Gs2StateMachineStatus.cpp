@@ -15,5 +15,6 @@
  */
 
 #include "StateMachine/Model/Gs2StateMachineStatus.h"
+#include "StateMachine/Domain/EzGs2StateMachine.h"
 #include "Core/Model/Gs2AccessToken.h"
 #include "Core/BpGs2Constant.h"

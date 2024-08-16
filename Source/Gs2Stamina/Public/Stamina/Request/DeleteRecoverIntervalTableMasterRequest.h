@@ -17,6 +17,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Dom/JsonObject.h"
 
 namespace Gs2::Stamina::Request
 {
@@ -47,5 +48,5 @@ namespace Gs2::Stamina::Request
         static TSharedPtr<FDeleteRecoverIntervalTableMasterRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;
     };
-    typedef TSharedPtr<FDeleteRecoverIntervalTableMasterRequest, ESPMode::ThreadSafe> FDeleteRecoverIntervalTableMasterRequestPtr;
+    typedef TSharedPtr<FDeleteRecoverIntervalTableMasterRequest> FDeleteRecoverIntervalTableMasterRequestPtr;
 }

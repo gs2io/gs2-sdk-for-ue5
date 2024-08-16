@@ -15,5 +15,6 @@
  */
 
 #include "Matchmaking/Model/Gs2MatchmakingRating.h"
+#include "Matchmaking/Domain/EzGs2Matchmaking.h"
 #include "Core/Model/Gs2AccessToken.h"
 #include "Core/BpGs2Constant.h"

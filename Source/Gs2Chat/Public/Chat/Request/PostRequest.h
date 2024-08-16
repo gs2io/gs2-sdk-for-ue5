@@ -17,6 +17,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Dom/JsonObject.h"
 
 namespace Gs2::Chat::Request
 {
@@ -63,5 +64,5 @@ namespace Gs2::Chat::Request
         static TSharedPtr<FPostRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;
     };
-    typedef TSharedPtr<FPostRequest, ESPMode::ThreadSafe> FPostRequestPtr;
+    typedef TSharedPtr<FPostRequest> FPostRequestPtr;
 }

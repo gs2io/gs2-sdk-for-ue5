@@ -25,6 +25,7 @@
 #endif
 
 #include "Quest/Domain/SpeculativeExecutor/Consume/DeleteProgressByUserIdSpeculativeExecutor.h"
+#include "Quest/Domain/Gs2Quest.h"
 
 #include "Core/Domain/Gs2.h"
 
