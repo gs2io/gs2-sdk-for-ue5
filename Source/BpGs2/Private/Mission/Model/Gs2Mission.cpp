@@ -15,7 +15,6 @@
  */
 
 #include "Mission/Model/Gs2Mission.h"
-#include "Mission/Domain/EzGs2Mission.h"
 #include "Mission/Model/Gs2MissionNamespace.h"
 #include "Mission/Model/Gs2MissionMissionTaskModel.h"
 #include "Core/BpGs2Constant.h"

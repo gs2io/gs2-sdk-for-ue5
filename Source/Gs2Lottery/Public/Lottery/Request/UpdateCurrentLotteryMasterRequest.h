@@ -17,7 +17,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Dom/JsonObject.h"
 
 namespace Gs2::Lottery::Request
 {
@@ -48,5 +47,5 @@ namespace Gs2::Lottery::Request
         static TSharedPtr<FUpdateCurrentLotteryMasterRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;
     };
-    typedef TSharedPtr<FUpdateCurrentLotteryMasterRequest> FUpdateCurrentLotteryMasterRequestPtr;
+    typedef TSharedPtr<FUpdateCurrentLotteryMasterRequest, ESPMode::ThreadSafe> FUpdateCurrentLotteryMasterRequestPtr;
 }

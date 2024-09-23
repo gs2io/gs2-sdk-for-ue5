@@ -17,7 +17,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Dom/JsonObject.h"
 #include "../Model/Material.h"
 #include "../Model/Config.h"
 
@@ -63,5 +62,5 @@ namespace Gs2::Enhance::Request
         static TSharedPtr<FDirectEnhanceRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;
     };
-    typedef TSharedPtr<FDirectEnhanceRequest> FDirectEnhanceRequestPtr;
+    typedef TSharedPtr<FDirectEnhanceRequest, ESPMode::ThreadSafe> FDirectEnhanceRequestPtr;
 }

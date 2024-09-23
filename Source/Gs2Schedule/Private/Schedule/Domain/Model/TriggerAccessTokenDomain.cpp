@@ -204,6 +204,54 @@ namespace Gs2::Schedule::Domain::Model
         return Gs2::Core::Util::New<FAsyncTask<FDeleteTask>>(this->AsShared(), Request);
     }
 
+    FTriggerAccessTokenDomain::FVerifyTask::FVerifyTask(
+        const TSharedPtr<FTriggerAccessTokenDomain>& Self,
+        const Request::FVerifyTriggerRequestPtr Request
+    ): Self(Self), Request(Request)
+    {
+
+    }
+
+    FTriggerAccessTokenDomain::FVerifyTask::FVerifyTask(
+        const FVerifyTask& From
+    ): TGs2Future(From), Self(From.Self), Request(From.Request)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FTriggerAccessTokenDomain::FVerifyTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::Schedule::Domain::Model::FTriggerAccessTokenDomain>> Result
+    )
+    {
+        Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
+            ->WithNamespaceName(Self->NamespaceName)
+            ->WithAccessToken(Self->AccessToken->GetToken())
+            ->WithTriggerName(Self->TriggerName);
+        const auto Future = Self->Client->VerifyTrigger(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto RequestModel = Request;
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
+        if (ResultModel != nullptr) {
+            
+        }
+        const auto Domain = Self;
+        *Result = Domain;
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FTriggerAccessTokenDomain::FVerifyTask>> FTriggerAccessTokenDomain::Verify(
+        Request::FVerifyTriggerRequestPtr Request
+    ) {
+        return Gs2::Core::Util::New<FAsyncTask<FVerifyTask>>(this->AsShared(), Request);
+    }
+
     FString FTriggerAccessTokenDomain::CreateCacheParentKey(
         TOptional<FString> NamespaceName,
         TOptional<FString> UserId,

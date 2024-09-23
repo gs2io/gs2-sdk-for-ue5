@@ -15,7 +15,6 @@
  */
 
 #include "SkillTree/Model/Gs2SkillTree.h"
-#include "SkillTree/Domain/EzGs2SkillTree.h"
 #include "SkillTree/Model/Gs2SkillTreeNamespace.h"
 #include "Core/BpGs2Constant.h"
 

@@ -17,7 +17,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Dom/JsonObject.h"
 
 namespace Gs2::Stamina::Request
 {
@@ -48,5 +47,5 @@ namespace Gs2::Stamina::Request
         static TSharedPtr<FSetRecoverIntervalByStampSheetRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;
     };
-    typedef TSharedPtr<FSetRecoverIntervalByStampSheetRequest> FSetRecoverIntervalByStampSheetRequestPtr;
+    typedef TSharedPtr<FSetRecoverIntervalByStampSheetRequest, ESPMode::ThreadSafe> FSetRecoverIntervalByStampSheetRequestPtr;
 }

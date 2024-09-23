@@ -17,7 +17,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Dom/JsonObject.h"
 
 namespace Gs2::Lock::Request
 {
@@ -55,5 +54,5 @@ namespace Gs2::Lock::Request
         static TSharedPtr<FDescribeMutexesRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;
     };
-    typedef TSharedPtr<FDescribeMutexesRequest> FDescribeMutexesRequestPtr;
+    typedef TSharedPtr<FDescribeMutexesRequest, ESPMode::ThreadSafe> FDescribeMutexesRequestPtr;
 }

@@ -15,7 +15,6 @@
  */
 
 #include "Lottery/Model/Gs2LotteryNamespace.h"
-#include "Lottery/Domain/EzGs2Lottery.h"
 #include "Lottery/Model/Gs2LotteryLotteryModel.h"
 #include "Lottery/Model/Gs2LotteryDrawnPrize.h"
 #include "Core/Model/Gs2AccessToken.h"

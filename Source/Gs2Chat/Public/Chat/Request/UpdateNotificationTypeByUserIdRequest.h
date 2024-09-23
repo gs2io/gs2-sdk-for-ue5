@@ -17,7 +17,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Dom/JsonObject.h"
 #include "../Model/NotificationType.h"
 
 namespace Gs2::Chat::Request
@@ -60,5 +59,5 @@ namespace Gs2::Chat::Request
         static TSharedPtr<FUpdateNotificationTypeByUserIdRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;
     };
-    typedef TSharedPtr<FUpdateNotificationTypeByUserIdRequest> FUpdateNotificationTypeByUserIdRequestPtr;
+    typedef TSharedPtr<FUpdateNotificationTypeByUserIdRequest, ESPMode::ThreadSafe> FUpdateNotificationTypeByUserIdRequestPtr;
 }

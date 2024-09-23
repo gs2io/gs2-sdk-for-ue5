@@ -15,7 +15,6 @@
  */
 
 #include "Mission/Model/Gs2MissionUser.h"
-#include "Mission/Domain/EzGs2Mission.h"
 #include "Mission/Model/Gs2MissionComplete.h"
 #include "Mission/Model/Gs2MissionCounter.h"
 #include "Core/Model/Gs2AccessToken.h"

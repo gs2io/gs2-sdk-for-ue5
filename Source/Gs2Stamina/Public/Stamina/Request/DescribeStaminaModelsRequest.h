@@ -17,7 +17,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Dom/JsonObject.h"
 
 namespace Gs2::Stamina::Request
 {
@@ -45,5 +44,5 @@ namespace Gs2::Stamina::Request
         static TSharedPtr<FDescribeStaminaModelsRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;
     };
-    typedef TSharedPtr<FDescribeStaminaModelsRequest> FDescribeStaminaModelsRequestPtr;
+    typedef TSharedPtr<FDescribeStaminaModelsRequest, ESPMode::ThreadSafe> FDescribeStaminaModelsRequestPtr;
 }

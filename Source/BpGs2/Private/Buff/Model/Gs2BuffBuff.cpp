@@ -15,6 +15,5 @@
  */
 
 #include "Buff/Model/Gs2BuffBuff.h"
-#include "Buff/Domain/EzGs2Buff.h"
 #include "Core/Model/Gs2AccessToken.h"
 #include "Core/BpGs2Constant.h"

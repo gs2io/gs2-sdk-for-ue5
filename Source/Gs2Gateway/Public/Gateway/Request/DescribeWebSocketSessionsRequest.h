@@ -17,7 +17,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Dom/JsonObject.h"
 
 namespace Gs2::Gateway::Request
 {
@@ -55,5 +54,5 @@ namespace Gs2::Gateway::Request
         static TSharedPtr<FDescribeWebSocketSessionsRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;
     };
-    typedef TSharedPtr<FDescribeWebSocketSessionsRequest> FDescribeWebSocketSessionsRequestPtr;
+    typedef TSharedPtr<FDescribeWebSocketSessionsRequest, ESPMode::ThreadSafe> FDescribeWebSocketSessionsRequestPtr;
 }

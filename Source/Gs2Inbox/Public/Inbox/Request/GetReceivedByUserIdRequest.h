@@ -17,7 +17,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Dom/JsonObject.h"
 
 namespace Gs2::Inbox::Request
 {
@@ -51,5 +50,5 @@ namespace Gs2::Inbox::Request
         static TSharedPtr<FGetReceivedByUserIdRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;
     };
-    typedef TSharedPtr<FGetReceivedByUserIdRequest> FGetReceivedByUserIdRequestPtr;
+    typedef TSharedPtr<FGetReceivedByUserIdRequest, ESPMode::ThreadSafe> FGetReceivedByUserIdRequestPtr;
 }

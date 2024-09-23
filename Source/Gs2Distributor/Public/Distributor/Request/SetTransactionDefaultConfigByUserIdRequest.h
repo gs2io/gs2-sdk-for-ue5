@@ -17,7 +17,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Dom/JsonObject.h"
 #include "../Model/Config.h"
 
 namespace Gs2::Distributor::Request
@@ -54,5 +53,5 @@ namespace Gs2::Distributor::Request
         static TSharedPtr<FSetTransactionDefaultConfigByUserIdRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;
     };
-    typedef TSharedPtr<FSetTransactionDefaultConfigByUserIdRequest> FSetTransactionDefaultConfigByUserIdRequestPtr;
+    typedef TSharedPtr<FSetTransactionDefaultConfigByUserIdRequest, ESPMode::ThreadSafe> FSetTransactionDefaultConfigByUserIdRequestPtr;
 }

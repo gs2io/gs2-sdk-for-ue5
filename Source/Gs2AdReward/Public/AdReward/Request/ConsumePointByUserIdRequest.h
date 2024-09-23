@@ -17,7 +17,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Dom/JsonObject.h"
 
 namespace Gs2::AdReward::Request
 {
@@ -58,5 +57,5 @@ namespace Gs2::AdReward::Request
         static TSharedPtr<FConsumePointByUserIdRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;
     };
-    typedef TSharedPtr<FConsumePointByUserIdRequest> FConsumePointByUserIdRequestPtr;
+    typedef TSharedPtr<FConsumePointByUserIdRequest, ESPMode::ThreadSafe> FConsumePointByUserIdRequestPtr;
 }

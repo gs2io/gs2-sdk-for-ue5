@@ -127,6 +127,32 @@ namespace Gs2::Mission::Domain::Model
             Request::FCompleteByUserIdRequestPtr Request
         );
 
+        class GS2MISSION_API FBatchTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Mission::Domain::Model::FCompleteDomain>,
+            public TSharedFromThis<FBatchTask>
+        {
+            const TSharedPtr<FCompleteDomain> Self;
+            const Request::FBatchCompleteByUserIdRequestPtr Request;
+        public:
+            explicit FBatchTask(
+                const TSharedPtr<FCompleteDomain>& Self,
+                const Request::FBatchCompleteByUserIdRequestPtr Request
+            );
+
+            FBatchTask(
+                const FBatchTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Mission::Domain::Model::FCompleteDomain>> Result
+            ) override;
+        };
+        friend FBatchTask;
+
+        TSharedPtr<FAsyncTask<FBatchTask>> Batch(
+            Request::FBatchCompleteByUserIdRequestPtr Request
+        );
+
         class GS2MISSION_API FReceiveTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Mission::Domain::Model::FCompleteDomain>,
             public TSharedFromThis<FReceiveTask>
@@ -151,6 +177,32 @@ namespace Gs2::Mission::Domain::Model
 
         TSharedPtr<FAsyncTask<FReceiveTask>> Receive(
             Request::FReceiveByUserIdRequestPtr Request
+        );
+
+        class GS2MISSION_API FBatchReceiveTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Mission::Domain::Model::FCompleteDomain>,
+            public TSharedFromThis<FBatchReceiveTask>
+        {
+            const TSharedPtr<FCompleteDomain> Self;
+            const Request::FBatchReceiveByUserIdRequestPtr Request;
+        public:
+            explicit FBatchReceiveTask(
+                const TSharedPtr<FCompleteDomain>& Self,
+                const Request::FBatchReceiveByUserIdRequestPtr Request
+            );
+
+            FBatchReceiveTask(
+                const FBatchReceiveTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Mission::Domain::Model::FCompleteDomain>> Result
+            ) override;
+        };
+        friend FBatchReceiveTask;
+
+        TSharedPtr<FAsyncTask<FBatchReceiveTask>> BatchReceive(
+            Request::FBatchReceiveByUserIdRequestPtr Request
         );
 
         class GS2MISSION_API FRevertReceiveTask final :

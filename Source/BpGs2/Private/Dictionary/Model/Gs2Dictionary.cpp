@@ -15,7 +15,6 @@
  */
 
 #include "Dictionary/Model/Gs2Dictionary.h"
-#include "Dictionary/Domain/EzGs2Dictionary.h"
 #include "Dictionary/Model/Gs2DictionaryNamespace.h"
 #include "Core/BpGs2Constant.h"
 

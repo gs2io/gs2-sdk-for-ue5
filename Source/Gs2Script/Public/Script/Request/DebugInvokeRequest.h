@@ -17,7 +17,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Dom/JsonObject.h"
 #include "../Model/RandomStatus.h"
 
 namespace Gs2::Script::Request
@@ -52,5 +51,5 @@ namespace Gs2::Script::Request
         static TSharedPtr<FDebugInvokeRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;
     };
-    typedef TSharedPtr<FDebugInvokeRequest> FDebugInvokeRequestPtr;
+    typedef TSharedPtr<FDebugInvokeRequest, ESPMode::ThreadSafe> FDebugInvokeRequestPtr;
 }

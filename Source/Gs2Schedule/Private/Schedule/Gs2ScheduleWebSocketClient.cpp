@@ -253,10 +253,37 @@ namespace Gs2::Schedule
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::WebSocket::FVerifyTriggerTask>> FGs2ScheduleWebSocketClient::VerifyTrigger(
+        const Request::FVerifyTriggerRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FVerifyTriggerTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FVerifyTriggerByUserIdTask>> FGs2ScheduleWebSocketClient::VerifyTriggerByUserId(
+        const Request::FVerifyTriggerByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FVerifyTriggerByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::WebSocket::FDeleteTriggerByStampTaskTask>> FGs2ScheduleWebSocketClient::DeleteTriggerByStampTask(
         const Request::FDeleteTriggerByStampTaskRequestPtr Request) const
     {
         return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FDeleteTriggerByStampTaskTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FVerifyTriggerByStampTaskTask>> FGs2ScheduleWebSocketClient::VerifyTriggerByStampTask(
+        const Request::FVerifyTriggerByStampTaskRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FVerifyTriggerByStampTaskTask>>(
             Session,
             Request
         );

@@ -19,7 +19,9 @@
 namespace Gs2::Mission::Model
 {
     FScopedValue::FScopedValue():
+        ScopeTypeValue(TOptional<FString>()),
         ResetTypeValue(TOptional<FString>()),
+        ConditionNameValue(TOptional<FString>()),
         ValueValue(TOptional<int64>()),
         NextResetAtValue(TOptional<int64>()),
         UpdatedAtValue(TOptional<int64>())
@@ -29,11 +31,21 @@ namespace Gs2::Mission::Model
     FScopedValue::FScopedValue(
         const FScopedValue& From
     ):
+        ScopeTypeValue(From.ScopeTypeValue),
         ResetTypeValue(From.ResetTypeValue),
+        ConditionNameValue(From.ConditionNameValue),
         ValueValue(From.ValueValue),
         NextResetAtValue(From.NextResetAtValue),
         UpdatedAtValue(From.UpdatedAtValue)
     {
+    }
+
+    TSharedPtr<FScopedValue> FScopedValue::WithScopeType(
+        const TOptional<FString> ScopeType
+    )
+    {
+        this->ScopeTypeValue = ScopeType;
+        return SharedThis(this);
     }
 
     TSharedPtr<FScopedValue> FScopedValue::WithResetType(
@@ -41,6 +53,14 @@ namespace Gs2::Mission::Model
     )
     {
         this->ResetTypeValue = ResetType;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FScopedValue> FScopedValue::WithConditionName(
+        const TOptional<FString> ConditionName
+    )
+    {
+        this->ConditionNameValue = ConditionName;
         return SharedThis(this);
     }
 
@@ -67,9 +87,17 @@ namespace Gs2::Mission::Model
         this->UpdatedAtValue = UpdatedAt;
         return SharedThis(this);
     }
+    TOptional<FString> FScopedValue::GetScopeType() const
+    {
+        return ScopeTypeValue;
+    }
     TOptional<FString> FScopedValue::GetResetType() const
     {
         return ResetTypeValue;
+    }
+    TOptional<FString> FScopedValue::GetConditionName() const
+    {
+        return ConditionNameValue;
     }
     TOptional<int64> FScopedValue::GetValue() const
     {
@@ -117,10 +145,28 @@ namespace Gs2::Mission::Model
             return nullptr;
         }
         return MakeShared<FScopedValue>()
+            ->WithScopeType(Data->HasField(ANSI_TO_TCHAR("scopeType")) ? [Data]() -> TOptional<FString>
+                {
+                    FString v("");
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("scopeType"), v))
+                    {
+                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                    }
+                    return TOptional<FString>();
+                }() : TOptional<FString>())
             ->WithResetType(Data->HasField(ANSI_TO_TCHAR("resetType")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
                     if (Data->TryGetStringField(ANSI_TO_TCHAR("resetType"), v))
+                    {
+                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                    }
+                    return TOptional<FString>();
+                }() : TOptional<FString>())
+            ->WithConditionName(Data->HasField(ANSI_TO_TCHAR("conditionName")) ? [Data]() -> TOptional<FString>
+                {
+                    FString v("");
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("conditionName"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
@@ -158,9 +204,17 @@ namespace Gs2::Mission::Model
     TSharedPtr<FJsonObject> FScopedValue::ToJson() const
     {
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
+        if (ScopeTypeValue.IsSet())
+        {
+            JsonRootObject->SetStringField("scopeType", ScopeTypeValue.GetValue());
+        }
         if (ResetTypeValue.IsSet())
         {
             JsonRootObject->SetStringField("resetType", ResetTypeValue.GetValue());
+        }
+        if (ConditionNameValue.IsSet())
+        {
+            JsonRootObject->SetStringField("conditionName", ConditionNameValue.GetValue());
         }
         if (ValueValue.IsSet())
         {

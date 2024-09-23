@@ -15,7 +15,6 @@
  */
 
 #include "Stamina/Model/Gs2StaminaUser.h"
-#include "Stamina/Domain/EzGs2Stamina.h"
 #include "Stamina/Model/Gs2StaminaStamina.h"
 #include "Core/Model/Gs2AccessToken.h"
 #include "Stamina/Model/Gs2StaminaStamina.h"

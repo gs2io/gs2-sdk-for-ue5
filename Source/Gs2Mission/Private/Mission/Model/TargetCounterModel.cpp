@@ -20,7 +20,9 @@ namespace Gs2::Mission::Model
 {
     FTargetCounterModel::FTargetCounterModel():
         CounterNameValue(TOptional<FString>()),
+        ScopeTypeValue(TOptional<FString>()),
         ResetTypeValue(TOptional<FString>()),
+        ConditionNameValue(TOptional<FString>()),
         ValueValue(TOptional<int64>())
     {
     }
@@ -29,7 +31,9 @@ namespace Gs2::Mission::Model
         const FTargetCounterModel& From
     ):
         CounterNameValue(From.CounterNameValue),
+        ScopeTypeValue(From.ScopeTypeValue),
         ResetTypeValue(From.ResetTypeValue),
+        ConditionNameValue(From.ConditionNameValue),
         ValueValue(From.ValueValue)
     {
     }
@@ -42,11 +46,27 @@ namespace Gs2::Mission::Model
         return SharedThis(this);
     }
 
+    TSharedPtr<FTargetCounterModel> FTargetCounterModel::WithScopeType(
+        const TOptional<FString> ScopeType
+    )
+    {
+        this->ScopeTypeValue = ScopeType;
+        return SharedThis(this);
+    }
+
     TSharedPtr<FTargetCounterModel> FTargetCounterModel::WithResetType(
         const TOptional<FString> ResetType
     )
     {
         this->ResetTypeValue = ResetType;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FTargetCounterModel> FTargetCounterModel::WithConditionName(
+        const TOptional<FString> ConditionName
+    )
+    {
+        this->ConditionNameValue = ConditionName;
         return SharedThis(this);
     }
 
@@ -61,9 +81,17 @@ namespace Gs2::Mission::Model
     {
         return CounterNameValue;
     }
+    TOptional<FString> FTargetCounterModel::GetScopeType() const
+    {
+        return ScopeTypeValue;
+    }
     TOptional<FString> FTargetCounterModel::GetResetType() const
     {
         return ResetTypeValue;
+    }
+    TOptional<FString> FTargetCounterModel::GetConditionName() const
+    {
+        return ConditionNameValue;
     }
     TOptional<int64> FTargetCounterModel::GetValue() const
     {
@@ -94,10 +122,28 @@ namespace Gs2::Mission::Model
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
+            ->WithScopeType(Data->HasField(ANSI_TO_TCHAR("scopeType")) ? [Data]() -> TOptional<FString>
+                {
+                    FString v("");
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("scopeType"), v))
+                    {
+                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                    }
+                    return TOptional<FString>();
+                }() : TOptional<FString>())
             ->WithResetType(Data->HasField(ANSI_TO_TCHAR("resetType")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
                     if (Data->TryGetStringField(ANSI_TO_TCHAR("resetType"), v))
+                    {
+                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                    }
+                    return TOptional<FString>();
+                }() : TOptional<FString>())
+            ->WithConditionName(Data->HasField(ANSI_TO_TCHAR("conditionName")) ? [Data]() -> TOptional<FString>
+                {
+                    FString v("");
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("conditionName"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
@@ -121,9 +167,17 @@ namespace Gs2::Mission::Model
         {
             JsonRootObject->SetStringField("counterName", CounterNameValue.GetValue());
         }
+        if (ScopeTypeValue.IsSet())
+        {
+            JsonRootObject->SetStringField("scopeType", ScopeTypeValue.GetValue());
+        }
         if (ResetTypeValue.IsSet())
         {
             JsonRootObject->SetStringField("resetType", ResetTypeValue.GetValue());
+        }
+        if (ConditionNameValue.IsSet())
+        {
+            JsonRootObject->SetStringField("conditionName", ConditionNameValue.GetValue());
         }
         if (ValueValue.IsSet())
         {

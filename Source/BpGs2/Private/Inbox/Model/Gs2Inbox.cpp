@@ -15,7 +15,6 @@
  */
 
 #include "Inbox/Model/Gs2Inbox.h"
-#include "Inbox/Domain/EzGs2Inbox.h"
 #include "Inbox/Model/Gs2InboxNamespace.h"
 #include "Core/BpGs2Constant.h"
 

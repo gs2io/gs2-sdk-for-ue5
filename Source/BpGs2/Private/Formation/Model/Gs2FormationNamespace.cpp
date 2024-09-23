@@ -15,7 +15,6 @@
  */
 
 #include "Formation/Model/Gs2FormationNamespace.h"
-#include "Formation/Domain/EzGs2Formation.h"
 #include "Formation/Model/Gs2FormationMoldModel.h"
 #include "Formation/Model/Gs2FormationPropertyFormModel.h"
 #include "Core/Model/Gs2AccessToken.h"

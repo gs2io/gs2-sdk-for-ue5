@@ -17,7 +17,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Dom/JsonObject.h"
 
 namespace Gs2::MegaField::Request
 {
@@ -48,5 +47,5 @@ namespace Gs2::MegaField::Request
         static TSharedPtr<FDescribeLayerModelsRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;
     };
-    typedef TSharedPtr<FDescribeLayerModelsRequest> FDescribeLayerModelsRequestPtr;
+    typedef TSharedPtr<FDescribeLayerModelsRequest, ESPMode::ThreadSafe> FDescribeLayerModelsRequestPtr;
 }

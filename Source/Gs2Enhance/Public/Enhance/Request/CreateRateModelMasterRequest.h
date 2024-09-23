@@ -17,7 +17,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Dom/JsonObject.h"
 #include "../Model/BonusRate.h"
 
 namespace Gs2::Enhance::Request
@@ -73,5 +72,5 @@ namespace Gs2::Enhance::Request
         static TSharedPtr<FCreateRateModelMasterRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;
     };
-    typedef TSharedPtr<FCreateRateModelMasterRequest> FCreateRateModelMasterRequestPtr;
+    typedef TSharedPtr<FCreateRateModelMasterRequest, ESPMode::ThreadSafe> FCreateRateModelMasterRequestPtr;
 }

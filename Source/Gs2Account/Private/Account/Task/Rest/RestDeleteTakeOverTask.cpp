@@ -85,9 +85,6 @@ namespace Gs2::Account::Task::Rest
             if (this->Request->GetContextStack().IsSet()) {
                 queryStrings.Add("contextStack=" + FGenericPlatformHttp::UrlEncode(*this->Request->GetContextStack().GetValue()));
             }
-            if (this->Request->GetUserIdentifier().IsSet()) {
-                queryStrings.Add("userIdentifier=" + FGenericPlatformHttp::UrlEncode(this->Request->GetUserIdentifier().GetValue()));
-            }
             Url += "?" + FString::Join(queryStrings, TEXT("&"));
 
             request->SetURL(Url);

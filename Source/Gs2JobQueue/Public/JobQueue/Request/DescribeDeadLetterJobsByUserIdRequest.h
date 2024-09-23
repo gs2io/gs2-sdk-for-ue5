@@ -17,7 +17,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Dom/JsonObject.h"
 
 namespace Gs2::JobQueue::Request
 {
@@ -58,5 +57,5 @@ namespace Gs2::JobQueue::Request
         static TSharedPtr<FDescribeDeadLetterJobsByUserIdRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;
     };
-    typedef TSharedPtr<FDescribeDeadLetterJobsByUserIdRequest> FDescribeDeadLetterJobsByUserIdRequestPtr;
+    typedef TSharedPtr<FDescribeDeadLetterJobsByUserIdRequest, ESPMode::ThreadSafe> FDescribeDeadLetterJobsByUserIdRequestPtr;
 }

@@ -15,7 +15,6 @@
  */
 
 #include "Lottery/Model/Gs2Lottery.h"
-#include "Lottery/Domain/EzGs2Lottery.h"
 #include "Lottery/Model/Gs2LotteryNamespace.h"
 #include "Core/BpGs2Constant.h"
 

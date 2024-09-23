@@ -15,6 +15,5 @@
  */
 
 #include "Dictionary/Model/Gs2DictionaryEntryModel.h"
-#include "Dictionary/Domain/EzGs2Dictionary.h"
 #include "Core/Model/Gs2AccessToken.h"
 #include "Core/BpGs2Constant.h"

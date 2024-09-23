@@ -15,7 +15,6 @@
  */
 
 #include "Limit/Model/Gs2Limit.h"
-#include "Limit/Domain/EzGs2Limit.h"
 #include "Limit/Model/Gs2LimitNamespace.h"
 #include "Core/BpGs2Constant.h"
 

@@ -15,7 +15,6 @@
  */
 
 #include "MegaField/Model/Gs2MegaField.h"
-#include "MegaField/Domain/EzGs2MegaField.h"
 #include "MegaField/Model/Gs2MegaFieldNamespace.h"
 #include "MegaField/Model/Gs2MegaFieldLayerModel.h"
 #include "Core/BpGs2Constant.h"

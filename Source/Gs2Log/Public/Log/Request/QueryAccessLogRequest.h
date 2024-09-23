@@ -17,7 +17,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Dom/JsonObject.h"
 
 namespace Gs2::Log::Request
 {
@@ -79,5 +78,5 @@ namespace Gs2::Log::Request
         static TSharedPtr<FQueryAccessLogRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;
     };
-    typedef TSharedPtr<FQueryAccessLogRequest> FQueryAccessLogRequestPtr;
+    typedef TSharedPtr<FQueryAccessLogRequest, ESPMode::ThreadSafe> FQueryAccessLogRequestPtr;
 }

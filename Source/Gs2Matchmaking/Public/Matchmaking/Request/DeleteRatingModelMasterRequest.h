@@ -17,7 +17,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Dom/JsonObject.h"
 
 namespace Gs2::Matchmaking::Request
 {
@@ -48,5 +47,5 @@ namespace Gs2::Matchmaking::Request
         static TSharedPtr<FDeleteRatingModelMasterRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;
     };
-    typedef TSharedPtr<FDeleteRatingModelMasterRequest> FDeleteRatingModelMasterRequestPtr;
+    typedef TSharedPtr<FDeleteRatingModelMasterRequest, ESPMode::ThreadSafe> FDeleteRatingModelMasterRequestPtr;
 }

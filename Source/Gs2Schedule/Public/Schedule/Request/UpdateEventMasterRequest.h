@@ -17,7 +17,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Dom/JsonObject.h"
 #include "../Model/RepeatSetting.h"
 
 namespace Gs2::Schedule::Request
@@ -97,5 +96,5 @@ namespace Gs2::Schedule::Request
         static TSharedPtr<FUpdateEventMasterRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;
     };
-    typedef TSharedPtr<FUpdateEventMasterRequest> FUpdateEventMasterRequestPtr;
+    typedef TSharedPtr<FUpdateEventMasterRequest, ESPMode::ThreadSafe> FUpdateEventMasterRequestPtr;
 }

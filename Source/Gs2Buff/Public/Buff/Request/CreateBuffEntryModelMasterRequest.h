@@ -17,7 +17,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Dom/JsonObject.h"
 #include "../Model/BuffTargetModel.h"
 #include "../Model/BuffTargetAction.h"
 
@@ -75,5 +74,5 @@ namespace Gs2::Buff::Request
         static TSharedPtr<FCreateBuffEntryModelMasterRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;
     };
-    typedef TSharedPtr<FCreateBuffEntryModelMasterRequest> FCreateBuffEntryModelMasterRequestPtr;
+    typedef TSharedPtr<FCreateBuffEntryModelMasterRequest, ESPMode::ThreadSafe> FCreateBuffEntryModelMasterRequestPtr;
 }

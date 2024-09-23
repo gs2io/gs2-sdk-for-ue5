@@ -26,27 +26,27 @@ UGs2AccountDeleteTakeOverSettingAsyncFunction::UGs2AccountDeleteTakeOverSettingA
 
 UGs2AccountDeleteTakeOverSettingAsyncFunction* UGs2AccountDeleteTakeOverSettingAsyncFunction::DeleteTakeOverSetting(
     UObject* WorldContextObject,
-    FGs2AccountOwnTakeOver TakeOver
+    FGs2AccountOwnAccount Account
 )
 {
     UGs2AccountDeleteTakeOverSettingAsyncFunction* Action = NewObject<UGs2AccountDeleteTakeOverSettingAsyncFunction>();
     Action->RegisterWithGameInstance(WorldContextObject);
-    if (TakeOver.Value == nullptr) {
-        UE_LOG(BpGs2Log, Error, TEXT("[UGs2AccountDeleteTakeOverSettingAsyncFunction::DeleteTakeOverSetting] TakeOver parameter specification is missing."))
+    if (Account.Value == nullptr) {
+        UE_LOG(BpGs2Log, Error, TEXT("[UGs2AccountDeleteTakeOverSettingAsyncFunction::DeleteTakeOverSetting] Account parameter specification is missing."))
         return Action;
     }
-    Action->TakeOver = TakeOver;
+    Action->Account = Account;
     return Action;
 }
 
 void UGs2AccountDeleteTakeOverSettingAsyncFunction::Activate()
 {
-    if (TakeOver.Value == nullptr) {
-        UE_LOG(BpGs2Log, Error, TEXT("[UGs2AccountDeleteTakeOverSettingAsyncFunction] TakeOver parameter specification is missing."))
+    if (Account.Value == nullptr) {
+        UE_LOG(BpGs2Log, Error, TEXT("[UGs2AccountDeleteTakeOverSettingAsyncFunction] Account parameter specification is missing."))
         return;
     }
 
-    auto Future = TakeOver.Value->DeleteTakeOverSetting(
+    auto Future = Account.Value->DeleteTakeOverSetting(
     );
     Future->GetTask().OnSuccessDelegate().BindLambda([&](auto Result)
     {

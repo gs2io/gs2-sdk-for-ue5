@@ -17,7 +17,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Dom/JsonObject.h"
 #include "../Model/ScopedValue.h"
 
 namespace Gs2::Mission::Request
@@ -60,5 +59,5 @@ namespace Gs2::Mission::Request
         static TSharedPtr<FSetCounterByUserIdRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;
     };
-    typedef TSharedPtr<FSetCounterByUserIdRequest> FSetCounterByUserIdRequestPtr;
+    typedef TSharedPtr<FSetCounterByUserIdRequest, ESPMode::ThreadSafe> FSetCounterByUserIdRequestPtr;
 }

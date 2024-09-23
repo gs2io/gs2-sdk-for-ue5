@@ -17,7 +17,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Dom/JsonObject.h"
 #include "../Model/TargetCounterModel.h"
 #include "../Model/VerifyAction.h"
 #include "../Model/AcquireAction.h"
@@ -86,5 +85,5 @@ namespace Gs2::Mission::Request
         static TSharedPtr<FUpdateMissionTaskModelMasterRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;
     };
-    typedef TSharedPtr<FUpdateMissionTaskModelMasterRequest> FUpdateMissionTaskModelMasterRequestPtr;
+    typedef TSharedPtr<FUpdateMissionTaskModelMasterRequest, ESPMode::ThreadSafe> FUpdateMissionTaskModelMasterRequestPtr;
 }

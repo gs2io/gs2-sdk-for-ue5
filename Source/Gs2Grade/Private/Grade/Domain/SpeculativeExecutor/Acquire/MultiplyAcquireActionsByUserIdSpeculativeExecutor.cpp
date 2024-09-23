@@ -23,7 +23,6 @@
 #endif
 
 #include "Grade/Domain/SpeculativeExecutor/Acquire/MultiplyAcquireActionsByUserIdSpeculativeExecutor.h"
-#include "Grade/Domain/Gs2Grade.h"
 #include "Grade/Domain/SpeculativeExecutor/Transaction/MultiplyAcquireActionsByUserIdSpeculativeExecutor.h"
 
 #include "Core/Domain/Gs2.h"

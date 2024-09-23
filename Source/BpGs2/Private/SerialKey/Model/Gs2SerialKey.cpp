@@ -15,7 +15,6 @@
  */
 
 #include "SerialKey/Model/Gs2SerialKey.h"
-#include "SerialKey/Domain/EzGs2SerialKey.h"
 #include "SerialKey/Model/Gs2SerialKeyNamespace.h"
 #include "Core/BpGs2Constant.h"
 

@@ -17,7 +17,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Dom/JsonObject.h"
 
 namespace Gs2::Mission::Request
 {
@@ -30,7 +29,9 @@ namespace Gs2::Mission::Request
         TOptional<FString> UserIdValue;
         TOptional<FString> CounterNameValue;
         TOptional<FString> VerifyTypeValue;
+        TOptional<FString> ScopeTypeValue;
         TOptional<FString> ResetTypeValue;
+        TOptional<FString> ConditionNameValue;
         TOptional<int64> ValueValue;
         TOptional<bool> MultiplyValueSpecifyingQuantityValue;
         TOptional<FString> TimeOffsetTokenValue;
@@ -49,7 +50,9 @@ namespace Gs2::Mission::Request
         TSharedPtr<FVerifyCounterValueByUserIdRequest> WithUserId(const TOptional<FString> UserId);
         TSharedPtr<FVerifyCounterValueByUserIdRequest> WithCounterName(const TOptional<FString> CounterName);
         TSharedPtr<FVerifyCounterValueByUserIdRequest> WithVerifyType(const TOptional<FString> VerifyType);
+        TSharedPtr<FVerifyCounterValueByUserIdRequest> WithScopeType(const TOptional<FString> ScopeType);
         TSharedPtr<FVerifyCounterValueByUserIdRequest> WithResetType(const TOptional<FString> ResetType);
+        TSharedPtr<FVerifyCounterValueByUserIdRequest> WithConditionName(const TOptional<FString> ConditionName);
         TSharedPtr<FVerifyCounterValueByUserIdRequest> WithValue(const TOptional<int64> Value);
         TSharedPtr<FVerifyCounterValueByUserIdRequest> WithMultiplyValueSpecifyingQuantity(const TOptional<bool> MultiplyValueSpecifyingQuantity);
         TSharedPtr<FVerifyCounterValueByUserIdRequest> WithTimeOffsetToken(const TOptional<FString> TimeOffsetToken);
@@ -60,7 +63,9 @@ namespace Gs2::Mission::Request
         TOptional<FString> GetUserId() const;
         TOptional<FString> GetCounterName() const;
         TOptional<FString> GetVerifyType() const;
+        TOptional<FString> GetScopeType() const;
         TOptional<FString> GetResetType() const;
+        TOptional<FString> GetConditionName() const;
         TOptional<int64> GetValue() const;
         FString GetValueString() const;
         TOptional<bool> GetMultiplyValueSpecifyingQuantity() const;
@@ -71,5 +76,5 @@ namespace Gs2::Mission::Request
         static TSharedPtr<FVerifyCounterValueByUserIdRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;
     };
-    typedef TSharedPtr<FVerifyCounterValueByUserIdRequest> FVerifyCounterValueByUserIdRequestPtr;
+    typedef TSharedPtr<FVerifyCounterValueByUserIdRequest, ESPMode::ThreadSafe> FVerifyCounterValueByUserIdRequestPtr;
 }

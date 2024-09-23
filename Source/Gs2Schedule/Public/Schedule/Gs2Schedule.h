@@ -183,11 +183,29 @@
 #include "Task/Rest/DeleteTriggerByUserIdTask.h"
 #include "Task/WebSocket/DeleteTriggerByUserIdTask.h"
 
+// VerifyTrigger
+#include "Request/VerifyTriggerRequest.h"
+#include "Result/VerifyTriggerResult.h"
+#include "Task/Rest/VerifyTriggerTask.h"
+#include "Task/WebSocket/VerifyTriggerTask.h"
+
+// VerifyTriggerByUserId
+#include "Request/VerifyTriggerByUserIdRequest.h"
+#include "Result/VerifyTriggerByUserIdResult.h"
+#include "Task/Rest/VerifyTriggerByUserIdTask.h"
+#include "Task/WebSocket/VerifyTriggerByUserIdTask.h"
+
 // DeleteTriggerByStampTask
 #include "Request/DeleteTriggerByStampTaskRequest.h"
 #include "Result/DeleteTriggerByStampTaskResult.h"
 #include "Task/Rest/DeleteTriggerByStampTaskTask.h"
 #include "Task/WebSocket/DeleteTriggerByStampTaskTask.h"
+
+// VerifyTriggerByStampTask
+#include "Request/VerifyTriggerByStampTaskRequest.h"
+#include "Result/VerifyTriggerByStampTaskResult.h"
+#include "Task/Rest/VerifyTriggerByStampTaskTask.h"
+#include "Task/WebSocket/VerifyTriggerByStampTaskTask.h"
 
 // DescribeEvents
 #include "Request/DescribeEventsRequest.h"

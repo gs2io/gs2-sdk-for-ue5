@@ -17,7 +17,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Dom/JsonObject.h"
 #include "../Model/GitHubCheckoutSetting.h"
 
 namespace Gs2::SeasonRating::Request
@@ -49,5 +48,5 @@ namespace Gs2::SeasonRating::Request
         static TSharedPtr<FUpdateCurrentSeasonModelMasterFromGitHubRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;
     };
-    typedef TSharedPtr<FUpdateCurrentSeasonModelMasterFromGitHubRequest> FUpdateCurrentSeasonModelMasterFromGitHubRequestPtr;
+    typedef TSharedPtr<FUpdateCurrentSeasonModelMasterFromGitHubRequest, ESPMode::ThreadSafe> FUpdateCurrentSeasonModelMasterFromGitHubRequestPtr;
 }

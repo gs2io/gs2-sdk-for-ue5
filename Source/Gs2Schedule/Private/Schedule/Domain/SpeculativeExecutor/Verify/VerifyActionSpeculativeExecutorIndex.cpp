@@ -23,6 +23,7 @@
 #endif
 
 #include "Schedule/Domain/SpeculativeExecutor/Verify/VerifyActionSpeculativeExecutorIndex.h"
+#include "Schedule/Domain/SpeculativeExecutor/Verify/VerifyTriggerByUserIdSpeculativeExecutor.h"
 #include "Schedule/Domain/SpeculativeExecutor/Verify/VerifyEventByUserIdSpeculativeExecutor.h"
 
 #include "Core/Domain/Gs2.h"
@@ -64,6 +65,28 @@ namespace Gs2::Schedule::Domain::SpeculativeExecutor
         auto NewVerifyAction = VerifyAction->WithAction(VerifyAction->GetAction()->Replace(TEXT("{region}"), ToCStr(Domain->RestSession->RegionName())));
         NewVerifyAction = VerifyAction->WithAction(NewVerifyAction->GetAction()->Replace(TEXT("{ownerId}"), ToCStr(Domain->RestSession->OwnerId())));
         NewVerifyAction = VerifyAction->WithAction(NewVerifyAction->GetAction()->Replace(TEXT("{userId}"), ToCStr(AccessToken->GetUserId().IsSet() ? *AccessToken->GetUserId() : "")));
+        if (FVerifyTriggerByUserIdSpeculativeExecutor::Action() == NewVerifyAction->GetAction()) {
+            TSharedPtr<FJsonObject> RequestModelJson;
+            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(NewVerifyAction->GetRequest().IsSet() ? *NewVerifyAction->GetRequest() : "{}");
+                !FJsonSerializer::Deserialize(JsonReader, RequestModelJson))
+            {
+                return nullptr;
+            }
+            auto Request = Request::FVerifyTriggerByUserIdRequest::FromJson(RequestModelJson);
+            Request = FVerifyTriggerByUserIdSpeculativeExecutor::Rate(Request, Rate);
+            auto Future = FVerifyTriggerByUserIdSpeculativeExecutor::Execute(
+                Domain,
+                Service,
+                AccessToken,
+                Request
+            );
+            Future->StartSynchronousTask();
+            if (Future->GetTask().IsError())
+            {
+                return Future->GetTask().Error();
+            }
+            *Result = Future->GetTask().Result();
+        }
         if (FVerifyEventByUserIdSpeculativeExecutor::Action() == NewVerifyAction->GetAction()) {
             TSharedPtr<FJsonObject> RequestModelJson;
             if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(NewVerifyAction->GetRequest().IsSet() ? *NewVerifyAction->GetRequest() : "{}");

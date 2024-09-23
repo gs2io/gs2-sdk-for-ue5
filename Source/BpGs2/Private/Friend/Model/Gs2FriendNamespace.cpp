@@ -15,7 +15,6 @@
  */
 
 #include "Friend/Model/Gs2FriendNamespace.h"
-#include "Friend/Domain/EzGs2Friend.h"
 #include "Core/Model/Gs2AccessToken.h"
 #include "Friend/Model/Gs2FriendUser.h"
 #include "Core/BpGs2Constant.h"

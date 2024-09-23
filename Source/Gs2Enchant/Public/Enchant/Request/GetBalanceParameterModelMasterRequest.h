@@ -17,7 +17,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Dom/JsonObject.h"
 
 namespace Gs2::Enchant::Request
 {
@@ -48,5 +47,5 @@ namespace Gs2::Enchant::Request
         static TSharedPtr<FGetBalanceParameterModelMasterRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;
     };
-    typedef TSharedPtr<FGetBalanceParameterModelMasterRequest> FGetBalanceParameterModelMasterRequestPtr;
+    typedef TSharedPtr<FGetBalanceParameterModelMasterRequest, ESPMode::ThreadSafe> FGetBalanceParameterModelMasterRequestPtr;
 }

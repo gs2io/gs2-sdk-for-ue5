@@ -17,7 +17,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Dom/JsonObject.h"
 
 namespace Gs2::Experience::Request
 {
@@ -48,5 +47,5 @@ namespace Gs2::Experience::Request
         static TSharedPtr<FDeleteThresholdMasterRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;
     };
-    typedef TSharedPtr<FDeleteThresholdMasterRequest> FDeleteThresholdMasterRequestPtr;
+    typedef TSharedPtr<FDeleteThresholdMasterRequest, ESPMode::ThreadSafe> FDeleteThresholdMasterRequestPtr;
 }

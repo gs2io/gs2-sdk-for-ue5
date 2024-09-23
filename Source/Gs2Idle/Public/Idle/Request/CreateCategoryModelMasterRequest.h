@@ -17,7 +17,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Dom/JsonObject.h"
 #include "../Model/AcquireActionList.h"
 
 namespace Gs2::Idle::Request
@@ -71,5 +70,5 @@ namespace Gs2::Idle::Request
         static TSharedPtr<FCreateCategoryModelMasterRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;
     };
-    typedef TSharedPtr<FCreateCategoryModelMasterRequest> FCreateCategoryModelMasterRequestPtr;
+    typedef TSharedPtr<FCreateCategoryModelMasterRequest, ESPMode::ThreadSafe> FCreateCategoryModelMasterRequestPtr;
 }

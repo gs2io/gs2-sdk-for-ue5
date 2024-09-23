@@ -17,7 +17,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Dom/JsonObject.h"
 #include "../Model/GitHubCheckoutSetting.h"
 
 namespace Gs2::Limit::Request
@@ -49,5 +48,5 @@ namespace Gs2::Limit::Request
         static TSharedPtr<FUpdateCurrentLimitMasterFromGitHubRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;
     };
-    typedef TSharedPtr<FUpdateCurrentLimitMasterFromGitHubRequest> FUpdateCurrentLimitMasterFromGitHubRequestPtr;
+    typedef TSharedPtr<FUpdateCurrentLimitMasterFromGitHubRequest, ESPMode::ThreadSafe> FUpdateCurrentLimitMasterFromGitHubRequestPtr;
 }

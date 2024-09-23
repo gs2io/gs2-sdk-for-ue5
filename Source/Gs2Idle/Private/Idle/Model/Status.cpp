@@ -24,6 +24,7 @@ namespace Gs2::Idle::Model
         UserIdValue(TOptional<FString>()),
         RandomSeedValue(TOptional<int64>()),
         IdleMinutesValue(TOptional<int32>()),
+        NextRewardsAtValue(TOptional<int64>()),
         MaximumIdleMinutesValue(TOptional<int32>()),
         CreatedAtValue(TOptional<int64>()),
         UpdatedAtValue(TOptional<int64>()),
@@ -39,6 +40,7 @@ namespace Gs2::Idle::Model
         UserIdValue(From.UserIdValue),
         RandomSeedValue(From.RandomSeedValue),
         IdleMinutesValue(From.IdleMinutesValue),
+        NextRewardsAtValue(From.NextRewardsAtValue),
         MaximumIdleMinutesValue(From.MaximumIdleMinutesValue),
         CreatedAtValue(From.CreatedAtValue),
         UpdatedAtValue(From.UpdatedAtValue),
@@ -83,6 +85,14 @@ namespace Gs2::Idle::Model
     )
     {
         this->IdleMinutesValue = IdleMinutes;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FStatus> FStatus::WithNextRewardsAt(
+        const TOptional<int64> NextRewardsAt
+    )
+    {
+        this->NextRewardsAtValue = NextRewardsAt;
         return SharedThis(this);
     }
 
@@ -154,6 +164,19 @@ namespace Gs2::Idle::Model
             return FString("null");
         }
         return FString::Printf(TEXT("%d"), IdleMinutesValue.GetValue());
+    }
+    TOptional<int64> FStatus::GetNextRewardsAt() const
+    {
+        return NextRewardsAtValue;
+    }
+
+    FString FStatus::GetNextRewardsAtString() const
+    {
+        if (!NextRewardsAtValue.IsSet())
+        {
+            return FString("null");
+        }
+        return FString::Printf(TEXT("%lld"), NextRewardsAtValue.GetValue());
     }
     TOptional<int32> FStatus::GetMaximumIdleMinutes() const
     {
@@ -314,6 +337,15 @@ namespace Gs2::Idle::Model
                     }
                     return TOptional<int32>();
                 }() : TOptional<int32>())
+            ->WithNextRewardsAt(Data->HasField(ANSI_TO_TCHAR("nextRewardsAt")) ? [Data]() -> TOptional<int64>
+                {
+                    int64 v;
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("nextRewardsAt"), v))
+                    {
+                        return TOptional(v);
+                    }
+                    return TOptional<int64>();
+                }() : TOptional<int64>())
             ->WithMaximumIdleMinutes(Data->HasField(ANSI_TO_TCHAR("maximumIdleMinutes")) ? [Data]() -> TOptional<int32>
                 {
                     int32 v;
@@ -374,6 +406,10 @@ namespace Gs2::Idle::Model
         if (IdleMinutesValue.IsSet())
         {
             JsonRootObject->SetNumberField("idleMinutes", IdleMinutesValue.GetValue());
+        }
+        if (NextRewardsAtValue.IsSet())
+        {
+            JsonRootObject->SetStringField("nextRewardsAt", FString::Printf(TEXT("%lld"), NextRewardsAtValue.GetValue()));
         }
         if (MaximumIdleMinutesValue.IsSet())
         {

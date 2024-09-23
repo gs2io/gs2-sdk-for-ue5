@@ -17,7 +17,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Dom/JsonObject.h"
 #include "../Model/AdMob.h"
 #include "../Model/UnityAd.h"
 #include "../Model/AppLovinMax.h"
@@ -74,5 +73,5 @@ namespace Gs2::AdReward::Request
         static TSharedPtr<FUpdateNamespaceRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;
     };
-    typedef TSharedPtr<FUpdateNamespaceRequest> FUpdateNamespaceRequestPtr;
+    typedef TSharedPtr<FUpdateNamespaceRequest, ESPMode::ThreadSafe> FUpdateNamespaceRequestPtr;
 }

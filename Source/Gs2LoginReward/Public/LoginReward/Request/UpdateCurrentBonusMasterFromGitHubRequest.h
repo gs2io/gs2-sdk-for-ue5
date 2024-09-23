@@ -17,7 +17,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Dom/JsonObject.h"
 #include "../Model/GitHubCheckoutSetting.h"
 
 namespace Gs2::LoginReward::Request
@@ -49,5 +48,5 @@ namespace Gs2::LoginReward::Request
         static TSharedPtr<FUpdateCurrentBonusMasterFromGitHubRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;
     };
-    typedef TSharedPtr<FUpdateCurrentBonusMasterFromGitHubRequest> FUpdateCurrentBonusMasterFromGitHubRequestPtr;
+    typedef TSharedPtr<FUpdateCurrentBonusMasterFromGitHubRequest, ESPMode::ThreadSafe> FUpdateCurrentBonusMasterFromGitHubRequestPtr;
 }

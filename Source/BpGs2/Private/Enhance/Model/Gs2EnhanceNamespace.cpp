@@ -15,7 +15,6 @@
  */
 
 #include "Enhance/Model/Gs2EnhanceNamespace.h"
-#include "Enhance/Domain/EzGs2Enhance.h"
 #include "Enhance/Model/Gs2EnhanceRateModel.h"
 #include "Core/Model/Gs2AccessToken.h"
 #include "Enhance/Model/Gs2EnhanceRateModel.h"

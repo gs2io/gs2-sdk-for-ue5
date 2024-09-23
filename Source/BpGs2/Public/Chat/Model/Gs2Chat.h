@@ -19,7 +19,6 @@
 #include "CoreMinimal.h"
 
 #include "Core/Model/Gs2Client.h"
-#include "Gs2Chat/Public/Chat/Model/PostNotification.h"
 #include "Gs2Chat.generated.h"
 
 USTRUCT(BlueprintType)

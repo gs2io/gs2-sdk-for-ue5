@@ -23,7 +23,6 @@
 #endif
 
 #include "Exchange/Domain/SpeculativeExecutor/Acquire/ExchangeByUserIdSpeculativeExecutor.h"
-#include "Exchange/Domain/Gs2Exchange.h"
 #include "Exchange/Domain/SpeculativeExecutor/Transaction/ExchangeByUserIdSpeculativeExecutor.h"
 
 #include "Core/Domain/Gs2.h"

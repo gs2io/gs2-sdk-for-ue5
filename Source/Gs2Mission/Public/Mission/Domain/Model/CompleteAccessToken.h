@@ -132,6 +132,35 @@ namespace Gs2::Mission::Domain::Model
             bool SpeculativeExecute = true
         );
 
+        class GS2MISSION_API FBatchTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Mission::Domain::Model::FCompleteAccessTokenDomain>,
+            public TSharedFromThis<FBatchTask>
+        {
+            const TSharedPtr<FCompleteAccessTokenDomain> Self;
+            const Request::FBatchCompleteRequestPtr Request;
+            bool SpeculativeExecute;
+        public:
+            explicit FBatchTask(
+                const TSharedPtr<FCompleteAccessTokenDomain>& Self,
+                const Request::FBatchCompleteRequestPtr Request,
+                bool SpeculativeExecute
+            );
+
+            FBatchTask(
+                const FBatchTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Mission::Domain::Model::FCompleteAccessTokenDomain>> Result
+            ) override;
+        };
+        friend FBatchTask;
+
+        TSharedPtr<FAsyncTask<FBatchTask>> Batch(
+            Request::FBatchCompleteRequestPtr Request,
+            bool SpeculativeExecute = true
+        );
+
         class GS2MISSION_API FGetTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Mission::Model::FComplete>,
             public TSharedFromThis<FGetTask>

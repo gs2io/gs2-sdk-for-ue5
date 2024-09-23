@@ -96,9 +96,13 @@ namespace Gs2::Money2::Task::Rest
             {
                 JsonRootObject->SetObjectField("platformSetting", this->Request->GetPlatformSetting()->ToJson());
             }
-            if (this->Request->GetChangeBalanceScript() != nullptr && this->Request->GetChangeBalanceScript().IsValid())
+            if (this->Request->GetDepositBalanceScript() != nullptr && this->Request->GetDepositBalanceScript().IsValid())
             {
-                JsonRootObject->SetObjectField("changeBalanceScript", this->Request->GetChangeBalanceScript()->ToJson());
+                JsonRootObject->SetObjectField("depositBalanceScript", this->Request->GetDepositBalanceScript()->ToJson());
+            }
+            if (this->Request->GetWithdrawBalanceScript() != nullptr && this->Request->GetWithdrawBalanceScript().IsValid())
+            {
+                JsonRootObject->SetObjectField("withdrawBalanceScript", this->Request->GetWithdrawBalanceScript()->ToJson());
             }
             if (this->Request->GetLogSetting() != nullptr && this->Request->GetLogSetting().IsValid())
             {

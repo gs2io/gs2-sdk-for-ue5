@@ -15,7 +15,6 @@
  */
 
 #include "Limit/Model/Gs2LimitNamespace.h"
-#include "Limit/Domain/EzGs2Limit.h"
 #include "Limit/Model/Gs2LimitLimitModel.h"
 #include "Core/Model/Gs2AccessToken.h"
 #include "Limit/Model/Gs2LimitLimitModel.h"

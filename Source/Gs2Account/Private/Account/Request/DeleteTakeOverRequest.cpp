@@ -21,8 +21,7 @@ namespace Gs2::Account::Request
     FDeleteTakeOverRequest::FDeleteTakeOverRequest():
         NamespaceNameValue(TOptional<FString>()),
         AccessTokenValue(TOptional<FString>()),
-        TypeValue(TOptional<int32>()),
-        UserIdentifierValue(TOptional<FString>())
+        TypeValue(TOptional<int32>())
     {
     }
 
@@ -31,8 +30,7 @@ namespace Gs2::Account::Request
     ):
         NamespaceNameValue(From.NamespaceNameValue),
         AccessTokenValue(From.AccessTokenValue),
-        TypeValue(From.TypeValue),
-        UserIdentifierValue(From.UserIdentifierValue)
+        TypeValue(From.TypeValue)
     {
     }
 
@@ -65,14 +63,6 @@ namespace Gs2::Account::Request
     )
     {
         this->TypeValue = Type;
-        return SharedThis(this);
-    }
-
-    TSharedPtr<FDeleteTakeOverRequest> FDeleteTakeOverRequest::WithUserIdentifier(
-        const TOptional<FString> UserIdentifier
-    )
-    {
-        this->UserIdentifierValue = UserIdentifier;
         return SharedThis(this);
     }
 
@@ -111,11 +101,6 @@ namespace Gs2::Account::Request
             return FString("null");
         }
         return FString::Printf(TEXT("%d"), TypeValue.GetValue());
-    }
-
-    TOptional<FString> FDeleteTakeOverRequest::GetUserIdentifier() const
-    {
-        return UserIdentifierValue;
     }
 
     TOptional<FString> FDeleteTakeOverRequest::GetDuplicationAvoider() const
@@ -157,15 +142,6 @@ namespace Gs2::Account::Request
                   }
                   return TOptional<int32>();
               }() : TOptional<int32>())
-            ->WithUserIdentifier(Data->HasField(ANSI_TO_TCHAR("userIdentifier")) ? [Data]() -> TOptional<FString>
-              {
-                  FString v("");
-                    if (Data->TryGetStringField(ANSI_TO_TCHAR("userIdentifier"), v))
-                  {
-                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
-                  }
-                  return TOptional<FString>();
-              }() : TOptional<FString>())
           ->WithDuplicationAvoider(Data->HasField(ANSI_TO_TCHAR("duplicationAvoider")) ? TOptional<FString>(Data->GetStringField(ANSI_TO_TCHAR("duplicationAvoider"))) : TOptional<FString>());
     }
 
@@ -187,10 +163,6 @@ namespace Gs2::Account::Request
         if (TypeValue.IsSet())
         {
             JsonRootObject->SetNumberField("type", TypeValue.GetValue());
-        }
-        if (UserIdentifierValue.IsSet())
-        {
-            JsonRootObject->SetStringField("userIdentifier", UserIdentifierValue.GetValue());
         }
         if (DuplicationAvoiderValue.IsSet())
         {

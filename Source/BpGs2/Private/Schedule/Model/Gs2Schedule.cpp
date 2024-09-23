@@ -15,7 +15,6 @@
  */
 
 #include "Schedule/Model/Gs2Schedule.h"
-#include "Schedule/Domain/EzGs2Schedule.h"
 #include "Schedule/Model/Gs2ScheduleNamespace.h"
 #include "Core/BpGs2Constant.h"
 

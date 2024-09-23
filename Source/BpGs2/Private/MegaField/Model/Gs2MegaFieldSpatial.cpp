@@ -15,6 +15,5 @@
  */
 
 #include "MegaField/Model/Gs2MegaFieldSpatial.h"
-#include "MegaField/Domain/EzGs2MegaField.h"
 #include "Core/Model/Gs2AccessToken.h"
 #include "Core/BpGs2Constant.h"

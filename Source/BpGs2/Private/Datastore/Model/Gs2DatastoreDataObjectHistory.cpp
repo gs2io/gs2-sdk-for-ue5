@@ -15,6 +15,5 @@
  */
 
 #include "Datastore/Model/Gs2DatastoreDataObjectHistory.h"
-#include "Datastore/Domain/EzGs2Datastore.h"
 #include "Core/Model/Gs2AccessToken.h"
 #include "Core/BpGs2Constant.h"

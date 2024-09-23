@@ -17,7 +17,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Dom/JsonObject.h"
 #include "../Model/GitHubCheckoutSetting.h"
 
 namespace Gs2::Lottery::Request
@@ -49,5 +48,5 @@ namespace Gs2::Lottery::Request
         static TSharedPtr<FUpdateCurrentLotteryMasterFromGitHubRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;
     };
-    typedef TSharedPtr<FUpdateCurrentLotteryMasterFromGitHubRequest> FUpdateCurrentLotteryMasterFromGitHubRequestPtr;
+    typedef TSharedPtr<FUpdateCurrentLotteryMasterFromGitHubRequest, ESPMode::ThreadSafe> FUpdateCurrentLotteryMasterFromGitHubRequestPtr;
 }

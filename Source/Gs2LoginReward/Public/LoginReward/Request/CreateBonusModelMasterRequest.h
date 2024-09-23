@@ -17,7 +17,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Dom/JsonObject.h"
 #include "../Model/Reward.h"
 #include "../Model/VerifyAction.h"
 #include "../Model/ConsumeAction.h"
@@ -79,5 +78,5 @@ namespace Gs2::LoginReward::Request
         static TSharedPtr<FCreateBonusModelMasterRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;
     };
-    typedef TSharedPtr<FCreateBonusModelMasterRequest> FCreateBonusModelMasterRequestPtr;
+    typedef TSharedPtr<FCreateBonusModelMasterRequest, ESPMode::ThreadSafe> FCreateBonusModelMasterRequestPtr;
 }

@@ -684,6 +684,41 @@ namespace Gs2::Mission::Domain
                 );
             }
         }
+        if (Method == "BatchReceiveByUserId") {
+            TSharedPtr<FJsonObject> RequestModelJson;
+            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Request);
+                !FJsonSerializer::Deserialize(JsonReader, RequestModelJson))
+            {
+                return;
+            }
+            TSharedPtr<FJsonObject> ResultModelJson;
+            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Result);
+                !FJsonSerializer::Deserialize(JsonReader, ResultModelJson))
+            {
+                return;
+            }
+            const auto RequestModel = Gs2::Mission::Request::FBatchReceiveByUserIdRequest::FromJson(RequestModelJson);
+            const auto ResultModel = Gs2::Mission::Result::FBatchReceiveByUserIdResult::FromJson(ResultModelJson);
+            
+            if (ResultModel->GetItem() != nullptr)
+            {
+                const auto ParentKey = Gs2::Mission::Domain::Model::FUserDomain::CreateCacheParentKey(
+                    RequestModel->GetNamespaceName(),
+                    RequestModel->GetUserId(),
+                    "Complete"
+                );
+                const auto Key = Gs2::Mission::Domain::Model::FCompleteDomain::CreateCacheKey(
+                    ResultModel->GetItem()->GetMissionGroupName()
+                );
+                Gs2->Cache->Put(
+                    Gs2::Mission::Model::FComplete::TypeName,
+                    ParentKey,
+                    Key,
+                    ResultModel->GetItem(),
+                    ResultModel->GetItem()->GetNextResetAt().IsSet() && *ResultModel->GetItem()->GetNextResetAt() != 0 ? FDateTime::FromUnixTimestamp(*ResultModel->GetItem()->GetNextResetAt() / 1000) : FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+            }
+        }
         if (Method == "DecreaseCounterByUserId") {
             TSharedPtr<FJsonObject> RequestModelJson;
             if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Request);

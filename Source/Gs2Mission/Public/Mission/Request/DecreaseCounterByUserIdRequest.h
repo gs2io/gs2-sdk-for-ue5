@@ -17,7 +17,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Dom/JsonObject.h"
 
 namespace Gs2::Mission::Request
 {
@@ -61,5 +60,5 @@ namespace Gs2::Mission::Request
         static TSharedPtr<FDecreaseCounterByUserIdRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;
     };
-    typedef TSharedPtr<FDecreaseCounterByUserIdRequest> FDecreaseCounterByUserIdRequestPtr;
+    typedef TSharedPtr<FDecreaseCounterByUserIdRequest, ESPMode::ThreadSafe> FDecreaseCounterByUserIdRequestPtr;
 }

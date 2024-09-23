@@ -17,7 +17,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Dom/JsonObject.h"
 #include "../Model/GitHubCheckoutSetting.h"
 
 namespace Gs2::Stamina::Request
@@ -49,5 +48,5 @@ namespace Gs2::Stamina::Request
         static TSharedPtr<FUpdateCurrentStaminaMasterFromGitHubRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;
     };
-    typedef TSharedPtr<FUpdateCurrentStaminaMasterFromGitHubRequest> FUpdateCurrentStaminaMasterFromGitHubRequestPtr;
+    typedef TSharedPtr<FUpdateCurrentStaminaMasterFromGitHubRequest, ESPMode::ThreadSafe> FUpdateCurrentStaminaMasterFromGitHubRequestPtr;
 }

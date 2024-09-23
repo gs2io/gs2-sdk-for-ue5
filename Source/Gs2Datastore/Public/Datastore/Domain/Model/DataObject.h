@@ -202,55 +202,55 @@ namespace Gs2::Datastore::Domain::Model
             Request::FDeleteDataObjectByUserIdRequestPtr Request
         );
 
-        class GS2DATASTORE_API FPrepareDownloadByUserIdAndNameTask final :
+        class GS2DATASTORE_API FPrepareDownloadByUserIdAndDataObjectNameTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Datastore::Domain::Model::FDataObjectDomain>,
-            public TSharedFromThis<FPrepareDownloadByUserIdAndNameTask>
+            public TSharedFromThis<FPrepareDownloadByUserIdAndDataObjectNameTask>
         {
             const TSharedPtr<FDataObjectDomain> Self;
             const Request::FPrepareDownloadByUserIdAndDataObjectNameRequestPtr Request;
         public:
-            explicit FPrepareDownloadByUserIdAndNameTask(
+            explicit FPrepareDownloadByUserIdAndDataObjectNameTask(
                 const TSharedPtr<FDataObjectDomain>& Self,
                 const Request::FPrepareDownloadByUserIdAndDataObjectNameRequestPtr Request
             );
 
-            FPrepareDownloadByUserIdAndNameTask(
-                const FPrepareDownloadByUserIdAndNameTask& From
+            FPrepareDownloadByUserIdAndDataObjectNameTask(
+                const FPrepareDownloadByUserIdAndDataObjectNameTask& From
             );
 
             virtual Gs2::Core::Model::FGs2ErrorPtr Action(
                 TSharedPtr<TSharedPtr<Gs2::Datastore::Domain::Model::FDataObjectDomain>> Result
             ) override;
         };
-        friend FPrepareDownloadByUserIdAndNameTask;
+        friend FPrepareDownloadByUserIdAndDataObjectNameTask;
 
-        TSharedPtr<FAsyncTask<FPrepareDownloadByUserIdAndNameTask>> PrepareDownloadByUserIdAndName(
+        TSharedPtr<FAsyncTask<FPrepareDownloadByUserIdAndDataObjectNameTask>> PrepareDownloadByUserIdAndDataObjectName(
             Request::FPrepareDownloadByUserIdAndDataObjectNameRequestPtr Request
         );
 
-        class GS2DATASTORE_API FPrepareDownloadByUserIdAndNameAndGenerationTask final :
+        class GS2DATASTORE_API FPrepareDownloadByUserIdAndDataObjectNameAndGenerationTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Datastore::Domain::Model::FDataObjectDomain>,
-            public TSharedFromThis<FPrepareDownloadByUserIdAndNameAndGenerationTask>
+            public TSharedFromThis<FPrepareDownloadByUserIdAndDataObjectNameAndGenerationTask>
         {
             const TSharedPtr<FDataObjectDomain> Self;
             const Request::FPrepareDownloadByUserIdAndDataObjectNameAndGenerationRequestPtr Request;
         public:
-            explicit FPrepareDownloadByUserIdAndNameAndGenerationTask(
+            explicit FPrepareDownloadByUserIdAndDataObjectNameAndGenerationTask(
                 const TSharedPtr<FDataObjectDomain>& Self,
                 const Request::FPrepareDownloadByUserIdAndDataObjectNameAndGenerationRequestPtr Request
             );
 
-            FPrepareDownloadByUserIdAndNameAndGenerationTask(
-                const FPrepareDownloadByUserIdAndNameAndGenerationTask& From
+            FPrepareDownloadByUserIdAndDataObjectNameAndGenerationTask(
+                const FPrepareDownloadByUserIdAndDataObjectNameAndGenerationTask& From
             );
 
             virtual Gs2::Core::Model::FGs2ErrorPtr Action(
                 TSharedPtr<TSharedPtr<Gs2::Datastore::Domain::Model::FDataObjectDomain>> Result
             ) override;
         };
-        friend FPrepareDownloadByUserIdAndNameAndGenerationTask;
+        friend FPrepareDownloadByUserIdAndDataObjectNameAndGenerationTask;
 
-        TSharedPtr<FAsyncTask<FPrepareDownloadByUserIdAndNameAndGenerationTask>> PrepareDownloadByUserIdAndNameAndGeneration(
+        TSharedPtr<FAsyncTask<FPrepareDownloadByUserIdAndDataObjectNameAndGenerationTask>> PrepareDownloadByUserIdAndDataObjectNameAndGeneration(
             Request::FPrepareDownloadByUserIdAndDataObjectNameAndGenerationRequestPtr Request
         );
 

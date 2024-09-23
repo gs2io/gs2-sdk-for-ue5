@@ -17,7 +17,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Dom/JsonObject.h"
 #include "../Model/VerifyAction.h"
 
 namespace Gs2::Distributor::Request
@@ -57,5 +56,5 @@ namespace Gs2::Distributor::Request
         static TSharedPtr<FAndExpressionByUserIdRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;
     };
-    typedef TSharedPtr<FAndExpressionByUserIdRequest> FAndExpressionByUserIdRequestPtr;
+    typedef TSharedPtr<FAndExpressionByUserIdRequest, ESPMode::ThreadSafe> FAndExpressionByUserIdRequestPtr;
 }

@@ -17,7 +17,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Dom/JsonObject.h"
 #include "../Model/GameResult.h"
 
 namespace Gs2::SeasonRating::Request
@@ -57,5 +56,5 @@ namespace Gs2::SeasonRating::Request
         static TSharedPtr<FVoteRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;
     };
-    typedef TSharedPtr<FVoteRequest> FVoteRequestPtr;
+    typedef TSharedPtr<FVoteRequest, ESPMode::ThreadSafe> FVoteRequestPtr;
 }

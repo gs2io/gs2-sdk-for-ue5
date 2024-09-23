@@ -15,7 +15,6 @@
  */
 
 #include "Dictionary/Model/Gs2DictionaryUser.h"
-#include "Dictionary/Domain/EzGs2Dictionary.h"
 #include "Dictionary/Model/Gs2DictionaryEntry.h"
 #include "Core/Model/Gs2AccessToken.h"
 #include "Dictionary/Model/Gs2DictionaryEntry.h"

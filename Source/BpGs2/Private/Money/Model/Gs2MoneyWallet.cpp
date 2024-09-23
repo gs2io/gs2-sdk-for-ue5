@@ -15,6 +15,5 @@
  */
 
 #include "Money/Model/Gs2MoneyWallet.h"
-#include "Money/Domain/EzGs2Money.h"
 #include "Core/Model/Gs2AccessToken.h"
 #include "Core/BpGs2Constant.h"

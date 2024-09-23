@@ -99,9 +99,17 @@ namespace Gs2::Mission::Task::Rest
             FString Body;
             const TSharedRef<TJsonWriter<TCHAR>> Writer = TJsonWriterFactory<TCHAR>::Create(&Body);
             const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
+            if (this->Request->GetScopeType().IsSet())
+            {
+                JsonRootObject->SetStringField("scopeType", this->Request->GetScopeType().GetValue());
+            }
             if (this->Request->GetResetType().IsSet())
             {
                 JsonRootObject->SetStringField("resetType", this->Request->GetResetType().GetValue());
+            }
+            if (this->Request->GetConditionName().IsSet())
+            {
+                JsonRootObject->SetStringField("conditionName", this->Request->GetConditionName().GetValue());
             }
             if (this->Request->GetValue().IsSet())
             {

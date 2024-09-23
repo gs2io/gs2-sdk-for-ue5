@@ -15,6 +15,5 @@
  */
 
 #include "Version/Model/Gs2VersionChecker.h"
-#include "Version/Domain/EzGs2Version.h"
 #include "Core/Model/Gs2AccessToken.h"
 #include "Core/BpGs2Constant.h"

@@ -15,7 +15,6 @@
  */
 
 #include "Exchange/Model/Gs2Exchange.h"
-#include "Exchange/Domain/EzGs2Exchange.h"
 #include "Exchange/Model/Gs2ExchangeNamespace.h"
 #include "Core/BpGs2Constant.h"
 

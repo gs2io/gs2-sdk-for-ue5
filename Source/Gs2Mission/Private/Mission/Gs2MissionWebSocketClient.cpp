@@ -55,10 +55,37 @@ namespace Gs2::Mission
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::WebSocket::FBatchCompleteTask>> FGs2MissionWebSocketClient::BatchComplete(
+        const Request::FBatchCompleteRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FBatchCompleteTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FBatchCompleteByUserIdTask>> FGs2MissionWebSocketClient::BatchCompleteByUserId(
+        const Request::FBatchCompleteByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FBatchCompleteByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::WebSocket::FReceiveByUserIdTask>> FGs2MissionWebSocketClient::ReceiveByUserId(
         const Request::FReceiveByUserIdRequestPtr Request) const
     {
         return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FReceiveByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FBatchReceiveByUserIdTask>> FGs2MissionWebSocketClient::BatchReceiveByUserId(
+        const Request::FBatchReceiveByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FBatchReceiveByUserIdTask>>(
             Session,
             Request
         );
@@ -122,6 +149,15 @@ namespace Gs2::Mission
         const Request::FReceiveByStampTaskRequestPtr Request) const
     {
         return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FReceiveByStampTaskTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FBatchReceiveByStampTaskTask>> FGs2MissionWebSocketClient::BatchReceiveByStampTask(
+        const Request::FBatchReceiveByStampTaskRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FBatchReceiveByStampTaskTask>>(
             Session,
             Request
         );

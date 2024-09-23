@@ -15,6 +15,5 @@
  */
 
 #include "Ranking/Model/Gs2RankingSubscribeUser.h"
-#include "Ranking/Domain/EzGs2Ranking.h"
 #include "Core/Model/Gs2AccessToken.h"
 #include "Core/BpGs2Constant.h"

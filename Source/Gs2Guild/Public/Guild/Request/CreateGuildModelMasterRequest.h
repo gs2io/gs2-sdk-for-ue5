@@ -17,7 +17,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Dom/JsonObject.h"
 #include "../Model/RoleModel.h"
 
 namespace Gs2::Guild::Request
@@ -79,5 +78,5 @@ namespace Gs2::Guild::Request
         static TSharedPtr<FCreateGuildModelMasterRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;
     };
-    typedef TSharedPtr<FCreateGuildModelMasterRequest> FCreateGuildModelMasterRequestPtr;
+    typedef TSharedPtr<FCreateGuildModelMasterRequest, ESPMode::ThreadSafe> FCreateGuildModelMasterRequestPtr;
 }

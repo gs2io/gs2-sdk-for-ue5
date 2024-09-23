@@ -17,7 +17,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Dom/JsonObject.h"
 #include "../Model/GitHubCheckoutSetting.h"
 
 namespace Gs2::SkillTree::Request
@@ -49,5 +48,5 @@ namespace Gs2::SkillTree::Request
         static TSharedPtr<FUpdateCurrentTreeMasterFromGitHubRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;
     };
-    typedef TSharedPtr<FUpdateCurrentTreeMasterFromGitHubRequest> FUpdateCurrentTreeMasterFromGitHubRequestPtr;
+    typedef TSharedPtr<FUpdateCurrentTreeMasterFromGitHubRequest, ESPMode::ThreadSafe> FUpdateCurrentTreeMasterFromGitHubRequestPtr;
 }

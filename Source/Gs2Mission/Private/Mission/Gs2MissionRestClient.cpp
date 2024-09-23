@@ -55,10 +55,37 @@ namespace Gs2::Mission
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::Rest::FBatchCompleteTask>> FGs2MissionRestClient::BatchComplete(
+        const Request::FBatchCompleteRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FBatchCompleteTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FBatchCompleteByUserIdTask>> FGs2MissionRestClient::BatchCompleteByUserId(
+        const Request::FBatchCompleteByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FBatchCompleteByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::Rest::FReceiveByUserIdTask>> FGs2MissionRestClient::ReceiveByUserId(
         const Request::FReceiveByUserIdRequestPtr Request) const
     {
         return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FReceiveByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FBatchReceiveByUserIdTask>> FGs2MissionRestClient::BatchReceiveByUserId(
+        const Request::FBatchReceiveByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FBatchReceiveByUserIdTask>>(
             Session,
             Request
         );
@@ -122,6 +149,15 @@ namespace Gs2::Mission
         const Request::FReceiveByStampTaskRequestPtr Request) const
     {
         return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FReceiveByStampTaskTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FBatchReceiveByStampTaskTask>> FGs2MissionRestClient::BatchReceiveByStampTask(
+        const Request::FBatchReceiveByStampTaskRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FBatchReceiveByStampTaskTask>>(
             Session,
             Request
         );

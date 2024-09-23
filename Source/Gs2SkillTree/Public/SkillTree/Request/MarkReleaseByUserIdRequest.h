@@ -17,7 +17,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Dom/JsonObject.h"
 
 namespace Gs2::SkillTree::Request
 {
@@ -61,5 +60,5 @@ namespace Gs2::SkillTree::Request
         static TSharedPtr<FMarkReleaseByUserIdRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;
     };
-    typedef TSharedPtr<FMarkReleaseByUserIdRequest> FMarkReleaseByUserIdRequestPtr;
+    typedef TSharedPtr<FMarkReleaseByUserIdRequest, ESPMode::ThreadSafe> FMarkReleaseByUserIdRequestPtr;
 }

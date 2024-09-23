@@ -15,7 +15,6 @@
  */
 
 #include "Showcase/Model/Gs2Showcase.h"
-#include "Showcase/Domain/EzGs2Showcase.h"
 #include "Showcase/Model/Gs2ShowcaseNamespace.h"
 #include "Core/BpGs2Constant.h"
 

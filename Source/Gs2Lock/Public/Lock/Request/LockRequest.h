@@ -17,7 +17,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Dom/JsonObject.h"
 
 namespace Gs2::Lock::Request
 {
@@ -61,5 +60,5 @@ namespace Gs2::Lock::Request
         static TSharedPtr<FLockRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;
     };
-    typedef TSharedPtr<FLockRequest> FLockRequestPtr;
+    typedef TSharedPtr<FLockRequest, ESPMode::ThreadSafe> FLockRequestPtr;
 }

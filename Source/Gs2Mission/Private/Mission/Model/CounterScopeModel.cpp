@@ -19,21 +19,35 @@
 namespace Gs2::Mission::Model
 {
     FCounterScopeModel::FCounterScopeModel():
+        ScopeTypeValue(TOptional<FString>()),
         ResetTypeValue(TOptional<FString>()),
         ResetDayOfMonthValue(TOptional<int32>()),
         ResetDayOfWeekValue(TOptional<FString>()),
-        ResetHourValue(TOptional<int32>())
+        ResetHourValue(TOptional<int32>()),
+        ConditionNameValue(TOptional<FString>()),
+        ConditionValue(nullptr)
     {
     }
 
     FCounterScopeModel::FCounterScopeModel(
         const FCounterScopeModel& From
     ):
+        ScopeTypeValue(From.ScopeTypeValue),
         ResetTypeValue(From.ResetTypeValue),
         ResetDayOfMonthValue(From.ResetDayOfMonthValue),
         ResetDayOfWeekValue(From.ResetDayOfWeekValue),
-        ResetHourValue(From.ResetHourValue)
+        ResetHourValue(From.ResetHourValue),
+        ConditionNameValue(From.ConditionNameValue),
+        ConditionValue(From.ConditionValue)
     {
+    }
+
+    TSharedPtr<FCounterScopeModel> FCounterScopeModel::WithScopeType(
+        const TOptional<FString> ScopeType
+    )
+    {
+        this->ScopeTypeValue = ScopeType;
+        return SharedThis(this);
     }
 
     TSharedPtr<FCounterScopeModel> FCounterScopeModel::WithResetType(
@@ -66,6 +80,26 @@ namespace Gs2::Mission::Model
     {
         this->ResetHourValue = ResetHour;
         return SharedThis(this);
+    }
+
+    TSharedPtr<FCounterScopeModel> FCounterScopeModel::WithConditionName(
+        const TOptional<FString> ConditionName
+    )
+    {
+        this->ConditionNameValue = ConditionName;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FCounterScopeModel> FCounterScopeModel::WithCondition(
+        const TSharedPtr<FVerifyAction> Condition
+    )
+    {
+        this->ConditionValue = Condition;
+        return SharedThis(this);
+    }
+    TOptional<FString> FCounterScopeModel::GetScopeType() const
+    {
+        return ScopeTypeValue;
     }
     TOptional<FString> FCounterScopeModel::GetResetType() const
     {
@@ -101,6 +135,14 @@ namespace Gs2::Mission::Model
         }
         return FString::Printf(TEXT("%d"), ResetHourValue.GetValue());
     }
+    TOptional<FString> FCounterScopeModel::GetConditionName() const
+    {
+        return ConditionNameValue;
+    }
+    TSharedPtr<FVerifyAction> FCounterScopeModel::GetCondition() const
+    {
+        return ConditionValue;
+    }
 
     TSharedPtr<FCounterScopeModel> FCounterScopeModel::FromJson(const TSharedPtr<FJsonObject> Data)
     {
@@ -108,6 +150,15 @@ namespace Gs2::Mission::Model
             return nullptr;
         }
         return MakeShared<FCounterScopeModel>()
+            ->WithScopeType(Data->HasField(ANSI_TO_TCHAR("scopeType")) ? [Data]() -> TOptional<FString>
+                {
+                    FString v("");
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("scopeType"), v))
+                    {
+                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                    }
+                    return TOptional<FString>();
+                }() : TOptional<FString>())
             ->WithResetType(Data->HasField(ANSI_TO_TCHAR("resetType")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
@@ -143,12 +194,33 @@ namespace Gs2::Mission::Model
                         return TOptional(v);
                     }
                     return TOptional<int32>();
-                }() : TOptional<int32>());
+                }() : TOptional<int32>())
+            ->WithConditionName(Data->HasField(ANSI_TO_TCHAR("conditionName")) ? [Data]() -> TOptional<FString>
+                {
+                    FString v("");
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("conditionName"), v))
+                    {
+                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                    }
+                    return TOptional<FString>();
+                }() : TOptional<FString>())
+            ->WithCondition(Data->HasField(ANSI_TO_TCHAR("condition")) ? [Data]() -> Model::FVerifyActionPtr
+                {
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("condition")))
+                    {
+                        return nullptr;
+                    }
+                    return Model::FVerifyAction::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("condition")));
+                 }() : nullptr);
     }
 
     TSharedPtr<FJsonObject> FCounterScopeModel::ToJson() const
     {
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
+        if (ScopeTypeValue.IsSet())
+        {
+            JsonRootObject->SetStringField("scopeType", ScopeTypeValue.GetValue());
+        }
         if (ResetTypeValue.IsSet())
         {
             JsonRootObject->SetStringField("resetType", ResetTypeValue.GetValue());
@@ -164,6 +236,14 @@ namespace Gs2::Mission::Model
         if (ResetHourValue.IsSet())
         {
             JsonRootObject->SetNumberField("resetHour", ResetHourValue.GetValue());
+        }
+        if (ConditionNameValue.IsSet())
+        {
+            JsonRootObject->SetStringField("conditionName", ConditionNameValue.GetValue());
+        }
+        if (ConditionValue != nullptr && ConditionValue.IsValid())
+        {
+            JsonRootObject->SetObjectField("condition", ConditionValue->ToJson());
         }
         return JsonRootObject;
     }

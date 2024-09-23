@@ -347,67 +347,6 @@ namespace Gs2::Account::Domain::Model
         return Gs2::Core::Util::New<FAsyncTask<FUpdateTask>>(this->AsShared(), Request);
     }
 
-    FTakeOverAccessTokenDomain::FDeleteTask::FDeleteTask(
-        const TSharedPtr<FTakeOverAccessTokenDomain>& Self,
-        const Request::FDeleteTakeOverRequestPtr Request
-    ): Self(Self), Request(Request)
-    {
-
-    }
-
-    FTakeOverAccessTokenDomain::FDeleteTask::FDeleteTask(
-        const FDeleteTask& From
-    ): TGs2Future(From), Self(From.Self), Request(From.Request)
-    {
-    }
-
-    Gs2::Core::Model::FGs2ErrorPtr FTakeOverAccessTokenDomain::FDeleteTask::Action(
-        TSharedPtr<TSharedPtr<Gs2::Account::Domain::Model::FTakeOverAccessTokenDomain>> Result
-    )
-    {
-        Request
-            ->WithContextStack(Self->Gs2->DefaultContextStack)
-            ->WithNamespaceName(Self->NamespaceName)
-            ->WithAccessToken(Self->AccessToken->GetToken())
-            ->WithType(Self->Type);
-        const auto Future = Self->Client->DeleteTakeOver(
-            Request
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            return Future->GetTask().Error();
-        }
-        const auto RequestModel = Request;
-        const auto ResultModel = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::Account::Domain::Model::FAccountDomain::CreateCacheParentKey(
-                    Self->NamespaceName,
-                    Self->UserId(),
-                    "TakeOver"
-                );
-                const auto Key = Gs2::Account::Domain::Model::FTakeOverDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetType().IsSet() ? FString::FromInt(*ResultModel->GetItem()->GetType()) : TOptional<FString>()
-                );
-                Self->Gs2->Cache->Delete(Gs2::Account::Model::FTakeOver::TypeName, ParentKey, Key);
-            }
-        }
-        auto Domain = Self;
-
-        *Result = Domain;
-        return nullptr;
-    }
-
-    TSharedPtr<FAsyncTask<FTakeOverAccessTokenDomain::FDeleteTask>> FTakeOverAccessTokenDomain::Delete(
-        Request::FDeleteTakeOverRequestPtr Request
-    ) {
-        return Gs2::Core::Util::New<FAsyncTask<FDeleteTask>>(this->AsShared(), Request);
-    }
-
     FString FTakeOverAccessTokenDomain::CreateCacheParentKey(
         TOptional<FString> NamespaceName,
         TOptional<FString> UserId,

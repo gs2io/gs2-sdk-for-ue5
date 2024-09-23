@@ -70,8 +70,14 @@
 #include "Task/Rest/DeleteTriggerTask.h"
 #include "Request/DeleteTriggerByUserIdRequest.h"
 #include "Task/Rest/DeleteTriggerByUserIdTask.h"
+#include "Request/VerifyTriggerRequest.h"
+#include "Task/Rest/VerifyTriggerTask.h"
+#include "Request/VerifyTriggerByUserIdRequest.h"
+#include "Task/Rest/VerifyTriggerByUserIdTask.h"
 #include "Request/DeleteTriggerByStampTaskRequest.h"
 #include "Task/Rest/DeleteTriggerByStampTaskTask.h"
+#include "Request/VerifyTriggerByStampTaskRequest.h"
+#include "Task/Rest/VerifyTriggerByStampTaskTask.h"
 #include "Request/DescribeEventsRequest.h"
 #include "Task/Rest/DescribeEventsTask.h"
 #include "Request/DescribeEventsByUserIdRequest.h"
@@ -214,8 +220,20 @@ namespace Gs2::Schedule
             const Request::FDeleteTriggerByUserIdRequestPtr Request
         ) const;
 
+        TSharedPtr<FAsyncTask<Task::Rest::FVerifyTriggerTask>> VerifyTrigger(
+            const Request::FVerifyTriggerRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FVerifyTriggerByUserIdTask>> VerifyTriggerByUserId(
+            const Request::FVerifyTriggerByUserIdRequestPtr Request
+        ) const;
+
         TSharedPtr<FAsyncTask<Task::Rest::FDeleteTriggerByStampTaskTask>> DeleteTriggerByStampTask(
             const Request::FDeleteTriggerByStampTaskRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FVerifyTriggerByStampTaskTask>> VerifyTriggerByStampTask(
+            const Request::FVerifyTriggerByStampTaskRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::Rest::FDescribeEventsTask>> DescribeEvents(

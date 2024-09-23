@@ -17,7 +17,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Dom/JsonObject.h"
 #include "../Model/InGameLogTag.h"
 
 namespace Gs2::Log::Request
@@ -57,5 +56,5 @@ namespace Gs2::Log::Request
         static TSharedPtr<FSendInGameLogRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;
     };
-    typedef TSharedPtr<FSendInGameLogRequest> FSendInGameLogRequestPtr;
+    typedef TSharedPtr<FSendInGameLogRequest, ESPMode::ThreadSafe> FSendInGameLogRequestPtr;
 }

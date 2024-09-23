@@ -23,7 +23,9 @@ namespace Gs2::Mission::Model
 {
     class GS2MISSION_API FScopedValue final : public Gs2Object, public TSharedFromThis<FScopedValue>
     {
+        TOptional<FString> ScopeTypeValue;
         TOptional<FString> ResetTypeValue;
+        TOptional<FString> ConditionNameValue;
         TOptional<int64> ValueValue;
         TOptional<int64> NextResetAtValue;
         TOptional<int64> UpdatedAtValue;
@@ -35,12 +37,16 @@ namespace Gs2::Mission::Model
         );
         virtual ~FScopedValue() override = default;
 
+        TSharedPtr<FScopedValue> WithScopeType(const TOptional<FString> ScopeType);
         TSharedPtr<FScopedValue> WithResetType(const TOptional<FString> ResetType);
+        TSharedPtr<FScopedValue> WithConditionName(const TOptional<FString> ConditionName);
         TSharedPtr<FScopedValue> WithValue(const TOptional<int64> Value);
         TSharedPtr<FScopedValue> WithNextResetAt(const TOptional<int64> NextResetAt);
         TSharedPtr<FScopedValue> WithUpdatedAt(const TOptional<int64> UpdatedAt);
 
+        TOptional<FString> GetScopeType() const;
         TOptional<FString> GetResetType() const;
+        TOptional<FString> GetConditionName() const;
         TOptional<int64> GetValue() const;
         FString GetValueString() const;
         TOptional<int64> GetNextResetAt() const;

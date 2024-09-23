@@ -15,7 +15,6 @@
  */
 
 #include "Matchmaking/Model/Gs2MatchmakingNamespace.h"
-#include "Matchmaking/Domain/EzGs2Matchmaking.h"
 #include "Matchmaking/Model/Gs2MatchmakingRatingModel.h"
 #include "Matchmaking/Model/Gs2MatchmakingSeasonModel.h"
 #include "Core/Model/Gs2AccessToken.h"

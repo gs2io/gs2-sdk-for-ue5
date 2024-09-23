@@ -15,7 +15,6 @@
  */
 
 #include "Version/Model/Gs2Version.h"
-#include "Version/Domain/EzGs2Version.h"
 #include "Version/Model/Gs2VersionNamespace.h"
 #include "Core/BpGs2Constant.h"
 

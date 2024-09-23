@@ -23,7 +23,6 @@
 #endif
 
 #include "Formation/Domain/SpeculativeExecutor/Acquire/AcquireActionsToPropertyFormPropertiesSpeculativeExecutor.h"
-#include "Formation/Domain/Gs2Formation.h"
 #include "Formation/Domain/SpeculativeExecutor/Transaction/AcquireActionsToPropertyFormPropertiesSpeculativeExecutor.h"
 
 #include "Core/Domain/Gs2.h"

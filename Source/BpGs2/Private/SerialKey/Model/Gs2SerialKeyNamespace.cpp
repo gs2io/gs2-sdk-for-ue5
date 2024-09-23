@@ -15,7 +15,6 @@
  */
 
 #include "SerialKey/Model/Gs2SerialKeyNamespace.h"
-#include "SerialKey/Domain/EzGs2SerialKey.h"
 #include "SerialKey/Model/Gs2SerialKeyCampaignModel.h"
 #include "Core/Model/Gs2AccessToken.h"
 #include "SerialKey/Model/Gs2SerialKeyCampaignModel.h"

@@ -17,7 +17,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Dom/JsonObject.h"
 #include "../Model/HeldCount.h"
 
 namespace Gs2::Inventory::Request
@@ -60,5 +59,5 @@ namespace Gs2::Inventory::Request
         static TSharedPtr<FSetSimpleItemsByUserIdRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;
     };
-    typedef TSharedPtr<FSetSimpleItemsByUserIdRequest> FSetSimpleItemsByUserIdRequestPtr;
+    typedef TSharedPtr<FSetSimpleItemsByUserIdRequest, ESPMode::ThreadSafe> FSetSimpleItemsByUserIdRequestPtr;
 }

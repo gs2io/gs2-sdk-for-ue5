@@ -17,7 +17,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Dom/JsonObject.h"
 
 namespace Gs2::Inventory::Request
 {
@@ -66,5 +65,5 @@ namespace Gs2::Inventory::Request
         static TSharedPtr<FDeleteReferenceOfByUserIdRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;
     };
-    typedef TSharedPtr<FDeleteReferenceOfByUserIdRequest> FDeleteReferenceOfByUserIdRequestPtr;
+    typedef TSharedPtr<FDeleteReferenceOfByUserIdRequest, ESPMode::ThreadSafe> FDeleteReferenceOfByUserIdRequestPtr;
 }

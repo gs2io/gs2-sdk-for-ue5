@@ -39,6 +39,7 @@
 #include "Mission/Domain/Model/User.h"
 #include "Mission/Domain/Model/UserAccessToken.h"
 #include "Mission/Domain/SpeculativeExecutor/Transaction/CompleteByUserIdSpeculativeExecutor.h"
+#include "Mission/Domain/SpeculativeExecutor/Transaction/BatchCompleteByUserIdSpeculativeExecutor.h"
 
 #include "Core/Domain/Gs2.h"
 #include "Core/Domain/Transaction/JobQueueJobDomainFactory.h"
@@ -173,6 +174,97 @@ namespace Gs2::Mission::Domain::Model
         bool SpeculativeExecute
     ) {
         return Gs2::Core::Util::New<FAsyncTask<FCompleteTask>>(this->AsShared(), Request, SpeculativeExecute);
+    }
+
+    FCompleteAccessTokenDomain::FBatchTask::FBatchTask(
+        const TSharedPtr<FCompleteAccessTokenDomain>& Self,
+        const Request::FBatchCompleteRequestPtr Request,
+        bool SpeculativeExecute
+    ): Self(Self), Request(Request), SpeculativeExecute(SpeculativeExecute)
+    {
+
+    }
+
+    FCompleteAccessTokenDomain::FBatchTask::FBatchTask(
+        const FBatchTask& From
+    ): TGs2Future(From), Self(From.Self), Request(From.Request), SpeculativeExecute(From.SpeculativeExecute)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FCompleteAccessTokenDomain::FBatchTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::Mission::Domain::Model::FCompleteAccessTokenDomain>> Result
+    )
+    {
+        Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
+            ->WithNamespaceName(Self->NamespaceName)
+            ->WithMissionGroupName(Self->MissionGroupName)
+            ->WithAccessToken(Self->AccessToken->GetToken());
+
+        if (SpeculativeExecute) {
+            const auto SpeculativeExecuteFuture = Transaction::SpeculativeExecutor::FBatchCompleteByUserIdSpeculativeExecutor::Execute(
+                Self->Gs2,
+                Self->Service,
+                Self->AccessToken,
+                Request::FBatchCompleteByUserIdRequest::FromJson(Request->ToJson())
+            );
+            SpeculativeExecuteFuture->StartSynchronousTask();
+            if (SpeculativeExecuteFuture->GetTask().IsError())
+            {
+                return SpeculativeExecuteFuture->GetTask().Error();
+            }
+            const auto Commit = SpeculativeExecuteFuture->GetTask().Result();
+            SpeculativeExecuteFuture->EnsureCompletion();
+
+            if (Commit.IsValid()) {
+                (*Commit)();
+            }
+        }
+        const auto Future = Self->Client->BatchComplete(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto RequestModel = Request;
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
+        if (ResultModel != nullptr) {
+            
+        }
+        if (ResultModel && ResultModel->GetStampSheet())
+        {
+            const auto Transaction = Gs2::Core::Domain::Internal::FTransactionDomainFactory::ToTransaction(
+                Self->Gs2,
+                Self->AccessToken,
+                false,
+                *ResultModel->GetTransactionId(),
+                *ResultModel->GetStampSheet(),
+                *ResultModel->GetStampSheetEncryptionKeyId()
+            );
+            const auto Future3 = Transaction->Wait(true);
+            Future3->StartSynchronousTask();
+            if (Future3->GetTask().IsError())
+            {
+                return Future3->GetTask().Error();
+            }
+        }
+        if (ResultModel != nullptr)
+        {
+            Self->AutoRunStampSheet = ResultModel->GetAutoRunStampSheet();
+            Self->TransactionId = ResultModel->GetTransactionId();
+        }
+        *Result = Self;
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FCompleteAccessTokenDomain::FBatchTask>> FCompleteAccessTokenDomain::Batch(
+        Request::FBatchCompleteRequestPtr Request,
+        bool SpeculativeExecute
+    ) {
+        return Gs2::Core::Util::New<FAsyncTask<FBatchTask>>(this->AsShared(), Request, SpeculativeExecute);
     }
 
     FCompleteAccessTokenDomain::FGetTask::FGetTask(

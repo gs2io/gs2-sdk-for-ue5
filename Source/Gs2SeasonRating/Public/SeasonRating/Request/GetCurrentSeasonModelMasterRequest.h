@@ -17,7 +17,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Dom/JsonObject.h"
 
 namespace Gs2::SeasonRating::Request
 {
@@ -45,5 +44,5 @@ namespace Gs2::SeasonRating::Request
         static TSharedPtr<FGetCurrentSeasonModelMasterRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;
     };
-    typedef TSharedPtr<FGetCurrentSeasonModelMasterRequest> FGetCurrentSeasonModelMasterRequestPtr;
+    typedef TSharedPtr<FGetCurrentSeasonModelMasterRequest, ESPMode::ThreadSafe> FGetCurrentSeasonModelMasterRequestPtr;
 }

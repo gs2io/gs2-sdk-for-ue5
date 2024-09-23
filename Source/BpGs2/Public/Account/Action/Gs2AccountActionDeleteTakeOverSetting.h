@@ -18,7 +18,7 @@
 
 #include "CoreMinimal.h"
 #include "Account/Model/Gs2AccountTakeOver.h"
-#include "Account/Model/Gs2AccountTakeOver.h"
+#include "Account/Model/Gs2AccountAccount.h"
 #include "../../Core/Model/Gs2Error.h"
 #include "Kismet/BlueprintAsyncActionBase.h"
 #include "Gs2AccountActionDeleteTakeOverSetting.generated.h"
@@ -32,7 +32,7 @@ class BPGS2_API UGs2AccountDeleteTakeOverSettingAsyncFunction : public UBlueprin
 {
     GENERATED_BODY()
 
-    FGs2AccountOwnTakeOver TakeOver;
+    FGs2AccountOwnAccount Account;
 
 public:
 
@@ -47,7 +47,7 @@ public:
 	UFUNCTION(BlueprintCallable, DisplayName="Gs2::Account::TakeOver::Action::DeleteTakeOverSetting", Category="Game Server Services|GS2-Account|Namespace|Account|TakeOver|Action", meta=(WorldContext="WorldContextObject", BlueprintInternalUseOnly="true"))
     static UGs2AccountDeleteTakeOverSettingAsyncFunction* DeleteTakeOverSetting(
         UObject* WorldContextObject,
-        FGs2AccountOwnTakeOver TakeOver
+        FGs2AccountOwnAccount Account
     );
 
     virtual void Activate() override;

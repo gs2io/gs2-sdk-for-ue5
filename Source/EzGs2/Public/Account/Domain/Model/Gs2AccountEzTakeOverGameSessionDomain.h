@@ -126,26 +126,6 @@ namespace Gs2::UE5::Account::Domain::Model
             FString Password
         );
 
-        class EZGS2_API FDeleteTakeOverSettingTask :
-            public Gs2::Core::Util::TGs2Future<Gs2::UE5::Account::Domain::Model::FEzTakeOverGameSessionDomain>,
-            public TSharedFromThis<FDeleteTakeOverSettingTask>
-        {
-            TSharedPtr<FEzTakeOverGameSessionDomain> Self;
-
-        public:
-            explicit FDeleteTakeOverSettingTask(
-                TSharedPtr<FEzTakeOverGameSessionDomain> Self
-            );
-
-            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-                TSharedPtr<TSharedPtr<Gs2::UE5::Account::Domain::Model::FEzTakeOverGameSessionDomain>> Result
-            ) override;
-        };
-        friend FDeleteTakeOverSettingTask;
-
-        TSharedPtr<FAsyncTask<FDeleteTakeOverSettingTask>> DeleteTakeOverSetting(
-        );
-
         class EZGS2_API FModelTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::Account::Model::FEzTakeOver>,
             public TSharedFromThis<FModelTask>

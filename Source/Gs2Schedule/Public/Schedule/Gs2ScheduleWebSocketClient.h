@@ -70,8 +70,14 @@
 #include "Task/WebSocket/DeleteTriggerTask.h"
 #include "Request/DeleteTriggerByUserIdRequest.h"
 #include "Task/WebSocket/DeleteTriggerByUserIdTask.h"
+#include "Request/VerifyTriggerRequest.h"
+#include "Task/WebSocket/VerifyTriggerTask.h"
+#include "Request/VerifyTriggerByUserIdRequest.h"
+#include "Task/WebSocket/VerifyTriggerByUserIdTask.h"
 #include "Request/DeleteTriggerByStampTaskRequest.h"
 #include "Task/WebSocket/DeleteTriggerByStampTaskTask.h"
+#include "Request/VerifyTriggerByStampTaskRequest.h"
+#include "Task/WebSocket/VerifyTriggerByStampTaskTask.h"
 #include "Request/DescribeEventsRequest.h"
 #include "Task/WebSocket/DescribeEventsTask.h"
 #include "Request/DescribeEventsByUserIdRequest.h"
@@ -214,8 +220,20 @@ namespace Gs2::Schedule
             const Request::FDeleteTriggerByUserIdRequestPtr Request
         ) const;
 
+        TSharedPtr<FAsyncTask<Task::WebSocket::FVerifyTriggerTask>> VerifyTrigger(
+            const Request::FVerifyTriggerRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FVerifyTriggerByUserIdTask>> VerifyTriggerByUserId(
+            const Request::FVerifyTriggerByUserIdRequestPtr Request
+        ) const;
+
         TSharedPtr<FAsyncTask<Task::WebSocket::FDeleteTriggerByStampTaskTask>> DeleteTriggerByStampTask(
             const Request::FDeleteTriggerByStampTaskRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FVerifyTriggerByStampTaskTask>> VerifyTriggerByStampTask(
+            const Request::FVerifyTriggerByStampTaskRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FDescribeEventsTask>> DescribeEvents(

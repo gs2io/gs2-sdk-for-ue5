@@ -151,6 +151,75 @@ namespace Gs2::Mission::Domain::Model
         return Gs2::Core::Util::New<FAsyncTask<FCompleteTask>>(this->AsShared(), Request);
     }
 
+    FCompleteDomain::FBatchTask::FBatchTask(
+        const TSharedPtr<FCompleteDomain>& Self,
+        const Request::FBatchCompleteByUserIdRequestPtr Request
+    ): Self(Self), Request(Request)
+    {
+
+    }
+
+    FCompleteDomain::FBatchTask::FBatchTask(
+        const FBatchTask& From
+    ): TGs2Future(From), Self(From.Self), Request(From.Request)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FCompleteDomain::FBatchTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::Mission::Domain::Model::FCompleteDomain>> Result
+    )
+    {
+        Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
+            ->WithNamespaceName(Self->NamespaceName)
+            ->WithMissionGroupName(Self->MissionGroupName)
+            ->WithUserId(Self->UserId);
+        const auto Future = Self->Client->BatchCompleteByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto RequestModel = Request;
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
+        if (ResultModel != nullptr) {
+            
+        }
+        if (ResultModel && ResultModel->GetStampSheet())
+        {
+            const auto Transaction = Gs2::Core::Domain::Internal::FTransactionDomainFactory::ToTransaction(
+                Self->Gs2,
+                *Self->UserId,
+                false,
+                *ResultModel->GetTransactionId(),
+                *ResultModel->GetStampSheet(),
+                *ResultModel->GetStampSheetEncryptionKeyId()
+            );
+            const auto Future3 = Transaction->Wait(true);
+            Future3->StartSynchronousTask();
+            if (Future3->GetTask().IsError())
+            {
+                return Future3->GetTask().Error();
+            }
+        }
+        if (ResultModel != nullptr)
+        {
+            Self->AutoRunStampSheet = ResultModel->GetAutoRunStampSheet();
+            Self->TransactionId = ResultModel->GetTransactionId();
+        }
+        *Result = Self;
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FCompleteDomain::FBatchTask>> FCompleteDomain::Batch(
+        Request::FBatchCompleteByUserIdRequestPtr Request
+    ) {
+        return Gs2::Core::Util::New<FAsyncTask<FBatchTask>>(this->AsShared(), Request);
+    }
+
     FCompleteDomain::FReceiveTask::FReceiveTask(
         const TSharedPtr<FCompleteDomain>& Self,
         const Request::FReceiveByUserIdRequestPtr Request
@@ -216,6 +285,73 @@ namespace Gs2::Mission::Domain::Model
         Request::FReceiveByUserIdRequestPtr Request
     ) {
         return Gs2::Core::Util::New<FAsyncTask<FReceiveTask>>(this->AsShared(), Request);
+    }
+
+    FCompleteDomain::FBatchReceiveTask::FBatchReceiveTask(
+        const TSharedPtr<FCompleteDomain>& Self,
+        const Request::FBatchReceiveByUserIdRequestPtr Request
+    ): Self(Self), Request(Request)
+    {
+
+    }
+
+    FCompleteDomain::FBatchReceiveTask::FBatchReceiveTask(
+        const FBatchReceiveTask& From
+    ): TGs2Future(From), Self(From.Self), Request(From.Request)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FCompleteDomain::FBatchReceiveTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::Mission::Domain::Model::FCompleteDomain>> Result
+    )
+    {
+        Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
+            ->WithNamespaceName(Self->NamespaceName)
+            ->WithMissionGroupName(Self->MissionGroupName)
+            ->WithUserId(Self->UserId);
+        const auto Future = Self->Client->BatchReceiveByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto RequestModel = Request;
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
+        if (ResultModel != nullptr) {
+            
+            if (ResultModel->GetItem() != nullptr)
+            {
+                const auto ParentKey = Gs2::Mission::Domain::Model::FUserDomain::CreateCacheParentKey(
+                    Self->NamespaceName,
+                    Self->UserId,
+                    "Complete"
+                );
+                const auto Key = Gs2::Mission::Domain::Model::FCompleteDomain::CreateCacheKey(
+                    ResultModel->GetItem()->GetMissionGroupName()
+                );
+                Self->Gs2->Cache->Put(
+                    Gs2::Mission::Model::FComplete::TypeName,
+                    ParentKey,
+                    Key,
+                    ResultModel->GetItem(),
+                    ResultModel->GetItem()->GetNextResetAt().IsSet() && *ResultModel->GetItem()->GetNextResetAt() != 0 ? FDateTime::FromUnixTimestamp(*ResultModel->GetItem()->GetNextResetAt() / 1000) : FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+            }
+        }
+        auto Domain = Self;
+
+        *Result = Domain;
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FCompleteDomain::FBatchReceiveTask>> FCompleteDomain::BatchReceive(
+        Request::FBatchReceiveByUserIdRequestPtr Request
+    ) {
+        return Gs2::Core::Util::New<FAsyncTask<FBatchReceiveTask>>(this->AsShared(), Request);
     }
 
     FCompleteDomain::FRevertReceiveTask::FRevertReceiveTask(

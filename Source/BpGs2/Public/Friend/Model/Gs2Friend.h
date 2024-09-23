@@ -19,12 +19,6 @@
 #include "CoreMinimal.h"
 
 #include "Core/Model/Gs2Client.h"
-#include "Gs2Friend/Public/Friend/Model/FollowNotification.h"
-#include "Gs2Friend/Public/Friend/Model/AcceptRequestNotification.h"
-#include "Gs2Friend/Public/Friend/Model/RejectRequestNotification.h"
-#include "Gs2Friend/Public/Friend/Model/DeleteFriendNotification.h"
-#include "Gs2Friend/Public/Friend/Model/ReceiveRequestNotification.h"
-#include "Gs2Friend/Public/Friend/Model/CancelRequestNotification.h"
 #include "Gs2Friend.generated.h"
 
 USTRUCT(BlueprintType)

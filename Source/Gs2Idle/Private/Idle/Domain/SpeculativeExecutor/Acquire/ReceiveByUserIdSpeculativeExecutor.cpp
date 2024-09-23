@@ -23,7 +23,6 @@
 #endif
 
 #include "Idle/Domain/SpeculativeExecutor/Acquire/ReceiveByUserIdSpeculativeExecutor.h"
-#include "Idle/Domain/Gs2Idle.h"
 #include "Idle/Domain/SpeculativeExecutor/Transaction/ReceiveByUserIdSpeculativeExecutor.h"
 
 #include "Core/Domain/Gs2.h"

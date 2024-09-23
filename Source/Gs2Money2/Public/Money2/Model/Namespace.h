@@ -32,7 +32,8 @@ namespace Gs2::Money2::Model
         TOptional<FString> CurrencyUsagePriorityValue;
         TOptional<bool> SharedFreeCurrencyValue;
         TSharedPtr<FPlatformSetting> PlatformSettingValue;
-        TSharedPtr<FScriptSetting> ChangeBalanceScriptValue;
+        TSharedPtr<FScriptSetting> DepositBalanceScriptValue;
+        TSharedPtr<FScriptSetting> WithdrawBalanceScriptValue;
         TSharedPtr<FLogSetting> LogSettingValue;
         TOptional<int64> CreatedAtValue;
         TOptional<int64> UpdatedAtValue;
@@ -51,7 +52,8 @@ namespace Gs2::Money2::Model
         TSharedPtr<FNamespace> WithCurrencyUsagePriority(const TOptional<FString> CurrencyUsagePriority);
         TSharedPtr<FNamespace> WithSharedFreeCurrency(const TOptional<bool> SharedFreeCurrency);
         TSharedPtr<FNamespace> WithPlatformSetting(const TSharedPtr<FPlatformSetting> PlatformSetting);
-        TSharedPtr<FNamespace> WithChangeBalanceScript(const TSharedPtr<FScriptSetting> ChangeBalanceScript);
+        TSharedPtr<FNamespace> WithDepositBalanceScript(const TSharedPtr<FScriptSetting> DepositBalanceScript);
+        TSharedPtr<FNamespace> WithWithdrawBalanceScript(const TSharedPtr<FScriptSetting> WithdrawBalanceScript);
         TSharedPtr<FNamespace> WithLogSetting(const TSharedPtr<FLogSetting> LogSetting);
         TSharedPtr<FNamespace> WithCreatedAt(const TOptional<int64> CreatedAt);
         TSharedPtr<FNamespace> WithUpdatedAt(const TOptional<int64> UpdatedAt);
@@ -64,7 +66,8 @@ namespace Gs2::Money2::Model
         TOptional<bool> GetSharedFreeCurrency() const;
         FString GetSharedFreeCurrencyString() const;
         TSharedPtr<FPlatformSetting> GetPlatformSetting() const;
-        TSharedPtr<FScriptSetting> GetChangeBalanceScript() const;
+        TSharedPtr<FScriptSetting> GetDepositBalanceScript() const;
+        TSharedPtr<FScriptSetting> GetWithdrawBalanceScript() const;
         TSharedPtr<FLogSetting> GetLogSetting() const;
         TOptional<int64> GetCreatedAt() const;
         FString GetCreatedAtString() const;

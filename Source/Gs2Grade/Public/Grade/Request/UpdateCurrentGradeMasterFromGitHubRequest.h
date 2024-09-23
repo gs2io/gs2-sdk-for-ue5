@@ -17,7 +17,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Dom/JsonObject.h"
 #include "../Model/GitHubCheckoutSetting.h"
 
 namespace Gs2::Grade::Request
@@ -49,5 +48,5 @@ namespace Gs2::Grade::Request
         static TSharedPtr<FUpdateCurrentGradeMasterFromGitHubRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;
     };
-    typedef TSharedPtr<FUpdateCurrentGradeMasterFromGitHubRequest> FUpdateCurrentGradeMasterFromGitHubRequestPtr;
+    typedef TSharedPtr<FUpdateCurrentGradeMasterFromGitHubRequest, ESPMode::ThreadSafe> FUpdateCurrentGradeMasterFromGitHubRequestPtr;
 }

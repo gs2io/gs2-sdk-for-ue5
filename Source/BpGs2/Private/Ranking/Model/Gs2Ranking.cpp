@@ -15,7 +15,6 @@
  */
 
 #include "Ranking/Model/Gs2Ranking.h"
-#include "Ranking/Domain/EzGs2Ranking.h"
 #include "Ranking/Model/Gs2RankingNamespace.h"
 #include "Ranking/Model/Gs2RankingRanking.h"
 #include "Core/BpGs2Constant.h"

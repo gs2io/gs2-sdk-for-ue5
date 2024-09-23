@@ -15,7 +15,6 @@
  */
 
 #include "Realtime/Model/Gs2Realtime.h"
-#include "Realtime/Domain/EzGs2Realtime.h"
 #include "Realtime/Model/Gs2RealtimeNamespace.h"
 #include "Core/BpGs2Constant.h"
 

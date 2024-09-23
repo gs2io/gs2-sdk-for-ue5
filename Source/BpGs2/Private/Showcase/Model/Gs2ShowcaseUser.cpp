@@ -15,7 +15,6 @@
  */
 
 #include "Showcase/Model/Gs2ShowcaseUser.h"
-#include "Showcase/Domain/EzGs2Showcase.h"
 #include "Showcase/Model/Gs2ShowcaseShowcase.h"
 #include "Core/Model/Gs2AccessToken.h"
 #include "Showcase/Model/Gs2ShowcaseShowcase.h"

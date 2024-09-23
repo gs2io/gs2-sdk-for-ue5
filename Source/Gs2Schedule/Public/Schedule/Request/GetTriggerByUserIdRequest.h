@@ -17,7 +17,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Dom/JsonObject.h"
 
 namespace Gs2::Schedule::Request
 {
@@ -54,5 +53,5 @@ namespace Gs2::Schedule::Request
         static TSharedPtr<FGetTriggerByUserIdRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;
     };
-    typedef TSharedPtr<FGetTriggerByUserIdRequest> FGetTriggerByUserIdRequestPtr;
+    typedef TSharedPtr<FGetTriggerByUserIdRequest, ESPMode::ThreadSafe> FGetTriggerByUserIdRequestPtr;
 }

@@ -17,7 +17,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Dom/JsonObject.h"
 #include "../Model/CounterScopeModel.h"
 
 namespace Gs2::Mission::Request
@@ -60,5 +59,5 @@ namespace Gs2::Mission::Request
         static TSharedPtr<FUpdateCounterModelMasterRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;
     };
-    typedef TSharedPtr<FUpdateCounterModelMasterRequest> FUpdateCounterModelMasterRequestPtr;
+    typedef TSharedPtr<FUpdateCounterModelMasterRequest, ESPMode::ThreadSafe> FUpdateCounterModelMasterRequestPtr;
 }

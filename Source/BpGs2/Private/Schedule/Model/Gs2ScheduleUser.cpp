@@ -15,7 +15,6 @@
  */
 
 #include "Schedule/Model/Gs2ScheduleUser.h"
-#include "Schedule/Domain/EzGs2Schedule.h"
 #include "Schedule/Model/Gs2ScheduleTrigger.h"
 #include "Schedule/Model/Gs2ScheduleEvent.h"
 #include "Core/Model/Gs2AccessToken.h"

@@ -15,7 +15,6 @@
  */
 
 #include "Enchant/Model/Gs2Enchant.h"
-#include "Enchant/Domain/EzGs2Enchant.h"
 #include "Enchant/Model/Gs2EnchantNamespace.h"
 #include "Core/BpGs2Constant.h"
 

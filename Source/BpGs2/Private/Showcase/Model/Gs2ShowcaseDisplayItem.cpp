@@ -15,6 +15,5 @@
  */
 
 #include "Showcase/Model/Gs2ShowcaseDisplayItem.h"
-#include "Showcase/Domain/EzGs2Showcase.h"
 #include "Core/Model/Gs2AccessToken.h"
 #include "Core/BpGs2Constant.h"

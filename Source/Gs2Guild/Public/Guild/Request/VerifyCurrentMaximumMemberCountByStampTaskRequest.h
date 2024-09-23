@@ -17,7 +17,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Dom/JsonObject.h"
 
 namespace Gs2::Guild::Request
 {
@@ -48,5 +47,5 @@ namespace Gs2::Guild::Request
         static TSharedPtr<FVerifyCurrentMaximumMemberCountByStampTaskRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;
     };
-    typedef TSharedPtr<FVerifyCurrentMaximumMemberCountByStampTaskRequest> FVerifyCurrentMaximumMemberCountByStampTaskRequestPtr;
+    typedef TSharedPtr<FVerifyCurrentMaximumMemberCountByStampTaskRequest, ESPMode::ThreadSafe> FVerifyCurrentMaximumMemberCountByStampTaskRequestPtr;
 }

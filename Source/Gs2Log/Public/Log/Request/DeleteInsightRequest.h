@@ -17,7 +17,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Dom/JsonObject.h"
 
 namespace Gs2::Log::Request
 {
@@ -48,5 +47,5 @@ namespace Gs2::Log::Request
         static TSharedPtr<FDeleteInsightRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;
     };
-    typedef TSharedPtr<FDeleteInsightRequest> FDeleteInsightRequestPtr;
+    typedef TSharedPtr<FDeleteInsightRequest, ESPMode::ThreadSafe> FDeleteInsightRequestPtr;
 }

@@ -15,7 +15,6 @@
  */
 
 #include "Buff/Model/Gs2BuffNamespace.h"
-#include "Buff/Domain/EzGs2Buff.h"
 #include "Buff/Model/Gs2BuffBuffEntryModel.h"
 #include "Core/Model/Gs2AccessToken.h"
 #include "Buff/Model/Gs2BuffBuffEntryModel.h"

@@ -15,6 +15,5 @@
  */
 
 #include "Enhance/Model/Gs2EnhanceProgress.h"
-#include "Enhance/Domain/EzGs2Enhance.h"
 #include "Core/Model/Gs2AccessToken.h"
 #include "Core/BpGs2Constant.h"

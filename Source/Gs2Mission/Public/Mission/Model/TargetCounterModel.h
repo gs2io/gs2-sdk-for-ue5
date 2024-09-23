@@ -24,7 +24,9 @@ namespace Gs2::Mission::Model
     class GS2MISSION_API FTargetCounterModel final : public Gs2Object, public TSharedFromThis<FTargetCounterModel>
     {
         TOptional<FString> CounterNameValue;
+        TOptional<FString> ScopeTypeValue;
         TOptional<FString> ResetTypeValue;
+        TOptional<FString> ConditionNameValue;
         TOptional<int64> ValueValue;
 
     public:
@@ -35,11 +37,15 @@ namespace Gs2::Mission::Model
         virtual ~FTargetCounterModel() override = default;
 
         TSharedPtr<FTargetCounterModel> WithCounterName(const TOptional<FString> CounterName);
+        TSharedPtr<FTargetCounterModel> WithScopeType(const TOptional<FString> ScopeType);
         TSharedPtr<FTargetCounterModel> WithResetType(const TOptional<FString> ResetType);
+        TSharedPtr<FTargetCounterModel> WithConditionName(const TOptional<FString> ConditionName);
         TSharedPtr<FTargetCounterModel> WithValue(const TOptional<int64> Value);
 
         TOptional<FString> GetCounterName() const;
+        TOptional<FString> GetScopeType() const;
         TOptional<FString> GetResetType() const;
+        TOptional<FString> GetConditionName() const;
         TOptional<int64> GetValue() const;
         FString GetValueString() const;
 

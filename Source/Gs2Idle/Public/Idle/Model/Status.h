@@ -28,6 +28,7 @@ namespace Gs2::Idle::Model
         TOptional<FString> UserIdValue;
         TOptional<int64> RandomSeedValue;
         TOptional<int32> IdleMinutesValue;
+        TOptional<int64> NextRewardsAtValue;
         TOptional<int32> MaximumIdleMinutesValue;
         TOptional<int64> CreatedAtValue;
         TOptional<int64> UpdatedAtValue;
@@ -45,6 +46,7 @@ namespace Gs2::Idle::Model
         TSharedPtr<FStatus> WithUserId(const TOptional<FString> UserId);
         TSharedPtr<FStatus> WithRandomSeed(const TOptional<int64> RandomSeed);
         TSharedPtr<FStatus> WithIdleMinutes(const TOptional<int32> IdleMinutes);
+        TSharedPtr<FStatus> WithNextRewardsAt(const TOptional<int64> NextRewardsAt);
         TSharedPtr<FStatus> WithMaximumIdleMinutes(const TOptional<int32> MaximumIdleMinutes);
         TSharedPtr<FStatus> WithCreatedAt(const TOptional<int64> CreatedAt);
         TSharedPtr<FStatus> WithUpdatedAt(const TOptional<int64> UpdatedAt);
@@ -57,6 +59,8 @@ namespace Gs2::Idle::Model
         FString GetRandomSeedString() const;
         TOptional<int32> GetIdleMinutes() const;
         FString GetIdleMinutesString() const;
+        TOptional<int64> GetNextRewardsAt() const;
+        FString GetNextRewardsAtString() const;
         TOptional<int32> GetMaximumIdleMinutes() const;
         FString GetMaximumIdleMinutesString() const;
         TOptional<int64> GetCreatedAt() const;

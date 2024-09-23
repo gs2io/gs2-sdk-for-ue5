@@ -15,7 +15,6 @@
  */
 
 #include "Stamina/Model/Gs2Stamina.h"
-#include "Stamina/Domain/EzGs2Stamina.h"
 #include "Stamina/Model/Gs2StaminaNamespace.h"
 #include "Core/BpGs2Constant.h"
 

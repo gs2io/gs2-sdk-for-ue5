@@ -17,7 +17,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Dom/JsonObject.h"
 #include "../Model/SignedBallot.h"
 #include "../Model/GameResult.h"
 
@@ -54,5 +53,5 @@ namespace Gs2::Matchmaking::Request
         static TSharedPtr<FVoteMultipleRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;
     };
-    typedef TSharedPtr<FVoteMultipleRequest> FVoteMultipleRequestPtr;
+    typedef TSharedPtr<FVoteMultipleRequest, ESPMode::ThreadSafe> FVoteMultipleRequestPtr;
 }

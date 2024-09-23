@@ -253,10 +253,37 @@ namespace Gs2::Schedule
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::Rest::FVerifyTriggerTask>> FGs2ScheduleRestClient::VerifyTrigger(
+        const Request::FVerifyTriggerRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FVerifyTriggerTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FVerifyTriggerByUserIdTask>> FGs2ScheduleRestClient::VerifyTriggerByUserId(
+        const Request::FVerifyTriggerByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FVerifyTriggerByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::Rest::FDeleteTriggerByStampTaskTask>> FGs2ScheduleRestClient::DeleteTriggerByStampTask(
         const Request::FDeleteTriggerByStampTaskRequestPtr Request) const
     {
         return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FDeleteTriggerByStampTaskTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FVerifyTriggerByStampTaskTask>> FGs2ScheduleRestClient::VerifyTriggerByStampTask(
+        const Request::FVerifyTriggerByStampTaskRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FVerifyTriggerByStampTaskTask>>(
             Session,
             Request
         );

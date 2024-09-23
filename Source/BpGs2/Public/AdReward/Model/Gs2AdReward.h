@@ -19,7 +19,6 @@
 #include "CoreMinimal.h"
 
 #include "Core/Model/Gs2Client.h"
-#include "Gs2AdReward/Public/AdReward/Model/ChangePointNotification.h"
 #include "Gs2AdReward.generated.h"
 
 USTRUCT(BlueprintType)

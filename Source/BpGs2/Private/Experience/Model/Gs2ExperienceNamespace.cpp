@@ -15,7 +15,6 @@
  */
 
 #include "Experience/Model/Gs2ExperienceNamespace.h"
-#include "Experience/Domain/EzGs2Experience.h"
 #include "Experience/Model/Gs2ExperienceExperienceModel.h"
 #include "Core/Model/Gs2AccessToken.h"
 #include "Experience/Model/Gs2ExperienceExperienceModel.h"

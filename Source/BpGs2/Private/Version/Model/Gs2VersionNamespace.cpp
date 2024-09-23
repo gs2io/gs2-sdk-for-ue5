@@ -15,7 +15,6 @@
  */
 
 #include "Version/Model/Gs2VersionNamespace.h"
-#include "Version/Domain/EzGs2Version.h"
 #include "Version/Model/Gs2VersionVersionModel.h"
 #include "Core/Model/Gs2AccessToken.h"
 #include "Version/Model/Gs2VersionVersionModel.h"

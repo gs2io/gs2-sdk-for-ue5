@@ -15,6 +15,5 @@
  */
 
 #include "Quest/Model/Gs2QuestProgress.h"
-#include "Quest/Domain/EzGs2Quest.h"
 #include "Core/Model/Gs2AccessToken.h"
 #include "Core/BpGs2Constant.h"

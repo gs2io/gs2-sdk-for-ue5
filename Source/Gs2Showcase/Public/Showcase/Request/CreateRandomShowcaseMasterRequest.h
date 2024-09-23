@@ -17,7 +17,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Dom/JsonObject.h"
 #include "../Model/RandomDisplayItemModel.h"
 
 namespace Gs2::Showcase::Request
@@ -72,5 +71,5 @@ namespace Gs2::Showcase::Request
         static TSharedPtr<FCreateRandomShowcaseMasterRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;
     };
-    typedef TSharedPtr<FCreateRandomShowcaseMasterRequest> FCreateRandomShowcaseMasterRequestPtr;
+    typedef TSharedPtr<FCreateRandomShowcaseMasterRequest, ESPMode::ThreadSafe> FCreateRandomShowcaseMasterRequestPtr;
 }

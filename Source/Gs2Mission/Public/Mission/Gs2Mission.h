@@ -64,11 +64,29 @@
 #include "Task/Rest/CompleteByUserIdTask.h"
 #include "Task/WebSocket/CompleteByUserIdTask.h"
 
+// BatchComplete
+#include "Request/BatchCompleteRequest.h"
+#include "Result/BatchCompleteResult.h"
+#include "Task/Rest/BatchCompleteTask.h"
+#include "Task/WebSocket/BatchCompleteTask.h"
+
+// BatchCompleteByUserId
+#include "Request/BatchCompleteByUserIdRequest.h"
+#include "Result/BatchCompleteByUserIdResult.h"
+#include "Task/Rest/BatchCompleteByUserIdTask.h"
+#include "Task/WebSocket/BatchCompleteByUserIdTask.h"
+
 // ReceiveByUserId
 #include "Request/ReceiveByUserIdRequest.h"
 #include "Result/ReceiveByUserIdResult.h"
 #include "Task/Rest/ReceiveByUserIdTask.h"
 #include "Task/WebSocket/ReceiveByUserIdTask.h"
+
+// BatchReceiveByUserId
+#include "Request/BatchReceiveByUserIdRequest.h"
+#include "Result/BatchReceiveByUserIdResult.h"
+#include "Task/Rest/BatchReceiveByUserIdTask.h"
+#include "Task/WebSocket/BatchReceiveByUserIdTask.h"
 
 // RevertReceiveByUserId
 #include "Request/RevertReceiveByUserIdRequest.h"
@@ -111,6 +129,12 @@
 #include "Result/ReceiveByStampTaskResult.h"
 #include "Task/Rest/ReceiveByStampTaskTask.h"
 #include "Task/WebSocket/ReceiveByStampTaskTask.h"
+
+// BatchReceiveByStampTask
+#include "Request/BatchReceiveByStampTaskRequest.h"
+#include "Result/BatchReceiveByStampTaskResult.h"
+#include "Task/Rest/BatchReceiveByStampTaskTask.h"
+#include "Task/WebSocket/BatchReceiveByStampTaskTask.h"
 
 // RevertReceiveByStampSheet
 #include "Request/RevertReceiveByStampSheetRequest.h"

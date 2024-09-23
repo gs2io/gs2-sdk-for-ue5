@@ -17,7 +17,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Dom/JsonObject.h"
 
 namespace Gs2::SerialKey::Request
 {
@@ -51,5 +50,5 @@ namespace Gs2::SerialKey::Request
         static TSharedPtr<FGetIssueJobRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;
     };
-    typedef TSharedPtr<FGetIssueJobRequest> FGetIssueJobRequestPtr;
+    typedef TSharedPtr<FGetIssueJobRequest, ESPMode::ThreadSafe> FGetIssueJobRequestPtr;
 }

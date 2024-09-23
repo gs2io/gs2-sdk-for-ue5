@@ -26,8 +26,14 @@
 #include "Task/Rest/CompleteTask.h"
 #include "Request/CompleteByUserIdRequest.h"
 #include "Task/Rest/CompleteByUserIdTask.h"
+#include "Request/BatchCompleteRequest.h"
+#include "Task/Rest/BatchCompleteTask.h"
+#include "Request/BatchCompleteByUserIdRequest.h"
+#include "Task/Rest/BatchCompleteByUserIdTask.h"
 #include "Request/ReceiveByUserIdRequest.h"
 #include "Task/Rest/ReceiveByUserIdTask.h"
+#include "Request/BatchReceiveByUserIdRequest.h"
+#include "Task/Rest/BatchReceiveByUserIdTask.h"
 #include "Request/RevertReceiveByUserIdRequest.h"
 #include "Task/Rest/RevertReceiveByUserIdTask.h"
 #include "Request/GetCompleteRequest.h"
@@ -42,6 +48,8 @@
 #include "Task/Rest/VerifyCompleteByUserIdTask.h"
 #include "Request/ReceiveByStampTaskRequest.h"
 #include "Task/Rest/ReceiveByStampTaskTask.h"
+#include "Request/BatchReceiveByStampTaskRequest.h"
+#include "Task/Rest/BatchReceiveByStampTaskTask.h"
 #include "Request/RevertReceiveByStampSheetRequest.h"
 #include "Task/Rest/RevertReceiveByStampSheetTask.h"
 #include "Request/VerifyCompleteByStampTaskRequest.h"
@@ -180,8 +188,20 @@ namespace Gs2::Mission
             const Request::FCompleteByUserIdRequestPtr Request
         ) const;
 
+        TSharedPtr<FAsyncTask<Task::Rest::FBatchCompleteTask>> BatchComplete(
+            const Request::FBatchCompleteRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FBatchCompleteByUserIdTask>> BatchCompleteByUserId(
+            const Request::FBatchCompleteByUserIdRequestPtr Request
+        ) const;
+
         TSharedPtr<FAsyncTask<Task::Rest::FReceiveByUserIdTask>> ReceiveByUserId(
             const Request::FReceiveByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FBatchReceiveByUserIdTask>> BatchReceiveByUserId(
+            const Request::FBatchReceiveByUserIdRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::Rest::FRevertReceiveByUserIdTask>> RevertReceiveByUserId(
@@ -210,6 +230,10 @@ namespace Gs2::Mission
 
         TSharedPtr<FAsyncTask<Task::Rest::FReceiveByStampTaskTask>> ReceiveByStampTask(
             const Request::FReceiveByStampTaskRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FBatchReceiveByStampTaskTask>> BatchReceiveByStampTask(
+            const Request::FBatchReceiveByStampTaskRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::Rest::FRevertReceiveByStampSheetTask>> RevertReceiveByStampSheet(

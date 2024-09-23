@@ -15,7 +15,6 @@
  */
 
 #include "Chat/Model/Gs2ChatRoom.h"
-#include "Chat/Domain/EzGs2Chat.h"
 #include "Chat/Model/Gs2ChatMessage.h"
 #include "Core/Model/Gs2AccessToken.h"
 #include "Chat/Model/Gs2ChatMessage.h"

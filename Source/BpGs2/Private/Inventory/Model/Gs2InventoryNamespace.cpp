@@ -15,7 +15,6 @@
  */
 
 #include "Inventory/Model/Gs2InventoryNamespace.h"
-#include "Inventory/Domain/EzGs2Inventory.h"
 #include "Inventory/Model/Gs2InventoryInventoryModel.h"
 #include "Inventory/Model/Gs2InventorySimpleInventoryModel.h"
 #include "Inventory/Model/Gs2InventoryBigInventoryModel.h"

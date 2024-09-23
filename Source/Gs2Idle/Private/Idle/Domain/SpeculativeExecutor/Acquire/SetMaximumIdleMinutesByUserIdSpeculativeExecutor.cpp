@@ -23,7 +23,6 @@
 #endif
 
 #include "Idle/Domain/SpeculativeExecutor/Acquire/SetMaximumIdleMinutesByUserIdSpeculativeExecutor.h"
-#include "Idle/Domain/Gs2Idle.h"
 
 #include "Core/Domain/Gs2.h"
 

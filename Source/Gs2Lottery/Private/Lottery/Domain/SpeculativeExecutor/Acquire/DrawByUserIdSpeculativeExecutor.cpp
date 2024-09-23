@@ -23,7 +23,6 @@
 #endif
 
 #include "Lottery/Domain/SpeculativeExecutor/Acquire/DrawByUserIdSpeculativeExecutor.h"
-#include "Lottery/Domain/Gs2Lottery.h"
 #include "Lottery/Domain/SpeculativeExecutor/Transaction/DrawByUserIdSpeculativeExecutor.h"
 
 #include "Core/Domain/Gs2.h"

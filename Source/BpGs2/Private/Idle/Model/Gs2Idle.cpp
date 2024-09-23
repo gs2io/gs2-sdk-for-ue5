@@ -15,7 +15,6 @@
  */
 
 #include "Idle/Model/Gs2Idle.h"
-#include "Idle/Domain/EzGs2Idle.h"
 #include "Idle/Model/Gs2IdleNamespace.h"
 #include "Core/BpGs2Constant.h"
 

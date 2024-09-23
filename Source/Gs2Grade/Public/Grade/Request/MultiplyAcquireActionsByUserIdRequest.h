@@ -17,7 +17,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Dom/JsonObject.h"
 #include "../Model/AcquireAction.h"
 
 namespace Gs2::Grade::Request
@@ -66,5 +65,5 @@ namespace Gs2::Grade::Request
         static TSharedPtr<FMultiplyAcquireActionsByUserIdRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;
     };
-    typedef TSharedPtr<FMultiplyAcquireActionsByUserIdRequest> FMultiplyAcquireActionsByUserIdRequestPtr;
+    typedef TSharedPtr<FMultiplyAcquireActionsByUserIdRequest, ESPMode::ThreadSafe> FMultiplyAcquireActionsByUserIdRequestPtr;
 }

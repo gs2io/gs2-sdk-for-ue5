@@ -15,6 +15,5 @@
  */
 
 #include "SkillTree/Model/Gs2SkillTreeNodeModel.h"
-#include "SkillTree/Domain/EzGs2SkillTree.h"
 #include "Core/Model/Gs2AccessToken.h"
 #include "Core/BpGs2Constant.h"

@@ -15,6 +15,5 @@
  */
 
 #include "Formation/Model/Gs2FormationPropertyForm.h"
-#include "Formation/Domain/EzGs2Formation.h"
 #include "Core/Model/Gs2AccessToken.h"
 #include "Core/BpGs2Constant.h"

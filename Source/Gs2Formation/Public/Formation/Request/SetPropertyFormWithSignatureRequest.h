@@ -17,7 +17,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Dom/JsonObject.h"
 #include "../Model/SlotWithSignature.h"
 
 namespace Gs2::Formation::Request
@@ -63,5 +62,5 @@ namespace Gs2::Formation::Request
         static TSharedPtr<FSetPropertyFormWithSignatureRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;
     };
-    typedef TSharedPtr<FSetPropertyFormWithSignatureRequest> FSetPropertyFormWithSignatureRequestPtr;
+    typedef TSharedPtr<FSetPropertyFormWithSignatureRequest, ESPMode::ThreadSafe> FSetPropertyFormWithSignatureRequestPtr;
 }

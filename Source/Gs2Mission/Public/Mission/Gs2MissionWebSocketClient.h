@@ -26,8 +26,14 @@
 #include "Task/WebSocket/CompleteTask.h"
 #include "Request/CompleteByUserIdRequest.h"
 #include "Task/WebSocket/CompleteByUserIdTask.h"
+#include "Request/BatchCompleteRequest.h"
+#include "Task/WebSocket/BatchCompleteTask.h"
+#include "Request/BatchCompleteByUserIdRequest.h"
+#include "Task/WebSocket/BatchCompleteByUserIdTask.h"
 #include "Request/ReceiveByUserIdRequest.h"
 #include "Task/WebSocket/ReceiveByUserIdTask.h"
+#include "Request/BatchReceiveByUserIdRequest.h"
+#include "Task/WebSocket/BatchReceiveByUserIdTask.h"
 #include "Request/RevertReceiveByUserIdRequest.h"
 #include "Task/WebSocket/RevertReceiveByUserIdTask.h"
 #include "Request/GetCompleteRequest.h"
@@ -42,6 +48,8 @@
 #include "Task/WebSocket/VerifyCompleteByUserIdTask.h"
 #include "Request/ReceiveByStampTaskRequest.h"
 #include "Task/WebSocket/ReceiveByStampTaskTask.h"
+#include "Request/BatchReceiveByStampTaskRequest.h"
+#include "Task/WebSocket/BatchReceiveByStampTaskTask.h"
 #include "Request/RevertReceiveByStampSheetRequest.h"
 #include "Task/WebSocket/RevertReceiveByStampSheetTask.h"
 #include "Request/VerifyCompleteByStampTaskRequest.h"
@@ -180,8 +188,20 @@ namespace Gs2::Mission
             const Request::FCompleteByUserIdRequestPtr Request
         ) const;
 
+        TSharedPtr<FAsyncTask<Task::WebSocket::FBatchCompleteTask>> BatchComplete(
+            const Request::FBatchCompleteRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FBatchCompleteByUserIdTask>> BatchCompleteByUserId(
+            const Request::FBatchCompleteByUserIdRequestPtr Request
+        ) const;
+
         TSharedPtr<FAsyncTask<Task::WebSocket::FReceiveByUserIdTask>> ReceiveByUserId(
             const Request::FReceiveByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FBatchReceiveByUserIdTask>> BatchReceiveByUserId(
+            const Request::FBatchReceiveByUserIdRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FRevertReceiveByUserIdTask>> RevertReceiveByUserId(
@@ -210,6 +230,10 @@ namespace Gs2::Mission
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FReceiveByStampTaskTask>> ReceiveByStampTask(
             const Request::FReceiveByStampTaskRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FBatchReceiveByStampTaskTask>> BatchReceiveByStampTask(
+            const Request::FBatchReceiveByStampTaskRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FRevertReceiveByStampSheetTask>> RevertReceiveByStampSheet(

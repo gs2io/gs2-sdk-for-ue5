@@ -17,7 +17,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Dom/JsonObject.h"
 
 namespace Gs2::Experience::Request
 {
@@ -48,5 +47,5 @@ namespace Gs2::Experience::Request
         static TSharedPtr<FDumpUserDataByUserIdRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;
     };
-    typedef TSharedPtr<FDumpUserDataByUserIdRequest> FDumpUserDataByUserIdRequestPtr;
+    typedef TSharedPtr<FDumpUserDataByUserIdRequest, ESPMode::ThreadSafe> FDumpUserDataByUserIdRequestPtr;
 }

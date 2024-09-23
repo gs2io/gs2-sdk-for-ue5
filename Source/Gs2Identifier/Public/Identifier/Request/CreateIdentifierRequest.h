@@ -17,7 +17,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Dom/JsonObject.h"
 
 namespace Gs2::Identifier::Request
 {
@@ -45,5 +44,5 @@ namespace Gs2::Identifier::Request
         static TSharedPtr<FCreateIdentifierRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;
     };
-    typedef TSharedPtr<FCreateIdentifierRequest> FCreateIdentifierRequestPtr;
+    typedef TSharedPtr<FCreateIdentifierRequest, ESPMode::ThreadSafe> FCreateIdentifierRequestPtr;
 }

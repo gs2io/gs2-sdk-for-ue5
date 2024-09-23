@@ -17,7 +17,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Dom/JsonObject.h"
 #include "../Model/DefaultGradeModel.h"
 #include "../Model/GradeEntryModel.h"
 #include "../Model/AcquireActionRate.h"
@@ -66,5 +65,5 @@ namespace Gs2::Grade::Request
         static TSharedPtr<FCreateGradeModelMasterRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;
     };
-    typedef TSharedPtr<FCreateGradeModelMasterRequest> FCreateGradeModelMasterRequestPtr;
+    typedef TSharedPtr<FCreateGradeModelMasterRequest, ESPMode::ThreadSafe> FCreateGradeModelMasterRequestPtr;
 }

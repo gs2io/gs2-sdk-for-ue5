@@ -15,6 +15,5 @@
  */
 
 #include "Inbox/Model/Gs2InboxMessage.h"
-#include "Inbox/Domain/EzGs2Inbox.h"
 #include "Core/Model/Gs2AccessToken.h"
 #include "Core/BpGs2Constant.h"

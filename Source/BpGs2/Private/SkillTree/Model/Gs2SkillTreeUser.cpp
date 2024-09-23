@@ -15,7 +15,6 @@
  */
 
 #include "SkillTree/Model/Gs2SkillTreeUser.h"
-#include "SkillTree/Domain/EzGs2SkillTree.h"
 #include "SkillTree/Model/Gs2SkillTreeStatus.h"
 #include "Core/Model/Gs2AccessToken.h"
 #include "SkillTree/Model/Gs2SkillTreeStatus.h"

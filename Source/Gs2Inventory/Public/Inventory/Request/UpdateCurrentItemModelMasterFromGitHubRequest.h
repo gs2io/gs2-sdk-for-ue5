@@ -17,7 +17,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Dom/JsonObject.h"
 #include "../Model/GitHubCheckoutSetting.h"
 
 namespace Gs2::Inventory::Request
@@ -49,5 +48,5 @@ namespace Gs2::Inventory::Request
         static TSharedPtr<FUpdateCurrentItemModelMasterFromGitHubRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;
     };
-    typedef TSharedPtr<FUpdateCurrentItemModelMasterFromGitHubRequest> FUpdateCurrentItemModelMasterFromGitHubRequestPtr;
+    typedef TSharedPtr<FUpdateCurrentItemModelMasterFromGitHubRequest, ESPMode::ThreadSafe> FUpdateCurrentItemModelMasterFromGitHubRequestPtr;
 }

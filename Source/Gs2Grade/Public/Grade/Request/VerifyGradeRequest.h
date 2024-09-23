@@ -17,7 +17,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Dom/JsonObject.h"
 
 namespace Gs2::Grade::Request
 {
@@ -68,5 +67,5 @@ namespace Gs2::Grade::Request
         static TSharedPtr<FVerifyGradeRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;
     };
-    typedef TSharedPtr<FVerifyGradeRequest> FVerifyGradeRequestPtr;
+    typedef TSharedPtr<FVerifyGradeRequest, ESPMode::ThreadSafe> FVerifyGradeRequestPtr;
 }

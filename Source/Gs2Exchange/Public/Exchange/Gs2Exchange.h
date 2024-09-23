@@ -24,6 +24,7 @@
 #include "Model/IncrementalRateModelMaster.h"
 #include "Model/CurrentRateMaster.h"
 #include "Model/Await.h"
+#include "Model/LogCost.h"
 #include "Model/AcquireAction.h"
 #include "Model/ConsumeAction.h"
 #include "Model/VerifyAction.h"

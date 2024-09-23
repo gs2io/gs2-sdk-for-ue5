@@ -17,7 +17,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Dom/JsonObject.h"
 
 namespace Gs2::Account::Request
 {
@@ -29,7 +28,6 @@ namespace Gs2::Account::Request
         TOptional<FString> NamespaceNameValue;
         TOptional<FString> AccessTokenValue;
         TOptional<int32> TypeValue;
-        TOptional<FString> UserIdentifierValue;
         TOptional<FString> DuplicationAvoiderValue;
         
     public:
@@ -44,7 +42,6 @@ namespace Gs2::Account::Request
         TSharedPtr<FDeleteTakeOverRequest> WithNamespaceName(const TOptional<FString> NamespaceName);
         TSharedPtr<FDeleteTakeOverRequest> WithAccessToken(const TOptional<FString> AccessToken);
         TSharedPtr<FDeleteTakeOverRequest> WithType(const TOptional<int32> Type);
-        TSharedPtr<FDeleteTakeOverRequest> WithUserIdentifier(const TOptional<FString> UserIdentifier);
         TSharedPtr<FDeleteTakeOverRequest> WithDuplicationAvoider(const TOptional<FString> DuplicationAvoider);
 
         TOptional<FString> GetContextStack() const;
@@ -52,11 +49,10 @@ namespace Gs2::Account::Request
         TOptional<FString> GetAccessToken() const;
         TOptional<int32> GetType() const;
         FString GetTypeString() const;
-        TOptional<FString> GetUserIdentifier() const;
         TOptional<FString> GetDuplicationAvoider() const;
 
         static TSharedPtr<FDeleteTakeOverRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;
     };
-    typedef TSharedPtr<FDeleteTakeOverRequest> FDeleteTakeOverRequestPtr;
+    typedef TSharedPtr<FDeleteTakeOverRequest, ESPMode::ThreadSafe> FDeleteTakeOverRequestPtr;
 }

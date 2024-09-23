@@ -25,7 +25,6 @@
 #include "Friend/Domain/SpeculativeExecutor/Acquire/UpdateProfileByUserIdSpeculativeExecutor.h"
 
 #include "Core/Domain/Gs2.h"
-#include "Friend/Domain/Gs2Friend.h"
 
 namespace Gs2::Friend::Domain::SpeculativeExecutor
 {

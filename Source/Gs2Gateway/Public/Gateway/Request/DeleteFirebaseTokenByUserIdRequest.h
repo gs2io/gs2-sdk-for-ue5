@@ -17,7 +17,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Dom/JsonObject.h"
 
 namespace Gs2::Gateway::Request
 {
@@ -54,5 +53,5 @@ namespace Gs2::Gateway::Request
         static TSharedPtr<FDeleteFirebaseTokenByUserIdRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;
     };
-    typedef TSharedPtr<FDeleteFirebaseTokenByUserIdRequest> FDeleteFirebaseTokenByUserIdRequestPtr;
+    typedef TSharedPtr<FDeleteFirebaseTokenByUserIdRequest, ESPMode::ThreadSafe> FDeleteFirebaseTokenByUserIdRequestPtr;
 }

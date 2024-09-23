@@ -356,7 +356,7 @@ namespace Gs2::Datastore::Domain::Model
         return Gs2::Core::Util::New<FAsyncTask<FDeleteTask>>(this->AsShared(), Request);
     }
 
-    FDataObjectDomain::FPrepareDownloadByUserIdAndNameTask::FPrepareDownloadByUserIdAndNameTask(
+    FDataObjectDomain::FPrepareDownloadByUserIdAndDataObjectNameTask::FPrepareDownloadByUserIdAndDataObjectNameTask(
         const TSharedPtr<FDataObjectDomain>& Self,
         const Request::FPrepareDownloadByUserIdAndDataObjectNameRequestPtr Request
     ): Self(Self), Request(Request)
@@ -364,13 +364,13 @@ namespace Gs2::Datastore::Domain::Model
 
     }
 
-    FDataObjectDomain::FPrepareDownloadByUserIdAndNameTask::FPrepareDownloadByUserIdAndNameTask(
-        const FPrepareDownloadByUserIdAndNameTask& From
+    FDataObjectDomain::FPrepareDownloadByUserIdAndDataObjectNameTask::FPrepareDownloadByUserIdAndDataObjectNameTask(
+        const FPrepareDownloadByUserIdAndDataObjectNameTask& From
     ): TGs2Future(From), Self(From.Self), Request(From.Request)
     {
     }
 
-    Gs2::Core::Model::FGs2ErrorPtr FDataObjectDomain::FPrepareDownloadByUserIdAndNameTask::Action(
+    Gs2::Core::Model::FGs2ErrorPtr FDataObjectDomain::FPrepareDownloadByUserIdAndDataObjectNameTask::Action(
         TSharedPtr<TSharedPtr<Gs2::Datastore::Domain::Model::FDataObjectDomain>> Result
     )
     {
@@ -422,13 +422,13 @@ namespace Gs2::Datastore::Domain::Model
         return nullptr;
     }
 
-    TSharedPtr<FAsyncTask<FDataObjectDomain::FPrepareDownloadByUserIdAndNameTask>> FDataObjectDomain::PrepareDownloadByUserIdAndName(
+    TSharedPtr<FAsyncTask<FDataObjectDomain::FPrepareDownloadByUserIdAndDataObjectNameTask>> FDataObjectDomain::PrepareDownloadByUserIdAndDataObjectName(
         Request::FPrepareDownloadByUserIdAndDataObjectNameRequestPtr Request
     ) {
-        return Gs2::Core::Util::New<FAsyncTask<FPrepareDownloadByUserIdAndNameTask>>(this->AsShared(), Request);
+        return Gs2::Core::Util::New<FAsyncTask<FPrepareDownloadByUserIdAndDataObjectNameTask>>(this->AsShared(), Request);
     }
 
-    FDataObjectDomain::FPrepareDownloadByUserIdAndNameAndGenerationTask::FPrepareDownloadByUserIdAndNameAndGenerationTask(
+    FDataObjectDomain::FPrepareDownloadByUserIdAndDataObjectNameAndGenerationTask::FPrepareDownloadByUserIdAndDataObjectNameAndGenerationTask(
         const TSharedPtr<FDataObjectDomain>& Self,
         const Request::FPrepareDownloadByUserIdAndDataObjectNameAndGenerationRequestPtr Request
     ): Self(Self), Request(Request)
@@ -436,13 +436,13 @@ namespace Gs2::Datastore::Domain::Model
 
     }
 
-    FDataObjectDomain::FPrepareDownloadByUserIdAndNameAndGenerationTask::FPrepareDownloadByUserIdAndNameAndGenerationTask(
-        const FPrepareDownloadByUserIdAndNameAndGenerationTask& From
+    FDataObjectDomain::FPrepareDownloadByUserIdAndDataObjectNameAndGenerationTask::FPrepareDownloadByUserIdAndDataObjectNameAndGenerationTask(
+        const FPrepareDownloadByUserIdAndDataObjectNameAndGenerationTask& From
     ): TGs2Future(From), Self(From.Self), Request(From.Request)
     {
     }
 
-    Gs2::Core::Model::FGs2ErrorPtr FDataObjectDomain::FPrepareDownloadByUserIdAndNameAndGenerationTask::Action(
+    Gs2::Core::Model::FGs2ErrorPtr FDataObjectDomain::FPrepareDownloadByUserIdAndDataObjectNameAndGenerationTask::Action(
         TSharedPtr<TSharedPtr<Gs2::Datastore::Domain::Model::FDataObjectDomain>> Result
     )
     {
@@ -494,10 +494,10 @@ namespace Gs2::Datastore::Domain::Model
         return nullptr;
     }
 
-    TSharedPtr<FAsyncTask<FDataObjectDomain::FPrepareDownloadByUserIdAndNameAndGenerationTask>> FDataObjectDomain::PrepareDownloadByUserIdAndNameAndGeneration(
+    TSharedPtr<FAsyncTask<FDataObjectDomain::FPrepareDownloadByUserIdAndDataObjectNameAndGenerationTask>> FDataObjectDomain::PrepareDownloadByUserIdAndDataObjectNameAndGeneration(
         Request::FPrepareDownloadByUserIdAndDataObjectNameAndGenerationRequestPtr Request
     ) {
-        return Gs2::Core::Util::New<FAsyncTask<FPrepareDownloadByUserIdAndNameAndGenerationTask>>(this->AsShared(), Request);
+        return Gs2::Core::Util::New<FAsyncTask<FPrepareDownloadByUserIdAndDataObjectNameAndGenerationTask>>(this->AsShared(), Request);
     }
 
     Gs2::Datastore::Domain::Iterator::FDescribeDataObjectHistoriesByUserIdIteratorPtr FDataObjectDomain::DataObjectHistories(

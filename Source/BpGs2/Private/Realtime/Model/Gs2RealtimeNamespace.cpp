@@ -15,7 +15,6 @@
  */
 
 #include "Realtime/Model/Gs2RealtimeNamespace.h"
-#include "Realtime/Domain/EzGs2Realtime.h"
 #include "Realtime/Model/Gs2RealtimeRoom.h"
 #include "Core/Model/Gs2AccessToken.h"
 #include "Realtime/Model/Gs2RealtimeRoom.h"

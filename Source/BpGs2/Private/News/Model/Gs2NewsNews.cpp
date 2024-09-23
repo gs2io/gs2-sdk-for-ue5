@@ -15,6 +15,5 @@
  */
 
 #include "News/Model/Gs2NewsNews.h"
-#include "News/Domain/EzGs2News.h"
 #include "Core/Model/Gs2AccessToken.h"
 #include "Core/BpGs2Constant.h"

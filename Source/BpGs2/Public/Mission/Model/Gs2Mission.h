@@ -19,7 +19,6 @@
 #include "CoreMinimal.h"
 
 #include "Core/Model/Gs2Client.h"
-#include "Gs2Mission/Public/Mission/Model/CompleteNotification.h"
 #include "Gs2Mission.generated.h"
 
 USTRUCT(BlueprintType)

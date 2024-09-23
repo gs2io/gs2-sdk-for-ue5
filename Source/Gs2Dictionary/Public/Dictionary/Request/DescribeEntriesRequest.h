@@ -17,7 +17,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Dom/JsonObject.h"
 
 namespace Gs2::Dictionary::Request
 {
@@ -55,5 +54,5 @@ namespace Gs2::Dictionary::Request
         static TSharedPtr<FDescribeEntriesRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;
     };
-    typedef TSharedPtr<FDescribeEntriesRequest> FDescribeEntriesRequestPtr;
+    typedef TSharedPtr<FDescribeEntriesRequest, ESPMode::ThreadSafe> FDescribeEntriesRequestPtr;
 }

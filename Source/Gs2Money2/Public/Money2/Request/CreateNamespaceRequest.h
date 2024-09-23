@@ -17,7 +17,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Dom/JsonObject.h"
 #include "../Model/PlatformSetting.h"
 #include "../Model/ScriptSetting.h"
 #include "../Model/LogSetting.h"
@@ -34,7 +33,8 @@ namespace Gs2::Money2::Request
         TOptional<FString> DescriptionValue;
         TOptional<bool> SharedFreeCurrencyValue;
         TSharedPtr<Model::FPlatformSetting> PlatformSettingValue;
-        TSharedPtr<Model::FScriptSetting> ChangeBalanceScriptValue;
+        TSharedPtr<Model::FScriptSetting> DepositBalanceScriptValue;
+        TSharedPtr<Model::FScriptSetting> WithdrawBalanceScriptValue;
         TSharedPtr<Model::FLogSetting> LogSettingValue;
         
     public:
@@ -51,7 +51,8 @@ namespace Gs2::Money2::Request
         TSharedPtr<FCreateNamespaceRequest> WithDescription(const TOptional<FString> Description);
         TSharedPtr<FCreateNamespaceRequest> WithSharedFreeCurrency(const TOptional<bool> SharedFreeCurrency);
         TSharedPtr<FCreateNamespaceRequest> WithPlatformSetting(const TSharedPtr<Model::FPlatformSetting> PlatformSetting);
-        TSharedPtr<FCreateNamespaceRequest> WithChangeBalanceScript(const TSharedPtr<Model::FScriptSetting> ChangeBalanceScript);
+        TSharedPtr<FCreateNamespaceRequest> WithDepositBalanceScript(const TSharedPtr<Model::FScriptSetting> DepositBalanceScript);
+        TSharedPtr<FCreateNamespaceRequest> WithWithdrawBalanceScript(const TSharedPtr<Model::FScriptSetting> WithdrawBalanceScript);
         TSharedPtr<FCreateNamespaceRequest> WithLogSetting(const TSharedPtr<Model::FLogSetting> LogSetting);
 
         TOptional<FString> GetContextStack() const;
@@ -61,11 +62,12 @@ namespace Gs2::Money2::Request
         TOptional<bool> GetSharedFreeCurrency() const;
         FString GetSharedFreeCurrencyString() const;
         TSharedPtr<Model::FPlatformSetting> GetPlatformSetting() const;
-        TSharedPtr<Model::FScriptSetting> GetChangeBalanceScript() const;
+        TSharedPtr<Model::FScriptSetting> GetDepositBalanceScript() const;
+        TSharedPtr<Model::FScriptSetting> GetWithdrawBalanceScript() const;
         TSharedPtr<Model::FLogSetting> GetLogSetting() const;
 
         static TSharedPtr<FCreateNamespaceRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;
     };
-    typedef TSharedPtr<FCreateNamespaceRequest> FCreateNamespaceRequestPtr;
+    typedef TSharedPtr<FCreateNamespaceRequest, ESPMode::ThreadSafe> FCreateNamespaceRequestPtr;
 }

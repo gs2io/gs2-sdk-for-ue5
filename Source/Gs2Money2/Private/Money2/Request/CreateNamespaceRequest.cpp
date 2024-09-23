@@ -24,7 +24,8 @@ namespace Gs2::Money2::Request
         DescriptionValue(TOptional<FString>()),
         SharedFreeCurrencyValue(TOptional<bool>()),
         PlatformSettingValue(nullptr),
-        ChangeBalanceScriptValue(nullptr),
+        DepositBalanceScriptValue(nullptr),
+        WithdrawBalanceScriptValue(nullptr),
         LogSettingValue(nullptr)
     {
     }
@@ -37,7 +38,8 @@ namespace Gs2::Money2::Request
         DescriptionValue(From.DescriptionValue),
         SharedFreeCurrencyValue(From.SharedFreeCurrencyValue),
         PlatformSettingValue(From.PlatformSettingValue),
-        ChangeBalanceScriptValue(From.ChangeBalanceScriptValue),
+        DepositBalanceScriptValue(From.DepositBalanceScriptValue),
+        WithdrawBalanceScriptValue(From.WithdrawBalanceScriptValue),
         LogSettingValue(From.LogSettingValue)
     {
     }
@@ -90,11 +92,19 @@ namespace Gs2::Money2::Request
         return SharedThis(this);
     }
 
-    TSharedPtr<FCreateNamespaceRequest> FCreateNamespaceRequest::WithChangeBalanceScript(
-        const TSharedPtr<Model::FScriptSetting> ChangeBalanceScript
+    TSharedPtr<FCreateNamespaceRequest> FCreateNamespaceRequest::WithDepositBalanceScript(
+        const TSharedPtr<Model::FScriptSetting> DepositBalanceScript
     )
     {
-        this->ChangeBalanceScriptValue = ChangeBalanceScript;
+        this->DepositBalanceScriptValue = DepositBalanceScript;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FCreateNamespaceRequest> FCreateNamespaceRequest::WithWithdrawBalanceScript(
+        const TSharedPtr<Model::FScriptSetting> WithdrawBalanceScript
+    )
+    {
+        this->WithdrawBalanceScriptValue = WithdrawBalanceScript;
         return SharedThis(this);
     }
 
@@ -149,13 +159,22 @@ namespace Gs2::Money2::Request
         return PlatformSettingValue;
     }
 
-    TSharedPtr<Model::FScriptSetting> FCreateNamespaceRequest::GetChangeBalanceScript() const
+    TSharedPtr<Model::FScriptSetting> FCreateNamespaceRequest::GetDepositBalanceScript() const
     {
-        if (!ChangeBalanceScriptValue.IsValid())
+        if (!DepositBalanceScriptValue.IsValid())
         {
             return nullptr;
         }
-        return ChangeBalanceScriptValue;
+        return DepositBalanceScriptValue;
+    }
+
+    TSharedPtr<Model::FScriptSetting> FCreateNamespaceRequest::GetWithdrawBalanceScript() const
+    {
+        if (!WithdrawBalanceScriptValue.IsValid())
+        {
+            return nullptr;
+        }
+        return WithdrawBalanceScriptValue;
     }
 
     TSharedPtr<Model::FLogSetting> FCreateNamespaceRequest::GetLogSetting() const
@@ -218,13 +237,21 @@ namespace Gs2::Money2::Request
                   }
                   return Model::FPlatformSetting::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("platformSetting")));
               }() : nullptr)
-          ->WithChangeBalanceScript(Data->HasField(ANSI_TO_TCHAR("changeBalanceScript")) ? [Data]() -> Model::FScriptSettingPtr
+          ->WithDepositBalanceScript(Data->HasField(ANSI_TO_TCHAR("depositBalanceScript")) ? [Data]() -> Model::FScriptSettingPtr
               {
-                  if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("changeBalanceScript")))
+                  if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("depositBalanceScript")))
                   {
                       return nullptr;
                   }
-                  return Model::FScriptSetting::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("changeBalanceScript")));
+                  return Model::FScriptSetting::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("depositBalanceScript")));
+              }() : nullptr)
+          ->WithWithdrawBalanceScript(Data->HasField(ANSI_TO_TCHAR("withdrawBalanceScript")) ? [Data]() -> Model::FScriptSettingPtr
+              {
+                  if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("withdrawBalanceScript")))
+                  {
+                      return nullptr;
+                  }
+                  return Model::FScriptSetting::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("withdrawBalanceScript")));
               }() : nullptr)
           ->WithLogSetting(Data->HasField(ANSI_TO_TCHAR("logSetting")) ? [Data]() -> Model::FLogSettingPtr
               {
@@ -263,9 +290,13 @@ namespace Gs2::Money2::Request
         {
             JsonRootObject->SetObjectField("platformSetting", PlatformSettingValue->ToJson());
         }
-        if (ChangeBalanceScriptValue != nullptr && ChangeBalanceScriptValue.IsValid())
+        if (DepositBalanceScriptValue != nullptr && DepositBalanceScriptValue.IsValid())
         {
-            JsonRootObject->SetObjectField("changeBalanceScript", ChangeBalanceScriptValue->ToJson());
+            JsonRootObject->SetObjectField("depositBalanceScript", DepositBalanceScriptValue->ToJson());
+        }
+        if (WithdrawBalanceScriptValue != nullptr && WithdrawBalanceScriptValue.IsValid())
+        {
+            JsonRootObject->SetObjectField("withdrawBalanceScript", WithdrawBalanceScriptValue->ToJson());
         }
         if (LogSettingValue != nullptr && LogSettingValue.IsValid())
         {

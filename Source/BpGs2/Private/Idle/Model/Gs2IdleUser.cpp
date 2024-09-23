@@ -15,7 +15,6 @@
  */
 
 #include "Idle/Model/Gs2IdleUser.h"
-#include "Idle/Domain/EzGs2Idle.h"
 #include "Idle/Model/Gs2IdleStatus.h"
 #include "Core/Model/Gs2AccessToken.h"
 #include "Idle/Model/Gs2IdleStatus.h"

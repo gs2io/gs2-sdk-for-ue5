@@ -19,7 +19,6 @@
 #include "CoreMinimal.h"
 
 #include "Core/Model/Gs2Client.h"
-#include "Gs2Realtime/Public/Realtime/Model/CreateNotification.h"
 #include "Gs2Realtime.generated.h"
 
 USTRUCT(BlueprintType)

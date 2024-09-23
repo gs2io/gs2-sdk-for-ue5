@@ -17,7 +17,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Dom/JsonObject.h"
 
 namespace Gs2::StateMachine::Request
 {
@@ -61,5 +60,5 @@ namespace Gs2::StateMachine::Request
         static TSharedPtr<FStartStateMachineByUserIdRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;
     };
-    typedef TSharedPtr<FStartStateMachineByUserIdRequest> FStartStateMachineByUserIdRequestPtr;
+    typedef TSharedPtr<FStartStateMachineByUserIdRequest, ESPMode::ThreadSafe> FStartStateMachineByUserIdRequestPtr;
 }

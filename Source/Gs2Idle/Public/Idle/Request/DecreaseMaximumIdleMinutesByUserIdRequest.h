@@ -17,7 +17,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Dom/JsonObject.h"
 
 namespace Gs2::Idle::Request
 {
@@ -61,5 +60,5 @@ namespace Gs2::Idle::Request
         static TSharedPtr<FDecreaseMaximumIdleMinutesByUserIdRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;
     };
-    typedef TSharedPtr<FDecreaseMaximumIdleMinutesByUserIdRequest> FDecreaseMaximumIdleMinutesByUserIdRequestPtr;
+    typedef TSharedPtr<FDecreaseMaximumIdleMinutesByUserIdRequest, ESPMode::ThreadSafe> FDecreaseMaximumIdleMinutesByUserIdRequestPtr;
 }

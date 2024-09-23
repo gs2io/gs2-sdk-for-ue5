@@ -15,7 +15,6 @@
  */
 
 #include "News/Model/Gs2News.h"
-#include "News/Domain/EzGs2News.h"
 #include "News/Model/Gs2NewsNamespace.h"
 #include "News/Model/Gs2NewsNews.h"
 #include "Core/BpGs2Constant.h"

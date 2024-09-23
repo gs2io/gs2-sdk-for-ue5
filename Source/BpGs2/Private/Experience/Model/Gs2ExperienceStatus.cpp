@@ -15,6 +15,5 @@
  */
 
 #include "Experience/Model/Gs2ExperienceStatus.h"
-#include "Experience/Domain/EzGs2Experience.h"
 #include "Core/Model/Gs2AccessToken.h"
 #include "Core/BpGs2Constant.h"

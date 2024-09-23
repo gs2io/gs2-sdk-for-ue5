@@ -17,7 +17,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Dom/JsonObject.h"
 
 namespace Gs2::Formation::Request
 {
@@ -48,5 +47,5 @@ namespace Gs2::Formation::Request
         static TSharedPtr<FDeleteMoldModelMasterRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;
     };
-    typedef TSharedPtr<FDeleteMoldModelMasterRequest> FDeleteMoldModelMasterRequestPtr;
+    typedef TSharedPtr<FDeleteMoldModelMasterRequest, ESPMode::ThreadSafe> FDeleteMoldModelMasterRequestPtr;
 }

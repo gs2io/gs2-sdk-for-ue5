@@ -15,6 +15,5 @@
  */
 
 #include "Account/Model/Gs2AccountPlatformId.h"
-#include "Account/Domain/EzGs2Account.h"
 #include "Core/Model/Gs2AccessToken.h"
 #include "Core/BpGs2Constant.h"
