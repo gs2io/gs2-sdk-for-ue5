@@ -362,7 +362,7 @@ namespace Gs2::Buff::Domain::Model
             Gs2::Buff::Domain::Model::FBuffEntryModelMasterDomain::CreateCacheKey(
                 BuffEntryName
             ),
-            [Callback](TSharedPtr<Gs2Object> obj)
+            [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::Buff::Model::FBuffEntryModelMaster>(obj));
             }

@@ -244,7 +244,7 @@ namespace Gs2::News::Domain::Model
             ParentKey,
             Gs2::News::Domain::Model::FNewsDomain::CreateCacheKey(
             ),
-            [Callback](TSharedPtr<Gs2Object> obj)
+            [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::News::Model::FNews>(obj));
             }

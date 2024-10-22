@@ -352,7 +352,7 @@ namespace Gs2::Guild::Domain::Model
                 GuildModelName,
                 GuildName
             ),
-            [Callback](TSharedPtr<Gs2Object> obj)
+            [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::Guild::Model::FJoinedGuild>(obj));
             }

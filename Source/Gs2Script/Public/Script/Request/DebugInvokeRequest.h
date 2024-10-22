@@ -17,6 +17,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Dom/JsonObject.h"
 #include "../Model/RandomStatus.h"
 
 namespace Gs2::Script::Request
@@ -29,6 +30,7 @@ namespace Gs2::Script::Request
         TOptional<FString> ScriptValue;
         TOptional<FString> ArgsValue;
         TSharedPtr<Model::FRandomStatus> RandomStatusValue;
+        TOptional<bool> DisableStringNumberToNumberValue;
         
     public:
         
@@ -42,14 +44,17 @@ namespace Gs2::Script::Request
         TSharedPtr<FDebugInvokeRequest> WithScript(const TOptional<FString> Script);
         TSharedPtr<FDebugInvokeRequest> WithArgs(const TOptional<FString> Args);
         TSharedPtr<FDebugInvokeRequest> WithRandomStatus(const TSharedPtr<Model::FRandomStatus> RandomStatus);
+        TSharedPtr<FDebugInvokeRequest> WithDisableStringNumberToNumber(const TOptional<bool> DisableStringNumberToNumber);
 
         TOptional<FString> GetContextStack() const;
         TOptional<FString> GetScript() const;
         TOptional<FString> GetArgs() const;
         TSharedPtr<Model::FRandomStatus> GetRandomStatus() const;
+        TOptional<bool> GetDisableStringNumberToNumber() const;
+        FString GetDisableStringNumberToNumberString() const;
 
         static TSharedPtr<FDebugInvokeRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;
     };
-    typedef TSharedPtr<FDebugInvokeRequest, ESPMode::ThreadSafe> FDebugInvokeRequestPtr;
+    typedef TSharedPtr<FDebugInvokeRequest> FDebugInvokeRequestPtr;
 }

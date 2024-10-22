@@ -322,7 +322,7 @@ namespace Gs2::JobQueue::Domain::Model
             Gs2::JobQueue::Domain::Model::FJobDomain::CreateCacheKey(
                 JobName
             ),
-            [Callback](TSharedPtr<Gs2Object> obj)
+            [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::JobQueue::Model::FJob>(obj));
             }

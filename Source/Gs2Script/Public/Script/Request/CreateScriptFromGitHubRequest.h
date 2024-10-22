@@ -17,6 +17,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Dom/JsonObject.h"
 #include "../Model/GitHubCheckoutSetting.h"
 
 namespace Gs2::Script::Request
@@ -30,6 +31,7 @@ namespace Gs2::Script::Request
         TOptional<FString> NameValue;
         TOptional<FString> DescriptionValue;
         TSharedPtr<Model::FGitHubCheckoutSetting> CheckoutSettingValue;
+        TOptional<bool> DisableStringNumberToNumberValue;
         
     public:
         
@@ -44,15 +46,18 @@ namespace Gs2::Script::Request
         TSharedPtr<FCreateScriptFromGitHubRequest> WithName(const TOptional<FString> Name);
         TSharedPtr<FCreateScriptFromGitHubRequest> WithDescription(const TOptional<FString> Description);
         TSharedPtr<FCreateScriptFromGitHubRequest> WithCheckoutSetting(const TSharedPtr<Model::FGitHubCheckoutSetting> CheckoutSetting);
+        TSharedPtr<FCreateScriptFromGitHubRequest> WithDisableStringNumberToNumber(const TOptional<bool> DisableStringNumberToNumber);
 
         TOptional<FString> GetContextStack() const;
         TOptional<FString> GetNamespaceName() const;
         TOptional<FString> GetName() const;
         TOptional<FString> GetDescription() const;
         TSharedPtr<Model::FGitHubCheckoutSetting> GetCheckoutSetting() const;
+        TOptional<bool> GetDisableStringNumberToNumber() const;
+        FString GetDisableStringNumberToNumberString() const;
 
         static TSharedPtr<FCreateScriptFromGitHubRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;
     };
-    typedef TSharedPtr<FCreateScriptFromGitHubRequest, ESPMode::ThreadSafe> FCreateScriptFromGitHubRequestPtr;
+    typedef TSharedPtr<FCreateScriptFromGitHubRequest> FCreateScriptFromGitHubRequestPtr;
 }

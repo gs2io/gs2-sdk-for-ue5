@@ -153,4 +153,13 @@ namespace Gs2::Script
             Request
         );
     }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FInvokeByStampSheetTask>> FGs2ScriptWebSocketClient::InvokeByStampSheet(
+        const Request::FInvokeByStampSheetRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FInvokeByStampSheetTask>>(
+            Session,
+            Request
+        );
+    }
 }

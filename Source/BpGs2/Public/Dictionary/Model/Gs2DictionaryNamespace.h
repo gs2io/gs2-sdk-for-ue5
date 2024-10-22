@@ -37,7 +37,7 @@ class BPGS2_API UGs2DictionaryNamespaceFunctionLibrary : public UBlueprintFuncti
     UFUNCTION(BlueprintCallable, DisplayName="Gs2::Dictionary::EntryModel", Category="Game Server Services|GS2-Dictionary|Namespace|EntryModel", meta=(WorldContext="WorldContextObject"))
     static UPARAM(DisplayName="EntryModel") FGs2DictionaryEntryModel EntryModel(
         FGs2DictionaryNamespace Namespace,
-        FString EntryName
+        FString EntryModelName
     );
     UFUNCTION(BlueprintCallable, DisplayName="Gs2::Dictionary::Me", Category="Game Server Services|GS2-Dictionary|Namespace|User", meta=(WorldContext="WorldContextObject"))
     static UPARAM(DisplayName="User") FGs2DictionaryOwnUser Me(

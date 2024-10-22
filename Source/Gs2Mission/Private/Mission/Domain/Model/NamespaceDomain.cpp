@@ -771,7 +771,7 @@ namespace Gs2::Mission::Domain::Model
             Gs2::Mission::Domain::Model::FNamespaceDomain::CreateCacheKey(
                 NamespaceName
             ),
-            [Callback](TSharedPtr<Gs2Object> obj)
+            [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::Mission::Model::FNamespace>(obj));
             }

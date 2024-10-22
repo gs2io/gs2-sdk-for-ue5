@@ -17,6 +17,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Dom/JsonObject.h"
 
 namespace Gs2::Quest::Request
 {
@@ -57,5 +58,5 @@ namespace Gs2::Quest::Request
         static TSharedPtr<FDescribeCompletedQuestListsByUserIdRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;
     };
-    typedef TSharedPtr<FDescribeCompletedQuestListsByUserIdRequest, ESPMode::ThreadSafe> FDescribeCompletedQuestListsByUserIdRequestPtr;
+    typedef TSharedPtr<FDescribeCompletedQuestListsByUserIdRequest> FDescribeCompletedQuestListsByUserIdRequestPtr;
 }

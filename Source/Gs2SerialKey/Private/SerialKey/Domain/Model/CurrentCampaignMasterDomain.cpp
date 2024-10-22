@@ -415,7 +415,7 @@ namespace Gs2::SerialKey::Domain::Model
             ParentKey,
             Gs2::SerialKey::Domain::Model::FCurrentCampaignMasterDomain::CreateCacheKey(
             ),
-            [Callback](TSharedPtr<Gs2Object> obj)
+            [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::SerialKey::Model::FCurrentCampaignMaster>(obj));
             }

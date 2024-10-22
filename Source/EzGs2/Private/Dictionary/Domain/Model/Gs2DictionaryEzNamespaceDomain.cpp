@@ -83,12 +83,12 @@ namespace Gs2::UE5::Dictionary::Domain::Model
     }
 
     Gs2::UE5::Dictionary::Domain::Model::FEzEntryModelDomainPtr FEzNamespaceDomain::EntryModel(
-        const FString EntryName
+        const FString EntryModelName
     ) const
     {
         return MakeShared<Gs2::UE5::Dictionary::Domain::Model::FEzEntryModelDomain>(
             Domain->EntryModel(
-                EntryName
+                EntryModelName
             ),
             ConnectionValue
         );

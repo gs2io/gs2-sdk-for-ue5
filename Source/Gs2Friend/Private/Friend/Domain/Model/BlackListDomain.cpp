@@ -295,7 +295,7 @@ namespace Gs2::Friend::Domain::Model
             ParentKey,
             Gs2::Friend::Domain::Model::FBlackListDomain::CreateCacheKey(
             ),
-            [Callback](TSharedPtr<Gs2Object> obj)
+            [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::Friend::Model::FBlackList>(obj));
             }

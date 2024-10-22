@@ -132,7 +132,7 @@ namespace Gs2::Log::Domain::Model
             ParentKey,
             Gs2::Log::Domain::Model::FAccessLogDomain::CreateCacheKey(
             ),
-            [Callback](TSharedPtr<Gs2Object> obj)
+            [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::Log::Model::FAccessLog>(obj));
             }

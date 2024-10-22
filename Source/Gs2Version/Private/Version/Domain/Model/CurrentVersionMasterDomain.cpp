@@ -416,7 +416,7 @@ namespace Gs2::Version::Domain::Model
             ParentKey,
             Gs2::Version::Domain::Model::FCurrentVersionMasterDomain::CreateCacheKey(
             ),
-            [Callback](TSharedPtr<Gs2Object> obj)
+            [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::Version::Model::FCurrentVersionMaster>(obj));
             }

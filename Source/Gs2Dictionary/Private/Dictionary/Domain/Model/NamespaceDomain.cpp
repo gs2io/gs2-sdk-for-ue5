@@ -360,6 +360,200 @@ namespace Gs2::Dictionary::Domain::Model
         return Gs2::Core::Util::New<FAsyncTask<FCreateEntryModelMasterTask>>(this->AsShared(), Request);
     }
 
+    FNamespaceDomain::FGetEntryModelMasterTask::FGetEntryModelMasterTask(
+        const TSharedPtr<FNamespaceDomain>& Self,
+        const Request::FGetEntryModelMasterRequestPtr Request
+    ): Self(Self), Request(Request)
+    {
+
+    }
+
+    FNamespaceDomain::FGetEntryModelMasterTask::FGetEntryModelMasterTask(
+        const FGetEntryModelMasterTask& From
+    ): TGs2Future(From), Self(From.Self), Request(From.Request)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FNamespaceDomain::FGetEntryModelMasterTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::Dictionary::Model::FEntryModelMaster>> Result
+    )
+    {
+        Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
+            ->WithNamespaceName(Self->NamespaceName);
+        const auto Future = Self->Client->GetEntryModelMaster(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto RequestModel = Request;
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
+        if (ResultModel != nullptr) {
+            
+            if (ResultModel->GetItem() != nullptr)
+            {
+                const auto ParentKey = Gs2::Dictionary::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                    Self->NamespaceName,
+                    "EntryModelMaster"
+                );
+                const auto Key = Gs2::Dictionary::Domain::Model::FEntryModelMasterDomain::CreateCacheKey(
+                    ResultModel->GetItem()->GetName()
+                );
+                Self->Gs2->Cache->Put(
+                    Gs2::Dictionary::Model::FEntryModelMaster::TypeName,
+                    ParentKey,
+                    Key,
+                    ResultModel->GetItem(),
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+            }
+        }
+        *Result = ResultModel->GetItem();
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FNamespaceDomain::FGetEntryModelMasterTask>> FNamespaceDomain::GetEntryModelMaster(
+        Request::FGetEntryModelMasterRequestPtr Request
+    ) {
+        return Gs2::Core::Util::New<FAsyncTask<FGetEntryModelMasterTask>>(this->AsShared(), Request);
+    }
+
+    FNamespaceDomain::FUpdateEntryModelMasterTask::FUpdateEntryModelMasterTask(
+        const TSharedPtr<FNamespaceDomain>& Self,
+        const Request::FUpdateEntryModelMasterRequestPtr Request
+    ): Self(Self), Request(Request)
+    {
+
+    }
+
+    FNamespaceDomain::FUpdateEntryModelMasterTask::FUpdateEntryModelMasterTask(
+        const FUpdateEntryModelMasterTask& From
+    ): TGs2Future(From), Self(From.Self), Request(From.Request)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FNamespaceDomain::FUpdateEntryModelMasterTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::Dictionary::Domain::Model::FEntryModelMasterDomain>> Result
+    )
+    {
+        Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
+            ->WithNamespaceName(Self->NamespaceName);
+        const auto Future = Self->Client->UpdateEntryModelMaster(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto RequestModel = Request;
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
+        if (ResultModel != nullptr) {
+            
+            if (ResultModel->GetItem() != nullptr)
+            {
+                const auto ParentKey = Gs2::Dictionary::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                    Self->NamespaceName,
+                    "EntryModelMaster"
+                );
+                const auto Key = Gs2::Dictionary::Domain::Model::FEntryModelMasterDomain::CreateCacheKey(
+                    ResultModel->GetItem()->GetName()
+                );
+                Self->Gs2->Cache->Put(
+                    Gs2::Dictionary::Model::FEntryModelMaster::TypeName,
+                    ParentKey,
+                    Key,
+                    ResultModel->GetItem(),
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+            }
+        }
+        auto Domain = MakeShared<Gs2::Dictionary::Domain::Model::FEntryModelMasterDomain>(
+            Self->Gs2,
+            Self->Service,
+            Request->GetNamespaceName(),
+            ResultModel->GetItem()->GetName()
+        );
+
+        *Result = Domain;
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FNamespaceDomain::FUpdateEntryModelMasterTask>> FNamespaceDomain::UpdateEntryModelMaster(
+        Request::FUpdateEntryModelMasterRequestPtr Request
+    ) {
+        return Gs2::Core::Util::New<FAsyncTask<FUpdateEntryModelMasterTask>>(this->AsShared(), Request);
+    }
+
+    FNamespaceDomain::FDeleteEntryModelMasterTask::FDeleteEntryModelMasterTask(
+        const TSharedPtr<FNamespaceDomain>& Self,
+        const Request::FDeleteEntryModelMasterRequestPtr Request
+    ): Self(Self), Request(Request)
+    {
+
+    }
+
+    FNamespaceDomain::FDeleteEntryModelMasterTask::FDeleteEntryModelMasterTask(
+        const FDeleteEntryModelMasterTask& From
+    ): TGs2Future(From), Self(From.Self), Request(From.Request)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FNamespaceDomain::FDeleteEntryModelMasterTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::Dictionary::Domain::Model::FEntryModelMasterDomain>> Result
+    )
+    {
+        Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
+            ->WithNamespaceName(Self->NamespaceName);
+        const auto Future = Self->Client->DeleteEntryModelMaster(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto RequestModel = Request;
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
+        if (ResultModel != nullptr) {
+            
+            if (ResultModel->GetItem() != nullptr)
+            {
+                const auto ParentKey = Gs2::Dictionary::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                    Self->NamespaceName,
+                    "EntryModelMaster"
+                );
+                const auto Key = Gs2::Dictionary::Domain::Model::FEntryModelMasterDomain::CreateCacheKey(
+                    ResultModel->GetItem()->GetName()
+                );
+                Self->Gs2->Cache->Delete(Gs2::Dictionary::Model::FEntryModelMaster::TypeName, ParentKey, Key);
+            }
+        }
+        auto Domain = MakeShared<Gs2::Dictionary::Domain::Model::FEntryModelMasterDomain>(
+            Self->Gs2,
+            Self->Service,
+            Request->GetNamespaceName(),
+            ResultModel->GetItem()->GetName()
+        );
+
+        *Result = Domain;
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FNamespaceDomain::FDeleteEntryModelMasterTask>> FNamespaceDomain::DeleteEntryModelMaster(
+        Request::FDeleteEntryModelMasterRequestPtr Request
+    ) {
+        return Gs2::Core::Util::New<FAsyncTask<FDeleteEntryModelMasterTask>>(this->AsShared(), Request);
+    }
+
     TSharedPtr<Gs2::Dictionary::Domain::Model::FCurrentEntryMasterDomain> FNamespaceDomain::CurrentEntryMaster(
     )
     {
@@ -409,14 +603,14 @@ namespace Gs2::Dictionary::Domain::Model
     }
 
     TSharedPtr<Gs2::Dictionary::Domain::Model::FEntryModelDomain> FNamespaceDomain::EntryModel(
-        const FString EntryName
+        const FString EntryModelName
     )
     {
         return MakeShared<Gs2::Dictionary::Domain::Model::FEntryModelDomain>(
             Gs2,
             Service,
             NamespaceName,
-            EntryName == TEXT("") ? TOptional<FString>() : TOptional<FString>(EntryName)
+            EntryModelName == TEXT("") ? TOptional<FString>() : TOptional<FString>(EntryModelName)
         );
     }
 
@@ -483,14 +677,14 @@ namespace Gs2::Dictionary::Domain::Model
     }
 
     TSharedPtr<Gs2::Dictionary::Domain::Model::FEntryModelMasterDomain> FNamespaceDomain::EntryModelMaster(
-        const FString EntryName
+        const FString EntryModelName
     )
     {
         return MakeShared<Gs2::Dictionary::Domain::Model::FEntryModelMasterDomain>(
             Gs2,
             Service,
             NamespaceName,
-            EntryName == TEXT("") ? TOptional<FString>() : TOptional<FString>(EntryName)
+            EntryModelName == TEXT("") ? TOptional<FString>() : TOptional<FString>(EntryModelName)
         );
     }
 
@@ -596,7 +790,7 @@ namespace Gs2::Dictionary::Domain::Model
             Gs2::Dictionary::Domain::Model::FNamespaceDomain::CreateCacheKey(
                 NamespaceName
             ),
-            [Callback](TSharedPtr<Gs2Object> obj)
+            [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::Dictionary::Model::FNamespace>(obj));
             }

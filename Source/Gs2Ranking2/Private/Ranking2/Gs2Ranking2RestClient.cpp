@@ -262,6 +262,33 @@ namespace Gs2::Ranking2
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::Rest::FVerifyGlobalRankingScoreTask>> FGs2Ranking2RestClient::VerifyGlobalRankingScore(
+        const Request::FVerifyGlobalRankingScoreRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FVerifyGlobalRankingScoreTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FVerifyGlobalRankingScoreByUserIdTask>> FGs2Ranking2RestClient::VerifyGlobalRankingScoreByUserId(
+        const Request::FVerifyGlobalRankingScoreByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FVerifyGlobalRankingScoreByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FVerifyGlobalRankingScoreByStampTaskTask>> FGs2Ranking2RestClient::VerifyGlobalRankingScoreByStampTask(
+        const Request::FVerifyGlobalRankingScoreByStampTaskRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FVerifyGlobalRankingScoreByStampTaskTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::Rest::FDescribeGlobalRankingReceivedRewardsTask>> FGs2Ranking2RestClient::DescribeGlobalRankingReceivedRewards(
         const Request::FDescribeGlobalRankingReceivedRewardsRequestPtr Request) const
     {
@@ -509,6 +536,33 @@ namespace Gs2::Ranking2
         const Request::FDeleteClusterRankingScoreByUserIdRequestPtr Request) const
     {
         return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FDeleteClusterRankingScoreByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FVerifyClusterRankingScoreTask>> FGs2Ranking2RestClient::VerifyClusterRankingScore(
+        const Request::FVerifyClusterRankingScoreRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FVerifyClusterRankingScoreTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FVerifyClusterRankingScoreByUserIdTask>> FGs2Ranking2RestClient::VerifyClusterRankingScoreByUserId(
+        const Request::FVerifyClusterRankingScoreByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FVerifyClusterRankingScoreByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FVerifyClusterRankingScoreByStampTaskTask>> FGs2Ranking2RestClient::VerifyClusterRankingScoreByStampTask(
+        const Request::FVerifyClusterRankingScoreByStampTaskRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FVerifyClusterRankingScoreByStampTaskTask>>(
             Session,
             Request
         );
@@ -797,6 +851,33 @@ namespace Gs2::Ranking2
         const Request::FDeleteSubscribeRankingScoreByUserIdRequestPtr Request) const
     {
         return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FDeleteSubscribeRankingScoreByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FVerifySubscribeRankingScoreTask>> FGs2Ranking2RestClient::VerifySubscribeRankingScore(
+        const Request::FVerifySubscribeRankingScoreRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FVerifySubscribeRankingScoreTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FVerifySubscribeRankingScoreByUserIdTask>> FGs2Ranking2RestClient::VerifySubscribeRankingScoreByUserId(
+        const Request::FVerifySubscribeRankingScoreByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FVerifySubscribeRankingScoreByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FVerifySubscribeRankingScoreByStampTaskTask>> FGs2Ranking2RestClient::VerifySubscribeRankingScoreByStampTask(
+        const Request::FVerifySubscribeRankingScoreByStampTaskRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FVerifySubscribeRankingScoreByStampTaskTask>>(
             Session,
             Request
         );

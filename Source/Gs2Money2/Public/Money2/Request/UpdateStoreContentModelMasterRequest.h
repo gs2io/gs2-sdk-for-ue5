@@ -17,6 +17,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Dom/JsonObject.h"
 #include "../Model/AppleAppStoreContent.h"
 #include "../Model/GooglePlayContent.h"
 
@@ -61,5 +62,5 @@ namespace Gs2::Money2::Request
         static TSharedPtr<FUpdateStoreContentModelMasterRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;
     };
-    typedef TSharedPtr<FUpdateStoreContentModelMasterRequest, ESPMode::ThreadSafe> FUpdateStoreContentModelMasterRequestPtr;
+    typedef TSharedPtr<FUpdateStoreContentModelMasterRequest> FUpdateStoreContentModelMasterRequestPtr;
 }

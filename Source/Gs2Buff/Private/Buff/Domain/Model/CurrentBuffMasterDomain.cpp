@@ -414,7 +414,7 @@ namespace Gs2::Buff::Domain::Model
             ParentKey,
             Gs2::Buff::Domain::Model::FCurrentBuffMasterDomain::CreateCacheKey(
             ),
-            [Callback](TSharedPtr<Gs2Object> obj)
+            [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::Buff::Model::FCurrentBuffMaster>(obj));
             }

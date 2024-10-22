@@ -464,7 +464,7 @@ namespace Gs2::Enchant::Domain::Model
                 ParameterName,
                 PropertyId
             ),
-            [Callback](TSharedPtr<Gs2Object> obj)
+            [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::Enchant::Model::FBalanceParameterStatus>(obj));
             }

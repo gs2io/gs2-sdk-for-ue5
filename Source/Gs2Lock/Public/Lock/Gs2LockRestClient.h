@@ -30,10 +30,6 @@
 #include "Task/Rest/UpdateNamespaceTask.h"
 #include "Request/DeleteNamespaceRequest.h"
 #include "Task/Rest/DeleteNamespaceTask.h"
-#include "Request/DescribeMutexesRequest.h"
-#include "Task/Rest/DescribeMutexesTask.h"
-#include "Request/DescribeMutexesByUserIdRequest.h"
-#include "Task/Rest/DescribeMutexesByUserIdTask.h"
 #include "Request/LockRequest.h"
 #include "Task/Rest/LockTask.h"
 #include "Request/LockByUserIdRequest.h"
@@ -82,14 +78,6 @@ namespace Gs2::Lock
 
         TSharedPtr<FAsyncTask<Task::Rest::FDeleteNamespaceTask>> DeleteNamespace(
             const Request::FDeleteNamespaceRequestPtr Request
-        ) const;
-
-        TSharedPtr<FAsyncTask<Task::Rest::FDescribeMutexesTask>> DescribeMutexes(
-            const Request::FDescribeMutexesRequestPtr Request
-        ) const;
-
-        TSharedPtr<FAsyncTask<Task::Rest::FDescribeMutexesByUserIdTask>> DescribeMutexesByUserId(
-            const Request::FDescribeMutexesByUserIdRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::Rest::FLockTask>> Lock(

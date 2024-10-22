@@ -346,6 +346,44 @@ namespace Gs2::Identifier::Domain::Model
         );
     }
 
+    Gs2::Identifier::Domain::Iterator::FDescribeAttachedGuardsIteratorPtr FUserDomain::AttachedGuards(
+        const TOptional<FString> ClientId
+    ) const
+    {
+        return MakeShared<Gs2::Identifier::Domain::Iterator::FDescribeAttachedGuardsIterator>(
+            Gs2,
+            Client,
+            UserName,
+            ClientId
+        );
+    }
+
+    Gs2::Core::Domain::CallbackID FUserDomain::SubscribeAttachedGuards(
+    TFunction<void()> Callback
+    )
+    {
+        return Gs2->Cache->ListSubscribe(
+            FString::TypeName,
+            FStringDomain::CreateCacheParentKey(
+                "NamespaceGrn"
+            ),
+            Callback
+        );
+    }
+
+    void FUserDomain::UnsubscribeAttachedGuards(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Gs2->Cache->ListUnsubscribe(
+            FString::TypeName,
+            FStringDomain::CreateCacheParentKey(
+                "NamespaceGrn"
+            ),
+            CallbackID
+        );
+    }
+
     TSharedPtr<Gs2::Identifier::Domain::Model::FIdentifierDomain> FUserDomain::Identifier(
         const FString ClientId
     )
@@ -518,7 +556,7 @@ namespace Gs2::Identifier::Domain::Model
             Gs2::Identifier::Domain::Model::FUserDomain::CreateCacheKey(
                 UserName
             ),
-            [Callback](TSharedPtr<Gs2Object> obj)
+            [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::Identifier::Model::FUser>(obj));
             }

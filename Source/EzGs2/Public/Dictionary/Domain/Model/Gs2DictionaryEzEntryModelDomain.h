@@ -37,7 +37,7 @@ namespace Gs2::UE5::Dictionary::Domain::Model
 
         public:
         TOptional<FString> NamespaceName() const;
-        TOptional<FString> EntryName() const;
+        TOptional<FString> EntryModelName() const;
 
         FEzEntryModelDomain(
             Gs2::Dictionary::Domain::Model::FEntryModelDomainPtr Domain,

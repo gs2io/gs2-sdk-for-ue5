@@ -15,6 +15,7 @@
  */
 
 #include "Enchant/Model/Gs2EnchantUser.h"
+#include "Enchant/Domain/EzGs2Enchant.h"
 #include "Enchant/Model/Gs2EnchantBalanceParameterStatus.h"
 #include "Enchant/Model/Gs2EnchantRarityParameterStatus.h"
 #include "Core/Model/Gs2AccessToken.h"

@@ -33,6 +33,7 @@ class BPGS2_API UGs2DictionaryEntryModelGetValueAsyncFunction : public UBlueprin
     FGs2DictionaryEntryModel EntryModel;
 
 public:
+    FString EntryName;
 
     UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2DictionaryEntryModelGetValueSuccessDelegate OnSuccess;

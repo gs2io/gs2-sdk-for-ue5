@@ -248,7 +248,7 @@ namespace Gs2::News::Domain::Model
             Gs2::News::Domain::Model::FOutputDomain::CreateCacheKey(
                 OutputName
             ),
-            [Callback](TSharedPtr<Gs2Object> obj)
+            [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::News::Model::FOutput>(obj));
             }

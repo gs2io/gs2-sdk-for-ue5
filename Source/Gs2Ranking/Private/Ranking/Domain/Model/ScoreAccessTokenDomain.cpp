@@ -286,7 +286,7 @@ namespace Gs2::Ranking::Domain::Model
                 ScorerUserId,
                 UniqueId ? *UniqueId : "0"
             ),
-            [Callback](TSharedPtr<Gs2Object> obj)
+            [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::Ranking::Model::FScore>(obj));
             }

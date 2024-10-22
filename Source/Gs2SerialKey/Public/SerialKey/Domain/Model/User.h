@@ -114,6 +114,58 @@ namespace Gs2::SerialKey::Domain::Model
             Request::FDownloadSerialCodesRequestPtr Request
         );
 
+        class GS2SERIALKEY_API FIssueOnceTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::SerialKey::Domain::Model::FSerialKeyDomain>,
+            public TSharedFromThis<FIssueOnceTask>
+        {
+            const TSharedPtr<FUserDomain> Self;
+            const Request::FIssueOnceRequestPtr Request;
+        public:
+            explicit FIssueOnceTask(
+                const TSharedPtr<FUserDomain>& Self,
+                const Request::FIssueOnceRequestPtr Request
+            );
+
+            FIssueOnceTask(
+                const FIssueOnceTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::SerialKey::Domain::Model::FSerialKeyDomain>> Result
+            ) override;
+        };
+        friend FIssueOnceTask;
+
+        TSharedPtr<FAsyncTask<FIssueOnceTask>> IssueOnce(
+            Request::FIssueOnceRequestPtr Request
+        );
+
+        class GS2SERIALKEY_API FVerifyCodeTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::SerialKey::Domain::Model::FSerialKeyDomain>,
+            public TSharedFromThis<FVerifyCodeTask>
+        {
+            const TSharedPtr<FUserDomain> Self;
+            const Request::FVerifyCodeByUserIdRequestPtr Request;
+        public:
+            explicit FVerifyCodeTask(
+                const TSharedPtr<FUserDomain>& Self,
+                const Request::FVerifyCodeByUserIdRequestPtr Request
+            );
+
+            FVerifyCodeTask(
+                const FVerifyCodeTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::SerialKey::Domain::Model::FSerialKeyDomain>> Result
+            ) override;
+        };
+        friend FVerifyCodeTask;
+
+        TSharedPtr<FAsyncTask<FVerifyCodeTask>> VerifyCode(
+            Request::FVerifyCodeByUserIdRequestPtr Request
+        );
+
         class GS2SERIALKEY_API FRevertUseTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::SerialKey::Domain::Model::FSerialKeyDomain>,
             public TSharedFromThis<FRevertUseTask>

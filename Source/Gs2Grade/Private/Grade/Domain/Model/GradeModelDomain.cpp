@@ -238,7 +238,7 @@ namespace Gs2::Grade::Domain::Model
             Gs2::Grade::Domain::Model::FGradeModelDomain::CreateCacheKey(
                 GradeName
             ),
-            [Callback](TSharedPtr<Gs2Object> obj)
+            [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::Grade::Model::FGradeModel>(obj));
             }

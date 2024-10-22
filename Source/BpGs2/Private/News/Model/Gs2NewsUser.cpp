@@ -15,6 +15,7 @@
  */
 
 #include "News/Model/Gs2NewsUser.h"
+#include "News/Domain/EzGs2News.h"
 #include "News/Model/Gs2NewsNews.h"
 #include "News/Model/Gs2NewsSetCookieRequestEntry.h"
 #include "Core/Model/Gs2AccessToken.h"

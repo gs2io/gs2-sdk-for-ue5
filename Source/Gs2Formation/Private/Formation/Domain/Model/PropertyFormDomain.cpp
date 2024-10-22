@@ -624,7 +624,7 @@ namespace Gs2::Formation::Domain::Model
                 PropertyFormModelName,
                 PropertyId
             ),
-            [Callback](TSharedPtr<Gs2Object> obj)
+            [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::Formation::Model::FPropertyForm>(obj));
             }

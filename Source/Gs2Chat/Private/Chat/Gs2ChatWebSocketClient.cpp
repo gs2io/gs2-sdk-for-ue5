@@ -226,6 +226,24 @@ namespace Gs2::Chat
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::WebSocket::FDescribeLatestMessagesTask>> FGs2ChatWebSocketClient::DescribeLatestMessages(
+        const Request::FDescribeLatestMessagesRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FDescribeLatestMessagesTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FDescribeLatestMessagesByUserIdTask>> FGs2ChatWebSocketClient::DescribeLatestMessagesByUserId(
+        const Request::FDescribeLatestMessagesByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FDescribeLatestMessagesByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::WebSocket::FPostTask>> FGs2ChatWebSocketClient::Post(
         const Request::FPostRequestPtr Request) const
     {

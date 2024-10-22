@@ -71,6 +71,53 @@ namespace Gs2::Distributor::Domain::Model
 
     }
 
+    FDistributeDomain::FFreezeMasterDataTask::FFreezeMasterDataTask(
+        const TSharedPtr<FDistributeDomain>& Self,
+        const Request::FFreezeMasterDataByUserIdRequestPtr Request
+    ): Self(Self), Request(Request)
+    {
+
+    }
+
+    FDistributeDomain::FFreezeMasterDataTask::FFreezeMasterDataTask(
+        const FFreezeMasterDataTask& From
+    ): TGs2Future(From), Self(From.Self), Request(From.Request)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FDistributeDomain::FFreezeMasterDataTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::Distributor::Domain::Model::FDistributeDomain>> Result
+    )
+    {
+        Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
+            ->WithNamespaceName(Self->NamespaceName)
+            ->WithUserId(Self->UserId);
+        const auto Future = Self->Client->FreezeMasterDataByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto RequestModel = Request;
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
+        if (ResultModel != nullptr) {
+            
+        }
+        const auto Domain = Self;
+        *Result = Domain;
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FDistributeDomain::FFreezeMasterDataTask>> FDistributeDomain::FreezeMasterData(
+        Request::FFreezeMasterDataByUserIdRequestPtr Request
+    ) {
+        return Gs2::Core::Util::New<FAsyncTask<FFreezeMasterDataTask>>(this->AsShared(), Request);
+    }
+
     FString FDistributeDomain::CreateCacheParentKey(
         TOptional<FString> NamespaceName,
         FString ChildType

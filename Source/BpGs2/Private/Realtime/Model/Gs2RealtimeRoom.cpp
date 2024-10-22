@@ -15,5 +15,6 @@
  */
 
 #include "Realtime/Model/Gs2RealtimeRoom.h"
+#include "Realtime/Domain/EzGs2Realtime.h"
 #include "Core/Model/Gs2AccessToken.h"
 #include "Core/BpGs2Constant.h"

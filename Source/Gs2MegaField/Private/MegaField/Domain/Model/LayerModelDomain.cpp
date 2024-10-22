@@ -248,7 +248,7 @@ namespace Gs2::MegaField::Domain::Model
             Gs2::MegaField::Domain::Model::FLayerModelDomain::CreateCacheKey(
                 LayerModelName
             ),
-            [Callback](TSharedPtr<Gs2Object> obj)
+            [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::MegaField::Model::FLayerModel>(obj));
             }

@@ -17,6 +17,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Dom/JsonObject.h"
 
 namespace Gs2::Mission::Request
 {
@@ -50,5 +51,5 @@ namespace Gs2::Mission::Request
         static TSharedPtr<FGetMissionTaskModelRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;
     };
-    typedef TSharedPtr<FGetMissionTaskModelRequest, ESPMode::ThreadSafe> FGetMissionTaskModelRequestPtr;
+    typedef TSharedPtr<FGetMissionTaskModelRequest> FGetMissionTaskModelRequestPtr;
 }

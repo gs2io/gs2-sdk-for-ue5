@@ -39,9 +39,9 @@ namespace Gs2::UE5::Dictionary::Domain::Model
         return Domain->UserId;
     }
 
-    TOptional<FString> FEzEntryDomain::EntryName() const
+    TOptional<FString> FEzEntryDomain::EntryModelName() const
     {
-        return Domain->EntryName;
+        return Domain->EntryModelName;
     }
 
     FEzEntryDomain::FEzEntryDomain(

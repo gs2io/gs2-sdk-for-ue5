@@ -15,6 +15,7 @@
  */
 
 #include "Dictionary/Model/Gs2DictionaryNamespace.h"
+#include "Dictionary/Domain/EzGs2Dictionary.h"
 #include "Dictionary/Model/Gs2DictionaryEntryModel.h"
 #include "Core/Model/Gs2AccessToken.h"
 #include "Dictionary/Model/Gs2DictionaryEntryModel.h"
@@ -23,7 +24,7 @@
 
 FGs2DictionaryEntryModel UGs2DictionaryNamespaceFunctionLibrary::EntryModel(
     FGs2DictionaryNamespace Namespace,
-    FString EntryName
+    FString EntryModelName
 )
 {
     FGs2DictionaryEntryModel Return;
@@ -31,12 +32,12 @@ FGs2DictionaryEntryModel UGs2DictionaryNamespaceFunctionLibrary::EntryModel(
         UE_LOG(BpGs2Log, Error, TEXT("[UGs2DictionaryNamespaceFunctionLibrary::EntryModel] Namespace parameter specification is missing."))
         return Return;
     }
-    if (EntryName == "") {
-        UE_LOG(BpGs2Log, Error, TEXT("[UGs2DictionaryNamespaceFunctionLibrary::EntryModel] EntryName parameter specification is missing."))
+    if (EntryModelName == "") {
+        UE_LOG(BpGs2Log, Error, TEXT("[UGs2DictionaryNamespaceFunctionLibrary::EntryModel] EntryModelName parameter specification is missing."))
         return Return;
     }
     Return.Value = Namespace.Value->EntryModel(
-        EntryName
+        EntryModelName
     );
     return Return;
 }

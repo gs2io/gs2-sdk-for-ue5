@@ -369,7 +369,7 @@ namespace Gs2::Lottery::Domain::Model
             Gs2::Lottery::Domain::Model::FPrizeTableMasterDomain::CreateCacheKey(
                 PrizeTableName
             ),
-            [Callback](TSharedPtr<Gs2Object> obj)
+            [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::Lottery::Model::FPrizeTableMaster>(obj));
             }

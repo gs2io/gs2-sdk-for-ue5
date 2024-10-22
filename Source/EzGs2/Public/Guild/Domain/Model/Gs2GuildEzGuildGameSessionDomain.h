@@ -58,26 +58,6 @@ namespace Gs2::UE5::Guild::Domain::Model
             Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
 
-        class EZGS2_API FDeleteGuildTask :
-            public Gs2::Core::Util::TGs2Future<Gs2::UE5::Guild::Domain::Model::FEzGuildGameSessionDomain>,
-            public TSharedFromThis<FDeleteGuildTask>
-        {
-            TSharedPtr<FEzGuildGameSessionDomain> Self;
-
-        public:
-            explicit FDeleteGuildTask(
-                TSharedPtr<FEzGuildGameSessionDomain> Self
-            );
-
-            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-                TSharedPtr<TSharedPtr<Gs2::UE5::Guild::Domain::Model::FEzGuildGameSessionDomain>> Result
-            ) override;
-        };
-        friend FDeleteGuildTask;
-
-        TSharedPtr<FAsyncTask<FDeleteGuildTask>> DeleteGuild(
-        );
-
         class EZGS2_API FUpdateGuildTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::Guild::Domain::Model::FEzGuildGameSessionDomain>,
             public TSharedFromThis<FUpdateGuildTask>
@@ -123,6 +103,26 @@ namespace Gs2::UE5::Guild::Domain::Model
             TOptional<int32> Attribute5 = TOptional<int32>(),
             TOptional<TArray<TSharedPtr<Gs2::UE5::Guild::Model::FEzRoleModel>>> CustomRoles = TOptional<TArray<TSharedPtr<Gs2::UE5::Guild::Model::FEzRoleModel>>>(),
             TOptional<FString> GuildMemberDefaultRole = TOptional<FString>()
+        );
+
+        class EZGS2_API FDeleteGuildTask :
+            public Gs2::Core::Util::TGs2Future<Gs2::UE5::Guild::Domain::Model::FEzGuildGameSessionDomain>,
+            public TSharedFromThis<FDeleteGuildTask>
+        {
+            TSharedPtr<FEzGuildGameSessionDomain> Self;
+
+        public:
+            explicit FDeleteGuildTask(
+                TSharedPtr<FEzGuildGameSessionDomain> Self
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::UE5::Guild::Domain::Model::FEzGuildGameSessionDomain>> Result
+            ) override;
+        };
+        friend FDeleteGuildTask;
+
+        TSharedPtr<FAsyncTask<FDeleteGuildTask>> DeleteGuild(
         );
 
         class EZGS2_API FAddIgnoreUserTask :

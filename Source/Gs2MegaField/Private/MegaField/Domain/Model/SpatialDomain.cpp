@@ -322,7 +322,7 @@ namespace Gs2::MegaField::Domain::Model
                 AreaModelName,
                 LayerModelName
             ),
-            [Callback](TSharedPtr<Gs2Object> obj)
+            [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::MegaField::Model::FSpatial>(obj));
             }

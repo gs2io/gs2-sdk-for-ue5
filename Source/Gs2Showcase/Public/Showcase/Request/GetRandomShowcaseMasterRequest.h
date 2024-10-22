@@ -17,6 +17,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Dom/JsonObject.h"
 
 namespace Gs2::Showcase::Request
 {
@@ -47,5 +48,5 @@ namespace Gs2::Showcase::Request
         static TSharedPtr<FGetRandomShowcaseMasterRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;
     };
-    typedef TSharedPtr<FGetRandomShowcaseMasterRequest, ESPMode::ThreadSafe> FGetRandomShowcaseMasterRequestPtr;
+    typedef TSharedPtr<FGetRandomShowcaseMasterRequest> FGetRandomShowcaseMasterRequestPtr;
 }

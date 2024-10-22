@@ -494,7 +494,7 @@ namespace Gs2::Mission::Domain::Model
             Gs2::Mission::Domain::Model::FMissionGroupModelMasterDomain::CreateCacheKey(
                 MissionGroupName
             ),
-            [Callback](TSharedPtr<Gs2Object> obj)
+            [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::Mission::Model::FMissionGroupModelMaster>(obj));
             }

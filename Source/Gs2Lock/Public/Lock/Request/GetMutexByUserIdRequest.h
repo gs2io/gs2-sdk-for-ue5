@@ -17,6 +17,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Dom/JsonObject.h"
 
 namespace Gs2::Lock::Request
 {
@@ -53,5 +54,5 @@ namespace Gs2::Lock::Request
         static TSharedPtr<FGetMutexByUserIdRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;
     };
-    typedef TSharedPtr<FGetMutexByUserIdRequest, ESPMode::ThreadSafe> FGetMutexByUserIdRequestPtr;
+    typedef TSharedPtr<FGetMutexByUserIdRequest> FGetMutexByUserIdRequestPtr;
 }

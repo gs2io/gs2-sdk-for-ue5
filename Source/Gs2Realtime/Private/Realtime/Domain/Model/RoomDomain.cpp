@@ -291,7 +291,7 @@ namespace Gs2::Realtime::Domain::Model
             Gs2::Realtime::Domain::Model::FRoomDomain::CreateCacheKey(
                 RoomName
             ),
-            [Callback](TSharedPtr<Gs2Object> obj)
+            [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::Realtime::Model::FRoom>(obj));
             }

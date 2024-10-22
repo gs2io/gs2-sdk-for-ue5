@@ -417,7 +417,7 @@ namespace Gs2::Stamina::Domain::Model
             ParentKey,
             Gs2::Stamina::Domain::Model::FCurrentStaminaMasterDomain::CreateCacheKey(
             ),
-            [Callback](TSharedPtr<Gs2Object> obj)
+            [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::Stamina::Model::FCurrentStaminaMaster>(obj));
             }

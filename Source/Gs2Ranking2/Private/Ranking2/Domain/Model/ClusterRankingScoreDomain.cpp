@@ -242,6 +242,77 @@ namespace Gs2::Ranking2::Domain::Model
         return Gs2::Core::Util::New<FAsyncTask<FDeleteTask>>(this->AsShared(), Request);
     }
 
+    FClusterRankingScoreDomain::FVerifyTask::FVerifyTask(
+        const TSharedPtr<FClusterRankingScoreDomain>& Self,
+        const Request::FVerifyClusterRankingScoreByUserIdRequestPtr Request
+    ): Self(Self), Request(Request)
+    {
+
+    }
+
+    FClusterRankingScoreDomain::FVerifyTask::FVerifyTask(
+        const FVerifyTask& From
+    ): TGs2Future(From), Self(From.Self), Request(From.Request)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FClusterRankingScoreDomain::FVerifyTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::Ranking2::Domain::Model::FClusterRankingScoreDomain>> Result
+    )
+    {
+        Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
+            ->WithNamespaceName(Self->NamespaceName)
+            ->WithUserId(Self->UserId)
+            ->WithRankingName(Self->RankingName)
+            ->WithClusterName(Self->ClusterName)
+            ->WithSeason(Self->Season);
+        const auto Future = Self->Client->VerifyClusterRankingScoreByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto RequestModel = Request;
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
+        if (ResultModel != nullptr) {
+            
+            if (ResultModel->GetItem() != nullptr)
+            {
+                const auto ParentKey = Gs2::Ranking2::Domain::Model::FUserDomain::CreateCacheParentKey(
+                    Self->NamespaceName,
+                    Self->UserId,
+                    "ClusterRankingScore"
+                );
+                const auto Key = Gs2::Ranking2::Domain::Model::FClusterRankingScoreDomain::CreateCacheKey(
+                    ResultModel->GetItem()->GetRankingName(),
+                    ResultModel->GetItem()->GetClusterName(),
+                    ResultModel->GetItem()->GetSeason().IsSet() ? FString::FromInt(*ResultModel->GetItem()->GetSeason()) : TOptional<FString>()
+                );
+                Self->Gs2->Cache->Put(
+                    Gs2::Ranking2::Model::FClusterRankingScore::TypeName,
+                    ParentKey,
+                    Key,
+                    ResultModel->GetItem(),
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+            }
+        }
+        auto Domain = Self;
+
+        *Result = Domain;
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FClusterRankingScoreDomain::FVerifyTask>> FClusterRankingScoreDomain::Verify(
+        Request::FVerifyClusterRankingScoreByUserIdRequestPtr Request
+    ) {
+        return Gs2::Core::Util::New<FAsyncTask<FVerifyTask>>(this->AsShared(), Request);
+    }
+
     FString FClusterRankingScoreDomain::CreateCacheParentKey(
         TOptional<FString> NamespaceName,
         TOptional<FString> UserId,
@@ -363,7 +434,7 @@ namespace Gs2::Ranking2::Domain::Model
                 ClusterName,
                 Season.IsSet() ? FString::FromInt(*Season) : TOptional<FString>()
             ),
-            [Callback](TSharedPtr<Gs2Object> obj)
+            [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::Ranking2::Model::FClusterRankingScore>(obj));
             }

@@ -205,6 +205,18 @@
 #include "Task/Rest/SetTransactionDefaultConfigByUserIdTask.h"
 #include "Task/WebSocket/SetTransactionDefaultConfigByUserIdTask.h"
 
+// FreezeMasterData
+#include "Request/FreezeMasterDataRequest.h"
+#include "Result/FreezeMasterDataResult.h"
+#include "Task/Rest/FreezeMasterDataTask.h"
+#include "Task/WebSocket/FreezeMasterDataTask.h"
+
+// FreezeMasterDataByUserId
+#include "Request/FreezeMasterDataByUserIdRequest.h"
+#include "Result/FreezeMasterDataByUserIdResult.h"
+#include "Task/Rest/FreezeMasterDataByUserIdTask.h"
+#include "Task/WebSocket/FreezeMasterDataByUserIdTask.h"
+
 // IfExpressionByUserId
 #include "Request/IfExpressionByUserIdRequest.h"
 #include "Result/IfExpressionByUserIdResult.h"

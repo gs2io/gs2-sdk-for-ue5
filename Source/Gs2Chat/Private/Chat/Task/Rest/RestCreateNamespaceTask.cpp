@@ -90,6 +90,10 @@ namespace Gs2::Chat::Task::Rest
             {
                 JsonRootObject->SetBoolField("allowCreateRoom", this->Request->GetAllowCreateRoom().GetValue());
             }
+            if (this->Request->GetMessageLifeTimeDays().IsSet())
+            {
+                JsonRootObject->SetNumberField("messageLifeTimeDays", this->Request->GetMessageLifeTimeDays().GetValue());
+            }
             if (this->Request->GetPostMessageScript() != nullptr && this->Request->GetPostMessageScript().IsValid())
             {
                 JsonRootObject->SetObjectField("postMessageScript", this->Request->GetPostMessageScript()->ToJson());

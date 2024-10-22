@@ -27,6 +27,7 @@ namespace Gs2::Script::Model
         TOptional<FString> NameValue;
         TOptional<FString> DescriptionValue;
         TOptional<FString> ScriptValue;
+        TOptional<bool> DisableStringNumberToNumberValue;
         TOptional<int64> CreatedAtValue;
         TOptional<int64> UpdatedAtValue;
         TOptional<int64> RevisionValue;
@@ -42,6 +43,7 @@ namespace Gs2::Script::Model
         TSharedPtr<FScript> WithName(const TOptional<FString> Name);
         TSharedPtr<FScript> WithDescription(const TOptional<FString> Description);
         TSharedPtr<FScript> WithScript(const TOptional<FString> Script);
+        TSharedPtr<FScript> WithDisableStringNumberToNumber(const TOptional<bool> DisableStringNumberToNumber);
         TSharedPtr<FScript> WithCreatedAt(const TOptional<int64> CreatedAt);
         TSharedPtr<FScript> WithUpdatedAt(const TOptional<int64> UpdatedAt);
         TSharedPtr<FScript> WithRevision(const TOptional<int64> Revision);
@@ -50,6 +52,8 @@ namespace Gs2::Script::Model
         TOptional<FString> GetName() const;
         TOptional<FString> GetDescription() const;
         TOptional<FString> GetScript() const;
+        TOptional<bool> GetDisableStringNumberToNumber() const;
+        FString GetDisableStringNumberToNumberString() const;
         TOptional<int64> GetCreatedAt() const;
         FString GetCreatedAtString() const;
         TOptional<int64> GetUpdatedAt() const;

@@ -359,7 +359,7 @@ namespace Gs2::Inbox::Domain::Model
             ParentKey,
             Gs2::Inbox::Domain::Model::FReceivedDomain::CreateCacheKey(
             ),
-            [Callback](TSharedPtr<Gs2Object> obj)
+            [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::Inbox::Model::FReceived>(obj));
             }

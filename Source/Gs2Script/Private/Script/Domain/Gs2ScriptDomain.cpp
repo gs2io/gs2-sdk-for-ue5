@@ -159,6 +159,23 @@ namespace Gs2::Script::Domain
         const FString Request,
         const FString Result
     ) {
+        if (Method == "InvokeScript") {
+            TSharedPtr<FJsonObject> RequestModelJson;
+            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Request);
+                !FJsonSerializer::Deserialize(JsonReader, RequestModelJson))
+            {
+                return;
+            }
+            TSharedPtr<FJsonObject> ResultModelJson;
+            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Result);
+                !FJsonSerializer::Deserialize(JsonReader, ResultModelJson))
+            {
+                return;
+            }
+            const auto RequestModel = Gs2::Script::Request::FInvokeScriptRequest::FromJson(RequestModelJson);
+            const auto ResultModel = Gs2::Script::Result::FInvokeScriptResult::FromJson(ResultModelJson);
+            
+        }
     }
 
     void FGs2ScriptDomain::UpdateCacheFromStampTask(
@@ -173,6 +190,31 @@ namespace Gs2::Script::Domain
         const Gs2::JobQueue::Model::FJobPtr Job,
         const Gs2::JobQueue::Model::FJobResultBodyPtr Result
     ) {
+        if (Method == "invoke_script") {
+            TSharedPtr<FJsonObject> RequestModelJson;
+            if (!Job->GetArgs().IsSet())
+            {
+                return;
+            }
+            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(*Job->GetArgs());
+                !FJsonSerializer::Deserialize(JsonReader, RequestModelJson))
+            {
+                return;
+            }
+            TSharedPtr<FJsonObject> ResultModelJson;
+            if (!Result->GetResult().IsSet())
+            {
+                return;
+            }
+            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(*Result->GetResult());
+                !FJsonSerializer::Deserialize(JsonReader, ResultModelJson))
+            {
+                return;
+            }
+            const auto RequestModel = Gs2::Script::Request::FInvokeScriptRequest::FromJson(RequestModelJson);
+            const auto ResultModel = Gs2::Script::Result::FInvokeScriptResult::FromJson(ResultModelJson);
+            
+        }
     }
 
     void FGs2ScriptDomain::HandleNotification(

@@ -15,5 +15,6 @@
  */
 
 #include "SerialKey/Model/Gs2SerialKeyCampaignModel.h"
+#include "SerialKey/Domain/EzGs2SerialKey.h"
 #include "Core/Model/Gs2AccessToken.h"
 #include "Core/BpGs2Constant.h"

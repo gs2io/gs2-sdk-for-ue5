@@ -416,7 +416,7 @@ namespace Gs2::SeasonRating::Domain::Model
             ParentKey,
             Gs2::SeasonRating::Domain::Model::FCurrentSeasonModelMasterDomain::CreateCacheKey(
             ),
-            [Callback](TSharedPtr<Gs2Object> obj)
+            [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::SeasonRating::Model::FCurrentSeasonModelMaster>(obj));
             }

@@ -353,7 +353,7 @@ namespace Gs2::Showcase::Domain::Model
             Gs2::Showcase::Domain::Model::FRandomDisplayItemDomain::CreateCacheKey(
                 DisplayItemName
             ),
-            [Callback](TSharedPtr<Gs2Object> obj)
+            [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::Showcase::Model::FRandomDisplayItem>(obj));
             }

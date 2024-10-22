@@ -110,6 +110,66 @@ namespace Gs2::UE5::Mission::Domain::Model
         );
     }
 
+    FEzCompleteGameSessionDomain::FBatchReceiveRewardsTask::FBatchReceiveRewardsTask(
+        TSharedPtr<FEzCompleteGameSessionDomain> Self,
+        TArray<FString> MissionTaskNames
+    ): Self(Self), MissionTaskNames(MissionTaskNames)
+    {
+
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FEzCompleteGameSessionDomain::FBatchReceiveRewardsTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::UE5::Mission::Domain::Model::FEzCompleteGameSessionDomain>> Result
+    )
+    {
+        const auto Future = Self->ConnectionValue->Run(
+            [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
+                const auto Task = Self->Domain->Batch(
+                    MakeShared<Gs2::Mission::Request::FBatchCompleteRequest>()
+                        ->WithMissionTaskNames([&]{
+                            auto Arr = MakeShared<TArray<FString>>();
+                            for (auto Value : MissionTaskNames) {
+                                Arr->Add(Value);
+                            }
+                            return Arr;
+                        }())
+                );
+                Task->StartSynchronousTask();
+                if (Task->GetTask().IsError())
+                {
+                    Task->EnsureCompletion();
+                    return Task->GetTask().Error();
+                }
+                *Result = MakeShared<Gs2::UE5::Mission::Domain::Model::FEzCompleteGameSessionDomain>(
+                    Task->GetTask().Result(),
+                    Self->GameSession,
+                    Self->ConnectionValue
+                );
+                Task->EnsureCompletion();
+                return nullptr;
+            },
+            nullptr
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            Future->EnsureCompletion();
+            return Future->GetTask().Error();
+        }
+        Future->EnsureCompletion();
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FEzCompleteGameSessionDomain::FBatchReceiveRewardsTask>> FEzCompleteGameSessionDomain::BatchReceiveRewards(
+        TArray<FString> MissionTaskNames
+    )
+    {
+        return Gs2::Core::Util::New<FAsyncTask<FBatchReceiveRewardsTask>>(
+            this->AsShared(),
+            MissionTaskNames
+        );
+    }
+
     FEzCompleteGameSessionDomain::FModelTask::FModelTask(
         TSharedPtr<FEzCompleteGameSessionDomain> Self
     ): Self(Self)

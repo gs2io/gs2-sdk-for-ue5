@@ -17,6 +17,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Dom/JsonObject.h"
 
 namespace Gs2::Script::Request
 {
@@ -29,6 +30,7 @@ namespace Gs2::Script::Request
         TOptional<FString> ScriptNameValue;
         TOptional<FString> DescriptionValue;
         TOptional<FString> ScriptValue;
+        TOptional<bool> DisableStringNumberToNumberValue;
         
     public:
         
@@ -43,15 +45,18 @@ namespace Gs2::Script::Request
         TSharedPtr<FUpdateScriptRequest> WithScriptName(const TOptional<FString> ScriptName);
         TSharedPtr<FUpdateScriptRequest> WithDescription(const TOptional<FString> Description);
         TSharedPtr<FUpdateScriptRequest> WithScript(const TOptional<FString> Script);
+        TSharedPtr<FUpdateScriptRequest> WithDisableStringNumberToNumber(const TOptional<bool> DisableStringNumberToNumber);
 
         TOptional<FString> GetContextStack() const;
         TOptional<FString> GetNamespaceName() const;
         TOptional<FString> GetScriptName() const;
         TOptional<FString> GetDescription() const;
         TOptional<FString> GetScript() const;
+        TOptional<bool> GetDisableStringNumberToNumber() const;
+        FString GetDisableStringNumberToNumberString() const;
 
         static TSharedPtr<FUpdateScriptRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;
     };
-    typedef TSharedPtr<FUpdateScriptRequest, ESPMode::ThreadSafe> FUpdateScriptRequestPtr;
+    typedef TSharedPtr<FUpdateScriptRequest> FUpdateScriptRequestPtr;
 }

@@ -375,7 +375,7 @@ namespace Gs2::Matchmaking::Domain::Model
             Gs2::Matchmaking::Domain::Model::FRatingModelMasterDomain::CreateCacheKey(
                 RatingName
             ),
-            [Callback](TSharedPtr<Gs2Object> obj)
+            [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::Matchmaking::Model::FRatingModelMaster>(obj));
             }

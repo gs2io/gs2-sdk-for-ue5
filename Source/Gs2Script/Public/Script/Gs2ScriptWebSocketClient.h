@@ -48,6 +48,8 @@
 #include "Task/WebSocket/InvokeScriptTask.h"
 #include "Request/DebugInvokeRequest.h"
 #include "Task/WebSocket/DebugInvokeTask.h"
+#include "Request/InvokeByStampSheetRequest.h"
+#include "Task/WebSocket/InvokeByStampSheetTask.h"
 
 namespace Gs2::Script
 {
@@ -118,6 +120,10 @@ namespace Gs2::Script
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FDebugInvokeTask>> DebugInvoke(
             const Request::FDebugInvokeRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FInvokeByStampSheetTask>> InvokeByStampSheet(
+            const Request::FInvokeByStampSheetRequestPtr Request
         ) const;
     };
     typedef TSharedPtr<FGs2ScriptWebSocketClient, ESPMode::ThreadSafe> FGs2ScriptWebSocketClientPtr;

@@ -414,7 +414,7 @@ namespace Gs2::Idle::Domain::Model
             ParentKey,
             Gs2::Idle::Domain::Model::FCurrentCategoryMasterDomain::CreateCacheKey(
             ),
-            [Callback](TSharedPtr<Gs2Object> obj)
+            [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::Idle::Model::FCurrentCategoryMaster>(obj));
             }

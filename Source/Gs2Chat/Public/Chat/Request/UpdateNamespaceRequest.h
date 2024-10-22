@@ -31,6 +31,7 @@ namespace Gs2::Chat::Request
         TOptional<FString> NamespaceNameValue;
         TOptional<FString> DescriptionValue;
         TOptional<bool> AllowCreateRoomValue;
+        TOptional<int32> MessageLifeTimeDaysValue;
         TSharedPtr<Model::FScriptSetting> PostMessageScriptValue;
         TSharedPtr<Model::FScriptSetting> CreateRoomScriptValue;
         TSharedPtr<Model::FScriptSetting> DeleteRoomScriptValue;
@@ -51,6 +52,7 @@ namespace Gs2::Chat::Request
         TSharedPtr<FUpdateNamespaceRequest> WithNamespaceName(const TOptional<FString> NamespaceName);
         TSharedPtr<FUpdateNamespaceRequest> WithDescription(const TOptional<FString> Description);
         TSharedPtr<FUpdateNamespaceRequest> WithAllowCreateRoom(const TOptional<bool> AllowCreateRoom);
+        TSharedPtr<FUpdateNamespaceRequest> WithMessageLifeTimeDays(const TOptional<int32> MessageLifeTimeDays);
         TSharedPtr<FUpdateNamespaceRequest> WithPostMessageScript(const TSharedPtr<Model::FScriptSetting> PostMessageScript);
         TSharedPtr<FUpdateNamespaceRequest> WithCreateRoomScript(const TSharedPtr<Model::FScriptSetting> CreateRoomScript);
         TSharedPtr<FUpdateNamespaceRequest> WithDeleteRoomScript(const TSharedPtr<Model::FScriptSetting> DeleteRoomScript);
@@ -64,6 +66,8 @@ namespace Gs2::Chat::Request
         TOptional<FString> GetDescription() const;
         TOptional<bool> GetAllowCreateRoom() const;
         FString GetAllowCreateRoomString() const;
+        TOptional<int32> GetMessageLifeTimeDays() const;
+        FString GetMessageLifeTimeDaysString() const;
         TSharedPtr<Model::FScriptSetting> GetPostMessageScript() const;
         TSharedPtr<Model::FScriptSetting> GetCreateRoomScript() const;
         TSharedPtr<Model::FScriptSetting> GetDeleteRoomScript() const;

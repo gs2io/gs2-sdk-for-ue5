@@ -204,6 +204,24 @@
 #include "Task/Rest/DeleteGlobalRankingScoreByUserIdTask.h"
 #include "Task/WebSocket/DeleteGlobalRankingScoreByUserIdTask.h"
 
+// VerifyGlobalRankingScore
+#include "Request/VerifyGlobalRankingScoreRequest.h"
+#include "Result/VerifyGlobalRankingScoreResult.h"
+#include "Task/Rest/VerifyGlobalRankingScoreTask.h"
+#include "Task/WebSocket/VerifyGlobalRankingScoreTask.h"
+
+// VerifyGlobalRankingScoreByUserId
+#include "Request/VerifyGlobalRankingScoreByUserIdRequest.h"
+#include "Result/VerifyGlobalRankingScoreByUserIdResult.h"
+#include "Task/Rest/VerifyGlobalRankingScoreByUserIdTask.h"
+#include "Task/WebSocket/VerifyGlobalRankingScoreByUserIdTask.h"
+
+// VerifyGlobalRankingScoreByStampTask
+#include "Request/VerifyGlobalRankingScoreByStampTaskRequest.h"
+#include "Result/VerifyGlobalRankingScoreByStampTaskResult.h"
+#include "Task/Rest/VerifyGlobalRankingScoreByStampTaskTask.h"
+#include "Task/WebSocket/VerifyGlobalRankingScoreByStampTaskTask.h"
+
 // DescribeGlobalRankingReceivedRewards
 #include "Request/DescribeGlobalRankingReceivedRewardsRequest.h"
 #include "Result/DescribeGlobalRankingReceivedRewardsResult.h"
@@ -371,6 +389,24 @@
 #include "Result/DeleteClusterRankingScoreByUserIdResult.h"
 #include "Task/Rest/DeleteClusterRankingScoreByUserIdTask.h"
 #include "Task/WebSocket/DeleteClusterRankingScoreByUserIdTask.h"
+
+// VerifyClusterRankingScore
+#include "Request/VerifyClusterRankingScoreRequest.h"
+#include "Result/VerifyClusterRankingScoreResult.h"
+#include "Task/Rest/VerifyClusterRankingScoreTask.h"
+#include "Task/WebSocket/VerifyClusterRankingScoreTask.h"
+
+// VerifyClusterRankingScoreByUserId
+#include "Request/VerifyClusterRankingScoreByUserIdRequest.h"
+#include "Result/VerifyClusterRankingScoreByUserIdResult.h"
+#include "Task/Rest/VerifyClusterRankingScoreByUserIdTask.h"
+#include "Task/WebSocket/VerifyClusterRankingScoreByUserIdTask.h"
+
+// VerifyClusterRankingScoreByStampTask
+#include "Request/VerifyClusterRankingScoreByStampTaskRequest.h"
+#include "Result/VerifyClusterRankingScoreByStampTaskResult.h"
+#include "Task/Rest/VerifyClusterRankingScoreByStampTaskTask.h"
+#include "Task/WebSocket/VerifyClusterRankingScoreByStampTaskTask.h"
 
 // DescribeClusterRankingReceivedRewards
 #include "Request/DescribeClusterRankingReceivedRewardsRequest.h"
@@ -563,6 +599,24 @@
 #include "Result/DeleteSubscribeRankingScoreByUserIdResult.h"
 #include "Task/Rest/DeleteSubscribeRankingScoreByUserIdTask.h"
 #include "Task/WebSocket/DeleteSubscribeRankingScoreByUserIdTask.h"
+
+// VerifySubscribeRankingScore
+#include "Request/VerifySubscribeRankingScoreRequest.h"
+#include "Result/VerifySubscribeRankingScoreResult.h"
+#include "Task/Rest/VerifySubscribeRankingScoreTask.h"
+#include "Task/WebSocket/VerifySubscribeRankingScoreTask.h"
+
+// VerifySubscribeRankingScoreByUserId
+#include "Request/VerifySubscribeRankingScoreByUserIdRequest.h"
+#include "Result/VerifySubscribeRankingScoreByUserIdResult.h"
+#include "Task/Rest/VerifySubscribeRankingScoreByUserIdTask.h"
+#include "Task/WebSocket/VerifySubscribeRankingScoreByUserIdTask.h"
+
+// VerifySubscribeRankingScoreByStampTask
+#include "Request/VerifySubscribeRankingScoreByStampTaskRequest.h"
+#include "Result/VerifySubscribeRankingScoreByStampTaskResult.h"
+#include "Task/Rest/VerifySubscribeRankingScoreByStampTaskTask.h"
+#include "Task/WebSocket/VerifySubscribeRankingScoreByStampTaskTask.h"
 
 // DescribeSubscribeRankings
 #include "Request/DescribeSubscribeRankingsRequest.h"

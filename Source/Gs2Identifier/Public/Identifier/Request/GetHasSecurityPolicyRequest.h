@@ -17,6 +17,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Dom/JsonObject.h"
 
 namespace Gs2::Identifier::Request
 {
@@ -44,5 +45,5 @@ namespace Gs2::Identifier::Request
         static TSharedPtr<FGetHasSecurityPolicyRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;
     };
-    typedef TSharedPtr<FGetHasSecurityPolicyRequest, ESPMode::ThreadSafe> FGetHasSecurityPolicyRequestPtr;
+    typedef TSharedPtr<FGetHasSecurityPolicyRequest> FGetHasSecurityPolicyRequestPtr;
 }

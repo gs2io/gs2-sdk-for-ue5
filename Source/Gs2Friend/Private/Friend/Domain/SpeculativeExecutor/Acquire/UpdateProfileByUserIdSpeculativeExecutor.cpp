@@ -23,6 +23,7 @@
 #endif
 
 #include "Friend/Domain/SpeculativeExecutor/Acquire/UpdateProfileByUserIdSpeculativeExecutor.h"
+#include "Friend/Domain/Gs2Friend.h"
 
 #include "Core/Domain/Gs2.h"
 

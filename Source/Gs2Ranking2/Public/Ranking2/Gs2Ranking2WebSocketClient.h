@@ -72,6 +72,12 @@
 #include "Task/WebSocket/GetGlobalRankingScoreByUserIdTask.h"
 #include "Request/DeleteGlobalRankingScoreByUserIdRequest.h"
 #include "Task/WebSocket/DeleteGlobalRankingScoreByUserIdTask.h"
+#include "Request/VerifyGlobalRankingScoreRequest.h"
+#include "Task/WebSocket/VerifyGlobalRankingScoreTask.h"
+#include "Request/VerifyGlobalRankingScoreByUserIdRequest.h"
+#include "Task/WebSocket/VerifyGlobalRankingScoreByUserIdTask.h"
+#include "Request/VerifyGlobalRankingScoreByStampTaskRequest.h"
+#include "Task/WebSocket/VerifyGlobalRankingScoreByStampTaskTask.h"
 #include "Request/DescribeGlobalRankingReceivedRewardsRequest.h"
 #include "Task/WebSocket/DescribeGlobalRankingReceivedRewardsTask.h"
 #include "Request/DescribeGlobalRankingReceivedRewardsByUserIdRequest.h"
@@ -128,6 +134,12 @@
 #include "Task/WebSocket/GetClusterRankingScoreByUserIdTask.h"
 #include "Request/DeleteClusterRankingScoreByUserIdRequest.h"
 #include "Task/WebSocket/DeleteClusterRankingScoreByUserIdTask.h"
+#include "Request/VerifyClusterRankingScoreRequest.h"
+#include "Task/WebSocket/VerifyClusterRankingScoreTask.h"
+#include "Request/VerifyClusterRankingScoreByUserIdRequest.h"
+#include "Task/WebSocket/VerifyClusterRankingScoreByUserIdTask.h"
+#include "Request/VerifyClusterRankingScoreByStampTaskRequest.h"
+#include "Task/WebSocket/VerifyClusterRankingScoreByStampTaskTask.h"
 #include "Request/DescribeClusterRankingReceivedRewardsRequest.h"
 #include "Task/WebSocket/DescribeClusterRankingReceivedRewardsTask.h"
 #include "Request/DescribeClusterRankingReceivedRewardsByUserIdRequest.h"
@@ -192,6 +204,12 @@
 #include "Task/WebSocket/GetSubscribeRankingScoreByUserIdTask.h"
 #include "Request/DeleteSubscribeRankingScoreByUserIdRequest.h"
 #include "Task/WebSocket/DeleteSubscribeRankingScoreByUserIdTask.h"
+#include "Request/VerifySubscribeRankingScoreRequest.h"
+#include "Task/WebSocket/VerifySubscribeRankingScoreTask.h"
+#include "Request/VerifySubscribeRankingScoreByUserIdRequest.h"
+#include "Task/WebSocket/VerifySubscribeRankingScoreByUserIdTask.h"
+#include "Request/VerifySubscribeRankingScoreByStampTaskRequest.h"
+#include "Task/WebSocket/VerifySubscribeRankingScoreByStampTaskTask.h"
 #include "Request/DescribeSubscribeRankingsRequest.h"
 #include "Task/WebSocket/DescribeSubscribeRankingsTask.h"
 #include "Request/DescribeSubscribeRankingsByUserIdRequest.h"
@@ -336,6 +354,18 @@ namespace Gs2::Ranking2
             const Request::FDeleteGlobalRankingScoreByUserIdRequestPtr Request
         ) const;
 
+        TSharedPtr<FAsyncTask<Task::WebSocket::FVerifyGlobalRankingScoreTask>> VerifyGlobalRankingScore(
+            const Request::FVerifyGlobalRankingScoreRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FVerifyGlobalRankingScoreByUserIdTask>> VerifyGlobalRankingScoreByUserId(
+            const Request::FVerifyGlobalRankingScoreByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FVerifyGlobalRankingScoreByStampTaskTask>> VerifyGlobalRankingScoreByStampTask(
+            const Request::FVerifyGlobalRankingScoreByStampTaskRequestPtr Request
+        ) const;
+
         TSharedPtr<FAsyncTask<Task::WebSocket::FDescribeGlobalRankingReceivedRewardsTask>> DescribeGlobalRankingReceivedRewards(
             const Request::FDescribeGlobalRankingReceivedRewardsRequestPtr Request
         ) const;
@@ -446,6 +476,18 @@ namespace Gs2::Ranking2
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FDeleteClusterRankingScoreByUserIdTask>> DeleteClusterRankingScoreByUserId(
             const Request::FDeleteClusterRankingScoreByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FVerifyClusterRankingScoreTask>> VerifyClusterRankingScore(
+            const Request::FVerifyClusterRankingScoreRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FVerifyClusterRankingScoreByUserIdTask>> VerifyClusterRankingScoreByUserId(
+            const Request::FVerifyClusterRankingScoreByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FVerifyClusterRankingScoreByStampTaskTask>> VerifyClusterRankingScoreByStampTask(
+            const Request::FVerifyClusterRankingScoreByStampTaskRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FDescribeClusterRankingReceivedRewardsTask>> DescribeClusterRankingReceivedRewards(
@@ -574,6 +616,18 @@ namespace Gs2::Ranking2
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FDeleteSubscribeRankingScoreByUserIdTask>> DeleteSubscribeRankingScoreByUserId(
             const Request::FDeleteSubscribeRankingScoreByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FVerifySubscribeRankingScoreTask>> VerifySubscribeRankingScore(
+            const Request::FVerifySubscribeRankingScoreRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FVerifySubscribeRankingScoreByUserIdTask>> VerifySubscribeRankingScoreByUserId(
+            const Request::FVerifySubscribeRankingScoreByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FVerifySubscribeRankingScoreByStampTaskTask>> VerifySubscribeRankingScoreByStampTask(
+            const Request::FVerifySubscribeRankingScoreByStampTaskRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FDescribeSubscribeRankingsTask>> DescribeSubscribeRankings(

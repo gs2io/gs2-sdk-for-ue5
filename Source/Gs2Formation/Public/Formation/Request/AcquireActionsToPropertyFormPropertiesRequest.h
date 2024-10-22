@@ -17,6 +17,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Dom/JsonObject.h"
 #include "../Model/AcquireAction.h"
 #include "../Model/Config.h"
 
@@ -66,5 +67,5 @@ namespace Gs2::Formation::Request
         static TSharedPtr<FAcquireActionsToPropertyFormPropertiesRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;
     };
-    typedef TSharedPtr<FAcquireActionsToPropertyFormPropertiesRequest, ESPMode::ThreadSafe> FAcquireActionsToPropertyFormPropertiesRequestPtr;
+    typedef TSharedPtr<FAcquireActionsToPropertyFormPropertiesRequest> FAcquireActionsToPropertyFormPropertiesRequestPtr;
 }

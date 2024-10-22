@@ -71,12 +71,12 @@ namespace Gs2::UE5::Dictionary::Domain::Model
     }
 
     Gs2::UE5::Dictionary::Domain::Model::FEzEntryGameSessionDomainPtr FEzUserGameSessionDomain::Entry(
-        const FString EntryName
+        const FString EntryModelName
     ) const
     {
         return MakeShared<Gs2::UE5::Dictionary::Domain::Model::FEzEntryGameSessionDomain>(
             Domain->Entry(
-                EntryName
+                EntryModelName
             ),
             GameSession,
             ConnectionValue

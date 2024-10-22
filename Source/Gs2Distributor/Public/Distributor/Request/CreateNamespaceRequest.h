@@ -17,6 +17,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Dom/JsonObject.h"
 #include "../Model/NotificationSetting.h"
 #include "../Model/LogSetting.h"
 
@@ -58,5 +59,5 @@ namespace Gs2::Distributor::Request
         static TSharedPtr<FCreateNamespaceRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;
     };
-    typedef TSharedPtr<FCreateNamespaceRequest, ESPMode::ThreadSafe> FCreateNamespaceRequestPtr;
+    typedef TSharedPtr<FCreateNamespaceRequest> FCreateNamespaceRequestPtr;
 }

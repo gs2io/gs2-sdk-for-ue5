@@ -249,7 +249,7 @@ namespace Gs2::Money2::Domain::Model
             Gs2::Money2::Domain::Model::FEventDomain::CreateCacheKey(
                 TransactionId
             ),
-            [Callback](TSharedPtr<Gs2Object> obj)
+            [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::Money2::Model::FEvent>(obj));
             }

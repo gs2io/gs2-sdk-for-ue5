@@ -359,8 +359,8 @@ namespace Gs2::Chat::Domain::Model
             Client,
             NamespaceName,
             RoomName,
-            Password,
-            AccessToken
+            AccessToken,
+            Password
         );
     }
 
@@ -381,6 +381,51 @@ namespace Gs2::Chat::Domain::Model
     }
 
     void FRoomAccessTokenDomain::UnsubscribeMessages(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Gs2->Cache->ListUnsubscribe(
+            Gs2::Chat::Model::FMessage::TypeName,
+            Gs2::Chat::Domain::Model::FRoomDomain::CreateCacheParentKey(
+                NamespaceName,
+                TOptional<FString>("Singleton"),
+                RoomName,
+                "Message"
+            ),
+            CallbackID
+        );
+    }
+
+    Gs2::Chat::Domain::Iterator::FDescribeLatestMessagesIteratorPtr FRoomAccessTokenDomain::LatestMessages(
+    ) const
+    {
+        return MakeShared<Gs2::Chat::Domain::Iterator::FDescribeLatestMessagesIterator>(
+            Gs2,
+            Client,
+            NamespaceName,
+            RoomName,
+            AccessToken,
+            Password
+        );
+    }
+
+    Gs2::Core::Domain::CallbackID FRoomAccessTokenDomain::SubscribeLatestMessages(
+    TFunction<void()> Callback
+    )
+    {
+        return Gs2->Cache->ListSubscribe(
+            Gs2::Chat::Model::FMessage::TypeName,
+            Gs2::Chat::Domain::Model::FRoomDomain::CreateCacheParentKey(
+                NamespaceName,
+                TOptional<FString>("Singleton"),
+                RoomName,
+                "Message"
+            ),
+            Callback
+        );
+    }
+
+    void FRoomAccessTokenDomain::UnsubscribeLatestMessages(
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {

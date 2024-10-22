@@ -126,6 +126,149 @@ namespace Gs2::SerialKey::Domain::Model
         return Gs2::Core::Util::New<FAsyncTask<FDownloadSerialCodesTask>>(this->AsShared(), Request);
     }
 
+    FUserDomain::FIssueOnceTask::FIssueOnceTask(
+        const TSharedPtr<FUserDomain>& Self,
+        const Request::FIssueOnceRequestPtr Request
+    ): Self(Self), Request(Request)
+    {
+
+    }
+
+    FUserDomain::FIssueOnceTask::FIssueOnceTask(
+        const FIssueOnceTask& From
+    ): TGs2Future(From), Self(From.Self), Request(From.Request)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FUserDomain::FIssueOnceTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::SerialKey::Domain::Model::FSerialKeyDomain>> Result
+    )
+    {
+        Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
+            ->WithNamespaceName(Self->NamespaceName);
+        const auto Future = Self->Client->IssueOnce(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto RequestModel = Request;
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
+        if (ResultModel != nullptr) {
+            
+            if (ResultModel->GetItem() != nullptr)
+            {
+                const auto ParentKey = Gs2::SerialKey::Domain::Model::FUserDomain::CreateCacheParentKey(
+                    Self->NamespaceName,
+                    Self->UserId,
+                    "SerialKey"
+                );
+                const auto Key = Gs2::SerialKey::Domain::Model::FSerialKeyDomain::CreateCacheKey(
+                    ResultModel->GetItem()->GetCode()
+                );
+                Self->Gs2->Cache->Put(
+                    Gs2::SerialKey::Model::FSerialKey::TypeName,
+                    ParentKey,
+                    Key,
+                    ResultModel->GetItem(),
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+            }
+        }
+        auto Domain = MakeShared<Gs2::SerialKey::Domain::Model::FSerialKeyDomain>(
+            Self->Gs2,
+            Self->Service,
+            Request->GetNamespaceName(),
+            Self->UserId,
+            ResultModel->GetItem()->GetCode()
+        );
+
+        *Result = Domain;
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FUserDomain::FIssueOnceTask>> FUserDomain::IssueOnce(
+        Request::FIssueOnceRequestPtr Request
+    ) {
+        return Gs2::Core::Util::New<FAsyncTask<FIssueOnceTask>>(this->AsShared(), Request);
+    }
+
+    FUserDomain::FVerifyCodeTask::FVerifyCodeTask(
+        const TSharedPtr<FUserDomain>& Self,
+        const Request::FVerifyCodeByUserIdRequestPtr Request
+    ): Self(Self), Request(Request)
+    {
+
+    }
+
+    FUserDomain::FVerifyCodeTask::FVerifyCodeTask(
+        const FVerifyCodeTask& From
+    ): TGs2Future(From), Self(From.Self), Request(From.Request)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FUserDomain::FVerifyCodeTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::SerialKey::Domain::Model::FSerialKeyDomain>> Result
+    )
+    {
+        Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
+            ->WithNamespaceName(Self->NamespaceName)
+            ->WithUserId(Self->UserId);
+        const auto Future = Self->Client->VerifyCodeByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto RequestModel = Request;
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
+        if (ResultModel != nullptr) {
+            
+            if (ResultModel->GetItem() != nullptr)
+            {
+                const auto ParentKey = Gs2::SerialKey::Domain::Model::FUserDomain::CreateCacheParentKey(
+                    Self->NamespaceName,
+                    Self->UserId,
+                    "SerialKey"
+                );
+                const auto Key = Gs2::SerialKey::Domain::Model::FSerialKeyDomain::CreateCacheKey(
+                    ResultModel->GetItem()->GetCode()
+                );
+                Self->Gs2->Cache->Put(
+                    Gs2::SerialKey::Model::FSerialKey::TypeName,
+                    ParentKey,
+                    Key,
+                    ResultModel->GetItem(),
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+            }
+        }
+        auto Domain = MakeShared<Gs2::SerialKey::Domain::Model::FSerialKeyDomain>(
+            Self->Gs2,
+            Self->Service,
+            Request->GetNamespaceName(),
+            Request->GetUserId(),
+            ResultModel->GetItem()->GetCode()
+        );
+
+        *Result = Domain;
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FUserDomain::FVerifyCodeTask>> FUserDomain::VerifyCode(
+        Request::FVerifyCodeByUserIdRequestPtr Request
+    ) {
+        return Gs2::Core::Util::New<FAsyncTask<FVerifyCodeTask>>(this->AsShared(), Request);
+    }
+
     FUserDomain::FRevertUseTask::FRevertUseTask(
         const TSharedPtr<FUserDomain>& Self,
         const Request::FRevertUseByUserIdRequestPtr Request

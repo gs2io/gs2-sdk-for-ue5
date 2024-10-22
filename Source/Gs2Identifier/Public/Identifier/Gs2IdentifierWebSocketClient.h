@@ -48,6 +48,12 @@
 #include "Task/WebSocket/GetIdentifierTask.h"
 #include "Request/DeleteIdentifierRequest.h"
 #include "Task/WebSocket/DeleteIdentifierTask.h"
+#include "Request/DescribeAttachedGuardsRequest.h"
+#include "Task/WebSocket/DescribeAttachedGuardsTask.h"
+#include "Request/AttachGuardRequest.h"
+#include "Task/WebSocket/AttachGuardTask.h"
+#include "Request/DetachGuardRequest.h"
+#include "Task/WebSocket/DetachGuardTask.h"
 #include "Request/DescribePasswordsRequest.h"
 #include "Task/WebSocket/DescribePasswordsTask.h"
 #include "Request/CreatePasswordRequest.h"
@@ -142,6 +148,18 @@ namespace Gs2::Identifier
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FDeleteIdentifierTask>> DeleteIdentifier(
             const Request::FDeleteIdentifierRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FDescribeAttachedGuardsTask>> DescribeAttachedGuards(
+            const Request::FDescribeAttachedGuardsRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FAttachGuardTask>> AttachGuard(
+            const Request::FAttachGuardRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FDetachGuardTask>> DetachGuard(
+            const Request::FDetachGuardRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FDescribePasswordsTask>> DescribePasswords(

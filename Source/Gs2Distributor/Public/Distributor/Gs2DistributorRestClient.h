@@ -76,6 +76,10 @@
 #include "Task/Rest/SetTransactionDefaultConfigTask.h"
 #include "Request/SetTransactionDefaultConfigByUserIdRequest.h"
 #include "Task/Rest/SetTransactionDefaultConfigByUserIdTask.h"
+#include "Request/FreezeMasterDataRequest.h"
+#include "Task/Rest/FreezeMasterDataTask.h"
+#include "Request/FreezeMasterDataByUserIdRequest.h"
+#include "Task/Rest/FreezeMasterDataByUserIdTask.h"
 #include "Request/IfExpressionByUserIdRequest.h"
 #include "Task/Rest/IfExpressionByUserIdTask.h"
 #include "Request/AndExpressionByUserIdRequest.h"
@@ -218,6 +222,14 @@ namespace Gs2::Distributor
 
         TSharedPtr<FAsyncTask<Task::Rest::FSetTransactionDefaultConfigByUserIdTask>> SetTransactionDefaultConfigByUserId(
             const Request::FSetTransactionDefaultConfigByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FFreezeMasterDataTask>> FreezeMasterData(
+            const Request::FFreezeMasterDataRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FFreezeMasterDataByUserIdTask>> FreezeMasterDataByUserId(
+            const Request::FFreezeMasterDataByUserIdRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::Rest::FIfExpressionByUserIdTask>> IfExpressionByUserId(

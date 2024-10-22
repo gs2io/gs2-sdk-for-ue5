@@ -15,6 +15,7 @@
  */
 
 #include "Inventory/Model/Gs2Inventory.h"
+#include "Inventory/Domain/EzGs2Inventory.h"
 #include "Inventory/Model/Gs2InventoryNamespace.h"
 #include "Inventory/Model/Gs2InventoryItemModel.h"
 #include "Core/BpGs2Constant.h"

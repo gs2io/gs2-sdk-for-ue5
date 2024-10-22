@@ -37,6 +37,6 @@ class BPGS2_API UGs2DictionaryUserFunctionLibrary : public UBlueprintFunctionLib
     UFUNCTION(BlueprintCallable, DisplayName="Gs2::Dictionary::OwnEntry", Category="Game Server Services|GS2-Dictionary|Namespace|User|Entry", meta=(WorldContext="WorldContextObject"))
     static UPARAM(DisplayName="Entry") FGs2DictionaryOwnEntry OwnEntry(
         FGs2DictionaryOwnUser User,
-        FString EntryName
+        FString EntryModelName
     );
 };

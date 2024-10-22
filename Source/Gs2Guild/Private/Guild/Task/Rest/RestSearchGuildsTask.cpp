@@ -151,6 +151,10 @@ namespace Gs2::Guild::Task::Rest
             {
                 JsonRootObject->SetBoolField("includeFullMembersGuild", this->Request->GetIncludeFullMembersGuild().GetValue());
             }
+            if (this->Request->GetOrderBy().IsSet())
+            {
+                JsonRootObject->SetStringField("orderBy", this->Request->GetOrderBy().GetValue());
+            }
             if (this->Request->GetPageToken().IsSet())
             {
                 JsonRootObject->SetStringField("pageToken", this->Request->GetPageToken().GetValue());

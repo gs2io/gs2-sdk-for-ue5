@@ -15,6 +15,7 @@
  */
 
 #include "Matchmaking/Model/Gs2Matchmaking.h"
+#include "Matchmaking/Domain/EzGs2Matchmaking.h"
 #include "Matchmaking/Model/Gs2MatchmakingNamespace.h"
 #include "Matchmaking/Model/Gs2MatchmakingBallot.h"
 #include "Core/BpGs2Constant.h"

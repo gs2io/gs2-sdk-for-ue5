@@ -240,7 +240,7 @@ namespace Gs2::Distributor::Domain::Model
             Gs2::Distributor::Domain::Model::FDistributorModelDomain::CreateCacheKey(
                 DistributorName
             ),
-            [Callback](TSharedPtr<Gs2Object> obj)
+            [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::Distributor::Model::FDistributorModel>(obj));
             }

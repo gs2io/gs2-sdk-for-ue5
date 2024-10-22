@@ -197,7 +197,7 @@ namespace Gs2::SeasonRating::Domain::Model
                 SeasonName,
                 SessionName
             ),
-            [Callback](TSharedPtr<Gs2Object> obj)
+            [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::SeasonRating::Model::FVote>(obj));
             }

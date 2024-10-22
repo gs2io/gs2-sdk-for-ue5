@@ -24,6 +24,7 @@
 #include "Chat/Model/Gs2ChatEzNotificationType.h"
 #include "Gs2ChatEzMessageGameSessionDomain.h"
 #include "Chat/Domain/Iterator/Gs2ChatEzDescribeMessagesIterator.h"
+#include "Chat/Domain/Iterator/Gs2ChatEzDescribeLatestMessagesIterator.h"
 #include "Gs2ChatEzRoomGameSessionDomain.h"
 #include "Util/Net/GameSession.h"
 #include "Util/Net/Gs2Connection.h"
@@ -102,6 +103,13 @@ namespace Gs2::UE5::Chat::Domain::Model
         Gs2::Core::Domain::CallbackID SubscribeMessages(TFunction<void()> Callback);
 
         void UnsubscribeMessages(Gs2::Core::Domain::CallbackID CallbackId);
+
+        Gs2::UE5::Chat::Domain::Iterator::FEzDescribeLatestMessagesIteratorPtr LatestMessages(
+        ) const;
+
+        Gs2::Core::Domain::CallbackID SubscribeLatestMessages(TFunction<void()> Callback);
+
+        void UnsubscribeLatestMessages(Gs2::Core::Domain::CallbackID CallbackId);
 
         Gs2::UE5::Chat::Domain::Model::FEzMessageGameSessionDomainPtr Message(
             const FString MessageName

@@ -42,8 +42,8 @@ namespace Gs2::Chat::Domain::Iterator
             const Gs2::Chat::FGs2ChatRestClientPtr Client,
             const TOptional<FString> NamespaceName,
             const TOptional<FString> RoomName,
-            const TOptional<FString> Password = TOptional<FString>(),
-            const Gs2::Auth::Model::FAccessTokenPtr AccessToken = nullptr
+            const Gs2::Auth::Model::FAccessTokenPtr AccessToken,
+            const TOptional<FString> Password = TOptional<FString>()
         );
 
         FDescribeMessagesIterator(

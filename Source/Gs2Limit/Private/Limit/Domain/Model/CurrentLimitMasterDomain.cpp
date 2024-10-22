@@ -414,7 +414,7 @@ namespace Gs2::Limit::Domain::Model
             ParentKey,
             Gs2::Limit::Domain::Model::FCurrentLimitMasterDomain::CreateCacheKey(
             ),
-            [Callback](TSharedPtr<Gs2Object> obj)
+            [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::Limit::Model::FCurrentLimitMaster>(obj));
             }

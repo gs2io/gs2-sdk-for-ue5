@@ -420,7 +420,7 @@ namespace Gs2::Mission::Domain::Model
             ParentKey,
             Gs2::Mission::Domain::Model::FCurrentMissionMasterDomain::CreateCacheKey(
             ),
-            [Callback](TSharedPtr<Gs2Object> obj)
+            [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::Mission::Model::FCurrentMissionMaster>(obj));
             }

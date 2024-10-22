@@ -115,6 +115,24 @@
 #include "Task/Rest/DeleteIdentifierTask.h"
 #include "Task/WebSocket/DeleteIdentifierTask.h"
 
+// DescribeAttachedGuards
+#include "Request/DescribeAttachedGuardsRequest.h"
+#include "Result/DescribeAttachedGuardsResult.h"
+#include "Task/Rest/DescribeAttachedGuardsTask.h"
+#include "Task/WebSocket/DescribeAttachedGuardsTask.h"
+
+// AttachGuard
+#include "Request/AttachGuardRequest.h"
+#include "Result/AttachGuardResult.h"
+#include "Task/Rest/AttachGuardTask.h"
+#include "Task/WebSocket/AttachGuardTask.h"
+
+// DetachGuard
+#include "Request/DetachGuardRequest.h"
+#include "Result/DetachGuardResult.h"
+#include "Task/Rest/DetachGuardTask.h"
+#include "Task/WebSocket/DetachGuardTask.h"
+
 // DescribePasswords
 #include "Request/DescribePasswordsRequest.h"
 #include "Result/DescribePasswordsResult.h"

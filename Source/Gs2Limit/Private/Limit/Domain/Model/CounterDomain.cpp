@@ -509,7 +509,7 @@ namespace Gs2::Limit::Domain::Model
                 LimitName,
                 CounterName
             ),
-            [Callback](TSharedPtr<Gs2Object> obj)
+            [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::Limit::Model::FCounter>(obj));
             }

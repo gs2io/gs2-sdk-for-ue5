@@ -427,7 +427,7 @@ namespace Gs2::Matchmaking::Domain::Model
             ParentKey,
             Gs2::Matchmaking::Domain::Model::FCurrentModelMasterDomain::CreateCacheKey(
             ),
-            [Callback](TSharedPtr<Gs2Object> obj)
+            [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::Matchmaking::Model::FCurrentModelMaster>(obj));
             }

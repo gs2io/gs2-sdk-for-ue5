@@ -17,6 +17,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Dom/JsonObject.h"
 
 namespace Gs2::Enchant::Request
 {
@@ -47,5 +48,5 @@ namespace Gs2::Enchant::Request
         static TSharedPtr<FVerifyRarityParameterStatusByStampTaskRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;
     };
-    typedef TSharedPtr<FVerifyRarityParameterStatusByStampTaskRequest, ESPMode::ThreadSafe> FVerifyRarityParameterStatusByStampTaskRequestPtr;
+    typedef TSharedPtr<FVerifyRarityParameterStatusByStampTaskRequest> FVerifyRarityParameterStatusByStampTaskRequestPtr;
 }

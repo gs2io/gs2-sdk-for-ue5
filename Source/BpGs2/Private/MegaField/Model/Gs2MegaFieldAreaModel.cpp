@@ -15,6 +15,7 @@
  */
 
 #include "MegaField/Model/Gs2MegaFieldAreaModel.h"
+#include "MegaField/Domain/EzGs2MegaField.h"
 #include "MegaField/Model/Gs2MegaFieldLayerModel.h"
 #include "Core/Model/Gs2AccessToken.h"
 #include "MegaField/Model/Gs2MegaFieldLayerModel.h"

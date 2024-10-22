@@ -960,7 +960,7 @@ namespace Gs2::Ranking2::Domain::Model
             Gs2::Ranking2::Domain::Model::FNamespaceDomain::CreateCacheKey(
                 NamespaceName
             ),
-            [Callback](TSharedPtr<Gs2Object> obj)
+            [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::Ranking2::Model::FNamespace>(obj));
             }

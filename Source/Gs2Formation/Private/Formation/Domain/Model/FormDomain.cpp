@@ -765,7 +765,7 @@ namespace Gs2::Formation::Domain::Model
             Gs2::Formation::Domain::Model::FFormDomain::CreateCacheKey(
                 Index.IsSet() ? FString::FromInt(*Index) : TOptional<FString>()
             ),
-            [Callback](TSharedPtr<Gs2Object> obj)
+            [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::Formation::Model::FForm>(obj));
             }

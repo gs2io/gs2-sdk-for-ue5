@@ -17,6 +17,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Dom/JsonObject.h"
 
 namespace Gs2::Schedule::Request
 {
@@ -56,5 +57,5 @@ namespace Gs2::Schedule::Request
         static TSharedPtr<FDeleteTriggerByUserIdRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;
     };
-    typedef TSharedPtr<FDeleteTriggerByUserIdRequest, ESPMode::ThreadSafe> FDeleteTriggerByUserIdRequestPtr;
+    typedef TSharedPtr<FDeleteTriggerByUserIdRequest> FDeleteTriggerByUserIdRequestPtr;
 }

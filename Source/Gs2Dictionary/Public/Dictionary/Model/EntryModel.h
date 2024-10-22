@@ -45,7 +45,7 @@ namespace Gs2::Dictionary::Model
         static TOptional<FString> GetRegionFromGrn(const FString Grn);
         static TOptional<FString> GetOwnerIdFromGrn(const FString Grn);
         static TOptional<FString> GetNamespaceNameFromGrn(const FString Grn);
-        static TOptional<FString> GetEntryNameFromGrn(const FString Grn);
+        static TOptional<FString> GetEntryModelNameFromGrn(const FString Grn);
 
         static TSharedPtr<FEntryModel> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;

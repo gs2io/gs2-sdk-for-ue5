@@ -17,6 +17,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Dom/JsonObject.h"
 #include "../Model/Config.h"
 
 namespace Gs2::Idle::Request
@@ -59,5 +60,5 @@ namespace Gs2::Idle::Request
         static TSharedPtr<FReceiveByUserIdRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;
     };
-    typedef TSharedPtr<FReceiveByUserIdRequest, ESPMode::ThreadSafe> FReceiveByUserIdRequestPtr;
+    typedef TSharedPtr<FReceiveByUserIdRequest> FReceiveByUserIdRequestPtr;
 }

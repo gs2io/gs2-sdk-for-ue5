@@ -440,7 +440,7 @@ namespace Gs2::Ranking2::Domain::Model
             ParentKey,
             Gs2::Ranking2::Domain::Model::FCurrentRankingMasterDomain::CreateCacheKey(
             ),
-            [Callback](TSharedPtr<Gs2Object> obj)
+            [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::Ranking2::Model::FCurrentRankingMaster>(obj));
             }

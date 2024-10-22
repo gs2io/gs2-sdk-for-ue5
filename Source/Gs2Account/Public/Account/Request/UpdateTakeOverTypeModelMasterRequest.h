@@ -17,6 +17,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Dom/JsonObject.h"
 #include "../Model/OpenIdConnectSetting.h"
 
 namespace Gs2::Account::Request
@@ -58,5 +59,5 @@ namespace Gs2::Account::Request
         static TSharedPtr<FUpdateTakeOverTypeModelMasterRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;
     };
-    typedef TSharedPtr<FUpdateTakeOverTypeModelMasterRequest, ESPMode::ThreadSafe> FUpdateTakeOverTypeModelMasterRequestPtr;
+    typedef TSharedPtr<FUpdateTakeOverTypeModelMasterRequest> FUpdateTakeOverTypeModelMasterRequestPtr;
 }

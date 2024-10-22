@@ -73,24 +73,6 @@ namespace Gs2::Lock
         );
     }
 
-    TSharedPtr<FAsyncTask<Task::WebSocket::FDescribeMutexesTask>> FGs2LockWebSocketClient::DescribeMutexes(
-        const Request::FDescribeMutexesRequestPtr Request) const
-    {
-        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FDescribeMutexesTask>>(
-            Session,
-            Request
-        );
-    }
-
-    TSharedPtr<FAsyncTask<Task::WebSocket::FDescribeMutexesByUserIdTask>> FGs2LockWebSocketClient::DescribeMutexesByUserId(
-        const Request::FDescribeMutexesByUserIdRequestPtr Request) const
-    {
-        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FDescribeMutexesByUserIdTask>>(
-            Session,
-            Request
-        );
-    }
-
     TSharedPtr<FAsyncTask<Task::WebSocket::FLockTask>> FGs2LockWebSocketClient::Lock(
         const Request::FLockRequestPtr Request) const
     {

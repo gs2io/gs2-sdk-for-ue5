@@ -81,6 +81,29 @@ namespace Gs2::UE5::Mission::Domain::Model
             FString MissionTaskName
         );
 
+        class EZGS2_API FBatchReceiveRewardsTask :
+            public Gs2::Core::Util::TGs2Future<Gs2::UE5::Mission::Domain::Model::FEzCompleteGameSessionDomain>,
+            public TSharedFromThis<FBatchReceiveRewardsTask>
+        {
+            TSharedPtr<FEzCompleteGameSessionDomain> Self;
+            TArray<FString> MissionTaskNames;
+
+        public:
+            explicit FBatchReceiveRewardsTask(
+                TSharedPtr<FEzCompleteGameSessionDomain> Self,
+                TArray<FString> MissionTaskNames
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::UE5::Mission::Domain::Model::FEzCompleteGameSessionDomain>> Result
+            ) override;
+        };
+        friend FBatchReceiveRewardsTask;
+
+        TSharedPtr<FAsyncTask<FBatchReceiveRewardsTask>> BatchReceiveRewards(
+            TArray<FString> MissionTaskNames
+        );
+
         class EZGS2_API FModelTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::Mission::Model::FEzComplete>,
             public TSharedFromThis<FModelTask>

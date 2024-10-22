@@ -23,6 +23,7 @@
 #endif
 
 #include "Grade/Domain/SpeculativeExecutor/Acquire/AddGradeByUserIdSpeculativeExecutor.h"
+#include "Grade/Domain/Gs2Grade.h"
 
 #include "Core/Domain/Gs2.h"
 

@@ -242,7 +242,7 @@ namespace Gs2::Enchant::Domain::Model
             Gs2::Enchant::Domain::Model::FBalanceParameterModelDomain::CreateCacheKey(
                 ParameterName
             ),
-            [Callback](TSharedPtr<Gs2Object> obj)
+            [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::Enchant::Model::FBalanceParameterModel>(obj));
             }

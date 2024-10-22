@@ -254,7 +254,7 @@ namespace Gs2::Datastore::Domain::Model
             Gs2::Datastore::Domain::Model::FDataObjectHistoryDomain::CreateCacheKey(
                 Generation
             ),
-            [Callback](TSharedPtr<Gs2Object> obj)
+            [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::Datastore::Model::FDataObjectHistory>(obj));
             }

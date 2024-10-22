@@ -96,6 +96,10 @@ namespace Gs2::Script::Task::Rest
             {
                 JsonRootObject->SetObjectField("checkoutSetting", this->Request->GetCheckoutSetting()->ToJson());
             }
+            if (this->Request->GetDisableStringNumberToNumber().IsSet())
+            {
+                JsonRootObject->SetBoolField("disableStringNumberToNumber", this->Request->GetDisableStringNumberToNumber().GetValue());
+            }
             if (this->Request->GetContextStack().IsSet())
             {
                 JsonRootObject->SetStringField("contextStack", this->Request->GetContextStack().GetValue());

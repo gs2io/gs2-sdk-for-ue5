@@ -22,7 +22,8 @@ namespace Gs2::Script::Request
         NamespaceNameValue(TOptional<FString>()),
         NameValue(TOptional<FString>()),
         DescriptionValue(TOptional<FString>()),
-        ScriptValue(TOptional<FString>())
+        ScriptValue(TOptional<FString>()),
+        DisableStringNumberToNumberValue(TOptional<bool>())
     {
     }
 
@@ -32,7 +33,8 @@ namespace Gs2::Script::Request
         NamespaceNameValue(From.NamespaceNameValue),
         NameValue(From.NameValue),
         DescriptionValue(From.DescriptionValue),
-        ScriptValue(From.ScriptValue)
+        ScriptValue(From.ScriptValue),
+        DisableStringNumberToNumberValue(From.DisableStringNumberToNumberValue)
     {
     }
 
@@ -76,6 +78,14 @@ namespace Gs2::Script::Request
         return SharedThis(this);
     }
 
+    TSharedPtr<FCreateScriptRequest> FCreateScriptRequest::WithDisableStringNumberToNumber(
+        const TOptional<bool> DisableStringNumberToNumber
+    )
+    {
+        this->DisableStringNumberToNumberValue = DisableStringNumberToNumber;
+        return SharedThis(this);
+    }
+
     TOptional<FString> FCreateScriptRequest::GetContextStack() const
     {
         return ContextStackValue;
@@ -99,6 +109,20 @@ namespace Gs2::Script::Request
     TOptional<FString> FCreateScriptRequest::GetScript() const
     {
         return ScriptValue;
+    }
+
+    TOptional<bool> FCreateScriptRequest::GetDisableStringNumberToNumber() const
+    {
+        return DisableStringNumberToNumberValue;
+    }
+
+    FString FCreateScriptRequest::GetDisableStringNumberToNumberString() const
+    {
+        if (!DisableStringNumberToNumberValue.IsSet())
+        {
+            return FString("null");
+        }
+        return FString(DisableStringNumberToNumberValue.GetValue() ? "true" : "false");
     }
 
     TSharedPtr<FCreateScriptRequest> FCreateScriptRequest::FromJson(const TSharedPtr<FJsonObject> Data)
@@ -143,7 +167,16 @@ namespace Gs2::Script::Request
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
-              }() : TOptional<FString>());
+              }() : TOptional<FString>())
+            ->WithDisableStringNumberToNumber(Data->HasField(ANSI_TO_TCHAR("disableStringNumberToNumber")) ? [Data]() -> TOptional<bool>
+              {
+                  bool v;
+                    if (Data->TryGetBoolField(ANSI_TO_TCHAR("disableStringNumberToNumber"), v))
+                  {
+                        return TOptional(v);
+                  }
+                  return TOptional<bool>();
+              }() : TOptional<bool>());
     }
 
     TSharedPtr<FJsonObject> FCreateScriptRequest::ToJson() const
@@ -168,6 +201,10 @@ namespace Gs2::Script::Request
         if (ScriptValue.IsSet())
         {
             JsonRootObject->SetStringField("script", ScriptValue.GetValue());
+        }
+        if (DisableStringNumberToNumberValue.IsSet())
+        {
+            JsonRootObject->SetBoolField("disableStringNumberToNumber", DisableStringNumberToNumberValue.GetValue());
         }
         return JsonRootObject;
     }

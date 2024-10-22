@@ -15,6 +15,7 @@
  */
 
 #include "Money2/Model/Gs2Money2.h"
+#include "Money2/Domain/EzGs2Money2.h"
 #include "Money2/Model/Gs2Money2Namespace.h"
 #include "Core/BpGs2Constant.h"
 

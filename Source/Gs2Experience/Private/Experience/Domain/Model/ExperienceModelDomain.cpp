@@ -239,7 +239,7 @@ namespace Gs2::Experience::Domain::Model
             Gs2::Experience::Domain::Model::FExperienceModelDomain::CreateCacheKey(
                 ExperienceName
             ),
-            [Callback](TSharedPtr<Gs2Object> obj)
+            [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::Experience::Model::FExperienceModel>(obj));
             }

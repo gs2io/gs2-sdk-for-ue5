@@ -17,6 +17,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Dom/JsonObject.h"
 
 namespace Gs2::Matchmaking::Request
 {
@@ -47,5 +48,5 @@ namespace Gs2::Matchmaking::Request
         static TSharedPtr<FGetGatheringRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;
     };
-    typedef TSharedPtr<FGetGatheringRequest, ESPMode::ThreadSafe> FGetGatheringRequestPtr;
+    typedef TSharedPtr<FGetGatheringRequest> FGetGatheringRequestPtr;
 }

@@ -437,7 +437,7 @@ namespace Gs2::Inventory::Domain::Model
             ParentKey,
             Gs2::Inventory::Domain::Model::FCurrentItemModelMasterDomain::CreateCacheKey(
             ),
-            [Callback](TSharedPtr<Gs2Object> obj)
+            [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::Inventory::Model::FCurrentItemModelMaster>(obj));
             }

@@ -73,24 +73,6 @@ namespace Gs2::Lock
         );
     }
 
-    TSharedPtr<FAsyncTask<Task::Rest::FDescribeMutexesTask>> FGs2LockRestClient::DescribeMutexes(
-        const Request::FDescribeMutexesRequestPtr Request) const
-    {
-        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FDescribeMutexesTask>>(
-            Session,
-            Request
-        );
-    }
-
-    TSharedPtr<FAsyncTask<Task::Rest::FDescribeMutexesByUserIdTask>> FGs2LockRestClient::DescribeMutexesByUserId(
-        const Request::FDescribeMutexesByUserIdRequestPtr Request) const
-    {
-        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FDescribeMutexesByUserIdTask>>(
-            Session,
-            Request
-        );
-    }
-
     TSharedPtr<FAsyncTask<Task::Rest::FLockTask>> FGs2LockRestClient::Lock(
         const Request::FLockRequestPtr Request) const
     {

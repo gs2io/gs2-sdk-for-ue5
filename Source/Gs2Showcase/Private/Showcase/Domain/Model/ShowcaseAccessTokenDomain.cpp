@@ -272,7 +272,7 @@ namespace Gs2::Showcase::Domain::Model
             Gs2::Showcase::Domain::Model::FShowcaseDomain::CreateCacheKey(
                 ShowcaseName
             ),
-            [Callback](TSharedPtr<Gs2Object> obj)
+            [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::Showcase::Model::FShowcase>(obj));
             }

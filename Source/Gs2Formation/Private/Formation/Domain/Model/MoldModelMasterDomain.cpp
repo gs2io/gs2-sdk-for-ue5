@@ -370,7 +370,7 @@ namespace Gs2::Formation::Domain::Model
             Gs2::Formation::Domain::Model::FMoldModelMasterDomain::CreateCacheKey(
                 MoldModelName
             ),
-            [Callback](TSharedPtr<Gs2Object> obj)
+            [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::Formation::Model::FMoldModelMaster>(obj));
             }

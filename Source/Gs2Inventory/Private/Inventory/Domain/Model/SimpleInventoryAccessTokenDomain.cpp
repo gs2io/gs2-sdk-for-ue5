@@ -323,7 +323,7 @@ namespace Gs2::Inventory::Domain::Model
             Gs2::Inventory::Domain::Model::FSimpleInventoryDomain::CreateCacheKey(
                 InventoryName
             ),
-            [Callback](TSharedPtr<Gs2Object> obj)
+            [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::Inventory::Model::FSimpleInventory>(obj));
             }

@@ -17,6 +17,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Dom/JsonObject.h"
 #include "../Model/VerifyAction.h"
 #include "../Model/ConsumeAction.h"
 
@@ -67,5 +68,5 @@ namespace Gs2::SkillTree::Request
         static TSharedPtr<FUpdateNodeModelMasterRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;
     };
-    typedef TSharedPtr<FUpdateNodeModelMasterRequest, ESPMode::ThreadSafe> FUpdateNodeModelMasterRequestPtr;
+    typedef TSharedPtr<FUpdateNodeModelMasterRequest> FUpdateNodeModelMasterRequestPtr;
 }

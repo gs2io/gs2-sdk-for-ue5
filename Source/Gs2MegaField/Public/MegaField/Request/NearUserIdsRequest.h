@@ -17,6 +17,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Dom/JsonObject.h"
 #include "../Model/Position.h"
 
 namespace Gs2::MegaField::Request
@@ -68,5 +69,5 @@ namespace Gs2::MegaField::Request
         static TSharedPtr<FNearUserIdsRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;
     };
-    typedef TSharedPtr<FNearUserIdsRequest, ESPMode::ThreadSafe> FNearUserIdsRequestPtr;
+    typedef TSharedPtr<FNearUserIdsRequest> FNearUserIdsRequestPtr;
 }

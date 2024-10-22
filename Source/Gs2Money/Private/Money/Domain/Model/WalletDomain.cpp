@@ -383,7 +383,7 @@ namespace Gs2::Money::Domain::Model
             Gs2::Money::Domain::Model::FWalletDomain::CreateCacheKey(
                 TOptional<FString>()
             ),
-            [Callback](TSharedPtr<Gs2Object> obj)
+            [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::Money::Model::FWallet>(obj));
             }

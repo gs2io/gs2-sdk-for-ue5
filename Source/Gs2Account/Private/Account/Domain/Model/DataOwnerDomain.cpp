@@ -237,7 +237,7 @@ namespace Gs2::Account::Domain::Model
             ParentKey,
             Gs2::Account::Domain::Model::FDataOwnerDomain::CreateCacheKey(
             ),
-            [Callback](TSharedPtr<Gs2Object> obj)
+            [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::Account::Model::FDataOwner>(obj));
             }

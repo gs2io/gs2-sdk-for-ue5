@@ -318,7 +318,7 @@ namespace Gs2::Money2::Domain::Model
             Gs2::Money2::Domain::Model::FWalletDomain::CreateCacheKey(
                 Slot.IsSet() ? FString::FromInt(*Slot) : TOptional<FString>()
             ),
-            [Callback](TSharedPtr<Gs2Object> obj)
+            [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::Money2::Model::FWallet>(obj));
             }

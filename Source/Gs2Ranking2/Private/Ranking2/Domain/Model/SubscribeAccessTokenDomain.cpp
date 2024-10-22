@@ -260,7 +260,7 @@ namespace Gs2::Ranking2::Domain::Model
             Gs2::Ranking2::Domain::Model::FSubscribeDomain::CreateCacheKey(
                 RankingName
             ),
-            [Callback](TSharedPtr<Gs2Object> obj)
+            [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::Ranking2::Model::FSubscribe>(obj));
             }

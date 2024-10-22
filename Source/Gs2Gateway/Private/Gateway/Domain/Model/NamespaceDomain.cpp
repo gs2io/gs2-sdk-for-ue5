@@ -418,7 +418,7 @@ namespace Gs2::Gateway::Domain::Model
             Gs2::Gateway::Domain::Model::FNamespaceDomain::CreateCacheKey(
                 NamespaceName
             ),
-            [Callback](TSharedPtr<Gs2Object> obj)
+            [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::Gateway::Model::FNamespace>(obj));
             }

@@ -17,6 +17,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Dom/JsonObject.h"
 
 namespace Gs2::Inventory::Request
 {
@@ -74,5 +75,5 @@ namespace Gs2::Inventory::Request
         static TSharedPtr<FAcquireItemSetByUserIdRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;
     };
-    typedef TSharedPtr<FAcquireItemSetByUserIdRequest, ESPMode::ThreadSafe> FAcquireItemSetByUserIdRequestPtr;
+    typedef TSharedPtr<FAcquireItemSetByUserIdRequest> FAcquireItemSetByUserIdRequestPtr;
 }

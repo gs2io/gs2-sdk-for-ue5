@@ -423,7 +423,7 @@ namespace Gs2::Exchange::Domain::Model
             Gs2::Exchange::Domain::Model::FAwaitDomain::CreateCacheKey(
                 AwaitName
             ),
-            [Callback](TSharedPtr<Gs2Object> obj)
+            [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::Exchange::Model::FAwait>(obj));
             }

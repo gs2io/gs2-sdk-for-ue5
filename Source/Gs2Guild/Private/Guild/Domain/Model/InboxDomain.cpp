@@ -147,7 +147,7 @@ namespace Gs2::Guild::Domain::Model
             ParentKey,
             Gs2::Guild::Domain::Model::FInboxDomain::CreateCacheKey(
             ),
-            [Callback](TSharedPtr<Gs2Object> obj)
+            [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::Guild::Model::FInbox>(obj));
             }

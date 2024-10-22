@@ -362,7 +362,7 @@ namespace Gs2::SkillTree::Domain::Model
             Gs2::SkillTree::Domain::Model::FNodeModelMasterDomain::CreateCacheKey(
                 NodeModelName
             ),
-            [Callback](TSharedPtr<Gs2Object> obj)
+            [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::SkillTree::Model::FNodeModelMaster>(obj));
             }

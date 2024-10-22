@@ -418,7 +418,7 @@ namespace Gs2::Enchant::Domain::Model
             ParentKey,
             Gs2::Enchant::Domain::Model::FCurrentParameterMasterDomain::CreateCacheKey(
             ),
-            [Callback](TSharedPtr<Gs2Object> obj)
+            [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::Enchant::Model::FCurrentParameterMaster>(obj));
             }

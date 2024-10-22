@@ -299,7 +299,7 @@ namespace Gs2::Matchmaking::Domain::Model
                 NumberOfPlayer.IsSet() ? FString::FromInt(*NumberOfPlayer) : TOptional<FString>(),
                 KeyId
             ),
-            [Callback](TSharedPtr<Gs2Object> obj)
+            [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::Matchmaking::Model::FBallot>(obj));
             }

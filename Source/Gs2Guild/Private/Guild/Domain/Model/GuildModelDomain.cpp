@@ -244,7 +244,7 @@ namespace Gs2::Guild::Domain::Model
             Gs2::Guild::Domain::Model::FGuildModelDomain::CreateCacheKey(
                 GuildModelName
             ),
-            [Callback](TSharedPtr<Gs2Object> obj)
+            [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::Guild::Model::FGuildModel>(obj));
             }

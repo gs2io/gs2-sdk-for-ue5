@@ -230,6 +230,84 @@ namespace Gs2::Dictionary::Domain::Model
             Request::FCreateEntryModelMasterRequestPtr Request
         );
 
+        class GS2DICTIONARY_API FGetEntryModelMasterTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Dictionary::Model::FEntryModelMaster>,
+            public TSharedFromThis<FGetEntryModelMasterTask>
+        {
+            const TSharedPtr<FNamespaceDomain> Self;
+            const Request::FGetEntryModelMasterRequestPtr Request;
+        public:
+            explicit FGetEntryModelMasterTask(
+                const TSharedPtr<FNamespaceDomain>& Self,
+                const Request::FGetEntryModelMasterRequestPtr Request
+            );
+
+            FGetEntryModelMasterTask(
+                const FGetEntryModelMasterTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Dictionary::Model::FEntryModelMaster>> Result
+            ) override;
+        };
+        friend FGetEntryModelMasterTask;
+
+        TSharedPtr<FAsyncTask<FGetEntryModelMasterTask>> GetEntryModelMaster(
+            Request::FGetEntryModelMasterRequestPtr Request
+        );
+
+        class GS2DICTIONARY_API FUpdateEntryModelMasterTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Dictionary::Domain::Model::FEntryModelMasterDomain>,
+            public TSharedFromThis<FUpdateEntryModelMasterTask>
+        {
+            const TSharedPtr<FNamespaceDomain> Self;
+            const Request::FUpdateEntryModelMasterRequestPtr Request;
+        public:
+            explicit FUpdateEntryModelMasterTask(
+                const TSharedPtr<FNamespaceDomain>& Self,
+                const Request::FUpdateEntryModelMasterRequestPtr Request
+            );
+
+            FUpdateEntryModelMasterTask(
+                const FUpdateEntryModelMasterTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Dictionary::Domain::Model::FEntryModelMasterDomain>> Result
+            ) override;
+        };
+        friend FUpdateEntryModelMasterTask;
+
+        TSharedPtr<FAsyncTask<FUpdateEntryModelMasterTask>> UpdateEntryModelMaster(
+            Request::FUpdateEntryModelMasterRequestPtr Request
+        );
+
+        class GS2DICTIONARY_API FDeleteEntryModelMasterTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Dictionary::Domain::Model::FEntryModelMasterDomain>,
+            public TSharedFromThis<FDeleteEntryModelMasterTask>
+        {
+            const TSharedPtr<FNamespaceDomain> Self;
+            const Request::FDeleteEntryModelMasterRequestPtr Request;
+        public:
+            explicit FDeleteEntryModelMasterTask(
+                const TSharedPtr<FNamespaceDomain>& Self,
+                const Request::FDeleteEntryModelMasterRequestPtr Request
+            );
+
+            FDeleteEntryModelMasterTask(
+                const FDeleteEntryModelMasterTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Dictionary::Domain::Model::FEntryModelMasterDomain>> Result
+            ) override;
+        };
+        friend FDeleteEntryModelMasterTask;
+
+        TSharedPtr<FAsyncTask<FDeleteEntryModelMasterTask>> DeleteEntryModelMaster(
+            Request::FDeleteEntryModelMasterRequestPtr Request
+        );
+
         TSharedPtr<Gs2::Dictionary::Domain::Model::FCurrentEntryMasterDomain> CurrentEntryMaster(
         );
 
@@ -245,7 +323,7 @@ namespace Gs2::Dictionary::Domain::Model
         );
 
         TSharedPtr<Gs2::Dictionary::Domain::Model::FEntryModelDomain> EntryModel(
-            const FString EntryName
+            const FString EntryModelName
         );
 
         TSharedPtr<Gs2::Dictionary::Domain::Model::FUserDomain> User(
@@ -268,7 +346,7 @@ namespace Gs2::Dictionary::Domain::Model
         );
 
         TSharedPtr<Gs2::Dictionary::Domain::Model::FEntryModelMasterDomain> EntryModelMaster(
-            const FString EntryName
+            const FString EntryModelName
         );
 
         static FString CreateCacheParentKey(

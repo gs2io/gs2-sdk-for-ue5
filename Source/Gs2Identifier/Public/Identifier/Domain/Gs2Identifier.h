@@ -36,6 +36,7 @@
 #include "Identifier/Domain/Iterator/DescribeSecurityPoliciesIterator.h"
 #include "Identifier/Domain/Iterator/DescribeCommonSecurityPoliciesIterator.h"
 #include "Identifier/Domain/Iterator/DescribeIdentifiersIterator.h"
+#include "Identifier/Domain/Iterator/DescribeAttachedGuardsIterator.h"
 #include "Identifier/Domain/Iterator/DescribePasswordsIterator.h"
 
 // Notification

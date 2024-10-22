@@ -462,7 +462,7 @@ namespace Gs2::Friend::Domain::Model
             Gs2::Friend::Domain::Model::FReceiveFriendRequestDomain::CreateCacheKey(
                 FromUserId
             ),
-            [Callback](TSharedPtr<Gs2Object> obj)
+            [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::Friend::Model::FFriendRequest>(obj));
             }

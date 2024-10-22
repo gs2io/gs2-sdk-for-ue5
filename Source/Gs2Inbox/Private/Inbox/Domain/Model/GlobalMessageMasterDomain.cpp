@@ -364,7 +364,7 @@ namespace Gs2::Inbox::Domain::Model
             Gs2::Inbox::Domain::Model::FGlobalMessageMasterDomain::CreateCacheKey(
                 GlobalMessageName
             ),
-            [Callback](TSharedPtr<Gs2Object> obj)
+            [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::Inbox::Model::FGlobalMessageMaster>(obj));
             }

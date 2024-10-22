@@ -33,7 +33,6 @@ class BPGS2_API UGs2DictionaryGetEntryWithSignatureAsyncFunction : public UBluep
     GENERATED_BODY()
 
     FGs2DictionaryOwnEntry Entry;
-    FString EntryModelName;
     FString KeyId;
 
 public:
@@ -50,7 +49,6 @@ public:
     static UGs2DictionaryGetEntryWithSignatureAsyncFunction* GetEntryWithSignature(
         UObject* WorldContextObject,
         FGs2DictionaryOwnEntry Entry,
-        FString EntryModelName,
         FString KeyId
     );
 

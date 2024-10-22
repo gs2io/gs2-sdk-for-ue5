@@ -240,7 +240,7 @@ namespace Gs2::LoginReward::Domain::Model
             Gs2::LoginReward::Domain::Model::FBonusModelDomain::CreateCacheKey(
                 BonusModelName
             ),
-            [Callback](TSharedPtr<Gs2Object> obj)
+            [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::LoginReward::Model::FBonusModel>(obj));
             }

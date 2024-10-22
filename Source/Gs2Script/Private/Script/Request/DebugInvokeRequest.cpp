@@ -21,7 +21,8 @@ namespace Gs2::Script::Request
     FDebugInvokeRequest::FDebugInvokeRequest():
         ScriptValue(TOptional<FString>()),
         ArgsValue(TOptional<FString>()),
-        RandomStatusValue(nullptr)
+        RandomStatusValue(nullptr),
+        DisableStringNumberToNumberValue(TOptional<bool>())
     {
     }
 
@@ -30,7 +31,8 @@ namespace Gs2::Script::Request
     ):
         ScriptValue(From.ScriptValue),
         ArgsValue(From.ArgsValue),
-        RandomStatusValue(From.RandomStatusValue)
+        RandomStatusValue(From.RandomStatusValue),
+        DisableStringNumberToNumberValue(From.DisableStringNumberToNumberValue)
     {
     }
 
@@ -66,6 +68,14 @@ namespace Gs2::Script::Request
         return SharedThis(this);
     }
 
+    TSharedPtr<FDebugInvokeRequest> FDebugInvokeRequest::WithDisableStringNumberToNumber(
+        const TOptional<bool> DisableStringNumberToNumber
+    )
+    {
+        this->DisableStringNumberToNumberValue = DisableStringNumberToNumber;
+        return SharedThis(this);
+    }
+
     TOptional<FString> FDebugInvokeRequest::GetContextStack() const
     {
         return ContextStackValue;
@@ -88,6 +98,20 @@ namespace Gs2::Script::Request
             return nullptr;
         }
         return RandomStatusValue;
+    }
+
+    TOptional<bool> FDebugInvokeRequest::GetDisableStringNumberToNumber() const
+    {
+        return DisableStringNumberToNumberValue;
+    }
+
+    FString FDebugInvokeRequest::GetDisableStringNumberToNumberString() const
+    {
+        if (!DisableStringNumberToNumberValue.IsSet())
+        {
+            return FString("null");
+        }
+        return FString(DisableStringNumberToNumberValue.GetValue() ? "true" : "false");
     }
 
     TSharedPtr<FDebugInvokeRequest> FDebugInvokeRequest::FromJson(const TSharedPtr<FJsonObject> Data)
@@ -122,7 +146,16 @@ namespace Gs2::Script::Request
                       return nullptr;
                   }
                   return Model::FRandomStatus::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("randomStatus")));
-              }() : nullptr);
+              }() : nullptr)
+            ->WithDisableStringNumberToNumber(Data->HasField(ANSI_TO_TCHAR("disableStringNumberToNumber")) ? [Data]() -> TOptional<bool>
+              {
+                  bool v;
+                    if (Data->TryGetBoolField(ANSI_TO_TCHAR("disableStringNumberToNumber"), v))
+                  {
+                        return TOptional(v);
+                  }
+                  return TOptional<bool>();
+              }() : TOptional<bool>());
     }
 
     TSharedPtr<FJsonObject> FDebugInvokeRequest::ToJson() const
@@ -143,6 +176,10 @@ namespace Gs2::Script::Request
         if (RandomStatusValue != nullptr && RandomStatusValue.IsValid())
         {
             JsonRootObject->SetObjectField("randomStatus", RandomStatusValue->ToJson());
+        }
+        if (DisableStringNumberToNumberValue.IsSet())
+        {
+            JsonRootObject->SetBoolField("disableStringNumberToNumber", DisableStringNumberToNumberValue.GetValue());
         }
         return JsonRootObject;
     }

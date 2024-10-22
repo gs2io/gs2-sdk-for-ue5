@@ -17,6 +17,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Dom/JsonObject.h"
 
 namespace Gs2::LoginReward::Request
 {
@@ -56,5 +57,5 @@ namespace Gs2::LoginReward::Request
         static TSharedPtr<FDeleteReceiveStatusByUserIdRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;
     };
-    typedef TSharedPtr<FDeleteReceiveStatusByUserIdRequest, ESPMode::ThreadSafe> FDeleteReceiveStatusByUserIdRequestPtr;
+    typedef TSharedPtr<FDeleteReceiveStatusByUserIdRequest> FDeleteReceiveStatusByUserIdRequestPtr;
 }

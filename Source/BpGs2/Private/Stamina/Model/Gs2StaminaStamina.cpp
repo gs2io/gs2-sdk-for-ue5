@@ -15,5 +15,6 @@
  */
 
 #include "Stamina/Model/Gs2StaminaStamina.h"
+#include "Stamina/Domain/EzGs2Stamina.h"
 #include "Core/Model/Gs2AccessToken.h"
 #include "Core/BpGs2Constant.h"

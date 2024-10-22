@@ -17,6 +17,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Dom/JsonObject.h"
 #include "../Model/GitHubCheckoutSetting.h"
 
 namespace Gs2::SerialKey::Request
@@ -48,5 +49,5 @@ namespace Gs2::SerialKey::Request
         static TSharedPtr<FUpdateCurrentCampaignMasterFromGitHubRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;
     };
-    typedef TSharedPtr<FUpdateCurrentCampaignMasterFromGitHubRequest, ESPMode::ThreadSafe> FUpdateCurrentCampaignMasterFromGitHubRequestPtr;
+    typedef TSharedPtr<FUpdateCurrentCampaignMasterFromGitHubRequest> FUpdateCurrentCampaignMasterFromGitHubRequestPtr;
 }

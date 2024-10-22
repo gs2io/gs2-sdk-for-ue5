@@ -48,6 +48,12 @@
 #include "Task/Rest/GetIdentifierTask.h"
 #include "Request/DeleteIdentifierRequest.h"
 #include "Task/Rest/DeleteIdentifierTask.h"
+#include "Request/DescribeAttachedGuardsRequest.h"
+#include "Task/Rest/DescribeAttachedGuardsTask.h"
+#include "Request/AttachGuardRequest.h"
+#include "Task/Rest/AttachGuardTask.h"
+#include "Request/DetachGuardRequest.h"
+#include "Task/Rest/DetachGuardTask.h"
 #include "Request/DescribePasswordsRequest.h"
 #include "Task/Rest/DescribePasswordsTask.h"
 #include "Request/CreatePasswordRequest.h"
@@ -142,6 +148,18 @@ namespace Gs2::Identifier
 
         TSharedPtr<FAsyncTask<Task::Rest::FDeleteIdentifierTask>> DeleteIdentifier(
             const Request::FDeleteIdentifierRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FDescribeAttachedGuardsTask>> DescribeAttachedGuards(
+            const Request::FDescribeAttachedGuardsRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FAttachGuardTask>> AttachGuard(
+            const Request::FAttachGuardRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FDetachGuardTask>> DetachGuard(
+            const Request::FDetachGuardRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::Rest::FDescribePasswordsTask>> DescribePasswords(

@@ -363,7 +363,7 @@ namespace Gs2::SerialKey::Domain::Model
             Gs2::SerialKey::Domain::Model::FCampaignModelMasterDomain::CreateCacheKey(
                 CampaignModelName
             ),
-            [Callback](TSharedPtr<Gs2Object> obj)
+            [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::SerialKey::Model::FCampaignModelMaster>(obj));
             }

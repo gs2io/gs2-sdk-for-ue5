@@ -134,7 +134,7 @@ namespace Gs2::Account::Domain::Model
             Gs2::Account::Domain::Model::FBanStatusDomain::CreateCacheKey(
                 Name
             ),
-            [Callback](TSharedPtr<Gs2Object> obj)
+            [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::Account::Model::FBanStatus>(obj));
             }

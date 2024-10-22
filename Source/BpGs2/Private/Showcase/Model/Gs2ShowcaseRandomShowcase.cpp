@@ -15,6 +15,7 @@
  */
 
 #include "Showcase/Model/Gs2ShowcaseRandomShowcase.h"
+#include "Showcase/Domain/EzGs2Showcase.h"
 #include "Showcase/Model/Gs2ShowcaseRandomDisplayItem.h"
 #include "Core/Model/Gs2AccessToken.h"
 #include "Showcase/Model/Gs2ShowcaseRandomDisplayItem.h"

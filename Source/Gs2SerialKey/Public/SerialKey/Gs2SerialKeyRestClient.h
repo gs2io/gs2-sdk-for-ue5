@@ -54,8 +54,14 @@
 #include "Task/Rest/DescribeSerialKeysTask.h"
 #include "Request/DownloadSerialCodesRequest.h"
 #include "Task/Rest/DownloadSerialCodesTask.h"
+#include "Request/IssueOnceRequest.h"
+#include "Task/Rest/IssueOnceTask.h"
 #include "Request/GetSerialKeyRequest.h"
 #include "Task/Rest/GetSerialKeyTask.h"
+#include "Request/VerifyCodeRequest.h"
+#include "Task/Rest/VerifyCodeTask.h"
+#include "Request/VerifyCodeByUserIdRequest.h"
+#include "Task/Rest/VerifyCodeByUserIdTask.h"
 #include "Request/UseRequest.h"
 #include "Task/Rest/UseTask.h"
 #include "Request/UseByUserIdRequest.h"
@@ -66,6 +72,8 @@
 #include "Task/Rest/UseByStampTaskTask.h"
 #include "Request/RevertUseByStampSheetRequest.h"
 #include "Task/Rest/RevertUseByStampSheetTask.h"
+#include "Request/VerifyByStampTaskRequest.h"
+#include "Task/Rest/VerifyByStampTaskTask.h"
 #include "Request/DescribeCampaignModelsRequest.h"
 #include "Task/Rest/DescribeCampaignModelsTask.h"
 #include "Request/GetCampaignModelRequest.h"
@@ -172,8 +180,20 @@ namespace Gs2::SerialKey
             const Request::FDownloadSerialCodesRequestPtr Request
         ) const;
 
+        TSharedPtr<FAsyncTask<Task::Rest::FIssueOnceTask>> IssueOnce(
+            const Request::FIssueOnceRequestPtr Request
+        ) const;
+
         TSharedPtr<FAsyncTask<Task::Rest::FGetSerialKeyTask>> GetSerialKey(
             const Request::FGetSerialKeyRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FVerifyCodeTask>> VerifyCode(
+            const Request::FVerifyCodeRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FVerifyCodeByUserIdTask>> VerifyCodeByUserId(
+            const Request::FVerifyCodeByUserIdRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::Rest::FUseTask>> Use(
@@ -194,6 +214,10 @@ namespace Gs2::SerialKey
 
         TSharedPtr<FAsyncTask<Task::Rest::FRevertUseByStampSheetTask>> RevertUseByStampSheet(
             const Request::FRevertUseByStampSheetRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FVerifyByStampTaskTask>> VerifyByStampTask(
+            const Request::FVerifyByStampTaskRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::Rest::FDescribeCampaignModelsTask>> DescribeCampaignModels(

@@ -24,6 +24,8 @@
 #include "Chat/Domain/Iterator/DescribeRoomsIterator.h"
 #include "Chat/Domain/Iterator/DescribeMessagesIterator.h"
 #include "Chat/Domain/Iterator/DescribeMessagesByUserIdIterator.h"
+#include "Chat/Domain/Iterator/DescribeLatestMessagesIterator.h"
+#include "Chat/Domain/Iterator/DescribeLatestMessagesByUserIdIterator.h"
 #include "Chat/Domain/Iterator/DescribeSubscribesIterator.h"
 #include "Chat/Domain/Iterator/DescribeSubscribesByUserIdIterator.h"
 #include "Chat/Domain/Iterator/DescribeSubscribesByRoomNameIterator.h"

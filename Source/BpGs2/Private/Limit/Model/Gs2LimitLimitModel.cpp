@@ -15,5 +15,6 @@
  */
 
 #include "Limit/Model/Gs2LimitLimitModel.h"
+#include "Limit/Domain/EzGs2Limit.h"
 #include "Core/Model/Gs2AccessToken.h"
 #include "Core/BpGs2Constant.h"

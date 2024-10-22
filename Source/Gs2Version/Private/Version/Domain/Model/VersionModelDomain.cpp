@@ -240,7 +240,7 @@ namespace Gs2::Version::Domain::Model
             Gs2::Version::Domain::Model::FVersionModelDomain::CreateCacheKey(
                 VersionName
             ),
-            [Callback](TSharedPtr<Gs2Object> obj)
+            [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::Version::Model::FVersionModel>(obj));
             }

@@ -125,6 +125,32 @@ namespace Gs2::Distributor::Domain::Model
             const FDistributeDomain& From
         );
 
+        class GS2DISTRIBUTOR_API FFreezeMasterDataTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Distributor::Domain::Model::FDistributeDomain>,
+            public TSharedFromThis<FFreezeMasterDataTask>
+        {
+            const TSharedPtr<FDistributeDomain> Self;
+            const Request::FFreezeMasterDataByUserIdRequestPtr Request;
+        public:
+            explicit FFreezeMasterDataTask(
+                const TSharedPtr<FDistributeDomain>& Self,
+                const Request::FFreezeMasterDataByUserIdRequestPtr Request
+            );
+
+            FFreezeMasterDataTask(
+                const FFreezeMasterDataTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Distributor::Domain::Model::FDistributeDomain>> Result
+            ) override;
+        };
+        friend FFreezeMasterDataTask;
+
+        TSharedPtr<FAsyncTask<FFreezeMasterDataTask>> FreezeMasterData(
+            Request::FFreezeMasterDataByUserIdRequestPtr Request
+        );
+
         static FString CreateCacheParentKey(
             TOptional<FString> NamespaceName,
             FString ChildType

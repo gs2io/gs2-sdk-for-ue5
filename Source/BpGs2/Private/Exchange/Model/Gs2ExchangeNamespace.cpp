@@ -15,6 +15,7 @@
  */
 
 #include "Exchange/Model/Gs2ExchangeNamespace.h"
+#include "Exchange/Domain/EzGs2Exchange.h"
 #include "Exchange/Model/Gs2ExchangeRateModel.h"
 #include "Exchange/Model/Gs2ExchangeIncrementalRateModel.h"
 #include "Core/Model/Gs2AccessToken.h"

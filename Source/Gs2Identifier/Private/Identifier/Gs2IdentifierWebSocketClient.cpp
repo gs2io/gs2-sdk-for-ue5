@@ -154,6 +154,33 @@ namespace Gs2::Identifier
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::WebSocket::FDescribeAttachedGuardsTask>> FGs2IdentifierWebSocketClient::DescribeAttachedGuards(
+        const Request::FDescribeAttachedGuardsRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FDescribeAttachedGuardsTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FAttachGuardTask>> FGs2IdentifierWebSocketClient::AttachGuard(
+        const Request::FAttachGuardRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FAttachGuardTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FDetachGuardTask>> FGs2IdentifierWebSocketClient::DetachGuard(
+        const Request::FDetachGuardRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FDetachGuardTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::WebSocket::FDescribePasswordsTask>> FGs2IdentifierWebSocketClient::DescribePasswords(
         const Request::FDescribePasswordsRequestPtr Request) const
     {

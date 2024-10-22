@@ -23,6 +23,7 @@
 #endif
 
 #include "SerialKey/Domain/SpeculativeExecutor/Verify/VerifyActionSpeculativeExecutorIndex.h"
+#include "SerialKey/Domain/SpeculativeExecutor/Verify/VerifyCodeByUserIdSpeculativeExecutor.h"
 
 #include "Core/Domain/Gs2.h"
 
@@ -63,6 +64,28 @@ namespace Gs2::SerialKey::Domain::SpeculativeExecutor
         auto NewVerifyAction = VerifyAction->WithAction(VerifyAction->GetAction()->Replace(TEXT("{region}"), ToCStr(Domain->RestSession->RegionName())));
         NewVerifyAction = VerifyAction->WithAction(NewVerifyAction->GetAction()->Replace(TEXT("{ownerId}"), ToCStr(Domain->RestSession->OwnerId())));
         NewVerifyAction = VerifyAction->WithAction(NewVerifyAction->GetAction()->Replace(TEXT("{userId}"), ToCStr(AccessToken->GetUserId().IsSet() ? *AccessToken->GetUserId() : "")));
+        if (FVerifyCodeByUserIdSpeculativeExecutor::Action() == NewVerifyAction->GetAction()) {
+            TSharedPtr<FJsonObject> RequestModelJson;
+            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(NewVerifyAction->GetRequest().IsSet() ? *NewVerifyAction->GetRequest() : "{}");
+                !FJsonSerializer::Deserialize(JsonReader, RequestModelJson))
+            {
+                return nullptr;
+            }
+            auto Request = Request::FVerifyCodeByUserIdRequest::FromJson(RequestModelJson);
+            Request = FVerifyCodeByUserIdSpeculativeExecutor::Rate(Request, Rate);
+            auto Future = FVerifyCodeByUserIdSpeculativeExecutor::Execute(
+                Domain,
+                Service,
+                AccessToken,
+                Request
+            );
+            Future->StartSynchronousTask();
+            if (Future->GetTask().IsError())
+            {
+                return Future->GetTask().Error();
+            }
+            *Result = Future->GetTask().Result();
+        }
         return nullptr;
     }
 

@@ -416,7 +416,7 @@ namespace Gs2::LoginReward::Domain::Model
             ParentKey,
             Gs2::LoginReward::Domain::Model::FCurrentBonusMasterDomain::CreateCacheKey(
             ),
-            [Callback](TSharedPtr<Gs2Object> obj)
+            [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::LoginReward::Model::FCurrentBonusMaster>(obj));
             }

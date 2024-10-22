@@ -56,7 +56,7 @@ namespace Gs2::UE5::Dictionary::Domain::Model
         void UnsubscribeEntries(Gs2::Core::Domain::CallbackID CallbackId);
 
         Gs2::UE5::Dictionary::Domain::Model::FEzEntryGameSessionDomainPtr Entry(
-            const FString EntryName
+            const FString EntryModelName
         ) const;
 
     };

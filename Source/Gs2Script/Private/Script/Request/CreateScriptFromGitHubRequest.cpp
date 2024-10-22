@@ -22,7 +22,8 @@ namespace Gs2::Script::Request
         NamespaceNameValue(TOptional<FString>()),
         NameValue(TOptional<FString>()),
         DescriptionValue(TOptional<FString>()),
-        CheckoutSettingValue(nullptr)
+        CheckoutSettingValue(nullptr),
+        DisableStringNumberToNumberValue(TOptional<bool>())
     {
     }
 
@@ -32,7 +33,8 @@ namespace Gs2::Script::Request
         NamespaceNameValue(From.NamespaceNameValue),
         NameValue(From.NameValue),
         DescriptionValue(From.DescriptionValue),
-        CheckoutSettingValue(From.CheckoutSettingValue)
+        CheckoutSettingValue(From.CheckoutSettingValue),
+        DisableStringNumberToNumberValue(From.DisableStringNumberToNumberValue)
     {
     }
 
@@ -76,6 +78,14 @@ namespace Gs2::Script::Request
         return SharedThis(this);
     }
 
+    TSharedPtr<FCreateScriptFromGitHubRequest> FCreateScriptFromGitHubRequest::WithDisableStringNumberToNumber(
+        const TOptional<bool> DisableStringNumberToNumber
+    )
+    {
+        this->DisableStringNumberToNumberValue = DisableStringNumberToNumber;
+        return SharedThis(this);
+    }
+
     TOptional<FString> FCreateScriptFromGitHubRequest::GetContextStack() const
     {
         return ContextStackValue;
@@ -103,6 +113,20 @@ namespace Gs2::Script::Request
             return nullptr;
         }
         return CheckoutSettingValue;
+    }
+
+    TOptional<bool> FCreateScriptFromGitHubRequest::GetDisableStringNumberToNumber() const
+    {
+        return DisableStringNumberToNumberValue;
+    }
+
+    FString FCreateScriptFromGitHubRequest::GetDisableStringNumberToNumberString() const
+    {
+        if (!DisableStringNumberToNumberValue.IsSet())
+        {
+            return FString("null");
+        }
+        return FString(DisableStringNumberToNumberValue.GetValue() ? "true" : "false");
     }
 
     TSharedPtr<FCreateScriptFromGitHubRequest> FCreateScriptFromGitHubRequest::FromJson(const TSharedPtr<FJsonObject> Data)
@@ -146,7 +170,16 @@ namespace Gs2::Script::Request
                       return nullptr;
                   }
                   return Model::FGitHubCheckoutSetting::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("checkoutSetting")));
-              }() : nullptr);
+              }() : nullptr)
+            ->WithDisableStringNumberToNumber(Data->HasField(ANSI_TO_TCHAR("disableStringNumberToNumber")) ? [Data]() -> TOptional<bool>
+              {
+                  bool v;
+                    if (Data->TryGetBoolField(ANSI_TO_TCHAR("disableStringNumberToNumber"), v))
+                  {
+                        return TOptional(v);
+                  }
+                  return TOptional<bool>();
+              }() : TOptional<bool>());
     }
 
     TSharedPtr<FJsonObject> FCreateScriptFromGitHubRequest::ToJson() const
@@ -171,6 +204,10 @@ namespace Gs2::Script::Request
         if (CheckoutSettingValue != nullptr && CheckoutSettingValue.IsValid())
         {
             JsonRootObject->SetObjectField("checkoutSetting", CheckoutSettingValue->ToJson());
+        }
+        if (DisableStringNumberToNumberValue.IsSet())
+        {
+            JsonRootObject->SetBoolField("disableStringNumberToNumber", DisableStringNumberToNumberValue.GetValue());
         }
         return JsonRootObject;
     }

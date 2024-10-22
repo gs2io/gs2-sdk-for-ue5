@@ -24,6 +24,7 @@
 #include "Identifier/Domain/Iterator/DescribeSecurityPoliciesIterator.h"
 #include "Identifier/Domain/Iterator/DescribeCommonSecurityPoliciesIterator.h"
 #include "Identifier/Domain/Iterator/DescribeIdentifiersIterator.h"
+#include "Identifier/Domain/Iterator/DescribeAttachedGuardsIterator.h"
 #include "Identifier/Domain/Iterator/DescribePasswordsIterator.h"
 
 namespace Gs2::Core::Domain
@@ -194,6 +195,18 @@ namespace Gs2::Identifier::Domain::Model
         );
 
         void UnsubscribeIdentifiers(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
+
+        Gs2::Identifier::Domain::Iterator::FDescribeAttachedGuardsIteratorPtr AttachedGuards(
+            const TOptional<FString> ClientId = TOptional<FString>()
+        ) const;
+
+        Gs2::Core::Domain::CallbackID SubscribeAttachedGuards(
+            TFunction<void()> Callback
+        );
+
+        void UnsubscribeAttachedGuards(
             Gs2::Core::Domain::CallbackID CallbackID
         );
 

@@ -295,7 +295,7 @@ namespace Gs2::StateMachine::Domain::Model
             Gs2::StateMachine::Domain::Model::FStateMachineMasterDomain::CreateCacheKey(
                 Version.IsSet() ? FString::FromInt(*Version) : TOptional<FString>()
             ),
-            [Callback](TSharedPtr<Gs2Object> obj)
+            [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::StateMachine::Model::FStateMachineMaster>(obj));
             }

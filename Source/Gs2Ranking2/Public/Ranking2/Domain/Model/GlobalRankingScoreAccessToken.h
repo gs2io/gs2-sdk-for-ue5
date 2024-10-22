@@ -155,6 +155,32 @@ namespace Gs2::Ranking2::Domain::Model
             Request::FGetGlobalRankingScoreRequestPtr Request
         );
 
+        class GS2RANKING2_API FVerifyTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Ranking2::Domain::Model::FGlobalRankingScoreAccessTokenDomain>,
+            public TSharedFromThis<FVerifyTask>
+        {
+            const TSharedPtr<FGlobalRankingScoreAccessTokenDomain> Self;
+            const Request::FVerifyGlobalRankingScoreRequestPtr Request;
+        public:
+            explicit FVerifyTask(
+                const TSharedPtr<FGlobalRankingScoreAccessTokenDomain>& Self,
+                const Request::FVerifyGlobalRankingScoreRequestPtr Request
+            );
+
+            FVerifyTask(
+                const FVerifyTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Ranking2::Domain::Model::FGlobalRankingScoreAccessTokenDomain>> Result
+            ) override;
+        };
+        friend FVerifyTask;
+
+        TSharedPtr<FAsyncTask<FVerifyTask>> Verify(
+            Request::FVerifyGlobalRankingScoreRequestPtr Request
+        );
+
         static FString CreateCacheParentKey(
             TOptional<FString> NamespaceName,
             TOptional<FString> UserId,

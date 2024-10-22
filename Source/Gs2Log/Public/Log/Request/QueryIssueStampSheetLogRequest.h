@@ -17,6 +17,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Dom/JsonObject.h"
 
 namespace Gs2::Log::Request
 {
@@ -36,7 +37,6 @@ namespace Gs2::Log::Request
         TOptional<FString> PageTokenValue;
         TOptional<int32> LimitValue;
         TOptional<FString> TimeOffsetTokenValue;
-        TOptional<FString> DuplicationAvoiderValue;
         
     public:
         
@@ -58,7 +58,6 @@ namespace Gs2::Log::Request
         TSharedPtr<FQueryIssueStampSheetLogRequest> WithPageToken(const TOptional<FString> PageToken);
         TSharedPtr<FQueryIssueStampSheetLogRequest> WithLimit(const TOptional<int32> Limit);
         TSharedPtr<FQueryIssueStampSheetLogRequest> WithTimeOffsetToken(const TOptional<FString> TimeOffsetToken);
-        TSharedPtr<FQueryIssueStampSheetLogRequest> WithDuplicationAvoider(const TOptional<FString> DuplicationAvoider);
 
         TOptional<FString> GetContextStack() const;
         TOptional<FString> GetNamespaceName() const;
@@ -76,10 +75,9 @@ namespace Gs2::Log::Request
         TOptional<int32> GetLimit() const;
         FString GetLimitString() const;
         TOptional<FString> GetTimeOffsetToken() const;
-        TOptional<FString> GetDuplicationAvoider() const;
 
         static TSharedPtr<FQueryIssueStampSheetLogRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;
     };
-    typedef TSharedPtr<FQueryIssueStampSheetLogRequest, ESPMode::ThreadSafe> FQueryIssueStampSheetLogRequestPtr;
+    typedef TSharedPtr<FQueryIssueStampSheetLogRequest> FQueryIssueStampSheetLogRequestPtr;
 }

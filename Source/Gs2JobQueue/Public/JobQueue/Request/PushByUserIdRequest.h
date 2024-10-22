@@ -17,6 +17,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Dom/JsonObject.h"
 #include "../Model/JobEntry.h"
 
 namespace Gs2::JobQueue::Request
@@ -56,5 +57,5 @@ namespace Gs2::JobQueue::Request
         static TSharedPtr<FPushByUserIdRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;
     };
-    typedef TSharedPtr<FPushByUserIdRequest, ESPMode::ThreadSafe> FPushByUserIdRequestPtr;
+    typedef TSharedPtr<FPushByUserIdRequest> FPushByUserIdRequestPtr;
 }

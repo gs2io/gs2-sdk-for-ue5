@@ -15,6 +15,7 @@
  */
 
 #include "Datastore/Model/Gs2DatastoreNamespace.h"
+#include "Datastore/Domain/EzGs2Datastore.h"
 #include "Core/Model/Gs2AccessToken.h"
 #include "Datastore/Model/Gs2DatastoreUser.h"
 #include "Core/BpGs2Constant.h"

@@ -23,6 +23,7 @@
 #endif
 
 #include "Lottery/Domain/SpeculativeExecutor/Acquire/ResetBoxByUserIdSpeculativeExecutor.h"
+#include "Lottery/Domain/Gs2Lottery.h"
 
 #include "Core/Domain/Gs2.h"
 

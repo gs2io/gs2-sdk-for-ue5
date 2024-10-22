@@ -210,7 +210,7 @@ namespace Gs2::Money::Domain::Model
             Gs2::Money::Domain::Model::FReceiptDomain::CreateCacheKey(
                 TransactionId
             ),
-            [Callback](TSharedPtr<Gs2Object> obj)
+            [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::Money::Model::FReceipt>(obj));
             }

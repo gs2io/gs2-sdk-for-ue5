@@ -522,7 +522,7 @@ namespace Gs2::Ranking2::Domain::Model
                 ClusterName,
                 Season.IsSet() ? FString::FromInt(*Season) : TOptional<FString>()
             ),
-            [Callback](TSharedPtr<Gs2Object> obj)
+            [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::Ranking2::Model::FClusterRankingReceivedReward>(obj));
             }

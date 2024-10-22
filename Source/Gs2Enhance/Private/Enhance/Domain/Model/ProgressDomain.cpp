@@ -514,7 +514,7 @@ namespace Gs2::Enhance::Domain::Model
             ParentKey,
             Gs2::Enhance::Domain::Model::FProgressDomain::CreateCacheKey(
             ),
-            [Callback](TSharedPtr<Gs2Object> obj)
+            [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::Enhance::Model::FProgress>(obj));
             }

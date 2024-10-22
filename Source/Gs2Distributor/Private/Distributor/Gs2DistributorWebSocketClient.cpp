@@ -280,6 +280,24 @@ namespace Gs2::Distributor
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::WebSocket::FFreezeMasterDataTask>> FGs2DistributorWebSocketClient::FreezeMasterData(
+        const Request::FFreezeMasterDataRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FFreezeMasterDataTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FFreezeMasterDataByUserIdTask>> FGs2DistributorWebSocketClient::FreezeMasterDataByUserId(
+        const Request::FFreezeMasterDataByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FFreezeMasterDataByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::WebSocket::FIfExpressionByUserIdTask>> FGs2DistributorWebSocketClient::IfExpressionByUserId(
         const Request::FIfExpressionByUserIdRequestPtr Request) const
     {

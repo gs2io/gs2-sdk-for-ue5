@@ -337,7 +337,7 @@ namespace Gs2::Identifier::Domain::Model
             Gs2::Identifier::Domain::Model::FSecurityPolicyDomain::CreateCacheKey(
                 SecurityPolicyName
             ),
-            [Callback](TSharedPtr<Gs2Object> obj)
+            [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::Identifier::Model::FSecurityPolicy>(obj));
             }

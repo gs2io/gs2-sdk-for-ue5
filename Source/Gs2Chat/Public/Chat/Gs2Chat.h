@@ -164,6 +164,18 @@
 #include "Task/Rest/DescribeMessagesByUserIdTask.h"
 #include "Task/WebSocket/DescribeMessagesByUserIdTask.h"
 
+// DescribeLatestMessages
+#include "Request/DescribeLatestMessagesRequest.h"
+#include "Result/DescribeLatestMessagesResult.h"
+#include "Task/Rest/DescribeLatestMessagesTask.h"
+#include "Task/WebSocket/DescribeLatestMessagesTask.h"
+
+// DescribeLatestMessagesByUserId
+#include "Request/DescribeLatestMessagesByUserIdRequest.h"
+#include "Result/DescribeLatestMessagesByUserIdResult.h"
+#include "Task/Rest/DescribeLatestMessagesByUserIdTask.h"
+#include "Task/WebSocket/DescribeLatestMessagesByUserIdTask.h"
+
 // Post
 #include "Request/PostRequest.h"
 #include "Result/PostResult.h"

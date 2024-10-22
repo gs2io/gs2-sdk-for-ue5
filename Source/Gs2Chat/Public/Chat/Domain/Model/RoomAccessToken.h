@@ -25,6 +25,8 @@
 #include "Chat/Domain/Iterator/DescribeRoomsIterator.h"
 #include "Chat/Domain/Iterator/DescribeMessagesIterator.h"
 #include "Chat/Domain/Iterator/DescribeMessagesByUserIdIterator.h"
+#include "Chat/Domain/Iterator/DescribeLatestMessagesIterator.h"
+#include "Chat/Domain/Iterator/DescribeLatestMessagesByUserIdIterator.h"
 #include "Chat/Domain/Iterator/DescribeSubscribesIterator.h"
 #include "Chat/Domain/Iterator/DescribeSubscribesByUserIdIterator.h"
 #include "Chat/Domain/Iterator/DescribeSubscribesByRoomNameIterator.h"
@@ -198,6 +200,17 @@ namespace Gs2::Chat::Domain::Model
         );
 
         void UnsubscribeMessages(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
+
+        Gs2::Chat::Domain::Iterator::FDescribeLatestMessagesIteratorPtr LatestMessages(
+        ) const;
+
+        Gs2::Core::Domain::CallbackID SubscribeLatestMessages(
+            TFunction<void()> Callback
+        );
+
+        void UnsubscribeLatestMessages(
             Gs2::Core::Domain::CallbackID CallbackID
         );
 

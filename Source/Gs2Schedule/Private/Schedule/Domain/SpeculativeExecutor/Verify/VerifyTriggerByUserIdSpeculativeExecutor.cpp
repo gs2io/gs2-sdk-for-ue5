@@ -23,6 +23,7 @@
 #endif
 
 #include "Schedule/Domain/SpeculativeExecutor/Verify/VerifyTriggerByUserIdSpeculativeExecutor.h"
+#include "Schedule/Domain/Gs2Schedule.h"
 
 #include "Core/Domain/Gs2.h"
 

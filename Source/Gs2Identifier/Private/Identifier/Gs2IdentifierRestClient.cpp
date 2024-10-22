@@ -154,6 +154,33 @@ namespace Gs2::Identifier
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::Rest::FDescribeAttachedGuardsTask>> FGs2IdentifierRestClient::DescribeAttachedGuards(
+        const Request::FDescribeAttachedGuardsRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FDescribeAttachedGuardsTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FAttachGuardTask>> FGs2IdentifierRestClient::AttachGuard(
+        const Request::FAttachGuardRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FAttachGuardTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FDetachGuardTask>> FGs2IdentifierRestClient::DetachGuard(
+        const Request::FDetachGuardRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FDetachGuardTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::Rest::FDescribePasswordsTask>> FGs2IdentifierRestClient::DescribePasswords(
         const Request::FDescribePasswordsRequestPtr Request) const
     {

@@ -183,6 +183,30 @@ namespace Gs2::UE5::Chat::Domain::Model
         );
     }
 
+    Gs2::UE5::Chat::Domain::Iterator::FEzDescribeLatestMessagesIteratorPtr FEzRoomGameSessionDomain::LatestMessages(
+    ) const
+    {
+        return MakeShared<Gs2::UE5::Chat::Domain::Iterator::FEzDescribeLatestMessagesIterator>(
+            Domain,
+            GameSession,
+            ConnectionValue
+        );
+    }
+
+    Gs2::Core::Domain::CallbackID FEzRoomGameSessionDomain::SubscribeLatestMessages(TFunction<void()> Callback)
+    {
+        return Domain->SubscribeLatestMessages(
+            Callback
+        );
+    }
+
+    void FEzRoomGameSessionDomain::UnsubscribeLatestMessages(Gs2::Core::Domain::CallbackID CallbackId)
+    {
+        Domain->UnsubscribeLatestMessages(
+            CallbackId
+        );
+    }
+
     Gs2::UE5::Chat::Domain::Model::FEzMessageGameSessionDomainPtr FEzRoomGameSessionDomain::Message(
         const FString MessageName
     ) const

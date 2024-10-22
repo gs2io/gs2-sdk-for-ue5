@@ -69,7 +69,7 @@ namespace Gs2::Dictionary::Domain::Model
         }
         TOptional<FString> NamespaceName;
         TOptional<FString> UserId;
-        TOptional<FString> EntryName;
+        TOptional<FString> EntryModelName;
     private:
 
         FString ParentKey;
@@ -81,7 +81,7 @@ namespace Gs2::Dictionary::Domain::Model
             const Dictionary::Domain::FGs2DictionaryDomainPtr& Service,
             const TOptional<FString> NamespaceName,
             const TOptional<FString> UserId,
-            const TOptional<FString> EntryName
+            const TOptional<FString> EntryModelName
             // ReSharper disable once CppMemberInitializersOrder
         );
 
@@ -141,15 +141,41 @@ namespace Gs2::Dictionary::Domain::Model
             Request::FGetEntryWithSignatureByUserIdRequestPtr Request
         );
 
+        class GS2DICTIONARY_API FVerifyTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Dictionary::Domain::Model::FEntryDomain>,
+            public TSharedFromThis<FVerifyTask>
+        {
+            const TSharedPtr<FEntryDomain> Self;
+            const Request::FVerifyEntryByUserIdRequestPtr Request;
+        public:
+            explicit FVerifyTask(
+                const TSharedPtr<FEntryDomain>& Self,
+                const Request::FVerifyEntryByUserIdRequestPtr Request
+            );
+
+            FVerifyTask(
+                const FVerifyTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Dictionary::Domain::Model::FEntryDomain>> Result
+            ) override;
+        };
+        friend FVerifyTask;
+
+        TSharedPtr<FAsyncTask<FVerifyTask>> Verify(
+            Request::FVerifyEntryByUserIdRequestPtr Request
+        );
+
         static FString CreateCacheParentKey(
             TOptional<FString> NamespaceName,
             TOptional<FString> UserId,
-            TOptional<FString> EntryName,
+            TOptional<FString> EntryModelName,
             FString ChildType
         );
 
         static FString CreateCacheKey(
-            TOptional<FString> EntryName
+            TOptional<FString> EntryModelName
         );
 
         class GS2DICTIONARY_API FModelTask final :

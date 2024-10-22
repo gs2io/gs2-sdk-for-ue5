@@ -421,7 +421,7 @@ namespace Gs2::Script::Domain::Model
             Gs2::Script::Domain::Model::FScriptDomain::CreateCacheKey(
                 ScriptName
             ),
-            [Callback](TSharedPtr<Gs2Object> obj)
+            [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::Script::Model::FScript>(obj));
             }

@@ -288,7 +288,7 @@ namespace Gs2::SeasonRating::Domain::Model
                 NumberOfPlayer.IsSet() ? FString::FromInt(*NumberOfPlayer) : TOptional<FString>(),
                 KeyId
             ),
-            [Callback](TSharedPtr<Gs2Object> obj)
+            [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::SeasonRating::Model::FBallot>(obj));
             }

@@ -365,7 +365,7 @@ namespace Gs2::Stamina::Domain::Model
             Gs2::Stamina::Domain::Model::FRecoverValueTableMasterDomain::CreateCacheKey(
                 RecoverValueTableName
             ),
-            [Callback](TSharedPtr<Gs2Object> obj)
+            [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::Stamina::Model::FRecoverValueTableMaster>(obj));
             }

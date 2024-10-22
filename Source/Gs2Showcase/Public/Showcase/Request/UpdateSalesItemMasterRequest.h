@@ -17,6 +17,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Dom/JsonObject.h"
 #include "../Model/VerifyAction.h"
 #include "../Model/ConsumeAction.h"
 #include "../Model/AcquireAction.h"
@@ -62,5 +63,5 @@ namespace Gs2::Showcase::Request
         static TSharedPtr<FUpdateSalesItemMasterRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;
     };
-    typedef TSharedPtr<FUpdateSalesItemMasterRequest, ESPMode::ThreadSafe> FUpdateSalesItemMasterRequestPtr;
+    typedef TSharedPtr<FUpdateSalesItemMasterRequest> FUpdateSalesItemMasterRequestPtr;
 }

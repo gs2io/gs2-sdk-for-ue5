@@ -60,7 +60,7 @@ namespace Gs2::UE5::Dictionary::Domain::Model
         void UnsubscribeEntryModels(Gs2::Core::Domain::CallbackID CallbackId);
 
         Gs2::UE5::Dictionary::Domain::Model::FEzEntryModelDomainPtr EntryModel(
-            const FString EntryName
+            const FString EntryModelName
         ) const;
 
         Gs2::UE5::Dictionary::Domain::Model::FEzUserDomainPtr User(

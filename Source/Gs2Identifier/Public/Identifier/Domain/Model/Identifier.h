@@ -24,6 +24,7 @@
 #include "Identifier/Domain/Iterator/DescribeSecurityPoliciesIterator.h"
 #include "Identifier/Domain/Iterator/DescribeCommonSecurityPoliciesIterator.h"
 #include "Identifier/Domain/Iterator/DescribeIdentifiersIterator.h"
+#include "Identifier/Domain/Iterator/DescribeAttachedGuardsIterator.h"
 #include "Identifier/Domain/Iterator/DescribePasswordsIterator.h"
 
 namespace Gs2::Core::Domain
@@ -134,6 +135,58 @@ namespace Gs2::Identifier::Domain::Model
 
         TSharedPtr<FAsyncTask<FDeleteTask>> Delete(
             Request::FDeleteIdentifierRequestPtr Request
+        );
+
+        class GS2IDENTIFIER_API FAttachGuardTask final :
+            public Gs2::Core::Util::TGs2Future<TArray<TSharedPtr<Gs2::Identifier::Domain::Model::FIdentifierDomain>>>,
+            public TSharedFromThis<FAttachGuardTask>
+        {
+            const TSharedPtr<FIdentifierDomain> Self;
+            const Request::FAttachGuardRequestPtr Request;
+        public:
+            explicit FAttachGuardTask(
+                const TSharedPtr<FIdentifierDomain>& Self,
+                const Request::FAttachGuardRequestPtr Request
+            );
+
+            FAttachGuardTask(
+                const FAttachGuardTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<TArray<TSharedPtr<Gs2::Identifier::Domain::Model::FIdentifierDomain>>>> Result
+            ) override;
+        };
+        friend FAttachGuardTask;
+
+        TSharedPtr<FAsyncTask<FAttachGuardTask>> AttachGuard(
+            Request::FAttachGuardRequestPtr Request
+        );
+
+        class GS2IDENTIFIER_API FDetachGuardTask final :
+            public Gs2::Core::Util::TGs2Future<TArray<TSharedPtr<Gs2::Identifier::Domain::Model::FIdentifierDomain>>>,
+            public TSharedFromThis<FDetachGuardTask>
+        {
+            const TSharedPtr<FIdentifierDomain> Self;
+            const Request::FDetachGuardRequestPtr Request;
+        public:
+            explicit FDetachGuardTask(
+                const TSharedPtr<FIdentifierDomain>& Self,
+                const Request::FDetachGuardRequestPtr Request
+            );
+
+            FDetachGuardTask(
+                const FDetachGuardTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<TArray<TSharedPtr<Gs2::Identifier::Domain::Model::FIdentifierDomain>>>> Result
+            ) override;
+        };
+        friend FDetachGuardTask;
+
+        TSharedPtr<FAsyncTask<FDetachGuardTask>> DetachGuard(
+            Request::FDetachGuardRequestPtr Request
         );
 
         static FString CreateCacheParentKey(

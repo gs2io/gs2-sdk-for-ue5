@@ -26,7 +26,6 @@
 // Model
 #include "Dictionary/Domain/Model/Namespace.h"
 #include "Dictionary/Domain/Model/EntryModel.h"
-#include "Dictionary/Domain/Model/EntryModelMaster.h"
 #include "Dictionary/Domain/Model/Entry.h"
 #include "Dictionary/Domain/Model/EntryAccessToken.h"
 #include "Dictionary/Domain/Model/CurrentEntryMaster.h"

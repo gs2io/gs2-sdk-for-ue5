@@ -234,7 +234,7 @@ namespace Gs2::Deploy::Domain::Model
             Gs2::Deploy::Domain::Model::FResourceDomain::CreateCacheKey(
                 ResourceName
             ),
-            [Callback](TSharedPtr<Gs2Object> obj)
+            [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::Deploy::Model::FResource>(obj));
             }

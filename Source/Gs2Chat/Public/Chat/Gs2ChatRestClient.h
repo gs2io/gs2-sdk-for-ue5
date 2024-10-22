@@ -64,6 +64,10 @@
 #include "Task/Rest/DescribeMessagesTask.h"
 #include "Request/DescribeMessagesByUserIdRequest.h"
 #include "Task/Rest/DescribeMessagesByUserIdTask.h"
+#include "Request/DescribeLatestMessagesRequest.h"
+#include "Task/Rest/DescribeLatestMessagesTask.h"
+#include "Request/DescribeLatestMessagesByUserIdRequest.h"
+#include "Task/Rest/DescribeLatestMessagesByUserIdTask.h"
 #include "Request/PostRequest.h"
 #include "Task/Rest/PostTask.h"
 #include "Request/PostByUserIdRequest.h"
@@ -198,6 +202,14 @@ namespace Gs2::Chat
 
         TSharedPtr<FAsyncTask<Task::Rest::FDescribeMessagesByUserIdTask>> DescribeMessagesByUserId(
             const Request::FDescribeMessagesByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FDescribeLatestMessagesTask>> DescribeLatestMessages(
+            const Request::FDescribeLatestMessagesRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FDescribeLatestMessagesByUserIdTask>> DescribeLatestMessagesByUserId(
+            const Request::FDescribeLatestMessagesByUserIdRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::Rest::FPostTask>> Post(

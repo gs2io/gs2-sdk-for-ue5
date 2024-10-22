@@ -17,6 +17,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Dom/JsonObject.h"
 #include "../Model/AcquireAction.h"
 #include "../Model/TimeSpan.h"
 
@@ -64,5 +65,5 @@ namespace Gs2::Inbox::Request
         static TSharedPtr<FUpdateGlobalMessageMasterRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;
     };
-    typedef TSharedPtr<FUpdateGlobalMessageMasterRequest, ESPMode::ThreadSafe> FUpdateGlobalMessageMasterRequestPtr;
+    typedef TSharedPtr<FUpdateGlobalMessageMasterRequest> FUpdateGlobalMessageMasterRequestPtr;
 }

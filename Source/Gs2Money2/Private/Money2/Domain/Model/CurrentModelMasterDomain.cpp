@@ -418,7 +418,7 @@ namespace Gs2::Money2::Domain::Model
             ParentKey,
             Gs2::Money2::Domain::Model::FCurrentModelMasterDomain::CreateCacheKey(
             ),
-            [Callback](TSharedPtr<Gs2Object> obj)
+            [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::Money2::Model::FCurrentModelMaster>(obj));
             }

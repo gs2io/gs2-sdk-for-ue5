@@ -414,7 +414,7 @@ namespace Gs2::SkillTree::Domain::Model
             ParentKey,
             Gs2::SkillTree::Domain::Model::FCurrentTreeMasterDomain::CreateCacheKey(
             ),
-            [Callback](TSharedPtr<Gs2Object> obj)
+            [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::SkillTree::Model::FCurrentTreeMaster>(obj));
             }

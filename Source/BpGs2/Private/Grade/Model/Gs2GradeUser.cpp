@@ -15,6 +15,7 @@
  */
 
 #include "Grade/Model/Gs2GradeUser.h"
+#include "Grade/Domain/EzGs2Grade.h"
 #include "Grade/Model/Gs2GradeStatus.h"
 #include "Core/Model/Gs2AccessToken.h"
 #include "Grade/Model/Gs2GradeStatus.h"

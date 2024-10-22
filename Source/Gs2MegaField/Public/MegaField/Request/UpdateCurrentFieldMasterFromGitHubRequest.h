@@ -17,6 +17,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Dom/JsonObject.h"
 #include "../Model/GitHubCheckoutSetting.h"
 
 namespace Gs2::MegaField::Request
@@ -48,5 +49,5 @@ namespace Gs2::MegaField::Request
         static TSharedPtr<FUpdateCurrentFieldMasterFromGitHubRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;
     };
-    typedef TSharedPtr<FUpdateCurrentFieldMasterFromGitHubRequest, ESPMode::ThreadSafe> FUpdateCurrentFieldMasterFromGitHubRequestPtr;
+    typedef TSharedPtr<FUpdateCurrentFieldMasterFromGitHubRequest> FUpdateCurrentFieldMasterFromGitHubRequestPtr;
 }

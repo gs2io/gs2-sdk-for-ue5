@@ -17,6 +17,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Dom/JsonObject.h"
 
 namespace Gs2::Distributor::Request
 {
@@ -50,5 +51,5 @@ namespace Gs2::Distributor::Request
         static TSharedPtr<FRunVerifyTaskRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;
     };
-    typedef TSharedPtr<FRunVerifyTaskRequest, ESPMode::ThreadSafe> FRunVerifyTaskRequestPtr;
+    typedef TSharedPtr<FRunVerifyTaskRequest> FRunVerifyTaskRequestPtr;
 }

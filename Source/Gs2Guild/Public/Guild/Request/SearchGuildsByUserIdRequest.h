@@ -17,6 +17,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Dom/JsonObject.h"
 
 namespace Gs2::Guild::Request
 {
@@ -36,6 +37,7 @@ namespace Gs2::Guild::Request
         TSharedPtr<TArray<int32>> Attributes5Value;
         TSharedPtr<TArray<FString>> JoinPoliciesValue;
         TOptional<bool> IncludeFullMembersGuildValue;
+        TOptional<FString> OrderByValue;
         TOptional<FString> PageTokenValue;
         TOptional<int32> LimitValue;
         TOptional<FString> TimeOffsetTokenValue;
@@ -67,6 +69,7 @@ namespace Gs2::Guild::Request
         TSharedPtr<FSearchGuildsByUserIdRequest> WithJoinPolicies(
             const TSharedPtr<TArray<FString>> JoinPolicies);
         TSharedPtr<FSearchGuildsByUserIdRequest> WithIncludeFullMembersGuild(const TOptional<bool> IncludeFullMembersGuild);
+        TSharedPtr<FSearchGuildsByUserIdRequest> WithOrderBy(const TOptional<FString> OrderBy);
         TSharedPtr<FSearchGuildsByUserIdRequest> WithPageToken(const TOptional<FString> PageToken);
         TSharedPtr<FSearchGuildsByUserIdRequest> WithLimit(const TOptional<int32> Limit);
         TSharedPtr<FSearchGuildsByUserIdRequest> WithTimeOffsetToken(const TOptional<FString> TimeOffsetToken);
@@ -85,6 +88,7 @@ namespace Gs2::Guild::Request
         TSharedPtr<TArray<FString>> GetJoinPolicies() const;
         TOptional<bool> GetIncludeFullMembersGuild() const;
         FString GetIncludeFullMembersGuildString() const;
+        TOptional<FString> GetOrderBy() const;
         TOptional<FString> GetPageToken() const;
         TOptional<int32> GetLimit() const;
         FString GetLimitString() const;
@@ -94,5 +98,5 @@ namespace Gs2::Guild::Request
         static TSharedPtr<FSearchGuildsByUserIdRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;
     };
-    typedef TSharedPtr<FSearchGuildsByUserIdRequest, ESPMode::ThreadSafe> FSearchGuildsByUserIdRequestPtr;
+    typedef TSharedPtr<FSearchGuildsByUserIdRequest> FSearchGuildsByUserIdRequestPtr;
 }

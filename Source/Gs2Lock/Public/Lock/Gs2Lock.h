@@ -57,18 +57,6 @@
 #include "Task/Rest/DeleteNamespaceTask.h"
 #include "Task/WebSocket/DeleteNamespaceTask.h"
 
-// DescribeMutexes
-#include "Request/DescribeMutexesRequest.h"
-#include "Result/DescribeMutexesResult.h"
-#include "Task/Rest/DescribeMutexesTask.h"
-#include "Task/WebSocket/DescribeMutexesTask.h"
-
-// DescribeMutexesByUserId
-#include "Request/DescribeMutexesByUserIdRequest.h"
-#include "Result/DescribeMutexesByUserIdResult.h"
-#include "Task/Rest/DescribeMutexesByUserIdTask.h"
-#include "Task/WebSocket/DescribeMutexesByUserIdTask.h"
-
 // Lock
 #include "Request/LockRequest.h"
 #include "Result/LockResult.h"

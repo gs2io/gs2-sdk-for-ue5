@@ -48,6 +48,8 @@
 #include "Task/Rest/InvokeScriptTask.h"
 #include "Request/DebugInvokeRequest.h"
 #include "Task/Rest/DebugInvokeTask.h"
+#include "Request/InvokeByStampSheetRequest.h"
+#include "Task/Rest/InvokeByStampSheetTask.h"
 
 namespace Gs2::Script
 {
@@ -118,6 +120,10 @@ namespace Gs2::Script
 
         TSharedPtr<FAsyncTask<Task::Rest::FDebugInvokeTask>> DebugInvoke(
             const Request::FDebugInvokeRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FInvokeByStampSheetTask>> InvokeByStampSheet(
+            const Request::FInvokeByStampSheetRequestPtr Request
         ) const;
     };
     typedef TSharedPtr<FGs2ScriptRestClient, ESPMode::ThreadSafe> FGs2ScriptRestClientPtr;

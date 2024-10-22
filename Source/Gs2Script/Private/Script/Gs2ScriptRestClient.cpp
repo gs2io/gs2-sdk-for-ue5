@@ -153,4 +153,13 @@ namespace Gs2::Script
             Request
         );
     }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FInvokeByStampSheetTask>> FGs2ScriptRestClient::InvokeByStampSheet(
+        const Request::FInvokeByStampSheetRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FInvokeByStampSheetTask>>(
+            Session,
+            Request
+        );
+    }
 }

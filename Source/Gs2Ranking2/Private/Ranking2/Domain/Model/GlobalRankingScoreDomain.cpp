@@ -235,6 +235,75 @@ namespace Gs2::Ranking2::Domain::Model
         return Gs2::Core::Util::New<FAsyncTask<FDeleteTask>>(this->AsShared(), Request);
     }
 
+    FGlobalRankingScoreDomain::FVerifyTask::FVerifyTask(
+        const TSharedPtr<FGlobalRankingScoreDomain>& Self,
+        const Request::FVerifyGlobalRankingScoreByUserIdRequestPtr Request
+    ): Self(Self), Request(Request)
+    {
+
+    }
+
+    FGlobalRankingScoreDomain::FVerifyTask::FVerifyTask(
+        const FVerifyTask& From
+    ): TGs2Future(From), Self(From.Self), Request(From.Request)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FGlobalRankingScoreDomain::FVerifyTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::Ranking2::Domain::Model::FGlobalRankingScoreDomain>> Result
+    )
+    {
+        Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
+            ->WithNamespaceName(Self->NamespaceName)
+            ->WithUserId(Self->UserId)
+            ->WithRankingName(Self->RankingName)
+            ->WithSeason(Self->Season);
+        const auto Future = Self->Client->VerifyGlobalRankingScoreByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto RequestModel = Request;
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
+        if (ResultModel != nullptr) {
+            
+            if (ResultModel->GetItem() != nullptr)
+            {
+                const auto ParentKey = Gs2::Ranking2::Domain::Model::FUserDomain::CreateCacheParentKey(
+                    Self->NamespaceName,
+                    Self->UserId,
+                    "GlobalRankingScore"
+                );
+                const auto Key = Gs2::Ranking2::Domain::Model::FGlobalRankingScoreDomain::CreateCacheKey(
+                    ResultModel->GetItem()->GetRankingName(),
+                    ResultModel->GetItem()->GetSeason().IsSet() ? FString::FromInt(*ResultModel->GetItem()->GetSeason()) : TOptional<FString>()
+                );
+                Self->Gs2->Cache->Put(
+                    Gs2::Ranking2::Model::FGlobalRankingScore::TypeName,
+                    ParentKey,
+                    Key,
+                    ResultModel->GetItem(),
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+            }
+        }
+        auto Domain = Self;
+
+        *Result = Domain;
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FGlobalRankingScoreDomain::FVerifyTask>> FGlobalRankingScoreDomain::Verify(
+        Request::FVerifyGlobalRankingScoreByUserIdRequestPtr Request
+    ) {
+        return Gs2::Core::Util::New<FAsyncTask<FVerifyTask>>(this->AsShared(), Request);
+    }
+
     FString FGlobalRankingScoreDomain::CreateCacheParentKey(
         TOptional<FString> NamespaceName,
         TOptional<FString> UserId,
@@ -348,7 +417,7 @@ namespace Gs2::Ranking2::Domain::Model
                 RankingName,
                 Season.IsSet() ? FString::FromInt(*Season) : TOptional<FString>()
             ),
-            [Callback](TSharedPtr<Gs2Object> obj)
+            [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::Ranking2::Model::FGlobalRankingScore>(obj));
             }

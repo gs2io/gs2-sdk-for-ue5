@@ -418,7 +418,7 @@ namespace Gs2::Enhance::Domain::Model
             ParentKey,
             Gs2::Enhance::Domain::Model::FCurrentRateMasterDomain::CreateCacheKey(
             ),
-            [Callback](TSharedPtr<Gs2Object> obj)
+            [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::Enhance::Model::FCurrentRateMaster>(obj));
             }

@@ -22,8 +22,6 @@
 #include "Auth/Gs2Auth.h"
 #include "Lock/Gs2Lock.h"
 #include "Lock/Domain/Iterator/DescribeNamespacesIterator.h"
-#include "Lock/Domain/Iterator/DescribeMutexesIterator.h"
-#include "Lock/Domain/Iterator/DescribeMutexesByUserIdIterator.h"
 
 namespace Gs2::Core::Domain
 {
@@ -53,11 +51,6 @@ namespace Gs2::Lock::Domain::Model
         const Gs2::Lock::FGs2LockRestClientPtr Client;
 
         public:
-        TOptional<FString> NextPageToken;
-        TOptional<FString> GetNextPageToken() const
-        {
-            return NextPageToken;
-        }
         TOptional<FString> NamespaceName;
         Gs2::Auth::Model::FAccessTokenPtr AccessToken;
         TOptional<FString> UserId() const { return AccessToken->GetUserId(); }
@@ -77,17 +70,6 @@ namespace Gs2::Lock::Domain::Model
 
         FUserAccessTokenDomain(
             const FUserAccessTokenDomain& From
-        );
-
-        Gs2::Lock::Domain::Iterator::FDescribeMutexesIteratorPtr Mutexes(
-        ) const;
-
-        Gs2::Core::Domain::CallbackID SubscribeMutexes(
-            TFunction<void()> Callback
-        );
-
-        void UnsubscribeMutexes(
-            Gs2::Core::Domain::CallbackID CallbackID
         );
 
         TSharedPtr<Gs2::Lock::Domain::Model::FMutexAccessTokenDomain> Mutex(

@@ -70,47 +70,6 @@ namespace Gs2::Lock::Domain::Model
 
     }
 
-    Gs2::Lock::Domain::Iterator::FDescribeMutexesIteratorPtr FUserAccessTokenDomain::Mutexes(
-    ) const
-    {
-        return MakeShared<Gs2::Lock::Domain::Iterator::FDescribeMutexesIterator>(
-            Gs2,
-            Client,
-            NamespaceName,
-            AccessToken
-        );
-    }
-
-    Gs2::Core::Domain::CallbackID FUserAccessTokenDomain::SubscribeMutexes(
-    TFunction<void()> Callback
-    )
-    {
-        return Gs2->Cache->ListSubscribe(
-            Gs2::Lock::Model::FMutex::TypeName,
-            Gs2::Lock::Domain::Model::FUserDomain::CreateCacheParentKey(
-                NamespaceName,
-                UserId(),
-                "Mutex"
-            ),
-            Callback
-        );
-    }
-
-    void FUserAccessTokenDomain::UnsubscribeMutexes(
-        Gs2::Core::Domain::CallbackID CallbackID
-    )
-    {
-        Gs2->Cache->ListUnsubscribe(
-            Gs2::Lock::Model::FMutex::TypeName,
-            Gs2::Lock::Domain::Model::FUserDomain::CreateCacheParentKey(
-                NamespaceName,
-                UserId(),
-                "Mutex"
-            ),
-            CallbackID
-        );
-    }
-
     TSharedPtr<Gs2::Lock::Domain::Model::FMutexAccessTokenDomain> FUserAccessTokenDomain::Mutex(
         const FString PropertyId
     )

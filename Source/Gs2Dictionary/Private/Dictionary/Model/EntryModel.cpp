@@ -72,7 +72,7 @@ namespace Gs2::Dictionary::Model
 
     TOptional<FString> FEntryModel::GetRegionFromGrn(const FString Grn)
     {
-        const auto Pattern = FRegexPattern(TEXT("grn:gs2:(?<region>.+):(?<ownerId>.+):dictionary:(?<namespaceName>.+):model:(?<entryName>.+)"));
+        const auto Pattern = FRegexPattern(TEXT("grn:gs2:(?<region>.+):(?<ownerId>.+):dictionary:(?<namespaceName>.+):model:(?<entryModelName>.+)"));
         FRegexMatcher Matcher(Pattern, Grn);
         while (Matcher.FindNext())
         {
@@ -83,7 +83,7 @@ namespace Gs2::Dictionary::Model
 
     TOptional<FString> FEntryModel::GetOwnerIdFromGrn(const FString Grn)
     {
-        const auto Pattern = FRegexPattern(TEXT("grn:gs2:(?<region>.+):(?<ownerId>.+):dictionary:(?<namespaceName>.+):model:(?<entryName>.+)"));
+        const auto Pattern = FRegexPattern(TEXT("grn:gs2:(?<region>.+):(?<ownerId>.+):dictionary:(?<namespaceName>.+):model:(?<entryModelName>.+)"));
         FRegexMatcher Matcher(Pattern, Grn);
         while (Matcher.FindNext())
         {
@@ -94,7 +94,7 @@ namespace Gs2::Dictionary::Model
 
     TOptional<FString> FEntryModel::GetNamespaceNameFromGrn(const FString Grn)
     {
-        const auto Pattern = FRegexPattern(TEXT("grn:gs2:(?<region>.+):(?<ownerId>.+):dictionary:(?<namespaceName>.+):model:(?<entryName>.+)"));
+        const auto Pattern = FRegexPattern(TEXT("grn:gs2:(?<region>.+):(?<ownerId>.+):dictionary:(?<namespaceName>.+):model:(?<entryModelName>.+)"));
         FRegexMatcher Matcher(Pattern, Grn);
         while (Matcher.FindNext())
         {
@@ -103,9 +103,9 @@ namespace Gs2::Dictionary::Model
         return TOptional<FString>();
     }
 
-    TOptional<FString> FEntryModel::GetEntryNameFromGrn(const FString Grn)
+    TOptional<FString> FEntryModel::GetEntryModelNameFromGrn(const FString Grn)
     {
-        const auto Pattern = FRegexPattern(TEXT("grn:gs2:(?<region>.+):(?<ownerId>.+):dictionary:(?<namespaceName>.+):model:(?<entryName>.+)"));
+        const auto Pattern = FRegexPattern(TEXT("grn:gs2:(?<region>.+):(?<ownerId>.+):dictionary:(?<namespaceName>.+):model:(?<entryModelName>.+)"));
         FRegexMatcher Matcher(Pattern, Grn);
         while (Matcher.FindNext())
         {

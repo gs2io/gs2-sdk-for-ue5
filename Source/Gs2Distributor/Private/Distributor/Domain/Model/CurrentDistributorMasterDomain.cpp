@@ -416,7 +416,7 @@ namespace Gs2::Distributor::Domain::Model
             ParentKey,
             Gs2::Distributor::Domain::Model::FCurrentDistributorMasterDomain::CreateCacheKey(
             ),
-            [Callback](TSharedPtr<Gs2Object> obj)
+            [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::Distributor::Model::FCurrentDistributorMaster>(obj));
             }

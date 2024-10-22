@@ -208,7 +208,7 @@ namespace Gs2::Matchmaking::Domain::Model
                 RatingName,
                 GatheringName
             ),
-            [Callback](TSharedPtr<Gs2Object> obj)
+            [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::Matchmaking::Model::FVote>(obj));
             }

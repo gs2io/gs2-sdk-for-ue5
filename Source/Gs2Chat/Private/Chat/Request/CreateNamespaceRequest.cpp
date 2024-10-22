@@ -22,6 +22,7 @@ namespace Gs2::Chat::Request
         NameValue(TOptional<FString>()),
         DescriptionValue(TOptional<FString>()),
         AllowCreateRoomValue(TOptional<bool>()),
+        MessageLifeTimeDaysValue(TOptional<int32>()),
         PostMessageScriptValue(nullptr),
         CreateRoomScriptValue(nullptr),
         DeleteRoomScriptValue(nullptr),
@@ -38,6 +39,7 @@ namespace Gs2::Chat::Request
         NameValue(From.NameValue),
         DescriptionValue(From.DescriptionValue),
         AllowCreateRoomValue(From.AllowCreateRoomValue),
+        MessageLifeTimeDaysValue(From.MessageLifeTimeDaysValue),
         PostMessageScriptValue(From.PostMessageScriptValue),
         CreateRoomScriptValue(From.CreateRoomScriptValue),
         DeleteRoomScriptValue(From.DeleteRoomScriptValue),
@@ -77,6 +79,14 @@ namespace Gs2::Chat::Request
     )
     {
         this->AllowCreateRoomValue = AllowCreateRoom;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FCreateNamespaceRequest> FCreateNamespaceRequest::WithMessageLifeTimeDays(
+        const TOptional<int32> MessageLifeTimeDays
+    )
+    {
+        this->MessageLifeTimeDaysValue = MessageLifeTimeDays;
         return SharedThis(this);
     }
 
@@ -163,6 +173,20 @@ namespace Gs2::Chat::Request
             return FString("null");
         }
         return FString(AllowCreateRoomValue.GetValue() ? "true" : "false");
+    }
+
+    TOptional<int32> FCreateNamespaceRequest::GetMessageLifeTimeDays() const
+    {
+        return MessageLifeTimeDaysValue;
+    }
+
+    FString FCreateNamespaceRequest::GetMessageLifeTimeDaysString() const
+    {
+        if (!MessageLifeTimeDaysValue.IsSet())
+        {
+            return FString("null");
+        }
+        return FString::Printf(TEXT("%d"), MessageLifeTimeDaysValue.GetValue());
     }
 
     TSharedPtr<Model::FScriptSetting> FCreateNamespaceRequest::GetPostMessageScript() const
@@ -262,6 +286,15 @@ namespace Gs2::Chat::Request
                   }
                   return TOptional<bool>();
               }() : TOptional<bool>())
+            ->WithMessageLifeTimeDays(Data->HasField(ANSI_TO_TCHAR("messageLifeTimeDays")) ? [Data]() -> TOptional<int32>
+              {
+                  int32 v;
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("messageLifeTimeDays"), v))
+                  {
+                        return TOptional(v);
+                  }
+                  return TOptional<int32>();
+              }() : TOptional<int32>())
           ->WithPostMessageScript(Data->HasField(ANSI_TO_TCHAR("postMessageScript")) ? [Data]() -> Model::FScriptSettingPtr
               {
                   if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("postMessageScript")))
@@ -338,6 +371,10 @@ namespace Gs2::Chat::Request
         if (AllowCreateRoomValue.IsSet())
         {
             JsonRootObject->SetBoolField("allowCreateRoom", AllowCreateRoomValue.GetValue());
+        }
+        if (MessageLifeTimeDaysValue.IsSet())
+        {
+            JsonRootObject->SetNumberField("messageLifeTimeDays", MessageLifeTimeDaysValue.GetValue());
         }
         if (PostMessageScriptValue != nullptr && PostMessageScriptValue.IsValid())
         {

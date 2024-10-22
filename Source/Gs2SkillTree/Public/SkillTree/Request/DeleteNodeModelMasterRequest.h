@@ -17,6 +17,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Dom/JsonObject.h"
 
 namespace Gs2::SkillTree::Request
 {
@@ -47,5 +48,5 @@ namespace Gs2::SkillTree::Request
         static TSharedPtr<FDeleteNodeModelMasterRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;
     };
-    typedef TSharedPtr<FDeleteNodeModelMasterRequest, ESPMode::ThreadSafe> FDeleteNodeModelMasterRequestPtr;
+    typedef TSharedPtr<FDeleteNodeModelMasterRequest> FDeleteNodeModelMasterRequestPtr;
 }

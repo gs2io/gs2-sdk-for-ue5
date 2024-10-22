@@ -23,6 +23,7 @@ namespace Gs2::Script::Model
         NameValue(TOptional<FString>()),
         DescriptionValue(TOptional<FString>()),
         ScriptValue(TOptional<FString>()),
+        DisableStringNumberToNumberValue(TOptional<bool>()),
         CreatedAtValue(TOptional<int64>()),
         UpdatedAtValue(TOptional<int64>()),
         RevisionValue(TOptional<int64>())
@@ -36,6 +37,7 @@ namespace Gs2::Script::Model
         NameValue(From.NameValue),
         DescriptionValue(From.DescriptionValue),
         ScriptValue(From.ScriptValue),
+        DisableStringNumberToNumberValue(From.DisableStringNumberToNumberValue),
         CreatedAtValue(From.CreatedAtValue),
         UpdatedAtValue(From.UpdatedAtValue),
         RevisionValue(From.RevisionValue)
@@ -71,6 +73,14 @@ namespace Gs2::Script::Model
     )
     {
         this->ScriptValue = Script;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FScript> FScript::WithDisableStringNumberToNumber(
+        const TOptional<bool> DisableStringNumberToNumber
+    )
+    {
+        this->DisableStringNumberToNumberValue = DisableStringNumberToNumber;
         return SharedThis(this);
     }
 
@@ -112,6 +122,19 @@ namespace Gs2::Script::Model
     TOptional<FString> FScript::GetScript() const
     {
         return ScriptValue;
+    }
+    TOptional<bool> FScript::GetDisableStringNumberToNumber() const
+    {
+        return DisableStringNumberToNumberValue;
+    }
+
+    FString FScript::GetDisableStringNumberToNumberString() const
+    {
+        if (!DisableStringNumberToNumberValue.IsSet())
+        {
+            return FString("null");
+        }
+        return FString(DisableStringNumberToNumberValue.GetValue() ? "true" : "false");
     }
     TOptional<int64> FScript::GetCreatedAt() const
     {
@@ -239,6 +262,15 @@ namespace Gs2::Script::Model
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
+            ->WithDisableStringNumberToNumber(Data->HasField(ANSI_TO_TCHAR("disableStringNumberToNumber")) ? [Data]() -> TOptional<bool>
+                {
+                    bool v;
+                    if (Data->TryGetBoolField(ANSI_TO_TCHAR("disableStringNumberToNumber"), v))
+                    {
+                        return TOptional(v);
+                    }
+                    return TOptional<bool>();
+                }() : TOptional<bool>())
             ->WithCreatedAt(Data->HasField(ANSI_TO_TCHAR("createdAt")) ? [Data]() -> TOptional<int64>
                 {
                     int64 v;
@@ -286,6 +318,10 @@ namespace Gs2::Script::Model
         if (ScriptValue.IsSet())
         {
             JsonRootObject->SetStringField("script", ScriptValue.GetValue());
+        }
+        if (DisableStringNumberToNumberValue.IsSet())
+        {
+            JsonRootObject->SetBoolField("disableStringNumberToNumber", DisableStringNumberToNumberValue.GetValue());
         }
         if (CreatedAtValue.IsSet())
         {

@@ -229,7 +229,7 @@ namespace Gs2::SerialKey::Domain::Model
             Gs2::SerialKey::Domain::Model::FSerialKeyDomain::CreateCacheKey(
                 SerialKeyCode
             ),
-            [Callback](TSharedPtr<Gs2Object> obj)
+            [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::SerialKey::Model::FSerialKey>(obj));
             }

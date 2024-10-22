@@ -17,6 +17,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Dom/JsonObject.h"
 
 namespace Gs2::Enhance::Request
 {
@@ -44,5 +45,5 @@ namespace Gs2::Enhance::Request
         static TSharedPtr<FGetCurrentRateMasterRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;
     };
-    typedef TSharedPtr<FGetCurrentRateMasterRequest, ESPMode::ThreadSafe> FGetCurrentRateMasterRequestPtr;
+    typedef TSharedPtr<FGetCurrentRateMasterRequest> FGetCurrentRateMasterRequestPtr;
 }

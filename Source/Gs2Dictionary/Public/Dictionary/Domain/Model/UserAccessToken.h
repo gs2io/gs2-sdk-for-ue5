@@ -84,32 +84,6 @@ namespace Gs2::Dictionary::Domain::Model
             const FUserAccessTokenDomain& From
         );
 
-        class GS2DICTIONARY_API FVerifyEntryTask final :
-            public Gs2::Core::Util::TGs2Future<Gs2::Dictionary::Domain::Model::FUserAccessTokenDomain>,
-            public TSharedFromThis<FVerifyEntryTask>
-        {
-            const TSharedPtr<FUserAccessTokenDomain> Self;
-            const Request::FVerifyEntryRequestPtr Request;
-        public:
-            explicit FVerifyEntryTask(
-                const TSharedPtr<FUserAccessTokenDomain>& Self,
-                const Request::FVerifyEntryRequestPtr Request
-            );
-
-            FVerifyEntryTask(
-                const FVerifyEntryTask& From
-            );
-
-            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-                TSharedPtr<TSharedPtr<Gs2::Dictionary::Domain::Model::FUserAccessTokenDomain>> Result
-            ) override;
-        };
-        friend FVerifyEntryTask;
-
-        TSharedPtr<FAsyncTask<FVerifyEntryTask>> VerifyEntry(
-            Request::FVerifyEntryRequestPtr Request
-        );
-
         class GS2DICTIONARY_API FDeleteEntriesTask final :
             public Gs2::Core::Util::TGs2Future<TArray<TSharedPtr<Gs2::Dictionary::Domain::Model::FEntryAccessTokenDomain>>>,
             public TSharedFromThis<FDeleteEntriesTask>
@@ -148,7 +122,7 @@ namespace Gs2::Dictionary::Domain::Model
         );
 
         TSharedPtr<Gs2::Dictionary::Domain::Model::FEntryAccessTokenDomain> Entry(
-            const FString EntryName
+            const FString EntryModelName
         );
 
         static FString CreateCacheParentKey(

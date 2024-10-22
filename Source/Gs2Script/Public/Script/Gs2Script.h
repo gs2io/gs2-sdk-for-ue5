@@ -119,6 +119,12 @@
 #include "Task/Rest/DebugInvokeTask.h"
 #include "Task/WebSocket/DebugInvokeTask.h"
 
+// InvokeByStampSheet
+#include "Request/InvokeByStampSheetRequest.h"
+#include "Result/InvokeByStampSheetResult.h"
+#include "Task/Rest/InvokeByStampSheetTask.h"
+#include "Task/WebSocket/InvokeByStampSheetTask.h"
+
 // Client
 #include "Gs2ScriptRestClient.h"
 #include "Gs2ScriptWebSocketClient.h"

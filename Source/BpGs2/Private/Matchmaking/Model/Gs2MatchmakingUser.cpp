@@ -15,6 +15,7 @@
  */
 
 #include "Matchmaking/Model/Gs2MatchmakingUser.h"
+#include "Matchmaking/Domain/EzGs2Matchmaking.h"
 #include "Matchmaking/Model/Gs2MatchmakingGathering.h"
 #include "Matchmaking/Model/Gs2MatchmakingRating.h"
 #include "Matchmaking/Model/Gs2MatchmakingBallot.h"

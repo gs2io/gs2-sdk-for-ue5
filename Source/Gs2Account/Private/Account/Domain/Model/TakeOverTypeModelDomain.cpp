@@ -242,7 +242,7 @@ namespace Gs2::Account::Domain::Model
             Gs2::Account::Domain::Model::FTakeOverTypeModelDomain::CreateCacheKey(
                 Type.IsSet() ? FString::FromInt(*Type) : TOptional<FString>()
             ),
-            [Callback](TSharedPtr<Gs2Object> obj)
+            [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::Account::Model::FTakeOverTypeModel>(obj));
             }

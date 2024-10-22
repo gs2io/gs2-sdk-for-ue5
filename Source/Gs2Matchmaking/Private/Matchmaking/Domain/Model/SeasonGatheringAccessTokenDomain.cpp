@@ -339,7 +339,7 @@ namespace Gs2::Matchmaking::Domain::Model
                 Tier.IsSet() ? FString::FromInt(*Tier) : TOptional<FString>(),
                 SeasonGatheringName
             ),
-            [Callback](TSharedPtr<Gs2Object> obj)
+            [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::Matchmaking::Model::FSeasonGathering>(obj));
             }

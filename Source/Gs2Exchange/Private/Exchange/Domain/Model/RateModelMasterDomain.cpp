@@ -366,7 +366,7 @@ namespace Gs2::Exchange::Domain::Model
             Gs2::Exchange::Domain::Model::FRateModelMasterDomain::CreateCacheKey(
                 RateName
             ),
-            [Callback](TSharedPtr<Gs2Object> obj)
+            [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::Exchange::Model::FRateModelMaster>(obj));
             }

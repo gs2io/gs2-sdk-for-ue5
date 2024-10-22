@@ -241,7 +241,7 @@ namespace Gs2::Formation::Domain::Model
             ParentKey,
             Gs2::Formation::Domain::Model::FFormModelDomain::CreateCacheKey(
             ),
-            [Callback](TSharedPtr<Gs2Object> obj)
+            [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::Formation::Model::FFormModel>(obj));
             }

@@ -17,6 +17,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Dom/JsonObject.h"
 #include "../Model/SlotModel.h"
 
 namespace Gs2::Formation::Request
@@ -56,5 +57,5 @@ namespace Gs2::Formation::Request
         static TSharedPtr<FCreatePropertyFormModelMasterRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;
     };
-    typedef TSharedPtr<FCreatePropertyFormModelMasterRequest, ESPMode::ThreadSafe> FCreatePropertyFormModelMasterRequestPtr;
+    typedef TSharedPtr<FCreatePropertyFormModelMasterRequest> FCreatePropertyFormModelMasterRequestPtr;
 }

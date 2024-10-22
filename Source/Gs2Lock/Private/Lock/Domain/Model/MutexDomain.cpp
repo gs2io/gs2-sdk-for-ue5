@@ -438,7 +438,7 @@ namespace Gs2::Lock::Domain::Model
             Gs2::Lock::Domain::Model::FMutexDomain::CreateCacheKey(
                 PropertyId
             ),
-            [Callback](TSharedPtr<Gs2Object> obj)
+            [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::Lock::Model::FMutex>(obj));
             }

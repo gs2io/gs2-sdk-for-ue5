@@ -44,14 +44,14 @@ namespace Gs2::Dictionary::Domain::Model
         const Core::Domain::FGs2Ptr& Gs2,
         const Dictionary::Domain::FGs2DictionaryDomainPtr& Service,
         const TOptional<FString> NamespaceName,
-        const TOptional<FString> EntryName
+        const TOptional<FString> EntryModelName
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
         Service(Service),
         Client(MakeShared<Gs2::Dictionary::FGs2DictionaryRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
-        EntryName(EntryName),
+        EntryModelName(EntryModelName),
         ParentKey(Gs2::Dictionary::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
             NamespaceName,
             "EntryModel"
@@ -66,7 +66,7 @@ namespace Gs2::Dictionary::Domain::Model
         Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
-        EntryName(From.EntryName),
+        EntryModelName(From.EntryModelName),
         ParentKey(From.ParentKey)
     {
 
@@ -92,8 +92,7 @@ namespace Gs2::Dictionary::Domain::Model
     {
         Request
             ->WithContextStack(Self->Gs2->DefaultContextStack)
-            ->WithNamespaceName(Self->NamespaceName)
-            ->WithEntryName(Self->EntryName);
+            ->WithNamespaceName(Self->NamespaceName);
         const auto Future = Self->Client->GetEntryModel(
             Request
         );
@@ -137,22 +136,22 @@ namespace Gs2::Dictionary::Domain::Model
 
     FString FEntryModelDomain::CreateCacheParentKey(
         TOptional<FString> NamespaceName,
-        TOptional<FString> EntryName,
+        TOptional<FString> EntryModelName,
         FString ChildType
     )
     {
         return FString("") +
             (NamespaceName.IsSet() ? *NamespaceName : "null") + ":" +
-            (EntryName.IsSet() ? *EntryName : "null") + ":" +
+            (EntryModelName.IsSet() ? *EntryModelName : "null") + ":" +
             ChildType;
     }
 
     FString FEntryModelDomain::CreateCacheKey(
-        TOptional<FString> EntryName
+        TOptional<FString> EntryModelName
     )
     {
         return FString("") +
-            (EntryName.IsSet() ? *EntryName : "null");
+            (EntryModelName.IsSet() ? *EntryModelName : "null");
     }
 
     FEntryModelDomain::FModelTask::FModelTask(
@@ -178,7 +177,7 @@ namespace Gs2::Dictionary::Domain::Model
         auto bCacheHit = Self->Gs2->Cache->TryGet<Gs2::Dictionary::Model::FEntryModel>(
             Self->ParentKey,
             Gs2::Dictionary::Domain::Model::FEntryModelDomain::CreateCacheKey(
-                Self->EntryName
+                Self->EntryModelName
             ),
             &Value
         );
@@ -195,7 +194,7 @@ namespace Gs2::Dictionary::Domain::Model
                 }
 
                 const auto Key = Gs2::Dictionary::Domain::Model::FEntryModelDomain::CreateCacheKey(
-                    Self->EntryName
+                    Self->EntryModelName
                 );
                 Self->Gs2->Cache->Put(
                     Gs2::Dictionary::Model::FEntryModel::TypeName,
@@ -213,7 +212,7 @@ namespace Gs2::Dictionary::Domain::Model
             Self->Gs2->Cache->TryGet<Gs2::Dictionary::Model::FEntryModel>(
                 Self->ParentKey,
                 Gs2::Dictionary::Domain::Model::FEntryModelDomain::CreateCacheKey(
-                    Self->EntryName
+                    Self->EntryModelName
                 ),
                 &Value
             );
@@ -236,9 +235,9 @@ namespace Gs2::Dictionary::Domain::Model
             Gs2::Dictionary::Model::FEntryModel::TypeName,
             ParentKey,
             Gs2::Dictionary::Domain::Model::FEntryModelDomain::CreateCacheKey(
-                EntryName
+                EntryModelName
             ),
-            [Callback](TSharedPtr<Gs2Object> obj)
+            [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::Dictionary::Model::FEntryModel>(obj));
             }
@@ -253,7 +252,7 @@ namespace Gs2::Dictionary::Domain::Model
             Gs2::Dictionary::Model::FEntryModel::TypeName,
             ParentKey,
             Gs2::Dictionary::Domain::Model::FEntryModelDomain::CreateCacheKey(
-                EntryName
+                EntryModelName
             ),
             CallbackID
         );

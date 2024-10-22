@@ -181,10 +181,37 @@ namespace Gs2::SerialKey
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::WebSocket::FIssueOnceTask>> FGs2SerialKeyWebSocketClient::IssueOnce(
+        const Request::FIssueOnceRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FIssueOnceTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::WebSocket::FGetSerialKeyTask>> FGs2SerialKeyWebSocketClient::GetSerialKey(
         const Request::FGetSerialKeyRequestPtr Request) const
     {
         return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FGetSerialKeyTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FVerifyCodeTask>> FGs2SerialKeyWebSocketClient::VerifyCode(
+        const Request::FVerifyCodeRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FVerifyCodeTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FVerifyCodeByUserIdTask>> FGs2SerialKeyWebSocketClient::VerifyCodeByUserId(
+        const Request::FVerifyCodeByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FVerifyCodeByUserIdTask>>(
             Session,
             Request
         );
@@ -230,6 +257,15 @@ namespace Gs2::SerialKey
         const Request::FRevertUseByStampSheetRequestPtr Request) const
     {
         return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FRevertUseByStampSheetTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FVerifyByStampTaskTask>> FGs2SerialKeyWebSocketClient::VerifyByStampTask(
+        const Request::FVerifyByStampTaskRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FVerifyByStampTaskTask>>(
             Session,
             Request
         );

@@ -262,6 +262,33 @@ namespace Gs2::Ranking2
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::WebSocket::FVerifyGlobalRankingScoreTask>> FGs2Ranking2WebSocketClient::VerifyGlobalRankingScore(
+        const Request::FVerifyGlobalRankingScoreRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FVerifyGlobalRankingScoreTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FVerifyGlobalRankingScoreByUserIdTask>> FGs2Ranking2WebSocketClient::VerifyGlobalRankingScoreByUserId(
+        const Request::FVerifyGlobalRankingScoreByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FVerifyGlobalRankingScoreByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FVerifyGlobalRankingScoreByStampTaskTask>> FGs2Ranking2WebSocketClient::VerifyGlobalRankingScoreByStampTask(
+        const Request::FVerifyGlobalRankingScoreByStampTaskRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FVerifyGlobalRankingScoreByStampTaskTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::WebSocket::FDescribeGlobalRankingReceivedRewardsTask>> FGs2Ranking2WebSocketClient::DescribeGlobalRankingReceivedRewards(
         const Request::FDescribeGlobalRankingReceivedRewardsRequestPtr Request) const
     {
@@ -509,6 +536,33 @@ namespace Gs2::Ranking2
         const Request::FDeleteClusterRankingScoreByUserIdRequestPtr Request) const
     {
         return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FDeleteClusterRankingScoreByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FVerifyClusterRankingScoreTask>> FGs2Ranking2WebSocketClient::VerifyClusterRankingScore(
+        const Request::FVerifyClusterRankingScoreRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FVerifyClusterRankingScoreTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FVerifyClusterRankingScoreByUserIdTask>> FGs2Ranking2WebSocketClient::VerifyClusterRankingScoreByUserId(
+        const Request::FVerifyClusterRankingScoreByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FVerifyClusterRankingScoreByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FVerifyClusterRankingScoreByStampTaskTask>> FGs2Ranking2WebSocketClient::VerifyClusterRankingScoreByStampTask(
+        const Request::FVerifyClusterRankingScoreByStampTaskRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FVerifyClusterRankingScoreByStampTaskTask>>(
             Session,
             Request
         );
@@ -797,6 +851,33 @@ namespace Gs2::Ranking2
         const Request::FDeleteSubscribeRankingScoreByUserIdRequestPtr Request) const
     {
         return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FDeleteSubscribeRankingScoreByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FVerifySubscribeRankingScoreTask>> FGs2Ranking2WebSocketClient::VerifySubscribeRankingScore(
+        const Request::FVerifySubscribeRankingScoreRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FVerifySubscribeRankingScoreTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FVerifySubscribeRankingScoreByUserIdTask>> FGs2Ranking2WebSocketClient::VerifySubscribeRankingScoreByUserId(
+        const Request::FVerifySubscribeRankingScoreByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FVerifySubscribeRankingScoreByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FVerifySubscribeRankingScoreByStampTaskTask>> FGs2Ranking2WebSocketClient::VerifySubscribeRankingScoreByStampTask(
+        const Request::FVerifySubscribeRankingScoreByStampTaskRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FVerifySubscribeRankingScoreByStampTaskTask>>(
             Session,
             Request
         );

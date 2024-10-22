@@ -17,6 +17,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Dom/JsonObject.h"
 #include "../Model/Player.h"
 #include "../Model/AttributeRange.h"
 #include "../Model/CapacityOfRole.h"
@@ -72,5 +73,5 @@ namespace Gs2::Matchmaking::Request
         static TSharedPtr<FCreateGatheringRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;
     };
-    typedef TSharedPtr<FCreateGatheringRequest, ESPMode::ThreadSafe> FCreateGatheringRequestPtr;
+    typedef TSharedPtr<FCreateGatheringRequest> FCreateGatheringRequestPtr;
 }

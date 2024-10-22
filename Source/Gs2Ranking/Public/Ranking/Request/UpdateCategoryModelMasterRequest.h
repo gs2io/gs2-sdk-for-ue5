@@ -17,6 +17,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Dom/JsonObject.h"
 #include "../Model/GlobalRankingSetting.h"
 #include "../Model/Scope.h"
 
@@ -107,5 +108,5 @@ namespace Gs2::Ranking::Request
         static TSharedPtr<FUpdateCategoryModelMasterRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;
     };
-    typedef TSharedPtr<FUpdateCategoryModelMasterRequest, ESPMode::ThreadSafe> FUpdateCategoryModelMasterRequestPtr;
+    typedef TSharedPtr<FUpdateCategoryModelMasterRequest> FUpdateCategoryModelMasterRequestPtr;
 }

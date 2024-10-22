@@ -21,8 +21,6 @@
 #include "Core/Domain/Gs2Core.h"
 #include "Auth/Gs2Auth.h"
 #include "Lock/Domain/Iterator/DescribeNamespacesIterator.h"
-#include "Lock/Domain/Iterator/DescribeMutexesIterator.h"
-#include "Lock/Domain/Iterator/DescribeMutexesByUserIdIterator.h"
 
 namespace Gs2::Core::Domain
 {

@@ -124,7 +124,7 @@ namespace Gs2::Stamina::Domain::Model
             ParentKey,
             Gs2::Stamina::Domain::Model::FRecoverIntervalTableDomain::CreateCacheKey(
             ),
-            [Callback](TSharedPtr<Gs2Object> obj)
+            [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::Stamina::Model::FRecoverIntervalTable>(obj));
             }

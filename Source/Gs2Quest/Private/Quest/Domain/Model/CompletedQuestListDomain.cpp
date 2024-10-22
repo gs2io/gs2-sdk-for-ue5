@@ -311,7 +311,7 @@ namespace Gs2::Quest::Domain::Model
             Gs2::Quest::Domain::Model::FCompletedQuestListDomain::CreateCacheKey(
                 QuestGroupName
             ),
-            [Callback](TSharedPtr<Gs2Object> obj)
+            [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::Quest::Model::FCompletedQuestList>(obj));
             }

@@ -230,53 +230,6 @@ namespace Gs2::Dictionary::Domain::Model
         return Gs2::Core::Util::New<FAsyncTask<FResetTask>>(this->AsShared(), Request);
     }
 
-    FUserDomain::FVerifyEntryTask::FVerifyEntryTask(
-        const TSharedPtr<FUserDomain>& Self,
-        const Request::FVerifyEntryByUserIdRequestPtr Request
-    ): Self(Self), Request(Request)
-    {
-
-    }
-
-    FUserDomain::FVerifyEntryTask::FVerifyEntryTask(
-        const FVerifyEntryTask& From
-    ): TGs2Future(From), Self(From.Self), Request(From.Request)
-    {
-    }
-
-    Gs2::Core::Model::FGs2ErrorPtr FUserDomain::FVerifyEntryTask::Action(
-        TSharedPtr<TSharedPtr<Gs2::Dictionary::Domain::Model::FUserDomain>> Result
-    )
-    {
-        Request
-            ->WithContextStack(Self->Gs2->DefaultContextStack)
-            ->WithNamespaceName(Self->NamespaceName)
-            ->WithUserId(Self->UserId);
-        const auto Future = Self->Client->VerifyEntryByUserId(
-            Request
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            return Future->GetTask().Error();
-        }
-        const auto RequestModel = Request;
-        const auto ResultModel = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-        }
-        const auto Domain = Self;
-        *Result = Domain;
-        return nullptr;
-    }
-
-    TSharedPtr<FAsyncTask<FUserDomain::FVerifyEntryTask>> FUserDomain::VerifyEntry(
-        Request::FVerifyEntryByUserIdRequestPtr Request
-    ) {
-        return Gs2::Core::Util::New<FAsyncTask<FVerifyEntryTask>>(this->AsShared(), Request);
-    }
-
     FUserDomain::FDeleteEntriesTask::FDeleteEntriesTask(
         const TSharedPtr<FUserDomain>& Self,
         const Request::FDeleteEntriesByUserIdRequestPtr Request
@@ -412,7 +365,7 @@ namespace Gs2::Dictionary::Domain::Model
     }
 
     TSharedPtr<Gs2::Dictionary::Domain::Model::FEntryDomain> FUserDomain::Entry(
-        const FString EntryName
+        const FString EntryModelName
     )
     {
         return MakeShared<Gs2::Dictionary::Domain::Model::FEntryDomain>(
@@ -420,7 +373,7 @@ namespace Gs2::Dictionary::Domain::Model
             Service,
             NamespaceName,
             UserId,
-            EntryName == TEXT("") ? TOptional<FString>() : TOptional<FString>(EntryName)
+            EntryModelName == TEXT("") ? TOptional<FString>() : TOptional<FString>(EntryModelName)
         );
     }
 

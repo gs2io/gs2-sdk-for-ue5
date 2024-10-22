@@ -490,7 +490,7 @@ namespace Gs2::MegaField::Domain::Model
             Gs2::MegaField::Domain::Model::FAreaModelMasterDomain::CreateCacheKey(
                 AreaModelName
             ),
-            [Callback](TSharedPtr<Gs2Object> obj)
+            [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::MegaField::Model::FAreaModelMaster>(obj));
             }

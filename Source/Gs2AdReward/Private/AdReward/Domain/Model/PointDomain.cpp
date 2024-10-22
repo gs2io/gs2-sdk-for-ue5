@@ -419,7 +419,7 @@ namespace Gs2::AdReward::Domain::Model
             ParentKey,
             Gs2::AdReward::Domain::Model::FPointDomain::CreateCacheKey(
             ),
-            [Callback](TSharedPtr<Gs2Object> obj)
+            [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::AdReward::Model::FPoint>(obj));
             }

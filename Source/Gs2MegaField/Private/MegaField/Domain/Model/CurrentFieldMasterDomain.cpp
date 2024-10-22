@@ -416,7 +416,7 @@ namespace Gs2::MegaField::Domain::Model
             ParentKey,
             Gs2::MegaField::Domain::Model::FCurrentFieldMasterDomain::CreateCacheKey(
             ),
-            [Callback](TSharedPtr<Gs2Object> obj)
+            [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::MegaField::Model::FCurrentFieldMaster>(obj));
             }

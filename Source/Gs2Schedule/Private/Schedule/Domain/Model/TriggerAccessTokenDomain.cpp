@@ -357,7 +357,7 @@ namespace Gs2::Schedule::Domain::Model
             Gs2::Schedule::Domain::Model::FTriggerDomain::CreateCacheKey(
                 TriggerName
             ),
-            [Callback](TSharedPtr<Gs2Object> obj)
+            [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::Schedule::Model::FTrigger>(obj));
             }

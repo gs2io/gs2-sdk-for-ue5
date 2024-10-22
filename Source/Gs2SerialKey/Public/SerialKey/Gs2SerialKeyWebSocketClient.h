@@ -54,8 +54,14 @@
 #include "Task/WebSocket/DescribeSerialKeysTask.h"
 #include "Request/DownloadSerialCodesRequest.h"
 #include "Task/WebSocket/DownloadSerialCodesTask.h"
+#include "Request/IssueOnceRequest.h"
+#include "Task/WebSocket/IssueOnceTask.h"
 #include "Request/GetSerialKeyRequest.h"
 #include "Task/WebSocket/GetSerialKeyTask.h"
+#include "Request/VerifyCodeRequest.h"
+#include "Task/WebSocket/VerifyCodeTask.h"
+#include "Request/VerifyCodeByUserIdRequest.h"
+#include "Task/WebSocket/VerifyCodeByUserIdTask.h"
 #include "Request/UseRequest.h"
 #include "Task/WebSocket/UseTask.h"
 #include "Request/UseByUserIdRequest.h"
@@ -66,6 +72,8 @@
 #include "Task/WebSocket/UseByStampTaskTask.h"
 #include "Request/RevertUseByStampSheetRequest.h"
 #include "Task/WebSocket/RevertUseByStampSheetTask.h"
+#include "Request/VerifyByStampTaskRequest.h"
+#include "Task/WebSocket/VerifyByStampTaskTask.h"
 #include "Request/DescribeCampaignModelsRequest.h"
 #include "Task/WebSocket/DescribeCampaignModelsTask.h"
 #include "Request/GetCampaignModelRequest.h"
@@ -172,8 +180,20 @@ namespace Gs2::SerialKey
             const Request::FDownloadSerialCodesRequestPtr Request
         ) const;
 
+        TSharedPtr<FAsyncTask<Task::WebSocket::FIssueOnceTask>> IssueOnce(
+            const Request::FIssueOnceRequestPtr Request
+        ) const;
+
         TSharedPtr<FAsyncTask<Task::WebSocket::FGetSerialKeyTask>> GetSerialKey(
             const Request::FGetSerialKeyRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FVerifyCodeTask>> VerifyCode(
+            const Request::FVerifyCodeRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FVerifyCodeByUserIdTask>> VerifyCodeByUserId(
+            const Request::FVerifyCodeByUserIdRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FUseTask>> Use(
@@ -194,6 +214,10 @@ namespace Gs2::SerialKey
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FRevertUseByStampSheetTask>> RevertUseByStampSheet(
             const Request::FRevertUseByStampSheetRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FVerifyByStampTaskTask>> VerifyByStampTask(
+            const Request::FVerifyByStampTaskRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FDescribeCampaignModelsTask>> DescribeCampaignModels(

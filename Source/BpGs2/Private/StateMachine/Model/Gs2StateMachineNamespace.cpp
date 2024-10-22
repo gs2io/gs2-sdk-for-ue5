@@ -15,6 +15,7 @@
  */
 
 #include "StateMachine/Model/Gs2StateMachineNamespace.h"
+#include "StateMachine/Domain/EzGs2StateMachine.h"
 #include "Core/Model/Gs2AccessToken.h"
 #include "StateMachine/Model/Gs2StateMachineUser.h"
 #include "Core/BpGs2Constant.h"

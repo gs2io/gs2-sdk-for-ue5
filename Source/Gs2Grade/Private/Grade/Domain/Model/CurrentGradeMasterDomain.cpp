@@ -414,7 +414,7 @@ namespace Gs2::Grade::Domain::Model
             ParentKey,
             Gs2::Grade::Domain::Model::FCurrentGradeMasterDomain::CreateCacheKey(
             ),
-            [Callback](TSharedPtr<Gs2Object> obj)
+            [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::Grade::Model::FCurrentGradeMaster>(obj));
             }

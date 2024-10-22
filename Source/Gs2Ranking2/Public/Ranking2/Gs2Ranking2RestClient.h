@@ -72,6 +72,12 @@
 #include "Task/Rest/GetGlobalRankingScoreByUserIdTask.h"
 #include "Request/DeleteGlobalRankingScoreByUserIdRequest.h"
 #include "Task/Rest/DeleteGlobalRankingScoreByUserIdTask.h"
+#include "Request/VerifyGlobalRankingScoreRequest.h"
+#include "Task/Rest/VerifyGlobalRankingScoreTask.h"
+#include "Request/VerifyGlobalRankingScoreByUserIdRequest.h"
+#include "Task/Rest/VerifyGlobalRankingScoreByUserIdTask.h"
+#include "Request/VerifyGlobalRankingScoreByStampTaskRequest.h"
+#include "Task/Rest/VerifyGlobalRankingScoreByStampTaskTask.h"
 #include "Request/DescribeGlobalRankingReceivedRewardsRequest.h"
 #include "Task/Rest/DescribeGlobalRankingReceivedRewardsTask.h"
 #include "Request/DescribeGlobalRankingReceivedRewardsByUserIdRequest.h"
@@ -128,6 +134,12 @@
 #include "Task/Rest/GetClusterRankingScoreByUserIdTask.h"
 #include "Request/DeleteClusterRankingScoreByUserIdRequest.h"
 #include "Task/Rest/DeleteClusterRankingScoreByUserIdTask.h"
+#include "Request/VerifyClusterRankingScoreRequest.h"
+#include "Task/Rest/VerifyClusterRankingScoreTask.h"
+#include "Request/VerifyClusterRankingScoreByUserIdRequest.h"
+#include "Task/Rest/VerifyClusterRankingScoreByUserIdTask.h"
+#include "Request/VerifyClusterRankingScoreByStampTaskRequest.h"
+#include "Task/Rest/VerifyClusterRankingScoreByStampTaskTask.h"
 #include "Request/DescribeClusterRankingReceivedRewardsRequest.h"
 #include "Task/Rest/DescribeClusterRankingReceivedRewardsTask.h"
 #include "Request/DescribeClusterRankingReceivedRewardsByUserIdRequest.h"
@@ -192,6 +204,12 @@
 #include "Task/Rest/GetSubscribeRankingScoreByUserIdTask.h"
 #include "Request/DeleteSubscribeRankingScoreByUserIdRequest.h"
 #include "Task/Rest/DeleteSubscribeRankingScoreByUserIdTask.h"
+#include "Request/VerifySubscribeRankingScoreRequest.h"
+#include "Task/Rest/VerifySubscribeRankingScoreTask.h"
+#include "Request/VerifySubscribeRankingScoreByUserIdRequest.h"
+#include "Task/Rest/VerifySubscribeRankingScoreByUserIdTask.h"
+#include "Request/VerifySubscribeRankingScoreByStampTaskRequest.h"
+#include "Task/Rest/VerifySubscribeRankingScoreByStampTaskTask.h"
 #include "Request/DescribeSubscribeRankingsRequest.h"
 #include "Task/Rest/DescribeSubscribeRankingsTask.h"
 #include "Request/DescribeSubscribeRankingsByUserIdRequest.h"
@@ -336,6 +354,18 @@ namespace Gs2::Ranking2
             const Request::FDeleteGlobalRankingScoreByUserIdRequestPtr Request
         ) const;
 
+        TSharedPtr<FAsyncTask<Task::Rest::FVerifyGlobalRankingScoreTask>> VerifyGlobalRankingScore(
+            const Request::FVerifyGlobalRankingScoreRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FVerifyGlobalRankingScoreByUserIdTask>> VerifyGlobalRankingScoreByUserId(
+            const Request::FVerifyGlobalRankingScoreByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FVerifyGlobalRankingScoreByStampTaskTask>> VerifyGlobalRankingScoreByStampTask(
+            const Request::FVerifyGlobalRankingScoreByStampTaskRequestPtr Request
+        ) const;
+
         TSharedPtr<FAsyncTask<Task::Rest::FDescribeGlobalRankingReceivedRewardsTask>> DescribeGlobalRankingReceivedRewards(
             const Request::FDescribeGlobalRankingReceivedRewardsRequestPtr Request
         ) const;
@@ -446,6 +476,18 @@ namespace Gs2::Ranking2
 
         TSharedPtr<FAsyncTask<Task::Rest::FDeleteClusterRankingScoreByUserIdTask>> DeleteClusterRankingScoreByUserId(
             const Request::FDeleteClusterRankingScoreByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FVerifyClusterRankingScoreTask>> VerifyClusterRankingScore(
+            const Request::FVerifyClusterRankingScoreRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FVerifyClusterRankingScoreByUserIdTask>> VerifyClusterRankingScoreByUserId(
+            const Request::FVerifyClusterRankingScoreByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FVerifyClusterRankingScoreByStampTaskTask>> VerifyClusterRankingScoreByStampTask(
+            const Request::FVerifyClusterRankingScoreByStampTaskRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::Rest::FDescribeClusterRankingReceivedRewardsTask>> DescribeClusterRankingReceivedRewards(
@@ -574,6 +616,18 @@ namespace Gs2::Ranking2
 
         TSharedPtr<FAsyncTask<Task::Rest::FDeleteSubscribeRankingScoreByUserIdTask>> DeleteSubscribeRankingScoreByUserId(
             const Request::FDeleteSubscribeRankingScoreByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FVerifySubscribeRankingScoreTask>> VerifySubscribeRankingScore(
+            const Request::FVerifySubscribeRankingScoreRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FVerifySubscribeRankingScoreByUserIdTask>> VerifySubscribeRankingScoreByUserId(
+            const Request::FVerifySubscribeRankingScoreByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FVerifySubscribeRankingScoreByStampTaskTask>> VerifySubscribeRankingScoreByStampTask(
+            const Request::FVerifySubscribeRankingScoreByStampTaskRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::Rest::FDescribeSubscribeRankingsTask>> DescribeSubscribeRankings(

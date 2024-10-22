@@ -146,14 +146,6 @@ namespace Gs2::Log::Request
         return SharedThis(this);
     }
 
-    TSharedPtr<FQueryExecuteStampTaskLogRequest> FQueryExecuteStampTaskLogRequest::WithDuplicationAvoider(
-        const TOptional<FString> DuplicationAvoider
-    )
-    {
-        this->DuplicationAvoiderValue = DuplicationAvoider;
-        return SharedThis(this);
-    }
-
     TOptional<FString> FQueryExecuteStampTaskLogRequest::GetContextStack() const
     {
         return ContextStackValue;
@@ -248,11 +240,6 @@ namespace Gs2::Log::Request
     TOptional<FString> FQueryExecuteStampTaskLogRequest::GetTimeOffsetToken() const
     {
         return TimeOffsetTokenValue;
-    }
-
-    TOptional<FString> FQueryExecuteStampTaskLogRequest::GetDuplicationAvoider() const
-    {
-        return DuplicationAvoiderValue;
     }
 
     TSharedPtr<FQueryExecuteStampTaskLogRequest> FQueryExecuteStampTaskLogRequest::FromJson(const TSharedPtr<FJsonObject> Data)
@@ -360,8 +347,7 @@ namespace Gs2::Log::Request
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
-              }() : TOptional<FString>())
-          ->WithDuplicationAvoider(Data->HasField(ANSI_TO_TCHAR("duplicationAvoider")) ? TOptional<FString>(Data->GetStringField(ANSI_TO_TCHAR("duplicationAvoider"))) : TOptional<FString>());
+              }() : TOptional<FString>());
     }
 
     TSharedPtr<FJsonObject> FQueryExecuteStampTaskLogRequest::ToJson() const
@@ -414,10 +400,6 @@ namespace Gs2::Log::Request
         if (TimeOffsetTokenValue.IsSet())
         {
             JsonRootObject->SetStringField("timeOffsetToken", TimeOffsetTokenValue.GetValue());
-        }
-        if (DuplicationAvoiderValue.IsSet())
-        {
-            JsonRootObject->SetStringField("duplicationAvoider", DuplicationAvoiderValue.GetValue());
         }
         return JsonRootObject;
     }

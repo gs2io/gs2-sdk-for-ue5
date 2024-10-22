@@ -23,6 +23,9 @@
 #endif
 
 #include "Ranking2/Domain/SpeculativeExecutor/Verify/VerifyActionSpeculativeExecutorIndex.h"
+#include "Ranking2/Domain/SpeculativeExecutor/Verify/VerifyGlobalRankingScoreByUserIdSpeculativeExecutor.h"
+#include "Ranking2/Domain/SpeculativeExecutor/Verify/VerifyClusterRankingScoreByUserIdSpeculativeExecutor.h"
+#include "Ranking2/Domain/SpeculativeExecutor/Verify/VerifySubscribeRankingScoreByUserIdSpeculativeExecutor.h"
 
 #include "Core/Domain/Gs2.h"
 
@@ -63,6 +66,72 @@ namespace Gs2::Ranking2::Domain::SpeculativeExecutor
         auto NewVerifyAction = VerifyAction->WithAction(VerifyAction->GetAction()->Replace(TEXT("{region}"), ToCStr(Domain->RestSession->RegionName())));
         NewVerifyAction = VerifyAction->WithAction(NewVerifyAction->GetAction()->Replace(TEXT("{ownerId}"), ToCStr(Domain->RestSession->OwnerId())));
         NewVerifyAction = VerifyAction->WithAction(NewVerifyAction->GetAction()->Replace(TEXT("{userId}"), ToCStr(AccessToken->GetUserId().IsSet() ? *AccessToken->GetUserId() : "")));
+        if (FVerifyGlobalRankingScoreByUserIdSpeculativeExecutor::Action() == NewVerifyAction->GetAction()) {
+            TSharedPtr<FJsonObject> RequestModelJson;
+            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(NewVerifyAction->GetRequest().IsSet() ? *NewVerifyAction->GetRequest() : "{}");
+                !FJsonSerializer::Deserialize(JsonReader, RequestModelJson))
+            {
+                return nullptr;
+            }
+            auto Request = Request::FVerifyGlobalRankingScoreByUserIdRequest::FromJson(RequestModelJson);
+            Request = FVerifyGlobalRankingScoreByUserIdSpeculativeExecutor::Rate(Request, Rate);
+            auto Future = FVerifyGlobalRankingScoreByUserIdSpeculativeExecutor::Execute(
+                Domain,
+                Service,
+                AccessToken,
+                Request
+            );
+            Future->StartSynchronousTask();
+            if (Future->GetTask().IsError())
+            {
+                return Future->GetTask().Error();
+            }
+            *Result = Future->GetTask().Result();
+        }
+        if (FVerifyClusterRankingScoreByUserIdSpeculativeExecutor::Action() == NewVerifyAction->GetAction()) {
+            TSharedPtr<FJsonObject> RequestModelJson;
+            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(NewVerifyAction->GetRequest().IsSet() ? *NewVerifyAction->GetRequest() : "{}");
+                !FJsonSerializer::Deserialize(JsonReader, RequestModelJson))
+            {
+                return nullptr;
+            }
+            auto Request = Request::FVerifyClusterRankingScoreByUserIdRequest::FromJson(RequestModelJson);
+            Request = FVerifyClusterRankingScoreByUserIdSpeculativeExecutor::Rate(Request, Rate);
+            auto Future = FVerifyClusterRankingScoreByUserIdSpeculativeExecutor::Execute(
+                Domain,
+                Service,
+                AccessToken,
+                Request
+            );
+            Future->StartSynchronousTask();
+            if (Future->GetTask().IsError())
+            {
+                return Future->GetTask().Error();
+            }
+            *Result = Future->GetTask().Result();
+        }
+        if (FVerifySubscribeRankingScoreByUserIdSpeculativeExecutor::Action() == NewVerifyAction->GetAction()) {
+            TSharedPtr<FJsonObject> RequestModelJson;
+            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(NewVerifyAction->GetRequest().IsSet() ? *NewVerifyAction->GetRequest() : "{}");
+                !FJsonSerializer::Deserialize(JsonReader, RequestModelJson))
+            {
+                return nullptr;
+            }
+            auto Request = Request::FVerifySubscribeRankingScoreByUserIdRequest::FromJson(RequestModelJson);
+            Request = FVerifySubscribeRankingScoreByUserIdSpeculativeExecutor::Rate(Request, Rate);
+            auto Future = FVerifySubscribeRankingScoreByUserIdSpeculativeExecutor::Execute(
+                Domain,
+                Service,
+                AccessToken,
+                Request
+            );
+            Future->StartSynchronousTask();
+            if (Future->GetTask().IsError())
+            {
+                return Future->GetTask().Error();
+            }
+            *Result = Future->GetTask().Result();
+        }
         return nullptr;
     }
 

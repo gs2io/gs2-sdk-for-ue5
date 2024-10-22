@@ -30,6 +30,7 @@ namespace Gs2::Guild::Request
         Attributes5Value(nullptr),
         JoinPoliciesValue(nullptr),
         IncludeFullMembersGuildValue(TOptional<bool>()),
+        OrderByValue(TOptional<FString>()),
         PageTokenValue(TOptional<FString>()),
         LimitValue(TOptional<int32>()),
         TimeOffsetTokenValue(TOptional<FString>())
@@ -50,6 +51,7 @@ namespace Gs2::Guild::Request
         Attributes5Value(From.Attributes5Value),
         JoinPoliciesValue(From.JoinPoliciesValue),
         IncludeFullMembersGuildValue(From.IncludeFullMembersGuildValue),
+        OrderByValue(From.OrderByValue),
         PageTokenValue(From.PageTokenValue),
         LimitValue(From.LimitValue),
         TimeOffsetTokenValue(From.TimeOffsetTokenValue)
@@ -149,6 +151,14 @@ namespace Gs2::Guild::Request
     )
     {
         this->IncludeFullMembersGuildValue = IncludeFullMembersGuild;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FSearchGuildsByUserIdRequest> FSearchGuildsByUserIdRequest::WithOrderBy(
+        const TOptional<FString> OrderBy
+    )
+    {
+        this->OrderByValue = OrderBy;
         return SharedThis(this);
     }
 
@@ -275,6 +285,11 @@ namespace Gs2::Guild::Request
             return FString("null");
         }
         return FString(IncludeFullMembersGuildValue.GetValue() ? "true" : "false");
+    }
+
+    TOptional<FString> FSearchGuildsByUserIdRequest::GetOrderBy() const
+    {
+        return OrderByValue;
     }
 
     TOptional<FString> FSearchGuildsByUserIdRequest::GetPageToken() const
@@ -430,6 +445,15 @@ namespace Gs2::Guild::Request
                   }
                   return TOptional<bool>();
               }() : TOptional<bool>())
+            ->WithOrderBy(Data->HasField(ANSI_TO_TCHAR("orderBy")) ? [Data]() -> TOptional<FString>
+              {
+                  FString v("");
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("orderBy"), v))
+                  {
+                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                  }
+                  return TOptional<FString>();
+              }() : TOptional<FString>())
             ->WithPageToken(Data->HasField(ANSI_TO_TCHAR("pageToken")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
@@ -540,6 +564,10 @@ namespace Gs2::Guild::Request
         if (IncludeFullMembersGuildValue.IsSet())
         {
             JsonRootObject->SetBoolField("includeFullMembersGuild", IncludeFullMembersGuildValue.GetValue());
+        }
+        if (OrderByValue.IsSet())
+        {
+            JsonRootObject->SetStringField("orderBy", OrderByValue.GetValue());
         }
         if (PageTokenValue.IsSet())
         {

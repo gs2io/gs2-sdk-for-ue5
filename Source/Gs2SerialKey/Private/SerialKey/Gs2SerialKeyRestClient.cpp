@@ -181,10 +181,37 @@ namespace Gs2::SerialKey
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::Rest::FIssueOnceTask>> FGs2SerialKeyRestClient::IssueOnce(
+        const Request::FIssueOnceRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FIssueOnceTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::Rest::FGetSerialKeyTask>> FGs2SerialKeyRestClient::GetSerialKey(
         const Request::FGetSerialKeyRequestPtr Request) const
     {
         return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FGetSerialKeyTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FVerifyCodeTask>> FGs2SerialKeyRestClient::VerifyCode(
+        const Request::FVerifyCodeRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FVerifyCodeTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FVerifyCodeByUserIdTask>> FGs2SerialKeyRestClient::VerifyCodeByUserId(
+        const Request::FVerifyCodeByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FVerifyCodeByUserIdTask>>(
             Session,
             Request
         );
@@ -230,6 +257,15 @@ namespace Gs2::SerialKey
         const Request::FRevertUseByStampSheetRequestPtr Request) const
     {
         return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FRevertUseByStampSheetTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FVerifyByStampTaskTask>> FGs2SerialKeyRestClient::VerifyByStampTask(
+        const Request::FVerifyByStampTaskRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FVerifyByStampTaskTask>>(
             Session,
             Request
         );

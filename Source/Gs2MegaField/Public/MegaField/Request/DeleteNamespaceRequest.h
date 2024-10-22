@@ -17,6 +17,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Dom/JsonObject.h"
 
 namespace Gs2::MegaField::Request
 {
@@ -44,5 +45,5 @@ namespace Gs2::MegaField::Request
         static TSharedPtr<FDeleteNamespaceRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;
     };
-    typedef TSharedPtr<FDeleteNamespaceRequest, ESPMode::ThreadSafe> FDeleteNamespaceRequestPtr;
+    typedef TSharedPtr<FDeleteNamespaceRequest> FDeleteNamespaceRequestPtr;
 }

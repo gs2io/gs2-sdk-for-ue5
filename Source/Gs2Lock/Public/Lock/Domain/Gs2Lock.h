@@ -32,8 +32,6 @@
 
 // Iterator
 #include "Lock/Domain/Iterator/DescribeNamespacesIterator.h"
-#include "Lock/Domain/Iterator/DescribeMutexesIterator.h"
-#include "Lock/Domain/Iterator/DescribeMutexesByUserIdIterator.h"
 
 // Notification
 

@@ -15,6 +15,7 @@
  */
 
 #include "Buff/Model/Gs2Buff.h"
+#include "Buff/Domain/EzGs2Buff.h"
 #include "Buff/Model/Gs2BuffNamespace.h"
 #include "Core/BpGs2Constant.h"
 

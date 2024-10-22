@@ -414,7 +414,7 @@ namespace Gs2::AdReward::Domain::Model
             Gs2::AdReward::Domain::Model::FNamespaceDomain::CreateCacheKey(
                 NamespaceName
             ),
-            [Callback](TSharedPtr<Gs2Object> obj)
+            [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::AdReward::Model::FNamespace>(obj));
             }

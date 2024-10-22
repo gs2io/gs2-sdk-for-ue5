@@ -414,7 +414,7 @@ namespace Gs2::Inventory::Domain::Model
             Gs2::Inventory::Domain::Model::FBigItemDomain::CreateCacheKey(
                 ItemName
             ),
-            [Callback](TSharedPtr<Gs2Object> obj)
+            [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::Inventory::Model::FBigItem>(obj));
             }

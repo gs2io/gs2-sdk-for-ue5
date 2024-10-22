@@ -24,9 +24,9 @@ namespace Gs2::UE5::Dictionary::Domain::Model
         return Domain->NamespaceName;
     }
 
-    TOptional<FString> FEzEntryModelDomain::EntryName() const
+    TOptional<FString> FEzEntryModelDomain::EntryModelName() const
     {
-        return Domain->EntryName;
+        return Domain->EntryModelName;
     }
 
     FEzEntryModelDomain::FEzEntryModelDomain(

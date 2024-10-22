@@ -572,7 +572,7 @@ namespace Gs2::Experience::Domain::Model
                 ExperienceName,
                 PropertyId
             ),
-            [Callback](TSharedPtr<Gs2Object> obj)
+            [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::Experience::Model::FStatus>(obj));
             }

@@ -17,6 +17,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Dom/JsonObject.h"
 
 namespace Gs2::Datastore::Request
 {
@@ -70,5 +71,5 @@ namespace Gs2::Datastore::Request
         static TSharedPtr<FPrepareUploadByUserIdRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;
     };
-    typedef TSharedPtr<FPrepareUploadByUserIdRequest, ESPMode::ThreadSafe> FPrepareUploadByUserIdRequestPtr;
+    typedef TSharedPtr<FPrepareUploadByUserIdRequest> FPrepareUploadByUserIdRequestPtr;
 }

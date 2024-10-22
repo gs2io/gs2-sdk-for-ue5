@@ -76,6 +76,10 @@
 #include "Task/WebSocket/SetTransactionDefaultConfigTask.h"
 #include "Request/SetTransactionDefaultConfigByUserIdRequest.h"
 #include "Task/WebSocket/SetTransactionDefaultConfigByUserIdTask.h"
+#include "Request/FreezeMasterDataRequest.h"
+#include "Task/WebSocket/FreezeMasterDataTask.h"
+#include "Request/FreezeMasterDataByUserIdRequest.h"
+#include "Task/WebSocket/FreezeMasterDataByUserIdTask.h"
 #include "Request/IfExpressionByUserIdRequest.h"
 #include "Task/WebSocket/IfExpressionByUserIdTask.h"
 #include "Request/AndExpressionByUserIdRequest.h"
@@ -218,6 +222,14 @@ namespace Gs2::Distributor
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FSetTransactionDefaultConfigByUserIdTask>> SetTransactionDefaultConfigByUserId(
             const Request::FSetTransactionDefaultConfigByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FFreezeMasterDataTask>> FreezeMasterData(
+            const Request::FFreezeMasterDataRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FFreezeMasterDataByUserIdTask>> FreezeMasterDataByUserId(
+            const Request::FFreezeMasterDataByUserIdRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FIfExpressionByUserIdTask>> IfExpressionByUserId(

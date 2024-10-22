@@ -300,7 +300,7 @@ namespace Gs2::Log::Domain::Model
             Gs2::Log::Domain::Model::FInsightDomain::CreateCacheKey(
                 InsightName
             ),
-            [Callback](TSharedPtr<Gs2Object> obj)
+            [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::Log::Model::FInsight>(obj));
             }

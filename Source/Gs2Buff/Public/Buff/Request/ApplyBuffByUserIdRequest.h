@@ -17,6 +17,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Dom/JsonObject.h"
 
 namespace Gs2::Buff::Request
 {
@@ -53,5 +54,5 @@ namespace Gs2::Buff::Request
         static TSharedPtr<FApplyBuffByUserIdRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;
     };
-    typedef TSharedPtr<FApplyBuffByUserIdRequest, ESPMode::ThreadSafe> FApplyBuffByUserIdRequestPtr;
+    typedef TSharedPtr<FApplyBuffByUserIdRequest> FApplyBuffByUserIdRequestPtr;
 }

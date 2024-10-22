@@ -30,10 +30,6 @@
 #include "Task/WebSocket/UpdateNamespaceTask.h"
 #include "Request/DeleteNamespaceRequest.h"
 #include "Task/WebSocket/DeleteNamespaceTask.h"
-#include "Request/DescribeMutexesRequest.h"
-#include "Task/WebSocket/DescribeMutexesTask.h"
-#include "Request/DescribeMutexesByUserIdRequest.h"
-#include "Task/WebSocket/DescribeMutexesByUserIdTask.h"
 #include "Request/LockRequest.h"
 #include "Task/WebSocket/LockTask.h"
 #include "Request/LockByUserIdRequest.h"
@@ -82,14 +78,6 @@ namespace Gs2::Lock
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FDeleteNamespaceTask>> DeleteNamespace(
             const Request::FDeleteNamespaceRequestPtr Request
-        ) const;
-
-        TSharedPtr<FAsyncTask<Task::WebSocket::FDescribeMutexesTask>> DescribeMutexes(
-            const Request::FDescribeMutexesRequestPtr Request
-        ) const;
-
-        TSharedPtr<FAsyncTask<Task::WebSocket::FDescribeMutexesByUserIdTask>> DescribeMutexesByUserId(
-            const Request::FDescribeMutexesByUserIdRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FLockTask>> Lock(

@@ -17,6 +17,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Dom/JsonObject.h"
 
 namespace Gs2::Account::Request
 {
@@ -60,5 +61,5 @@ namespace Gs2::Account::Request
         static TSharedPtr<FCreateTakeOverRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;
     };
-    typedef TSharedPtr<FCreateTakeOverRequest, ESPMode::ThreadSafe> FCreateTakeOverRequestPtr;
+    typedef TSharedPtr<FCreateTakeOverRequest> FCreateTakeOverRequestPtr;
 }

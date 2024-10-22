@@ -415,7 +415,7 @@ namespace Gs2::Schedule::Domain::Model
             ParentKey,
             Gs2::Schedule::Domain::Model::FCurrentEventMasterDomain::CreateCacheKey(
             ),
-            [Callback](TSharedPtr<Gs2Object> obj)
+            [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::Schedule::Model::FCurrentEventMaster>(obj));
             }

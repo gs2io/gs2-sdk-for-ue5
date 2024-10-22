@@ -362,7 +362,7 @@ namespace Gs2::Limit::Domain::Model
             Gs2::Limit::Domain::Model::FLimitModelMasterDomain::CreateCacheKey(
                 LimitName
             ),
-            [Callback](TSharedPtr<Gs2Object> obj)
+            [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::Limit::Model::FLimitModelMaster>(obj));
             }

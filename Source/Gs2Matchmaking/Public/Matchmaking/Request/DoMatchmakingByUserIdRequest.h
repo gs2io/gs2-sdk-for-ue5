@@ -17,6 +17,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Dom/JsonObject.h"
 #include "../Model/Player.h"
 
 namespace Gs2::Matchmaking::Request
@@ -60,5 +61,5 @@ namespace Gs2::Matchmaking::Request
         static TSharedPtr<FDoMatchmakingByUserIdRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;
     };
-    typedef TSharedPtr<FDoMatchmakingByUserIdRequest, ESPMode::ThreadSafe> FDoMatchmakingByUserIdRequestPtr;
+    typedef TSharedPtr<FDoMatchmakingByUserIdRequest> FDoMatchmakingByUserIdRequestPtr;
 }

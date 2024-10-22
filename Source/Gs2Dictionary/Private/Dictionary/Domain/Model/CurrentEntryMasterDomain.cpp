@@ -414,7 +414,7 @@ namespace Gs2::Dictionary::Domain::Model
             ParentKey,
             Gs2::Dictionary::Domain::Model::FCurrentEntryMasterDomain::CreateCacheKey(
             ),
-            [Callback](TSharedPtr<Gs2Object> obj)
+            [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::Dictionary::Model::FCurrentEntryMaster>(obj));
             }

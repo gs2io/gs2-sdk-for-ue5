@@ -359,8 +359,8 @@ namespace Gs2::Chat::Domain::Model
             Client,
             NamespaceName,
             RoomName,
-            Password,
             UserId,
+            Password,
             TimeOffsetToken
         );
     }
@@ -382,6 +382,53 @@ namespace Gs2::Chat::Domain::Model
     }
 
     void FRoomDomain::UnsubscribeMessages(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Gs2->Cache->ListUnsubscribe(
+            Gs2::Chat::Model::FMessage::TypeName,
+            Gs2::Chat::Domain::Model::FRoomDomain::CreateCacheParentKey(
+                NamespaceName,
+                TOptional<FString>("Singleton"),
+                RoomName,
+                "Message"
+            ),
+            CallbackID
+        );
+    }
+
+    Gs2::Chat::Domain::Iterator::FDescribeLatestMessagesByUserIdIteratorPtr FRoomDomain::LatestMessages(
+        const TOptional<FString> TimeOffsetToken
+    ) const
+    {
+        return MakeShared<Gs2::Chat::Domain::Iterator::FDescribeLatestMessagesByUserIdIterator>(
+            Gs2,
+            Client,
+            NamespaceName,
+            RoomName,
+            UserId,
+            Password,
+            TimeOffsetToken
+        );
+    }
+
+    Gs2::Core::Domain::CallbackID FRoomDomain::SubscribeLatestMessages(
+    TFunction<void()> Callback
+    )
+    {
+        return Gs2->Cache->ListSubscribe(
+            Gs2::Chat::Model::FMessage::TypeName,
+            Gs2::Chat::Domain::Model::FRoomDomain::CreateCacheParentKey(
+                NamespaceName,
+                TOptional<FString>("Singleton"),
+                RoomName,
+                "Message"
+            ),
+            Callback
+        );
+    }
+
+    void FRoomDomain::UnsubscribeLatestMessages(
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {

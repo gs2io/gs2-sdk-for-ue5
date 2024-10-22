@@ -418,7 +418,7 @@ namespace Gs2::Quest::Domain::Model
             ParentKey,
             Gs2::Quest::Domain::Model::FCurrentQuestMasterDomain::CreateCacheKey(
             ),
-            [Callback](TSharedPtr<Gs2Object> obj)
+            [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::Quest::Model::FCurrentQuestMaster>(obj));
             }

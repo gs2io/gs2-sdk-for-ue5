@@ -277,7 +277,7 @@ namespace Gs2::Friend::Domain::Model
             Gs2::Friend::Domain::Model::FFriendDomain::CreateCacheKey(
                 WithProfile.IsSet() ? WithProfile ? TOptional<FString>("True") : TOptional<FString>("False") : TOptional<FString>("False")
             ),
-            [Callback](TSharedPtr<Gs2Object> obj)
+            [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::Friend::Model::FFriend>(obj));
             }

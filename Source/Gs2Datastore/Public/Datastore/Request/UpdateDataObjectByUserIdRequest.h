@@ -17,6 +17,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Dom/JsonObject.h"
 
 namespace Gs2::Datastore::Request
 {
@@ -63,5 +64,5 @@ namespace Gs2::Datastore::Request
         static TSharedPtr<FUpdateDataObjectByUserIdRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;
     };
-    typedef TSharedPtr<FUpdateDataObjectByUserIdRequest, ESPMode::ThreadSafe> FUpdateDataObjectByUserIdRequestPtr;
+    typedef TSharedPtr<FUpdateDataObjectByUserIdRequest> FUpdateDataObjectByUserIdRequestPtr;
 }

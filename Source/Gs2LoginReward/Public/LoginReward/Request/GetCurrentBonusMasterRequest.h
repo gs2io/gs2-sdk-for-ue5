@@ -17,6 +17,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Dom/JsonObject.h"
 
 namespace Gs2::LoginReward::Request
 {
@@ -44,5 +45,5 @@ namespace Gs2::LoginReward::Request
         static TSharedPtr<FGetCurrentBonusMasterRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;
     };
-    typedef TSharedPtr<FGetCurrentBonusMasterRequest, ESPMode::ThreadSafe> FGetCurrentBonusMasterRequestPtr;
+    typedef TSharedPtr<FGetCurrentBonusMasterRequest> FGetCurrentBonusMasterRequestPtr;
 }

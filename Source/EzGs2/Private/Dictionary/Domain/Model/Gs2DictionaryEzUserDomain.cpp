@@ -45,12 +45,12 @@ namespace Gs2::UE5::Dictionary::Domain::Model
     }
 
     Gs2::UE5::Dictionary::Domain::Model::FEzEntryDomainPtr FEzUserDomain::Entry(
-        const FString EntryName
+        const FString EntryModelName
     ) const
     {
         return MakeShared<Gs2::UE5::Dictionary::Domain::Model::FEzEntryDomain>(
             Domain->Entry(
-                EntryName
+                EntryModelName
             ),
             ConnectionValue
         );

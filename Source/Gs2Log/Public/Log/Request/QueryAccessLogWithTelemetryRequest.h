@@ -17,6 +17,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Dom/JsonObject.h"
 
 namespace Gs2::Log::Request
 {
@@ -33,7 +34,6 @@ namespace Gs2::Log::Request
         TOptional<FString> PageTokenValue;
         TOptional<int32> LimitValue;
         TOptional<FString> TimeOffsetTokenValue;
-        TOptional<FString> DuplicationAvoiderValue;
         
     public:
         
@@ -52,7 +52,6 @@ namespace Gs2::Log::Request
         TSharedPtr<FQueryAccessLogWithTelemetryRequest> WithPageToken(const TOptional<FString> PageToken);
         TSharedPtr<FQueryAccessLogWithTelemetryRequest> WithLimit(const TOptional<int32> Limit);
         TSharedPtr<FQueryAccessLogWithTelemetryRequest> WithTimeOffsetToken(const TOptional<FString> TimeOffsetToken);
-        TSharedPtr<FQueryAccessLogWithTelemetryRequest> WithDuplicationAvoider(const TOptional<FString> DuplicationAvoider);
 
         TOptional<FString> GetContextStack() const;
         TOptional<FString> GetNamespaceName() const;
@@ -67,10 +66,9 @@ namespace Gs2::Log::Request
         TOptional<int32> GetLimit() const;
         FString GetLimitString() const;
         TOptional<FString> GetTimeOffsetToken() const;
-        TOptional<FString> GetDuplicationAvoider() const;
 
         static TSharedPtr<FQueryAccessLogWithTelemetryRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;
     };
-    typedef TSharedPtr<FQueryAccessLogWithTelemetryRequest, ESPMode::ThreadSafe> FQueryAccessLogWithTelemetryRequestPtr;
+    typedef TSharedPtr<FQueryAccessLogWithTelemetryRequest> FQueryAccessLogWithTelemetryRequestPtr;
 }

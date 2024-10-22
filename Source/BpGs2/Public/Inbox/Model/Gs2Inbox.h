@@ -19,6 +19,7 @@
 #include "CoreMinimal.h"
 
 #include "Core/Model/Gs2Client.h"
+#include "Gs2Inbox/Public/Inbox/Model/ReceiveNotification.h"
 #include "Gs2Inbox.generated.h"
 
 USTRUCT(BlueprintType)

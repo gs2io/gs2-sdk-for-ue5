@@ -64,6 +64,10 @@
 #include "Task/WebSocket/DescribeMessagesTask.h"
 #include "Request/DescribeMessagesByUserIdRequest.h"
 #include "Task/WebSocket/DescribeMessagesByUserIdTask.h"
+#include "Request/DescribeLatestMessagesRequest.h"
+#include "Task/WebSocket/DescribeLatestMessagesTask.h"
+#include "Request/DescribeLatestMessagesByUserIdRequest.h"
+#include "Task/WebSocket/DescribeLatestMessagesByUserIdTask.h"
 #include "Request/PostRequest.h"
 #include "Task/WebSocket/PostTask.h"
 #include "Request/PostByUserIdRequest.h"
@@ -198,6 +202,14 @@ namespace Gs2::Chat
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FDescribeMessagesByUserIdTask>> DescribeMessagesByUserId(
             const Request::FDescribeMessagesByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FDescribeLatestMessagesTask>> DescribeLatestMessages(
+            const Request::FDescribeLatestMessagesRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FDescribeLatestMessagesByUserIdTask>> DescribeLatestMessagesByUserId(
+            const Request::FDescribeLatestMessagesByUserIdRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FPostTask>> Post(

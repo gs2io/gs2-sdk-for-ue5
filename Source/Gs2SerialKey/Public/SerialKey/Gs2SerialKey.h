@@ -134,11 +134,29 @@
 #include "Task/Rest/DownloadSerialCodesTask.h"
 #include "Task/WebSocket/DownloadSerialCodesTask.h"
 
+// IssueOnce
+#include "Request/IssueOnceRequest.h"
+#include "Result/IssueOnceResult.h"
+#include "Task/Rest/IssueOnceTask.h"
+#include "Task/WebSocket/IssueOnceTask.h"
+
 // GetSerialKey
 #include "Request/GetSerialKeyRequest.h"
 #include "Result/GetSerialKeyResult.h"
 #include "Task/Rest/GetSerialKeyTask.h"
 #include "Task/WebSocket/GetSerialKeyTask.h"
+
+// VerifyCode
+#include "Request/VerifyCodeRequest.h"
+#include "Result/VerifyCodeResult.h"
+#include "Task/Rest/VerifyCodeTask.h"
+#include "Task/WebSocket/VerifyCodeTask.h"
+
+// VerifyCodeByUserId
+#include "Request/VerifyCodeByUserIdRequest.h"
+#include "Result/VerifyCodeByUserIdResult.h"
+#include "Task/Rest/VerifyCodeByUserIdTask.h"
+#include "Task/WebSocket/VerifyCodeByUserIdTask.h"
 
 // Use
 #include "Request/UseRequest.h"
@@ -169,6 +187,12 @@
 #include "Result/RevertUseByStampSheetResult.h"
 #include "Task/Rest/RevertUseByStampSheetTask.h"
 #include "Task/WebSocket/RevertUseByStampSheetTask.h"
+
+// VerifyByStampTask
+#include "Request/VerifyByStampTaskRequest.h"
+#include "Result/VerifyByStampTaskResult.h"
+#include "Task/Rest/VerifyByStampTaskTask.h"
+#include "Task/WebSocket/VerifyByStampTaskTask.h"
 
 // DescribeCampaignModels
 #include "Request/DescribeCampaignModelsRequest.h"

@@ -364,7 +364,7 @@ namespace Gs2::SeasonRating::Domain::Model
             Gs2::SeasonRating::Domain::Model::FSeasonModelMasterDomain::CreateCacheKey(
                 SeasonName
             ),
-            [Callback](TSharedPtr<Gs2Object> obj)
+            [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::SeasonRating::Model::FSeasonModelMaster>(obj));
             }

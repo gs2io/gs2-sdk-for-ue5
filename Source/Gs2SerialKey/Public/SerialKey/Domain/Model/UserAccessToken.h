@@ -90,6 +90,32 @@ namespace Gs2::SerialKey::Domain::Model
             const FUserAccessTokenDomain& From
         );
 
+        class GS2SERIALKEY_API FVerifyCodeTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::SerialKey::Domain::Model::FSerialKeyAccessTokenDomain>,
+            public TSharedFromThis<FVerifyCodeTask>
+        {
+            const TSharedPtr<FUserAccessTokenDomain> Self;
+            const Request::FVerifyCodeRequestPtr Request;
+        public:
+            explicit FVerifyCodeTask(
+                const TSharedPtr<FUserAccessTokenDomain>& Self,
+                const Request::FVerifyCodeRequestPtr Request
+            );
+
+            FVerifyCodeTask(
+                const FVerifyCodeTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::SerialKey::Domain::Model::FSerialKeyAccessTokenDomain>> Result
+            ) override;
+        };
+        friend FVerifyCodeTask;
+
+        TSharedPtr<FAsyncTask<FVerifyCodeTask>> VerifyCode(
+            Request::FVerifyCodeRequestPtr Request
+        );
+
         TSharedPtr<Gs2::SerialKey::Domain::Model::FSerialKeyAccessTokenDomain> SerialKey(
             const FString SerialKeyCode
         );

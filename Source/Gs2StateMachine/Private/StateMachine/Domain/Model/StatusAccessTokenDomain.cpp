@@ -440,7 +440,7 @@ namespace Gs2::StateMachine::Domain::Model
             Gs2::StateMachine::Domain::Model::FStatusDomain::CreateCacheKey(
                 StatusName
             ),
-            [Callback](TSharedPtr<Gs2Object> obj)
+            [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::StateMachine::Model::FStatus>(obj));
             }
