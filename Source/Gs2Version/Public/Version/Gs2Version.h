@@ -175,6 +175,18 @@
 #include "Task/Rest/AcceptByUserIdTask.h"
 #include "Task/WebSocket/AcceptByUserIdTask.h"
 
+// Reject
+#include "Request/RejectRequest.h"
+#include "Result/RejectResult.h"
+#include "Task/Rest/RejectTask.h"
+#include "Task/WebSocket/RejectTask.h"
+
+// RejectByUserId
+#include "Request/RejectByUserIdRequest.h"
+#include "Result/RejectByUserIdResult.h"
+#include "Task/Rest/RejectByUserIdTask.h"
+#include "Task/WebSocket/RejectByUserIdTask.h"
+
 // GetAcceptVersion
 #include "Request/GetAcceptVersionRequest.h"
 #include "Result/GetAcceptVersionResult.h"

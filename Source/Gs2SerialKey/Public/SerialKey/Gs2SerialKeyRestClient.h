@@ -74,6 +74,8 @@
 #include "Task/Rest/RevertUseByStampSheetTask.h"
 #include "Request/VerifyByStampTaskRequest.h"
 #include "Task/Rest/VerifyByStampTaskTask.h"
+#include "Request/IssueOnceByStampSheetRequest.h"
+#include "Task/Rest/IssueOnceByStampSheetTask.h"
 #include "Request/DescribeCampaignModelsRequest.h"
 #include "Task/Rest/DescribeCampaignModelsTask.h"
 #include "Request/GetCampaignModelRequest.h"
@@ -218,6 +220,10 @@ namespace Gs2::SerialKey
 
         TSharedPtr<FAsyncTask<Task::Rest::FVerifyByStampTaskTask>> VerifyByStampTask(
             const Request::FVerifyByStampTaskRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FIssueOnceByStampSheetTask>> IssueOnceByStampSheet(
+            const Request::FIssueOnceByStampSheetRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::Rest::FDescribeCampaignModelsTask>> DescribeCampaignModels(

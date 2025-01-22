@@ -18,6 +18,7 @@
 
 #include "CoreMinimal.h"
 #include "../Model/Message.h"
+#include "Gs2Core/Public/Core/Model/TransactionResult.h"
 
 namespace Gs2::Inbox::Result
 {
@@ -28,6 +29,9 @@ namespace Gs2::Inbox::Result
         TOptional<FString> StampSheetValue;
         TOptional<FString> StampSheetEncryptionKeyIdValue;
         TOptional<bool> AutoRunStampSheetValue;
+        TOptional<bool> AtomicCommitValue;
+        TOptional<FString> TransactionValue;
+        TSharedPtr<Gs2::Core::Model::FTransactionResult> TransactionResultValue;
         
     public:
         
@@ -42,6 +46,9 @@ namespace Gs2::Inbox::Result
         TSharedPtr<FReadMessageByUserIdResult> WithStampSheet(const TOptional<FString> StampSheet);
         TSharedPtr<FReadMessageByUserIdResult> WithStampSheetEncryptionKeyId(const TOptional<FString> StampSheetEncryptionKeyId);
         TSharedPtr<FReadMessageByUserIdResult> WithAutoRunStampSheet(const TOptional<bool> AutoRunStampSheet);
+        TSharedPtr<FReadMessageByUserIdResult> WithAtomicCommit(const TOptional<bool> AtomicCommit);
+        TSharedPtr<FReadMessageByUserIdResult> WithTransaction(const TOptional<FString> Transaction);
+        TSharedPtr<FReadMessageByUserIdResult> WithTransactionResult(const TSharedPtr<Gs2::Core::Model::FTransactionResult> TransactionResult);
 
         TSharedPtr<Model::FMessage> GetItem() const;
         TOptional<FString> GetTransactionId() const;
@@ -49,6 +56,10 @@ namespace Gs2::Inbox::Result
         TOptional<FString> GetStampSheetEncryptionKeyId() const;
         TOptional<bool> GetAutoRunStampSheet() const;
         FString GetAutoRunStampSheetString() const;
+        TOptional<bool> GetAtomicCommit() const;
+        FString GetAtomicCommitString() const;
+        TOptional<FString> GetTransaction() const;
+        TSharedPtr<Gs2::Core::Model::FTransactionResult> GetTransactionResult() const;
 
         static TSharedPtr<FReadMessageByUserIdResult> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;

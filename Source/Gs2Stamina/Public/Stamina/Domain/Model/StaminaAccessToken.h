@@ -144,6 +144,32 @@ namespace Gs2::Stamina::Domain::Model
             Request::FConsumeStaminaRequestPtr Request
         );
 
+        class GS2STAMINA_API FApplyTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Stamina::Domain::Model::FStaminaAccessTokenDomain>,
+            public TSharedFromThis<FApplyTask>
+        {
+            const TSharedPtr<FStaminaAccessTokenDomain> Self;
+            const Request::FApplyStaminaRequestPtr Request;
+        public:
+            explicit FApplyTask(
+                const TSharedPtr<FStaminaAccessTokenDomain>& Self,
+                const Request::FApplyStaminaRequestPtr Request
+            );
+
+            FApplyTask(
+                const FApplyTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Stamina::Domain::Model::FStaminaAccessTokenDomain>> Result
+            ) override;
+        };
+        friend FApplyTask;
+
+        TSharedPtr<FAsyncTask<FApplyTask>> Apply(
+            Request::FApplyStaminaRequestPtr Request
+        );
+
         class GS2STAMINA_API FDecreaseMaxValueTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Stamina::Domain::Model::FStaminaAccessTokenDomain>,
             public TSharedFromThis<FDecreaseMaxValueTask>

@@ -72,16 +72,6 @@ namespace Gs2::Showcase::Domain::Model
         const Gs2::Showcase::FGs2ShowcaseRestClientPtr Client;
 
         public:
-        TOptional<FString> TransactionId;
-        TOptional<bool> AutoRunStampSheet;
-        TOptional<FString> GetTransactionId() const
-        {
-            return TransactionId;
-        }
-        TOptional<bool> GetAutoRunStampSheet() const
-        {
-            return AutoRunStampSheet;
-        }
         TOptional<FString> NamespaceName;
         Gs2::Auth::Model::FAccessTokenPtr AccessToken;
         TOptional<FString> UserId() const { return AccessToken->GetUserId(); }

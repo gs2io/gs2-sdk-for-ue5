@@ -22,6 +22,7 @@ namespace Gs2::SerialKey::Request
         NamespaceNameValue(TOptional<FString>()),
         AccessTokenValue(TOptional<FString>()),
         CodeValue(TOptional<FString>()),
+        CampaignModelNameValue(TOptional<FString>()),
         VerifyTypeValue(TOptional<FString>())
     {
     }
@@ -32,6 +33,7 @@ namespace Gs2::SerialKey::Request
         NamespaceNameValue(From.NamespaceNameValue),
         AccessTokenValue(From.AccessTokenValue),
         CodeValue(From.CodeValue),
+        CampaignModelNameValue(From.CampaignModelNameValue),
         VerifyTypeValue(From.VerifyTypeValue)
     {
     }
@@ -65,6 +67,14 @@ namespace Gs2::SerialKey::Request
     )
     {
         this->CodeValue = Code;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FVerifyCodeRequest> FVerifyCodeRequest::WithCampaignModelName(
+        const TOptional<FString> CampaignModelName
+    )
+    {
+        this->CampaignModelNameValue = CampaignModelName;
         return SharedThis(this);
     }
 
@@ -102,6 +112,11 @@ namespace Gs2::SerialKey::Request
     TOptional<FString> FVerifyCodeRequest::GetCode() const
     {
         return CodeValue;
+    }
+
+    TOptional<FString> FVerifyCodeRequest::GetCampaignModelName() const
+    {
+        return CampaignModelNameValue;
     }
 
     TOptional<FString> FVerifyCodeRequest::GetVerifyType() const
@@ -148,6 +163,15 @@ namespace Gs2::SerialKey::Request
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
+            ->WithCampaignModelName(Data->HasField(ANSI_TO_TCHAR("campaignModelName")) ? [Data]() -> TOptional<FString>
+              {
+                  FString v("");
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("campaignModelName"), v))
+                  {
+                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                  }
+                  return TOptional<FString>();
+              }() : TOptional<FString>())
             ->WithVerifyType(Data->HasField(ANSI_TO_TCHAR("verifyType")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
@@ -178,6 +202,10 @@ namespace Gs2::SerialKey::Request
         if (CodeValue.IsSet())
         {
             JsonRootObject->SetStringField("code", CodeValue.GetValue());
+        }
+        if (CampaignModelNameValue.IsSet())
+        {
+            JsonRootObject->SetStringField("campaignModelName", CampaignModelNameValue.GetValue());
         }
         if (VerifyTypeValue.IsSet())
         {

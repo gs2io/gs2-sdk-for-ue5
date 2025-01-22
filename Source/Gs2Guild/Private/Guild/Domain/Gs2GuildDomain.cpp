@@ -756,6 +756,15 @@ namespace Gs2::Guild::Domain
             }
             RemoveRequestNotificationEvent.Broadcast(Gs2::Guild::Model::FRemoveRequestNotification::FromJson(PayloadJson));
         }
+        if (Action == "ChangeNotification") {
+            TSharedPtr<FJsonObject> PayloadJson;
+            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Payload);
+                !FJsonSerializer::Deserialize(JsonReader, PayloadJson))
+            {
+                return;
+            }
+            ChangeNotificationEvent.Broadcast(Gs2::Guild::Model::FChangeNotification::FromJson(PayloadJson));
+        }
         if (Action == "JoinNotification") {
             TSharedPtr<FJsonObject> PayloadJson;
             if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Payload);
@@ -826,6 +835,11 @@ namespace Gs2::Guild::Domain
     FRemoveRequestNotificationEvent& FGs2GuildDomain::OnRemoveRequestNotification()
     {
         return RemoveRequestNotificationEvent;
+    }
+
+    FChangeNotificationEvent& FGs2GuildDomain::OnChangeNotification()
+    {
+        return ChangeNotificationEvent;
     }
 
     FJoinNotificationEvent& FGs2GuildDomain::OnJoinNotification()

@@ -31,6 +31,10 @@
 #include "Model/ReceiveMemberRequest.h"
 #include "Model/SendMemberRequest.h"
 #include "Model/IgnoreUser.h"
+#include "Model/VerifyActionResult.h"
+#include "Model/ConsumeActionResult.h"
+#include "Model/AcquireActionResult.h"
+#include "Model/TransactionResult.h"
 #include "Model/TransactionSetting.h"
 #include "Model/NotificationSetting.h"
 #include "Model/ScriptSetting.h"
@@ -228,6 +232,30 @@
 #include "Result/UpdateMemberRoleByGuildNameResult.h"
 #include "Task/Rest/UpdateMemberRoleByGuildNameTask.h"
 #include "Task/WebSocket/UpdateMemberRoleByGuildNameTask.h"
+
+// BatchUpdateMemberRole
+#include "Request/BatchUpdateMemberRoleRequest.h"
+#include "Result/BatchUpdateMemberRoleResult.h"
+#include "Task/Rest/BatchUpdateMemberRoleTask.h"
+#include "Task/WebSocket/BatchUpdateMemberRoleTask.h"
+
+// BatchUpdateMemberRoleByGuildName
+#include "Request/BatchUpdateMemberRoleByGuildNameRequest.h"
+#include "Result/BatchUpdateMemberRoleByGuildNameResult.h"
+#include "Task/Rest/BatchUpdateMemberRoleByGuildNameTask.h"
+#include "Task/WebSocket/BatchUpdateMemberRoleByGuildNameTask.h"
+
+// UpdateMemberMetadata
+#include "Request/UpdateMemberMetadataRequest.h"
+#include "Result/UpdateMemberMetadataResult.h"
+#include "Task/Rest/UpdateMemberMetadataTask.h"
+#include "Task/WebSocket/UpdateMemberMetadataTask.h"
+
+// UpdateMemberMetadataByUserId
+#include "Request/UpdateMemberMetadataByUserIdRequest.h"
+#include "Result/UpdateMemberMetadataByUserIdResult.h"
+#include "Task/Rest/UpdateMemberMetadataByUserIdTask.h"
+#include "Task/WebSocket/UpdateMemberMetadataByUserIdTask.h"
 
 // DeleteGuild
 #include "Request/DeleteGuildRequest.h"

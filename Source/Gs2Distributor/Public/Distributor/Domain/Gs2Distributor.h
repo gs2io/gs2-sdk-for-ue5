@@ -34,6 +34,8 @@
 #include "Distributor/Domain/Model/UserAccessToken.h"
 #include "Distributor/Domain/Model/StampSheetResult.h"
 #include "Distributor/Domain/Model/StampSheetResultAccessToken.h"
+#include "Distributor/Domain/Model/TransactionResult.h"
+#include "Distributor/Domain/Model/TransactionResultAccessToken.h"
 
 // Iterator
 #include "Distributor/Domain/Iterator/DescribeNamespacesIterator.h"
@@ -42,6 +44,7 @@
 
 // Notification
 #include "Distributor/Model/AutoRunStampSheetNotification.h"
+#include "Distributor/Model/AutoRunTransactionNotification.h"
 
 namespace Gs2::Core::Domain
 {
@@ -52,6 +55,7 @@ namespace Gs2::Core::Domain
 namespace Gs2::Distributor::Domain
 {
     DECLARE_EVENT_OneParam(FGs2DistributorDomain, FAutoRunStampSheetNotificationEvent, Gs2::Distributor::Model::FAutoRunStampSheetNotificationPtr);
+    DECLARE_EVENT_OneParam(FGs2DistributorDomain, FAutoRunTransactionNotificationEvent, Gs2::Distributor::Model::FAutoRunTransactionNotificationPtr);
 
     class GS2DISTRIBUTOR_API FGs2DistributorDomain:
         public TSharedFromThis<FGs2DistributorDomain>
@@ -60,6 +64,7 @@ namespace Gs2::Distributor::Domain
         TSharedPtr<TArray<Gs2::Distributor::Model::FAutoRunStampSheetNotificationPtr>> CompletedStampSheets;
         TSharedPtr<FCriticalSection> CompletedStampSheetsMutex;
         FAutoRunStampSheetNotificationEvent AutoRunStampSheetNotificationEvent;
+        FAutoRunTransactionNotificationEvent AutoRunTransactionNotificationEvent;
         const Core::Domain::FGs2Ptr Gs2;
         const Gs2::Distributor::FGs2DistributorRestClientPtr Client;
 
@@ -138,6 +143,7 @@ namespace Gs2::Distributor::Domain
             const Gs2::JobQueue::Model::FJobResultBodyPtr Result
         );
         FAutoRunStampSheetNotificationEvent& OnAutoRunStampSheetNotification();
+        FAutoRunTransactionNotificationEvent& OnAutoRunTransactionNotification();
 
         void HandleNotification(
             const FString Action,

@@ -25,6 +25,10 @@
 #include "LoginReward/Model/Gs2LoginRewardEzConsumeAction.h"
 #include "LoginReward/Model/Gs2LoginRewardEzVerifyAction.h"
 #include "LoginReward/Model/Gs2LoginRewardEzAcquireAction.h"
+#include "LoginReward/Model/Gs2LoginRewardEzVerifyActionResult.h"
+#include "LoginReward/Model/Gs2LoginRewardEzConsumeActionResult.h"
+#include "LoginReward/Model/Gs2LoginRewardEzAcquireActionResult.h"
+#include "LoginReward/Model/Gs2LoginRewardEzTransactionResult.h"
 #include "Gs2LoginRewardEzBonusGameSessionDomain.h"
 #include "Util/Net/GameSession.h"
 #include "Util/Net/Gs2Connection.h"
@@ -40,8 +44,6 @@ namespace Gs2::UE5::LoginReward::Domain::Model
         Gs2::UE5::Util::FGs2ConnectionPtr ConnectionValue;
 
         public:
-        TOptional<FString> TransactionId() const;
-        TOptional<bool> AutoRunStampSheet() const;
         TOptional<FString> NamespaceName() const;
         TOptional<FString> UserId() const;
 

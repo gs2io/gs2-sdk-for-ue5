@@ -30,6 +30,10 @@
 #include "Mission/Model/Gs2MissionEzMissionTaskModel.h"
 #include "Mission/Model/Gs2MissionEzTargetCounterModel.h"
 #include "Mission/Model/Gs2MissionEzScopedValue.h"
+#include "Mission/Model/Gs2MissionEzVerifyActionResult.h"
+#include "Mission/Model/Gs2MissionEzConsumeActionResult.h"
+#include "Mission/Model/Gs2MissionEzAcquireActionResult.h"
+#include "Mission/Model/Gs2MissionEzTransactionResult.h"
 #include "Gs2MissionEzCompleteGameSessionDomain.h"
 #include "Mission/Domain/Iterator/Gs2MissionEzDescribeCompletesIterator.h"
 #include "Util/Net/GameSession.h"
@@ -46,8 +50,6 @@ namespace Gs2::UE5::Mission::Domain::Model
         Gs2::UE5::Util::FGs2ConnectionPtr ConnectionValue;
 
         public:
-        TOptional<FString> TransactionId() const;
-        TOptional<bool> AutoRunStampSheet() const;
         TOptional<FString> NamespaceName() const;
         TOptional<FString> UserId() const;
         TOptional<FString> MissionGroupName() const;

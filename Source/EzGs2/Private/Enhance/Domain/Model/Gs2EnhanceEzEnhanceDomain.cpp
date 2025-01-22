@@ -19,16 +19,6 @@
 namespace Gs2::UE5::Enhance::Domain::Model
 {
 
-    TOptional<FString> FEzEnhanceDomain::TransactionId() const
-    {
-        return Domain->TransactionId;
-    }
-
-    TOptional<bool> FEzEnhanceDomain::AutoRunStampSheet() const
-    {
-        return Domain->AutoRunStampSheet;
-    }
-
     TOptional<int64> FEzEnhanceDomain::AcquireExperience() const
     {
         return Domain->AcquireExperience;

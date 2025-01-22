@@ -29,6 +29,10 @@
 #include "Formation/Model/Gs2FormationEzSlotWithSignature.h"
 #include "Formation/Model/Gs2FormationEzConfig.h"
 #include "Formation/Model/Gs2FormationEzAcquireAction.h"
+#include "Formation/Model/Gs2FormationEzVerifyActionResult.h"
+#include "Formation/Model/Gs2FormationEzConsumeActionResult.h"
+#include "Formation/Model/Gs2FormationEzAcquireActionResult.h"
+#include "Formation/Model/Gs2FormationEzTransactionResult.h"
 #include "Gs2FormationEzMoldDomain.h"
 #include "Gs2FormationEzPropertyFormDomain.h"
 #include "Gs2FormationEzUserDomain.h"
@@ -47,8 +51,6 @@ namespace Gs2::UE5::Formation::Domain::Model
         Gs2::UE5::Util::FGs2ConnectionPtr ConnectionValue;
 
         public:
-        TOptional<FString> TransactionId() const;
-        TOptional<bool> AutoRunStampSheet() const;
         TOptional<FString> NextPageToken() const;
         TOptional<FString> NamespaceName() const;
         TOptional<FString> UserId() const;

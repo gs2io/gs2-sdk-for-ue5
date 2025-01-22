@@ -69,6 +69,31 @@ namespace Gs2::UE5::Distributor::Domain::Model
         return Domain->SheetResult;
     }
 
+    TOptional<FString> FEzDistributeDomain::Body() const
+    {
+        return Domain->Body;
+    }
+
+    TOptional<FString> FEzDistributeDomain::Signature() const
+    {
+        return Domain->Signature;
+    }
+
+    TSharedPtr<TArray<TSharedPtr<Gs2::UE5::Distributor::Model::FEzBatchResultPayload>>> FEzDistributeDomain::Results() const
+    {
+        return [&]{
+            auto Result = MakeShared<TArray<TSharedPtr<Gs2::UE5::Distributor::Model::FEzBatchResultPayload>>>();
+            for (auto Value : *Domain->Results) {
+                Result->Add(
+                    Gs2::UE5::Distributor::Model::FEzBatchResultPayload::FromModel(
+                        Value
+                    )
+                );
+            }
+            return Result;
+        }();
+    }
+
     TOptional<FString> FEzDistributeDomain::NamespaceName() const
     {
         return Domain->NamespaceName;

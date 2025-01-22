@@ -88,6 +88,10 @@ namespace Gs2::Guild::Task::Rest
             {
                 JsonRootObject->SetStringField("description", this->Request->GetDescription().GetValue());
             }
+            if (this->Request->GetChangeNotification() != nullptr && this->Request->GetChangeNotification().IsValid())
+            {
+                JsonRootObject->SetObjectField("changeNotification", this->Request->GetChangeNotification()->ToJson());
+            }
             if (this->Request->GetJoinNotification() != nullptr && this->Request->GetJoinNotification().IsValid())
             {
                 JsonRootObject->SetObjectField("joinNotification", this->Request->GetJoinNotification()->ToJson());
@@ -111,6 +115,10 @@ namespace Gs2::Guild::Task::Rest
             if (this->Request->GetCreateGuildScript() != nullptr && this->Request->GetCreateGuildScript().IsValid())
             {
                 JsonRootObject->SetObjectField("createGuildScript", this->Request->GetCreateGuildScript()->ToJson());
+            }
+            if (this->Request->GetUpdateGuildScript() != nullptr && this->Request->GetUpdateGuildScript().IsValid())
+            {
+                JsonRootObject->SetObjectField("updateGuildScript", this->Request->GetUpdateGuildScript()->ToJson());
             }
             if (this->Request->GetJoinGuildScript() != nullptr && this->Request->GetJoinGuildScript().IsValid())
             {

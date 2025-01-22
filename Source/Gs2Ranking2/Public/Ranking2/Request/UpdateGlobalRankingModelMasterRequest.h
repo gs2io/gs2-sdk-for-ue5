@@ -36,6 +36,7 @@ namespace Gs2::Ranking2::Request
         TOptional<bool> SumValue;
         TOptional<FString> OrderDirectionValue;
         TSharedPtr<TArray<TSharedPtr<Model::FRankingReward>>> RankingRewardsValue;
+        TOptional<FString> RewardCalculationIndexValue;
         TOptional<FString> EntryPeriodEventIdValue;
         TOptional<FString> AccessPeriodEventIdValue;
         
@@ -57,6 +58,7 @@ namespace Gs2::Ranking2::Request
         TSharedPtr<FUpdateGlobalRankingModelMasterRequest> WithSum(const TOptional<bool> Sum);
         TSharedPtr<FUpdateGlobalRankingModelMasterRequest> WithOrderDirection(const TOptional<FString> OrderDirection);
         TSharedPtr<FUpdateGlobalRankingModelMasterRequest> WithRankingRewards(const TSharedPtr<TArray<TSharedPtr<Model::FRankingReward>>> RankingRewards);
+        TSharedPtr<FUpdateGlobalRankingModelMasterRequest> WithRewardCalculationIndex(const TOptional<FString> RewardCalculationIndex);
         TSharedPtr<FUpdateGlobalRankingModelMasterRequest> WithEntryPeriodEventId(const TOptional<FString> EntryPeriodEventId);
         TSharedPtr<FUpdateGlobalRankingModelMasterRequest> WithAccessPeriodEventId(const TOptional<FString> AccessPeriodEventId);
 
@@ -72,6 +74,7 @@ namespace Gs2::Ranking2::Request
         TOptional<bool> GetSum() const;
         FString GetSumString() const;
         TOptional<FString> GetOrderDirection() const;TSharedPtr<TArray<TSharedPtr<Model::FRankingReward>>> GetRankingRewards() const;
+        TOptional<FString> GetRewardCalculationIndex() const;
         TOptional<FString> GetEntryPeriodEventId() const;
         TOptional<FString> GetAccessPeriodEventId() const;
 

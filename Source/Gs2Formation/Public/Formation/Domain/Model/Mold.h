@@ -72,17 +72,7 @@ namespace Gs2::Formation::Domain::Model
         const Gs2::Formation::FGs2FormationRestClientPtr Client;
 
         public:
-        TOptional<FString> TransactionId;
-        TOptional<bool> AutoRunStampSheet;
         TOptional<FString> NextPageToken;
-        TOptional<FString> GetTransactionId() const
-        {
-            return TransactionId;
-        }
-        TOptional<bool> GetAutoRunStampSheet() const
-        {
-            return AutoRunStampSheet;
-        }
         TOptional<FString> GetNextPageToken() const
         {
             return NextPageToken;

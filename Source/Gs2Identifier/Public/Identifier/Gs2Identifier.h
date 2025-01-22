@@ -133,12 +133,6 @@
 #include "Task/Rest/DetachGuardTask.h"
 #include "Task/WebSocket/DetachGuardTask.h"
 
-// DescribePasswords
-#include "Request/DescribePasswordsRequest.h"
-#include "Result/DescribePasswordsResult.h"
-#include "Task/Rest/DescribePasswordsTask.h"
-#include "Task/WebSocket/DescribePasswordsTask.h"
-
 // CreatePassword
 #include "Request/CreatePasswordRequest.h"
 #include "Result/CreatePasswordResult.h"

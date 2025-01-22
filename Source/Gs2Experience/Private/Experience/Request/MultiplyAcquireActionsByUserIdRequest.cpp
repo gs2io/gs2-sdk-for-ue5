@@ -25,6 +25,7 @@ namespace Gs2::Experience::Request
         PropertyIdValue(TOptional<FString>()),
         RateNameValue(TOptional<FString>()),
         AcquireActionsValue(nullptr),
+        BaseRateValue(TOptional<float>()),
         TimeOffsetTokenValue(TOptional<FString>())
     {
     }
@@ -38,6 +39,7 @@ namespace Gs2::Experience::Request
         PropertyIdValue(From.PropertyIdValue),
         RateNameValue(From.RateNameValue),
         AcquireActionsValue(From.AcquireActionsValue),
+        BaseRateValue(From.BaseRateValue),
         TimeOffsetTokenValue(From.TimeOffsetTokenValue)
     {
     }
@@ -98,6 +100,14 @@ namespace Gs2::Experience::Request
         return SharedThis(this);
     }
 
+    TSharedPtr<FMultiplyAcquireActionsByUserIdRequest> FMultiplyAcquireActionsByUserIdRequest::WithBaseRate(
+        const TOptional<float> BaseRate
+    )
+    {
+        this->BaseRateValue = BaseRate;
+        return SharedThis(this);
+    }
+
     TSharedPtr<FMultiplyAcquireActionsByUserIdRequest> FMultiplyAcquireActionsByUserIdRequest::WithTimeOffsetToken(
         const TOptional<FString> TimeOffsetToken
     )
@@ -151,6 +161,20 @@ namespace Gs2::Experience::Request
             return nullptr;
         }
         return AcquireActionsValue;
+    }
+
+    TOptional<float> FMultiplyAcquireActionsByUserIdRequest::GetBaseRate() const
+    {
+        return BaseRateValue;
+    }
+
+    FString FMultiplyAcquireActionsByUserIdRequest::GetBaseRateString() const
+    {
+        if (!BaseRateValue.IsSet())
+        {
+            return FString("null");
+        }
+        return FString::Printf(TEXT("%f"), BaseRateValue.GetValue());
     }
 
     TOptional<FString> FMultiplyAcquireActionsByUserIdRequest::GetTimeOffsetToken() const
@@ -227,6 +251,15 @@ namespace Gs2::Experience::Request
                   }
                   return v;
               }() : MakeShared<TArray<Model::FAcquireActionPtr>>())
+            ->WithBaseRate(Data->HasField(ANSI_TO_TCHAR("baseRate")) ? [Data]() -> TOptional<float>
+              {
+                  float v;
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("baseRate"), v))
+                  {
+                        return TOptional(v);
+                  }
+                  return TOptional<float>();
+              }() : TOptional<float>())
             ->WithTimeOffsetToken(Data->HasField(ANSI_TO_TCHAR("timeOffsetToken")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
@@ -274,6 +307,10 @@ namespace Gs2::Experience::Request
                 v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
             }
             JsonRootObject->SetArrayField("acquireActions", v);
+        }
+        if (BaseRateValue.IsSet())
+        {
+            JsonRootObject->SetNumberField("baseRate", BaseRateValue.GetValue());
         }
         if (TimeOffsetTokenValue.IsSet())
         {

@@ -48,6 +48,8 @@ namespace Gs2::Distributor::Domain::Model
     class FUserAccessTokenDomain;
     class FStampSheetResultDomain;
     class FStampSheetResultAccessTokenDomain;
+    class FTransactionResultDomain;
+    class FTransactionResultAccessTokenDomain;
 
     class GS2DISTRIBUTOR_API FUserDomain:
         public TSharedFromThis<FUserDomain>
@@ -77,7 +79,37 @@ namespace Gs2::Distributor::Domain::Model
             const FUserDomain& From
         );
 
+        class GS2DISTRIBUTOR_API FRunTransactionTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Distributor::Domain::Model::FTransactionResultDomain>,
+            public TSharedFromThis<FRunTransactionTask>
+        {
+            const TSharedPtr<FUserDomain> Self;
+            const Request::FRunTransactionRequestPtr Request;
+        public:
+            explicit FRunTransactionTask(
+                const TSharedPtr<FUserDomain>& Self,
+                const Request::FRunTransactionRequestPtr Request
+            );
+
+            FRunTransactionTask(
+                const FRunTransactionTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Distributor::Domain::Model::FTransactionResultDomain>> Result
+            ) override;
+        };
+        friend FRunTransactionTask;
+
+        TSharedPtr<FAsyncTask<FRunTransactionTask>> RunTransaction(
+            Request::FRunTransactionRequestPtr Request
+        );
+
         TSharedPtr<Gs2::Distributor::Domain::Model::FStampSheetResultDomain> StampSheetResult(
+            const FString TransactionId
+        );
+
+        TSharedPtr<Gs2::Distributor::Domain::Model::FTransactionResultDomain> TransactionResult(
             const FString TransactionId
         );
 

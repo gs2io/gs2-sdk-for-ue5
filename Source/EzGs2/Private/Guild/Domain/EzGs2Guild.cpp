@@ -51,6 +51,11 @@ namespace Gs2::UE5::Guild::Domain
         return RemoveRequestNotificationEvent;
     }
 
+    FChangeNotificationEvent& FEzGs2Guild::OnChangeNotification()
+    {
+        return ChangeNotificationEvent;
+    }
+
     FJoinNotificationEvent& FEzGs2Guild::OnJoinNotification()
     {
         return JoinNotificationEvent;

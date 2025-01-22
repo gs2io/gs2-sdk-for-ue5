@@ -82,4 +82,17 @@ namespace Gs2::UE5::Dictionary::Domain::Model
             ConnectionValue
         );
     }
+
+    Gs2::UE5::Dictionary::Domain::Model::FEzLikeGameSessionDomainPtr FEzUserGameSessionDomain::Like(
+        const FString EntryModelName
+    ) const
+    {
+        return MakeShared<Gs2::UE5::Dictionary::Domain::Model::FEzLikeGameSessionDomain>(
+            Domain->Like(
+                EntryModelName
+            ),
+            GameSession,
+            ConnectionValue
+        );
+    }
 }

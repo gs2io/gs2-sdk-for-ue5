@@ -30,6 +30,10 @@
 #include "Mission/Model/Gs2MissionEzMissionTaskModel.h"
 #include "Mission/Model/Gs2MissionEzTargetCounterModel.h"
 #include "Mission/Model/Gs2MissionEzScopedValue.h"
+#include "Mission/Model/Gs2MissionEzVerifyActionResult.h"
+#include "Mission/Model/Gs2MissionEzConsumeActionResult.h"
+#include "Mission/Model/Gs2MissionEzAcquireActionResult.h"
+#include "Mission/Model/Gs2MissionEzTransactionResult.h"
 #include "Gs2MissionEzCounterGameSessionDomain.h"
 #include "Mission/Domain/Iterator/Gs2MissionEzDescribeCountersIterator.h"
 #include "Util/Net/GameSession.h"
@@ -55,6 +59,26 @@ namespace Gs2::UE5::Mission::Domain::Model
             Gs2::Mission::Domain::Model::FCounterAccessTokenDomainPtr Domain,
             Gs2::UE5::Util::IGameSessionPtr GameSession,
             Gs2::UE5::Util::FGs2ConnectionPtr Connection
+        );
+
+        class EZGS2_API FGetCounterTask :
+            public Gs2::Core::Util::TGs2Future<Gs2::UE5::Mission::Domain::Model::FEzCounterGameSessionDomain>,
+            public TSharedFromThis<FGetCounterTask>
+        {
+            TSharedPtr<FEzCounterGameSessionDomain> Self;
+
+        public:
+            explicit FGetCounterTask(
+                TSharedPtr<FEzCounterGameSessionDomain> Self
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::UE5::Mission::Domain::Model::FEzCounterGameSessionDomain>> Result
+            ) override;
+        };
+        friend FGetCounterTask;
+
+        TSharedPtr<FAsyncTask<FGetCounterTask>> GetCounter(
         );
 
         class EZGS2_API FModelTask :

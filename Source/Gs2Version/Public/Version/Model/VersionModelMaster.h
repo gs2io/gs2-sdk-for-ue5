@@ -37,6 +37,7 @@ namespace Gs2::Version::Model
         TSharedPtr<TArray<TSharedPtr<FScheduleVersion>>> ScheduleVersionsValue;
         TOptional<bool> NeedSignatureValue;
         TOptional<FString> SignatureKeyIdValue;
+        TOptional<FString> ApproveRequirementValue;
         TOptional<int64> CreatedAtValue;
         TOptional<int64> UpdatedAtValue;
         TOptional<int64> RevisionValue;
@@ -60,6 +61,7 @@ namespace Gs2::Version::Model
         TSharedPtr<FVersionModelMaster> WithScheduleVersions(const TSharedPtr<TArray<TSharedPtr<FScheduleVersion>>> ScheduleVersions);
         TSharedPtr<FVersionModelMaster> WithNeedSignature(const TOptional<bool> NeedSignature);
         TSharedPtr<FVersionModelMaster> WithSignatureKeyId(const TOptional<FString> SignatureKeyId);
+        TSharedPtr<FVersionModelMaster> WithApproveRequirement(const TOptional<FString> ApproveRequirement);
         TSharedPtr<FVersionModelMaster> WithCreatedAt(const TOptional<int64> CreatedAt);
         TSharedPtr<FVersionModelMaster> WithUpdatedAt(const TOptional<int64> UpdatedAt);
         TSharedPtr<FVersionModelMaster> WithRevision(const TOptional<int64> Revision);
@@ -77,6 +79,7 @@ namespace Gs2::Version::Model
         TOptional<bool> GetNeedSignature() const;
         FString GetNeedSignatureString() const;
         TOptional<FString> GetSignatureKeyId() const;
+        TOptional<FString> GetApproveRequirement() const;
         TOptional<int64> GetCreatedAt() const;
         FString GetCreatedAtString() const;
         TOptional<int64> GetUpdatedAt() const;

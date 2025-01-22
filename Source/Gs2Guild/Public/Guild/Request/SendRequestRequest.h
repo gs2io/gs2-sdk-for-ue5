@@ -30,6 +30,7 @@ namespace Gs2::Guild::Request
         TOptional<FString> AccessTokenValue;
         TOptional<FString> GuildModelNameValue;
         TOptional<FString> TargetGuildNameValue;
+        TOptional<FString> MetadataValue;
         TOptional<FString> DuplicationAvoiderValue;
         
     public:
@@ -45,6 +46,7 @@ namespace Gs2::Guild::Request
         TSharedPtr<FSendRequestRequest> WithAccessToken(const TOptional<FString> AccessToken);
         TSharedPtr<FSendRequestRequest> WithGuildModelName(const TOptional<FString> GuildModelName);
         TSharedPtr<FSendRequestRequest> WithTargetGuildName(const TOptional<FString> TargetGuildName);
+        TSharedPtr<FSendRequestRequest> WithMetadata(const TOptional<FString> Metadata);
         TSharedPtr<FSendRequestRequest> WithDuplicationAvoider(const TOptional<FString> DuplicationAvoider);
 
         TOptional<FString> GetContextStack() const;
@@ -52,6 +54,7 @@ namespace Gs2::Guild::Request
         TOptional<FString> GetAccessToken() const;
         TOptional<FString> GetGuildModelName() const;
         TOptional<FString> GetTargetGuildName() const;
+        TOptional<FString> GetMetadata() const;
         TOptional<FString> GetDuplicationAvoider() const;
 
         static TSharedPtr<FSendRequestRequest> FromJson(const TSharedPtr<FJsonObject> Data);

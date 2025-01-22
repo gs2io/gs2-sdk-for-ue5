@@ -18,6 +18,7 @@
 
 #include "CoreMinimal.h"
 #include "../Model/Status.h"
+#include "Gs2Core/Public/Core/Model/TransactionResult.h"
 
 namespace Gs2::SkillTree::Result
 {
@@ -28,6 +29,9 @@ namespace Gs2::SkillTree::Result
         TOptional<FString> StampSheetValue;
         TOptional<FString> StampSheetEncryptionKeyIdValue;
         TOptional<bool> AutoRunStampSheetValue;
+        TOptional<bool> AtomicCommitValue;
+        TOptional<FString> TransactionValue;
+        TSharedPtr<Gs2::Core::Model::FTransactionResult> TransactionResultValue;
         
     public:
         
@@ -42,6 +46,9 @@ namespace Gs2::SkillTree::Result
         TSharedPtr<FRestrainResult> WithStampSheet(const TOptional<FString> StampSheet);
         TSharedPtr<FRestrainResult> WithStampSheetEncryptionKeyId(const TOptional<FString> StampSheetEncryptionKeyId);
         TSharedPtr<FRestrainResult> WithAutoRunStampSheet(const TOptional<bool> AutoRunStampSheet);
+        TSharedPtr<FRestrainResult> WithAtomicCommit(const TOptional<bool> AtomicCommit);
+        TSharedPtr<FRestrainResult> WithTransaction(const TOptional<FString> Transaction);
+        TSharedPtr<FRestrainResult> WithTransactionResult(const TSharedPtr<Gs2::Core::Model::FTransactionResult> TransactionResult);
 
         TSharedPtr<Model::FStatus> GetItem() const;
         TOptional<FString> GetTransactionId() const;
@@ -49,6 +56,10 @@ namespace Gs2::SkillTree::Result
         TOptional<FString> GetStampSheetEncryptionKeyId() const;
         TOptional<bool> GetAutoRunStampSheet() const;
         FString GetAutoRunStampSheetString() const;
+        TOptional<bool> GetAtomicCommit() const;
+        FString GetAtomicCommitString() const;
+        TOptional<FString> GetTransaction() const;
+        TSharedPtr<Gs2::Core::Model::FTransactionResult> GetTransactionResult() const;
 
         static TSharedPtr<FRestrainResult> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;

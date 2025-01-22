@@ -30,6 +30,7 @@ namespace Gs2::Guild::Request
         TOptional<FString> UserIdValue;
         TOptional<FString> GuildModelNameValue;
         TOptional<FString> TargetGuildNameValue;
+        TOptional<FString> MetadataValue;
         TOptional<FString> TimeOffsetTokenValue;
         TOptional<FString> DuplicationAvoiderValue;
         
@@ -46,6 +47,7 @@ namespace Gs2::Guild::Request
         TSharedPtr<FSendRequestByUserIdRequest> WithUserId(const TOptional<FString> UserId);
         TSharedPtr<FSendRequestByUserIdRequest> WithGuildModelName(const TOptional<FString> GuildModelName);
         TSharedPtr<FSendRequestByUserIdRequest> WithTargetGuildName(const TOptional<FString> TargetGuildName);
+        TSharedPtr<FSendRequestByUserIdRequest> WithMetadata(const TOptional<FString> Metadata);
         TSharedPtr<FSendRequestByUserIdRequest> WithTimeOffsetToken(const TOptional<FString> TimeOffsetToken);
         TSharedPtr<FSendRequestByUserIdRequest> WithDuplicationAvoider(const TOptional<FString> DuplicationAvoider);
 
@@ -54,6 +56,7 @@ namespace Gs2::Guild::Request
         TOptional<FString> GetUserId() const;
         TOptional<FString> GetGuildModelName() const;
         TOptional<FString> GetTargetGuildName() const;
+        TOptional<FString> GetMetadata() const;
         TOptional<FString> GetTimeOffsetToken() const;
         TOptional<FString> GetDuplicationAvoider() const;
 

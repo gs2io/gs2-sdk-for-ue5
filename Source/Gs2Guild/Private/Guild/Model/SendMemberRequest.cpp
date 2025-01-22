@@ -20,7 +20,8 @@ namespace Gs2::Guild::Model
 {
     FSendMemberRequest::FSendMemberRequest():
         UserIdValue(TOptional<FString>()),
-        TargetGuildNameValue(TOptional<FString>())
+        TargetGuildNameValue(TOptional<FString>()),
+        MetadataValue(TOptional<FString>())
     {
     }
 
@@ -28,7 +29,8 @@ namespace Gs2::Guild::Model
         const FSendMemberRequest& From
     ):
         UserIdValue(From.UserIdValue),
-        TargetGuildNameValue(From.TargetGuildNameValue)
+        TargetGuildNameValue(From.TargetGuildNameValue),
+        MetadataValue(From.MetadataValue)
     {
     }
 
@@ -47,6 +49,14 @@ namespace Gs2::Guild::Model
         this->TargetGuildNameValue = TargetGuildName;
         return SharedThis(this);
     }
+
+    TSharedPtr<FSendMemberRequest> FSendMemberRequest::WithMetadata(
+        const TOptional<FString> Metadata
+    )
+    {
+        this->MetadataValue = Metadata;
+        return SharedThis(this);
+    }
     TOptional<FString> FSendMemberRequest::GetUserId() const
     {
         return UserIdValue;
@@ -54,6 +64,10 @@ namespace Gs2::Guild::Model
     TOptional<FString> FSendMemberRequest::GetTargetGuildName() const
     {
         return TargetGuildNameValue;
+    }
+    TOptional<FString> FSendMemberRequest::GetMetadata() const
+    {
+        return MetadataValue;
     }
 
     TSharedPtr<FSendMemberRequest> FSendMemberRequest::FromJson(const TSharedPtr<FJsonObject> Data)
@@ -79,6 +93,15 @@ namespace Gs2::Guild::Model
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
+                }() : TOptional<FString>())
+            ->WithMetadata(Data->HasField(ANSI_TO_TCHAR("metadata")) ? [Data]() -> TOptional<FString>
+                {
+                    FString v("");
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("metadata"), v))
+                    {
+                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                    }
+                    return TOptional<FString>();
                 }() : TOptional<FString>());
     }
 
@@ -92,6 +115,10 @@ namespace Gs2::Guild::Model
         if (TargetGuildNameValue.IsSet())
         {
             JsonRootObject->SetStringField("targetGuildName", TargetGuildNameValue.GetValue());
+        }
+        if (MetadataValue.IsSet())
+        {
+            JsonRootObject->SetStringField("metadata", MetadataValue.GetValue());
         }
         return JsonRootObject;
     }

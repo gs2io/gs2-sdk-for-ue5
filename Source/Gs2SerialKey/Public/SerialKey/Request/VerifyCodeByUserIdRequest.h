@@ -29,6 +29,7 @@ namespace Gs2::SerialKey::Request
         TOptional<FString> NamespaceNameValue;
         TOptional<FString> UserIdValue;
         TOptional<FString> CodeValue;
+        TOptional<FString> CampaignModelNameValue;
         TOptional<FString> VerifyTypeValue;
         TOptional<FString> TimeOffsetTokenValue;
         TOptional<FString> DuplicationAvoiderValue;
@@ -45,6 +46,7 @@ namespace Gs2::SerialKey::Request
         TSharedPtr<FVerifyCodeByUserIdRequest> WithNamespaceName(const TOptional<FString> NamespaceName);
         TSharedPtr<FVerifyCodeByUserIdRequest> WithUserId(const TOptional<FString> UserId);
         TSharedPtr<FVerifyCodeByUserIdRequest> WithCode(const TOptional<FString> Code);
+        TSharedPtr<FVerifyCodeByUserIdRequest> WithCampaignModelName(const TOptional<FString> CampaignModelName);
         TSharedPtr<FVerifyCodeByUserIdRequest> WithVerifyType(const TOptional<FString> VerifyType);
         TSharedPtr<FVerifyCodeByUserIdRequest> WithTimeOffsetToken(const TOptional<FString> TimeOffsetToken);
         TSharedPtr<FVerifyCodeByUserIdRequest> WithDuplicationAvoider(const TOptional<FString> DuplicationAvoider);
@@ -53,6 +55,7 @@ namespace Gs2::SerialKey::Request
         TOptional<FString> GetNamespaceName() const;
         TOptional<FString> GetUserId() const;
         TOptional<FString> GetCode() const;
+        TOptional<FString> GetCampaignModelName() const;
         TOptional<FString> GetVerifyType() const;
         TOptional<FString> GetTimeOffsetToken() const;
         TOptional<FString> GetDuplicationAvoider() const;

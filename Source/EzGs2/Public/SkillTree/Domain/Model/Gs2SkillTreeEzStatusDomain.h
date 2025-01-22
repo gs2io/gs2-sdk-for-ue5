@@ -24,6 +24,10 @@
 #include "SkillTree/Model/Gs2SkillTreeEzAcquireAction.h"
 #include "SkillTree/Model/Gs2SkillTreeEzConsumeAction.h"
 #include "SkillTree/Model/Gs2SkillTreeEzVerifyAction.h"
+#include "SkillTree/Model/Gs2SkillTreeEzVerifyActionResult.h"
+#include "SkillTree/Model/Gs2SkillTreeEzConsumeActionResult.h"
+#include "SkillTree/Model/Gs2SkillTreeEzAcquireActionResult.h"
+#include "SkillTree/Model/Gs2SkillTreeEzTransactionResult.h"
 #include "Gs2SkillTreeEzStatusDomain.h"
 #include "Util/Net/GameSession.h"
 #include "Util/Net/Gs2Connection.h"
@@ -38,8 +42,6 @@ namespace Gs2::UE5::SkillTree::Domain::Model
         Gs2::UE5::Util::FGs2ConnectionPtr ConnectionValue;
 
         public:
-        TOptional<FString> TransactionId() const;
-        TOptional<bool> AutoRunStampSheet() const;
         TOptional<FString> NamespaceName() const;
         TOptional<FString> UserId() const;
         TOptional<FString> PropertyId() const;

@@ -93,6 +93,10 @@ namespace Gs2::SerialKey::Task::Rest
             {
                 JsonRootObject->SetStringField("code", this->Request->GetCode().GetValue());
             }
+            if (this->Request->GetCampaignModelName().IsSet())
+            {
+                JsonRootObject->SetStringField("campaignModelName", this->Request->GetCampaignModelName().GetValue());
+            }
             if (this->Request->GetVerifyType().IsSet())
             {
                 JsonRootObject->SetStringField("verifyType", this->Request->GetVerifyType().GetValue());

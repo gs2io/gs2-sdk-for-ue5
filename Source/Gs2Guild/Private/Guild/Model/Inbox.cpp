@@ -22,6 +22,7 @@ namespace Gs2::Guild::Model
         InboxIdValue(TOptional<FString>()),
         GuildNameValue(TOptional<FString>()),
         FromUserIdsValue(nullptr),
+        ReceiveMemberRequestsValue(nullptr),
         CreatedAtValue(TOptional<int64>()),
         UpdatedAtValue(TOptional<int64>()),
         RevisionValue(TOptional<int64>())
@@ -34,6 +35,7 @@ namespace Gs2::Guild::Model
         InboxIdValue(From.InboxIdValue),
         GuildNameValue(From.GuildNameValue),
         FromUserIdsValue(From.FromUserIdsValue),
+        ReceiveMemberRequestsValue(From.ReceiveMemberRequestsValue),
         CreatedAtValue(From.CreatedAtValue),
         UpdatedAtValue(From.UpdatedAtValue),
         RevisionValue(From.RevisionValue)
@@ -61,6 +63,14 @@ namespace Gs2::Guild::Model
     )
     {
         this->FromUserIdsValue = FromUserIds;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FInbox> FInbox::WithReceiveMemberRequests(
+        const TSharedPtr<TArray<TSharedPtr<Model::FReceiveMemberRequest>>> ReceiveMemberRequests
+    )
+    {
+        this->ReceiveMemberRequestsValue = ReceiveMemberRequests;
         return SharedThis(this);
     }
 
@@ -98,6 +108,10 @@ namespace Gs2::Guild::Model
     TSharedPtr<TArray<FString>> FInbox::GetFromUserIds() const
     {
         return FromUserIdsValue;
+    }
+    TSharedPtr<TArray<TSharedPtr<Model::FReceiveMemberRequest>>> FInbox::GetReceiveMemberRequests() const
+    {
+        return ReceiveMemberRequestsValue;
     }
     TOptional<int64> FInbox::GetCreatedAt() const
     {
@@ -230,6 +244,18 @@ namespace Gs2::Guild::Model
                     }
                     return v;
                  }() : MakeShared<TArray<FString>>())
+            ->WithReceiveMemberRequests(Data->HasField(ANSI_TO_TCHAR("receiveMemberRequests")) ? [Data]() -> TSharedPtr<TArray<Model::FReceiveMemberRequestPtr>>
+                {
+                    auto v = MakeShared<TArray<Model::FReceiveMemberRequestPtr>>();
+                    if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("receiveMemberRequests")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("receiveMemberRequests")))
+                    {
+                        for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("receiveMemberRequests")))
+                        {
+                            v->Add(Model::FReceiveMemberRequest::FromJson(JsonObjectValue->AsObject()));
+                        }
+                    }
+                    return v;
+                 }() : MakeShared<TArray<Model::FReceiveMemberRequestPtr>>())
             ->WithCreatedAt(Data->HasField(ANSI_TO_TCHAR("createdAt")) ? [Data]() -> TOptional<int64>
                 {
                     int64 v;
@@ -278,6 +304,15 @@ namespace Gs2::Guild::Model
                 v.Add(MakeShared<FJsonValueString>(JsonObjectValue));
             }
             JsonRootObject->SetArrayField("fromUserIds", v);
+        }
+        if (ReceiveMemberRequestsValue != nullptr && ReceiveMemberRequestsValue.IsValid())
+        {
+            TArray<TSharedPtr<FJsonValue>> v;
+            for (auto JsonObjectValue : *ReceiveMemberRequestsValue)
+            {
+                v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
+            }
+            JsonRootObject->SetArrayField("receiveMemberRequests", v);
         }
         if (CreatedAtValue.IsSet())
         {

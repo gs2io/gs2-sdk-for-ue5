@@ -33,6 +33,8 @@
 #include "Distributor/Domain/Model/UserAccessToken.h"
 #include "Distributor/Domain/Model/StampSheetResult.h"
 #include "Distributor/Domain/Model/StampSheetResultAccessToken.h"
+#include "Distributor/Domain/Model/TransactionResult.h"
+#include "Distributor/Domain/Model/TransactionResultAccessToken.h"
 
 #include "Core/Domain/Gs2.h"
 #include "Core/Domain/Transaction/JobQueueJobDomainFactory.h"
@@ -74,11 +76,96 @@ namespace Gs2::Distributor::Domain::Model
 
     }
 
+    FUserDomain::FRunTransactionTask::FRunTransactionTask(
+        const TSharedPtr<FUserDomain>& Self,
+        const Request::FRunTransactionRequestPtr Request
+    ): Self(Self), Request(Request)
+    {
+
+    }
+
+    FUserDomain::FRunTransactionTask::FRunTransactionTask(
+        const FRunTransactionTask& From
+    ): TGs2Future(From), Self(From.Self), Request(From.Request)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FUserDomain::FRunTransactionTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::Distributor::Domain::Model::FTransactionResultDomain>> Result
+    )
+    {
+        Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
+            ->WithNamespaceName(Self->NamespaceName)
+            ->WithUserId(Self->UserId);
+        const auto Future = Self->Client->RunTransaction(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto RequestModel = Request;
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
+        if (ResultModel != nullptr) {
+            
+            if (ResultModel->GetItem() != nullptr)
+            {
+                const auto ParentKey = Gs2::Distributor::Domain::Model::FUserDomain::CreateCacheParentKey(
+                    Self->NamespaceName,
+                    Self->UserId,
+                    "TransactionResult"
+                );
+                const auto Key = Gs2::Distributor::Domain::Model::FTransactionResultDomain::CreateCacheKey(
+                    ResultModel->GetItem()->GetTransactionId()
+                );
+                Self->Gs2->Cache->Put(
+                    Gs2::Distributor::Model::FTransactionResult::TypeName,
+                    ParentKey,
+                    Key,
+                    ResultModel->GetItem(),
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+            }
+        }
+        auto Domain = MakeShared<Gs2::Distributor::Domain::Model::FTransactionResultDomain>(
+            Self->Gs2,
+            Self->Service,
+            Request->GetNamespaceName(),
+            ResultModel->GetItem()->GetUserId(),
+            ResultModel->GetItem()->GetTransactionId()
+        );
+
+        *Result = Domain;
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FUserDomain::FRunTransactionTask>> FUserDomain::RunTransaction(
+        Request::FRunTransactionRequestPtr Request
+    ) {
+        return Gs2::Core::Util::New<FAsyncTask<FRunTransactionTask>>(this->AsShared(), Request);
+    }
+
     TSharedPtr<Gs2::Distributor::Domain::Model::FStampSheetResultDomain> FUserDomain::StampSheetResult(
         const FString TransactionId
     )
     {
         return MakeShared<Gs2::Distributor::Domain::Model::FStampSheetResultDomain>(
+            Gs2,
+            Service,
+            NamespaceName,
+            UserId,
+            TransactionId == TEXT("") ? TOptional<FString>() : TOptional<FString>(TransactionId)
+        );
+    }
+
+    TSharedPtr<Gs2::Distributor::Domain::Model::FTransactionResultDomain> FUserDomain::TransactionResult(
+        const FString TransactionId
+    )
+    {
+        return MakeShared<Gs2::Distributor::Domain::Model::FTransactionResultDomain>(
             Gs2,
             Service,
             NamespaceName,

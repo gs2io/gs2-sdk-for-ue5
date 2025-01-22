@@ -23,6 +23,10 @@
 #include "Grade/Model/Gs2GradeEzGradeEntryModel.h"
 #include "Grade/Model/Gs2GradeEzAcquireAction.h"
 #include "Grade/Model/Gs2GradeEzAcquireActionRate.h"
+#include "Grade/Model/Gs2GradeEzVerifyActionResult.h"
+#include "Grade/Model/Gs2GradeEzConsumeActionResult.h"
+#include "Grade/Model/Gs2GradeEzAcquireActionResult.h"
+#include "Grade/Model/Gs2GradeEzTransactionResult.h"
 #include "Gs2GradeEzStatusGameSessionDomain.h"
 #include "Grade/Domain/Iterator/Gs2GradeEzDescribeStatusesIterator.h"
 #include "Gs2GradeEzUserGameSessionDomain.h"
@@ -41,8 +45,6 @@ namespace Gs2::UE5::Grade::Domain::Model
 
         public:
         TOptional<FString> ExperienceNamespaceName() const;
-        TOptional<FString> TransactionId() const;
-        TOptional<bool> AutoRunStampSheet() const;
         TOptional<FString> NextPageToken() const;
         TOptional<FString> NamespaceName() const;
         TOptional<FString> UserId() const;

@@ -66,6 +66,10 @@
 #include "Task/Rest/AcceptTask.h"
 #include "Request/AcceptByUserIdRequest.h"
 #include "Task/Rest/AcceptByUserIdTask.h"
+#include "Request/RejectRequest.h"
+#include "Task/Rest/RejectTask.h"
+#include "Request/RejectByUserIdRequest.h"
+#include "Task/Rest/RejectByUserIdTask.h"
 #include "Request/GetAcceptVersionRequest.h"
 #include "Task/Rest/GetAcceptVersionTask.h"
 #include "Request/GetAcceptVersionByUserIdRequest.h"
@@ -194,6 +198,14 @@ namespace Gs2::Version
 
         TSharedPtr<FAsyncTask<Task::Rest::FAcceptByUserIdTask>> AcceptByUserId(
             const Request::FAcceptByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FRejectTask>> Reject(
+            const Request::FRejectRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FRejectByUserIdTask>> RejectByUserId(
+            const Request::FRejectByUserIdRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::Rest::FGetAcceptVersionTask>> GetAcceptVersion(

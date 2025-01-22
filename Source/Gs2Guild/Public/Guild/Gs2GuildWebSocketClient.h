@@ -82,6 +82,14 @@
 #include "Task/WebSocket/UpdateMemberRoleTask.h"
 #include "Request/UpdateMemberRoleByGuildNameRequest.h"
 #include "Task/WebSocket/UpdateMemberRoleByGuildNameTask.h"
+#include "Request/BatchUpdateMemberRoleRequest.h"
+#include "Task/WebSocket/BatchUpdateMemberRoleTask.h"
+#include "Request/BatchUpdateMemberRoleByGuildNameRequest.h"
+#include "Task/WebSocket/BatchUpdateMemberRoleByGuildNameTask.h"
+#include "Request/UpdateMemberMetadataRequest.h"
+#include "Task/WebSocket/UpdateMemberMetadataTask.h"
+#include "Request/UpdateMemberMetadataByUserIdRequest.h"
+#include "Task/WebSocket/UpdateMemberMetadataByUserIdTask.h"
 #include "Request/DeleteGuildRequest.h"
 #include "Task/WebSocket/DeleteGuildTask.h"
 #include "Request/DeleteGuildByGuildNameRequest.h"
@@ -330,6 +338,22 @@ namespace Gs2::Guild
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FUpdateMemberRoleByGuildNameTask>> UpdateMemberRoleByGuildName(
             const Request::FUpdateMemberRoleByGuildNameRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FBatchUpdateMemberRoleTask>> BatchUpdateMemberRole(
+            const Request::FBatchUpdateMemberRoleRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FBatchUpdateMemberRoleByGuildNameTask>> BatchUpdateMemberRoleByGuildName(
+            const Request::FBatchUpdateMemberRoleByGuildNameRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FUpdateMemberMetadataTask>> UpdateMemberMetadata(
+            const Request::FUpdateMemberMetadataRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FUpdateMemberMetadataByUserIdTask>> UpdateMemberMetadataByUserId(
+            const Request::FUpdateMemberMetadataByUserIdRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FDeleteGuildTask>> DeleteGuild(

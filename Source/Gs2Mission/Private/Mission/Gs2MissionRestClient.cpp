@@ -478,6 +478,15 @@ namespace Gs2::Mission
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::Rest::FDeleteCounterTask>> FGs2MissionRestClient::DeleteCounter(
+        const Request::FDeleteCounterRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FDeleteCounterTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::Rest::FDeleteCounterByUserIdTask>> FGs2MissionRestClient::DeleteCounterByUserId(
         const Request::FDeleteCounterByUserIdRequestPtr Request) const
     {

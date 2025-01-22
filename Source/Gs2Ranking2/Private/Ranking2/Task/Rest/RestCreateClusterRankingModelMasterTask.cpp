@@ -129,6 +129,10 @@ namespace Gs2::Ranking2::Task::Rest
                 }
                 JsonRootObject->SetArrayField("rankingRewards", v);
             }
+            if (this->Request->GetRewardCalculationIndex().IsSet())
+            {
+                JsonRootObject->SetStringField("rewardCalculationIndex", this->Request->GetRewardCalculationIndex().GetValue());
+            }
             if (this->Request->GetEntryPeriodEventId().IsSet())
             {
                 JsonRootObject->SetStringField("entryPeriodEventId", this->Request->GetEntryPeriodEventId().GetValue());

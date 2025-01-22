@@ -24,6 +24,7 @@
 
 #include "SerialKey/Domain/SpeculativeExecutor/Acquire/AcquireActionSpeculativeExecutorIndex.h"
 #include "SerialKey/Domain/SpeculativeExecutor/Acquire/RevertUseByUserIdSpeculativeExecutor.h"
+#include "SerialKey/Domain/SpeculativeExecutor/Acquire/IssueOnceSpeculativeExecutor.h"
 
 #include "Core/Domain/Gs2.h"
 
@@ -74,6 +75,28 @@ namespace Gs2::SerialKey::Domain::SpeculativeExecutor
             auto Request = Request::FRevertUseByUserIdRequest::FromJson(RequestModelJson);
             Request = FRevertUseByUserIdSpeculativeExecutor::Rate(Request, Rate);
             auto Future = FRevertUseByUserIdSpeculativeExecutor::Execute(
+                Domain,
+                Service,
+                AccessToken,
+                Request
+            );
+            Future->StartSynchronousTask();
+            if (Future->GetTask().IsError())
+            {
+                return Future->GetTask().Error();
+            }
+            *Result = Future->GetTask().Result();
+        }
+        if (FIssueOnceSpeculativeExecutor::Action() == NewAcquireAction->GetAction()) {
+            TSharedPtr<FJsonObject> RequestModelJson;
+            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(NewAcquireAction->GetRequest().IsSet() ? *NewAcquireAction->GetRequest() : "{}");
+                !FJsonSerializer::Deserialize(JsonReader, RequestModelJson))
+            {
+                return nullptr;
+            }
+            auto Request = Request::FIssueOnceRequest::FromJson(RequestModelJson);
+            Request = FIssueOnceSpeculativeExecutor::Rate(Request, Rate);
+            auto Future = FIssueOnceSpeculativeExecutor::Execute(
                 Domain,
                 Service,
                 AccessToken,

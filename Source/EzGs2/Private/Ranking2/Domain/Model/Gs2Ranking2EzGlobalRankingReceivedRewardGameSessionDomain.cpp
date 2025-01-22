@@ -34,16 +34,6 @@ namespace Gs2::UE5::Ranking2::Domain::Model
         }();
     }
 
-    TOptional<FString> FEzGlobalRankingReceivedRewardGameSessionDomain::TransactionId() const
-    {
-        return Domain->TransactionId;
-    }
-
-    TOptional<bool> FEzGlobalRankingReceivedRewardGameSessionDomain::AutoRunStampSheet() const
-    {
-        return Domain->AutoRunStampSheet;
-    }
-
     TOptional<FString> FEzGlobalRankingReceivedRewardGameSessionDomain::NamespaceName() const
     {
         return Domain->NamespaceName;

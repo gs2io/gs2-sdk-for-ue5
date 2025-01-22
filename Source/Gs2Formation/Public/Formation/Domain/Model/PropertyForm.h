@@ -74,8 +74,6 @@ namespace Gs2::Formation::Domain::Model
         public:
         TOptional<FString> Body;
         TOptional<FString> Signature;
-        TOptional<FString> TransactionId;
-        TOptional<bool> AutoRunStampSheet;
         TOptional<FString> GetBody() const
         {
             return Body;
@@ -83,14 +81,6 @@ namespace Gs2::Formation::Domain::Model
         TOptional<FString> GetSignature() const
         {
             return Signature;
-        }
-        TOptional<FString> GetTransactionId() const
-        {
-            return TransactionId;
-        }
-        TOptional<bool> GetAutoRunStampSheet() const
-        {
-            return AutoRunStampSheet;
         }
         TOptional<FString> NamespaceName;
         TOptional<FString> UserId;

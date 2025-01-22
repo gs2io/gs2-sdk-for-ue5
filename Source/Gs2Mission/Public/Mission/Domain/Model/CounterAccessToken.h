@@ -176,6 +176,32 @@ namespace Gs2::Mission::Domain::Model
             Request::FVerifyCounterValueRequestPtr Request
         );
 
+        class GS2MISSION_API FDeleteTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Mission::Domain::Model::FCounterAccessTokenDomain>,
+            public TSharedFromThis<FDeleteTask>
+        {
+            const TSharedPtr<FCounterAccessTokenDomain> Self;
+            const Request::FDeleteCounterRequestPtr Request;
+        public:
+            explicit FDeleteTask(
+                const TSharedPtr<FCounterAccessTokenDomain>& Self,
+                const Request::FDeleteCounterRequestPtr Request
+            );
+
+            FDeleteTask(
+                const FDeleteTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Mission::Domain::Model::FCounterAccessTokenDomain>> Result
+            ) override;
+        };
+        friend FDeleteTask;
+
+        TSharedPtr<FAsyncTask<FDeleteTask>> Delete(
+            Request::FDeleteCounterRequestPtr Request
+        );
+
         static FString CreateCacheParentKey(
             TOptional<FString> NamespaceName,
             TOptional<FString> UserId,

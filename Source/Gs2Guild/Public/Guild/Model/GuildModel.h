@@ -34,6 +34,8 @@ namespace Gs2::Guild::Model
         TOptional<FString> GuildMasterRoleValue;
         TOptional<FString> GuildMemberDefaultRoleValue;
         TOptional<int32> RejoinCoolTimeMinutesValue;
+        TOptional<int32> MaxConcurrentJoinGuildsValue;
+        TOptional<int32> MaxConcurrentGuildMasterCountValue;
 
     public:
         FGuildModel();
@@ -52,6 +54,8 @@ namespace Gs2::Guild::Model
         TSharedPtr<FGuildModel> WithGuildMasterRole(const TOptional<FString> GuildMasterRole);
         TSharedPtr<FGuildModel> WithGuildMemberDefaultRole(const TOptional<FString> GuildMemberDefaultRole);
         TSharedPtr<FGuildModel> WithRejoinCoolTimeMinutes(const TOptional<int32> RejoinCoolTimeMinutes);
+        TSharedPtr<FGuildModel> WithMaxConcurrentJoinGuilds(const TOptional<int32> MaxConcurrentJoinGuilds);
+        TSharedPtr<FGuildModel> WithMaxConcurrentGuildMasterCount(const TOptional<int32> MaxConcurrentGuildMasterCount);
 
         TOptional<FString> GetGuildModelId() const;
         TOptional<FString> GetName() const;
@@ -67,6 +71,10 @@ namespace Gs2::Guild::Model
         TOptional<FString> GetGuildMemberDefaultRole() const;
         TOptional<int32> GetRejoinCoolTimeMinutes() const;
         FString GetRejoinCoolTimeMinutesString() const;
+        TOptional<int32> GetMaxConcurrentJoinGuilds() const;
+        FString GetMaxConcurrentJoinGuildsString() const;
+        TOptional<int32> GetMaxConcurrentGuildMasterCount() const;
+        FString GetMaxConcurrentGuildMasterCountString() const;
 
         static TOptional<FString> GetRegionFromGrn(const FString Grn);
         static TOptional<FString> GetOwnerIdFromGrn(const FString Grn);

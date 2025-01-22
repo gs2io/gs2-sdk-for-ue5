@@ -19,6 +19,7 @@
 #include "CoreMinimal.h"
 #include "../Model/AcquireAction.h"
 #include "../Model/Status.h"
+#include "Gs2Core/Public/Core/Model/TransactionResult.h"
 
 namespace Gs2::Idle::Result
 {
@@ -30,6 +31,9 @@ namespace Gs2::Idle::Result
         TOptional<FString> StampSheetValue;
         TOptional<FString> StampSheetEncryptionKeyIdValue;
         TOptional<bool> AutoRunStampSheetValue;
+        TOptional<bool> AtomicCommitValue;
+        TOptional<FString> TransactionValue;
+        TSharedPtr<Gs2::Core::Model::FTransactionResult> TransactionResultValue;
         
     public:
         
@@ -45,6 +49,9 @@ namespace Gs2::Idle::Result
         TSharedPtr<FReceiveByUserIdResult> WithStampSheet(const TOptional<FString> StampSheet);
         TSharedPtr<FReceiveByUserIdResult> WithStampSheetEncryptionKeyId(const TOptional<FString> StampSheetEncryptionKeyId);
         TSharedPtr<FReceiveByUserIdResult> WithAutoRunStampSheet(const TOptional<bool> AutoRunStampSheet);
+        TSharedPtr<FReceiveByUserIdResult> WithAtomicCommit(const TOptional<bool> AtomicCommit);
+        TSharedPtr<FReceiveByUserIdResult> WithTransaction(const TOptional<FString> Transaction);
+        TSharedPtr<FReceiveByUserIdResult> WithTransactionResult(const TSharedPtr<Gs2::Core::Model::FTransactionResult> TransactionResult);
 
         TSharedPtr<TArray<TSharedPtr<Model::FAcquireAction>>> GetItems() const;
         TSharedPtr<Model::FStatus> GetStatus() const;
@@ -53,6 +60,10 @@ namespace Gs2::Idle::Result
         TOptional<FString> GetStampSheetEncryptionKeyId() const;
         TOptional<bool> GetAutoRunStampSheet() const;
         FString GetAutoRunStampSheetString() const;
+        TOptional<bool> GetAtomicCommit() const;
+        FString GetAtomicCommitString() const;
+        TOptional<FString> GetTransaction() const;
+        TSharedPtr<Gs2::Core::Model::FTransactionResult> GetTransactionResult() const;
 
         static TSharedPtr<FReceiveByUserIdResult> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;

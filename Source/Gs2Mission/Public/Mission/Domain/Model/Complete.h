@@ -69,16 +69,6 @@ namespace Gs2::Mission::Domain::Model
         const Gs2::Mission::FGs2MissionRestClientPtr Client;
 
         public:
-        TOptional<FString> TransactionId;
-        TOptional<bool> AutoRunStampSheet;
-        TOptional<FString> GetTransactionId() const
-        {
-            return TransactionId;
-        }
-        TOptional<bool> GetAutoRunStampSheet() const
-        {
-            return AutoRunStampSheet;
-        }
         TOptional<FString> NamespaceName;
         TOptional<FString> UserId;
         TOptional<FString> MissionGroupName;

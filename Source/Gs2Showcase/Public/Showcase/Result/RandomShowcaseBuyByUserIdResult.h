@@ -18,6 +18,7 @@
 
 #include "CoreMinimal.h"
 #include "../Model/RandomDisplayItem.h"
+#include "Gs2Core/Public/Core/Model/TransactionResult.h"
 
 namespace Gs2::Showcase::Result
 {
@@ -28,6 +29,9 @@ namespace Gs2::Showcase::Result
         TOptional<FString> StampSheetValue;
         TOptional<FString> StampSheetEncryptionKeyIdValue;
         TOptional<bool> AutoRunStampSheetValue;
+        TOptional<bool> AtomicCommitValue;
+        TOptional<FString> TransactionValue;
+        TSharedPtr<Gs2::Core::Model::FTransactionResult> TransactionResultValue;
         
     public:
         
@@ -42,6 +46,9 @@ namespace Gs2::Showcase::Result
         TSharedPtr<FRandomShowcaseBuyByUserIdResult> WithStampSheet(const TOptional<FString> StampSheet);
         TSharedPtr<FRandomShowcaseBuyByUserIdResult> WithStampSheetEncryptionKeyId(const TOptional<FString> StampSheetEncryptionKeyId);
         TSharedPtr<FRandomShowcaseBuyByUserIdResult> WithAutoRunStampSheet(const TOptional<bool> AutoRunStampSheet);
+        TSharedPtr<FRandomShowcaseBuyByUserIdResult> WithAtomicCommit(const TOptional<bool> AtomicCommit);
+        TSharedPtr<FRandomShowcaseBuyByUserIdResult> WithTransaction(const TOptional<FString> Transaction);
+        TSharedPtr<FRandomShowcaseBuyByUserIdResult> WithTransactionResult(const TSharedPtr<Gs2::Core::Model::FTransactionResult> TransactionResult);
 
         TSharedPtr<Model::FRandomDisplayItem> GetItem() const;
         TOptional<FString> GetTransactionId() const;
@@ -49,6 +56,10 @@ namespace Gs2::Showcase::Result
         TOptional<FString> GetStampSheetEncryptionKeyId() const;
         TOptional<bool> GetAutoRunStampSheet() const;
         FString GetAutoRunStampSheetString() const;
+        TOptional<bool> GetAtomicCommit() const;
+        FString GetAtomicCommitString() const;
+        TOptional<FString> GetTransaction() const;
+        TSharedPtr<Gs2::Core::Model::FTransactionResult> GetTransactionResult() const;
 
         static TSharedPtr<FRandomShowcaseBuyByUserIdResult> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;

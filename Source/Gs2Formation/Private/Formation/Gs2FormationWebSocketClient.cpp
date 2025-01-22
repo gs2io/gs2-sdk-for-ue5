@@ -523,6 +523,15 @@ namespace Gs2::Formation
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::WebSocket::FSetFormTask>> FGs2FormationWebSocketClient::SetForm(
+        const Request::FSetFormRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FSetFormTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::WebSocket::FSetFormByUserIdTask>> FGs2FormationWebSocketClient::SetFormByUserId(
         const Request::FSetFormByUserIdRequestPtr Request) const
     {
@@ -635,6 +644,15 @@ namespace Gs2::Formation
         const Request::FGetPropertyFormWithSignatureByUserIdRequestPtr Request) const
     {
         return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FGetPropertyFormWithSignatureByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FSetPropertyFormTask>> FGs2FormationWebSocketClient::SetPropertyForm(
+        const Request::FSetPropertyFormRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FSetPropertyFormTask>>(
             Session,
             Request
         );

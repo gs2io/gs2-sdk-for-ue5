@@ -19,16 +19,6 @@
 namespace Gs2::UE5::Idle::Domain::Model
 {
 
-    TOptional<FString> FEzUserDomain::TransactionId() const
-    {
-        return Domain->TransactionId;
-    }
-
-    TOptional<bool> FEzUserDomain::AutoRunStampSheet() const
-    {
-        return Domain->AutoRunStampSheet;
-    }
-
     TOptional<FString> FEzUserDomain::NextPageToken() const
     {
         return Domain->NextPageToken;

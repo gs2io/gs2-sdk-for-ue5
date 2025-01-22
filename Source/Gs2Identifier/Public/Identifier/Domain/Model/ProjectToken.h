@@ -25,7 +25,6 @@
 #include "Identifier/Domain/Iterator/DescribeCommonSecurityPoliciesIterator.h"
 #include "Identifier/Domain/Iterator/DescribeIdentifiersIterator.h"
 #include "Identifier/Domain/Iterator/DescribeAttachedGuardsIterator.h"
-#include "Identifier/Domain/Iterator/DescribePasswordsIterator.h"
 
 namespace Gs2::Core::Domain
 {

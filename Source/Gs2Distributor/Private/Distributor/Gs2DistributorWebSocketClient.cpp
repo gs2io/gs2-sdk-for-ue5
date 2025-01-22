@@ -298,6 +298,33 @@ namespace Gs2::Distributor
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::WebSocket::FSignFreezeMasterDataTimestampTask>> FGs2DistributorWebSocketClient::SignFreezeMasterDataTimestamp(
+        const Request::FSignFreezeMasterDataTimestampRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FSignFreezeMasterDataTimestampTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FFreezeMasterDataBySignedTimestampTask>> FGs2DistributorWebSocketClient::FreezeMasterDataBySignedTimestamp(
+        const Request::FFreezeMasterDataBySignedTimestampRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FFreezeMasterDataBySignedTimestampTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FBatchExecuteApiTask>> FGs2DistributorWebSocketClient::BatchExecuteApi(
+        const Request::FBatchExecuteApiRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FBatchExecuteApiTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::WebSocket::FIfExpressionByUserIdTask>> FGs2DistributorWebSocketClient::IfExpressionByUserId(
         const Request::FIfExpressionByUserIdRequestPtr Request) const
     {
@@ -365,6 +392,33 @@ namespace Gs2::Distributor
         const Request::FGetStampSheetResultByUserIdRequestPtr Request) const
     {
         return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FGetStampSheetResultByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FRunTransactionTask>> FGs2DistributorWebSocketClient::RunTransaction(
+        const Request::FRunTransactionRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FRunTransactionTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FGetTransactionResultTask>> FGs2DistributorWebSocketClient::GetTransactionResult(
+        const Request::FGetTransactionResultRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FGetTransactionResultTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FGetTransactionResultByUserIdTask>> FGs2DistributorWebSocketClient::GetTransactionResultByUserId(
+        const Request::FGetTransactionResultByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FGetTransactionResultByUserIdTask>>(
             Session,
             Request
         );

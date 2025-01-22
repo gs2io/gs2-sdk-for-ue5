@@ -181,15 +181,6 @@ namespace Gs2::Identifier
         );
     }
 
-    TSharedPtr<FAsyncTask<Task::WebSocket::FDescribePasswordsTask>> FGs2IdentifierWebSocketClient::DescribePasswords(
-        const Request::FDescribePasswordsRequestPtr Request) const
-    {
-        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FDescribePasswordsTask>>(
-            Session,
-            Request
-        );
-    }
-
     TSharedPtr<FAsyncTask<Task::WebSocket::FCreatePasswordTask>> FGs2IdentifierWebSocketClient::CreatePassword(
         const Request::FCreatePasswordRequestPtr Request) const
     {

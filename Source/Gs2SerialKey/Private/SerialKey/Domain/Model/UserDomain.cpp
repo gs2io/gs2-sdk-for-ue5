@@ -250,6 +250,23 @@ namespace Gs2::SerialKey::Domain::Model
                     FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
                 );
             }
+            if (ResultModel->GetCampaignModel() != nullptr)
+            {
+                const auto ParentKey = Gs2::SerialKey::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                    Self->NamespaceName,
+                    "CampaignModel"
+                );
+                const auto Key = Gs2::SerialKey::Domain::Model::FCampaignModelDomain::CreateCacheKey(
+                    ResultModel->GetCampaignModel()->GetName()
+                );
+                Self->Gs2->Cache->Put(
+                    Gs2::SerialKey::Model::FCampaignModel::TypeName,
+                    ParentKey,
+                    Key,
+                    ResultModel->GetCampaignModel(),
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+            }
         }
         auto Domain = MakeShared<Gs2::SerialKey::Domain::Model::FSerialKeyDomain>(
             Self->Gs2,

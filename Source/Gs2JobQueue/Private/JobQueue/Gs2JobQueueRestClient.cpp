@@ -234,31 +234,4 @@ namespace Gs2::JobQueue
             Request
         );
     }
-
-    TSharedPtr<FAsyncTask<Task::Rest::FDescribeDeadLetterJobsByUserIdTask>> FGs2JobQueueRestClient::DescribeDeadLetterJobsByUserId(
-        const Request::FDescribeDeadLetterJobsByUserIdRequestPtr Request) const
-    {
-        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FDescribeDeadLetterJobsByUserIdTask>>(
-            Session,
-            Request
-        );
-    }
-
-    TSharedPtr<FAsyncTask<Task::Rest::FGetDeadLetterJobByUserIdTask>> FGs2JobQueueRestClient::GetDeadLetterJobByUserId(
-        const Request::FGetDeadLetterJobByUserIdRequestPtr Request) const
-    {
-        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FGetDeadLetterJobByUserIdTask>>(
-            Session,
-            Request
-        );
-    }
-
-    TSharedPtr<FAsyncTask<Task::Rest::FDeleteDeadLetterJobByUserIdTask>> FGs2JobQueueRestClient::DeleteDeadLetterJobByUserId(
-        const Request::FDeleteDeadLetterJobByUserIdRequestPtr Request) const
-    {
-        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FDeleteDeadLetterJobByUserIdTask>>(
-            Session,
-            Request
-        );
-    }
 }

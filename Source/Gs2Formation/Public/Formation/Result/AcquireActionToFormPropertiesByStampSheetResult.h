@@ -19,6 +19,7 @@
 #include "CoreMinimal.h"
 #include "../Model/Form.h"
 #include "../Model/Mold.h"
+#include "Gs2Core/Public/Core/Model/TransactionResult.h"
 
 namespace Gs2::Formation::Result
 {
@@ -30,6 +31,9 @@ namespace Gs2::Formation::Result
         TOptional<FString> StampSheetValue;
         TOptional<FString> StampSheetEncryptionKeyIdValue;
         TOptional<bool> AutoRunStampSheetValue;
+        TOptional<bool> AtomicCommitValue;
+        TOptional<FString> TransactionValue;
+        TSharedPtr<Gs2::Core::Model::FTransactionResult> TransactionResultValue;
         
     public:
         
@@ -45,6 +49,9 @@ namespace Gs2::Formation::Result
         TSharedPtr<FAcquireActionToFormPropertiesByStampSheetResult> WithStampSheet(const TOptional<FString> StampSheet);
         TSharedPtr<FAcquireActionToFormPropertiesByStampSheetResult> WithStampSheetEncryptionKeyId(const TOptional<FString> StampSheetEncryptionKeyId);
         TSharedPtr<FAcquireActionToFormPropertiesByStampSheetResult> WithAutoRunStampSheet(const TOptional<bool> AutoRunStampSheet);
+        TSharedPtr<FAcquireActionToFormPropertiesByStampSheetResult> WithAtomicCommit(const TOptional<bool> AtomicCommit);
+        TSharedPtr<FAcquireActionToFormPropertiesByStampSheetResult> WithTransaction(const TOptional<FString> Transaction);
+        TSharedPtr<FAcquireActionToFormPropertiesByStampSheetResult> WithTransactionResult(const TSharedPtr<Gs2::Core::Model::FTransactionResult> TransactionResult);
 
         TSharedPtr<Model::FForm> GetItem() const;
         TSharedPtr<Model::FMold> GetMold() const;
@@ -53,6 +60,10 @@ namespace Gs2::Formation::Result
         TOptional<FString> GetStampSheetEncryptionKeyId() const;
         TOptional<bool> GetAutoRunStampSheet() const;
         FString GetAutoRunStampSheetString() const;
+        TOptional<bool> GetAtomicCommit() const;
+        FString GetAtomicCommitString() const;
+        TOptional<FString> GetTransaction() const;
+        TSharedPtr<Gs2::Core::Model::FTransactionResult> GetTransactionResult() const;
 
         static TSharedPtr<FAcquireActionToFormPropertiesByStampSheetResult> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;

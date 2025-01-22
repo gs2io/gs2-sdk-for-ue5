@@ -29,6 +29,7 @@ namespace Gs2::Account::Model
         TOptional<FString> AppleTeamIdValue;
         TOptional<FString> AppleKeyIdValue;
         TOptional<FString> ApplePrivateKeyPemValue;
+        TOptional<FString> DoneEndpointUrlValue;
 
     public:
         FOpenIdConnectSetting();
@@ -43,6 +44,7 @@ namespace Gs2::Account::Model
         TSharedPtr<FOpenIdConnectSetting> WithAppleTeamId(const TOptional<FString> AppleTeamId);
         TSharedPtr<FOpenIdConnectSetting> WithAppleKeyId(const TOptional<FString> AppleKeyId);
         TSharedPtr<FOpenIdConnectSetting> WithApplePrivateKeyPem(const TOptional<FString> ApplePrivateKeyPem);
+        TSharedPtr<FOpenIdConnectSetting> WithDoneEndpointUrl(const TOptional<FString> DoneEndpointUrl);
 
         TOptional<FString> GetConfigurationPath() const;
         TOptional<FString> GetClientId() const;
@@ -50,6 +52,7 @@ namespace Gs2::Account::Model
         TOptional<FString> GetAppleTeamId() const;
         TOptional<FString> GetAppleKeyId() const;
         TOptional<FString> GetApplePrivateKeyPem() const;
+        TOptional<FString> GetDoneEndpointUrl() const;
 
 
         static TSharedPtr<FOpenIdConnectSetting> FromJson(const TSharedPtr<FJsonObject> Data);

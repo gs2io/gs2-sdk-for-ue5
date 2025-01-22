@@ -22,7 +22,8 @@ namespace Gs2::Guild::Request
         NamespaceNameValue(TOptional<FString>()),
         AccessTokenValue(TOptional<FString>()),
         GuildModelNameValue(TOptional<FString>()),
-        TargetGuildNameValue(TOptional<FString>())
+        TargetGuildNameValue(TOptional<FString>()),
+        MetadataValue(TOptional<FString>())
     {
     }
 
@@ -32,7 +33,8 @@ namespace Gs2::Guild::Request
         NamespaceNameValue(From.NamespaceNameValue),
         AccessTokenValue(From.AccessTokenValue),
         GuildModelNameValue(From.GuildModelNameValue),
-        TargetGuildNameValue(From.TargetGuildNameValue)
+        TargetGuildNameValue(From.TargetGuildNameValue),
+        MetadataValue(From.MetadataValue)
     {
     }
 
@@ -76,6 +78,14 @@ namespace Gs2::Guild::Request
         return SharedThis(this);
     }
 
+    TSharedPtr<FSendRequestRequest> FSendRequestRequest::WithMetadata(
+        const TOptional<FString> Metadata
+    )
+    {
+        this->MetadataValue = Metadata;
+        return SharedThis(this);
+    }
+
     TSharedPtr<FSendRequestRequest> FSendRequestRequest::WithDuplicationAvoider(
         const TOptional<FString> DuplicationAvoider
     )
@@ -107,6 +117,11 @@ namespace Gs2::Guild::Request
     TOptional<FString> FSendRequestRequest::GetTargetGuildName() const
     {
         return TargetGuildNameValue;
+    }
+
+    TOptional<FString> FSendRequestRequest::GetMetadata() const
+    {
+        return MetadataValue;
     }
 
     TOptional<FString> FSendRequestRequest::GetDuplicationAvoider() const
@@ -157,6 +172,15 @@ namespace Gs2::Guild::Request
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
+            ->WithMetadata(Data->HasField(ANSI_TO_TCHAR("metadata")) ? [Data]() -> TOptional<FString>
+              {
+                  FString v("");
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("metadata"), v))
+                  {
+                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                  }
+                  return TOptional<FString>();
+              }() : TOptional<FString>())
           ->WithDuplicationAvoider(Data->HasField(ANSI_TO_TCHAR("duplicationAvoider")) ? TOptional<FString>(Data->GetStringField(ANSI_TO_TCHAR("duplicationAvoider"))) : TOptional<FString>());
     }
 
@@ -182,6 +206,10 @@ namespace Gs2::Guild::Request
         if (TargetGuildNameValue.IsSet())
         {
             JsonRootObject->SetStringField("targetGuildName", TargetGuildNameValue.GetValue());
+        }
+        if (MetadataValue.IsSet())
+        {
+            JsonRootObject->SetStringField("metadata", MetadataValue.GetValue());
         }
         if (DuplicationAvoiderValue.IsSet())
         {

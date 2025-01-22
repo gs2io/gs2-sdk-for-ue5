@@ -28,6 +28,7 @@ namespace Gs2::Ranking2::Request
         SumValue(TOptional<bool>()),
         OrderDirectionValue(TOptional<FString>()),
         RankingRewardsValue(nullptr),
+        RewardCalculationIndexValue(TOptional<FString>()),
         EntryPeriodEventIdValue(TOptional<FString>()),
         AccessPeriodEventIdValue(TOptional<FString>())
     {
@@ -45,6 +46,7 @@ namespace Gs2::Ranking2::Request
         SumValue(From.SumValue),
         OrderDirectionValue(From.OrderDirectionValue),
         RankingRewardsValue(From.RankingRewardsValue),
+        RewardCalculationIndexValue(From.RewardCalculationIndexValue),
         EntryPeriodEventIdValue(From.EntryPeriodEventIdValue),
         AccessPeriodEventIdValue(From.AccessPeriodEventIdValue)
     {
@@ -127,6 +129,14 @@ namespace Gs2::Ranking2::Request
     )
     {
         this->RankingRewardsValue = RankingRewards;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FCreateGlobalRankingModelMasterRequest> FCreateGlobalRankingModelMasterRequest::WithRewardCalculationIndex(
+        const TOptional<FString> RewardCalculationIndex
+    )
+    {
+        this->RewardCalculationIndexValue = RewardCalculationIndex;
         return SharedThis(this);
     }
 
@@ -225,6 +235,11 @@ namespace Gs2::Ranking2::Request
             return nullptr;
         }
         return RankingRewardsValue;
+    }
+
+    TOptional<FString> FCreateGlobalRankingModelMasterRequest::GetRewardCalculationIndex() const
+    {
+        return RewardCalculationIndexValue;
     }
 
     TOptional<FString> FCreateGlobalRankingModelMasterRequest::GetEntryPeriodEventId() const
@@ -328,6 +343,15 @@ namespace Gs2::Ranking2::Request
                   }
                   return v;
               }() : MakeShared<TArray<Model::FRankingRewardPtr>>())
+            ->WithRewardCalculationIndex(Data->HasField(ANSI_TO_TCHAR("rewardCalculationIndex")) ? [Data]() -> TOptional<FString>
+              {
+                  FString v("");
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("rewardCalculationIndex"), v))
+                  {
+                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                  }
+                  return TOptional<FString>();
+              }() : TOptional<FString>())
             ->WithEntryPeriodEventId(Data->HasField(ANSI_TO_TCHAR("entryPeriodEventId")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
@@ -395,6 +419,10 @@ namespace Gs2::Ranking2::Request
                 v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
             }
             JsonRootObject->SetArrayField("rankingRewards", v);
+        }
+        if (RewardCalculationIndexValue.IsSet())
+        {
+            JsonRootObject->SetStringField("rewardCalculationIndex", RewardCalculationIndexValue.GetValue());
         }
         if (EntryPeriodEventIdValue.IsSet())
         {

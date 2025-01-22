@@ -58,10 +58,15 @@ namespace Gs2::Gateway::Domain::Model
 
         public:
         TOptional<FString> Protocol;
+        TSharedPtr<TArray<FString>> SendConnectionIds;
         TOptional<FString> NextPageToken;
         TOptional<FString> GetProtocol() const
         {
             return Protocol;
+        }
+        TSharedPtr<TArray<FString>> GetSendConnectionIds() const
+        {
+            return SendConnectionIds;
         }
         TOptional<FString> GetNextPageToken() const
         {

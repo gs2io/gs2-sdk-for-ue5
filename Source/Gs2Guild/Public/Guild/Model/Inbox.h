@@ -18,6 +18,7 @@
 
 #include "CoreMinimal.h"
 #include "Core/Gs2Object.h"
+#include "ReceiveMemberRequest.h"
 
 namespace Gs2::Guild::Model
 {
@@ -26,6 +27,7 @@ namespace Gs2::Guild::Model
         TOptional<FString> InboxIdValue;
         TOptional<FString> GuildNameValue;
         TSharedPtr<TArray<FString>> FromUserIdsValue;
+        TSharedPtr<TArray<TSharedPtr<FReceiveMemberRequest>>> ReceiveMemberRequestsValue;
         TOptional<int64> CreatedAtValue;
         TOptional<int64> UpdatedAtValue;
         TOptional<int64> RevisionValue;
@@ -40,6 +42,7 @@ namespace Gs2::Guild::Model
         TSharedPtr<FInbox> WithInboxId(const TOptional<FString> InboxId);
         TSharedPtr<FInbox> WithGuildName(const TOptional<FString> GuildName);
         TSharedPtr<FInbox> WithFromUserIds(const TSharedPtr<TArray<FString>> FromUserIds);
+        TSharedPtr<FInbox> WithReceiveMemberRequests(const TSharedPtr<TArray<TSharedPtr<FReceiveMemberRequest>>> ReceiveMemberRequests);
         TSharedPtr<FInbox> WithCreatedAt(const TOptional<int64> CreatedAt);
         TSharedPtr<FInbox> WithUpdatedAt(const TOptional<int64> UpdatedAt);
         TSharedPtr<FInbox> WithRevision(const TOptional<int64> Revision);
@@ -47,6 +50,7 @@ namespace Gs2::Guild::Model
         TOptional<FString> GetInboxId() const;
         TOptional<FString> GetGuildName() const;
         TSharedPtr<TArray<FString>> GetFromUserIds() const;
+        TSharedPtr<TArray<TSharedPtr<FReceiveMemberRequest>>> GetReceiveMemberRequests() const;
         TOptional<int64> GetCreatedAt() const;
         FString GetCreatedAtString() const;
         TOptional<int64> GetUpdatedAt() const;

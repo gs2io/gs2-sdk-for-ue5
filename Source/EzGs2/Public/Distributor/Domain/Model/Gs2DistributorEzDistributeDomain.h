@@ -22,9 +22,15 @@
 #include "Distributor/Model/Gs2DistributorEzDistributorModel.h"
 #include "Distributor/Model/Gs2DistributorEzDistributeResource.h"
 #include "Distributor/Model/Gs2DistributorEzStampSheetResult.h"
+#include "Distributor/Model/Gs2DistributorEzBatchRequestPayload.h"
+#include "Distributor/Model/Gs2DistributorEzBatchResultPayload.h"
 #include "Distributor/Model/Gs2DistributorEzAcquireAction.h"
 #include "Distributor/Model/Gs2DistributorEzConsumeAction.h"
 #include "Distributor/Model/Gs2DistributorEzVerifyAction.h"
+#include "Distributor/Model/Gs2DistributorEzTransactionResult.h"
+#include "Distributor/Model/Gs2DistributorEzAcquireActionResult.h"
+#include "Distributor/Model/Gs2DistributorEzConsumeActionResult.h"
+#include "Distributor/Model/Gs2DistributorEzVerifyActionResult.h"
 #include "Gs2DistributorEzDistributeDomain.h"
 #include "Util/Net/GameSession.h"
 #include "Util/Net/Gs2Connection.h"
@@ -49,6 +55,9 @@ namespace Gs2::UE5::Distributor::Domain::Model
         TSharedPtr<TArray<FString>> TaskResults() const;
         TOptional<int32> SheetResultCode() const;
         TOptional<FString> SheetResult() const;
+        TOptional<FString> Body() const;
+        TOptional<FString> Signature() const;
+        TSharedPtr<TArray<TSharedPtr<Gs2::UE5::Distributor::Model::FEzBatchResultPayload>>> Results() const;
         TOptional<FString> NamespaceName() const;
 
         FEzDistributeDomain(

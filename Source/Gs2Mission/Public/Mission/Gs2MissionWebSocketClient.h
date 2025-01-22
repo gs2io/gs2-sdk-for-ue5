@@ -120,6 +120,8 @@
 #include "Task/WebSocket/VerifyCounterValueTask.h"
 #include "Request/VerifyCounterValueByUserIdRequest.h"
 #include "Task/WebSocket/VerifyCounterValueByUserIdTask.h"
+#include "Request/DeleteCounterRequest.h"
+#include "Task/WebSocket/DeleteCounterTask.h"
 #include "Request/DeleteCounterByUserIdRequest.h"
 #include "Task/WebSocket/DeleteCounterByUserIdTask.h"
 #include "Request/IncreaseByStampSheetRequest.h"
@@ -374,6 +376,10 @@ namespace Gs2::Mission
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FVerifyCounterValueByUserIdTask>> VerifyCounterValueByUserId(
             const Request::FVerifyCounterValueByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FDeleteCounterTask>> DeleteCounter(
+            const Request::FDeleteCounterRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FDeleteCounterByUserIdTask>> DeleteCounterByUserId(

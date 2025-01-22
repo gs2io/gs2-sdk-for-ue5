@@ -22,9 +22,15 @@
 #include "Model/DistributorModel.h"
 #include "Model/CurrentDistributorMaster.h"
 #include "Model/StampSheetResult.h"
+#include "Model/BatchRequestPayload.h"
+#include "Model/BatchResultPayload.h"
 #include "Model/AcquireAction.h"
 #include "Model/ConsumeAction.h"
 #include "Model/VerifyAction.h"
+#include "Model/TransactionResult.h"
+#include "Model/AcquireActionResult.h"
+#include "Model/ConsumeActionResult.h"
+#include "Model/VerifyActionResult.h"
 #include "Model/Config.h"
 #include "Model/GitHubCheckoutSetting.h"
 #include "Model/DistributeResource.h"
@@ -217,6 +223,24 @@
 #include "Task/Rest/FreezeMasterDataByUserIdTask.h"
 #include "Task/WebSocket/FreezeMasterDataByUserIdTask.h"
 
+// SignFreezeMasterDataTimestamp
+#include "Request/SignFreezeMasterDataTimestampRequest.h"
+#include "Result/SignFreezeMasterDataTimestampResult.h"
+#include "Task/Rest/SignFreezeMasterDataTimestampTask.h"
+#include "Task/WebSocket/SignFreezeMasterDataTimestampTask.h"
+
+// FreezeMasterDataBySignedTimestamp
+#include "Request/FreezeMasterDataBySignedTimestampRequest.h"
+#include "Result/FreezeMasterDataBySignedTimestampResult.h"
+#include "Task/Rest/FreezeMasterDataBySignedTimestampTask.h"
+#include "Task/WebSocket/FreezeMasterDataBySignedTimestampTask.h"
+
+// BatchExecuteApi
+#include "Request/BatchExecuteApiRequest.h"
+#include "Result/BatchExecuteApiResult.h"
+#include "Task/Rest/BatchExecuteApiTask.h"
+#include "Task/WebSocket/BatchExecuteApiTask.h"
+
 // IfExpressionByUserId
 #include "Request/IfExpressionByUserIdRequest.h"
 #include "Result/IfExpressionByUserIdResult.h"
@@ -264,6 +288,24 @@
 #include "Result/GetStampSheetResultByUserIdResult.h"
 #include "Task/Rest/GetStampSheetResultByUserIdTask.h"
 #include "Task/WebSocket/GetStampSheetResultByUserIdTask.h"
+
+// RunTransaction
+#include "Request/RunTransactionRequest.h"
+#include "Result/RunTransactionResult.h"
+#include "Task/Rest/RunTransactionTask.h"
+#include "Task/WebSocket/RunTransactionTask.h"
+
+// GetTransactionResult
+#include "Request/GetTransactionResultRequest.h"
+#include "Result/GetTransactionResultResult.h"
+#include "Task/Rest/GetTransactionResultTask.h"
+#include "Task/WebSocket/GetTransactionResultTask.h"
+
+// GetTransactionResultByUserId
+#include "Request/GetTransactionResultByUserIdRequest.h"
+#include "Result/GetTransactionResultByUserIdResult.h"
+#include "Task/Rest/GetTransactionResultByUserIdTask.h"
+#include "Task/WebSocket/GetTransactionResultByUserIdTask.h"
 
 // Client
 #include "Gs2DistributorRestClient.h"

@@ -23,6 +23,7 @@ namespace Gs2::Version::Model
         VersionNameValue(TOptional<FString>()),
         UserIdValue(TOptional<FString>()),
         VersionValue(nullptr),
+        StatusValue(TOptional<FString>()),
         CreatedAtValue(TOptional<int64>()),
         UpdatedAtValue(TOptional<int64>()),
         RevisionValue(TOptional<int64>())
@@ -36,6 +37,7 @@ namespace Gs2::Version::Model
         VersionNameValue(From.VersionNameValue),
         UserIdValue(From.UserIdValue),
         VersionValue(From.VersionValue),
+        StatusValue(From.StatusValue),
         CreatedAtValue(From.CreatedAtValue),
         UpdatedAtValue(From.UpdatedAtValue),
         RevisionValue(From.RevisionValue)
@@ -71,6 +73,14 @@ namespace Gs2::Version::Model
     )
     {
         this->VersionValue = Version;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FAcceptVersion> FAcceptVersion::WithStatus(
+        const TOptional<FString> Status
+    )
+    {
+        this->StatusValue = Status;
         return SharedThis(this);
     }
 
@@ -112,6 +122,10 @@ namespace Gs2::Version::Model
     TSharedPtr<FVersion> FAcceptVersion::GetVersion() const
     {
         return VersionValue;
+    }
+    TOptional<FString> FAcceptVersion::GetStatus() const
+    {
+        return StatusValue;
     }
     TOptional<int64> FAcceptVersion::GetCreatedAt() const
     {
@@ -249,6 +263,15 @@ namespace Gs2::Version::Model
                     }
                     return Model::FVersion::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("version")));
                  }() : nullptr)
+            ->WithStatus(Data->HasField(ANSI_TO_TCHAR("status")) ? [Data]() -> TOptional<FString>
+                {
+                    FString v("");
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("status"), v))
+                    {
+                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                    }
+                    return TOptional<FString>();
+                }() : TOptional<FString>())
             ->WithCreatedAt(Data->HasField(ANSI_TO_TCHAR("createdAt")) ? [Data]() -> TOptional<int64>
                 {
                     int64 v;
@@ -296,6 +319,10 @@ namespace Gs2::Version::Model
         if (VersionValue != nullptr && VersionValue.IsValid())
         {
             JsonRootObject->SetObjectField("version", VersionValue->ToJson());
+        }
+        if (StatusValue.IsSet())
+        {
+            JsonRootObject->SetStringField("status", StatusValue.GetValue());
         }
         if (CreatedAtValue.IsSet())
         {

@@ -24,6 +24,9 @@ namespace Gs2::Enhance::Result
         StampSheetValue(TOptional<FString>()),
         StampSheetEncryptionKeyIdValue(TOptional<FString>()),
         AutoRunStampSheetValue(TOptional<bool>()),
+        AtomicCommitValue(TOptional<bool>()),
+        TransactionValue(TOptional<FString>()),
+        TransactionResultValue(nullptr),
         AcquireExperienceValue(TOptional<int64>()),
         BonusRateValue(TOptional<float>())
     {
@@ -37,6 +40,9 @@ namespace Gs2::Enhance::Result
         StampSheetValue(From.StampSheetValue),
         StampSheetEncryptionKeyIdValue(From.StampSheetEncryptionKeyIdValue),
         AutoRunStampSheetValue(From.AutoRunStampSheetValue),
+        AtomicCommitValue(From.AtomicCommitValue),
+        TransactionValue(From.TransactionValue),
+        TransactionResultValue(From.TransactionResultValue),
         AcquireExperienceValue(From.AcquireExperienceValue),
         BonusRateValue(From.BonusRateValue)
     {
@@ -79,6 +85,30 @@ namespace Gs2::Enhance::Result
     )
     {
         this->AutoRunStampSheetValue = AutoRunStampSheet;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FDirectEnhanceResult> FDirectEnhanceResult::WithAtomicCommit(
+        const TOptional<bool> AtomicCommit
+    )
+    {
+        this->AtomicCommitValue = AtomicCommit;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FDirectEnhanceResult> FDirectEnhanceResult::WithTransaction(
+        const TOptional<FString> Transaction
+    )
+    {
+        this->TransactionValue = Transaction;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FDirectEnhanceResult> FDirectEnhanceResult::WithTransactionResult(
+        const TSharedPtr<Gs2::Core::Model::FTransactionResult> TransactionResult
+    )
+    {
+        this->TransactionResultValue = TransactionResult;
         return SharedThis(this);
     }
 
@@ -134,6 +164,34 @@ namespace Gs2::Enhance::Result
             return FString("null");
         }
         return FString(AutoRunStampSheetValue.GetValue() ? "true" : "false");
+    }
+
+    TOptional<bool> FDirectEnhanceResult::GetAtomicCommit() const
+    {
+        return AtomicCommitValue;
+    }
+
+    FString FDirectEnhanceResult::GetAtomicCommitString() const
+    {
+        if (!AtomicCommitValue.IsSet())
+        {
+            return FString("null");
+        }
+        return FString(AtomicCommitValue.GetValue() ? "true" : "false");
+    }
+
+    TOptional<FString> FDirectEnhanceResult::GetTransaction() const
+    {
+        return TransactionValue;
+    }
+
+    TSharedPtr<Gs2::Core::Model::FTransactionResult> FDirectEnhanceResult::GetTransactionResult() const
+    {
+        if (!TransactionResultValue.IsValid())
+        {
+            return nullptr;
+        }
+        return TransactionResultValue;
     }
 
     TOptional<int64> FDirectEnhanceResult::GetAcquireExperience() const
@@ -214,6 +272,32 @@ namespace Gs2::Enhance::Result
                     }
                     return TOptional<bool>();
                 }() : TOptional<bool>())
+            ->WithAtomicCommit(Data->HasField(ANSI_TO_TCHAR("atomicCommit")) ? [Data]() -> TOptional<bool>
+                {
+                    bool v;
+                    if (Data->TryGetBoolField(ANSI_TO_TCHAR("atomicCommit"), v))
+                    {
+                        return TOptional(v);
+                    }
+                    return TOptional<bool>();
+                }() : TOptional<bool>())
+            ->WithTransaction(Data->HasField(ANSI_TO_TCHAR("transaction")) ? [Data]() -> TOptional<FString>
+                {
+                    FString v("");
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("transaction"), v))
+                    {
+                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                    }
+                    return TOptional<FString>();
+                }() : TOptional<FString>())
+            ->WithTransactionResult(Data->HasField(ANSI_TO_TCHAR("transactionResult")) ? [Data]() -> Gs2::Core::Model::FTransactionResultPtr
+                 {
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("transactionResult")))
+                    {
+                        return nullptr;
+                    }
+                    return Gs2::Core::Model::FTransactionResult::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("transactionResult")));
+                 }() : nullptr)
             ->WithAcquireExperience(Data->HasField(ANSI_TO_TCHAR("acquireExperience")) ? [Data]() -> TOptional<int64>
                 {
                     int64 v;
@@ -256,6 +340,18 @@ namespace Gs2::Enhance::Result
         if (AutoRunStampSheetValue.IsSet())
         {
             JsonRootObject->SetBoolField("autoRunStampSheet", AutoRunStampSheetValue.GetValue());
+        }
+        if (AtomicCommitValue.IsSet())
+        {
+            JsonRootObject->SetBoolField("atomicCommit", AtomicCommitValue.GetValue());
+        }
+        if (TransactionValue.IsSet())
+        {
+            JsonRootObject->SetStringField("transaction", TransactionValue.GetValue());
+        }
+        if (TransactionResultValue != nullptr && TransactionResultValue.IsValid())
+        {
+            JsonRootObject->SetObjectField("transactionResult", TransactionResultValue->ToJson());
         }
         if (AcquireExperienceValue.IsSet())
         {

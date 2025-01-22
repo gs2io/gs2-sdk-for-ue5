@@ -22,7 +22,6 @@
 #include "Auth/Gs2Auth.h"
 #include "JobQueue/Domain/Iterator/DescribeNamespacesIterator.h"
 #include "JobQueue/Domain/Iterator/DescribeJobsByUserIdIterator.h"
-#include "JobQueue/Domain/Iterator/DescribeDeadLetterJobsByUserIdIterator.h"
 
 namespace Gs2::Core::Domain
 {
@@ -43,8 +42,6 @@ namespace Gs2::JobQueue::Domain::Model
     class FJobAccessTokenDomain;
     class FJobResultDomain;
     class FJobResultAccessTokenDomain;
-    class FDeadLetterJobDomain;
-    class FDeadLetterJobAccessTokenDomain;
     class FUserDomain;
     class FUserAccessTokenDomain;
 
@@ -157,22 +154,6 @@ namespace Gs2::JobQueue::Domain::Model
 
         TSharedPtr<Gs2::JobQueue::Domain::Model::FJobDomain> Job(
             const FString JobName
-        );
-
-        Gs2::JobQueue::Domain::Iterator::FDescribeDeadLetterJobsByUserIdIteratorPtr DeadLetterJobs(
-            const TOptional<FString> TimeOffsetToken = TOptional<FString>()
-        ) const;
-
-        Gs2::Core::Domain::CallbackID SubscribeDeadLetterJobs(
-            TFunction<void()> Callback
-        );
-
-        void UnsubscribeDeadLetterJobs(
-            Gs2::Core::Domain::CallbackID CallbackID
-        );
-
-        TSharedPtr<Gs2::JobQueue::Domain::Model::FDeadLetterJobDomain> DeadLetterJob(
-            const FString DeadLetterJobName
         );
 
         static FString CreateCacheParentKey(

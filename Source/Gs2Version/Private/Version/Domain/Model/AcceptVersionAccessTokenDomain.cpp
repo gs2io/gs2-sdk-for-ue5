@@ -146,6 +146,73 @@ namespace Gs2::Version::Domain::Model
         return Gs2::Core::Util::New<FAsyncTask<FAcceptTask>>(this->AsShared(), Request);
     }
 
+    FAcceptVersionAccessTokenDomain::FRejectTask::FRejectTask(
+        const TSharedPtr<FAcceptVersionAccessTokenDomain>& Self,
+        const Request::FRejectRequestPtr Request
+    ): Self(Self), Request(Request)
+    {
+
+    }
+
+    FAcceptVersionAccessTokenDomain::FRejectTask::FRejectTask(
+        const FRejectTask& From
+    ): TGs2Future(From), Self(From.Self), Request(From.Request)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FAcceptVersionAccessTokenDomain::FRejectTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::Version::Domain::Model::FAcceptVersionAccessTokenDomain>> Result
+    )
+    {
+        Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
+            ->WithNamespaceName(Self->NamespaceName)
+            ->WithVersionName(Self->VersionName)
+            ->WithAccessToken(Self->AccessToken->GetToken());
+        const auto Future = Self->Client->Reject(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto RequestModel = Request;
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
+        if (ResultModel != nullptr) {
+            
+            if (ResultModel->GetItem() != nullptr)
+            {
+                const auto ParentKey = Gs2::Version::Domain::Model::FUserDomain::CreateCacheParentKey(
+                    Self->NamespaceName,
+                    Self->UserId(),
+                    "AcceptVersion"
+                );
+                const auto Key = Gs2::Version::Domain::Model::FAcceptVersionDomain::CreateCacheKey(
+                    ResultModel->GetItem()->GetVersionName()
+                );
+                Self->Gs2->Cache->Put(
+                    Gs2::Version::Model::FAcceptVersion::TypeName,
+                    ParentKey,
+                    Key,
+                    ResultModel->GetItem(),
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+            }
+        }
+        auto Domain = Self;
+
+        *Result = Domain;
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FAcceptVersionAccessTokenDomain::FRejectTask>> FAcceptVersionAccessTokenDomain::Reject(
+        Request::FRejectRequestPtr Request
+    ) {
+        return Gs2::Core::Util::New<FAsyncTask<FRejectTask>>(this->AsShared(), Request);
+    }
+
     FAcceptVersionAccessTokenDomain::FGetTask::FGetTask(
         const TSharedPtr<FAcceptVersionAccessTokenDomain>& Self,
         const Request::FGetAcceptVersionRequestPtr Request

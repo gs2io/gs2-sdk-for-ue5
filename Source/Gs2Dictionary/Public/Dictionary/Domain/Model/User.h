@@ -25,6 +25,8 @@
 #include "Dictionary/Domain/Iterator/DescribeEntryModelMastersIterator.h"
 #include "Dictionary/Domain/Iterator/DescribeEntriesIterator.h"
 #include "Dictionary/Domain/Iterator/DescribeEntriesByUserIdIterator.h"
+#include "Dictionary/Domain/Iterator/DescribeLikesIterator.h"
+#include "Dictionary/Domain/Iterator/DescribeLikesByUserIdIterator.h"
 
 namespace Gs2::Core::Domain
 {
@@ -45,6 +47,8 @@ namespace Gs2::Dictionary::Domain::Model
     class FEntryModelMasterDomain;
     class FEntryDomain;
     class FEntryAccessTokenDomain;
+    class FLikeDomain;
+    class FLikeAccessTokenDomain;
     class FCurrentEntryMasterDomain;
     class FUserDomain;
     class FUserAccessTokenDomain;
@@ -160,6 +164,84 @@ namespace Gs2::Dictionary::Domain::Model
             Request::FDeleteEntriesByUserIdRequestPtr Request
         );
 
+        class GS2DICTIONARY_API FAddLikesTask final :
+            public Gs2::Core::Util::TGs2Future<TArray<TSharedPtr<Gs2::Dictionary::Domain::Model::FLikeDomain>>>,
+            public TSharedFromThis<FAddLikesTask>
+        {
+            const TSharedPtr<FUserDomain> Self;
+            const Request::FAddLikesByUserIdRequestPtr Request;
+        public:
+            explicit FAddLikesTask(
+                const TSharedPtr<FUserDomain>& Self,
+                const Request::FAddLikesByUserIdRequestPtr Request
+            );
+
+            FAddLikesTask(
+                const FAddLikesTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<TArray<TSharedPtr<Gs2::Dictionary::Domain::Model::FLikeDomain>>>> Result
+            ) override;
+        };
+        friend FAddLikesTask;
+
+        TSharedPtr<FAsyncTask<FAddLikesTask>> AddLikes(
+            Request::FAddLikesByUserIdRequestPtr Request
+        );
+
+        class GS2DICTIONARY_API FResetLikesTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Dictionary::Domain::Model::FUserDomain>,
+            public TSharedFromThis<FResetLikesTask>
+        {
+            const TSharedPtr<FUserDomain> Self;
+            const Request::FResetLikesByUserIdRequestPtr Request;
+        public:
+            explicit FResetLikesTask(
+                const TSharedPtr<FUserDomain>& Self,
+                const Request::FResetLikesByUserIdRequestPtr Request
+            );
+
+            FResetLikesTask(
+                const FResetLikesTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Dictionary::Domain::Model::FUserDomain>> Result
+            ) override;
+        };
+        friend FResetLikesTask;
+
+        TSharedPtr<FAsyncTask<FResetLikesTask>> ResetLikes(
+            Request::FResetLikesByUserIdRequestPtr Request
+        );
+
+        class GS2DICTIONARY_API FDeleteLikesTask final :
+            public Gs2::Core::Util::TGs2Future<TArray<TSharedPtr<Gs2::Dictionary::Domain::Model::FLikeDomain>>>,
+            public TSharedFromThis<FDeleteLikesTask>
+        {
+            const TSharedPtr<FUserDomain> Self;
+            const Request::FDeleteLikesByUserIdRequestPtr Request;
+        public:
+            explicit FDeleteLikesTask(
+                const TSharedPtr<FUserDomain>& Self,
+                const Request::FDeleteLikesByUserIdRequestPtr Request
+            );
+
+            FDeleteLikesTask(
+                const FDeleteLikesTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<TArray<TSharedPtr<Gs2::Dictionary::Domain::Model::FLikeDomain>>>> Result
+            ) override;
+        };
+        friend FDeleteLikesTask;
+
+        TSharedPtr<FAsyncTask<FDeleteLikesTask>> DeleteLikes(
+            Request::FDeleteLikesByUserIdRequestPtr Request
+        );
+
         Gs2::Dictionary::Domain::Iterator::FDescribeEntriesByUserIdIteratorPtr Entries(
             const TOptional<FString> TimeOffsetToken = TOptional<FString>()
         ) const;
@@ -173,6 +255,22 @@ namespace Gs2::Dictionary::Domain::Model
         );
 
         TSharedPtr<Gs2::Dictionary::Domain::Model::FEntryDomain> Entry(
+            const FString EntryModelName
+        );
+
+        Gs2::Dictionary::Domain::Iterator::FDescribeLikesByUserIdIteratorPtr Likes(
+            const TOptional<FString> TimeOffsetToken = TOptional<FString>()
+        ) const;
+
+        Gs2::Core::Domain::CallbackID SubscribeLikes(
+            TFunction<void()> Callback
+        );
+
+        void UnsubscribeLikes(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
+
+        TSharedPtr<Gs2::Dictionary::Domain::Model::FLikeDomain> Like(
             const FString EntryModelName
         );
 

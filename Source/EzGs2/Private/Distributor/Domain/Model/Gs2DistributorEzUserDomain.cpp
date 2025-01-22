@@ -50,4 +50,16 @@ namespace Gs2::UE5::Distributor::Domain::Model
             ConnectionValue
         );
     }
+
+    Gs2::UE5::Distributor::Domain::Model::FEzTransactionResultDomainPtr FEzUserDomain::TransactionResult(
+        const FString TransactionId
+    ) const
+    {
+        return MakeShared<Gs2::UE5::Distributor::Domain::Model::FEzTransactionResultDomain>(
+            Domain->TransactionResult(
+                TransactionId
+            ),
+            ConnectionValue
+        );
+    }
 }

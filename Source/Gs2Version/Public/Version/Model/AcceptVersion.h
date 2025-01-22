@@ -28,6 +28,7 @@ namespace Gs2::Version::Model
         TOptional<FString> VersionNameValue;
         TOptional<FString> UserIdValue;
         TSharedPtr<FVersion> VersionValue;
+        TOptional<FString> StatusValue;
         TOptional<int64> CreatedAtValue;
         TOptional<int64> UpdatedAtValue;
         TOptional<int64> RevisionValue;
@@ -43,6 +44,7 @@ namespace Gs2::Version::Model
         TSharedPtr<FAcceptVersion> WithVersionName(const TOptional<FString> VersionName);
         TSharedPtr<FAcceptVersion> WithUserId(const TOptional<FString> UserId);
         TSharedPtr<FAcceptVersion> WithVersion(const TSharedPtr<FVersion> Version);
+        TSharedPtr<FAcceptVersion> WithStatus(const TOptional<FString> Status);
         TSharedPtr<FAcceptVersion> WithCreatedAt(const TOptional<int64> CreatedAt);
         TSharedPtr<FAcceptVersion> WithUpdatedAt(const TOptional<int64> UpdatedAt);
         TSharedPtr<FAcceptVersion> WithRevision(const TOptional<int64> Revision);
@@ -51,6 +53,7 @@ namespace Gs2::Version::Model
         TOptional<FString> GetVersionName() const;
         TOptional<FString> GetUserId() const;
         TSharedPtr<FVersion> GetVersion() const;
+        TOptional<FString> GetStatus() const;
         TOptional<int64> GetCreatedAt() const;
         FString GetCreatedAtString() const;
         TOptional<int64> GetUpdatedAt() const;

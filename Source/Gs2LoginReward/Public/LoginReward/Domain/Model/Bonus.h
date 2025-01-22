@@ -59,16 +59,6 @@ namespace Gs2::LoginReward::Domain::Model
         const Gs2::LoginReward::FGs2LoginRewardRestClientPtr Client;
 
         public:
-        TOptional<FString> TransactionId;
-        TOptional<bool> AutoRunStampSheet;
-        TOptional<FString> GetTransactionId() const
-        {
-            return TransactionId;
-        }
-        TOptional<bool> GetAutoRunStampSheet() const
-        {
-            return AutoRunStampSheet;
-        }
         TOptional<FString> NamespaceName;
         TOptional<FString> UserId;
     private:

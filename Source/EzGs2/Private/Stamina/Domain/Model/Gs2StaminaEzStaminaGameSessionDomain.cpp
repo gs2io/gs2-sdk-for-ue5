@@ -105,6 +105,56 @@ namespace Gs2::UE5::Stamina::Domain::Model
         );
     }
 
+    FEzStaminaGameSessionDomain::FApplyTask::FApplyTask(
+        TSharedPtr<FEzStaminaGameSessionDomain> Self
+    ): Self(Self)
+    {
+
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FEzStaminaGameSessionDomain::FApplyTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::UE5::Stamina::Domain::Model::FEzStaminaGameSessionDomain>> Result
+    )
+    {
+        const auto Future = Self->ConnectionValue->Run(
+            [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
+                const auto Task = Self->Domain->Apply(
+                    MakeShared<Gs2::Stamina::Request::FApplyStaminaRequest>()
+                );
+                Task->StartSynchronousTask();
+                if (Task->GetTask().IsError())
+                {
+                    Task->EnsureCompletion();
+                    return Task->GetTask().Error();
+                }
+                *Result = MakeShared<Gs2::UE5::Stamina::Domain::Model::FEzStaminaGameSessionDomain>(
+                    Task->GetTask().Result(),
+                    Self->GameSession,
+                    Self->ConnectionValue
+                );
+                Task->EnsureCompletion();
+                return nullptr;
+            },
+            nullptr
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            Future->EnsureCompletion();
+            return Future->GetTask().Error();
+        }
+        Future->EnsureCompletion();
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FEzStaminaGameSessionDomain::FApplyTask>> FEzStaminaGameSessionDomain::Apply(
+    )
+    {
+        return Gs2::Core::Util::New<FAsyncTask<FApplyTask>>(
+            this->AsShared()
+        );
+    }
+
     FEzStaminaGameSessionDomain::FSetMaxValueTask::FSetMaxValueTask(
         TSharedPtr<FEzStaminaGameSessionDomain> Self,
         FString SignedStatusBody,

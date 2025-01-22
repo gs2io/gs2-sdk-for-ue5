@@ -121,6 +121,7 @@ namespace Gs2::Ranking2::Domain::Iterator
                 MakeShared<Gs2::Ranking2::Request::FDescribeSubscribesRequest>()
                     ->WithNamespaceName(Self->NamespaceName)
                     ->WithAccessToken(Self->AccessToken == nullptr ? TOptional<FString>() : Self->AccessToken->GetToken())
+                    ->WithRankingName(Self->RankingName)
                     ->WithPageToken(PageToken)
                     ->WithLimit(FetchSize)
             );

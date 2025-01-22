@@ -80,6 +80,12 @@
 #include "Task/WebSocket/FreezeMasterDataTask.h"
 #include "Request/FreezeMasterDataByUserIdRequest.h"
 #include "Task/WebSocket/FreezeMasterDataByUserIdTask.h"
+#include "Request/SignFreezeMasterDataTimestampRequest.h"
+#include "Task/WebSocket/SignFreezeMasterDataTimestampTask.h"
+#include "Request/FreezeMasterDataBySignedTimestampRequest.h"
+#include "Task/WebSocket/FreezeMasterDataBySignedTimestampTask.h"
+#include "Request/BatchExecuteApiRequest.h"
+#include "Task/WebSocket/BatchExecuteApiTask.h"
 #include "Request/IfExpressionByUserIdRequest.h"
 #include "Task/WebSocket/IfExpressionByUserIdTask.h"
 #include "Request/AndExpressionByUserIdRequest.h"
@@ -96,6 +102,12 @@
 #include "Task/WebSocket/GetStampSheetResultTask.h"
 #include "Request/GetStampSheetResultByUserIdRequest.h"
 #include "Task/WebSocket/GetStampSheetResultByUserIdTask.h"
+#include "Request/RunTransactionRequest.h"
+#include "Task/WebSocket/RunTransactionTask.h"
+#include "Request/GetTransactionResultRequest.h"
+#include "Task/WebSocket/GetTransactionResultTask.h"
+#include "Request/GetTransactionResultByUserIdRequest.h"
+#include "Task/WebSocket/GetTransactionResultByUserIdTask.h"
 
 namespace Gs2::Distributor
 {
@@ -232,6 +244,18 @@ namespace Gs2::Distributor
             const Request::FFreezeMasterDataByUserIdRequestPtr Request
         ) const;
 
+        TSharedPtr<FAsyncTask<Task::WebSocket::FSignFreezeMasterDataTimestampTask>> SignFreezeMasterDataTimestamp(
+            const Request::FSignFreezeMasterDataTimestampRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FFreezeMasterDataBySignedTimestampTask>> FreezeMasterDataBySignedTimestamp(
+            const Request::FFreezeMasterDataBySignedTimestampRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FBatchExecuteApiTask>> BatchExecuteApi(
+            const Request::FBatchExecuteApiRequestPtr Request
+        ) const;
+
         TSharedPtr<FAsyncTask<Task::WebSocket::FIfExpressionByUserIdTask>> IfExpressionByUserId(
             const Request::FIfExpressionByUserIdRequestPtr Request
         ) const;
@@ -262,6 +286,18 @@ namespace Gs2::Distributor
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FGetStampSheetResultByUserIdTask>> GetStampSheetResultByUserId(
             const Request::FGetStampSheetResultByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FRunTransactionTask>> RunTransaction(
+            const Request::FRunTransactionRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FGetTransactionResultTask>> GetTransactionResult(
+            const Request::FGetTransactionResultRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FGetTransactionResultByUserIdTask>> GetTransactionResultByUserId(
+            const Request::FGetTransactionResultByUserIdRequestPtr Request
         ) const;
     };
     typedef TSharedPtr<FGs2DistributorWebSocketClient, ESPMode::ThreadSafe> FGs2DistributorWebSocketClientPtr;

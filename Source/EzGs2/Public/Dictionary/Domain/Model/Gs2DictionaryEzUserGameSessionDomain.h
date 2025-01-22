@@ -23,6 +23,7 @@
 #include "Dictionary/Model/Gs2DictionaryEzConfig.h"
 #include "Gs2DictionaryEzEntryGameSessionDomain.h"
 #include "Dictionary/Domain/Iterator/Gs2DictionaryEzDescribeEntriesIterator.h"
+#include "Gs2DictionaryEzLikeGameSessionDomain.h"
 #include "Gs2DictionaryEzUserGameSessionDomain.h"
 #include "Util/Net/GameSession.h"
 #include "Util/Net/Gs2Connection.h"
@@ -56,6 +57,10 @@ namespace Gs2::UE5::Dictionary::Domain::Model
         void UnsubscribeEntries(Gs2::Core::Domain::CallbackID CallbackId);
 
         Gs2::UE5::Dictionary::Domain::Model::FEzEntryGameSessionDomainPtr Entry(
+            const FString EntryModelName
+        ) const;
+
+        Gs2::UE5::Dictionary::Domain::Model::FEzLikeGameSessionDomainPtr Like(
             const FString EntryModelName
         ) const;
 

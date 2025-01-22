@@ -45,4 +45,9 @@ namespace Gs2::UE5::Distributor::Domain
     {
         return AutoRunStampSheetNotificationEvent;
     }
+
+    FAutoRunTransactionNotificationEvent& FEzGs2Distributor::OnAutoRunTransactionNotification()
+    {
+        return AutoRunTransactionNotificationEvent;
+    }
 }

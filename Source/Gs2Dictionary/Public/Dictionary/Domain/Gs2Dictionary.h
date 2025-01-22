@@ -28,6 +28,8 @@
 #include "Dictionary/Domain/Model/EntryModel.h"
 #include "Dictionary/Domain/Model/Entry.h"
 #include "Dictionary/Domain/Model/EntryAccessToken.h"
+#include "Dictionary/Domain/Model/Like.h"
+#include "Dictionary/Domain/Model/LikeAccessToken.h"
 #include "Dictionary/Domain/Model/CurrentEntryMaster.h"
 #include "Dictionary/Domain/Model/User.h"
 #include "Dictionary/Domain/Model/UserAccessToken.h"
@@ -38,6 +40,8 @@
 #include "Dictionary/Domain/Iterator/DescribeEntryModelMastersIterator.h"
 #include "Dictionary/Domain/Iterator/DescribeEntriesIterator.h"
 #include "Dictionary/Domain/Iterator/DescribeEntriesByUserIdIterator.h"
+#include "Dictionary/Domain/Iterator/DescribeLikesIterator.h"
+#include "Dictionary/Domain/Iterator/DescribeLikesByUserIdIterator.h"
 
 // Notification
 

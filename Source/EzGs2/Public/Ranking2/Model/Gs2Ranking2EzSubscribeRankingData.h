@@ -25,7 +25,7 @@ namespace Gs2::UE5::Ranking2::Model
 	{
         TOptional<FString> RankingNameValue;
         TOptional<int64> SeasonValue;
-        TOptional<FString> UserIdValue;
+        TOptional<FString> ScorerUserIdValue;
         TOptional<int32> IndexValue;
         TOptional<int32> RankValue;
         TOptional<int64> ScoreValue;
@@ -35,7 +35,7 @@ namespace Gs2::UE5::Ranking2::Model
 	public:
         TSharedPtr<FEzSubscribeRankingData> WithRankingName(const TOptional<FString> RankingName);
         TSharedPtr<FEzSubscribeRankingData> WithSeason(const TOptional<int64> Season);
-        TSharedPtr<FEzSubscribeRankingData> WithUserId(const TOptional<FString> UserId);
+        TSharedPtr<FEzSubscribeRankingData> WithScorerUserId(const TOptional<FString> ScorerUserId);
         TSharedPtr<FEzSubscribeRankingData> WithIndex(const TOptional<int32> Index);
         TSharedPtr<FEzSubscribeRankingData> WithRank(const TOptional<int32> Rank);
         TSharedPtr<FEzSubscribeRankingData> WithScore(const TOptional<int64> Score);
@@ -47,7 +47,7 @@ namespace Gs2::UE5::Ranking2::Model
         TOptional<int64> GetSeason() const;
         FString GetSeasonString() const;
 
-        TOptional<FString> GetUserId() const;
+        TOptional<FString> GetScorerUserId() const;
 
         TOptional<int32> GetIndex() const;
         FString GetIndexString() const;

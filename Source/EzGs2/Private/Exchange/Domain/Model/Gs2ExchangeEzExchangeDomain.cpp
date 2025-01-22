@@ -19,16 +19,6 @@
 namespace Gs2::UE5::Exchange::Domain::Model
 {
 
-    TOptional<FString> FEzExchangeDomain::TransactionId() const
-    {
-        return Domain->TransactionId;
-    }
-
-    TOptional<bool> FEzExchangeDomain::AutoRunStampSheet() const
-    {
-        return Domain->AutoRunStampSheet;
-    }
-
     TOptional<FString> FEzExchangeDomain::NamespaceName() const
     {
         return Domain->NamespaceName;

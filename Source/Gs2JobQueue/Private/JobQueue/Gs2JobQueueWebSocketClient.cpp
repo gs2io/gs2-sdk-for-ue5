@@ -234,31 +234,4 @@ namespace Gs2::JobQueue
             Request
         );
     }
-
-    TSharedPtr<FAsyncTask<Task::WebSocket::FDescribeDeadLetterJobsByUserIdTask>> FGs2JobQueueWebSocketClient::DescribeDeadLetterJobsByUserId(
-        const Request::FDescribeDeadLetterJobsByUserIdRequestPtr Request) const
-    {
-        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FDescribeDeadLetterJobsByUserIdTask>>(
-            Session,
-            Request
-        );
-    }
-
-    TSharedPtr<FAsyncTask<Task::WebSocket::FGetDeadLetterJobByUserIdTask>> FGs2JobQueueWebSocketClient::GetDeadLetterJobByUserId(
-        const Request::FGetDeadLetterJobByUserIdRequestPtr Request) const
-    {
-        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FGetDeadLetterJobByUserIdTask>>(
-            Session,
-            Request
-        );
-    }
-
-    TSharedPtr<FAsyncTask<Task::WebSocket::FDeleteDeadLetterJobByUserIdTask>> FGs2JobQueueWebSocketClient::DeleteDeadLetterJobByUserId(
-        const Request::FDeleteDeadLetterJobByUserIdRequestPtr Request) const
-    {
-        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FDeleteDeadLetterJobByUserIdTask>>(
-            Session,
-            Request
-        );
-    }
 }

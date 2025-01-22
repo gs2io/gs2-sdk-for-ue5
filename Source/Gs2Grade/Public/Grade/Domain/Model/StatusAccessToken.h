@@ -59,19 +59,9 @@ namespace Gs2::Grade::Domain::Model
 
         public:
         TOptional<FString> ExperienceNamespaceName;
-        TOptional<FString> TransactionId;
-        TOptional<bool> AutoRunStampSheet;
         TOptional<FString> GetExperienceNamespaceName() const
         {
             return ExperienceNamespaceName;
-        }
-        TOptional<FString> GetTransactionId() const
-        {
-            return TransactionId;
-        }
-        TOptional<bool> GetAutoRunStampSheet() const
-        {
-            return AutoRunStampSheet;
         }
         TOptional<FString> NamespaceName;
         Gs2::Auth::Model::FAccessTokenPtr AccessToken;

@@ -235,6 +235,24 @@ namespace Gs2::Version
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::Rest::FRejectTask>> FGs2VersionRestClient::Reject(
+        const Request::FRejectRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FRejectTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FRejectByUserIdTask>> FGs2VersionRestClient::RejectByUserId(
+        const Request::FRejectByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FRejectByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::Rest::FGetAcceptVersionTask>> FGs2VersionRestClient::GetAcceptVersion(
         const Request::FGetAcceptVersionRequestPtr Request) const
     {

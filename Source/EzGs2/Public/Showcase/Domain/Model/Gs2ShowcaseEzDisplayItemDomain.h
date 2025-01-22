@@ -27,6 +27,10 @@
 #include "Showcase/Model/Gs2ShowcaseEzConsumeAction.h"
 #include "Showcase/Model/Gs2ShowcaseEzVerifyAction.h"
 #include "Showcase/Model/Gs2ShowcaseEzAcquireAction.h"
+#include "Showcase/Model/Gs2ShowcaseEzVerifyActionResult.h"
+#include "Showcase/Model/Gs2ShowcaseEzConsumeActionResult.h"
+#include "Showcase/Model/Gs2ShowcaseEzAcquireActionResult.h"
+#include "Showcase/Model/Gs2ShowcaseEzTransactionResult.h"
 #include "Gs2ShowcaseEzDisplayItemDomain.h"
 #include "Util/Net/GameSession.h"
 #include "Util/Net/Gs2Connection.h"
@@ -41,8 +45,6 @@ namespace Gs2::UE5::Showcase::Domain::Model
         Gs2::UE5::Util::FGs2ConnectionPtr ConnectionValue;
 
         public:
-        TOptional<FString> TransactionId() const;
-        TOptional<bool> AutoRunStampSheet() const;
         TOptional<FString> NamespaceName() const;
         TOptional<FString> UserId() const;
         TOptional<FString> ShowcaseName() const;

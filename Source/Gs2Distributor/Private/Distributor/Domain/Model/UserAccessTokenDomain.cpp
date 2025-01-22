@@ -34,6 +34,8 @@
 #include "Distributor/Domain/Model/UserAccessToken.h"
 #include "Distributor/Domain/Model/StampSheetResult.h"
 #include "Distributor/Domain/Model/StampSheetResultAccessToken.h"
+#include "Distributor/Domain/Model/TransactionResult.h"
+#include "Distributor/Domain/Model/TransactionResultAccessToken.h"
 
 #include "Core/Domain/Gs2.h"
 #include "Core/Domain/Transaction/JobQueueJobDomainFactory.h"
@@ -80,6 +82,19 @@ namespace Gs2::Distributor::Domain::Model
     )
     {
         return MakeShared<Gs2::Distributor::Domain::Model::FStampSheetResultAccessTokenDomain>(
+            Gs2,
+            Service,
+            NamespaceName,
+            AccessToken,
+            TransactionId == TEXT("") ? TOptional<FString>() : TOptional<FString>(TransactionId)
+        );
+    }
+
+    TSharedPtr<Gs2::Distributor::Domain::Model::FTransactionResultAccessTokenDomain> FUserAccessTokenDomain::TransactionResult(
+        const FString TransactionId
+    )
+    {
+        return MakeShared<Gs2::Distributor::Domain::Model::FTransactionResultAccessTokenDomain>(
             Gs2,
             Service,
             NamespaceName,

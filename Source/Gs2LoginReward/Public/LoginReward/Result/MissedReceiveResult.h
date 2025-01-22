@@ -19,6 +19,7 @@
 #include "CoreMinimal.h"
 #include "../Model/ReceiveStatus.h"
 #include "../Model/BonusModel.h"
+#include "Gs2Core/Public/Core/Model/TransactionResult.h"
 
 namespace Gs2::LoginReward::Result
 {
@@ -30,6 +31,9 @@ namespace Gs2::LoginReward::Result
         TOptional<FString> StampSheetValue;
         TOptional<FString> StampSheetEncryptionKeyIdValue;
         TOptional<bool> AutoRunStampSheetValue;
+        TOptional<bool> AtomicCommitValue;
+        TOptional<FString> TransactionValue;
+        TSharedPtr<Gs2::Core::Model::FTransactionResult> TransactionResultValue;
         
     public:
         
@@ -45,6 +49,9 @@ namespace Gs2::LoginReward::Result
         TSharedPtr<FMissedReceiveResult> WithStampSheet(const TOptional<FString> StampSheet);
         TSharedPtr<FMissedReceiveResult> WithStampSheetEncryptionKeyId(const TOptional<FString> StampSheetEncryptionKeyId);
         TSharedPtr<FMissedReceiveResult> WithAutoRunStampSheet(const TOptional<bool> AutoRunStampSheet);
+        TSharedPtr<FMissedReceiveResult> WithAtomicCommit(const TOptional<bool> AtomicCommit);
+        TSharedPtr<FMissedReceiveResult> WithTransaction(const TOptional<FString> Transaction);
+        TSharedPtr<FMissedReceiveResult> WithTransactionResult(const TSharedPtr<Gs2::Core::Model::FTransactionResult> TransactionResult);
 
         TSharedPtr<Model::FReceiveStatus> GetItem() const;
         TSharedPtr<Model::FBonusModel> GetBonusModel() const;
@@ -53,6 +60,10 @@ namespace Gs2::LoginReward::Result
         TOptional<FString> GetStampSheetEncryptionKeyId() const;
         TOptional<bool> GetAutoRunStampSheet() const;
         FString GetAutoRunStampSheetString() const;
+        TOptional<bool> GetAtomicCommit() const;
+        FString GetAtomicCommitString() const;
+        TOptional<FString> GetTransaction() const;
+        TSharedPtr<Gs2::Core::Model::FTransactionResult> GetTransactionResult() const;
 
         static TSharedPtr<FMissedReceiveResult> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;

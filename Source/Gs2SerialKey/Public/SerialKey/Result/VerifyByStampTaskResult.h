@@ -18,12 +18,14 @@
 
 #include "CoreMinimal.h"
 #include "../Model/SerialKey.h"
+#include "../Model/CampaignModel.h"
 
 namespace Gs2::SerialKey::Result
 {
     class GS2SERIALKEY_API FVerifyByStampTaskResult final : public TSharedFromThis<FVerifyByStampTaskResult>
     {
         TSharedPtr<Model::FSerialKey> ItemValue;
+        TSharedPtr<Model::FCampaignModel> CampaignModelValue;
         TOptional<FString> NewContextStackValue;
         
     public:
@@ -35,9 +37,11 @@ namespace Gs2::SerialKey::Result
         ~FVerifyByStampTaskResult() = default;
 
         TSharedPtr<FVerifyByStampTaskResult> WithItem(const TSharedPtr<Model::FSerialKey> Item);
+        TSharedPtr<FVerifyByStampTaskResult> WithCampaignModel(const TSharedPtr<Model::FCampaignModel> CampaignModel);
         TSharedPtr<FVerifyByStampTaskResult> WithNewContextStack(const TOptional<FString> NewContextStack);
 
         TSharedPtr<Model::FSerialKey> GetItem() const;
+        TSharedPtr<Model::FCampaignModel> GetCampaignModel() const;
         TOptional<FString> GetNewContextStack() const;
 
         static TSharedPtr<FVerifyByStampTaskResult> FromJson(const TSharedPtr<FJsonObject> Data);

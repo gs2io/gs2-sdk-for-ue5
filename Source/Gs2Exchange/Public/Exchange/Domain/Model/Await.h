@@ -63,16 +63,6 @@ namespace Gs2::Exchange::Domain::Model
         const Gs2::Exchange::FGs2ExchangeRestClientPtr Client;
 
         public:
-        TOptional<FString> TransactionId;
-        TOptional<bool> AutoRunStampSheet;
-        TOptional<FString> GetTransactionId() const
-        {
-            return TransactionId;
-        }
-        TOptional<bool> GetAutoRunStampSheet() const
-        {
-            return AutoRunStampSheet;
-        }
         TOptional<FString> NamespaceName;
         TOptional<FString> UserId;
         TOptional<FString> AwaitName;

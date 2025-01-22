@@ -19,6 +19,7 @@
 #include "CoreMinimal.h"
 #include "../Model/DrawnPrize.h"
 #include "../Model/BoxItems.h"
+#include "Gs2Core/Public/Core/Model/TransactionResult.h"
 
 namespace Gs2::Lottery::Result
 {
@@ -30,6 +31,9 @@ namespace Gs2::Lottery::Result
         TOptional<FString> StampSheetValue;
         TOptional<FString> StampSheetEncryptionKeyIdValue;
         TOptional<bool> AutoRunStampSheetValue;
+        TOptional<bool> AtomicCommitValue;
+        TOptional<FString> TransactionValue;
+        TSharedPtr<Gs2::Core::Model::FTransactionResult> TransactionResultValue;
         
     public:
         
@@ -45,6 +49,9 @@ namespace Gs2::Lottery::Result
         TSharedPtr<FDrawByUserIdResult> WithStampSheet(const TOptional<FString> StampSheet);
         TSharedPtr<FDrawByUserIdResult> WithStampSheetEncryptionKeyId(const TOptional<FString> StampSheetEncryptionKeyId);
         TSharedPtr<FDrawByUserIdResult> WithAutoRunStampSheet(const TOptional<bool> AutoRunStampSheet);
+        TSharedPtr<FDrawByUserIdResult> WithAtomicCommit(const TOptional<bool> AtomicCommit);
+        TSharedPtr<FDrawByUserIdResult> WithTransaction(const TOptional<FString> Transaction);
+        TSharedPtr<FDrawByUserIdResult> WithTransactionResult(const TSharedPtr<Gs2::Core::Model::FTransactionResult> TransactionResult);
 
         TSharedPtr<TArray<TSharedPtr<Model::FDrawnPrize>>> GetItems() const;
         TSharedPtr<Model::FBoxItems> GetBoxItems() const;
@@ -53,6 +60,10 @@ namespace Gs2::Lottery::Result
         TOptional<FString> GetStampSheetEncryptionKeyId() const;
         TOptional<bool> GetAutoRunStampSheet() const;
         FString GetAutoRunStampSheetString() const;
+        TOptional<bool> GetAtomicCommit() const;
+        FString GetAtomicCommitString() const;
+        TOptional<FString> GetTransaction() const;
+        TSharedPtr<Gs2::Core::Model::FTransactionResult> GetTransactionResult() const;
 
         static TSharedPtr<FDrawByUserIdResult> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;

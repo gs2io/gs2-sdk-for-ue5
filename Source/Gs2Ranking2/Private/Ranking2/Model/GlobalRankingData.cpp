@@ -27,6 +27,7 @@ namespace Gs2::Ranking2::Model
         RankValue(TOptional<int32>()),
         ScoreValue(TOptional<int64>()),
         MetadataValue(TOptional<FString>()),
+        InvertCreatedAtValue(TOptional<int64>()),
         CreatedAtValue(TOptional<int64>()),
         UpdatedAtValue(TOptional<int64>()),
         RevisionValue(TOptional<int64>())
@@ -44,6 +45,7 @@ namespace Gs2::Ranking2::Model
         RankValue(From.RankValue),
         ScoreValue(From.ScoreValue),
         MetadataValue(From.MetadataValue),
+        InvertCreatedAtValue(From.InvertCreatedAtValue),
         CreatedAtValue(From.CreatedAtValue),
         UpdatedAtValue(From.UpdatedAtValue),
         RevisionValue(From.RevisionValue)
@@ -111,6 +113,14 @@ namespace Gs2::Ranking2::Model
     )
     {
         this->MetadataValue = Metadata;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FGlobalRankingData> FGlobalRankingData::WithInvertCreatedAt(
+        const TOptional<int64> InvertCreatedAt
+    )
+    {
+        this->InvertCreatedAtValue = InvertCreatedAt;
         return SharedThis(this);
     }
 
@@ -204,6 +214,19 @@ namespace Gs2::Ranking2::Model
     TOptional<FString> FGlobalRankingData::GetMetadata() const
     {
         return MetadataValue;
+    }
+    TOptional<int64> FGlobalRankingData::GetInvertCreatedAt() const
+    {
+        return InvertCreatedAtValue;
+    }
+
+    FString FGlobalRankingData::GetInvertCreatedAtString() const
+    {
+        if (!InvertCreatedAtValue.IsSet())
+        {
+            return FString("null");
+        }
+        return FString::Printf(TEXT("%lld"), InvertCreatedAtValue.GetValue());
     }
     TOptional<int64> FGlobalRankingData::GetCreatedAt() const
     {
@@ -389,6 +412,15 @@ namespace Gs2::Ranking2::Model
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
+            ->WithInvertCreatedAt(Data->HasField(ANSI_TO_TCHAR("invertCreatedAt")) ? [Data]() -> TOptional<int64>
+                {
+                    int64 v;
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("invertCreatedAt"), v))
+                    {
+                        return TOptional(v);
+                    }
+                    return TOptional<int64>();
+                }() : TOptional<int64>())
             ->WithCreatedAt(Data->HasField(ANSI_TO_TCHAR("createdAt")) ? [Data]() -> TOptional<int64>
                 {
                     int64 v;
@@ -452,6 +484,10 @@ namespace Gs2::Ranking2::Model
         if (MetadataValue.IsSet())
         {
             JsonRootObject->SetStringField("metadata", MetadataValue.GetValue());
+        }
+        if (InvertCreatedAtValue.IsSet())
+        {
+            JsonRootObject->SetStringField("invertCreatedAt", FString::Printf(TEXT("%lld"), InvertCreatedAtValue.GetValue()));
         }
         if (CreatedAtValue.IsSet())
         {

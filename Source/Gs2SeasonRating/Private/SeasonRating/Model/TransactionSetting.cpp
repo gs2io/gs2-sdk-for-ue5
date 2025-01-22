@@ -19,6 +19,9 @@
 namespace Gs2::SeasonRating::Model
 {
     FTransactionSetting::FTransactionSetting():
+        EnableAtomicCommitValue(TOptional<bool>()),
+        TransactionUseDistributorValue(TOptional<bool>()),
+        AcquireActionUseJobQueueValue(TOptional<bool>()),
         DistributorNamespaceIdValue(TOptional<FString>()),
         QueueNamespaceIdValue(TOptional<FString>())
     {
@@ -27,9 +30,36 @@ namespace Gs2::SeasonRating::Model
     FTransactionSetting::FTransactionSetting(
         const FTransactionSetting& From
     ):
+        EnableAtomicCommitValue(From.EnableAtomicCommitValue),
+        TransactionUseDistributorValue(From.TransactionUseDistributorValue),
+        AcquireActionUseJobQueueValue(From.AcquireActionUseJobQueueValue),
         DistributorNamespaceIdValue(From.DistributorNamespaceIdValue),
         QueueNamespaceIdValue(From.QueueNamespaceIdValue)
     {
+    }
+
+    TSharedPtr<FTransactionSetting> FTransactionSetting::WithEnableAtomicCommit(
+        const TOptional<bool> EnableAtomicCommit
+    )
+    {
+        this->EnableAtomicCommitValue = EnableAtomicCommit;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FTransactionSetting> FTransactionSetting::WithTransactionUseDistributor(
+        const TOptional<bool> TransactionUseDistributor
+    )
+    {
+        this->TransactionUseDistributorValue = TransactionUseDistributor;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FTransactionSetting> FTransactionSetting::WithAcquireActionUseJobQueue(
+        const TOptional<bool> AcquireActionUseJobQueue
+    )
+    {
+        this->AcquireActionUseJobQueueValue = AcquireActionUseJobQueue;
+        return SharedThis(this);
     }
 
     TSharedPtr<FTransactionSetting> FTransactionSetting::WithDistributorNamespaceId(
@@ -47,6 +77,45 @@ namespace Gs2::SeasonRating::Model
         this->QueueNamespaceIdValue = QueueNamespaceId;
         return SharedThis(this);
     }
+    TOptional<bool> FTransactionSetting::GetEnableAtomicCommit() const
+    {
+        return EnableAtomicCommitValue;
+    }
+
+    FString FTransactionSetting::GetEnableAtomicCommitString() const
+    {
+        if (!EnableAtomicCommitValue.IsSet())
+        {
+            return FString("null");
+        }
+        return FString(EnableAtomicCommitValue.GetValue() ? "true" : "false");
+    }
+    TOptional<bool> FTransactionSetting::GetTransactionUseDistributor() const
+    {
+        return TransactionUseDistributorValue;
+    }
+
+    FString FTransactionSetting::GetTransactionUseDistributorString() const
+    {
+        if (!TransactionUseDistributorValue.IsSet())
+        {
+            return FString("null");
+        }
+        return FString(TransactionUseDistributorValue.GetValue() ? "true" : "false");
+    }
+    TOptional<bool> FTransactionSetting::GetAcquireActionUseJobQueue() const
+    {
+        return AcquireActionUseJobQueueValue;
+    }
+
+    FString FTransactionSetting::GetAcquireActionUseJobQueueString() const
+    {
+        if (!AcquireActionUseJobQueueValue.IsSet())
+        {
+            return FString("null");
+        }
+        return FString(AcquireActionUseJobQueueValue.GetValue() ? "true" : "false");
+    }
     TOptional<FString> FTransactionSetting::GetDistributorNamespaceId() const
     {
         return DistributorNamespaceIdValue;
@@ -62,6 +131,33 @@ namespace Gs2::SeasonRating::Model
             return nullptr;
         }
         return MakeShared<FTransactionSetting>()
+            ->WithEnableAtomicCommit(Data->HasField(ANSI_TO_TCHAR("enableAtomicCommit")) ? [Data]() -> TOptional<bool>
+                {
+                    bool v;
+                    if (Data->TryGetBoolField(ANSI_TO_TCHAR("enableAtomicCommit"), v))
+                    {
+                        return TOptional(v);
+                    }
+                    return TOptional<bool>();
+                }() : TOptional<bool>())
+            ->WithTransactionUseDistributor(Data->HasField(ANSI_TO_TCHAR("transactionUseDistributor")) ? [Data]() -> TOptional<bool>
+                {
+                    bool v;
+                    if (Data->TryGetBoolField(ANSI_TO_TCHAR("transactionUseDistributor"), v))
+                    {
+                        return TOptional(v);
+                    }
+                    return TOptional<bool>();
+                }() : TOptional<bool>())
+            ->WithAcquireActionUseJobQueue(Data->HasField(ANSI_TO_TCHAR("acquireActionUseJobQueue")) ? [Data]() -> TOptional<bool>
+                {
+                    bool v;
+                    if (Data->TryGetBoolField(ANSI_TO_TCHAR("acquireActionUseJobQueue"), v))
+                    {
+                        return TOptional(v);
+                    }
+                    return TOptional<bool>();
+                }() : TOptional<bool>())
             ->WithDistributorNamespaceId(Data->HasField(ANSI_TO_TCHAR("distributorNamespaceId")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
@@ -85,6 +181,18 @@ namespace Gs2::SeasonRating::Model
     TSharedPtr<FJsonObject> FTransactionSetting::ToJson() const
     {
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
+        if (EnableAtomicCommitValue.IsSet())
+        {
+            JsonRootObject->SetBoolField("enableAtomicCommit", EnableAtomicCommitValue.GetValue());
+        }
+        if (TransactionUseDistributorValue.IsSet())
+        {
+            JsonRootObject->SetBoolField("transactionUseDistributor", TransactionUseDistributorValue.GetValue());
+        }
+        if (AcquireActionUseJobQueueValue.IsSet())
+        {
+            JsonRootObject->SetBoolField("acquireActionUseJobQueue", AcquireActionUseJobQueueValue.GetValue());
+        }
         if (DistributorNamespaceIdValue.IsSet())
         {
             JsonRootObject->SetStringField("distributorNamespaceId", DistributorNamespaceIdValue.GetValue());

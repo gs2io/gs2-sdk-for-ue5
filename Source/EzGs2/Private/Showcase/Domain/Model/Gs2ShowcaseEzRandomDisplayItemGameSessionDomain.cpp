@@ -19,16 +19,6 @@
 namespace Gs2::UE5::Showcase::Domain::Model
 {
 
-    TOptional<FString> FEzRandomDisplayItemGameSessionDomain::TransactionId() const
-    {
-        return Domain->TransactionId;
-    }
-
-    TOptional<bool> FEzRandomDisplayItemGameSessionDomain::AutoRunStampSheet() const
-    {
-        return Domain->AutoRunStampSheet;
-    }
-
     TOptional<FString> FEzRandomDisplayItemGameSessionDomain::NamespaceName() const
     {
         return Domain->NamespaceName;

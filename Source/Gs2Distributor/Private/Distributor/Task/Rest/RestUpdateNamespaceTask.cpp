@@ -96,6 +96,10 @@ namespace Gs2::Distributor::Task::Rest
             {
                 JsonRootObject->SetObjectField("autoRunStampSheetNotification", this->Request->GetAutoRunStampSheetNotification()->ToJson());
             }
+            if (this->Request->GetAutoRunTransactionNotification() != nullptr && this->Request->GetAutoRunTransactionNotification().IsValid())
+            {
+                JsonRootObject->SetObjectField("autoRunTransactionNotification", this->Request->GetAutoRunTransactionNotification()->ToJson());
+            }
             if (this->Request->GetLogSetting() != nullptr && this->Request->GetLogSetting().IsValid())
             {
                 JsonRootObject->SetObjectField("logSetting", this->Request->GetLogSetting()->ToJson());

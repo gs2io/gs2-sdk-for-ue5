@@ -27,6 +27,10 @@
 #include "Guild/Model/Gs2GuildEzLastGuildMasterActivity.h"
 #include "Guild/Model/Gs2GuildEzMember.h"
 #include "Guild/Model/Gs2GuildEzRoleModel.h"
+#include "Guild/Model/Gs2GuildEzVerifyActionResult.h"
+#include "Guild/Model/Gs2GuildEzConsumeActionResult.h"
+#include "Guild/Model/Gs2GuildEzAcquireActionResult.h"
+#include "Guild/Model/Gs2GuildEzTransactionResult.h"
 #include "Gs2GuildEzJoinedGuildGameSessionDomain.h"
 #include "Guild/Domain/Iterator/Gs2GuildEzDescribeJoinedGuildsIterator.h"
 #include "Util/Net/GameSession.h"
@@ -52,6 +56,26 @@ namespace Gs2::UE5::Guild::Domain::Model
             Gs2::Guild::Domain::Model::FJoinedGuildAccessTokenDomainPtr Domain,
             Gs2::UE5::Util::IGameSessionPtr GameSession,
             Gs2::UE5::Util::FGs2ConnectionPtr Connection
+        );
+
+        class EZGS2_API FWithdrawGuildTask :
+            public Gs2::Core::Util::TGs2Future<Gs2::UE5::Guild::Domain::Model::FEzJoinedGuildGameSessionDomain>,
+            public TSharedFromThis<FWithdrawGuildTask>
+        {
+            TSharedPtr<FEzJoinedGuildGameSessionDomain> Self;
+
+        public:
+            explicit FWithdrawGuildTask(
+                TSharedPtr<FEzJoinedGuildGameSessionDomain> Self
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::UE5::Guild::Domain::Model::FEzJoinedGuildGameSessionDomain>> Result
+            ) override;
+        };
+        friend FWithdrawGuildTask;
+
+        TSharedPtr<FAsyncTask<FWithdrawGuildTask>> WithdrawGuild(
         );
 
         class EZGS2_API FModelTask :

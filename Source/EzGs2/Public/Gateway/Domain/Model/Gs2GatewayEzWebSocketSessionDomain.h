@@ -34,6 +34,7 @@ namespace Gs2::UE5::Gateway::Domain::Model
 
         public:
         TOptional<FString> Protocol() const;
+        TSharedPtr<TArray<FString>> SendConnectionIds() const;
         TOptional<FString> NamespaceName() const;
         TOptional<FString> UserId() const;
 

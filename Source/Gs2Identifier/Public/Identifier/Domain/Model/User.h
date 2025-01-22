@@ -25,7 +25,6 @@
 #include "Identifier/Domain/Iterator/DescribeCommonSecurityPoliciesIterator.h"
 #include "Identifier/Domain/Iterator/DescribeIdentifiersIterator.h"
 #include "Identifier/Domain/Iterator/DescribeAttachedGuardsIterator.h"
-#include "Identifier/Domain/Iterator/DescribePasswordsIterator.h"
 
 namespace Gs2::Core::Domain
 {
@@ -212,17 +211,6 @@ namespace Gs2::Identifier::Domain::Model
 
         TSharedPtr<Gs2::Identifier::Domain::Model::FIdentifierDomain> Identifier(
             const FString ClientId
-        );
-
-        Gs2::Identifier::Domain::Iterator::FDescribePasswordsIteratorPtr Passwords(
-        ) const;
-
-        Gs2::Core::Domain::CallbackID SubscribePasswords(
-            TFunction<void()> Callback
-        );
-
-        void UnsubscribePasswords(
-            Gs2::Core::Domain::CallbackID CallbackID
         );
 
         TSharedPtr<Gs2::Identifier::Domain::Model::FPasswordDomain> Password(

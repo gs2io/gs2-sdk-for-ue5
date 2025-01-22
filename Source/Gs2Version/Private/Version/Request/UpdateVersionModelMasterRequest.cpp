@@ -30,7 +30,8 @@ namespace Gs2::Version::Request
         ErrorVersionValue(nullptr),
         ScheduleVersionsValue(nullptr),
         NeedSignatureValue(TOptional<bool>()),
-        SignatureKeyIdValue(TOptional<FString>())
+        SignatureKeyIdValue(TOptional<FString>()),
+        ApproveRequirementValue(TOptional<FString>())
     {
     }
 
@@ -48,7 +49,8 @@ namespace Gs2::Version::Request
         ErrorVersionValue(From.ErrorVersionValue),
         ScheduleVersionsValue(From.ScheduleVersionsValue),
         NeedSignatureValue(From.NeedSignatureValue),
-        SignatureKeyIdValue(From.SignatureKeyIdValue)
+        SignatureKeyIdValue(From.SignatureKeyIdValue),
+        ApproveRequirementValue(From.ApproveRequirementValue)
     {
     }
 
@@ -156,6 +158,14 @@ namespace Gs2::Version::Request
         return SharedThis(this);
     }
 
+    TSharedPtr<FUpdateVersionModelMasterRequest> FUpdateVersionModelMasterRequest::WithApproveRequirement(
+        const TOptional<FString> ApproveRequirement
+    )
+    {
+        this->ApproveRequirementValue = ApproveRequirement;
+        return SharedThis(this);
+    }
+
     TOptional<FString> FUpdateVersionModelMasterRequest::GetContextStack() const
     {
         return ContextStackValue;
@@ -244,6 +254,11 @@ namespace Gs2::Version::Request
     TOptional<FString> FUpdateVersionModelMasterRequest::GetSignatureKeyId() const
     {
         return SignatureKeyIdValue;
+    }
+
+    TOptional<FString> FUpdateVersionModelMasterRequest::GetApproveRequirement() const
+    {
+        return ApproveRequirementValue;
     }
 
     TSharedPtr<FUpdateVersionModelMasterRequest> FUpdateVersionModelMasterRequest::FromJson(const TSharedPtr<FJsonObject> Data)
@@ -360,6 +375,15 @@ namespace Gs2::Version::Request
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
+              }() : TOptional<FString>())
+            ->WithApproveRequirement(Data->HasField(ANSI_TO_TCHAR("approveRequirement")) ? [Data]() -> TOptional<FString>
+              {
+                  FString v("");
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("approveRequirement"), v))
+                  {
+                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                  }
+                  return TOptional<FString>();
               }() : TOptional<FString>());
     }
 
@@ -422,6 +446,10 @@ namespace Gs2::Version::Request
         if (SignatureKeyIdValue.IsSet())
         {
             JsonRootObject->SetStringField("signatureKeyId", SignatureKeyIdValue.GetValue());
+        }
+        if (ApproveRequirementValue.IsSet())
+        {
+            JsonRootObject->SetStringField("approveRequirement", ApproveRequirementValue.GetValue());
         }
         return JsonRootObject;
     }

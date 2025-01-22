@@ -116,6 +116,7 @@ namespace Gs2::Gateway::Domain::Model
             {
                 Self->Protocol = Domain->Protocol = ResultModel->GetProtocol();
             }
+            Self->SendConnectionIds = Domain->SendConnectionIds = ResultModel->GetSendConnectionIds();
         }
         *Result = Domain;
         return nullptr;

@@ -25,10 +25,15 @@
 #include "Model/CurrentRateMaster.h"
 #include "Model/Await.h"
 #include "Model/LogCost.h"
+#include "Model/LogRate.h"
 #include "Model/AcquireAction.h"
 #include "Model/ConsumeAction.h"
 #include "Model/VerifyAction.h"
 #include "Model/Config.h"
+#include "Model/VerifyActionResult.h"
+#include "Model/ConsumeActionResult.h"
+#include "Model/AcquireActionResult.h"
+#include "Model/TransactionResult.h"
 #include "Model/GitHubCheckoutSetting.h"
 #include "Model/ScriptSetting.h"
 #include "Model/LogSetting.h"
@@ -327,6 +332,12 @@
 #include "Result/CreateAwaitByStampSheetResult.h"
 #include "Task/Rest/CreateAwaitByStampSheetTask.h"
 #include "Task/WebSocket/CreateAwaitByStampSheetTask.h"
+
+// AcquireForceByStampSheet
+#include "Request/AcquireForceByStampSheetRequest.h"
+#include "Result/AcquireForceByStampSheetResult.h"
+#include "Task/Rest/AcquireForceByStampSheetTask.h"
+#include "Task/WebSocket/AcquireForceByStampSheetTask.h"
 
 // SkipByStampSheet
 #include "Request/SkipByStampSheetRequest.h"

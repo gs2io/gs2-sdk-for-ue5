@@ -19,16 +19,6 @@
 namespace Gs2::UE5::Lottery::Domain::Model
 {
 
-    TOptional<FString> FEzLotteryGameSessionDomain::TransactionId() const
-    {
-        return Domain->TransactionId;
-    }
-
-    TOptional<bool> FEzLotteryGameSessionDomain::AutoRunStampSheet() const
-    {
-        return Domain->AutoRunStampSheet;
-    }
-
     TOptional<FString> FEzLotteryGameSessionDomain::NamespaceName() const
     {
         return Domain->NamespaceName;

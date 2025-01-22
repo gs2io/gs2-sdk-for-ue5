@@ -20,6 +20,7 @@ namespace Gs2::SerialKey::Result
 {
     FVerifyByStampTaskResult::FVerifyByStampTaskResult():
         ItemValue(nullptr),
+        CampaignModelValue(nullptr),
         NewContextStackValue(TOptional<FString>())
     {
     }
@@ -28,6 +29,7 @@ namespace Gs2::SerialKey::Result
         const FVerifyByStampTaskResult& From
     ):
         ItemValue(From.ItemValue),
+        CampaignModelValue(From.CampaignModelValue),
         NewContextStackValue(From.NewContextStackValue)
     {
     }
@@ -37,6 +39,14 @@ namespace Gs2::SerialKey::Result
     )
     {
         this->ItemValue = Item;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FVerifyByStampTaskResult> FVerifyByStampTaskResult::WithCampaignModel(
+        const TSharedPtr<Model::FCampaignModel> CampaignModel
+    )
+    {
+        this->CampaignModelValue = CampaignModel;
         return SharedThis(this);
     }
 
@@ -55,6 +65,15 @@ namespace Gs2::SerialKey::Result
             return nullptr;
         }
         return ItemValue;
+    }
+
+    TSharedPtr<Model::FCampaignModel> FVerifyByStampTaskResult::GetCampaignModel() const
+    {
+        if (!CampaignModelValue.IsValid())
+        {
+            return nullptr;
+        }
+        return CampaignModelValue;
     }
 
     TOptional<FString> FVerifyByStampTaskResult::GetNewContextStack() const
@@ -76,6 +95,14 @@ namespace Gs2::SerialKey::Result
                     }
                     return Model::FSerialKey::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("item")));
                  }() : nullptr)
+            ->WithCampaignModel(Data->HasField(ANSI_TO_TCHAR("campaignModel")) ? [Data]() -> Model::FCampaignModelPtr
+                 {
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("campaignModel")))
+                    {
+                        return nullptr;
+                    }
+                    return Model::FCampaignModel::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("campaignModel")));
+                 }() : nullptr)
             ->WithNewContextStack(Data->HasField(ANSI_TO_TCHAR("newContextStack")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
@@ -93,6 +120,10 @@ namespace Gs2::SerialKey::Result
         if (ItemValue != nullptr && ItemValue.IsValid())
         {
             JsonRootObject->SetObjectField("item", ItemValue->ToJson());
+        }
+        if (CampaignModelValue != nullptr && CampaignModelValue.IsValid())
+        {
+            JsonRootObject->SetObjectField("campaignModel", CampaignModelValue->ToJson());
         }
         if (NewContextStackValue.IsSet())
         {

@@ -88,6 +88,26 @@
 #include "Task/WebSocket/DeleteEntriesByStampTaskTask.h"
 #include "Request/VerifyEntryByStampTaskRequest.h"
 #include "Task/WebSocket/VerifyEntryByStampTaskTask.h"
+#include "Request/DescribeLikesRequest.h"
+#include "Task/WebSocket/DescribeLikesTask.h"
+#include "Request/DescribeLikesByUserIdRequest.h"
+#include "Task/WebSocket/DescribeLikesByUserIdTask.h"
+#include "Request/AddLikesRequest.h"
+#include "Task/WebSocket/AddLikesTask.h"
+#include "Request/AddLikesByUserIdRequest.h"
+#include "Task/WebSocket/AddLikesByUserIdTask.h"
+#include "Request/GetLikeRequest.h"
+#include "Task/WebSocket/GetLikeTask.h"
+#include "Request/GetLikeByUserIdRequest.h"
+#include "Task/WebSocket/GetLikeByUserIdTask.h"
+#include "Request/ResetLikesRequest.h"
+#include "Task/WebSocket/ResetLikesTask.h"
+#include "Request/ResetLikesByUserIdRequest.h"
+#include "Task/WebSocket/ResetLikesByUserIdTask.h"
+#include "Request/DeleteLikesRequest.h"
+#include "Task/WebSocket/DeleteLikesTask.h"
+#include "Request/DeleteLikesByUserIdRequest.h"
+#include "Task/WebSocket/DeleteLikesByUserIdTask.h"
 #include "Request/ExportMasterRequest.h"
 #include "Task/WebSocket/ExportMasterTask.h"
 #include "Request/GetCurrentEntryMasterRequest.h"
@@ -246,6 +266,46 @@ namespace Gs2::Dictionary
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FVerifyEntryByStampTaskTask>> VerifyEntryByStampTask(
             const Request::FVerifyEntryByStampTaskRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FDescribeLikesTask>> DescribeLikes(
+            const Request::FDescribeLikesRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FDescribeLikesByUserIdTask>> DescribeLikesByUserId(
+            const Request::FDescribeLikesByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FAddLikesTask>> AddLikes(
+            const Request::FAddLikesRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FAddLikesByUserIdTask>> AddLikesByUserId(
+            const Request::FAddLikesByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FGetLikeTask>> GetLike(
+            const Request::FGetLikeRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FGetLikeByUserIdTask>> GetLikeByUserId(
+            const Request::FGetLikeByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FResetLikesTask>> ResetLikes(
+            const Request::FResetLikesRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FResetLikesByUserIdTask>> ResetLikesByUserId(
+            const Request::FResetLikesByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FDeleteLikesTask>> DeleteLikes(
+            const Request::FDeleteLikesRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FDeleteLikesByUserIdTask>> DeleteLikesByUserId(
+            const Request::FDeleteLikesByUserIdRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FExportMasterTask>> ExportMaster(

@@ -23,6 +23,7 @@ namespace Gs2::Guild::Request
         UserIdValue(TOptional<FString>()),
         GuildModelNameValue(TOptional<FString>()),
         TargetGuildNameValue(TOptional<FString>()),
+        MetadataValue(TOptional<FString>()),
         TimeOffsetTokenValue(TOptional<FString>())
     {
     }
@@ -34,6 +35,7 @@ namespace Gs2::Guild::Request
         UserIdValue(From.UserIdValue),
         GuildModelNameValue(From.GuildModelNameValue),
         TargetGuildNameValue(From.TargetGuildNameValue),
+        MetadataValue(From.MetadataValue),
         TimeOffsetTokenValue(From.TimeOffsetTokenValue)
     {
     }
@@ -78,6 +80,14 @@ namespace Gs2::Guild::Request
         return SharedThis(this);
     }
 
+    TSharedPtr<FSendRequestByUserIdRequest> FSendRequestByUserIdRequest::WithMetadata(
+        const TOptional<FString> Metadata
+    )
+    {
+        this->MetadataValue = Metadata;
+        return SharedThis(this);
+    }
+
     TSharedPtr<FSendRequestByUserIdRequest> FSendRequestByUserIdRequest::WithTimeOffsetToken(
         const TOptional<FString> TimeOffsetToken
     )
@@ -117,6 +127,11 @@ namespace Gs2::Guild::Request
     TOptional<FString> FSendRequestByUserIdRequest::GetTargetGuildName() const
     {
         return TargetGuildNameValue;
+    }
+
+    TOptional<FString> FSendRequestByUserIdRequest::GetMetadata() const
+    {
+        return MetadataValue;
     }
 
     TOptional<FString> FSendRequestByUserIdRequest::GetTimeOffsetToken() const
@@ -172,6 +187,15 @@ namespace Gs2::Guild::Request
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
+            ->WithMetadata(Data->HasField(ANSI_TO_TCHAR("metadata")) ? [Data]() -> TOptional<FString>
+              {
+                  FString v("");
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("metadata"), v))
+                  {
+                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                  }
+                  return TOptional<FString>();
+              }() : TOptional<FString>())
             ->WithTimeOffsetToken(Data->HasField(ANSI_TO_TCHAR("timeOffsetToken")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
@@ -206,6 +230,10 @@ namespace Gs2::Guild::Request
         if (TargetGuildNameValue.IsSet())
         {
             JsonRootObject->SetStringField("targetGuildName", TargetGuildNameValue.GetValue());
+        }
+        if (MetadataValue.IsSet())
+        {
+            JsonRootObject->SetStringField("metadata", MetadataValue.GetValue());
         }
         if (TimeOffsetTokenValue.IsSet())
         {

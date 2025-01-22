@@ -25,6 +25,8 @@
 #include "Dictionary/Domain/Iterator/DescribeEntryModelMastersIterator.h"
 #include "Dictionary/Domain/Iterator/DescribeEntriesIterator.h"
 #include "Dictionary/Domain/Iterator/DescribeEntriesByUserIdIterator.h"
+#include "Dictionary/Domain/Iterator/DescribeLikesIterator.h"
+#include "Dictionary/Domain/Iterator/DescribeLikesByUserIdIterator.h"
 
 namespace Gs2::Core::Domain
 {
@@ -45,6 +47,8 @@ namespace Gs2::Dictionary::Domain::Model
     class FEntryModelMasterDomain;
     class FEntryDomain;
     class FEntryAccessTokenDomain;
+    class FLikeDomain;
+    class FLikeAccessTokenDomain;
     class FCurrentEntryMasterDomain;
     class FUserDomain;
     class FUserAccessTokenDomain;

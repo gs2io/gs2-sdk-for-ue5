@@ -74,6 +74,8 @@
 #include "Task/WebSocket/RevertUseByStampSheetTask.h"
 #include "Request/VerifyByStampTaskRequest.h"
 #include "Task/WebSocket/VerifyByStampTaskTask.h"
+#include "Request/IssueOnceByStampSheetRequest.h"
+#include "Task/WebSocket/IssueOnceByStampSheetTask.h"
 #include "Request/DescribeCampaignModelsRequest.h"
 #include "Task/WebSocket/DescribeCampaignModelsTask.h"
 #include "Request/GetCampaignModelRequest.h"
@@ -218,6 +220,10 @@ namespace Gs2::SerialKey
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FVerifyByStampTaskTask>> VerifyByStampTask(
             const Request::FVerifyByStampTaskRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FIssueOnceByStampSheetTask>> IssueOnceByStampSheet(
+            const Request::FIssueOnceByStampSheetRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FDescribeCampaignModelsTask>> DescribeCampaignModels(

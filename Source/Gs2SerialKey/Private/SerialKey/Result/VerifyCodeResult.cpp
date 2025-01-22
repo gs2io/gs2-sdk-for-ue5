@@ -19,14 +19,16 @@
 namespace Gs2::SerialKey::Result
 {
     FVerifyCodeResult::FVerifyCodeResult():
-        ItemValue(nullptr)
+        ItemValue(nullptr),
+        CampaignModelValue(nullptr)
     {
     }
 
     FVerifyCodeResult::FVerifyCodeResult(
         const FVerifyCodeResult& From
     ):
-        ItemValue(From.ItemValue)
+        ItemValue(From.ItemValue),
+        CampaignModelValue(From.CampaignModelValue)
     {
     }
 
@@ -38,6 +40,14 @@ namespace Gs2::SerialKey::Result
         return SharedThis(this);
     }
 
+    TSharedPtr<FVerifyCodeResult> FVerifyCodeResult::WithCampaignModel(
+        const TSharedPtr<Model::FCampaignModel> CampaignModel
+    )
+    {
+        this->CampaignModelValue = CampaignModel;
+        return SharedThis(this);
+    }
+
     TSharedPtr<Model::FSerialKey> FVerifyCodeResult::GetItem() const
     {
         if (!ItemValue.IsValid())
@@ -45,6 +55,15 @@ namespace Gs2::SerialKey::Result
             return nullptr;
         }
         return ItemValue;
+    }
+
+    TSharedPtr<Model::FCampaignModel> FVerifyCodeResult::GetCampaignModel() const
+    {
+        if (!CampaignModelValue.IsValid())
+        {
+            return nullptr;
+        }
+        return CampaignModelValue;
     }
 
     TSharedPtr<FVerifyCodeResult> FVerifyCodeResult::FromJson(const TSharedPtr<FJsonObject> Data)
@@ -60,6 +79,14 @@ namespace Gs2::SerialKey::Result
                         return nullptr;
                     }
                     return Model::FSerialKey::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("item")));
+                 }() : nullptr)
+            ->WithCampaignModel(Data->HasField(ANSI_TO_TCHAR("campaignModel")) ? [Data]() -> Model::FCampaignModelPtr
+                 {
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("campaignModel")))
+                    {
+                        return nullptr;
+                    }
+                    return Model::FCampaignModel::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("campaignModel")));
                  }() : nullptr);
     }
 
@@ -69,6 +96,10 @@ namespace Gs2::SerialKey::Result
         if (ItemValue != nullptr && ItemValue.IsValid())
         {
             JsonRootObject->SetObjectField("item", ItemValue->ToJson());
+        }
+        if (CampaignModelValue != nullptr && CampaignModelValue.IsValid())
+        {
+            JsonRootObject->SetObjectField("campaignModel", CampaignModelValue->ToJson());
         }
         return JsonRootObject;
     }

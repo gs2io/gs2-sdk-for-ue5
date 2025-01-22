@@ -24,6 +24,11 @@ namespace Gs2::UE5::Gateway::Domain::Model
         return Domain->Protocol;
     }
 
+    TSharedPtr<TArray<FString>> FEzUserDomain::SendConnectionIds() const
+    {
+        return Domain->SendConnectionIds;
+    }
+
     TOptional<FString> FEzUserDomain::NextPageToken() const
     {
         return Domain->NextPageToken;

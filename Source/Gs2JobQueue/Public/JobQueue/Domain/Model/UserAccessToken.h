@@ -23,7 +23,6 @@
 #include "JobQueue/Gs2JobQueue.h"
 #include "JobQueue/Domain/Iterator/DescribeNamespacesIterator.h"
 #include "JobQueue/Domain/Iterator/DescribeJobsByUserIdIterator.h"
-#include "JobQueue/Domain/Iterator/DescribeDeadLetterJobsByUserIdIterator.h"
 
 namespace Gs2::Core::Domain
 {
@@ -44,8 +43,6 @@ namespace Gs2::JobQueue::Domain::Model
     class FJobAccessTokenDomain;
     class FJobResultDomain;
     class FJobResultAccessTokenDomain;
-    class FDeadLetterJobDomain;
-    class FDeadLetterJobAccessTokenDomain;
     class FUserDomain;
     class FUserAccessTokenDomain;
 
@@ -121,10 +118,6 @@ namespace Gs2::JobQueue::Domain::Model
 
         TSharedPtr<Gs2::JobQueue::Domain::Model::FJobAccessTokenDomain> Job(
             const FString JobName
-        );
-
-        TSharedPtr<Gs2::JobQueue::Domain::Model::FDeadLetterJobAccessTokenDomain> DeadLetterJob(
-            const FString DeadLetterJobName
         );
 
         static FString CreateCacheParentKey(

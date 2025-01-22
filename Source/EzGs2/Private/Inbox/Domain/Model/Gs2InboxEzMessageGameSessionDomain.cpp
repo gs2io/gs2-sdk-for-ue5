@@ -19,16 +19,6 @@
 namespace Gs2::UE5::Inbox::Domain::Model
 {
 
-    TOptional<FString> FEzMessageGameSessionDomain::TransactionId() const
-    {
-        return Domain->TransactionId;
-    }
-
-    TOptional<bool> FEzMessageGameSessionDomain::AutoRunStampSheet() const
-    {
-        return Domain->AutoRunStampSheet;
-    }
-
     TOptional<FString> FEzMessageGameSessionDomain::NamespaceName() const
     {
         return Domain->NamespaceName;

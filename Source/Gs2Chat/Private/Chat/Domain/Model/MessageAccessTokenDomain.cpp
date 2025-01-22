@@ -260,7 +260,7 @@ namespace Gs2::Chat::Domain::Model
             Gs2::Chat::Domain::Model::FMessageDomain::CreateCacheKey(
                 MessageName
             ),
-            [Callback](TSharedPtr<Gs2Object> obj)
+            [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::Chat::Model::FMessage>(obj));
             }

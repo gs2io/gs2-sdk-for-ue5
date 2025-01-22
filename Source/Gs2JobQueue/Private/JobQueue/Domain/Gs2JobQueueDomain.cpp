@@ -28,7 +28,6 @@
 #include "JobQueue/Domain/Model/Namespace.h"
 #include "JobQueue/Domain/Model/Job.h"
 #include "JobQueue/Domain/Model/JobResult.h"
-#include "JobQueue/Domain/Model/DeadLetterJob.h"
 #include "JobQueue/Domain/Model/User.h"
 #include "JobQueue/Domain/Model/UserAccessToken.h"
 #include "Core/Domain/Transaction/AutoJobQueueAccessTokenDomain.h"

@@ -433,6 +433,24 @@ namespace Gs2::Stamina
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::Rest::FApplyStaminaTask>> FGs2StaminaRestClient::ApplyStamina(
+        const Request::FApplyStaminaRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FApplyStaminaTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FApplyStaminaByUserIdTask>> FGs2StaminaRestClient::ApplyStaminaByUserId(
+        const Request::FApplyStaminaByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FApplyStaminaByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::Rest::FRecoverStaminaByUserIdTask>> FGs2StaminaRestClient::RecoverStaminaByUserId(
         const Request::FRecoverStaminaByUserIdRequestPtr Request) const
     {

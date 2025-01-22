@@ -28,6 +28,10 @@
 #include "Model/EmitEvent.h"
 #include "Model/RandomStatus.h"
 #include "Model/RandomUsed.h"
+#include "Model/VerifyActionResult.h"
+#include "Model/ConsumeActionResult.h"
+#include "Model/AcquireActionResult.h"
+#include "Model/TransactionResult.h"
 #include "Model/LogSetting.h"
 #include "Model/ScriptSetting.h"
 

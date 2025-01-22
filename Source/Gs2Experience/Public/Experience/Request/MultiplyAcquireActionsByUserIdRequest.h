@@ -33,6 +33,7 @@ namespace Gs2::Experience::Request
         TOptional<FString> PropertyIdValue;
         TOptional<FString> RateNameValue;
         TSharedPtr<TArray<TSharedPtr<Model::FAcquireAction>>> AcquireActionsValue;
+        TOptional<float> BaseRateValue;
         TOptional<FString> TimeOffsetTokenValue;
         TOptional<FString> DuplicationAvoiderValue;
         
@@ -51,6 +52,7 @@ namespace Gs2::Experience::Request
         TSharedPtr<FMultiplyAcquireActionsByUserIdRequest> WithPropertyId(const TOptional<FString> PropertyId);
         TSharedPtr<FMultiplyAcquireActionsByUserIdRequest> WithRateName(const TOptional<FString> RateName);
         TSharedPtr<FMultiplyAcquireActionsByUserIdRequest> WithAcquireActions(const TSharedPtr<TArray<TSharedPtr<Model::FAcquireAction>>> AcquireActions);
+        TSharedPtr<FMultiplyAcquireActionsByUserIdRequest> WithBaseRate(const TOptional<float> BaseRate);
         TSharedPtr<FMultiplyAcquireActionsByUserIdRequest> WithTimeOffsetToken(const TOptional<FString> TimeOffsetToken);
         TSharedPtr<FMultiplyAcquireActionsByUserIdRequest> WithDuplicationAvoider(const TOptional<FString> DuplicationAvoider);
 
@@ -60,6 +62,8 @@ namespace Gs2::Experience::Request
         TOptional<FString> GetExperienceName() const;
         TOptional<FString> GetPropertyId() const;
         TOptional<FString> GetRateName() const;TSharedPtr<TArray<TSharedPtr<Model::FAcquireAction>>> GetAcquireActions() const;
+        TOptional<float> GetBaseRate() const;
+        FString GetBaseRateString() const;
         TOptional<FString> GetTimeOffsetToken() const;
         TOptional<FString> GetDuplicationAvoider() const;
 

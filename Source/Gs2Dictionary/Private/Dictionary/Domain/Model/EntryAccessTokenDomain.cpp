@@ -29,6 +29,8 @@
 #include "Dictionary/Domain/Model/EntryModelMaster.h"
 #include "Dictionary/Domain/Model/Entry.h"
 #include "Dictionary/Domain/Model/EntryAccessToken.h"
+#include "Dictionary/Domain/Model/Like.h"
+#include "Dictionary/Domain/Model/LikeAccessToken.h"
 #include "Dictionary/Domain/Model/CurrentEntryMaster.h"
 #include "Dictionary/Domain/Model/User.h"
 #include "Dictionary/Domain/Model/UserAccessToken.h"

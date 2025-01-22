@@ -271,6 +271,15 @@ namespace Gs2::SerialKey
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::WebSocket::FIssueOnceByStampSheetTask>> FGs2SerialKeyWebSocketClient::IssueOnceByStampSheet(
+        const Request::FIssueOnceByStampSheetRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FIssueOnceByStampSheetTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::WebSocket::FDescribeCampaignModelsTask>> FGs2SerialKeyWebSocketClient::DescribeCampaignModels(
         const Request::FDescribeCampaignModelsRequestPtr Request) const
     {

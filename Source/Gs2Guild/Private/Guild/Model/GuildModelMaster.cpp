@@ -30,6 +30,8 @@ namespace Gs2::Guild::Model
         GuildMasterRoleValue(TOptional<FString>()),
         GuildMemberDefaultRoleValue(TOptional<FString>()),
         RejoinCoolTimeMinutesValue(TOptional<int32>()),
+        MaxConcurrentJoinGuildsValue(TOptional<int32>()),
+        MaxConcurrentGuildMasterCountValue(TOptional<int32>()),
         CreatedAtValue(TOptional<int64>()),
         UpdatedAtValue(TOptional<int64>()),
         RevisionValue(TOptional<int64>())
@@ -50,6 +52,8 @@ namespace Gs2::Guild::Model
         GuildMasterRoleValue(From.GuildMasterRoleValue),
         GuildMemberDefaultRoleValue(From.GuildMemberDefaultRoleValue),
         RejoinCoolTimeMinutesValue(From.RejoinCoolTimeMinutesValue),
+        MaxConcurrentJoinGuildsValue(From.MaxConcurrentJoinGuildsValue),
+        MaxConcurrentGuildMasterCountValue(From.MaxConcurrentGuildMasterCountValue),
         CreatedAtValue(From.CreatedAtValue),
         UpdatedAtValue(From.UpdatedAtValue),
         RevisionValue(From.RevisionValue)
@@ -141,6 +145,22 @@ namespace Gs2::Guild::Model
     )
     {
         this->RejoinCoolTimeMinutesValue = RejoinCoolTimeMinutes;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FGuildModelMaster> FGuildModelMaster::WithMaxConcurrentJoinGuilds(
+        const TOptional<int32> MaxConcurrentJoinGuilds
+    )
+    {
+        this->MaxConcurrentJoinGuildsValue = MaxConcurrentJoinGuilds;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FGuildModelMaster> FGuildModelMaster::WithMaxConcurrentGuildMasterCount(
+        const TOptional<int32> MaxConcurrentGuildMasterCount
+    )
+    {
+        this->MaxConcurrentGuildMasterCountValue = MaxConcurrentGuildMasterCount;
         return SharedThis(this);
     }
 
@@ -246,6 +266,32 @@ namespace Gs2::Guild::Model
             return FString("null");
         }
         return FString::Printf(TEXT("%d"), RejoinCoolTimeMinutesValue.GetValue());
+    }
+    TOptional<int32> FGuildModelMaster::GetMaxConcurrentJoinGuilds() const
+    {
+        return MaxConcurrentJoinGuildsValue;
+    }
+
+    FString FGuildModelMaster::GetMaxConcurrentJoinGuildsString() const
+    {
+        if (!MaxConcurrentJoinGuildsValue.IsSet())
+        {
+            return FString("null");
+        }
+        return FString::Printf(TEXT("%d"), MaxConcurrentJoinGuildsValue.GetValue());
+    }
+    TOptional<int32> FGuildModelMaster::GetMaxConcurrentGuildMasterCount() const
+    {
+        return MaxConcurrentGuildMasterCountValue;
+    }
+
+    FString FGuildModelMaster::GetMaxConcurrentGuildMasterCountString() const
+    {
+        if (!MaxConcurrentGuildMasterCountValue.IsSet())
+        {
+            return FString("null");
+        }
+        return FString::Printf(TEXT("%d"), MaxConcurrentGuildMasterCountValue.GetValue());
     }
     TOptional<int64> FGuildModelMaster::GetCreatedAt() const
     {
@@ -439,6 +485,24 @@ namespace Gs2::Guild::Model
                     }
                     return TOptional<int32>();
                 }() : TOptional<int32>())
+            ->WithMaxConcurrentJoinGuilds(Data->HasField(ANSI_TO_TCHAR("maxConcurrentJoinGuilds")) ? [Data]() -> TOptional<int32>
+                {
+                    int32 v;
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("maxConcurrentJoinGuilds"), v))
+                    {
+                        return TOptional(v);
+                    }
+                    return TOptional<int32>();
+                }() : TOptional<int32>())
+            ->WithMaxConcurrentGuildMasterCount(Data->HasField(ANSI_TO_TCHAR("maxConcurrentGuildMasterCount")) ? [Data]() -> TOptional<int32>
+                {
+                    int32 v;
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("maxConcurrentGuildMasterCount"), v))
+                    {
+                        return TOptional(v);
+                    }
+                    return TOptional<int32>();
+                }() : TOptional<int32>())
             ->WithCreatedAt(Data->HasField(ANSI_TO_TCHAR("createdAt")) ? [Data]() -> TOptional<int64>
                 {
                     int64 v;
@@ -519,6 +583,14 @@ namespace Gs2::Guild::Model
         if (RejoinCoolTimeMinutesValue.IsSet())
         {
             JsonRootObject->SetNumberField("rejoinCoolTimeMinutes", RejoinCoolTimeMinutesValue.GetValue());
+        }
+        if (MaxConcurrentJoinGuildsValue.IsSet())
+        {
+            JsonRootObject->SetNumberField("maxConcurrentJoinGuilds", MaxConcurrentJoinGuildsValue.GetValue());
+        }
+        if (MaxConcurrentGuildMasterCountValue.IsSet())
+        {
+            JsonRootObject->SetNumberField("maxConcurrentGuildMasterCount", MaxConcurrentGuildMasterCountValue.GetValue());
         }
         if (CreatedAtValue.IsSet())
         {

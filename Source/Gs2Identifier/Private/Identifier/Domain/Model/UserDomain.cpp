@@ -396,44 +396,6 @@ namespace Gs2::Identifier::Domain::Model
         );
     }
 
-    Gs2::Identifier::Domain::Iterator::FDescribePasswordsIteratorPtr FUserDomain::Passwords(
-    ) const
-    {
-        return MakeShared<Gs2::Identifier::Domain::Iterator::FDescribePasswordsIterator>(
-            Gs2,
-            Client,
-            UserName
-        );
-    }
-
-    Gs2::Core::Domain::CallbackID FUserDomain::SubscribePasswords(
-    TFunction<void()> Callback
-    )
-    {
-        return Gs2->Cache->ListSubscribe(
-            Gs2::Identifier::Model::FPassword::TypeName,
-            Gs2::Identifier::Domain::Model::FUserDomain::CreateCacheParentKey(
-                UserName,
-                "Password"
-            ),
-            Callback
-        );
-    }
-
-    void FUserDomain::UnsubscribePasswords(
-        Gs2::Core::Domain::CallbackID CallbackID
-    )
-    {
-        Gs2->Cache->ListUnsubscribe(
-            Gs2::Identifier::Model::FPassword::TypeName,
-            Gs2::Identifier::Domain::Model::FUserDomain::CreateCacheParentKey(
-                UserName,
-                "Password"
-            ),
-            CallbackID
-        );
-    }
-
     TSharedPtr<Gs2::Identifier::Domain::Model::FPasswordDomain> FUserDomain::Password(
     )
     {

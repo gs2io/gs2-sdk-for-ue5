@@ -28,6 +28,8 @@ namespace Gs2::Guild::Request
         Attribute3Value(TOptional<int32>()),
         Attribute4Value(TOptional<int32>()),
         Attribute5Value(TOptional<int32>()),
+        MetadataValue(TOptional<FString>()),
+        MemberMetadataValue(TOptional<FString>()),
         JoinPolicyValue(TOptional<FString>()),
         CustomRolesValue(nullptr),
         GuildMemberDefaultRoleValue(TOptional<FString>()),
@@ -47,6 +49,8 @@ namespace Gs2::Guild::Request
         Attribute3Value(From.Attribute3Value),
         Attribute4Value(From.Attribute4Value),
         Attribute5Value(From.Attribute5Value),
+        MetadataValue(From.MetadataValue),
+        MemberMetadataValue(From.MemberMetadataValue),
         JoinPolicyValue(From.JoinPolicyValue),
         CustomRolesValue(From.CustomRolesValue),
         GuildMemberDefaultRoleValue(From.GuildMemberDefaultRoleValue),
@@ -131,6 +135,22 @@ namespace Gs2::Guild::Request
     )
     {
         this->Attribute5Value = Attribute5;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FCreateGuildByUserIdRequest> FCreateGuildByUserIdRequest::WithMetadata(
+        const TOptional<FString> Metadata
+    )
+    {
+        this->MetadataValue = Metadata;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FCreateGuildByUserIdRequest> FCreateGuildByUserIdRequest::WithMemberMetadata(
+        const TOptional<FString> MemberMetadata
+    )
+    {
+        this->MemberMetadataValue = MemberMetadata;
         return SharedThis(this);
     }
 
@@ -269,6 +289,16 @@ namespace Gs2::Guild::Request
         return FString::Printf(TEXT("%d"), Attribute5Value.GetValue());
     }
 
+    TOptional<FString> FCreateGuildByUserIdRequest::GetMetadata() const
+    {
+        return MetadataValue;
+    }
+
+    TOptional<FString> FCreateGuildByUserIdRequest::GetMemberMetadata() const
+    {
+        return MemberMetadataValue;
+    }
+
     TOptional<FString> FCreateGuildByUserIdRequest::GetJoinPolicy() const
     {
         return JoinPolicyValue;
@@ -386,6 +416,24 @@ namespace Gs2::Guild::Request
                   }
                   return TOptional<int32>();
               }() : TOptional<int32>())
+            ->WithMetadata(Data->HasField(ANSI_TO_TCHAR("metadata")) ? [Data]() -> TOptional<FString>
+              {
+                  FString v("");
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("metadata"), v))
+                  {
+                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                  }
+                  return TOptional<FString>();
+              }() : TOptional<FString>())
+            ->WithMemberMetadata(Data->HasField(ANSI_TO_TCHAR("memberMetadata")) ? [Data]() -> TOptional<FString>
+              {
+                  FString v("");
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("memberMetadata"), v))
+                  {
+                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                  }
+                  return TOptional<FString>();
+              }() : TOptional<FString>())
             ->WithJoinPolicy(Data->HasField(ANSI_TO_TCHAR("joinPolicy")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
@@ -470,6 +518,14 @@ namespace Gs2::Guild::Request
         if (Attribute5Value.IsSet())
         {
             JsonRootObject->SetNumberField("attribute5", Attribute5Value.GetValue());
+        }
+        if (MetadataValue.IsSet())
+        {
+            JsonRootObject->SetStringField("metadata", MetadataValue.GetValue());
+        }
+        if (MemberMetadataValue.IsSet())
+        {
+            JsonRootObject->SetStringField("memberMetadata", MemberMetadataValue.GetValue());
         }
         if (JoinPolicyValue.IsSet())
         {

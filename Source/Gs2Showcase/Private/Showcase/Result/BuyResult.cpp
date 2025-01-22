@@ -23,7 +23,10 @@ namespace Gs2::Showcase::Result
         TransactionIdValue(TOptional<FString>()),
         StampSheetValue(TOptional<FString>()),
         StampSheetEncryptionKeyIdValue(TOptional<FString>()),
-        AutoRunStampSheetValue(TOptional<bool>())
+        AutoRunStampSheetValue(TOptional<bool>()),
+        AtomicCommitValue(TOptional<bool>()),
+        TransactionValue(TOptional<FString>()),
+        TransactionResultValue(nullptr)
     {
     }
 
@@ -34,7 +37,10 @@ namespace Gs2::Showcase::Result
         TransactionIdValue(From.TransactionIdValue),
         StampSheetValue(From.StampSheetValue),
         StampSheetEncryptionKeyIdValue(From.StampSheetEncryptionKeyIdValue),
-        AutoRunStampSheetValue(From.AutoRunStampSheetValue)
+        AutoRunStampSheetValue(From.AutoRunStampSheetValue),
+        AtomicCommitValue(From.AtomicCommitValue),
+        TransactionValue(From.TransactionValue),
+        TransactionResultValue(From.TransactionResultValue)
     {
     }
 
@@ -78,6 +84,30 @@ namespace Gs2::Showcase::Result
         return SharedThis(this);
     }
 
+    TSharedPtr<FBuyResult> FBuyResult::WithAtomicCommit(
+        const TOptional<bool> AtomicCommit
+    )
+    {
+        this->AtomicCommitValue = AtomicCommit;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FBuyResult> FBuyResult::WithTransaction(
+        const TOptional<FString> Transaction
+    )
+    {
+        this->TransactionValue = Transaction;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FBuyResult> FBuyResult::WithTransactionResult(
+        const TSharedPtr<Gs2::Core::Model::FTransactionResult> TransactionResult
+    )
+    {
+        this->TransactionResultValue = TransactionResult;
+        return SharedThis(this);
+    }
+
     TSharedPtr<Model::FSalesItem> FBuyResult::GetItem() const
     {
         if (!ItemValue.IsValid())
@@ -114,6 +144,34 @@ namespace Gs2::Showcase::Result
             return FString("null");
         }
         return FString(AutoRunStampSheetValue.GetValue() ? "true" : "false");
+    }
+
+    TOptional<bool> FBuyResult::GetAtomicCommit() const
+    {
+        return AtomicCommitValue;
+    }
+
+    FString FBuyResult::GetAtomicCommitString() const
+    {
+        if (!AtomicCommitValue.IsSet())
+        {
+            return FString("null");
+        }
+        return FString(AtomicCommitValue.GetValue() ? "true" : "false");
+    }
+
+    TOptional<FString> FBuyResult::GetTransaction() const
+    {
+        return TransactionValue;
+    }
+
+    TSharedPtr<Gs2::Core::Model::FTransactionResult> FBuyResult::GetTransactionResult() const
+    {
+        if (!TransactionResultValue.IsValid())
+        {
+            return nullptr;
+        }
+        return TransactionResultValue;
     }
 
     TSharedPtr<FBuyResult> FBuyResult::FromJson(const TSharedPtr<FJsonObject> Data)
@@ -165,7 +223,33 @@ namespace Gs2::Showcase::Result
                         return TOptional(v);
                     }
                     return TOptional<bool>();
-                }() : TOptional<bool>());
+                }() : TOptional<bool>())
+            ->WithAtomicCommit(Data->HasField(ANSI_TO_TCHAR("atomicCommit")) ? [Data]() -> TOptional<bool>
+                {
+                    bool v;
+                    if (Data->TryGetBoolField(ANSI_TO_TCHAR("atomicCommit"), v))
+                    {
+                        return TOptional(v);
+                    }
+                    return TOptional<bool>();
+                }() : TOptional<bool>())
+            ->WithTransaction(Data->HasField(ANSI_TO_TCHAR("transaction")) ? [Data]() -> TOptional<FString>
+                {
+                    FString v("");
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("transaction"), v))
+                    {
+                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                    }
+                    return TOptional<FString>();
+                }() : TOptional<FString>())
+            ->WithTransactionResult(Data->HasField(ANSI_TO_TCHAR("transactionResult")) ? [Data]() -> Gs2::Core::Model::FTransactionResultPtr
+                 {
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("transactionResult")))
+                    {
+                        return nullptr;
+                    }
+                    return Gs2::Core::Model::FTransactionResult::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("transactionResult")));
+                 }() : nullptr);
     }
 
     TSharedPtr<FJsonObject> FBuyResult::ToJson() const
@@ -190,6 +274,18 @@ namespace Gs2::Showcase::Result
         if (AutoRunStampSheetValue.IsSet())
         {
             JsonRootObject->SetBoolField("autoRunStampSheet", AutoRunStampSheetValue.GetValue());
+        }
+        if (AtomicCommitValue.IsSet())
+        {
+            JsonRootObject->SetBoolField("atomicCommit", AtomicCommitValue.GetValue());
+        }
+        if (TransactionValue.IsSet())
+        {
+            JsonRootObject->SetStringField("transaction", TransactionValue.GetValue());
+        }
+        if (TransactionResultValue != nullptr && TransactionResultValue.IsValid())
+        {
+            JsonRootObject->SetObjectField("transactionResult", TransactionResultValue->ToJson());
         }
         return JsonRootObject;
     }

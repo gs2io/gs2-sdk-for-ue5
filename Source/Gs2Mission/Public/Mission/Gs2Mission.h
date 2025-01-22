@@ -35,6 +35,10 @@
 #include "Model/ConsumeAction.h"
 #include "Model/VerifyAction.h"
 #include "Model/Config.h"
+#include "Model/VerifyActionResult.h"
+#include "Model/ConsumeActionResult.h"
+#include "Model/AcquireActionResult.h"
+#include "Model/TransactionResult.h"
 #include "Model/LogSetting.h"
 #include "Model/GitHubCheckoutSetting.h"
 #include "Model/ScriptSetting.h"
@@ -345,6 +349,12 @@
 #include "Result/VerifyCounterValueByUserIdResult.h"
 #include "Task/Rest/VerifyCounterValueByUserIdTask.h"
 #include "Task/WebSocket/VerifyCounterValueByUserIdTask.h"
+
+// DeleteCounter
+#include "Request/DeleteCounterRequest.h"
+#include "Result/DeleteCounterResult.h"
+#include "Task/Rest/DeleteCounterTask.h"
+#include "Task/WebSocket/DeleteCounterTask.h"
 
 // DeleteCounterByUserId
 #include "Request/DeleteCounterByUserIdRequest.h"

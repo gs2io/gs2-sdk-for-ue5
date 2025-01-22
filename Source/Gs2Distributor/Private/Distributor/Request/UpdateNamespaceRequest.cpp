@@ -23,6 +23,7 @@ namespace Gs2::Distributor::Request
         DescriptionValue(TOptional<FString>()),
         AssumeUserIdValue(TOptional<FString>()),
         AutoRunStampSheetNotificationValue(nullptr),
+        AutoRunTransactionNotificationValue(nullptr),
         LogSettingValue(nullptr)
     {
     }
@@ -34,6 +35,7 @@ namespace Gs2::Distributor::Request
         DescriptionValue(From.DescriptionValue),
         AssumeUserIdValue(From.AssumeUserIdValue),
         AutoRunStampSheetNotificationValue(From.AutoRunStampSheetNotificationValue),
+        AutoRunTransactionNotificationValue(From.AutoRunTransactionNotificationValue),
         LogSettingValue(From.LogSettingValue)
     {
     }
@@ -78,6 +80,14 @@ namespace Gs2::Distributor::Request
         return SharedThis(this);
     }
 
+    TSharedPtr<FUpdateNamespaceRequest> FUpdateNamespaceRequest::WithAutoRunTransactionNotification(
+        const TSharedPtr<Model::FNotificationSetting> AutoRunTransactionNotification
+    )
+    {
+        this->AutoRunTransactionNotificationValue = AutoRunTransactionNotification;
+        return SharedThis(this);
+    }
+
     TSharedPtr<FUpdateNamespaceRequest> FUpdateNamespaceRequest::WithLogSetting(
         const TSharedPtr<Model::FLogSetting> LogSetting
     )
@@ -113,6 +123,15 @@ namespace Gs2::Distributor::Request
             return nullptr;
         }
         return AutoRunStampSheetNotificationValue;
+    }
+
+    TSharedPtr<Model::FNotificationSetting> FUpdateNamespaceRequest::GetAutoRunTransactionNotification() const
+    {
+        if (!AutoRunTransactionNotificationValue.IsValid())
+        {
+            return nullptr;
+        }
+        return AutoRunTransactionNotificationValue;
     }
 
     TSharedPtr<Model::FLogSetting> FUpdateNamespaceRequest::GetLogSetting() const
@@ -166,6 +185,14 @@ namespace Gs2::Distributor::Request
                   }
                   return Model::FNotificationSetting::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("autoRunStampSheetNotification")));
               }() : nullptr)
+          ->WithAutoRunTransactionNotification(Data->HasField(ANSI_TO_TCHAR("autoRunTransactionNotification")) ? [Data]() -> Model::FNotificationSettingPtr
+              {
+                  if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("autoRunTransactionNotification")))
+                  {
+                      return nullptr;
+                  }
+                  return Model::FNotificationSetting::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("autoRunTransactionNotification")));
+              }() : nullptr)
           ->WithLogSetting(Data->HasField(ANSI_TO_TCHAR("logSetting")) ? [Data]() -> Model::FLogSettingPtr
               {
                   if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("logSetting")))
@@ -198,6 +225,10 @@ namespace Gs2::Distributor::Request
         if (AutoRunStampSheetNotificationValue != nullptr && AutoRunStampSheetNotificationValue.IsValid())
         {
             JsonRootObject->SetObjectField("autoRunStampSheetNotification", AutoRunStampSheetNotificationValue->ToJson());
+        }
+        if (AutoRunTransactionNotificationValue != nullptr && AutoRunTransactionNotificationValue.IsValid())
+        {
+            JsonRootObject->SetObjectField("autoRunTransactionNotification", AutoRunTransactionNotificationValue->ToJson());
         }
         if (LogSettingValue != nullptr && LogSettingValue.IsValid())
         {

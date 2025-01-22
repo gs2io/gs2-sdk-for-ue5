@@ -110,6 +110,10 @@
 #include "Task/Rest/ConsumeStaminaTask.h"
 #include "Request/ConsumeStaminaByUserIdRequest.h"
 #include "Task/Rest/ConsumeStaminaByUserIdTask.h"
+#include "Request/ApplyStaminaRequest.h"
+#include "Task/Rest/ApplyStaminaTask.h"
+#include "Request/ApplyStaminaByUserIdRequest.h"
+#include "Task/Rest/ApplyStaminaByUserIdTask.h"
 #include "Request/RecoverStaminaByUserIdRequest.h"
 #include "Task/Rest/RecoverStaminaByUserIdTask.h"
 #include "Request/RaiseMaxValueByUserIdRequest.h"
@@ -340,6 +344,14 @@ namespace Gs2::Stamina
 
         TSharedPtr<FAsyncTask<Task::Rest::FConsumeStaminaByUserIdTask>> ConsumeStaminaByUserId(
             const Request::FConsumeStaminaByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FApplyStaminaTask>> ApplyStamina(
+            const Request::FApplyStaminaRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FApplyStaminaByUserIdTask>> ApplyStaminaByUserId(
+            const Request::FApplyStaminaByUserIdRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::Rest::FRecoverStaminaByUserIdTask>> RecoverStaminaByUserId(

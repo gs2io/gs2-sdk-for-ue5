@@ -41,7 +41,7 @@ namespace Gs2::Ranking2::Domain::Iterator
             const Gs2::Ranking2::FGs2Ranking2RestClientPtr Client,
             const TOptional<FString> NamespaceName,
             const Gs2::Auth::Model::FAccessTokenPtr AccessToken,
-            const TOptional<FString> RankingName = TOptional<FString>()
+            const TOptional<FString> RankingName
         );
 
         FDescribeSubscribesIterator(

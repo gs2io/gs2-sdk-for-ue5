@@ -124,6 +124,7 @@ namespace Gs2::Ranking2::Domain::Iterator
                 MakeShared<Gs2::Ranking2::Request::FDescribeSubscribesByUserIdRequest>()
                     ->WithNamespaceName(Self->NamespaceName)
                     ->WithUserId(Self->UserId)
+                    ->WithRankingName(Self->RankingName)
                     ->WithPageToken(PageToken)
                     ->WithLimit(FetchSize)
             );

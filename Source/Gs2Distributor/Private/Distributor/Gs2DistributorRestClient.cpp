@@ -298,6 +298,33 @@ namespace Gs2::Distributor
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::Rest::FSignFreezeMasterDataTimestampTask>> FGs2DistributorRestClient::SignFreezeMasterDataTimestamp(
+        const Request::FSignFreezeMasterDataTimestampRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FSignFreezeMasterDataTimestampTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FFreezeMasterDataBySignedTimestampTask>> FGs2DistributorRestClient::FreezeMasterDataBySignedTimestamp(
+        const Request::FFreezeMasterDataBySignedTimestampRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FFreezeMasterDataBySignedTimestampTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FBatchExecuteApiTask>> FGs2DistributorRestClient::BatchExecuteApi(
+        const Request::FBatchExecuteApiRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FBatchExecuteApiTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::Rest::FIfExpressionByUserIdTask>> FGs2DistributorRestClient::IfExpressionByUserId(
         const Request::FIfExpressionByUserIdRequestPtr Request) const
     {
@@ -365,6 +392,33 @@ namespace Gs2::Distributor
         const Request::FGetStampSheetResultByUserIdRequestPtr Request) const
     {
         return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FGetStampSheetResultByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FRunTransactionTask>> FGs2DistributorRestClient::RunTransaction(
+        const Request::FRunTransactionRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FRunTransactionTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FGetTransactionResultTask>> FGs2DistributorRestClient::GetTransactionResult(
+        const Request::FGetTransactionResultRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FGetTransactionResultTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FGetTransactionResultByUserIdTask>> FGs2DistributorRestClient::GetTransactionResultByUserId(
+        const Request::FGetTransactionResultByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FGetTransactionResultByUserIdTask>>(
             Session,
             Request
         );

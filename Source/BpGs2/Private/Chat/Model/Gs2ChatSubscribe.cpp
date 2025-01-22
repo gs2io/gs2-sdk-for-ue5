@@ -15,5 +15,6 @@
  */
 
 #include "Chat/Model/Gs2ChatSubscribe.h"
+#include "Chat/Domain/EzGs2Chat.h"
 #include "Core/Model/Gs2AccessToken.h"
 #include "Core/BpGs2Constant.h"

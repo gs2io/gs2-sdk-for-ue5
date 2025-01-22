@@ -181,15 +181,6 @@ namespace Gs2::Identifier
         );
     }
 
-    TSharedPtr<FAsyncTask<Task::Rest::FDescribePasswordsTask>> FGs2IdentifierRestClient::DescribePasswords(
-        const Request::FDescribePasswordsRequestPtr Request) const
-    {
-        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FDescribePasswordsTask>>(
-            Session,
-            Request
-        );
-    }
-
     TSharedPtr<FAsyncTask<Task::Rest::FCreatePasswordTask>> FGs2IdentifierRestClient::CreatePassword(
         const Request::FCreatePasswordRequestPtr Request) const
     {

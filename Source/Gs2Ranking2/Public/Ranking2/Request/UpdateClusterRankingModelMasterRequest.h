@@ -38,6 +38,7 @@ namespace Gs2::Ranking2::Request
         TOptional<int32> ScoreTtlDaysValue;
         TOptional<FString> OrderDirectionValue;
         TSharedPtr<TArray<TSharedPtr<Model::FRankingReward>>> RankingRewardsValue;
+        TOptional<FString> RewardCalculationIndexValue;
         TOptional<FString> EntryPeriodEventIdValue;
         TOptional<FString> AccessPeriodEventIdValue;
         
@@ -61,6 +62,7 @@ namespace Gs2::Ranking2::Request
         TSharedPtr<FUpdateClusterRankingModelMasterRequest> WithScoreTtlDays(const TOptional<int32> ScoreTtlDays);
         TSharedPtr<FUpdateClusterRankingModelMasterRequest> WithOrderDirection(const TOptional<FString> OrderDirection);
         TSharedPtr<FUpdateClusterRankingModelMasterRequest> WithRankingRewards(const TSharedPtr<TArray<TSharedPtr<Model::FRankingReward>>> RankingRewards);
+        TSharedPtr<FUpdateClusterRankingModelMasterRequest> WithRewardCalculationIndex(const TOptional<FString> RewardCalculationIndex);
         TSharedPtr<FUpdateClusterRankingModelMasterRequest> WithEntryPeriodEventId(const TOptional<FString> EntryPeriodEventId);
         TSharedPtr<FUpdateClusterRankingModelMasterRequest> WithAccessPeriodEventId(const TOptional<FString> AccessPeriodEventId);
 
@@ -79,6 +81,7 @@ namespace Gs2::Ranking2::Request
         TOptional<int32> GetScoreTtlDays() const;
         FString GetScoreTtlDaysString() const;
         TOptional<FString> GetOrderDirection() const;TSharedPtr<TArray<TSharedPtr<Model::FRankingReward>>> GetRankingRewards() const;
+        TOptional<FString> GetRewardCalculationIndex() const;
         TOptional<FString> GetEntryPeriodEventId() const;
         TOptional<FString> GetAccessPeriodEventId() const;
 

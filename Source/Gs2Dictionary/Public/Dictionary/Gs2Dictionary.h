@@ -21,6 +21,7 @@
 #include "Model/EntryModel.h"
 #include "Model/EntryModelMaster.h"
 #include "Model/Entry.h"
+#include "Model/Like.h"
 #include "Model/CurrentEntryMaster.h"
 #include "Model/Config.h"
 #include "Model/GitHubCheckoutSetting.h"
@@ -236,6 +237,66 @@
 #include "Result/VerifyEntryByStampTaskResult.h"
 #include "Task/Rest/VerifyEntryByStampTaskTask.h"
 #include "Task/WebSocket/VerifyEntryByStampTaskTask.h"
+
+// DescribeLikes
+#include "Request/DescribeLikesRequest.h"
+#include "Result/DescribeLikesResult.h"
+#include "Task/Rest/DescribeLikesTask.h"
+#include "Task/WebSocket/DescribeLikesTask.h"
+
+// DescribeLikesByUserId
+#include "Request/DescribeLikesByUserIdRequest.h"
+#include "Result/DescribeLikesByUserIdResult.h"
+#include "Task/Rest/DescribeLikesByUserIdTask.h"
+#include "Task/WebSocket/DescribeLikesByUserIdTask.h"
+
+// AddLikes
+#include "Request/AddLikesRequest.h"
+#include "Result/AddLikesResult.h"
+#include "Task/Rest/AddLikesTask.h"
+#include "Task/WebSocket/AddLikesTask.h"
+
+// AddLikesByUserId
+#include "Request/AddLikesByUserIdRequest.h"
+#include "Result/AddLikesByUserIdResult.h"
+#include "Task/Rest/AddLikesByUserIdTask.h"
+#include "Task/WebSocket/AddLikesByUserIdTask.h"
+
+// GetLike
+#include "Request/GetLikeRequest.h"
+#include "Result/GetLikeResult.h"
+#include "Task/Rest/GetLikeTask.h"
+#include "Task/WebSocket/GetLikeTask.h"
+
+// GetLikeByUserId
+#include "Request/GetLikeByUserIdRequest.h"
+#include "Result/GetLikeByUserIdResult.h"
+#include "Task/Rest/GetLikeByUserIdTask.h"
+#include "Task/WebSocket/GetLikeByUserIdTask.h"
+
+// ResetLikes
+#include "Request/ResetLikesRequest.h"
+#include "Result/ResetLikesResult.h"
+#include "Task/Rest/ResetLikesTask.h"
+#include "Task/WebSocket/ResetLikesTask.h"
+
+// ResetLikesByUserId
+#include "Request/ResetLikesByUserIdRequest.h"
+#include "Result/ResetLikesByUserIdResult.h"
+#include "Task/Rest/ResetLikesByUserIdTask.h"
+#include "Task/WebSocket/ResetLikesByUserIdTask.h"
+
+// DeleteLikes
+#include "Request/DeleteLikesRequest.h"
+#include "Result/DeleteLikesResult.h"
+#include "Task/Rest/DeleteLikesTask.h"
+#include "Task/WebSocket/DeleteLikesTask.h"
+
+// DeleteLikesByUserId
+#include "Request/DeleteLikesByUserIdRequest.h"
+#include "Result/DeleteLikesByUserIdResult.h"
+#include "Task/Rest/DeleteLikesByUserIdTask.h"
+#include "Task/WebSocket/DeleteLikesByUserIdTask.h"
 
 // ExportMaster
 #include "Request/ExportMasterRequest.h"

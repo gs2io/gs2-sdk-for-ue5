@@ -168,6 +168,32 @@ namespace Gs2::Stamina::Domain::Model
             Request::FConsumeStaminaByUserIdRequestPtr Request
         );
 
+        class GS2STAMINA_API FApplyTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Stamina::Domain::Model::FStaminaDomain>,
+            public TSharedFromThis<FApplyTask>
+        {
+            const TSharedPtr<FStaminaDomain> Self;
+            const Request::FApplyStaminaByUserIdRequestPtr Request;
+        public:
+            explicit FApplyTask(
+                const TSharedPtr<FStaminaDomain>& Self,
+                const Request::FApplyStaminaByUserIdRequestPtr Request
+            );
+
+            FApplyTask(
+                const FApplyTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Stamina::Domain::Model::FStaminaDomain>> Result
+            ) override;
+        };
+        friend FApplyTask;
+
+        TSharedPtr<FAsyncTask<FApplyTask>> Apply(
+            Request::FApplyStaminaByUserIdRequestPtr Request
+        );
+
         class GS2STAMINA_API FRecoverTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Stamina::Domain::Model::FStaminaDomain>,
             public TSharedFromThis<FRecoverTask>

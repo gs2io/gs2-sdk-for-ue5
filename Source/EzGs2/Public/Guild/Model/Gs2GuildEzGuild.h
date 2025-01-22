@@ -33,6 +33,7 @@ namespace Gs2::UE5::Guild::Model
         TOptional<int32> Attribute3Value;
         TOptional<int32> Attribute4Value;
         TOptional<int32> Attribute5Value;
+        TOptional<FString> MetadataValue;
         TOptional<FString> JoinPolicyValue;
         TSharedPtr<TArray<TSharedPtr<Gs2::UE5::Guild::Model::FEzRoleModel>>> CustomRolesValue;
         TSharedPtr<TArray<TSharedPtr<Gs2::UE5::Guild::Model::FEzMember>>> MembersValue;
@@ -46,6 +47,7 @@ namespace Gs2::UE5::Guild::Model
         TSharedPtr<FEzGuild> WithAttribute3(const TOptional<int32> Attribute3);
         TSharedPtr<FEzGuild> WithAttribute4(const TOptional<int32> Attribute4);
         TSharedPtr<FEzGuild> WithAttribute5(const TOptional<int32> Attribute5);
+        TSharedPtr<FEzGuild> WithMetadata(const TOptional<FString> Metadata);
         TSharedPtr<FEzGuild> WithJoinPolicy(const TOptional<FString> JoinPolicy);
         TSharedPtr<FEzGuild> WithCustomRoles(const TSharedPtr<TArray<TSharedPtr<Gs2::UE5::Guild::Model::FEzRoleModel>>> CustomRoles);
         TSharedPtr<FEzGuild> WithMembers(const TSharedPtr<TArray<TSharedPtr<Gs2::UE5::Guild::Model::FEzMember>>> Members);
@@ -70,6 +72,8 @@ namespace Gs2::UE5::Guild::Model
 
         TOptional<int32> GetAttribute5() const;
         FString GetAttribute5String() const;
+
+        TOptional<FString> GetMetadata() const;
 
         TOptional<FString> GetJoinPolicy() const;
 

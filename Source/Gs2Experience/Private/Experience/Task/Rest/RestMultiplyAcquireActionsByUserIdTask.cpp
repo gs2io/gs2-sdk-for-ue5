@@ -113,6 +113,10 @@ namespace Gs2::Experience::Task::Rest
                 }
                 JsonRootObject->SetArrayField("acquireActions", v);
             }
+            if (this->Request->GetBaseRate().IsSet())
+            {
+                JsonRootObject->SetNumberField("baseRate", this->Request->GetBaseRate().GetValue());
+            }
             if (this->Request->GetContextStack().IsSet())
             {
                 JsonRootObject->SetStringField("contextStack", this->Request->GetContextStack().GetValue());

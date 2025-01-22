@@ -66,12 +66,6 @@
 #include "Task/WebSocket/GetJobResultTask.h"
 #include "Request/GetJobResultByUserIdRequest.h"
 #include "Task/WebSocket/GetJobResultByUserIdTask.h"
-#include "Request/DescribeDeadLetterJobsByUserIdRequest.h"
-#include "Task/WebSocket/DescribeDeadLetterJobsByUserIdTask.h"
-#include "Request/GetDeadLetterJobByUserIdRequest.h"
-#include "Task/WebSocket/GetDeadLetterJobByUserIdTask.h"
-#include "Request/DeleteDeadLetterJobByUserIdRequest.h"
-#include "Task/WebSocket/DeleteDeadLetterJobByUserIdTask.h"
 
 namespace Gs2::JobQueue
 {
@@ -178,18 +172,6 @@ namespace Gs2::JobQueue
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FGetJobResultByUserIdTask>> GetJobResultByUserId(
             const Request::FGetJobResultByUserIdRequestPtr Request
-        ) const;
-
-        TSharedPtr<FAsyncTask<Task::WebSocket::FDescribeDeadLetterJobsByUserIdTask>> DescribeDeadLetterJobsByUserId(
-            const Request::FDescribeDeadLetterJobsByUserIdRequestPtr Request
-        ) const;
-
-        TSharedPtr<FAsyncTask<Task::WebSocket::FGetDeadLetterJobByUserIdTask>> GetDeadLetterJobByUserId(
-            const Request::FGetDeadLetterJobByUserIdRequestPtr Request
-        ) const;
-
-        TSharedPtr<FAsyncTask<Task::WebSocket::FDeleteDeadLetterJobByUserIdTask>> DeleteDeadLetterJobByUserId(
-            const Request::FDeleteDeadLetterJobByUserIdRequestPtr Request
         ) const;
     };
     typedef TSharedPtr<FGs2JobQueueWebSocketClient, ESPMode::ThreadSafe> FGs2JobQueueWebSocketClientPtr;

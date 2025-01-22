@@ -308,6 +308,18 @@
 #include "Task/Rest/ConsumeStaminaByUserIdTask.h"
 #include "Task/WebSocket/ConsumeStaminaByUserIdTask.h"
 
+// ApplyStamina
+#include "Request/ApplyStaminaRequest.h"
+#include "Result/ApplyStaminaResult.h"
+#include "Task/Rest/ApplyStaminaTask.h"
+#include "Task/WebSocket/ApplyStaminaTask.h"
+
+// ApplyStaminaByUserId
+#include "Request/ApplyStaminaByUserIdRequest.h"
+#include "Result/ApplyStaminaByUserIdResult.h"
+#include "Task/Rest/ApplyStaminaByUserIdTask.h"
+#include "Task/WebSocket/ApplyStaminaByUserIdTask.h"
+
 // RecoverStaminaByUserId
 #include "Request/RecoverStaminaByUserIdRequest.h"
 #include "Result/RecoverStaminaByUserIdResult.h"

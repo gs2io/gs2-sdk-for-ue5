@@ -334,6 +334,96 @@ namespace Gs2::Dictionary
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::Rest::FDescribeLikesTask>> FGs2DictionaryRestClient::DescribeLikes(
+        const Request::FDescribeLikesRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FDescribeLikesTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FDescribeLikesByUserIdTask>> FGs2DictionaryRestClient::DescribeLikesByUserId(
+        const Request::FDescribeLikesByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FDescribeLikesByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FAddLikesTask>> FGs2DictionaryRestClient::AddLikes(
+        const Request::FAddLikesRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FAddLikesTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FAddLikesByUserIdTask>> FGs2DictionaryRestClient::AddLikesByUserId(
+        const Request::FAddLikesByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FAddLikesByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FGetLikeTask>> FGs2DictionaryRestClient::GetLike(
+        const Request::FGetLikeRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FGetLikeTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FGetLikeByUserIdTask>> FGs2DictionaryRestClient::GetLikeByUserId(
+        const Request::FGetLikeByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FGetLikeByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FResetLikesTask>> FGs2DictionaryRestClient::ResetLikes(
+        const Request::FResetLikesRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FResetLikesTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FResetLikesByUserIdTask>> FGs2DictionaryRestClient::ResetLikesByUserId(
+        const Request::FResetLikesByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FResetLikesByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FDeleteLikesTask>> FGs2DictionaryRestClient::DeleteLikes(
+        const Request::FDeleteLikesRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FDeleteLikesTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FDeleteLikesByUserIdTask>> FGs2DictionaryRestClient::DeleteLikesByUserId(
+        const Request::FDeleteLikesByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FDeleteLikesByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::Rest::FExportMasterTask>> FGs2DictionaryRestClient::ExportMaster(
         const Request::FExportMasterRequestPtr Request) const
     {

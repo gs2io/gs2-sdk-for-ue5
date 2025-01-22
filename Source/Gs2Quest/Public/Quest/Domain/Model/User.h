@@ -64,17 +64,7 @@ namespace Gs2::Quest::Domain::Model
         const Gs2::Quest::FGs2QuestRestClientPtr Client;
 
         public:
-        TOptional<FString> TransactionId;
-        TOptional<bool> AutoRunStampSheet;
         TOptional<FString> NextPageToken;
-        TOptional<FString> GetTransactionId() const
-        {
-            return TransactionId;
-        }
-        TOptional<bool> GetAutoRunStampSheet() const
-        {
-            return AutoRunStampSheet;
-        }
         TOptional<FString> GetNextPageToken() const
         {
             return NextPageToken;

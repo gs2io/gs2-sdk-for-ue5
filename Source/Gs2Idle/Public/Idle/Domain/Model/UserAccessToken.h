@@ -58,17 +58,7 @@ namespace Gs2::Idle::Domain::Model
         const Gs2::Idle::FGs2IdleRestClientPtr Client;
 
         public:
-        TOptional<FString> TransactionId;
-        TOptional<bool> AutoRunStampSheet;
         TOptional<FString> NextPageToken;
-        TOptional<FString> GetTransactionId() const
-        {
-            return TransactionId;
-        }
-        TOptional<bool> GetAutoRunStampSheet() const
-        {
-            return AutoRunStampSheet;
-        }
         TOptional<FString> GetNextPageToken() const
         {
             return NextPageToken;

@@ -61,18 +61,8 @@ namespace Gs2::Enhance::Domain::Model
         const Gs2::Enhance::FGs2EnhanceRestClientPtr Client;
 
         public:
-        TOptional<FString> TransactionId;
-        TOptional<bool> AutoRunStampSheet;
         TOptional<int64> AcquireExperience;
         TOptional<float> BonusRate;
-        TOptional<FString> GetTransactionId() const
-        {
-            return TransactionId;
-        }
-        TOptional<bool> GetAutoRunStampSheet() const
-        {
-            return AutoRunStampSheet;
-        }
         TOptional<int64> GetAcquireExperience() const
         {
             return AcquireExperience;

@@ -19,16 +19,6 @@
 namespace Gs2::UE5::Enhance::Domain::Model
 {
 
-    TOptional<FString> FEzProgressGameSessionDomain::TransactionId() const
-    {
-        return Domain->TransactionId;
-    }
-
-    TOptional<bool> FEzProgressGameSessionDomain::AutoRunStampSheet() const
-    {
-        return Domain->AutoRunStampSheet;
-    }
-
     TOptional<int64> FEzProgressGameSessionDomain::AcquireExperience() const
     {
         return Domain->AcquireExperience;

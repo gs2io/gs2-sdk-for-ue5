@@ -53,4 +53,17 @@ namespace Gs2::UE5::Distributor::Domain::Model
             ConnectionValue
         );
     }
+
+    Gs2::UE5::Distributor::Domain::Model::FEzTransactionResultGameSessionDomainPtr FEzUserGameSessionDomain::TransactionResult(
+        const FString TransactionId
+    ) const
+    {
+        return MakeShared<Gs2::UE5::Distributor::Domain::Model::FEzTransactionResultGameSessionDomain>(
+            Domain->TransactionResult(
+                TransactionId
+            ),
+            GameSession,
+            ConnectionValue
+        );
+    }
 }

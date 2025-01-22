@@ -23,6 +23,10 @@
 #include "Idle/Model/Gs2IdleEzConfig.h"
 #include "Idle/Model/Gs2IdleEzAcquireAction.h"
 #include "Idle/Model/Gs2IdleEzAcquireActionList.h"
+#include "Idle/Model/Gs2IdleEzVerifyActionResult.h"
+#include "Idle/Model/Gs2IdleEzConsumeActionResult.h"
+#include "Idle/Model/Gs2IdleEzAcquireActionResult.h"
+#include "Idle/Model/Gs2IdleEzTransactionResult.h"
 #include "Gs2IdleEzStatusGameSessionDomain.h"
 #include "Idle/Domain/Iterator/Gs2IdleEzDescribeStatusesIterator.h"
 #include "Gs2IdleEzUserGameSessionDomain.h"
@@ -40,8 +44,6 @@ namespace Gs2::UE5::Idle::Domain::Model
         Gs2::UE5::Util::FGs2ConnectionPtr ConnectionValue;
 
         public:
-        TOptional<FString> TransactionId() const;
-        TOptional<bool> AutoRunStampSheet() const;
         TOptional<FString> NextPageToken() const;
         TOptional<FString> NamespaceName() const;
         TOptional<FString> UserId() const;

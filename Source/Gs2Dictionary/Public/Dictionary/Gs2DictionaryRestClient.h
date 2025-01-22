@@ -88,6 +88,26 @@
 #include "Task/Rest/DeleteEntriesByStampTaskTask.h"
 #include "Request/VerifyEntryByStampTaskRequest.h"
 #include "Task/Rest/VerifyEntryByStampTaskTask.h"
+#include "Request/DescribeLikesRequest.h"
+#include "Task/Rest/DescribeLikesTask.h"
+#include "Request/DescribeLikesByUserIdRequest.h"
+#include "Task/Rest/DescribeLikesByUserIdTask.h"
+#include "Request/AddLikesRequest.h"
+#include "Task/Rest/AddLikesTask.h"
+#include "Request/AddLikesByUserIdRequest.h"
+#include "Task/Rest/AddLikesByUserIdTask.h"
+#include "Request/GetLikeRequest.h"
+#include "Task/Rest/GetLikeTask.h"
+#include "Request/GetLikeByUserIdRequest.h"
+#include "Task/Rest/GetLikeByUserIdTask.h"
+#include "Request/ResetLikesRequest.h"
+#include "Task/Rest/ResetLikesTask.h"
+#include "Request/ResetLikesByUserIdRequest.h"
+#include "Task/Rest/ResetLikesByUserIdTask.h"
+#include "Request/DeleteLikesRequest.h"
+#include "Task/Rest/DeleteLikesTask.h"
+#include "Request/DeleteLikesByUserIdRequest.h"
+#include "Task/Rest/DeleteLikesByUserIdTask.h"
 #include "Request/ExportMasterRequest.h"
 #include "Task/Rest/ExportMasterTask.h"
 #include "Request/GetCurrentEntryMasterRequest.h"
@@ -246,6 +266,46 @@ namespace Gs2::Dictionary
 
         TSharedPtr<FAsyncTask<Task::Rest::FVerifyEntryByStampTaskTask>> VerifyEntryByStampTask(
             const Request::FVerifyEntryByStampTaskRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FDescribeLikesTask>> DescribeLikes(
+            const Request::FDescribeLikesRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FDescribeLikesByUserIdTask>> DescribeLikesByUserId(
+            const Request::FDescribeLikesByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FAddLikesTask>> AddLikes(
+            const Request::FAddLikesRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FAddLikesByUserIdTask>> AddLikesByUserId(
+            const Request::FAddLikesByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FGetLikeTask>> GetLike(
+            const Request::FGetLikeRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FGetLikeByUserIdTask>> GetLikeByUserId(
+            const Request::FGetLikeByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FResetLikesTask>> ResetLikes(
+            const Request::FResetLikesRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FResetLikesByUserIdTask>> ResetLikesByUserId(
+            const Request::FResetLikesByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FDeleteLikesTask>> DeleteLikes(
+            const Request::FDeleteLikesRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FDeleteLikesByUserIdTask>> DeleteLikesByUserId(
+            const Request::FDeleteLikesByUserIdRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::Rest::FExportMasterTask>> ExportMaster(

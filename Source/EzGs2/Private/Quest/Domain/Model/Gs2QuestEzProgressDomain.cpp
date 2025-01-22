@@ -19,16 +19,6 @@
 namespace Gs2::UE5::Quest::Domain::Model
 {
 
-    TOptional<FString> FEzProgressDomain::TransactionId() const
-    {
-        return Domain->TransactionId;
-    }
-
-    TOptional<bool> FEzProgressDomain::AutoRunStampSheet() const
-    {
-        return Domain->AutoRunStampSheet;
-    }
-
     TOptional<FString> FEzProgressDomain::NamespaceName() const
     {
         return Domain->NamespaceName;

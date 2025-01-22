@@ -48,6 +48,8 @@ namespace Gs2::Distributor::Domain::Model
     class FUserAccessTokenDomain;
     class FStampSheetResultDomain;
     class FStampSheetResultAccessTokenDomain;
+    class FTransactionResultDomain;
+    class FTransactionResultAccessTokenDomain;
 
     class GS2DISTRIBUTOR_API FDistributorModelDomain:
         public TSharedFromThis<FDistributorModelDomain>

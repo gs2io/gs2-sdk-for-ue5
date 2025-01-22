@@ -116,6 +116,8 @@
 #include "Task/Rest/DeleteAwaitByUserIdTask.h"
 #include "Request/CreateAwaitByStampSheetRequest.h"
 #include "Task/Rest/CreateAwaitByStampSheetTask.h"
+#include "Request/AcquireForceByStampSheetRequest.h"
+#include "Task/Rest/AcquireForceByStampSheetTask.h"
 #include "Request/SkipByStampSheetRequest.h"
 #include "Task/Rest/SkipByStampSheetTask.h"
 #include "Request/DeleteAwaitByStampTaskRequest.h"
@@ -326,6 +328,10 @@ namespace Gs2::Exchange
 
         TSharedPtr<FAsyncTask<Task::Rest::FCreateAwaitByStampSheetTask>> CreateAwaitByStampSheet(
             const Request::FCreateAwaitByStampSheetRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FAcquireForceByStampSheetTask>> AcquireForceByStampSheet(
+            const Request::FAcquireForceByStampSheetRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::Rest::FSkipByStampSheetTask>> SkipByStampSheet(

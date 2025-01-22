@@ -134,6 +134,10 @@ namespace Gs2::Version::Task::Rest
             {
                 JsonRootObject->SetStringField("signatureKeyId", this->Request->GetSignatureKeyId().GetValue());
             }
+            if (this->Request->GetApproveRequirement().IsSet())
+            {
+                JsonRootObject->SetStringField("approveRequirement", this->Request->GetApproveRequirement().GetValue());
+            }
             if (this->Request->GetContextStack().IsSet())
             {
                 JsonRootObject->SetStringField("contextStack", this->Request->GetContextStack().GetValue());

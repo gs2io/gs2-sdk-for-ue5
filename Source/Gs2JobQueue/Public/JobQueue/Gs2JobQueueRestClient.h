@@ -66,12 +66,6 @@
 #include "Task/Rest/GetJobResultTask.h"
 #include "Request/GetJobResultByUserIdRequest.h"
 #include "Task/Rest/GetJobResultByUserIdTask.h"
-#include "Request/DescribeDeadLetterJobsByUserIdRequest.h"
-#include "Task/Rest/DescribeDeadLetterJobsByUserIdTask.h"
-#include "Request/GetDeadLetterJobByUserIdRequest.h"
-#include "Task/Rest/GetDeadLetterJobByUserIdTask.h"
-#include "Request/DeleteDeadLetterJobByUserIdRequest.h"
-#include "Task/Rest/DeleteDeadLetterJobByUserIdTask.h"
 
 namespace Gs2::JobQueue
 {
@@ -178,18 +172,6 @@ namespace Gs2::JobQueue
 
         TSharedPtr<FAsyncTask<Task::Rest::FGetJobResultByUserIdTask>> GetJobResultByUserId(
             const Request::FGetJobResultByUserIdRequestPtr Request
-        ) const;
-
-        TSharedPtr<FAsyncTask<Task::Rest::FDescribeDeadLetterJobsByUserIdTask>> DescribeDeadLetterJobsByUserId(
-            const Request::FDescribeDeadLetterJobsByUserIdRequestPtr Request
-        ) const;
-
-        TSharedPtr<FAsyncTask<Task::Rest::FGetDeadLetterJobByUserIdTask>> GetDeadLetterJobByUserId(
-            const Request::FGetDeadLetterJobByUserIdRequestPtr Request
-        ) const;
-
-        TSharedPtr<FAsyncTask<Task::Rest::FDeleteDeadLetterJobByUserIdTask>> DeleteDeadLetterJobByUserId(
-            const Request::FDeleteDeadLetterJobByUserIdRequestPtr Request
         ) const;
     };
     typedef TSharedPtr<FGs2JobQueueRestClient, ESPMode::ThreadSafe> FGs2JobQueueRestClientPtr;

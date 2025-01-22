@@ -17,6 +17,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Dom/JsonObject.h"
 #include "../Model/NotificationType.h"
 
 namespace Gs2::Chat::Request
@@ -59,5 +60,5 @@ namespace Gs2::Chat::Request
         static TSharedPtr<FSubscribeByUserIdRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;
     };
-    typedef TSharedPtr<FSubscribeByUserIdRequest, ESPMode::ThreadSafe> FSubscribeByUserIdRequestPtr;
+    typedef TSharedPtr<FSubscribeByUserIdRequest> FSubscribeByUserIdRequestPtr;
 }

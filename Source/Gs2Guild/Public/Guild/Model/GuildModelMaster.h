@@ -35,6 +35,8 @@ namespace Gs2::Guild::Model
         TOptional<FString> GuildMasterRoleValue;
         TOptional<FString> GuildMemberDefaultRoleValue;
         TOptional<int32> RejoinCoolTimeMinutesValue;
+        TOptional<int32> MaxConcurrentJoinGuildsValue;
+        TOptional<int32> MaxConcurrentGuildMasterCountValue;
         TOptional<int64> CreatedAtValue;
         TOptional<int64> UpdatedAtValue;
         TOptional<int64> RevisionValue;
@@ -57,6 +59,8 @@ namespace Gs2::Guild::Model
         TSharedPtr<FGuildModelMaster> WithGuildMasterRole(const TOptional<FString> GuildMasterRole);
         TSharedPtr<FGuildModelMaster> WithGuildMemberDefaultRole(const TOptional<FString> GuildMemberDefaultRole);
         TSharedPtr<FGuildModelMaster> WithRejoinCoolTimeMinutes(const TOptional<int32> RejoinCoolTimeMinutes);
+        TSharedPtr<FGuildModelMaster> WithMaxConcurrentJoinGuilds(const TOptional<int32> MaxConcurrentJoinGuilds);
+        TSharedPtr<FGuildModelMaster> WithMaxConcurrentGuildMasterCount(const TOptional<int32> MaxConcurrentGuildMasterCount);
         TSharedPtr<FGuildModelMaster> WithCreatedAt(const TOptional<int64> CreatedAt);
         TSharedPtr<FGuildModelMaster> WithUpdatedAt(const TOptional<int64> UpdatedAt);
         TSharedPtr<FGuildModelMaster> WithRevision(const TOptional<int64> Revision);
@@ -76,6 +80,10 @@ namespace Gs2::Guild::Model
         TOptional<FString> GetGuildMemberDefaultRole() const;
         TOptional<int32> GetRejoinCoolTimeMinutes() const;
         FString GetRejoinCoolTimeMinutesString() const;
+        TOptional<int32> GetMaxConcurrentJoinGuilds() const;
+        FString GetMaxConcurrentJoinGuildsString() const;
+        TOptional<int32> GetMaxConcurrentGuildMasterCount() const;
+        FString GetMaxConcurrentGuildMasterCountString() const;
         TOptional<int64> GetCreatedAt() const;
         FString GetCreatedAtString() const;
         TOptional<int64> GetUpdatedAt() const;

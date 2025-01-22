@@ -19,6 +19,7 @@
 #include "CoreMinimal.h"
 #include "../Model/ClusterRankingModel.h"
 #include "../Model/AcquireAction.h"
+#include "Gs2Core/Public/Core/Model/TransactionResult.h"
 
 namespace Gs2::Ranking2::Result
 {
@@ -30,6 +31,9 @@ namespace Gs2::Ranking2::Result
         TOptional<FString> StampSheetValue;
         TOptional<FString> StampSheetEncryptionKeyIdValue;
         TOptional<bool> AutoRunStampSheetValue;
+        TOptional<bool> AtomicCommitValue;
+        TOptional<FString> TransactionValue;
+        TSharedPtr<Gs2::Core::Model::FTransactionResult> TransactionResultValue;
         
     public:
         
@@ -45,6 +49,9 @@ namespace Gs2::Ranking2::Result
         TSharedPtr<FReceiveClusterRankingReceivedRewardByUserIdResult> WithStampSheet(const TOptional<FString> StampSheet);
         TSharedPtr<FReceiveClusterRankingReceivedRewardByUserIdResult> WithStampSheetEncryptionKeyId(const TOptional<FString> StampSheetEncryptionKeyId);
         TSharedPtr<FReceiveClusterRankingReceivedRewardByUserIdResult> WithAutoRunStampSheet(const TOptional<bool> AutoRunStampSheet);
+        TSharedPtr<FReceiveClusterRankingReceivedRewardByUserIdResult> WithAtomicCommit(const TOptional<bool> AtomicCommit);
+        TSharedPtr<FReceiveClusterRankingReceivedRewardByUserIdResult> WithTransaction(const TOptional<FString> Transaction);
+        TSharedPtr<FReceiveClusterRankingReceivedRewardByUserIdResult> WithTransactionResult(const TSharedPtr<Gs2::Core::Model::FTransactionResult> TransactionResult);
 
         TSharedPtr<Model::FClusterRankingModel> GetItem() const;
         TSharedPtr<TArray<TSharedPtr<Model::FAcquireAction>>> GetAcquireActions() const;
@@ -53,6 +60,10 @@ namespace Gs2::Ranking2::Result
         TOptional<FString> GetStampSheetEncryptionKeyId() const;
         TOptional<bool> GetAutoRunStampSheet() const;
         FString GetAutoRunStampSheetString() const;
+        TOptional<bool> GetAtomicCommit() const;
+        FString GetAtomicCommitString() const;
+        TOptional<FString> GetTransaction() const;
+        TSharedPtr<Gs2::Core::Model::FTransactionResult> GetTransactionResult() const;
 
         static TSharedPtr<FReceiveClusterRankingReceivedRewardByUserIdResult> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;

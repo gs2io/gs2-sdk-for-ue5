@@ -433,6 +433,24 @@ namespace Gs2::Stamina
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::WebSocket::FApplyStaminaTask>> FGs2StaminaWebSocketClient::ApplyStamina(
+        const Request::FApplyStaminaRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FApplyStaminaTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FApplyStaminaByUserIdTask>> FGs2StaminaWebSocketClient::ApplyStaminaByUserId(
+        const Request::FApplyStaminaByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FApplyStaminaByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::WebSocket::FRecoverStaminaByUserIdTask>> FGs2StaminaWebSocketClient::RecoverStaminaByUserId(
         const Request::FRecoverStaminaByUserIdRequestPtr Request) const
     {

@@ -18,6 +18,7 @@
 
 #include "CoreMinimal.h"
 #include "../Model/UnleashRateModel.h"
+#include "Gs2Core/Public/Core/Model/TransactionResult.h"
 
 namespace Gs2::Enhance::Result
 {
@@ -28,6 +29,9 @@ namespace Gs2::Enhance::Result
         TOptional<FString> StampSheetValue;
         TOptional<FString> StampSheetEncryptionKeyIdValue;
         TOptional<bool> AutoRunStampSheetValue;
+        TOptional<bool> AtomicCommitValue;
+        TOptional<FString> TransactionValue;
+        TSharedPtr<Gs2::Core::Model::FTransactionResult> TransactionResultValue;
         
     public:
         
@@ -42,6 +46,9 @@ namespace Gs2::Enhance::Result
         TSharedPtr<FUnleashResult> WithStampSheet(const TOptional<FString> StampSheet);
         TSharedPtr<FUnleashResult> WithStampSheetEncryptionKeyId(const TOptional<FString> StampSheetEncryptionKeyId);
         TSharedPtr<FUnleashResult> WithAutoRunStampSheet(const TOptional<bool> AutoRunStampSheet);
+        TSharedPtr<FUnleashResult> WithAtomicCommit(const TOptional<bool> AtomicCommit);
+        TSharedPtr<FUnleashResult> WithTransaction(const TOptional<FString> Transaction);
+        TSharedPtr<FUnleashResult> WithTransactionResult(const TSharedPtr<Gs2::Core::Model::FTransactionResult> TransactionResult);
 
         TSharedPtr<Model::FUnleashRateModel> GetItem() const;
         TOptional<FString> GetTransactionId() const;
@@ -49,6 +56,10 @@ namespace Gs2::Enhance::Result
         TOptional<FString> GetStampSheetEncryptionKeyId() const;
         TOptional<bool> GetAutoRunStampSheet() const;
         FString GetAutoRunStampSheetString() const;
+        TOptional<bool> GetAtomicCommit() const;
+        FString GetAtomicCommitString() const;
+        TOptional<FString> GetTransaction() const;
+        TSharedPtr<Gs2::Core::Model::FTransactionResult> GetTransactionResult() const;
 
         static TSharedPtr<FUnleashResult> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;

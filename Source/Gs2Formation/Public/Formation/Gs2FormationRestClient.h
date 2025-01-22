@@ -130,6 +130,8 @@
 #include "Task/Rest/GetFormWithSignatureTask.h"
 #include "Request/GetFormWithSignatureByUserIdRequest.h"
 #include "Task/Rest/GetFormWithSignatureByUserIdTask.h"
+#include "Request/SetFormRequest.h"
+#include "Task/Rest/SetFormTask.h"
 #include "Request/SetFormByUserIdRequest.h"
 #include "Task/Rest/SetFormByUserIdTask.h"
 #include "Request/SetFormWithSignatureRequest.h"
@@ -156,6 +158,8 @@
 #include "Task/Rest/GetPropertyFormWithSignatureTask.h"
 #include "Request/GetPropertyFormWithSignatureByUserIdRequest.h"
 #include "Task/Rest/GetPropertyFormWithSignatureByUserIdTask.h"
+#include "Request/SetPropertyFormRequest.h"
+#include "Task/Rest/SetPropertyFormTask.h"
 #include "Request/SetPropertyFormByUserIdRequest.h"
 #include "Task/Rest/SetPropertyFormByUserIdTask.h"
 #include "Request/SetPropertyFormWithSignatureRequest.h"
@@ -404,6 +408,10 @@ namespace Gs2::Formation
             const Request::FGetFormWithSignatureByUserIdRequestPtr Request
         ) const;
 
+        TSharedPtr<FAsyncTask<Task::Rest::FSetFormTask>> SetForm(
+            const Request::FSetFormRequestPtr Request
+        ) const;
+
         TSharedPtr<FAsyncTask<Task::Rest::FSetFormByUserIdTask>> SetFormByUserId(
             const Request::FSetFormByUserIdRequestPtr Request
         ) const;
@@ -454,6 +462,10 @@ namespace Gs2::Formation
 
         TSharedPtr<FAsyncTask<Task::Rest::FGetPropertyFormWithSignatureByUserIdTask>> GetPropertyFormWithSignatureByUserId(
             const Request::FGetPropertyFormWithSignatureByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FSetPropertyFormTask>> SetPropertyForm(
+            const Request::FSetPropertyFormRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::Rest::FSetPropertyFormByUserIdTask>> SetPropertyFormByUserId(

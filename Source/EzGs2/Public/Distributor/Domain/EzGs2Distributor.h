@@ -25,6 +25,8 @@ namespace Gs2::UE5::Distributor::Domain
 {
     DECLARE_EVENT_OneParam(Gs2Distributor, FAutoRunStampSheetNotificationEvent, Gs2::Distributor::Model::FAutoRunStampSheetNotificationPtr);
     typedef TSharedPtr<FAutoRunStampSheetNotificationEvent> FAutoRunStampSheetNotificationEventPtr;
+    DECLARE_EVENT_OneParam(Gs2Distributor, FAutoRunTransactionNotificationEvent, Gs2::Distributor::Model::FAutoRunTransactionNotificationPtr);
+    typedef TSharedPtr<FAutoRunTransactionNotificationEvent> FAutoRunTransactionNotificationEventPtr;
 
     class EZGS2_API FEzGs2Distributor {
         Gs2::Distributor::Domain::FGs2DistributorDomainPtr Domain;
@@ -32,6 +34,7 @@ namespace Gs2::UE5::Distributor::Domain
 
         public:
         FAutoRunStampSheetNotificationEvent AutoRunStampSheetNotificationEvent;
+        FAutoRunTransactionNotificationEvent AutoRunTransactionNotificationEvent;
 
         FEzGs2Distributor(
             Gs2::Distributor::Domain::FGs2DistributorDomainPtr Domain,
@@ -43,6 +46,8 @@ namespace Gs2::UE5::Distributor::Domain
         ) const;
 
         FAutoRunStampSheetNotificationEvent& OnAutoRunStampSheetNotification();
+
+        FAutoRunTransactionNotificationEvent& OnAutoRunTransactionNotification();
     };
     typedef TSharedPtr<FEzGs2Distributor> FEzGs2DistributorPtr;
 }

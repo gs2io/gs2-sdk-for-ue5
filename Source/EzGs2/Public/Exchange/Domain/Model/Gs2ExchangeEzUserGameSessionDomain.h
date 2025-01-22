@@ -25,6 +25,10 @@
 #include "Exchange/Model/Gs2ExchangeEzAcquireAction.h"
 #include "Exchange/Model/Gs2ExchangeEzConsumeAction.h"
 #include "Exchange/Model/Gs2ExchangeEzVerifyAction.h"
+#include "Exchange/Model/Gs2ExchangeEzVerifyActionResult.h"
+#include "Exchange/Model/Gs2ExchangeEzConsumeActionResult.h"
+#include "Exchange/Model/Gs2ExchangeEzAcquireActionResult.h"
+#include "Exchange/Model/Gs2ExchangeEzTransactionResult.h"
 #include "Gs2ExchangeEzExchangeGameSessionDomain.h"
 #include "Gs2ExchangeEzAwaitGameSessionDomain.h"
 #include "Exchange/Domain/Iterator/Gs2ExchangeEzDescribeAwaitsIterator.h"
@@ -43,8 +47,6 @@ namespace Gs2::UE5::Exchange::Domain::Model
         Gs2::UE5::Util::FGs2ConnectionPtr ConnectionValue;
 
         public:
-        TOptional<FString> TransactionId() const;
-        TOptional<bool> AutoRunStampSheet() const;
         TOptional<FString> NextPageToken() const;
         TOptional<FString> NamespaceName() const;
         TOptional<FString> UserId() const;

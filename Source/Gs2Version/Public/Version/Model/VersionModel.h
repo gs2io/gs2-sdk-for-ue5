@@ -36,6 +36,7 @@ namespace Gs2::Version::Model
         TSharedPtr<TArray<TSharedPtr<FScheduleVersion>>> ScheduleVersionsValue;
         TOptional<bool> NeedSignatureValue;
         TOptional<FString> SignatureKeyIdValue;
+        TOptional<FString> ApproveRequirementValue;
 
     public:
         FVersionModel();
@@ -55,6 +56,7 @@ namespace Gs2::Version::Model
         TSharedPtr<FVersionModel> WithScheduleVersions(const TSharedPtr<TArray<TSharedPtr<FScheduleVersion>>> ScheduleVersions);
         TSharedPtr<FVersionModel> WithNeedSignature(const TOptional<bool> NeedSignature);
         TSharedPtr<FVersionModel> WithSignatureKeyId(const TOptional<FString> SignatureKeyId);
+        TSharedPtr<FVersionModel> WithApproveRequirement(const TOptional<FString> ApproveRequirement);
 
         TOptional<FString> GetVersionModelId() const;
         TOptional<FString> GetName() const;
@@ -68,6 +70,7 @@ namespace Gs2::Version::Model
         TOptional<bool> GetNeedSignature() const;
         FString GetNeedSignatureString() const;
         TOptional<FString> GetSignatureKeyId() const;
+        TOptional<FString> GetApproveRequirement() const;
 
         static TOptional<FString> GetRegionFromGrn(const FString Grn);
         static TOptional<FString> GetOwnerIdFromGrn(const FString Grn);

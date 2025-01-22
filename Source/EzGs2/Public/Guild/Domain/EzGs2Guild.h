@@ -28,6 +28,8 @@ namespace Gs2::UE5::Guild::Domain
     typedef TSharedPtr<FReceiveRequestNotificationEvent> FReceiveRequestNotificationEventPtr;
     DECLARE_EVENT_OneParam(Gs2Guild, FRemoveRequestNotificationEvent, Gs2::Guild::Model::FRemoveRequestNotificationPtr);
     typedef TSharedPtr<FRemoveRequestNotificationEvent> FRemoveRequestNotificationEventPtr;
+    DECLARE_EVENT_OneParam(Gs2Guild, FChangeNotificationEvent, Gs2::Guild::Model::FChangeNotificationPtr);
+    typedef TSharedPtr<FChangeNotificationEvent> FChangeNotificationEventPtr;
     DECLARE_EVENT_OneParam(Gs2Guild, FJoinNotificationEvent, Gs2::Guild::Model::FJoinNotificationPtr);
     typedef TSharedPtr<FJoinNotificationEvent> FJoinNotificationEventPtr;
     DECLARE_EVENT_OneParam(Gs2Guild, FLeaveNotificationEvent, Gs2::Guild::Model::FLeaveNotificationPtr);
@@ -42,6 +44,7 @@ namespace Gs2::UE5::Guild::Domain
         public:
         FReceiveRequestNotificationEvent ReceiveRequestNotificationEvent;
         FRemoveRequestNotificationEvent RemoveRequestNotificationEvent;
+        FChangeNotificationEvent ChangeNotificationEvent;
         FJoinNotificationEvent JoinNotificationEvent;
         FLeaveNotificationEvent LeaveNotificationEvent;
         FChangeMemberNotificationEvent ChangeMemberNotificationEvent;
@@ -58,6 +61,8 @@ namespace Gs2::UE5::Guild::Domain
         FReceiveRequestNotificationEvent& OnReceiveRequestNotification();
 
         FRemoveRequestNotificationEvent& OnRemoveRequestNotification();
+
+        FChangeNotificationEvent& OnChangeNotification();
 
         FJoinNotificationEvent& OnJoinNotification();
 

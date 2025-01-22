@@ -442,7 +442,7 @@ namespace Gs2::Chat::Domain::Model
             Gs2::Chat::Domain::Model::FSubscribeDomain::CreateCacheKey(
                 RoomName
             ),
-            [Callback](TSharedPtr<Gs2Object> obj)
+            [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::Chat::Model::FSubscribe>(obj));
             }

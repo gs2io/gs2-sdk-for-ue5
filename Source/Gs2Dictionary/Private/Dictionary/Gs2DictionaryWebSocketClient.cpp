@@ -334,6 +334,96 @@ namespace Gs2::Dictionary
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::WebSocket::FDescribeLikesTask>> FGs2DictionaryWebSocketClient::DescribeLikes(
+        const Request::FDescribeLikesRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FDescribeLikesTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FDescribeLikesByUserIdTask>> FGs2DictionaryWebSocketClient::DescribeLikesByUserId(
+        const Request::FDescribeLikesByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FDescribeLikesByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FAddLikesTask>> FGs2DictionaryWebSocketClient::AddLikes(
+        const Request::FAddLikesRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FAddLikesTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FAddLikesByUserIdTask>> FGs2DictionaryWebSocketClient::AddLikesByUserId(
+        const Request::FAddLikesByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FAddLikesByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FGetLikeTask>> FGs2DictionaryWebSocketClient::GetLike(
+        const Request::FGetLikeRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FGetLikeTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FGetLikeByUserIdTask>> FGs2DictionaryWebSocketClient::GetLikeByUserId(
+        const Request::FGetLikeByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FGetLikeByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FResetLikesTask>> FGs2DictionaryWebSocketClient::ResetLikes(
+        const Request::FResetLikesRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FResetLikesTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FResetLikesByUserIdTask>> FGs2DictionaryWebSocketClient::ResetLikesByUserId(
+        const Request::FResetLikesByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FResetLikesByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FDeleteLikesTask>> FGs2DictionaryWebSocketClient::DeleteLikes(
+        const Request::FDeleteLikesRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FDeleteLikesTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FDeleteLikesByUserIdTask>> FGs2DictionaryWebSocketClient::DeleteLikesByUserId(
+        const Request::FDeleteLikesByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FDeleteLikesByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::WebSocket::FExportMasterTask>> FGs2DictionaryWebSocketClient::ExportMaster(
         const Request::FExportMasterRequestPtr Request) const
     {

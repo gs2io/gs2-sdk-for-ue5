@@ -80,6 +80,12 @@
 #include "Task/Rest/FreezeMasterDataTask.h"
 #include "Request/FreezeMasterDataByUserIdRequest.h"
 #include "Task/Rest/FreezeMasterDataByUserIdTask.h"
+#include "Request/SignFreezeMasterDataTimestampRequest.h"
+#include "Task/Rest/SignFreezeMasterDataTimestampTask.h"
+#include "Request/FreezeMasterDataBySignedTimestampRequest.h"
+#include "Task/Rest/FreezeMasterDataBySignedTimestampTask.h"
+#include "Request/BatchExecuteApiRequest.h"
+#include "Task/Rest/BatchExecuteApiTask.h"
 #include "Request/IfExpressionByUserIdRequest.h"
 #include "Task/Rest/IfExpressionByUserIdTask.h"
 #include "Request/AndExpressionByUserIdRequest.h"
@@ -96,6 +102,12 @@
 #include "Task/Rest/GetStampSheetResultTask.h"
 #include "Request/GetStampSheetResultByUserIdRequest.h"
 #include "Task/Rest/GetStampSheetResultByUserIdTask.h"
+#include "Request/RunTransactionRequest.h"
+#include "Task/Rest/RunTransactionTask.h"
+#include "Request/GetTransactionResultRequest.h"
+#include "Task/Rest/GetTransactionResultTask.h"
+#include "Request/GetTransactionResultByUserIdRequest.h"
+#include "Task/Rest/GetTransactionResultByUserIdTask.h"
 
 namespace Gs2::Distributor
 {
@@ -232,6 +244,18 @@ namespace Gs2::Distributor
             const Request::FFreezeMasterDataByUserIdRequestPtr Request
         ) const;
 
+        TSharedPtr<FAsyncTask<Task::Rest::FSignFreezeMasterDataTimestampTask>> SignFreezeMasterDataTimestamp(
+            const Request::FSignFreezeMasterDataTimestampRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FFreezeMasterDataBySignedTimestampTask>> FreezeMasterDataBySignedTimestamp(
+            const Request::FFreezeMasterDataBySignedTimestampRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FBatchExecuteApiTask>> BatchExecuteApi(
+            const Request::FBatchExecuteApiRequestPtr Request
+        ) const;
+
         TSharedPtr<FAsyncTask<Task::Rest::FIfExpressionByUserIdTask>> IfExpressionByUserId(
             const Request::FIfExpressionByUserIdRequestPtr Request
         ) const;
@@ -262,6 +286,18 @@ namespace Gs2::Distributor
 
         TSharedPtr<FAsyncTask<Task::Rest::FGetStampSheetResultByUserIdTask>> GetStampSheetResultByUserId(
             const Request::FGetStampSheetResultByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FRunTransactionTask>> RunTransaction(
+            const Request::FRunTransactionRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FGetTransactionResultTask>> GetTransactionResult(
+            const Request::FGetTransactionResultRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FGetTransactionResultByUserIdTask>> GetTransactionResultByUserId(
+            const Request::FGetTransactionResultByUserIdRequestPtr Request
         ) const;
     };
     typedef TSharedPtr<FGs2DistributorRestClient, ESPMode::ThreadSafe> FGs2DistributorRestClientPtr;

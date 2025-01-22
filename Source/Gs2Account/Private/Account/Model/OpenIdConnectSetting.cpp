@@ -24,7 +24,8 @@ namespace Gs2::Account::Model
         ClientSecretValue(TOptional<FString>()),
         AppleTeamIdValue(TOptional<FString>()),
         AppleKeyIdValue(TOptional<FString>()),
-        ApplePrivateKeyPemValue(TOptional<FString>())
+        ApplePrivateKeyPemValue(TOptional<FString>()),
+        DoneEndpointUrlValue(TOptional<FString>())
     {
     }
 
@@ -36,7 +37,8 @@ namespace Gs2::Account::Model
         ClientSecretValue(From.ClientSecretValue),
         AppleTeamIdValue(From.AppleTeamIdValue),
         AppleKeyIdValue(From.AppleKeyIdValue),
-        ApplePrivateKeyPemValue(From.ApplePrivateKeyPemValue)
+        ApplePrivateKeyPemValue(From.ApplePrivateKeyPemValue),
+        DoneEndpointUrlValue(From.DoneEndpointUrlValue)
     {
     }
 
@@ -87,6 +89,14 @@ namespace Gs2::Account::Model
         this->ApplePrivateKeyPemValue = ApplePrivateKeyPem;
         return SharedThis(this);
     }
+
+    TSharedPtr<FOpenIdConnectSetting> FOpenIdConnectSetting::WithDoneEndpointUrl(
+        const TOptional<FString> DoneEndpointUrl
+    )
+    {
+        this->DoneEndpointUrlValue = DoneEndpointUrl;
+        return SharedThis(this);
+    }
     TOptional<FString> FOpenIdConnectSetting::GetConfigurationPath() const
     {
         return ConfigurationPathValue;
@@ -110,6 +120,10 @@ namespace Gs2::Account::Model
     TOptional<FString> FOpenIdConnectSetting::GetApplePrivateKeyPem() const
     {
         return ApplePrivateKeyPemValue;
+    }
+    TOptional<FString> FOpenIdConnectSetting::GetDoneEndpointUrl() const
+    {
+        return DoneEndpointUrlValue;
     }
 
     TSharedPtr<FOpenIdConnectSetting> FOpenIdConnectSetting::FromJson(const TSharedPtr<FJsonObject> Data)
@@ -171,6 +185,15 @@ namespace Gs2::Account::Model
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
+                }() : TOptional<FString>())
+            ->WithDoneEndpointUrl(Data->HasField(ANSI_TO_TCHAR("doneEndpointUrl")) ? [Data]() -> TOptional<FString>
+                {
+                    FString v("");
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("doneEndpointUrl"), v))
+                    {
+                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                    }
+                    return TOptional<FString>();
                 }() : TOptional<FString>());
     }
 
@@ -200,6 +223,10 @@ namespace Gs2::Account::Model
         if (ApplePrivateKeyPemValue.IsSet())
         {
             JsonRootObject->SetStringField("applePrivateKeyPem", ApplePrivateKeyPemValue.GetValue());
+        }
+        if (DoneEndpointUrlValue.IsSet())
+        {
+            JsonRootObject->SetStringField("doneEndpointUrl", DoneEndpointUrlValue.GetValue());
         }
         return JsonRootObject;
     }

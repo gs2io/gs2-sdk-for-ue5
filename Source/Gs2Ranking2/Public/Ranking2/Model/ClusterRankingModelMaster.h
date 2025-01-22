@@ -37,6 +37,7 @@ namespace Gs2::Ranking2::Model
         TOptional<FString> EntryPeriodEventIdValue;
         TSharedPtr<TArray<TSharedPtr<FRankingReward>>> RankingRewardsValue;
         TOptional<FString> AccessPeriodEventIdValue;
+        TOptional<FString> RewardCalculationIndexValue;
         TOptional<int64> CreatedAtValue;
         TOptional<int64> UpdatedAtValue;
         TOptional<int64> RevisionValue;
@@ -61,6 +62,7 @@ namespace Gs2::Ranking2::Model
         TSharedPtr<FClusterRankingModelMaster> WithEntryPeriodEventId(const TOptional<FString> EntryPeriodEventId);
         TSharedPtr<FClusterRankingModelMaster> WithRankingRewards(const TSharedPtr<TArray<TSharedPtr<FRankingReward>>> RankingRewards);
         TSharedPtr<FClusterRankingModelMaster> WithAccessPeriodEventId(const TOptional<FString> AccessPeriodEventId);
+        TSharedPtr<FClusterRankingModelMaster> WithRewardCalculationIndex(const TOptional<FString> RewardCalculationIndex);
         TSharedPtr<FClusterRankingModelMaster> WithCreatedAt(const TOptional<int64> CreatedAt);
         TSharedPtr<FClusterRankingModelMaster> WithUpdatedAt(const TOptional<int64> UpdatedAt);
         TSharedPtr<FClusterRankingModelMaster> WithRevision(const TOptional<int64> Revision);
@@ -82,6 +84,7 @@ namespace Gs2::Ranking2::Model
         TOptional<FString> GetEntryPeriodEventId() const;
         TSharedPtr<TArray<TSharedPtr<FRankingReward>>> GetRankingRewards() const;
         TOptional<FString> GetAccessPeriodEventId() const;
+        TOptional<FString> GetRewardCalculationIndex() const;
         TOptional<int64> GetCreatedAt() const;
         FString GetCreatedAtString() const;
         TOptional<int64> GetUpdatedAt() const;

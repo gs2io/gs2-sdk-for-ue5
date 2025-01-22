@@ -75,8 +75,6 @@ namespace Gs2::Formation::Domain::Model
         public:
         TOptional<FString> Body;
         TOptional<FString> Signature;
-        TOptional<FString> TransactionId;
-        TOptional<bool> AutoRunStampSheet;
         TOptional<FString> GetBody() const
         {
             return Body;
@@ -84,14 +82,6 @@ namespace Gs2::Formation::Domain::Model
         TOptional<FString> GetSignature() const
         {
             return Signature;
-        }
-        TOptional<FString> GetTransactionId() const
-        {
-            return TransactionId;
-        }
-        TOptional<bool> GetAutoRunStampSheet() const
-        {
-            return AutoRunStampSheet;
         }
         TOptional<FString> NamespaceName;
         Gs2::Auth::Model::FAccessTokenPtr AccessToken;
@@ -168,6 +158,32 @@ namespace Gs2::Formation::Domain::Model
 
         TSharedPtr<FAsyncTask<FGetWithSignatureTask>> GetWithSignature(
             Request::FGetPropertyFormWithSignatureRequestPtr Request
+        );
+
+        class GS2FORMATION_API FSetTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Formation::Domain::Model::FPropertyFormAccessTokenDomain>,
+            public TSharedFromThis<FSetTask>
+        {
+            const TSharedPtr<FPropertyFormAccessTokenDomain> Self;
+            const Request::FSetPropertyFormRequestPtr Request;
+        public:
+            explicit FSetTask(
+                const TSharedPtr<FPropertyFormAccessTokenDomain>& Self,
+                const Request::FSetPropertyFormRequestPtr Request
+            );
+
+            FSetTask(
+                const FSetTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Formation::Domain::Model::FPropertyFormAccessTokenDomain>> Result
+            ) override;
+        };
+        friend FSetTask;
+
+        TSharedPtr<FAsyncTask<FSetTask>> Set(
+            Request::FSetPropertyFormRequestPtr Request
         );
 
         class GS2FORMATION_API FSetWithSignatureTask final :

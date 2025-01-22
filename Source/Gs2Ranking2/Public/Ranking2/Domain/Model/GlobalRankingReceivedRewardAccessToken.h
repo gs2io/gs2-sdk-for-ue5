@@ -105,19 +105,9 @@ namespace Gs2::Ranking2::Domain::Model
 
         public:
         TSharedPtr<TArray<TSharedPtr<Gs2::Ranking2::Model::FAcquireAction>>> AcquireActions;
-        TOptional<FString> TransactionId;
-        TOptional<bool> AutoRunStampSheet;
         TSharedPtr<TArray<TSharedPtr<Gs2::Ranking2::Model::FAcquireAction>>> GetAcquireActions() const
         {
             return AcquireActions;
-        }
-        TOptional<FString> GetTransactionId() const
-        {
-            return TransactionId;
-        }
-        TOptional<bool> GetAutoRunStampSheet() const
-        {
-            return AutoRunStampSheet;
         }
         TOptional<FString> NamespaceName;
         Gs2::Auth::Model::FAccessTokenPtr AccessToken;

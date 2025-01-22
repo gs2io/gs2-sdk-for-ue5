@@ -21,6 +21,7 @@ namespace Gs2::Guild::Model
     FMember::FMember():
         UserIdValue(TOptional<FString>()),
         RoleNameValue(TOptional<FString>()),
+        MetadataValue(TOptional<FString>()),
         JoinedAtValue(TOptional<int64>())
     {
     }
@@ -30,6 +31,7 @@ namespace Gs2::Guild::Model
     ):
         UserIdValue(From.UserIdValue),
         RoleNameValue(From.RoleNameValue),
+        MetadataValue(From.MetadataValue),
         JoinedAtValue(From.JoinedAtValue)
     {
     }
@@ -50,6 +52,14 @@ namespace Gs2::Guild::Model
         return SharedThis(this);
     }
 
+    TSharedPtr<FMember> FMember::WithMetadata(
+        const TOptional<FString> Metadata
+    )
+    {
+        this->MetadataValue = Metadata;
+        return SharedThis(this);
+    }
+
     TSharedPtr<FMember> FMember::WithJoinedAt(
         const TOptional<int64> JoinedAt
     )
@@ -64,6 +74,10 @@ namespace Gs2::Guild::Model
     TOptional<FString> FMember::GetRoleName() const
     {
         return RoleNameValue;
+    }
+    TOptional<FString> FMember::GetMetadata() const
+    {
+        return MetadataValue;
     }
     TOptional<int64> FMember::GetJoinedAt() const
     {
@@ -103,6 +117,15 @@ namespace Gs2::Guild::Model
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
+            ->WithMetadata(Data->HasField(ANSI_TO_TCHAR("metadata")) ? [Data]() -> TOptional<FString>
+                {
+                    FString v("");
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("metadata"), v))
+                    {
+                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                    }
+                    return TOptional<FString>();
+                }() : TOptional<FString>())
             ->WithJoinedAt(Data->HasField(ANSI_TO_TCHAR("joinedAt")) ? [Data]() -> TOptional<int64>
                 {
                     int64 v;
@@ -124,6 +147,10 @@ namespace Gs2::Guild::Model
         if (RoleNameValue.IsSet())
         {
             JsonRootObject->SetStringField("roleName", RoleNameValue.GetValue());
+        }
+        if (MetadataValue.IsSet())
+        {
+            JsonRootObject->SetStringField("metadata", MetadataValue.GetValue());
         }
         if (JoinedAtValue.IsSet())
         {

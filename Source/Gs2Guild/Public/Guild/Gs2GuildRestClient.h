@@ -82,6 +82,14 @@
 #include "Task/Rest/UpdateMemberRoleTask.h"
 #include "Request/UpdateMemberRoleByGuildNameRequest.h"
 #include "Task/Rest/UpdateMemberRoleByGuildNameTask.h"
+#include "Request/BatchUpdateMemberRoleRequest.h"
+#include "Task/Rest/BatchUpdateMemberRoleTask.h"
+#include "Request/BatchUpdateMemberRoleByGuildNameRequest.h"
+#include "Task/Rest/BatchUpdateMemberRoleByGuildNameTask.h"
+#include "Request/UpdateMemberMetadataRequest.h"
+#include "Task/Rest/UpdateMemberMetadataTask.h"
+#include "Request/UpdateMemberMetadataByUserIdRequest.h"
+#include "Task/Rest/UpdateMemberMetadataByUserIdTask.h"
 #include "Request/DeleteGuildRequest.h"
 #include "Task/Rest/DeleteGuildTask.h"
 #include "Request/DeleteGuildByGuildNameRequest.h"
@@ -330,6 +338,22 @@ namespace Gs2::Guild
 
         TSharedPtr<FAsyncTask<Task::Rest::FUpdateMemberRoleByGuildNameTask>> UpdateMemberRoleByGuildName(
             const Request::FUpdateMemberRoleByGuildNameRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FBatchUpdateMemberRoleTask>> BatchUpdateMemberRole(
+            const Request::FBatchUpdateMemberRoleRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FBatchUpdateMemberRoleByGuildNameTask>> BatchUpdateMemberRoleByGuildName(
+            const Request::FBatchUpdateMemberRoleByGuildNameRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FUpdateMemberMetadataTask>> UpdateMemberMetadata(
+            const Request::FUpdateMemberMetadataRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FUpdateMemberMetadataByUserIdTask>> UpdateMemberMetadataByUserId(
+            const Request::FUpdateMemberMetadataByUserIdRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::Rest::FDeleteGuildTask>> DeleteGuild(

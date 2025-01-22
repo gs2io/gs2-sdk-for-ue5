@@ -21,6 +21,10 @@
 #include "Inbox/Model/Gs2InboxEzMessage.h"
 #include "Inbox/Model/Gs2InboxEzConfig.h"
 #include "Inbox/Model/Gs2InboxEzAcquireAction.h"
+#include "Inbox/Model/Gs2InboxEzVerifyActionResult.h"
+#include "Inbox/Model/Gs2InboxEzConsumeActionResult.h"
+#include "Inbox/Model/Gs2InboxEzAcquireActionResult.h"
+#include "Inbox/Model/Gs2InboxEzTransactionResult.h"
 #include "Gs2InboxEzMessageGameSessionDomain.h"
 #include "Inbox/Domain/Iterator/Gs2InboxEzDescribeMessagesIterator.h"
 #include "Util/Net/GameSession.h"
@@ -37,8 +41,6 @@ namespace Gs2::UE5::Inbox::Domain::Model
         Gs2::UE5::Util::FGs2ConnectionPtr ConnectionValue;
 
         public:
-        TOptional<FString> TransactionId() const;
-        TOptional<bool> AutoRunStampSheet() const;
         TOptional<FString> NamespaceName() const;
         TOptional<FString> UserId() const;
         TOptional<FString> MessageName() const;

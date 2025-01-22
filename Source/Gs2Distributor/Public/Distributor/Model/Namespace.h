@@ -30,6 +30,7 @@ namespace Gs2::Distributor::Model
         TOptional<FString> DescriptionValue;
         TOptional<FString> AssumeUserIdValue;
         TSharedPtr<FNotificationSetting> AutoRunStampSheetNotificationValue;
+        TSharedPtr<FNotificationSetting> AutoRunTransactionNotificationValue;
         TSharedPtr<FLogSetting> LogSettingValue;
         TOptional<int64> CreatedAtValue;
         TOptional<int64> UpdatedAtValue;
@@ -47,6 +48,7 @@ namespace Gs2::Distributor::Model
         TSharedPtr<FNamespace> WithDescription(const TOptional<FString> Description);
         TSharedPtr<FNamespace> WithAssumeUserId(const TOptional<FString> AssumeUserId);
         TSharedPtr<FNamespace> WithAutoRunStampSheetNotification(const TSharedPtr<FNotificationSetting> AutoRunStampSheetNotification);
+        TSharedPtr<FNamespace> WithAutoRunTransactionNotification(const TSharedPtr<FNotificationSetting> AutoRunTransactionNotification);
         TSharedPtr<FNamespace> WithLogSetting(const TSharedPtr<FLogSetting> LogSetting);
         TSharedPtr<FNamespace> WithCreatedAt(const TOptional<int64> CreatedAt);
         TSharedPtr<FNamespace> WithUpdatedAt(const TOptional<int64> UpdatedAt);
@@ -57,6 +59,7 @@ namespace Gs2::Distributor::Model
         TOptional<FString> GetDescription() const;
         TOptional<FString> GetAssumeUserId() const;
         TSharedPtr<FNotificationSetting> GetAutoRunStampSheetNotification() const;
+        TSharedPtr<FNotificationSetting> GetAutoRunTransactionNotification() const;
         TSharedPtr<FLogSetting> GetLogSetting() const;
         TOptional<int64> GetCreatedAt() const;
         FString GetCreatedAtString() const;

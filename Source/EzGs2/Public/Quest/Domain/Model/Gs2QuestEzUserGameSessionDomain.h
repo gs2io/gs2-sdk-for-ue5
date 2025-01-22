@@ -28,6 +28,10 @@
 #include "Quest/Model/Gs2QuestEzCompletedQuestList.h"
 #include "Quest/Model/Gs2QuestEzQuestGroupModel.h"
 #include "Quest/Model/Gs2QuestEzQuestModel.h"
+#include "Quest/Model/Gs2QuestEzVerifyActionResult.h"
+#include "Quest/Model/Gs2QuestEzConsumeActionResult.h"
+#include "Quest/Model/Gs2QuestEzAcquireActionResult.h"
+#include "Quest/Model/Gs2QuestEzTransactionResult.h"
 #include "Gs2QuestEzCompletedQuestListGameSessionDomain.h"
 #include "Quest/Domain/Iterator/Gs2QuestEzDescribeCompletedQuestListsIterator.h"
 #include "Gs2QuestEzProgressGameSessionDomain.h"
@@ -46,8 +50,6 @@ namespace Gs2::UE5::Quest::Domain::Model
         Gs2::UE5::Util::FGs2ConnectionPtr ConnectionValue;
 
         public:
-        TOptional<FString> TransactionId() const;
-        TOptional<bool> AutoRunStampSheet() const;
         TOptional<FString> NextPageToken() const;
         TOptional<FString> NamespaceName() const;
         TOptional<FString> UserId() const;

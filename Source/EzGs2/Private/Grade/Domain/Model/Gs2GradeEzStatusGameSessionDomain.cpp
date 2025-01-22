@@ -24,16 +24,6 @@ namespace Gs2::UE5::Grade::Domain::Model
         return Domain->ExperienceNamespaceName;
     }
 
-    TOptional<FString> FEzStatusGameSessionDomain::TransactionId() const
-    {
-        return Domain->TransactionId;
-    }
-
-    TOptional<bool> FEzStatusGameSessionDomain::AutoRunStampSheet() const
-    {
-        return Domain->AutoRunStampSheet;
-    }
-
     TOptional<FString> FEzStatusGameSessionDomain::NamespaceName() const
     {
         return Domain->NamespaceName;

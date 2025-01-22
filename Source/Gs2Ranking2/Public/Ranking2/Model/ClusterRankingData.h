@@ -32,6 +32,7 @@ namespace Gs2::Ranking2::Model
         TOptional<int32> RankValue;
         TOptional<int64> ScoreValue;
         TOptional<FString> MetadataValue;
+        TOptional<int64> InvertCreatedAtValue;
         TOptional<int64> CreatedAtValue;
         TOptional<int64> UpdatedAtValue;
         TOptional<int64> RevisionValue;
@@ -52,6 +53,7 @@ namespace Gs2::Ranking2::Model
         TSharedPtr<FClusterRankingData> WithRank(const TOptional<int32> Rank);
         TSharedPtr<FClusterRankingData> WithScore(const TOptional<int64> Score);
         TSharedPtr<FClusterRankingData> WithMetadata(const TOptional<FString> Metadata);
+        TSharedPtr<FClusterRankingData> WithInvertCreatedAt(const TOptional<int64> InvertCreatedAt);
         TSharedPtr<FClusterRankingData> WithCreatedAt(const TOptional<int64> CreatedAt);
         TSharedPtr<FClusterRankingData> WithUpdatedAt(const TOptional<int64> UpdatedAt);
         TSharedPtr<FClusterRankingData> WithRevision(const TOptional<int64> Revision);
@@ -69,6 +71,8 @@ namespace Gs2::Ranking2::Model
         TOptional<int64> GetScore() const;
         FString GetScoreString() const;
         TOptional<FString> GetMetadata() const;
+        TOptional<int64> GetInvertCreatedAt() const;
+        FString GetInvertCreatedAtString() const;
         TOptional<int64> GetCreatedAt() const;
         FString GetCreatedAtString() const;
         TOptional<int64> GetUpdatedAt() const;

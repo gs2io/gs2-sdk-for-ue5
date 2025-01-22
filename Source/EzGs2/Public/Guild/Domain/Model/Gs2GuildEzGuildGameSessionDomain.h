@@ -27,6 +27,10 @@
 #include "Guild/Model/Gs2GuildEzLastGuildMasterActivity.h"
 #include "Guild/Model/Gs2GuildEzMember.h"
 #include "Guild/Model/Gs2GuildEzRoleModel.h"
+#include "Guild/Model/Gs2GuildEzVerifyActionResult.h"
+#include "Guild/Model/Gs2GuildEzConsumeActionResult.h"
+#include "Guild/Model/Gs2GuildEzAcquireActionResult.h"
+#include "Guild/Model/Gs2GuildEzTransactionResult.h"
 #include "Gs2GuildEzReceiveMemberRequestGameSessionDomain.h"
 #include "Guild/Domain/Iterator/Gs2GuildEzDescribeReceiveRequestsIterator.h"
 #include "Gs2GuildEzIgnoreUserGameSessionDomain.h"
@@ -103,6 +107,78 @@ namespace Gs2::UE5::Guild::Domain::Model
             TOptional<int32> Attribute5 = TOptional<int32>(),
             TOptional<TArray<TSharedPtr<Gs2::UE5::Guild::Model::FEzRoleModel>>> CustomRoles = TOptional<TArray<TSharedPtr<Gs2::UE5::Guild::Model::FEzRoleModel>>>(),
             TOptional<FString> GuildMemberDefaultRole = TOptional<FString>()
+        );
+
+        class EZGS2_API FDeleteMemberFromGuildTask :
+            public Gs2::Core::Util::TGs2Future<Gs2::UE5::Guild::Domain::Model::FEzGuildGameSessionDomain>,
+            public TSharedFromThis<FDeleteMemberFromGuildTask>
+        {
+            TSharedPtr<FEzGuildGameSessionDomain> Self;
+            FString TargetUserId;
+
+        public:
+            explicit FDeleteMemberFromGuildTask(
+                TSharedPtr<FEzGuildGameSessionDomain> Self,
+                FString TargetUserId
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::UE5::Guild::Domain::Model::FEzGuildGameSessionDomain>> Result
+            ) override;
+        };
+        friend FDeleteMemberFromGuildTask;
+
+        TSharedPtr<FAsyncTask<FDeleteMemberFromGuildTask>> DeleteMemberFromGuild(
+            FString TargetUserId
+        );
+
+        class EZGS2_API FUpdateGuildMemberRoleTask :
+            public Gs2::Core::Util::TGs2Future<Gs2::UE5::Guild::Domain::Model::FEzGuildGameSessionDomain>,
+            public TSharedFromThis<FUpdateGuildMemberRoleTask>
+        {
+            TSharedPtr<FEzGuildGameSessionDomain> Self;
+            FString TargetUserId;
+            FString RoleName;
+
+        public:
+            explicit FUpdateGuildMemberRoleTask(
+                TSharedPtr<FEzGuildGameSessionDomain> Self,
+                FString TargetUserId,
+                FString RoleName
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::UE5::Guild::Domain::Model::FEzGuildGameSessionDomain>> Result
+            ) override;
+        };
+        friend FUpdateGuildMemberRoleTask;
+
+        TSharedPtr<FAsyncTask<FUpdateGuildMemberRoleTask>> UpdateGuildMemberRole(
+            FString TargetUserId,
+            FString RoleName
+        );
+
+        class EZGS2_API FUpdateMemberMetadataTask :
+            public Gs2::Core::Util::TGs2Future<Gs2::UE5::Guild::Domain::Model::FEzGuildGameSessionDomain>,
+            public TSharedFromThis<FUpdateMemberMetadataTask>
+        {
+            TSharedPtr<FEzGuildGameSessionDomain> Self;
+            TOptional<FString> Metadata;
+
+        public:
+            explicit FUpdateMemberMetadataTask(
+                TSharedPtr<FEzGuildGameSessionDomain> Self,
+                TOptional<FString> Metadata = TOptional<FString>()
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::UE5::Guild::Domain::Model::FEzGuildGameSessionDomain>> Result
+            ) override;
+        };
+        friend FUpdateMemberMetadataTask;
+
+        TSharedPtr<FAsyncTask<FUpdateMemberMetadataTask>> UpdateMemberMetadata(
+            TOptional<FString> Metadata = TOptional<FString>()
         );
 
         class EZGS2_API FDeleteGuildTask :

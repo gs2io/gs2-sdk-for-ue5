@@ -111,7 +111,7 @@ namespace Gs2::Chat::Domain::Iterator
 
             if (!RangeIteratorOpt)
             {
-                TSharedPtr<Gs2Object> UpdateContext;
+                TSharedPtr<FGs2Object> UpdateContext;
                 Range = Self->Gs2->Cache->TryGetList<Gs2::Chat::Model::FMessage>(ListParentKey, &UpdateContext);
 
                 if (Range)
@@ -194,7 +194,7 @@ namespace Gs2::Chat::Domain::Iterator
                     ListParentKey,
                     StartAt
                         // ReSharper disable once CppSmartPointerVsMakeFunction
-                        ? TSharedPtr<Gs2Object>(new FDescribeMessagesStartAt(*StartAt))
+                        ? TSharedPtr<FGs2Object>(new FDescribeMessagesStartAt(*StartAt))
                         : nullptr
                 );
             }

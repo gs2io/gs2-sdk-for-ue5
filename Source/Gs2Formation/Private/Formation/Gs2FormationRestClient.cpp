@@ -523,6 +523,15 @@ namespace Gs2::Formation
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::Rest::FSetFormTask>> FGs2FormationRestClient::SetForm(
+        const Request::FSetFormRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FSetFormTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::Rest::FSetFormByUserIdTask>> FGs2FormationRestClient::SetFormByUserId(
         const Request::FSetFormByUserIdRequestPtr Request) const
     {
@@ -635,6 +644,15 @@ namespace Gs2::Formation
         const Request::FGetPropertyFormWithSignatureByUserIdRequestPtr Request) const
     {
         return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FGetPropertyFormWithSignatureByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FSetPropertyFormTask>> FGs2FormationRestClient::SetPropertyForm(
+        const Request::FSetPropertyFormRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FSetPropertyFormTask>>(
             Session,
             Request
         );

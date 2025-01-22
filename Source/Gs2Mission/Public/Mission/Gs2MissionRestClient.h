@@ -120,6 +120,8 @@
 #include "Task/Rest/VerifyCounterValueTask.h"
 #include "Request/VerifyCounterValueByUserIdRequest.h"
 #include "Task/Rest/VerifyCounterValueByUserIdTask.h"
+#include "Request/DeleteCounterRequest.h"
+#include "Task/Rest/DeleteCounterTask.h"
 #include "Request/DeleteCounterByUserIdRequest.h"
 #include "Task/Rest/DeleteCounterByUserIdTask.h"
 #include "Request/IncreaseByStampSheetRequest.h"
@@ -374,6 +376,10 @@ namespace Gs2::Mission
 
         TSharedPtr<FAsyncTask<Task::Rest::FVerifyCounterValueByUserIdTask>> VerifyCounterValueByUserId(
             const Request::FVerifyCounterValueByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FDeleteCounterTask>> DeleteCounter(
+            const Request::FDeleteCounterRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::Rest::FDeleteCounterByUserIdTask>> DeleteCounterByUserId(

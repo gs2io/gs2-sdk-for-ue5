@@ -235,6 +235,24 @@ namespace Gs2::Version
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::WebSocket::FRejectTask>> FGs2VersionWebSocketClient::Reject(
+        const Request::FRejectRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FRejectTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FRejectByUserIdTask>> FGs2VersionWebSocketClient::RejectByUserId(
+        const Request::FRejectByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FRejectByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::WebSocket::FGetAcceptVersionTask>> FGs2VersionWebSocketClient::GetAcceptVersion(
         const Request::FGetAcceptVersionRequestPtr Request) const
     {

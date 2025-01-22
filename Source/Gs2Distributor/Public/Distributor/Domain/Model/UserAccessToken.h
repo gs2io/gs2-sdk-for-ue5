@@ -49,6 +49,8 @@ namespace Gs2::Distributor::Domain::Model
     class FUserAccessTokenDomain;
     class FStampSheetResultDomain;
     class FStampSheetResultAccessTokenDomain;
+    class FTransactionResultDomain;
+    class FTransactionResultAccessTokenDomain;
 
     class GS2DISTRIBUTOR_API FUserAccessTokenDomain:
         public TSharedFromThis<FUserAccessTokenDomain>
@@ -80,6 +82,10 @@ namespace Gs2::Distributor::Domain::Model
         );
 
         TSharedPtr<Gs2::Distributor::Domain::Model::FStampSheetResultAccessTokenDomain> StampSheetResult(
+            const FString TransactionId
+        );
+
+        TSharedPtr<Gs2::Distributor::Domain::Model::FTransactionResultAccessTokenDomain> TransactionResult(
             const FString TransactionId
         );
 

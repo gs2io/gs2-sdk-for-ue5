@@ -59,6 +59,7 @@
 // Notification
 #include "Guild/Model/ReceiveRequestNotification.h"
 #include "Guild/Model/RemoveRequestNotification.h"
+#include "Guild/Model/ChangeNotification.h"
 #include "Guild/Model/JoinNotification.h"
 #include "Guild/Model/LeaveNotification.h"
 #include "Guild/Model/ChangeMemberNotification.h"
@@ -73,6 +74,7 @@ namespace Gs2::Guild::Domain
 {
     DECLARE_EVENT_OneParam(FGs2GuildDomain, FReceiveRequestNotificationEvent, Gs2::Guild::Model::FReceiveRequestNotificationPtr);
     DECLARE_EVENT_OneParam(FGs2GuildDomain, FRemoveRequestNotificationEvent, Gs2::Guild::Model::FRemoveRequestNotificationPtr);
+    DECLARE_EVENT_OneParam(FGs2GuildDomain, FChangeNotificationEvent, Gs2::Guild::Model::FChangeNotificationPtr);
     DECLARE_EVENT_OneParam(FGs2GuildDomain, FJoinNotificationEvent, Gs2::Guild::Model::FJoinNotificationPtr);
     DECLARE_EVENT_OneParam(FGs2GuildDomain, FLeaveNotificationEvent, Gs2::Guild::Model::FLeaveNotificationPtr);
     DECLARE_EVENT_OneParam(FGs2GuildDomain, FChangeMemberNotificationEvent, Gs2::Guild::Model::FChangeMemberNotificationPtr);
@@ -82,6 +84,7 @@ namespace Gs2::Guild::Domain
     {
         FReceiveRequestNotificationEvent ReceiveRequestNotificationEvent;
         FRemoveRequestNotificationEvent RemoveRequestNotificationEvent;
+        FChangeNotificationEvent ChangeNotificationEvent;
         FJoinNotificationEvent JoinNotificationEvent;
         FLeaveNotificationEvent LeaveNotificationEvent;
         FChangeMemberNotificationEvent ChangeMemberNotificationEvent;
@@ -361,6 +364,7 @@ namespace Gs2::Guild::Domain
         );
         FReceiveRequestNotificationEvent& OnReceiveRequestNotification();
         FRemoveRequestNotificationEvent& OnRemoveRequestNotification();
+        FChangeNotificationEvent& OnChangeNotification();
         FJoinNotificationEvent& OnJoinNotification();
         FLeaveNotificationEvent& OnLeaveNotification();
         FChangeMemberNotificationEvent& OnChangeMemberNotification();

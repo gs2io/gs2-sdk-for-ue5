@@ -33,6 +33,10 @@
 #include "Ranking2/Model/Gs2Ranking2EzAcquireAction.h"
 #include "Ranking2/Model/Gs2Ranking2EzConfig.h"
 #include "Ranking2/Model/Gs2Ranking2EzSubscribeUser.h"
+#include "Ranking2/Model/Gs2Ranking2EzVerifyActionResult.h"
+#include "Ranking2/Model/Gs2Ranking2EzConsumeActionResult.h"
+#include "Ranking2/Model/Gs2Ranking2EzAcquireActionResult.h"
+#include "Ranking2/Model/Gs2Ranking2EzTransactionResult.h"
 #include "Gs2Ranking2EzClusterRankingReceivedRewardDomain.h"
 #include "Util/Net/GameSession.h"
 #include "Util/Net/Gs2Connection.h"
@@ -48,8 +52,6 @@ namespace Gs2::UE5::Ranking2::Domain::Model
 
         public:
         TSharedPtr<TArray<TSharedPtr<Gs2::UE5::Ranking2::Model::FEzAcquireAction>>> AcquireActions() const;
-        TOptional<FString> TransactionId() const;
-        TOptional<bool> AutoRunStampSheet() const;
         TOptional<FString> NamespaceName() const;
         TOptional<FString> UserId() const;
         TOptional<FString> RankingName() const;

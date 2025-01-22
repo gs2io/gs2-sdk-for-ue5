@@ -29,6 +29,8 @@
 #include "Dictionary/Domain/Model/EntryModelMaster.h"
 #include "Dictionary/Domain/Model/Entry.h"
 #include "Dictionary/Domain/Model/EntryAccessToken.h"
+#include "Dictionary/Domain/Model/Like.h"
+#include "Dictionary/Domain/Model/LikeAccessToken.h"
 #include "Dictionary/Domain/Model/CurrentEntryMaster.h"
 #include "Dictionary/Domain/Model/User.h"
 #include "Dictionary/Domain/Model/UserAccessToken.h"
@@ -164,6 +166,237 @@ namespace Gs2::Dictionary::Domain::Model
         return Gs2::Core::Util::New<FAsyncTask<FDeleteEntriesTask>>(this->AsShared(), Request);
     }
 
+    FUserAccessTokenDomain::FAddLikesTask::FAddLikesTask(
+        const TSharedPtr<FUserAccessTokenDomain>& Self,
+        const Request::FAddLikesRequestPtr Request
+    ): Self(Self), Request(Request)
+    {
+
+    }
+
+    FUserAccessTokenDomain::FAddLikesTask::FAddLikesTask(
+        const FAddLikesTask& From
+    ): TGs2Future(From), Self(From.Self), Request(From.Request)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FUserAccessTokenDomain::FAddLikesTask::Action(
+        TSharedPtr<TSharedPtr<TArray<TSharedPtr<Gs2::Dictionary::Domain::Model::FLikeAccessTokenDomain>>>> Result
+    )
+    {
+        Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
+            ->WithNamespaceName(Self->NamespaceName)
+            ->WithAccessToken(Self->AccessToken->GetToken());
+        const auto Future = Self->Client->AddLikes(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto RequestModel = Request;
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
+        if (ResultModel != nullptr) {
+            {
+                for (auto Item : *ResultModel->GetItems())
+                {
+                    const auto ParentKey = Gs2::Dictionary::Domain::Model::FUserDomain::CreateCacheParentKey(
+                        Self->NamespaceName,
+                        Self->UserId(),
+                        "Like"
+                    );
+                    const auto Key = Gs2::Dictionary::Domain::Model::FLikeDomain::CreateCacheKey(
+                        Item->GetName()
+                    );
+                    Self->Gs2->Cache->Put(
+                        Gs2::Dictionary::Model::FLike::TypeName,
+                        ParentKey,
+                        Key,
+                        Item,
+                        FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                    );
+                }
+            }
+        }
+        auto Domain = MakeShared<TArray<TSharedPtr<Gs2::Dictionary::Domain::Model::FLikeAccessTokenDomain>>>();
+        for (auto i=0; i<ResultModel->GetItems()->Num(); i++)
+        {
+            Domain->Add(
+                MakeShared<Gs2::Dictionary::Domain::Model::FLikeAccessTokenDomain>(
+                    Self->Gs2,
+                    Self->Service,
+                    Request->GetNamespaceName(),
+                    Self->AccessToken,
+                    (*ResultModel->GetItems())[i]->GetName()
+                )
+            );
+            const auto ParentKey = Gs2::Dictionary::Domain::Model::FUserDomain::CreateCacheParentKey(
+                Self->NamespaceName,
+                Self->UserId(),
+                "Like"
+            );
+            const auto Key = Gs2::Dictionary::Domain::Model::FLikeDomain::CreateCacheKey(
+                (*ResultModel->GetItems())[i]->GetName()
+            );
+            Self->Gs2->Cache->Put(
+                Gs2::Dictionary::Model::FLike::TypeName,
+                ParentKey,
+                Key,
+                (*ResultModel->GetItems())[i],
+                FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+            );
+        }
+        *Result = Domain;
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FUserAccessTokenDomain::FAddLikesTask>> FUserAccessTokenDomain::AddLikes(
+        Request::FAddLikesRequestPtr Request
+    ) {
+        return Gs2::Core::Util::New<FAsyncTask<FAddLikesTask>>(this->AsShared(), Request);
+    }
+
+    FUserAccessTokenDomain::FResetLikesTask::FResetLikesTask(
+        const TSharedPtr<FUserAccessTokenDomain>& Self,
+        const Request::FResetLikesRequestPtr Request
+    ): Self(Self), Request(Request)
+    {
+
+    }
+
+    FUserAccessTokenDomain::FResetLikesTask::FResetLikesTask(
+        const FResetLikesTask& From
+    ): TGs2Future(From), Self(From.Self), Request(From.Request)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FUserAccessTokenDomain::FResetLikesTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::Dictionary::Domain::Model::FUserAccessTokenDomain>> Result
+    )
+    {
+        Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
+            ->WithNamespaceName(Self->NamespaceName)
+            ->WithAccessToken(Self->AccessToken->GetToken());
+        const auto Future = Self->Client->ResetLikes(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto RequestModel = Request;
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
+        if (ResultModel != nullptr) {
+            
+        }
+        const auto Domain = Self;
+        *Result = Domain;
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FUserAccessTokenDomain::FResetLikesTask>> FUserAccessTokenDomain::ResetLikes(
+        Request::FResetLikesRequestPtr Request
+    ) {
+        return Gs2::Core::Util::New<FAsyncTask<FResetLikesTask>>(this->AsShared(), Request);
+    }
+
+    FUserAccessTokenDomain::FDeleteLikesTask::FDeleteLikesTask(
+        const TSharedPtr<FUserAccessTokenDomain>& Self,
+        const Request::FDeleteLikesRequestPtr Request
+    ): Self(Self), Request(Request)
+    {
+
+    }
+
+    FUserAccessTokenDomain::FDeleteLikesTask::FDeleteLikesTask(
+        const FDeleteLikesTask& From
+    ): TGs2Future(From), Self(From.Self), Request(From.Request)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FUserAccessTokenDomain::FDeleteLikesTask::Action(
+        TSharedPtr<TSharedPtr<TArray<TSharedPtr<Gs2::Dictionary::Domain::Model::FLikeAccessTokenDomain>>>> Result
+    )
+    {
+        Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
+            ->WithNamespaceName(Self->NamespaceName)
+            ->WithAccessToken(Self->AccessToken->GetToken());
+        const auto Future = Self->Client->DeleteLikes(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto RequestModel = Request;
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
+        if (ResultModel != nullptr) {
+            {
+                for (auto Item : *ResultModel->GetItems())
+                {
+                    const auto ParentKey = Gs2::Dictionary::Domain::Model::FUserDomain::CreateCacheParentKey(
+                        Self->NamespaceName,
+                        Self->UserId(),
+                        "Like"
+                    );
+                    const auto Key = Gs2::Dictionary::Domain::Model::FLikeDomain::CreateCacheKey(
+                        Item->GetName()
+                    );
+                    Self->Gs2->Cache->Delete(
+                        Gs2::Dictionary::Model::FLike::TypeName,
+                        ParentKey,
+                        Key
+                    );
+                }
+            }
+        }
+        auto Domain = MakeShared<TArray<TSharedPtr<Gs2::Dictionary::Domain::Model::FLikeAccessTokenDomain>>>();
+        for (auto i=0; i<ResultModel->GetItems()->Num(); i++)
+        {
+            Domain->Add(
+                MakeShared<Gs2::Dictionary::Domain::Model::FLikeAccessTokenDomain>(
+                    Self->Gs2,
+                    Self->Service,
+                    Request->GetNamespaceName(),
+                    Self->AccessToken,
+                    (*ResultModel->GetItems())[i]->GetName()
+                )
+            );
+            const auto ParentKey = Gs2::Dictionary::Domain::Model::FUserDomain::CreateCacheParentKey(
+                Self->NamespaceName,
+                Self->UserId(),
+                "Like"
+            );
+            const auto Key = Gs2::Dictionary::Domain::Model::FLikeDomain::CreateCacheKey(
+                (*ResultModel->GetItems())[i]->GetName()
+            );
+            Self->Gs2->Cache->Put(
+                Gs2::Dictionary::Model::FLike::TypeName,
+                ParentKey,
+                Key,
+                (*ResultModel->GetItems())[i],
+                FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+            );
+        }
+        *Result = Domain;
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FUserAccessTokenDomain::FDeleteLikesTask>> FUserAccessTokenDomain::DeleteLikes(
+        Request::FDeleteLikesRequestPtr Request
+    ) {
+        return Gs2::Core::Util::New<FAsyncTask<FDeleteLikesTask>>(this->AsShared(), Request);
+    }
+
     Gs2::Dictionary::Domain::Iterator::FDescribeEntriesIteratorPtr FUserAccessTokenDomain::Entries(
     ) const
     {
@@ -210,6 +443,60 @@ namespace Gs2::Dictionary::Domain::Model
     )
     {
         return MakeShared<Gs2::Dictionary::Domain::Model::FEntryAccessTokenDomain>(
+            Gs2,
+            Service,
+            NamespaceName,
+            AccessToken,
+            EntryModelName == TEXT("") ? TOptional<FString>() : TOptional<FString>(EntryModelName)
+        );
+    }
+
+    Gs2::Dictionary::Domain::Iterator::FDescribeLikesIteratorPtr FUserAccessTokenDomain::Likes(
+    ) const
+    {
+        return MakeShared<Gs2::Dictionary::Domain::Iterator::FDescribeLikesIterator>(
+            Gs2,
+            Client,
+            NamespaceName,
+            AccessToken
+        );
+    }
+
+    Gs2::Core::Domain::CallbackID FUserAccessTokenDomain::SubscribeLikes(
+    TFunction<void()> Callback
+    )
+    {
+        return Gs2->Cache->ListSubscribe(
+            Gs2::Dictionary::Model::FLike::TypeName,
+            Gs2::Dictionary::Domain::Model::FUserDomain::CreateCacheParentKey(
+                NamespaceName,
+                UserId(),
+                "Like"
+            ),
+            Callback
+        );
+    }
+
+    void FUserAccessTokenDomain::UnsubscribeLikes(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Gs2->Cache->ListUnsubscribe(
+            Gs2::Dictionary::Model::FLike::TypeName,
+            Gs2::Dictionary::Domain::Model::FUserDomain::CreateCacheParentKey(
+                NamespaceName,
+                UserId(),
+                "Like"
+            ),
+            CallbackID
+        );
+    }
+
+    TSharedPtr<Gs2::Dictionary::Domain::Model::FLikeAccessTokenDomain> FUserAccessTokenDomain::Like(
+        const FString EntryModelName
+    )
+    {
+        return MakeShared<Gs2::Dictionary::Domain::Model::FLikeAccessTokenDomain>(
             Gs2,
             Service,
             NamespaceName,

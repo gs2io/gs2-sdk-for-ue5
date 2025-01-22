@@ -104,6 +104,10 @@ namespace Gs2::Experience::Domain::SpeculativeExecutor
         const double Rate
     )
     {
+        if (Request->GetBaseRate().IsSet())
+        {
+            Request->WithBaseRate(*Request->GetBaseRate() * Rate);
+        }
         return Request;
     }
 
@@ -112,6 +116,11 @@ namespace Gs2::Experience::Domain::SpeculativeExecutor
         TBigInt<1024, false> Rate
     )
     {
+        if (Request->GetBaseRate().IsSet())
+        {
+            Rate.Multiply(*Request->GetBaseRate());
+            Request->WithBaseRate(Rate.ToInt());
+        }
         return Request;
     }
 }

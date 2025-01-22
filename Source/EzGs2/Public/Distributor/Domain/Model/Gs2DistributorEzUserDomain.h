@@ -22,10 +22,17 @@
 #include "Distributor/Model/Gs2DistributorEzDistributorModel.h"
 #include "Distributor/Model/Gs2DistributorEzDistributeResource.h"
 #include "Distributor/Model/Gs2DistributorEzStampSheetResult.h"
+#include "Distributor/Model/Gs2DistributorEzBatchRequestPayload.h"
+#include "Distributor/Model/Gs2DistributorEzBatchResultPayload.h"
 #include "Distributor/Model/Gs2DistributorEzAcquireAction.h"
 #include "Distributor/Model/Gs2DistributorEzConsumeAction.h"
 #include "Distributor/Model/Gs2DistributorEzVerifyAction.h"
+#include "Distributor/Model/Gs2DistributorEzTransactionResult.h"
+#include "Distributor/Model/Gs2DistributorEzAcquireActionResult.h"
+#include "Distributor/Model/Gs2DistributorEzConsumeActionResult.h"
+#include "Distributor/Model/Gs2DistributorEzVerifyActionResult.h"
 #include "Gs2DistributorEzStampSheetResultDomain.h"
+#include "Gs2DistributorEzTransactionResultDomain.h"
 #include "Gs2DistributorEzUserDomain.h"
 #include "Gs2DistributorEzUserDomain.h"
 #include "Gs2DistributorEzUserGameSessionDomain.h"
@@ -51,6 +58,10 @@ namespace Gs2::UE5::Distributor::Domain::Model
         );
 
         Gs2::UE5::Distributor::Domain::Model::FEzStampSheetResultDomainPtr StampSheetResult(
+            const FString TransactionId
+        ) const;
+
+        Gs2::UE5::Distributor::Domain::Model::FEzTransactionResultDomainPtr TransactionResult(
             const FString TransactionId
         ) const;
 

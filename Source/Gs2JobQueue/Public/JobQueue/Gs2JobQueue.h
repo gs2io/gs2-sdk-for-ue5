@@ -20,7 +20,6 @@
 #include "Model/Namespace.h"
 #include "Model/Job.h"
 #include "Model/JobResult.h"
-#include "Model/DeadLetterJob.h"
 #include "Model/NotificationSetting.h"
 #include "Model/LogSetting.h"
 #include "Model/JobEntry.h"
@@ -169,24 +168,6 @@
 #include "Result/GetJobResultByUserIdResult.h"
 #include "Task/Rest/GetJobResultByUserIdTask.h"
 #include "Task/WebSocket/GetJobResultByUserIdTask.h"
-
-// DescribeDeadLetterJobsByUserId
-#include "Request/DescribeDeadLetterJobsByUserIdRequest.h"
-#include "Result/DescribeDeadLetterJobsByUserIdResult.h"
-#include "Task/Rest/DescribeDeadLetterJobsByUserIdTask.h"
-#include "Task/WebSocket/DescribeDeadLetterJobsByUserIdTask.h"
-
-// GetDeadLetterJobByUserId
-#include "Request/GetDeadLetterJobByUserIdRequest.h"
-#include "Result/GetDeadLetterJobByUserIdResult.h"
-#include "Task/Rest/GetDeadLetterJobByUserIdTask.h"
-#include "Task/WebSocket/GetDeadLetterJobByUserIdTask.h"
-
-// DeleteDeadLetterJobByUserId
-#include "Request/DeleteDeadLetterJobByUserIdRequest.h"
-#include "Result/DeleteDeadLetterJobByUserIdResult.h"
-#include "Task/Rest/DeleteDeadLetterJobByUserIdTask.h"
-#include "Task/WebSocket/DeleteDeadLetterJobByUserIdTask.h"
 
 // Client
 #include "Gs2JobQueueRestClient.h"

@@ -23,6 +23,10 @@
 #include "Experience/Model/Gs2ExperienceEzStatus.h"
 #include "Experience/Model/Gs2ExperienceEzAcquireAction.h"
 #include "Experience/Model/Gs2ExperienceEzAcquireActionRate.h"
+#include "Experience/Model/Gs2ExperienceEzVerifyActionResult.h"
+#include "Experience/Model/Gs2ExperienceEzConsumeActionResult.h"
+#include "Experience/Model/Gs2ExperienceEzAcquireActionResult.h"
+#include "Experience/Model/Gs2ExperienceEzTransactionResult.h"
 #include "Gs2ExperienceEzStatusGameSessionDomain.h"
 #include "Experience/Domain/Iterator/Gs2ExperienceEzDescribeStatusesIterator.h"
 #include "Util/Net/GameSession.h"
@@ -41,8 +45,6 @@ namespace Gs2::UE5::Experience::Domain::Model
         public:
         TOptional<FString> Body() const;
         TOptional<FString> Signature() const;
-        TOptional<FString> TransactionId() const;
-        TOptional<bool> AutoRunStampSheet() const;
         TOptional<FString> NamespaceName() const;
         TOptional<FString> UserId() const;
         TOptional<FString> ExperienceName() const;

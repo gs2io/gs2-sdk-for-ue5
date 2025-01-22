@@ -32,6 +32,7 @@ namespace Gs2::Distributor::Request
         TOptional<FString> DescriptionValue;
         TOptional<FString> AssumeUserIdValue;
         TSharedPtr<Model::FNotificationSetting> AutoRunStampSheetNotificationValue;
+        TSharedPtr<Model::FNotificationSetting> AutoRunTransactionNotificationValue;
         TSharedPtr<Model::FLogSetting> LogSettingValue;
         
     public:
@@ -47,6 +48,7 @@ namespace Gs2::Distributor::Request
         TSharedPtr<FCreateNamespaceRequest> WithDescription(const TOptional<FString> Description);
         TSharedPtr<FCreateNamespaceRequest> WithAssumeUserId(const TOptional<FString> AssumeUserId);
         TSharedPtr<FCreateNamespaceRequest> WithAutoRunStampSheetNotification(const TSharedPtr<Model::FNotificationSetting> AutoRunStampSheetNotification);
+        TSharedPtr<FCreateNamespaceRequest> WithAutoRunTransactionNotification(const TSharedPtr<Model::FNotificationSetting> AutoRunTransactionNotification);
         TSharedPtr<FCreateNamespaceRequest> WithLogSetting(const TSharedPtr<Model::FLogSetting> LogSetting);
 
         TOptional<FString> GetContextStack() const;
@@ -54,6 +56,7 @@ namespace Gs2::Distributor::Request
         TOptional<FString> GetDescription() const;
         TOptional<FString> GetAssumeUserId() const;
         TSharedPtr<Model::FNotificationSetting> GetAutoRunStampSheetNotification() const;
+        TSharedPtr<Model::FNotificationSetting> GetAutoRunTransactionNotification() const;
         TSharedPtr<Model::FLogSetting> GetLogSetting() const;
 
         static TSharedPtr<FCreateNamespaceRequest> FromJson(const TSharedPtr<FJsonObject> Data);

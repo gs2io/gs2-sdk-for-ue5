@@ -32,6 +32,7 @@ namespace Gs2::Ranking2::Model
         EntryPeriodEventIdValue(TOptional<FString>()),
         RankingRewardsValue(nullptr),
         AccessPeriodEventIdValue(TOptional<FString>()),
+        RewardCalculationIndexValue(TOptional<FString>()),
         CreatedAtValue(TOptional<int64>()),
         UpdatedAtValue(TOptional<int64>()),
         RevisionValue(TOptional<int64>())
@@ -54,6 +55,7 @@ namespace Gs2::Ranking2::Model
         EntryPeriodEventIdValue(From.EntryPeriodEventIdValue),
         RankingRewardsValue(From.RankingRewardsValue),
         AccessPeriodEventIdValue(From.AccessPeriodEventIdValue),
+        RewardCalculationIndexValue(From.RewardCalculationIndexValue),
         CreatedAtValue(From.CreatedAtValue),
         UpdatedAtValue(From.UpdatedAtValue),
         RevisionValue(From.RevisionValue)
@@ -161,6 +163,14 @@ namespace Gs2::Ranking2::Model
     )
     {
         this->AccessPeriodEventIdValue = AccessPeriodEventId;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FClusterRankingModelMaster> FClusterRankingModelMaster::WithRewardCalculationIndex(
+        const TOptional<FString> RewardCalculationIndex
+    )
+    {
+        this->RewardCalculationIndexValue = RewardCalculationIndex;
         return SharedThis(this);
     }
 
@@ -274,6 +284,10 @@ namespace Gs2::Ranking2::Model
     TOptional<FString> FClusterRankingModelMaster::GetAccessPeriodEventId() const
     {
         return AccessPeriodEventIdValue;
+    }
+    TOptional<FString> FClusterRankingModelMaster::GetRewardCalculationIndex() const
+    {
+        return RewardCalculationIndexValue;
     }
     TOptional<int64> FClusterRankingModelMaster::GetCreatedAt() const
     {
@@ -485,6 +499,15 @@ namespace Gs2::Ranking2::Model
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
+            ->WithRewardCalculationIndex(Data->HasField(ANSI_TO_TCHAR("rewardCalculationIndex")) ? [Data]() -> TOptional<FString>
+                {
+                    FString v("");
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("rewardCalculationIndex"), v))
+                    {
+                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                    }
+                    return TOptional<FString>();
+                }() : TOptional<FString>())
             ->WithCreatedAt(Data->HasField(ANSI_TO_TCHAR("createdAt")) ? [Data]() -> TOptional<int64>
                 {
                     int64 v;
@@ -573,6 +596,10 @@ namespace Gs2::Ranking2::Model
         if (AccessPeriodEventIdValue.IsSet())
         {
             JsonRootObject->SetStringField("accessPeriodEventId", AccessPeriodEventIdValue.GetValue());
+        }
+        if (RewardCalculationIndexValue.IsSet())
+        {
+            JsonRootObject->SetStringField("rewardCalculationIndex", RewardCalculationIndexValue.GetValue());
         }
         if (CreatedAtValue.IsSet())
         {

@@ -35,6 +35,14 @@ namespace Gs2::UE5::Guild::Model
         return SharedThis(this);
     }
 
+    TSharedPtr<FEzMember> FEzMember::WithMetadata(
+        const TOptional<FString> Metadata
+    )
+    {
+        this->MetadataValue = Metadata;
+        return SharedThis(this);
+    }
+
     TSharedPtr<FEzMember> FEzMember::WithJoinedAt(
         const TOptional<int64> JoinedAt
     )
@@ -49,6 +57,10 @@ namespace Gs2::UE5::Guild::Model
     TOptional<FString> FEzMember::GetRoleName() const
     {
         return RoleNameValue;
+    }
+    TOptional<FString> FEzMember::GetMetadata() const
+    {
+        return MetadataValue;
     }
     TOptional<int64> FEzMember::GetJoinedAt() const
     {
@@ -69,6 +81,7 @@ namespace Gs2::UE5::Guild::Model
         return MakeShared<Gs2::Guild::Model::FMember>()
             ->WithUserId(UserIdValue)
             ->WithRoleName(RoleNameValue)
+            ->WithMetadata(MetadataValue)
             ->WithJoinedAt(JoinedAtValue);
     }
 
@@ -81,6 +94,7 @@ namespace Gs2::UE5::Guild::Model
         return MakeShared<FEzMember>()
             ->WithUserId(Model->GetUserId())
             ->WithRoleName(Model->GetRoleName())
+            ->WithMetadata(Model->GetMetadata())
             ->WithJoinedAt(Model->GetJoinedAt());
     }
 }

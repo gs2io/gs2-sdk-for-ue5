@@ -129,6 +129,14 @@ namespace Gs2::Guild::Task::Rest
             {
                 JsonRootObject->SetNumberField("rejoinCoolTimeMinutes", this->Request->GetRejoinCoolTimeMinutes().GetValue());
             }
+            if (this->Request->GetMaxConcurrentJoinGuilds().IsSet())
+            {
+                JsonRootObject->SetNumberField("maxConcurrentJoinGuilds", this->Request->GetMaxConcurrentJoinGuilds().GetValue());
+            }
+            if (this->Request->GetMaxConcurrentGuildMasterCount().IsSet())
+            {
+                JsonRootObject->SetNumberField("maxConcurrentGuildMasterCount", this->Request->GetMaxConcurrentGuildMasterCount().GetValue());
+            }
             if (this->Request->GetContextStack().IsSet())
             {
                 JsonRootObject->SetStringField("contextStack", this->Request->GetContextStack().GetValue());

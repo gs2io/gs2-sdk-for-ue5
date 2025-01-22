@@ -18,12 +18,14 @@
 
 #include "CoreMinimal.h"
 #include "../Model/SerialKey.h"
+#include "../Model/CampaignModel.h"
 
 namespace Gs2::SerialKey::Result
 {
     class GS2SERIALKEY_API FVerifyCodeByUserIdResult final : public TSharedFromThis<FVerifyCodeByUserIdResult>
     {
         TSharedPtr<Model::FSerialKey> ItemValue;
+        TSharedPtr<Model::FCampaignModel> CampaignModelValue;
         
     public:
         
@@ -34,8 +36,10 @@ namespace Gs2::SerialKey::Result
         ~FVerifyCodeByUserIdResult() = default;
 
         TSharedPtr<FVerifyCodeByUserIdResult> WithItem(const TSharedPtr<Model::FSerialKey> Item);
+        TSharedPtr<FVerifyCodeByUserIdResult> WithCampaignModel(const TSharedPtr<Model::FCampaignModel> CampaignModel);
 
         TSharedPtr<Model::FSerialKey> GetItem() const;
+        TSharedPtr<Model::FCampaignModel> GetCampaignModel() const;
 
         static TSharedPtr<FVerifyCodeByUserIdResult> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;

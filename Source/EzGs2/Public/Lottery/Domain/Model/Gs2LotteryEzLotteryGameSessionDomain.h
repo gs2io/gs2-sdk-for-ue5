@@ -25,6 +25,10 @@
 #include "Lottery/Model/Gs2LotteryEzBoxItem.h"
 #include "Lottery/Model/Gs2LotteryEzBoxItems.h"
 #include "Lottery/Model/Gs2LotteryEzConfig.h"
+#include "Lottery/Model/Gs2LotteryEzVerifyActionResult.h"
+#include "Lottery/Model/Gs2LotteryEzConsumeActionResult.h"
+#include "Lottery/Model/Gs2LotteryEzAcquireActionResult.h"
+#include "Lottery/Model/Gs2LotteryEzTransactionResult.h"
 #include "Lottery/Domain/Iterator/Gs2LotteryEzDescribeProbabilitiesIterator.h"
 #include "Gs2LotteryEzLotteryGameSessionDomain.h"
 #include "Util/Net/GameSession.h"
@@ -41,8 +45,6 @@ namespace Gs2::UE5::Lottery::Domain::Model
         Gs2::UE5::Util::FGs2ConnectionPtr ConnectionValue;
 
         public:
-        TOptional<FString> TransactionId() const;
-        TOptional<bool> AutoRunStampSheet() const;
         TOptional<FString> NamespaceName() const;
         TOptional<FString> UserId() const;
         TOptional<FString> LotteryName() const;

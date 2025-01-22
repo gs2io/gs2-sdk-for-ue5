@@ -109,6 +109,32 @@ namespace Gs2::Version::Domain::Model
             Request::FAcceptRequestPtr Request
         );
 
+        class GS2VERSION_API FRejectTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Version::Domain::Model::FAcceptVersionAccessTokenDomain>,
+            public TSharedFromThis<FRejectTask>
+        {
+            const TSharedPtr<FAcceptVersionAccessTokenDomain> Self;
+            const Request::FRejectRequestPtr Request;
+        public:
+            explicit FRejectTask(
+                const TSharedPtr<FAcceptVersionAccessTokenDomain>& Self,
+                const Request::FRejectRequestPtr Request
+            );
+
+            FRejectTask(
+                const FRejectTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Version::Domain::Model::FAcceptVersionAccessTokenDomain>> Result
+            ) override;
+        };
+        friend FRejectTask;
+
+        TSharedPtr<FAsyncTask<FRejectTask>> Reject(
+            Request::FRejectRequestPtr Request
+        );
+
         class GS2VERSION_API FGetTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Version::Model::FAcceptVersion>,
             public TSharedFromThis<FGetTask>

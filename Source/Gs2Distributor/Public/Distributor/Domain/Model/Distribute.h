@@ -48,6 +48,8 @@ namespace Gs2::Distributor::Domain::Model
     class FUserAccessTokenDomain;
     class FStampSheetResultDomain;
     class FStampSheetResultAccessTokenDomain;
+    class FTransactionResultDomain;
+    class FTransactionResultAccessTokenDomain;
 
     class GS2DISTRIBUTOR_API FDistributeDomain:
         public TSharedFromThis<FDistributeDomain>
@@ -67,6 +69,9 @@ namespace Gs2::Distributor::Domain::Model
         TSharedPtr<TArray<FString>> TaskResults;
         TOptional<int32> SheetResultCode;
         TOptional<FString> SheetResult;
+        TOptional<FString> Body;
+        TOptional<FString> Signature;
+        TSharedPtr<TArray<TSharedPtr<Gs2::Distributor::Model::FBatchResultPayload>>> Results;
         TOptional<FString> GetInboxNamespaceId() const
         {
             return InboxNamespaceId;
@@ -106,6 +111,18 @@ namespace Gs2::Distributor::Domain::Model
         TOptional<FString> GetSheetResult() const
         {
             return SheetResult;
+        }
+        TOptional<FString> GetBody() const
+        {
+            return Body;
+        }
+        TOptional<FString> GetSignature() const
+        {
+            return Signature;
+        }
+        TSharedPtr<TArray<TSharedPtr<Gs2::Distributor::Model::FBatchResultPayload>>> GetResults() const
+        {
+            return Results;
         }
         TOptional<FString> NamespaceName;
     private:
@@ -149,6 +166,32 @@ namespace Gs2::Distributor::Domain::Model
 
         TSharedPtr<FAsyncTask<FFreezeMasterDataTask>> FreezeMasterData(
             Request::FFreezeMasterDataByUserIdRequestPtr Request
+        );
+
+        class GS2DISTRIBUTOR_API FSignFreezeMasterDataTimestampTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Distributor::Domain::Model::FDistributeDomain>,
+            public TSharedFromThis<FSignFreezeMasterDataTimestampTask>
+        {
+            const TSharedPtr<FDistributeDomain> Self;
+            const Request::FSignFreezeMasterDataTimestampRequestPtr Request;
+        public:
+            explicit FSignFreezeMasterDataTimestampTask(
+                const TSharedPtr<FDistributeDomain>& Self,
+                const Request::FSignFreezeMasterDataTimestampRequestPtr Request
+            );
+
+            FSignFreezeMasterDataTimestampTask(
+                const FSignFreezeMasterDataTimestampTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Distributor::Domain::Model::FDistributeDomain>> Result
+            ) override;
+        };
+        friend FSignFreezeMasterDataTimestampTask;
+
+        TSharedPtr<FAsyncTask<FSignFreezeMasterDataTimestampTask>> SignFreezeMasterDataTimestamp(
+            Request::FSignFreezeMasterDataTimestampRequestPtr Request
         );
 
         static FString CreateCacheParentKey(

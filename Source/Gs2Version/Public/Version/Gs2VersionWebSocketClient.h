@@ -66,6 +66,10 @@
 #include "Task/WebSocket/AcceptTask.h"
 #include "Request/AcceptByUserIdRequest.h"
 #include "Task/WebSocket/AcceptByUserIdTask.h"
+#include "Request/RejectRequest.h"
+#include "Task/WebSocket/RejectTask.h"
+#include "Request/RejectByUserIdRequest.h"
+#include "Task/WebSocket/RejectByUserIdTask.h"
 #include "Request/GetAcceptVersionRequest.h"
 #include "Task/WebSocket/GetAcceptVersionTask.h"
 #include "Request/GetAcceptVersionByUserIdRequest.h"
@@ -194,6 +198,14 @@ namespace Gs2::Version
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FAcceptByUserIdTask>> AcceptByUserId(
             const Request::FAcceptByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FRejectTask>> Reject(
+            const Request::FRejectRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FRejectByUserIdTask>> RejectByUserId(
+            const Request::FRejectByUserIdRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FGetAcceptVersionTask>> GetAcceptVersion(

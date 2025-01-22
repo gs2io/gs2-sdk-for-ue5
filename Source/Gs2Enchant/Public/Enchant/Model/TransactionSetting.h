@@ -24,6 +24,9 @@ namespace Gs2::Enchant::Model
     class GS2ENCHANT_API FTransactionSetting final : public Gs2Object, public TSharedFromThis<FTransactionSetting>
     {
         TOptional<bool> EnableAutoRunValue;
+        TOptional<bool> EnableAtomicCommitValue;
+        TOptional<bool> TransactionUseDistributorValue;
+        TOptional<bool> AcquireActionUseJobQueueValue;
         TOptional<FString> DistributorNamespaceIdValue;
         TOptional<FString> KeyIdValue;
         TOptional<FString> QueueNamespaceIdValue;
@@ -36,12 +39,21 @@ namespace Gs2::Enchant::Model
         virtual ~FTransactionSetting() override = default;
 
         TSharedPtr<FTransactionSetting> WithEnableAutoRun(const TOptional<bool> EnableAutoRun);
+        TSharedPtr<FTransactionSetting> WithEnableAtomicCommit(const TOptional<bool> EnableAtomicCommit);
+        TSharedPtr<FTransactionSetting> WithTransactionUseDistributor(const TOptional<bool> TransactionUseDistributor);
+        TSharedPtr<FTransactionSetting> WithAcquireActionUseJobQueue(const TOptional<bool> AcquireActionUseJobQueue);
         TSharedPtr<FTransactionSetting> WithDistributorNamespaceId(const TOptional<FString> DistributorNamespaceId);
         TSharedPtr<FTransactionSetting> WithKeyId(const TOptional<FString> KeyId);
         TSharedPtr<FTransactionSetting> WithQueueNamespaceId(const TOptional<FString> QueueNamespaceId);
 
         TOptional<bool> GetEnableAutoRun() const;
         FString GetEnableAutoRunString() const;
+        TOptional<bool> GetEnableAtomicCommit() const;
+        FString GetEnableAtomicCommitString() const;
+        TOptional<bool> GetTransactionUseDistributor() const;
+        FString GetTransactionUseDistributorString() const;
+        TOptional<bool> GetAcquireActionUseJobQueue() const;
+        FString GetAcquireActionUseJobQueueString() const;
         TOptional<FString> GetDistributorNamespaceId() const;
         TOptional<FString> GetKeyId() const;
         TOptional<FString> GetQueueNamespaceId() const;

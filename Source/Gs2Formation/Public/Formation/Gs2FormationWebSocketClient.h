@@ -130,6 +130,8 @@
 #include "Task/WebSocket/GetFormWithSignatureTask.h"
 #include "Request/GetFormWithSignatureByUserIdRequest.h"
 #include "Task/WebSocket/GetFormWithSignatureByUserIdTask.h"
+#include "Request/SetFormRequest.h"
+#include "Task/WebSocket/SetFormTask.h"
 #include "Request/SetFormByUserIdRequest.h"
 #include "Task/WebSocket/SetFormByUserIdTask.h"
 #include "Request/SetFormWithSignatureRequest.h"
@@ -156,6 +158,8 @@
 #include "Task/WebSocket/GetPropertyFormWithSignatureTask.h"
 #include "Request/GetPropertyFormWithSignatureByUserIdRequest.h"
 #include "Task/WebSocket/GetPropertyFormWithSignatureByUserIdTask.h"
+#include "Request/SetPropertyFormRequest.h"
+#include "Task/WebSocket/SetPropertyFormTask.h"
 #include "Request/SetPropertyFormByUserIdRequest.h"
 #include "Task/WebSocket/SetPropertyFormByUserIdTask.h"
 #include "Request/SetPropertyFormWithSignatureRequest.h"
@@ -404,6 +408,10 @@ namespace Gs2::Formation
             const Request::FGetFormWithSignatureByUserIdRequestPtr Request
         ) const;
 
+        TSharedPtr<FAsyncTask<Task::WebSocket::FSetFormTask>> SetForm(
+            const Request::FSetFormRequestPtr Request
+        ) const;
+
         TSharedPtr<FAsyncTask<Task::WebSocket::FSetFormByUserIdTask>> SetFormByUserId(
             const Request::FSetFormByUserIdRequestPtr Request
         ) const;
@@ -454,6 +462,10 @@ namespace Gs2::Formation
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FGetPropertyFormWithSignatureByUserIdTask>> GetPropertyFormWithSignatureByUserId(
             const Request::FGetPropertyFormWithSignatureByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FSetPropertyFormTask>> SetPropertyForm(
+            const Request::FSetPropertyFormRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FSetPropertyFormByUserIdTask>> SetPropertyFormByUserId(

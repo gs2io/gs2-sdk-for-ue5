@@ -110,6 +110,10 @@
 #include "Task/WebSocket/ConsumeStaminaTask.h"
 #include "Request/ConsumeStaminaByUserIdRequest.h"
 #include "Task/WebSocket/ConsumeStaminaByUserIdTask.h"
+#include "Request/ApplyStaminaRequest.h"
+#include "Task/WebSocket/ApplyStaminaTask.h"
+#include "Request/ApplyStaminaByUserIdRequest.h"
+#include "Task/WebSocket/ApplyStaminaByUserIdTask.h"
 #include "Request/RecoverStaminaByUserIdRequest.h"
 #include "Task/WebSocket/RecoverStaminaByUserIdTask.h"
 #include "Request/RaiseMaxValueByUserIdRequest.h"
@@ -340,6 +344,14 @@ namespace Gs2::Stamina
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FConsumeStaminaByUserIdTask>> ConsumeStaminaByUserId(
             const Request::FConsumeStaminaByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FApplyStaminaTask>> ApplyStamina(
+            const Request::FApplyStaminaRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FApplyStaminaByUserIdTask>> ApplyStaminaByUserId(
+            const Request::FApplyStaminaByUserIdRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FRecoverStaminaByUserIdTask>> RecoverStaminaByUserId(

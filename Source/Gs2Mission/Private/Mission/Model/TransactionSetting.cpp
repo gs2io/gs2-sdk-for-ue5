@@ -20,6 +20,9 @@ namespace Gs2::Mission::Model
 {
     FTransactionSetting::FTransactionSetting():
         EnableAutoRunValue(TOptional<bool>()),
+        EnableAtomicCommitValue(TOptional<bool>()),
+        TransactionUseDistributorValue(TOptional<bool>()),
+        AcquireActionUseJobQueueValue(TOptional<bool>()),
         DistributorNamespaceIdValue(TOptional<FString>()),
         KeyIdValue(TOptional<FString>()),
         QueueNamespaceIdValue(TOptional<FString>())
@@ -30,6 +33,9 @@ namespace Gs2::Mission::Model
         const FTransactionSetting& From
     ):
         EnableAutoRunValue(From.EnableAutoRunValue),
+        EnableAtomicCommitValue(From.EnableAtomicCommitValue),
+        TransactionUseDistributorValue(From.TransactionUseDistributorValue),
+        AcquireActionUseJobQueueValue(From.AcquireActionUseJobQueueValue),
         DistributorNamespaceIdValue(From.DistributorNamespaceIdValue),
         KeyIdValue(From.KeyIdValue),
         QueueNamespaceIdValue(From.QueueNamespaceIdValue)
@@ -41,6 +47,30 @@ namespace Gs2::Mission::Model
     )
     {
         this->EnableAutoRunValue = EnableAutoRun;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FTransactionSetting> FTransactionSetting::WithEnableAtomicCommit(
+        const TOptional<bool> EnableAtomicCommit
+    )
+    {
+        this->EnableAtomicCommitValue = EnableAtomicCommit;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FTransactionSetting> FTransactionSetting::WithTransactionUseDistributor(
+        const TOptional<bool> TransactionUseDistributor
+    )
+    {
+        this->TransactionUseDistributorValue = TransactionUseDistributor;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FTransactionSetting> FTransactionSetting::WithAcquireActionUseJobQueue(
+        const TOptional<bool> AcquireActionUseJobQueue
+    )
+    {
+        this->AcquireActionUseJobQueueValue = AcquireActionUseJobQueue;
         return SharedThis(this);
     }
 
@@ -80,6 +110,45 @@ namespace Gs2::Mission::Model
         }
         return FString(EnableAutoRunValue.GetValue() ? "true" : "false");
     }
+    TOptional<bool> FTransactionSetting::GetEnableAtomicCommit() const
+    {
+        return EnableAtomicCommitValue;
+    }
+
+    FString FTransactionSetting::GetEnableAtomicCommitString() const
+    {
+        if (!EnableAtomicCommitValue.IsSet())
+        {
+            return FString("null");
+        }
+        return FString(EnableAtomicCommitValue.GetValue() ? "true" : "false");
+    }
+    TOptional<bool> FTransactionSetting::GetTransactionUseDistributor() const
+    {
+        return TransactionUseDistributorValue;
+    }
+
+    FString FTransactionSetting::GetTransactionUseDistributorString() const
+    {
+        if (!TransactionUseDistributorValue.IsSet())
+        {
+            return FString("null");
+        }
+        return FString(TransactionUseDistributorValue.GetValue() ? "true" : "false");
+    }
+    TOptional<bool> FTransactionSetting::GetAcquireActionUseJobQueue() const
+    {
+        return AcquireActionUseJobQueueValue;
+    }
+
+    FString FTransactionSetting::GetAcquireActionUseJobQueueString() const
+    {
+        if (!AcquireActionUseJobQueueValue.IsSet())
+        {
+            return FString("null");
+        }
+        return FString(AcquireActionUseJobQueueValue.GetValue() ? "true" : "false");
+    }
     TOptional<FString> FTransactionSetting::GetDistributorNamespaceId() const
     {
         return DistributorNamespaceIdValue;
@@ -103,6 +172,33 @@ namespace Gs2::Mission::Model
                 {
                     bool v;
                     if (Data->TryGetBoolField(ANSI_TO_TCHAR("enableAutoRun"), v))
+                    {
+                        return TOptional(v);
+                    }
+                    return TOptional<bool>();
+                }() : TOptional<bool>())
+            ->WithEnableAtomicCommit(Data->HasField(ANSI_TO_TCHAR("enableAtomicCommit")) ? [Data]() -> TOptional<bool>
+                {
+                    bool v;
+                    if (Data->TryGetBoolField(ANSI_TO_TCHAR("enableAtomicCommit"), v))
+                    {
+                        return TOptional(v);
+                    }
+                    return TOptional<bool>();
+                }() : TOptional<bool>())
+            ->WithTransactionUseDistributor(Data->HasField(ANSI_TO_TCHAR("transactionUseDistributor")) ? [Data]() -> TOptional<bool>
+                {
+                    bool v;
+                    if (Data->TryGetBoolField(ANSI_TO_TCHAR("transactionUseDistributor"), v))
+                    {
+                        return TOptional(v);
+                    }
+                    return TOptional<bool>();
+                }() : TOptional<bool>())
+            ->WithAcquireActionUseJobQueue(Data->HasField(ANSI_TO_TCHAR("acquireActionUseJobQueue")) ? [Data]() -> TOptional<bool>
+                {
+                    bool v;
+                    if (Data->TryGetBoolField(ANSI_TO_TCHAR("acquireActionUseJobQueue"), v))
                     {
                         return TOptional(v);
                     }
@@ -143,6 +239,18 @@ namespace Gs2::Mission::Model
         if (EnableAutoRunValue.IsSet())
         {
             JsonRootObject->SetBoolField("enableAutoRun", EnableAutoRunValue.GetValue());
+        }
+        if (EnableAtomicCommitValue.IsSet())
+        {
+            JsonRootObject->SetBoolField("enableAtomicCommit", EnableAtomicCommitValue.GetValue());
+        }
+        if (TransactionUseDistributorValue.IsSet())
+        {
+            JsonRootObject->SetBoolField("transactionUseDistributor", TransactionUseDistributorValue.GetValue());
+        }
+        if (AcquireActionUseJobQueueValue.IsSet())
+        {
+            JsonRootObject->SetBoolField("acquireActionUseJobQueue", AcquireActionUseJobQueueValue.GetValue());
         }
         if (DistributorNamespaceIdValue.IsSet())
         {

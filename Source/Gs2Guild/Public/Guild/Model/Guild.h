@@ -34,6 +34,7 @@ namespace Gs2::Guild::Model
         TOptional<int32> Attribute3Value;
         TOptional<int32> Attribute4Value;
         TOptional<int32> Attribute5Value;
+        TOptional<FString> MetadataValue;
         TOptional<FString> JoinPolicyValue;
         TSharedPtr<TArray<TSharedPtr<FRoleModel>>> CustomRolesValue;
         TOptional<FString> GuildMemberDefaultRoleValue;
@@ -59,6 +60,7 @@ namespace Gs2::Guild::Model
         TSharedPtr<FGuild> WithAttribute3(const TOptional<int32> Attribute3);
         TSharedPtr<FGuild> WithAttribute4(const TOptional<int32> Attribute4);
         TSharedPtr<FGuild> WithAttribute5(const TOptional<int32> Attribute5);
+        TSharedPtr<FGuild> WithMetadata(const TOptional<FString> Metadata);
         TSharedPtr<FGuild> WithJoinPolicy(const TOptional<FString> JoinPolicy);
         TSharedPtr<FGuild> WithCustomRoles(const TSharedPtr<TArray<TSharedPtr<FRoleModel>>> CustomRoles);
         TSharedPtr<FGuild> WithGuildMemberDefaultRole(const TOptional<FString> GuildMemberDefaultRole);
@@ -82,6 +84,7 @@ namespace Gs2::Guild::Model
         FString GetAttribute4String() const;
         TOptional<int32> GetAttribute5() const;
         FString GetAttribute5String() const;
+        TOptional<FString> GetMetadata() const;
         TOptional<FString> GetJoinPolicy() const;
         TSharedPtr<TArray<TSharedPtr<FRoleModel>>> GetCustomRoles() const;
         TOptional<FString> GetGuildMemberDefaultRole() const;

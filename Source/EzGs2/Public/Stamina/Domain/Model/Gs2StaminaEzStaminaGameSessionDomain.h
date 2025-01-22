@@ -73,6 +73,26 @@ namespace Gs2::UE5::Stamina::Domain::Model
             int32 ConsumeValue
         );
 
+        class EZGS2_API FApplyTask :
+            public Gs2::Core::Util::TGs2Future<Gs2::UE5::Stamina::Domain::Model::FEzStaminaGameSessionDomain>,
+            public TSharedFromThis<FApplyTask>
+        {
+            TSharedPtr<FEzStaminaGameSessionDomain> Self;
+
+        public:
+            explicit FApplyTask(
+                TSharedPtr<FEzStaminaGameSessionDomain> Self
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::UE5::Stamina::Domain::Model::FEzStaminaGameSessionDomain>> Result
+            ) override;
+        };
+        friend FApplyTask;
+
+        TSharedPtr<FAsyncTask<FApplyTask>> Apply(
+        );
+
         class EZGS2_API FSetMaxValueTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::Stamina::Domain::Model::FEzStaminaGameSessionDomain>,
             public TSharedFromThis<FSetMaxValueTask>

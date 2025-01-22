@@ -35,6 +35,7 @@ namespace Gs2::Ranking2::Model
         TOptional<FString> EntryPeriodEventIdValue;
         TSharedPtr<TArray<TSharedPtr<FRankingReward>>> RankingRewardsValue;
         TOptional<FString> AccessPeriodEventIdValue;
+        TOptional<FString> RewardCalculationIndexValue;
 
     public:
         FClusterRankingModel();
@@ -54,6 +55,7 @@ namespace Gs2::Ranking2::Model
         TSharedPtr<FClusterRankingModel> WithEntryPeriodEventId(const TOptional<FString> EntryPeriodEventId);
         TSharedPtr<FClusterRankingModel> WithRankingRewards(const TSharedPtr<TArray<TSharedPtr<FRankingReward>>> RankingRewards);
         TSharedPtr<FClusterRankingModel> WithAccessPeriodEventId(const TOptional<FString> AccessPeriodEventId);
+        TSharedPtr<FClusterRankingModel> WithRewardCalculationIndex(const TOptional<FString> RewardCalculationIndex);
 
         TOptional<FString> GetClusterRankingModelId() const;
         TOptional<FString> GetName() const;
@@ -69,6 +71,7 @@ namespace Gs2::Ranking2::Model
         TOptional<FString> GetEntryPeriodEventId() const;
         TSharedPtr<TArray<TSharedPtr<FRankingReward>>> GetRankingRewards() const;
         TOptional<FString> GetAccessPeriodEventId() const;
+        TOptional<FString> GetRewardCalculationIndex() const;
 
         static TOptional<FString> GetRegionFromGrn(const FString Grn);
         static TOptional<FString> GetOwnerIdFromGrn(const FString Grn);

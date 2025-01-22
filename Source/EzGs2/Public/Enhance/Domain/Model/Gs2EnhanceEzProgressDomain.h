@@ -22,6 +22,10 @@
 #include "Enhance/Model/Gs2EnhanceEzProgress.h"
 #include "Enhance/Model/Gs2EnhanceEzConfig.h"
 #include "Enhance/Model/Gs2EnhanceEzMaterial.h"
+#include "Enhance/Model/Gs2EnhanceEzVerifyActionResult.h"
+#include "Enhance/Model/Gs2EnhanceEzConsumeActionResult.h"
+#include "Enhance/Model/Gs2EnhanceEzAcquireActionResult.h"
+#include "Enhance/Model/Gs2EnhanceEzTransactionResult.h"
 #include "Gs2EnhanceEzProgressDomain.h"
 #include "Util/Net/GameSession.h"
 #include "Util/Net/Gs2Connection.h"
@@ -36,8 +40,6 @@ namespace Gs2::UE5::Enhance::Domain::Model
         Gs2::UE5::Util::FGs2ConnectionPtr ConnectionValue;
 
         public:
-        TOptional<FString> TransactionId() const;
-        TOptional<bool> AutoRunStampSheet() const;
         TOptional<int64> AcquireExperience() const;
         TOptional<float> BonusRate() const;
         TOptional<FString> NamespaceName() const;

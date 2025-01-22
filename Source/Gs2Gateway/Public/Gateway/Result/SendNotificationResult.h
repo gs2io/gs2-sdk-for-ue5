@@ -23,6 +23,7 @@ namespace Gs2::Gateway::Result
     class GS2GATEWAY_API FSendNotificationResult final : public TSharedFromThis<FSendNotificationResult>
     {
         TOptional<FString> ProtocolValue;
+        TSharedPtr<TArray<FString>> SendConnectionIdsValue;
         
     public:
         
@@ -33,8 +34,10 @@ namespace Gs2::Gateway::Result
         ~FSendNotificationResult() = default;
 
         TSharedPtr<FSendNotificationResult> WithProtocol(const TOptional<FString> Protocol);
+        TSharedPtr<FSendNotificationResult> WithSendConnectionIds(const TSharedPtr<TArray<FString>> SendConnectionIds);
 
         TOptional<FString> GetProtocol() const;
+        TSharedPtr<TArray<FString>> GetSendConnectionIds() const;
 
         static TSharedPtr<FSendNotificationResult> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;

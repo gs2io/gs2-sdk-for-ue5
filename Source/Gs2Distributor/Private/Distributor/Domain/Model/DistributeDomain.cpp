@@ -33,6 +33,8 @@
 #include "Distributor/Domain/Model/UserAccessToken.h"
 #include "Distributor/Domain/Model/StampSheetResult.h"
 #include "Distributor/Domain/Model/StampSheetResultAccessToken.h"
+#include "Distributor/Domain/Model/TransactionResult.h"
+#include "Distributor/Domain/Model/TransactionResultAccessToken.h"
 
 #include "Core/Domain/Gs2.h"
 #include "Core/Domain/Transaction/JobQueueJobDomainFactory.h"
@@ -116,6 +118,63 @@ namespace Gs2::Distributor::Domain::Model
         Request::FFreezeMasterDataByUserIdRequestPtr Request
     ) {
         return Gs2::Core::Util::New<FAsyncTask<FFreezeMasterDataTask>>(this->AsShared(), Request);
+    }
+
+    FDistributeDomain::FSignFreezeMasterDataTimestampTask::FSignFreezeMasterDataTimestampTask(
+        const TSharedPtr<FDistributeDomain>& Self,
+        const Request::FSignFreezeMasterDataTimestampRequestPtr Request
+    ): Self(Self), Request(Request)
+    {
+
+    }
+
+    FDistributeDomain::FSignFreezeMasterDataTimestampTask::FSignFreezeMasterDataTimestampTask(
+        const FSignFreezeMasterDataTimestampTask& From
+    ): TGs2Future(From), Self(From.Self), Request(From.Request)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FDistributeDomain::FSignFreezeMasterDataTimestampTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::Distributor::Domain::Model::FDistributeDomain>> Result
+    )
+    {
+        Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
+            ->WithNamespaceName(Self->NamespaceName);
+        const auto Future = Self->Client->SignFreezeMasterDataTimestamp(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto RequestModel = Request;
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
+        if (ResultModel != nullptr) {
+            
+        }
+        const auto Domain = Self;
+        if (ResultModel != nullptr)
+        {
+            if (ResultModel->GetBody().IsSet())
+            {
+                Self->Body = Domain->Body = ResultModel->GetBody();
+            }
+            if (ResultModel->GetSignature().IsSet())
+            {
+                Self->Signature = Domain->Signature = ResultModel->GetSignature();
+            }
+        }
+        *Result = Domain;
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FDistributeDomain::FSignFreezeMasterDataTimestampTask>> FDistributeDomain::SignFreezeMasterDataTimestamp(
+        Request::FSignFreezeMasterDataTimestampRequestPtr Request
+    ) {
+        return Gs2::Core::Util::New<FAsyncTask<FSignFreezeMasterDataTimestampTask>>(this->AsShared(), Request);
     }
 
     FString FDistributeDomain::CreateCacheParentKey(

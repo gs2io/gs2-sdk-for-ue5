@@ -22,9 +22,15 @@
 #include "Distributor/Model/Gs2DistributorEzDistributorModel.h"
 #include "Distributor/Model/Gs2DistributorEzDistributeResource.h"
 #include "Distributor/Model/Gs2DistributorEzStampSheetResult.h"
+#include "Distributor/Model/Gs2DistributorEzBatchRequestPayload.h"
+#include "Distributor/Model/Gs2DistributorEzBatchResultPayload.h"
 #include "Distributor/Model/Gs2DistributorEzAcquireAction.h"
 #include "Distributor/Model/Gs2DistributorEzConsumeAction.h"
 #include "Distributor/Model/Gs2DistributorEzVerifyAction.h"
+#include "Distributor/Model/Gs2DistributorEzTransactionResult.h"
+#include "Distributor/Model/Gs2DistributorEzAcquireActionResult.h"
+#include "Distributor/Model/Gs2DistributorEzConsumeActionResult.h"
+#include "Distributor/Model/Gs2DistributorEzVerifyActionResult.h"
 #include "Gs2DistributorEzDistributorModelDomain.h"
 #include "Distributor/Domain/Iterator/Gs2DistributorEzDescribeDistributorModelsIterator.h"
 #include "Gs2DistributorEzUserDomain.h"
@@ -54,12 +60,36 @@ namespace Gs2::UE5::Distributor::Domain::Model
         TSharedPtr<TArray<FString>> TaskResults() const;
         TOptional<int32> SheetResultCode() const;
         TOptional<FString> SheetResult() const;
+        TSharedPtr<TArray<TSharedPtr<Gs2::UE5::Distributor::Model::FEzBatchResultPayload>>> Results() const;
         TOptional<FString> NextPageToken() const;
         TOptional<FString> NamespaceName() const;
 
         FEzNamespaceDomain(
             Gs2::Distributor::Domain::Model::FNamespaceDomainPtr Domain,
             Gs2::UE5::Util::FGs2ConnectionPtr Connection
+        );
+
+        class EZGS2_API FBatchExecuteApiTask :
+            public Gs2::Core::Util::TGs2Future<Gs2::UE5::Distributor::Domain::Model::FEzNamespaceDomain>,
+            public TSharedFromThis<FBatchExecuteApiTask>
+        {
+            TSharedPtr<FEzNamespaceDomain> Self;
+            TArray<TSharedPtr<Gs2::UE5::Distributor::Model::FEzBatchRequestPayload>> RequestPayloads;
+
+        public:
+            explicit FBatchExecuteApiTask(
+                TSharedPtr<FEzNamespaceDomain> Self,
+                TArray<TSharedPtr<Gs2::UE5::Distributor::Model::FEzBatchRequestPayload>> RequestPayloads
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::UE5::Distributor::Domain::Model::FEzNamespaceDomain>> Result
+            ) override;
+        };
+        friend FBatchExecuteApiTask;
+
+        TSharedPtr<FAsyncTask<FBatchExecuteApiTask>> BatchExecuteApi(
+            TArray<TSharedPtr<Gs2::UE5::Distributor::Model::FEzBatchRequestPayload>> RequestPayloads
         );
 
         Gs2::UE5::Distributor::Domain::Iterator::FEzDescribeDistributorModelsIteratorPtr DistributorModels(

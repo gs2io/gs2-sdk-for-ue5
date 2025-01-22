@@ -19,16 +19,6 @@
 namespace Gs2::UE5::LoginReward::Domain::Model
 {
 
-    TOptional<FString> FEzBonusDomain::TransactionId() const
-    {
-        return Domain->TransactionId;
-    }
-
-    TOptional<bool> FEzBonusDomain::AutoRunStampSheet() const
-    {
-        return Domain->AutoRunStampSheet;
-    }
-
     TOptional<FString> FEzBonusDomain::NamespaceName() const
     {
         return Domain->NamespaceName;

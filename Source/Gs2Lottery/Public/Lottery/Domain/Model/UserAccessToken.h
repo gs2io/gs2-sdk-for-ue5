@@ -70,17 +70,7 @@ namespace Gs2::Lottery::Domain::Model
         const Gs2::Lottery::FGs2LotteryRestClientPtr Client;
 
         public:
-        TOptional<FString> TransactionId;
-        TOptional<bool> AutoRunStampSheet;
         TOptional<FString> NextPageToken;
-        TOptional<FString> GetTransactionId() const
-        {
-            return TransactionId;
-        }
-        TOptional<bool> GetAutoRunStampSheet() const
-        {
-            return AutoRunStampSheet;
-        }
         TOptional<FString> GetNextPageToken() const
         {
             return NextPageToken;

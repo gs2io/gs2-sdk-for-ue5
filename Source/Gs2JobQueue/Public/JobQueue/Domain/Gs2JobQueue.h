@@ -29,15 +29,12 @@
 #include "JobQueue/Domain/Model/JobAccessToken.h"
 #include "JobQueue/Domain/Model/JobResult.h"
 #include "JobQueue/Domain/Model/JobResultAccessToken.h"
-#include "JobQueue/Domain/Model/DeadLetterJob.h"
-#include "JobQueue/Domain/Model/DeadLetterJobAccessToken.h"
 #include "JobQueue/Domain/Model/User.h"
 #include "JobQueue/Domain/Model/UserAccessToken.h"
 
 // Iterator
 #include "JobQueue/Domain/Iterator/DescribeNamespacesIterator.h"
 #include "JobQueue/Domain/Iterator/DescribeJobsByUserIdIterator.h"
-#include "JobQueue/Domain/Iterator/DescribeDeadLetterJobsByUserIdIterator.h"
 
 // Notification
 #include "JobQueue/Model/PushNotification.h"

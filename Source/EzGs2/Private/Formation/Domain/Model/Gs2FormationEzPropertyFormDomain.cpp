@@ -29,16 +29,6 @@ namespace Gs2::UE5::Formation::Domain::Model
         return Domain->Signature;
     }
 
-    TOptional<FString> FEzPropertyFormDomain::TransactionId() const
-    {
-        return Domain->TransactionId;
-    }
-
-    TOptional<bool> FEzPropertyFormDomain::AutoRunStampSheet() const
-    {
-        return Domain->AutoRunStampSheet;
-    }
-
     TOptional<FString> FEzPropertyFormDomain::NamespaceName() const
     {
         return Domain->NamespaceName;

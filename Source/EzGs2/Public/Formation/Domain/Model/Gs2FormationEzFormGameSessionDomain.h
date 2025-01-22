@@ -29,6 +29,10 @@
 #include "Formation/Model/Gs2FormationEzSlotWithSignature.h"
 #include "Formation/Model/Gs2FormationEzConfig.h"
 #include "Formation/Model/Gs2FormationEzAcquireAction.h"
+#include "Formation/Model/Gs2FormationEzVerifyActionResult.h"
+#include "Formation/Model/Gs2FormationEzConsumeActionResult.h"
+#include "Formation/Model/Gs2FormationEzAcquireActionResult.h"
+#include "Formation/Model/Gs2FormationEzTransactionResult.h"
 #include "Gs2FormationEzFormGameSessionDomain.h"
 #include "Formation/Domain/Iterator/Gs2FormationEzDescribeFormsIterator.h"
 #include "Util/Net/GameSession.h"
@@ -47,8 +51,6 @@ namespace Gs2::UE5::Formation::Domain::Model
         public:
         TOptional<FString> Body() const;
         TOptional<FString> Signature() const;
-        TOptional<FString> TransactionId() const;
-        TOptional<bool> AutoRunStampSheet() const;
         TOptional<FString> NamespaceName() const;
         TOptional<FString> UserId() const;
         TOptional<FString> MoldModelName() const;

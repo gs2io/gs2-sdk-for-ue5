@@ -25,6 +25,7 @@ namespace Gs2::Guild::Model
     {
         TOptional<FString> UserIdValue;
         TOptional<FString> RoleNameValue;
+        TOptional<FString> MetadataValue;
         TOptional<int64> JoinedAtValue;
 
     public:
@@ -36,10 +37,12 @@ namespace Gs2::Guild::Model
 
         TSharedPtr<FMember> WithUserId(const TOptional<FString> UserId);
         TSharedPtr<FMember> WithRoleName(const TOptional<FString> RoleName);
+        TSharedPtr<FMember> WithMetadata(const TOptional<FString> Metadata);
         TSharedPtr<FMember> WithJoinedAt(const TOptional<int64> JoinedAt);
 
         TOptional<FString> GetUserId() const;
         TOptional<FString> GetRoleName() const;
+        TOptional<FString> GetMetadata() const;
         TOptional<int64> GetJoinedAt() const;
         FString GetJoinedAtString() const;
 

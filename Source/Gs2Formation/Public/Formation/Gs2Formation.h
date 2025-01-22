@@ -33,6 +33,10 @@
 #include "Model/SlotWithSignature.h"
 #include "Model/AcquireAction.h"
 #include "Model/Config.h"
+#include "Model/VerifyActionResult.h"
+#include "Model/ConsumeActionResult.h"
+#include "Model/AcquireActionResult.h"
+#include "Model/TransactionResult.h"
 #include "Model/GitHubCheckoutSetting.h"
 #include "Model/ScriptSetting.h"
 #include "Model/LogSetting.h"
@@ -374,6 +378,12 @@
 #include "Task/Rest/GetFormWithSignatureByUserIdTask.h"
 #include "Task/WebSocket/GetFormWithSignatureByUserIdTask.h"
 
+// SetForm
+#include "Request/SetFormRequest.h"
+#include "Result/SetFormResult.h"
+#include "Task/Rest/SetFormTask.h"
+#include "Task/WebSocket/SetFormTask.h"
+
 // SetFormByUserId
 #include "Request/SetFormByUserIdRequest.h"
 #include "Result/SetFormByUserIdResult.h"
@@ -451,6 +461,12 @@
 #include "Result/GetPropertyFormWithSignatureByUserIdResult.h"
 #include "Task/Rest/GetPropertyFormWithSignatureByUserIdTask.h"
 #include "Task/WebSocket/GetPropertyFormWithSignatureByUserIdTask.h"
+
+// SetPropertyForm
+#include "Request/SetPropertyFormRequest.h"
+#include "Result/SetPropertyFormResult.h"
+#include "Task/Rest/SetPropertyFormTask.h"
+#include "Task/WebSocket/SetPropertyFormTask.h"
 
 // SetPropertyFormByUserId
 #include "Request/SetPropertyFormByUserIdRequest.h"

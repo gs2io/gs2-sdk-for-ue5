@@ -460,6 +460,15 @@ namespace Gs2::Exchange
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::Rest::FAcquireForceByStampSheetTask>> FGs2ExchangeRestClient::AcquireForceByStampSheet(
+        const Request::FAcquireForceByStampSheetRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FAcquireForceByStampSheetTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::Rest::FSkipByStampSheetTask>> FGs2ExchangeRestClient::SkipByStampSheet(
         const Request::FSkipByStampSheetRequestPtr Request) const
     {

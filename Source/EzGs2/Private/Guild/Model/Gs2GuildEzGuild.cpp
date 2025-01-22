@@ -83,6 +83,14 @@ namespace Gs2::UE5::Guild::Model
         return SharedThis(this);
     }
 
+    TSharedPtr<FEzGuild> FEzGuild::WithMetadata(
+        const TOptional<FString> Metadata
+    )
+    {
+        this->MetadataValue = Metadata;
+        return SharedThis(this);
+    }
+
     TSharedPtr<FEzGuild> FEzGuild::WithJoinPolicy(
         const TOptional<FString> JoinPolicy
     )
@@ -183,6 +191,10 @@ namespace Gs2::UE5::Guild::Model
         }
         return FString::Printf(TEXT("%d"), Attribute5Value.GetValue());
     }
+    TOptional<FString> FEzGuild::GetMetadata() const
+    {
+        return MetadataValue;
+    }
     TOptional<FString> FEzGuild::GetJoinPolicy() const
     {
         return JoinPolicyValue;
@@ -207,6 +219,7 @@ namespace Gs2::UE5::Guild::Model
             ->WithAttribute3(Attribute3Value)
             ->WithAttribute4(Attribute4Value)
             ->WithAttribute5(Attribute5Value)
+            ->WithMetadata(MetadataValue)
             ->WithJoinPolicy(JoinPolicyValue)
             ->WithCustomRoles([&]
                 {
@@ -253,6 +266,7 @@ namespace Gs2::UE5::Guild::Model
             ->WithAttribute3(Model->GetAttribute3())
             ->WithAttribute4(Model->GetAttribute4())
             ->WithAttribute5(Model->GetAttribute5())
+            ->WithMetadata(Model->GetMetadata())
             ->WithJoinPolicy(Model->GetJoinPolicy())
             ->WithCustomRoles([&]
                 {

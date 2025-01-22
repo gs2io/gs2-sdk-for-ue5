@@ -18,6 +18,7 @@
 
 #include "CoreMinimal.h"
 #include "../Model/Progress.h"
+#include "Gs2Core/Public/Core/Model/TransactionResult.h"
 
 namespace Gs2::Enhance::Result
 {
@@ -28,6 +29,9 @@ namespace Gs2::Enhance::Result
         TOptional<FString> StampSheetValue;
         TOptional<FString> StampSheetEncryptionKeyIdValue;
         TOptional<bool> AutoRunStampSheetValue;
+        TOptional<bool> AtomicCommitValue;
+        TOptional<FString> TransactionValue;
+        TSharedPtr<Gs2::Core::Model::FTransactionResult> TransactionResultValue;
         TOptional<int64> AcquireExperienceValue;
         TOptional<float> BonusRateValue;
         
@@ -44,6 +48,9 @@ namespace Gs2::Enhance::Result
         TSharedPtr<FEndResult> WithStampSheet(const TOptional<FString> StampSheet);
         TSharedPtr<FEndResult> WithStampSheetEncryptionKeyId(const TOptional<FString> StampSheetEncryptionKeyId);
         TSharedPtr<FEndResult> WithAutoRunStampSheet(const TOptional<bool> AutoRunStampSheet);
+        TSharedPtr<FEndResult> WithAtomicCommit(const TOptional<bool> AtomicCommit);
+        TSharedPtr<FEndResult> WithTransaction(const TOptional<FString> Transaction);
+        TSharedPtr<FEndResult> WithTransactionResult(const TSharedPtr<Gs2::Core::Model::FTransactionResult> TransactionResult);
         TSharedPtr<FEndResult> WithAcquireExperience(const TOptional<int64> AcquireExperience);
         TSharedPtr<FEndResult> WithBonusRate(const TOptional<float> BonusRate);
 
@@ -53,6 +60,10 @@ namespace Gs2::Enhance::Result
         TOptional<FString> GetStampSheetEncryptionKeyId() const;
         TOptional<bool> GetAutoRunStampSheet() const;
         FString GetAutoRunStampSheetString() const;
+        TOptional<bool> GetAtomicCommit() const;
+        FString GetAtomicCommitString() const;
+        TOptional<FString> GetTransaction() const;
+        TSharedPtr<Gs2::Core::Model::FTransactionResult> GetTransactionResult() const;
         TOptional<int64> GetAcquireExperience() const;
         FString GetAcquireExperienceString() const;
         TOptional<float> GetBonusRate() const;

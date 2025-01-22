@@ -26,6 +26,7 @@
 #include "Exchange/Domain/SpeculativeExecutor/Acquire/ExchangeByUserIdSpeculativeExecutor.h"
 #include "Exchange/Domain/SpeculativeExecutor/Acquire/IncrementalExchangeByUserIdSpeculativeExecutor.h"
 #include "Exchange/Domain/SpeculativeExecutor/Acquire/CreateAwaitByUserIdSpeculativeExecutor.h"
+#include "Exchange/Domain/SpeculativeExecutor/Acquire/AcquireForceByUserIdSpeculativeExecutor.h"
 #include "Exchange/Domain/SpeculativeExecutor/Acquire/SkipByUserIdSpeculativeExecutor.h"
 
 #include "Core/Domain/Gs2.h"
@@ -121,6 +122,28 @@ namespace Gs2::Exchange::Domain::SpeculativeExecutor
             auto Request = Request::FCreateAwaitByUserIdRequest::FromJson(RequestModelJson);
             Request = FCreateAwaitByUserIdSpeculativeExecutor::Rate(Request, Rate);
             auto Future = FCreateAwaitByUserIdSpeculativeExecutor::Execute(
+                Domain,
+                Service,
+                AccessToken,
+                Request
+            );
+            Future->StartSynchronousTask();
+            if (Future->GetTask().IsError())
+            {
+                return Future->GetTask().Error();
+            }
+            *Result = Future->GetTask().Result();
+        }
+        if (FAcquireForceByUserIdSpeculativeExecutor::Action() == NewAcquireAction->GetAction()) {
+            TSharedPtr<FJsonObject> RequestModelJson;
+            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(NewAcquireAction->GetRequest().IsSet() ? *NewAcquireAction->GetRequest() : "{}");
+                !FJsonSerializer::Deserialize(JsonReader, RequestModelJson))
+            {
+                return nullptr;
+            }
+            auto Request = Request::FAcquireForceByUserIdRequest::FromJson(RequestModelJson);
+            Request = FAcquireForceByUserIdSpeculativeExecutor::Rate(Request, Rate);
+            auto Future = FAcquireForceByUserIdSpeculativeExecutor::Execute(
                 Domain,
                 Service,
                 AccessToken,

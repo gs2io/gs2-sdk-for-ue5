@@ -35,11 +35,11 @@ namespace Gs2::UE5::Ranking2::Model
         return SharedThis(this);
     }
 
-    TSharedPtr<FEzSubscribeRankingData> FEzSubscribeRankingData::WithUserId(
-        const TOptional<FString> UserId
+    TSharedPtr<FEzSubscribeRankingData> FEzSubscribeRankingData::WithScorerUserId(
+        const TOptional<FString> ScorerUserId
     )
     {
-        this->UserIdValue = UserId;
+        this->ScorerUserIdValue = ScorerUserId;
         return SharedThis(this);
     }
 
@@ -99,9 +99,9 @@ namespace Gs2::UE5::Ranking2::Model
         }
         return FString::Printf(TEXT("%lld"), SeasonValue.GetValue());
     }
-    TOptional<FString> FEzSubscribeRankingData::GetUserId() const
+    TOptional<FString> FEzSubscribeRankingData::GetScorerUserId() const
     {
-        return UserIdValue;
+        return ScorerUserIdValue;
     }
     TOptional<int32> FEzSubscribeRankingData::GetIndex() const
     {
@@ -165,7 +165,7 @@ namespace Gs2::UE5::Ranking2::Model
         return MakeShared<Gs2::Ranking2::Model::FSubscribeRankingData>()
             ->WithRankingName(RankingNameValue)
             ->WithSeason(SeasonValue)
-            ->WithUserId(UserIdValue)
+            ->WithScorerUserId(ScorerUserIdValue)
             ->WithIndex(IndexValue)
             ->WithRank(RankValue)
             ->WithScore(ScoreValue)
@@ -182,7 +182,7 @@ namespace Gs2::UE5::Ranking2::Model
         return MakeShared<FEzSubscribeRankingData>()
             ->WithRankingName(Model->GetRankingName())
             ->WithSeason(Model->GetSeason())
-            ->WithUserId(Model->GetUserId())
+            ->WithScorerUserId(Model->GetScorerUserId())
             ->WithIndex(Model->GetIndex())
             ->WithRank(Model->GetRank())
             ->WithScore(Model->GetScore())

@@ -113,6 +113,10 @@ namespace Gs2::Guild::Task::Rest
             {
                 JsonRootObject->SetNumberField("attribute5", this->Request->GetAttribute5().GetValue());
             }
+            if (this->Request->GetMetadata().IsSet())
+            {
+                JsonRootObject->SetStringField("metadata", this->Request->GetMetadata().GetValue());
+            }
             if (this->Request->GetJoinPolicy().IsSet())
             {
                 JsonRootObject->SetStringField("joinPolicy", this->Request->GetJoinPolicy().GetValue());

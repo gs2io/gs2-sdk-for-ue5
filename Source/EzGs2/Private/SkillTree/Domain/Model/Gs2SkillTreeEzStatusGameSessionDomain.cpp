@@ -19,16 +19,6 @@
 namespace Gs2::UE5::SkillTree::Domain::Model
 {
 
-    TOptional<FString> FEzStatusGameSessionDomain::TransactionId() const
-    {
-        return Domain->TransactionId;
-    }
-
-    TOptional<bool> FEzStatusGameSessionDomain::AutoRunStampSheet() const
-    {
-        return Domain->AutoRunStampSheet;
-    }
-
     TOptional<FString> FEzStatusGameSessionDomain::NamespaceName() const
     {
         return Domain->NamespaceName;

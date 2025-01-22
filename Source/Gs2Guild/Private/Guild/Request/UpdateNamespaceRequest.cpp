@@ -21,12 +21,14 @@ namespace Gs2::Guild::Request
     FUpdateNamespaceRequest::FUpdateNamespaceRequest():
         NamespaceNameValue(TOptional<FString>()),
         DescriptionValue(TOptional<FString>()),
+        ChangeNotificationValue(nullptr),
         JoinNotificationValue(nullptr),
         LeaveNotificationValue(nullptr),
         ChangeMemberNotificationValue(nullptr),
         ReceiveRequestNotificationValue(nullptr),
         RemoveRequestNotificationValue(nullptr),
         CreateGuildScriptValue(nullptr),
+        UpdateGuildScriptValue(nullptr),
         JoinGuildScriptValue(nullptr),
         LeaveGuildScriptValue(nullptr),
         ChangeRoleScriptValue(nullptr),
@@ -39,12 +41,14 @@ namespace Gs2::Guild::Request
     ):
         NamespaceNameValue(From.NamespaceNameValue),
         DescriptionValue(From.DescriptionValue),
+        ChangeNotificationValue(From.ChangeNotificationValue),
         JoinNotificationValue(From.JoinNotificationValue),
         LeaveNotificationValue(From.LeaveNotificationValue),
         ChangeMemberNotificationValue(From.ChangeMemberNotificationValue),
         ReceiveRequestNotificationValue(From.ReceiveRequestNotificationValue),
         RemoveRequestNotificationValue(From.RemoveRequestNotificationValue),
         CreateGuildScriptValue(From.CreateGuildScriptValue),
+        UpdateGuildScriptValue(From.UpdateGuildScriptValue),
         JoinGuildScriptValue(From.JoinGuildScriptValue),
         LeaveGuildScriptValue(From.LeaveGuildScriptValue),
         ChangeRoleScriptValue(From.ChangeRoleScriptValue),
@@ -73,6 +77,14 @@ namespace Gs2::Guild::Request
     )
     {
         this->DescriptionValue = Description;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FUpdateNamespaceRequest> FUpdateNamespaceRequest::WithChangeNotification(
+        const TSharedPtr<Model::FNotificationSetting> ChangeNotification
+    )
+    {
+        this->ChangeNotificationValue = ChangeNotification;
         return SharedThis(this);
     }
 
@@ -124,6 +136,14 @@ namespace Gs2::Guild::Request
         return SharedThis(this);
     }
 
+    TSharedPtr<FUpdateNamespaceRequest> FUpdateNamespaceRequest::WithUpdateGuildScript(
+        const TSharedPtr<Model::FScriptSetting> UpdateGuildScript
+    )
+    {
+        this->UpdateGuildScriptValue = UpdateGuildScript;
+        return SharedThis(this);
+    }
+
     TSharedPtr<FUpdateNamespaceRequest> FUpdateNamespaceRequest::WithJoinGuildScript(
         const TSharedPtr<Model::FScriptSetting> JoinGuildScript
     )
@@ -169,6 +189,15 @@ namespace Gs2::Guild::Request
     TOptional<FString> FUpdateNamespaceRequest::GetDescription() const
     {
         return DescriptionValue;
+    }
+
+    TSharedPtr<Model::FNotificationSetting> FUpdateNamespaceRequest::GetChangeNotification() const
+    {
+        if (!ChangeNotificationValue.IsValid())
+        {
+            return nullptr;
+        }
+        return ChangeNotificationValue;
     }
 
     TSharedPtr<Model::FNotificationSetting> FUpdateNamespaceRequest::GetJoinNotification() const
@@ -223,6 +252,15 @@ namespace Gs2::Guild::Request
             return nullptr;
         }
         return CreateGuildScriptValue;
+    }
+
+    TSharedPtr<Model::FScriptSetting> FUpdateNamespaceRequest::GetUpdateGuildScript() const
+    {
+        if (!UpdateGuildScriptValue.IsValid())
+        {
+            return nullptr;
+        }
+        return UpdateGuildScriptValue;
     }
 
     TSharedPtr<Model::FScriptSetting> FUpdateNamespaceRequest::GetJoinGuildScript() const
@@ -286,6 +324,14 @@ namespace Gs2::Guild::Request
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
+          ->WithChangeNotification(Data->HasField(ANSI_TO_TCHAR("changeNotification")) ? [Data]() -> Model::FNotificationSettingPtr
+              {
+                  if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("changeNotification")))
+                  {
+                      return nullptr;
+                  }
+                  return Model::FNotificationSetting::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("changeNotification")));
+              }() : nullptr)
           ->WithJoinNotification(Data->HasField(ANSI_TO_TCHAR("joinNotification")) ? [Data]() -> Model::FNotificationSettingPtr
               {
                   if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("joinNotification")))
@@ -333,6 +379,14 @@ namespace Gs2::Guild::Request
                       return nullptr;
                   }
                   return Model::FScriptSetting::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("createGuildScript")));
+              }() : nullptr)
+          ->WithUpdateGuildScript(Data->HasField(ANSI_TO_TCHAR("updateGuildScript")) ? [Data]() -> Model::FScriptSettingPtr
+              {
+                  if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("updateGuildScript")))
+                  {
+                      return nullptr;
+                  }
+                  return Model::FScriptSetting::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("updateGuildScript")));
               }() : nullptr)
           ->WithJoinGuildScript(Data->HasField(ANSI_TO_TCHAR("joinGuildScript")) ? [Data]() -> Model::FScriptSettingPtr
               {
@@ -383,6 +437,10 @@ namespace Gs2::Guild::Request
         {
             JsonRootObject->SetStringField("description", DescriptionValue.GetValue());
         }
+        if (ChangeNotificationValue != nullptr && ChangeNotificationValue.IsValid())
+        {
+            JsonRootObject->SetObjectField("changeNotification", ChangeNotificationValue->ToJson());
+        }
         if (JoinNotificationValue != nullptr && JoinNotificationValue.IsValid())
         {
             JsonRootObject->SetObjectField("joinNotification", JoinNotificationValue->ToJson());
@@ -406,6 +464,10 @@ namespace Gs2::Guild::Request
         if (CreateGuildScriptValue != nullptr && CreateGuildScriptValue.IsValid())
         {
             JsonRootObject->SetObjectField("createGuildScript", CreateGuildScriptValue->ToJson());
+        }
+        if (UpdateGuildScriptValue != nullptr && UpdateGuildScriptValue.IsValid())
+        {
+            JsonRootObject->SetObjectField("updateGuildScript", UpdateGuildScriptValue->ToJson());
         }
         if (JoinGuildScriptValue != nullptr && JoinGuildScriptValue.IsValid())
         {

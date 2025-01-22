@@ -40,6 +40,7 @@ namespace Gs2::Version::Request
         TSharedPtr<TArray<TSharedPtr<Model::FScheduleVersion>>> ScheduleVersionsValue;
         TOptional<bool> NeedSignatureValue;
         TOptional<FString> SignatureKeyIdValue;
+        TOptional<FString> ApproveRequirementValue;
         
     public:
         
@@ -62,6 +63,7 @@ namespace Gs2::Version::Request
         TSharedPtr<FUpdateVersionModelMasterRequest> WithScheduleVersions(const TSharedPtr<TArray<TSharedPtr<Model::FScheduleVersion>>> ScheduleVersions);
         TSharedPtr<FUpdateVersionModelMasterRequest> WithNeedSignature(const TOptional<bool> NeedSignature);
         TSharedPtr<FUpdateVersionModelMasterRequest> WithSignatureKeyId(const TOptional<FString> SignatureKeyId);
+        TSharedPtr<FUpdateVersionModelMasterRequest> WithApproveRequirement(const TOptional<FString> ApproveRequirement);
 
         TOptional<FString> GetContextStack() const;
         TOptional<FString> GetNamespaceName() const;
@@ -76,6 +78,7 @@ namespace Gs2::Version::Request
         TOptional<bool> GetNeedSignature() const;
         FString GetNeedSignatureString() const;
         TOptional<FString> GetSignatureKeyId() const;
+        TOptional<FString> GetApproveRequirement() const;
 
         static TSharedPtr<FUpdateVersionModelMasterRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;

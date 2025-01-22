@@ -194,6 +194,12 @@
 #include "Task/Rest/VerifyByStampTaskTask.h"
 #include "Task/WebSocket/VerifyByStampTaskTask.h"
 
+// IssueOnceByStampSheet
+#include "Request/IssueOnceByStampSheetRequest.h"
+#include "Result/IssueOnceByStampSheetResult.h"
+#include "Task/Rest/IssueOnceByStampSheetTask.h"
+#include "Task/WebSocket/IssueOnceByStampSheetTask.h"
+
 // DescribeCampaignModels
 #include "Request/DescribeCampaignModelsRequest.h"
 #include "Result/DescribeCampaignModelsResult.h"
