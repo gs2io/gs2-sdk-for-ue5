@@ -26,6 +26,7 @@
 #include "Model/TakeOverTypeModelMaster.h"
 #include "Model/CurrentModelMaster.h"
 #include "Model/OpenIdConnectSetting.h"
+#include "Model/ScopeValue.h"
 #include "Model/PlatformUser.h"
 #include "Model/BanStatus.h"
 #include "Model/GitHubCheckoutSetting.h"

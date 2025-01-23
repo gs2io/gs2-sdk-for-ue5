@@ -61,14 +61,14 @@ namespace Gs2::UE5::Mission::Domain::Model
 
     }
 
-    FEzCounterGameSessionDomain::FGetCounterTask::FGetCounterTask(
+    FEzCounterGameSessionDomain::FDeleteCounterTask::FDeleteCounterTask(
         TSharedPtr<FEzCounterGameSessionDomain> Self
     ): Self(Self)
     {
 
     }
 
-    Gs2::Core::Model::FGs2ErrorPtr FEzCounterGameSessionDomain::FGetCounterTask::Action(
+    Gs2::Core::Model::FGs2ErrorPtr FEzCounterGameSessionDomain::FDeleteCounterTask::Action(
         TSharedPtr<TSharedPtr<Gs2::UE5::Mission::Domain::Model::FEzCounterGameSessionDomain>> Result
     )
     {
@@ -103,10 +103,10 @@ namespace Gs2::UE5::Mission::Domain::Model
         return nullptr;
     }
 
-    TSharedPtr<FAsyncTask<FEzCounterGameSessionDomain::FGetCounterTask>> FEzCounterGameSessionDomain::GetCounter(
+    TSharedPtr<FAsyncTask<FEzCounterGameSessionDomain::FDeleteCounterTask>> FEzCounterGameSessionDomain::DeleteCounter(
     )
     {
-        return Gs2::Core::Util::New<FAsyncTask<FGetCounterTask>>(
+        return Gs2::Core::Util::New<FAsyncTask<FDeleteCounterTask>>(
             this->AsShared()
         );
     }

@@ -18,6 +18,7 @@
 
 #include "CoreMinimal.h"
 #include "Core/Gs2Object.h"
+#include "ScopeValue.h"
 
 namespace Gs2::Account::Model
 {
@@ -30,6 +31,8 @@ namespace Gs2::Account::Model
         TOptional<FString> AppleKeyIdValue;
         TOptional<FString> ApplePrivateKeyPemValue;
         TOptional<FString> DoneEndpointUrlValue;
+        TSharedPtr<TArray<TSharedPtr<FScopeValue>>> AdditionalScopeValuesValue;
+        TSharedPtr<TArray<FString>> AdditionalReturnValuesValue;
 
     public:
         FOpenIdConnectSetting();
@@ -45,6 +48,8 @@ namespace Gs2::Account::Model
         TSharedPtr<FOpenIdConnectSetting> WithAppleKeyId(const TOptional<FString> AppleKeyId);
         TSharedPtr<FOpenIdConnectSetting> WithApplePrivateKeyPem(const TOptional<FString> ApplePrivateKeyPem);
         TSharedPtr<FOpenIdConnectSetting> WithDoneEndpointUrl(const TOptional<FString> DoneEndpointUrl);
+        TSharedPtr<FOpenIdConnectSetting> WithAdditionalScopeValues(const TSharedPtr<TArray<TSharedPtr<FScopeValue>>> AdditionalScopeValues);
+        TSharedPtr<FOpenIdConnectSetting> WithAdditionalReturnValues(const TSharedPtr<TArray<FString>> AdditionalReturnValues);
 
         TOptional<FString> GetConfigurationPath() const;
         TOptional<FString> GetClientId() const;
@@ -53,6 +58,8 @@ namespace Gs2::Account::Model
         TOptional<FString> GetAppleKeyId() const;
         TOptional<FString> GetApplePrivateKeyPem() const;
         TOptional<FString> GetDoneEndpointUrl() const;
+        TSharedPtr<TArray<TSharedPtr<FScopeValue>>> GetAdditionalScopeValues() const;
+        TSharedPtr<TArray<FString>> GetAdditionalReturnValues() const;
 
 
         static TSharedPtr<FOpenIdConnectSetting> FromJson(const TSharedPtr<FJsonObject> Data);

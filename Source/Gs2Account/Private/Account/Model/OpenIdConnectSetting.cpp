@@ -25,7 +25,9 @@ namespace Gs2::Account::Model
         AppleTeamIdValue(TOptional<FString>()),
         AppleKeyIdValue(TOptional<FString>()),
         ApplePrivateKeyPemValue(TOptional<FString>()),
-        DoneEndpointUrlValue(TOptional<FString>())
+        DoneEndpointUrlValue(TOptional<FString>()),
+        AdditionalScopeValuesValue(nullptr),
+        AdditionalReturnValuesValue(nullptr)
     {
     }
 
@@ -38,7 +40,9 @@ namespace Gs2::Account::Model
         AppleTeamIdValue(From.AppleTeamIdValue),
         AppleKeyIdValue(From.AppleKeyIdValue),
         ApplePrivateKeyPemValue(From.ApplePrivateKeyPemValue),
-        DoneEndpointUrlValue(From.DoneEndpointUrlValue)
+        DoneEndpointUrlValue(From.DoneEndpointUrlValue),
+        AdditionalScopeValuesValue(From.AdditionalScopeValuesValue),
+        AdditionalReturnValuesValue(From.AdditionalReturnValuesValue)
     {
     }
 
@@ -97,6 +101,22 @@ namespace Gs2::Account::Model
         this->DoneEndpointUrlValue = DoneEndpointUrl;
         return SharedThis(this);
     }
+
+    TSharedPtr<FOpenIdConnectSetting> FOpenIdConnectSetting::WithAdditionalScopeValues(
+        const TSharedPtr<TArray<TSharedPtr<Model::FScopeValue>>> AdditionalScopeValues
+    )
+    {
+        this->AdditionalScopeValuesValue = AdditionalScopeValues;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FOpenIdConnectSetting> FOpenIdConnectSetting::WithAdditionalReturnValues(
+        const TSharedPtr<TArray<FString>> AdditionalReturnValues
+    )
+    {
+        this->AdditionalReturnValuesValue = AdditionalReturnValues;
+        return SharedThis(this);
+    }
     TOptional<FString> FOpenIdConnectSetting::GetConfigurationPath() const
     {
         return ConfigurationPathValue;
@@ -124,6 +144,14 @@ namespace Gs2::Account::Model
     TOptional<FString> FOpenIdConnectSetting::GetDoneEndpointUrl() const
     {
         return DoneEndpointUrlValue;
+    }
+    TSharedPtr<TArray<TSharedPtr<Model::FScopeValue>>> FOpenIdConnectSetting::GetAdditionalScopeValues() const
+    {
+        return AdditionalScopeValuesValue;
+    }
+    TSharedPtr<TArray<FString>> FOpenIdConnectSetting::GetAdditionalReturnValues() const
+    {
+        return AdditionalReturnValuesValue;
     }
 
     TSharedPtr<FOpenIdConnectSetting> FOpenIdConnectSetting::FromJson(const TSharedPtr<FJsonObject> Data)
@@ -194,7 +222,31 @@ namespace Gs2::Account::Model
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
-                }() : TOptional<FString>());
+                }() : TOptional<FString>())
+            ->WithAdditionalScopeValues(Data->HasField(ANSI_TO_TCHAR("additionalScopeValues")) ? [Data]() -> TSharedPtr<TArray<Model::FScopeValuePtr>>
+                {
+                    auto v = MakeShared<TArray<Model::FScopeValuePtr>>();
+                    if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("additionalScopeValues")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("additionalScopeValues")))
+                    {
+                        for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("additionalScopeValues")))
+                        {
+                            v->Add(Model::FScopeValue::FromJson(JsonObjectValue->AsObject()));
+                        }
+                    }
+                    return v;
+                 }() : MakeShared<TArray<Model::FScopeValuePtr>>())
+            ->WithAdditionalReturnValues(Data->HasField(ANSI_TO_TCHAR("additionalReturnValues")) ? [Data]() -> TSharedPtr<TArray<FString>>
+                {
+                    auto v = MakeShared<TArray<FString>>();
+                    if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("additionalReturnValues")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("additionalReturnValues")))
+                    {
+                        for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("additionalReturnValues")))
+                        {
+                            v->Add(JsonObjectValue->AsString());
+                        }
+                    }
+                    return v;
+                 }() : MakeShared<TArray<FString>>());
     }
 
     TSharedPtr<FJsonObject> FOpenIdConnectSetting::ToJson() const
@@ -227,6 +279,24 @@ namespace Gs2::Account::Model
         if (DoneEndpointUrlValue.IsSet())
         {
             JsonRootObject->SetStringField("doneEndpointUrl", DoneEndpointUrlValue.GetValue());
+        }
+        if (AdditionalScopeValuesValue != nullptr && AdditionalScopeValuesValue.IsValid())
+        {
+            TArray<TSharedPtr<FJsonValue>> v;
+            for (auto JsonObjectValue : *AdditionalScopeValuesValue)
+            {
+                v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
+            }
+            JsonRootObject->SetArrayField("additionalScopeValues", v);
+        }
+        if (AdditionalReturnValuesValue != nullptr && AdditionalReturnValuesValue.IsValid())
+        {
+            TArray<TSharedPtr<FJsonValue>> v;
+            for (auto JsonObjectValue : *AdditionalReturnValuesValue)
+            {
+                v.Add(MakeShared<FJsonValueString>(JsonObjectValue));
+            }
+            JsonRootObject->SetArrayField("additionalReturnValues", v);
         }
         return JsonRootObject;
     }

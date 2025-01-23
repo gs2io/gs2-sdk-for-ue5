@@ -61,14 +61,14 @@ namespace Gs2::UE5::Mission::Domain::Model
             Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
 
-        class EZGS2_API FGetCounterTask :
+        class EZGS2_API FDeleteCounterTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::Mission::Domain::Model::FEzCounterGameSessionDomain>,
-            public TSharedFromThis<FGetCounterTask>
+            public TSharedFromThis<FDeleteCounterTask>
         {
             TSharedPtr<FEzCounterGameSessionDomain> Self;
 
         public:
-            explicit FGetCounterTask(
+            explicit FDeleteCounterTask(
                 TSharedPtr<FEzCounterGameSessionDomain> Self
             );
 
@@ -76,9 +76,9 @@ namespace Gs2::UE5::Mission::Domain::Model
                 TSharedPtr<TSharedPtr<Gs2::UE5::Mission::Domain::Model::FEzCounterGameSessionDomain>> Result
             ) override;
         };
-        friend FGetCounterTask;
+        friend FDeleteCounterTask;
 
-        TSharedPtr<FAsyncTask<FGetCounterTask>> GetCounter(
+        TSharedPtr<FAsyncTask<FDeleteCounterTask>> DeleteCounter(
         );
 
         class EZGS2_API FModelTask :
