@@ -40,6 +40,10 @@
 #include "Task/Rest/GetCompleteTask.h"
 #include "Request/GetCompleteByUserIdRequest.h"
 #include "Task/Rest/GetCompleteByUserIdTask.h"
+#include "Request/EvaluateCompleteRequest.h"
+#include "Task/Rest/EvaluateCompleteTask.h"
+#include "Request/EvaluateCompleteByUserIdRequest.h"
+#include "Task/Rest/EvaluateCompleteByUserIdTask.h"
 #include "Request/DeleteCompleteByUserIdRequest.h"
 #include "Task/Rest/DeleteCompleteByUserIdTask.h"
 #include "Request/VerifyCompleteRequest.h"
@@ -216,6 +220,14 @@ namespace Gs2::Mission
 
         TSharedPtr<FAsyncTask<Task::Rest::FGetCompleteByUserIdTask>> GetCompleteByUserId(
             const Request::FGetCompleteByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FEvaluateCompleteTask>> EvaluateComplete(
+            const Request::FEvaluateCompleteRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FEvaluateCompleteByUserIdTask>> EvaluateCompleteByUserId(
+            const Request::FEvaluateCompleteByUserIdRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::Rest::FDeleteCompleteByUserIdTask>> DeleteCompleteByUserId(

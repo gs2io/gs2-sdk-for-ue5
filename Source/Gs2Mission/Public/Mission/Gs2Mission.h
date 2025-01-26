@@ -110,6 +110,18 @@
 #include "Task/Rest/GetCompleteByUserIdTask.h"
 #include "Task/WebSocket/GetCompleteByUserIdTask.h"
 
+// EvaluateComplete
+#include "Request/EvaluateCompleteRequest.h"
+#include "Result/EvaluateCompleteResult.h"
+#include "Task/Rest/EvaluateCompleteTask.h"
+#include "Task/WebSocket/EvaluateCompleteTask.h"
+
+// EvaluateCompleteByUserId
+#include "Request/EvaluateCompleteByUserIdRequest.h"
+#include "Result/EvaluateCompleteByUserIdResult.h"
+#include "Task/Rest/EvaluateCompleteByUserIdTask.h"
+#include "Task/WebSocket/EvaluateCompleteByUserIdTask.h"
+
 // DeleteCompleteByUserId
 #include "Request/DeleteCompleteByUserIdRequest.h"
 #include "Result/DeleteCompleteByUserIdResult.h"

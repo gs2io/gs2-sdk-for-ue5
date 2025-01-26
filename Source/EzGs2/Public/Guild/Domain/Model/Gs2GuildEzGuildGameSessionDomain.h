@@ -74,6 +74,7 @@ namespace Gs2::UE5::Guild::Domain::Model
             TOptional<int32> Attribute3;
             TOptional<int32> Attribute4;
             TOptional<int32> Attribute5;
+            TOptional<FString> Metadata;
             TOptional<TArray<TSharedPtr<Gs2::UE5::Guild::Model::FEzRoleModel>>> CustomRoles;
             TOptional<FString> GuildMemberDefaultRole;
 
@@ -87,6 +88,7 @@ namespace Gs2::UE5::Guild::Domain::Model
                 TOptional<int32> Attribute3 = TOptional<int32>(),
                 TOptional<int32> Attribute4 = TOptional<int32>(),
                 TOptional<int32> Attribute5 = TOptional<int32>(),
+                TOptional<FString> Metadata = TOptional<FString>(),
                 TOptional<TArray<TSharedPtr<Gs2::UE5::Guild::Model::FEzRoleModel>>> CustomRoles = TOptional<TArray<TSharedPtr<Gs2::UE5::Guild::Model::FEzRoleModel>>>(),
                 TOptional<FString> GuildMemberDefaultRole = TOptional<FString>()
             );
@@ -105,6 +107,7 @@ namespace Gs2::UE5::Guild::Domain::Model
             TOptional<int32> Attribute3 = TOptional<int32>(),
             TOptional<int32> Attribute4 = TOptional<int32>(),
             TOptional<int32> Attribute5 = TOptional<int32>(),
+            TOptional<FString> Metadata = TOptional<FString>(),
             TOptional<TArray<TSharedPtr<Gs2::UE5::Guild::Model::FEzRoleModel>>> CustomRoles = TOptional<TArray<TSharedPtr<Gs2::UE5::Guild::Model::FEzRoleModel>>>(),
             TOptional<FString> GuildMemberDefaultRole = TOptional<FString>()
         );

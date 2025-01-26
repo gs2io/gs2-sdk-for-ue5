@@ -33,6 +33,8 @@ namespace Gs2::Mission::Model
         TOptional<FString> ResetDayOfWeekValue;
         TOptional<int32> ResetHourValue;
         TOptional<FString> CompleteNotificationNamespaceIdValue;
+        TOptional<int64> AnchorTimestampValue;
+        TOptional<int32> DaysValue;
 
     public:
         FMissionGroupModel();
@@ -50,6 +52,8 @@ namespace Gs2::Mission::Model
         TSharedPtr<FMissionGroupModel> WithResetDayOfWeek(const TOptional<FString> ResetDayOfWeek);
         TSharedPtr<FMissionGroupModel> WithResetHour(const TOptional<int32> ResetHour);
         TSharedPtr<FMissionGroupModel> WithCompleteNotificationNamespaceId(const TOptional<FString> CompleteNotificationNamespaceId);
+        TSharedPtr<FMissionGroupModel> WithAnchorTimestamp(const TOptional<int64> AnchorTimestamp);
+        TSharedPtr<FMissionGroupModel> WithDays(const TOptional<int32> Days);
 
         TOptional<FString> GetMissionGroupId() const;
         TOptional<FString> GetName() const;
@@ -62,6 +66,10 @@ namespace Gs2::Mission::Model
         TOptional<int32> GetResetHour() const;
         FString GetResetHourString() const;
         TOptional<FString> GetCompleteNotificationNamespaceId() const;
+        TOptional<int64> GetAnchorTimestamp() const;
+        FString GetAnchorTimestampString() const;
+        TOptional<int32> GetDays() const;
+        FString GetDaysString() const;
 
         static TOptional<FString> GetRegionFromGrn(const FString Grn);
         static TOptional<FString> GetOwnerIdFromGrn(const FString Grn);

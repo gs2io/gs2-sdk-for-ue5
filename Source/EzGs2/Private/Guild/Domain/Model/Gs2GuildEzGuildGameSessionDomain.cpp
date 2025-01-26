@@ -55,9 +55,10 @@ namespace Gs2::UE5::Guild::Domain::Model
         TOptional<int32> Attribute3,
         TOptional<int32> Attribute4,
         TOptional<int32> Attribute5,
+        TOptional<FString> Metadata,
         TOptional<TArray<TSharedPtr<Gs2::UE5::Guild::Model::FEzRoleModel>>> CustomRoles,
         TOptional<FString> GuildMemberDefaultRole
-    ): Self(Self), DisplayName(DisplayName), JoinPolicy(JoinPolicy), Attribute1(Attribute1), Attribute2(Attribute2), Attribute3(Attribute3), Attribute4(Attribute4), Attribute5(Attribute5), CustomRoles(CustomRoles), GuildMemberDefaultRole(GuildMemberDefaultRole)
+    ): Self(Self), DisplayName(DisplayName), JoinPolicy(JoinPolicy), Attribute1(Attribute1), Attribute2(Attribute2), Attribute3(Attribute3), Attribute4(Attribute4), Attribute5(Attribute5), Metadata(Metadata), CustomRoles(CustomRoles), GuildMemberDefaultRole(GuildMemberDefaultRole)
     {
 
     }
@@ -76,6 +77,7 @@ namespace Gs2::UE5::Guild::Domain::Model
                         ->WithAttribute3(Attribute3)
                         ->WithAttribute4(Attribute4)
                         ->WithAttribute5(Attribute5)
+                        ->WithMetadata(Metadata)
                         ->WithJoinPolicy(JoinPolicy)
                         ->WithCustomRoles([&]{
                             auto Arr = MakeShared<TArray<TSharedPtr<Gs2::Guild::Model::FRoleModel>>>();
@@ -123,6 +125,7 @@ namespace Gs2::UE5::Guild::Domain::Model
         TOptional<int32> Attribute3,
         TOptional<int32> Attribute4,
         TOptional<int32> Attribute5,
+        TOptional<FString> Metadata,
         TOptional<TArray<TSharedPtr<Gs2::UE5::Guild::Model::FEzRoleModel>>> CustomRoles,
         TOptional<FString> GuildMemberDefaultRole
     )
@@ -136,6 +139,7 @@ namespace Gs2::UE5::Guild::Domain::Model
             Attribute3,
             Attribute4,
             Attribute5,
+            Metadata,
             CustomRoles,
             GuildMemberDefaultRole
         );

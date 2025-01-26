@@ -40,6 +40,10 @@
 #include "Task/WebSocket/GetCompleteTask.h"
 #include "Request/GetCompleteByUserIdRequest.h"
 #include "Task/WebSocket/GetCompleteByUserIdTask.h"
+#include "Request/EvaluateCompleteRequest.h"
+#include "Task/WebSocket/EvaluateCompleteTask.h"
+#include "Request/EvaluateCompleteByUserIdRequest.h"
+#include "Task/WebSocket/EvaluateCompleteByUserIdTask.h"
 #include "Request/DeleteCompleteByUserIdRequest.h"
 #include "Task/WebSocket/DeleteCompleteByUserIdTask.h"
 #include "Request/VerifyCompleteRequest.h"
@@ -216,6 +220,14 @@ namespace Gs2::Mission
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FGetCompleteByUserIdTask>> GetCompleteByUserId(
             const Request::FGetCompleteByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FEvaluateCompleteTask>> EvaluateComplete(
+            const Request::FEvaluateCompleteRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FEvaluateCompleteByUserIdTask>> EvaluateCompleteByUserId(
+            const Request::FEvaluateCompleteByUserIdRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FDeleteCompleteByUserIdTask>> DeleteCompleteByUserId(

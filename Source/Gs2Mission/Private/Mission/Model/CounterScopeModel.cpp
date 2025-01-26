@@ -25,7 +25,9 @@ namespace Gs2::Mission::Model
         ResetDayOfWeekValue(TOptional<FString>()),
         ResetHourValue(TOptional<int32>()),
         ConditionNameValue(TOptional<FString>()),
-        ConditionValue(nullptr)
+        ConditionValue(nullptr),
+        AnchorTimestampValue(TOptional<int64>()),
+        DaysValue(TOptional<int32>())
     {
     }
 
@@ -38,7 +40,9 @@ namespace Gs2::Mission::Model
         ResetDayOfWeekValue(From.ResetDayOfWeekValue),
         ResetHourValue(From.ResetHourValue),
         ConditionNameValue(From.ConditionNameValue),
-        ConditionValue(From.ConditionValue)
+        ConditionValue(From.ConditionValue),
+        AnchorTimestampValue(From.AnchorTimestampValue),
+        DaysValue(From.DaysValue)
     {
     }
 
@@ -97,6 +101,22 @@ namespace Gs2::Mission::Model
         this->ConditionValue = Condition;
         return SharedThis(this);
     }
+
+    TSharedPtr<FCounterScopeModel> FCounterScopeModel::WithAnchorTimestamp(
+        const TOptional<int64> AnchorTimestamp
+    )
+    {
+        this->AnchorTimestampValue = AnchorTimestamp;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FCounterScopeModel> FCounterScopeModel::WithDays(
+        const TOptional<int32> Days
+    )
+    {
+        this->DaysValue = Days;
+        return SharedThis(this);
+    }
     TOptional<FString> FCounterScopeModel::GetScopeType() const
     {
         return ScopeTypeValue;
@@ -142,6 +162,32 @@ namespace Gs2::Mission::Model
     TSharedPtr<FVerifyAction> FCounterScopeModel::GetCondition() const
     {
         return ConditionValue;
+    }
+    TOptional<int64> FCounterScopeModel::GetAnchorTimestamp() const
+    {
+        return AnchorTimestampValue;
+    }
+
+    FString FCounterScopeModel::GetAnchorTimestampString() const
+    {
+        if (!AnchorTimestampValue.IsSet())
+        {
+            return FString("null");
+        }
+        return FString::Printf(TEXT("%lld"), AnchorTimestampValue.GetValue());
+    }
+    TOptional<int32> FCounterScopeModel::GetDays() const
+    {
+        return DaysValue;
+    }
+
+    FString FCounterScopeModel::GetDaysString() const
+    {
+        if (!DaysValue.IsSet())
+        {
+            return FString("null");
+        }
+        return FString::Printf(TEXT("%d"), DaysValue.GetValue());
     }
 
     TSharedPtr<FCounterScopeModel> FCounterScopeModel::FromJson(const TSharedPtr<FJsonObject> Data)
@@ -211,7 +257,25 @@ namespace Gs2::Mission::Model
                         return nullptr;
                     }
                     return Model::FVerifyAction::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("condition")));
-                 }() : nullptr);
+                 }() : nullptr)
+            ->WithAnchorTimestamp(Data->HasField(ANSI_TO_TCHAR("anchorTimestamp")) ? [Data]() -> TOptional<int64>
+                {
+                    int64 v;
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("anchorTimestamp"), v))
+                    {
+                        return TOptional(v);
+                    }
+                    return TOptional<int64>();
+                }() : TOptional<int64>())
+            ->WithDays(Data->HasField(ANSI_TO_TCHAR("days")) ? [Data]() -> TOptional<int32>
+                {
+                    int32 v;
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("days"), v))
+                    {
+                        return TOptional(v);
+                    }
+                    return TOptional<int32>();
+                }() : TOptional<int32>());
     }
 
     TSharedPtr<FJsonObject> FCounterScopeModel::ToJson() const
@@ -244,6 +308,14 @@ namespace Gs2::Mission::Model
         if (ConditionValue != nullptr && ConditionValue.IsValid())
         {
             JsonRootObject->SetObjectField("condition", ConditionValue->ToJson());
+        }
+        if (AnchorTimestampValue.IsSet())
+        {
+            JsonRootObject->SetStringField("anchorTimestamp", FString::Printf(TEXT("%lld"), AnchorTimestampValue.GetValue()));
+        }
+        if (DaysValue.IsSet())
+        {
+            JsonRootObject->SetNumberField("days", DaysValue.GetValue());
         }
         return JsonRootObject;
     }

@@ -14,7 +14,7 @@
  * permissions and limitations under the License.
  */
 
-#include "Mission/Task/Rest/UpdateMissionGroupModelMasterTask.h"
+#include "Mission/Task/Rest/EvaluateCompleteByUserIdTask.h"
 
 #include "HttpManager.h"
 #include "HttpModule.h"
@@ -25,21 +25,21 @@
 
 namespace Gs2::Mission::Task::Rest
 {
-    FUpdateMissionGroupModelMasterTask::FUpdateMissionGroupModelMasterTask(
+    FEvaluateCompleteByUserIdTask::FEvaluateCompleteByUserIdTask(
         const Core::Net::Rest::FGs2RestSessionPtr Session,
-        const Request::FUpdateMissionGroupModelMasterRequestPtr Request
+        const Request::FEvaluateCompleteByUserIdRequestPtr Request
     ): Session(Session), Request(Request)
     {
     }
 
-    FUpdateMissionGroupModelMasterTask::FUpdateMissionGroupModelMasterTask(
-        const FUpdateMissionGroupModelMasterTask& From
+    FEvaluateCompleteByUserIdTask::FEvaluateCompleteByUserIdTask(
+        const FEvaluateCompleteByUserIdTask& From
     ): TGs2Future(From), Session(From.Session), Request(From.Request)
     {
     }
 
-    Core::Model::FGs2ErrorPtr FUpdateMissionGroupModelMasterTask::Action(
-        const TSharedPtr<Result::FUpdateMissionGroupModelMasterResultPtr> Result
+    Core::Model::FGs2ErrorPtr FEvaluateCompleteByUserIdTask::Action(
+        const TSharedPtr<Result::FEvaluateCompleteByUserIdResultPtr> Result
     )
     {
 
@@ -69,12 +69,17 @@ namespace Gs2::Mission::Task::Rest
             auto Url = Core::FGs2Constant::EndpointHost
                 .Replace(TEXT("{service}"), TEXT("mission"))
                 .Replace(TEXT("{region}"), *this->Session->RegionName())
-                .Append("/{namespaceName}/master/group/{missionGroupName}");
+                .Append("/{namespaceName}/user/{userId}/complete/group/{missionGroupName}/eval");
 
             Url = Url.Replace(
                 TEXT("{namespaceName}"),
                 !this->Request->GetNamespaceName().IsSet() || this->Request->GetNamespaceName().GetValue().Len() == 0 ?
                     TEXT("null") : ToCStr(*this->Request->GetNamespaceName())
+            );
+            Url = Url.Replace(
+                TEXT("{userId}"),
+                !this->Request->GetUserId().IsSet() || this->Request->GetUserId().GetValue().Len() == 0 ?
+                    TEXT("null") : ToCStr(*this->Request->GetUserId())
             );
             Url = Url.Replace(
                 TEXT("{missionGroupName}"),
@@ -84,47 +89,11 @@ namespace Gs2::Mission::Task::Rest
 
             request->SetURL(Url);
 
-            request->SetVerb(TEXT("PUT"));
+            request->SetVerb(TEXT("POST"));
 
             FString Body;
             const TSharedRef<TJsonWriter<TCHAR>> Writer = TJsonWriterFactory<TCHAR>::Create(&Body);
             const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
-            if (this->Request->GetMetadata().IsSet())
-            {
-                JsonRootObject->SetStringField("metadata", this->Request->GetMetadata().GetValue());
-            }
-            if (this->Request->GetDescription().IsSet())
-            {
-                JsonRootObject->SetStringField("description", this->Request->GetDescription().GetValue());
-            }
-            if (this->Request->GetResetType().IsSet())
-            {
-                JsonRootObject->SetStringField("resetType", this->Request->GetResetType().GetValue());
-            }
-            if (this->Request->GetResetDayOfMonth().IsSet())
-            {
-                JsonRootObject->SetNumberField("resetDayOfMonth", this->Request->GetResetDayOfMonth().GetValue());
-            }
-            if (this->Request->GetResetDayOfWeek().IsSet())
-            {
-                JsonRootObject->SetStringField("resetDayOfWeek", this->Request->GetResetDayOfWeek().GetValue());
-            }
-            if (this->Request->GetResetHour().IsSet())
-            {
-                JsonRootObject->SetNumberField("resetHour", this->Request->GetResetHour().GetValue());
-            }
-            if (this->Request->GetAnchorTimestamp().IsSet())
-            {
-                JsonRootObject->SetStringField("anchorTimestamp", FString::Printf(TEXT("%lld"), this->Request->GetAnchorTimestamp().GetValue()));
-            }
-            if (this->Request->GetDays().IsSet())
-            {
-                JsonRootObject->SetNumberField("days", this->Request->GetDays().GetValue());
-            }
-            if (this->Request->GetCompleteNotificationNamespaceId().IsSet())
-            {
-                JsonRootObject->SetStringField("completeNotificationNamespaceId", this->Request->GetCompleteNotificationNamespaceId().GetValue());
-            }
             if (this->Request->GetContextStack().IsSet())
             {
                 JsonRootObject->SetStringField("contextStack", this->Request->GetContextStack().GetValue());
@@ -135,9 +104,17 @@ namespace Gs2::Mission::Task::Rest
             request->SetHeader("X-GS2-CLIENT-ID", this->Session->Credential()->ClientId());
             request->SetHeader("Authorization", "Bearer " + this->Session->Credential()->ProjectToken());
             request->SetHeader("Content-Type", "application/json");
+            if (this->Request->GetDuplicationAvoider().IsSet())
+            {
+                request->SetHeader("X-GS2-DUPLICATION-AVOIDER", this->Request->GetDuplicationAvoider().GetValue());
+            }
+            if (this->Request->GetTimeOffsetToken().IsSet())
+            {
+                request->SetHeader("X-GS2-TIME-OFFSET-TOKEN", this->Request->GetTimeOffsetToken().GetValue());
+            }
 
             request->ProcessRequest();
-            UE_LOG(Gs2Log, VeryVerbose, TEXT("[%s] %s %s"), TEXT("PUT"), ToCStr(Url), ToCStr(Body));
+            UE_LOG(Gs2Log, VeryVerbose, TEXT("[%s] %s %s"), TEXT("POST"), ToCStr(Url), ToCStr(Body));
         }
 
         if (FPlatformTLS::GetCurrentThreadId() == GGameThreadId)
@@ -161,7 +138,7 @@ namespace Gs2::Mission::Task::Rest
                 FJsonSerializer::Deserialize(JsonReader, JsonRootObject))
             {
                 auto Details = TArray<TSharedPtr<Core::Model::FGs2ErrorDetail>>();
-                *Result = Result::FUpdateMissionGroupModelMasterResult::FromJson(JsonRootObject);
+                *Result = Result::FEvaluateCompleteByUserIdResult::FromJson(JsonRootObject);
                 return nullptr;
             }
             const auto Details = MakeShared<TArray<TSharedPtr<Core::Model::FGs2ErrorDetail>>>();

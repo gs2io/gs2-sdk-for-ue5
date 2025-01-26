@@ -34,6 +34,8 @@ namespace Gs2::Mission::Request
         TOptional<int32> ResetDayOfMonthValue;
         TOptional<FString> ResetDayOfWeekValue;
         TOptional<int32> ResetHourValue;
+        TOptional<int64> AnchorTimestampValue;
+        TOptional<int32> DaysValue;
         TOptional<FString> CompleteNotificationNamespaceIdValue;
         
     public:
@@ -53,6 +55,8 @@ namespace Gs2::Mission::Request
         TSharedPtr<FUpdateMissionGroupModelMasterRequest> WithResetDayOfMonth(const TOptional<int32> ResetDayOfMonth);
         TSharedPtr<FUpdateMissionGroupModelMasterRequest> WithResetDayOfWeek(const TOptional<FString> ResetDayOfWeek);
         TSharedPtr<FUpdateMissionGroupModelMasterRequest> WithResetHour(const TOptional<int32> ResetHour);
+        TSharedPtr<FUpdateMissionGroupModelMasterRequest> WithAnchorTimestamp(const TOptional<int64> AnchorTimestamp);
+        TSharedPtr<FUpdateMissionGroupModelMasterRequest> WithDays(const TOptional<int32> Days);
         TSharedPtr<FUpdateMissionGroupModelMasterRequest> WithCompleteNotificationNamespaceId(const TOptional<FString> CompleteNotificationNamespaceId);
 
         TOptional<FString> GetContextStack() const;
@@ -66,6 +70,10 @@ namespace Gs2::Mission::Request
         TOptional<FString> GetResetDayOfWeek() const;
         TOptional<int32> GetResetHour() const;
         FString GetResetHourString() const;
+        TOptional<int64> GetAnchorTimestamp() const;
+        FString GetAnchorTimestampString() const;
+        TOptional<int32> GetDays() const;
+        FString GetDaysString() const;
         TOptional<FString> GetCompleteNotificationNamespaceId() const;
 
         static TSharedPtr<FUpdateMissionGroupModelMasterRequest> FromJson(const TSharedPtr<FJsonObject> Data);

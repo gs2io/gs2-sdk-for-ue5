@@ -160,6 +160,56 @@ namespace Gs2::UE5::Mission::Domain::Model
         );
     }
 
+    FEzCompleteGameSessionDomain::FEvaluateCompleteTask::FEvaluateCompleteTask(
+        TSharedPtr<FEzCompleteGameSessionDomain> Self
+    ): Self(Self)
+    {
+
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FEzCompleteGameSessionDomain::FEvaluateCompleteTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::UE5::Mission::Domain::Model::FEzCompleteGameSessionDomain>> Result
+    )
+    {
+        const auto Future = Self->ConnectionValue->Run(
+            [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
+                const auto Task = Self->Domain->Evaluate(
+                    MakeShared<Gs2::Mission::Request::FEvaluateCompleteRequest>()
+                );
+                Task->StartSynchronousTask();
+                if (Task->GetTask().IsError())
+                {
+                    Task->EnsureCompletion();
+                    return Task->GetTask().Error();
+                }
+                *Result = MakeShared<Gs2::UE5::Mission::Domain::Model::FEzCompleteGameSessionDomain>(
+                    Task->GetTask().Result(),
+                    Self->GameSession,
+                    Self->ConnectionValue
+                );
+                Task->EnsureCompletion();
+                return nullptr;
+            },
+            nullptr
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            Future->EnsureCompletion();
+            return Future->GetTask().Error();
+        }
+        Future->EnsureCompletion();
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FEzCompleteGameSessionDomain::FEvaluateCompleteTask>> FEzCompleteGameSessionDomain::EvaluateComplete(
+    )
+    {
+        return Gs2::Core::Util::New<FAsyncTask<FEvaluateCompleteTask>>(
+            this->AsShared()
+        );
+    }
+
     FEzCompleteGameSessionDomain::FModelTask::FModelTask(
         TSharedPtr<FEzCompleteGameSessionDomain> Self
     ): Self(Self)

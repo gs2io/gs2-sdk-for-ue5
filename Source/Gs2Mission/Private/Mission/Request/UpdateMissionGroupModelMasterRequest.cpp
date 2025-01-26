@@ -27,6 +27,8 @@ namespace Gs2::Mission::Request
         ResetDayOfMonthValue(TOptional<int32>()),
         ResetDayOfWeekValue(TOptional<FString>()),
         ResetHourValue(TOptional<int32>()),
+        AnchorTimestampValue(TOptional<int64>()),
+        DaysValue(TOptional<int32>()),
         CompleteNotificationNamespaceIdValue(TOptional<FString>())
     {
     }
@@ -42,6 +44,8 @@ namespace Gs2::Mission::Request
         ResetDayOfMonthValue(From.ResetDayOfMonthValue),
         ResetDayOfWeekValue(From.ResetDayOfWeekValue),
         ResetHourValue(From.ResetHourValue),
+        AnchorTimestampValue(From.AnchorTimestampValue),
+        DaysValue(From.DaysValue),
         CompleteNotificationNamespaceIdValue(From.CompleteNotificationNamespaceIdValue)
     {
     }
@@ -118,6 +122,22 @@ namespace Gs2::Mission::Request
         return SharedThis(this);
     }
 
+    TSharedPtr<FUpdateMissionGroupModelMasterRequest> FUpdateMissionGroupModelMasterRequest::WithAnchorTimestamp(
+        const TOptional<int64> AnchorTimestamp
+    )
+    {
+        this->AnchorTimestampValue = AnchorTimestamp;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FUpdateMissionGroupModelMasterRequest> FUpdateMissionGroupModelMasterRequest::WithDays(
+        const TOptional<int32> Days
+    )
+    {
+        this->DaysValue = Days;
+        return SharedThis(this);
+    }
+
     TSharedPtr<FUpdateMissionGroupModelMasterRequest> FUpdateMissionGroupModelMasterRequest::WithCompleteNotificationNamespaceId(
         const TOptional<FString> CompleteNotificationNamespaceId
     )
@@ -187,6 +207,34 @@ namespace Gs2::Mission::Request
             return FString("null");
         }
         return FString::Printf(TEXT("%d"), ResetHourValue.GetValue());
+    }
+
+    TOptional<int64> FUpdateMissionGroupModelMasterRequest::GetAnchorTimestamp() const
+    {
+        return AnchorTimestampValue;
+    }
+
+    FString FUpdateMissionGroupModelMasterRequest::GetAnchorTimestampString() const
+    {
+        if (!AnchorTimestampValue.IsSet())
+        {
+            return FString("null");
+        }
+        return FString::Printf(TEXT("%lld"), AnchorTimestampValue.GetValue());
+    }
+
+    TOptional<int32> FUpdateMissionGroupModelMasterRequest::GetDays() const
+    {
+        return DaysValue;
+    }
+
+    FString FUpdateMissionGroupModelMasterRequest::GetDaysString() const
+    {
+        if (!DaysValue.IsSet())
+        {
+            return FString("null");
+        }
+        return FString::Printf(TEXT("%d"), DaysValue.GetValue());
     }
 
     TOptional<FString> FUpdateMissionGroupModelMasterRequest::GetCompleteNotificationNamespaceId() const
@@ -273,6 +321,24 @@ namespace Gs2::Mission::Request
                   }
                   return TOptional<int32>();
               }() : TOptional<int32>())
+            ->WithAnchorTimestamp(Data->HasField(ANSI_TO_TCHAR("anchorTimestamp")) ? [Data]() -> TOptional<int64>
+              {
+                  int64 v;
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("anchorTimestamp"), v))
+                  {
+                        return TOptional(v);
+                  }
+                  return TOptional<int64>();
+              }() : TOptional<int64>())
+            ->WithDays(Data->HasField(ANSI_TO_TCHAR("days")) ? [Data]() -> TOptional<int32>
+              {
+                  int32 v;
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("days"), v))
+                  {
+                        return TOptional(v);
+                  }
+                  return TOptional<int32>();
+              }() : TOptional<int32>())
             ->WithCompleteNotificationNamespaceId(Data->HasField(ANSI_TO_TCHAR("completeNotificationNamespaceId")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
@@ -322,6 +388,14 @@ namespace Gs2::Mission::Request
         if (ResetHourValue.IsSet())
         {
             JsonRootObject->SetNumberField("resetHour", ResetHourValue.GetValue());
+        }
+        if (AnchorTimestampValue.IsSet())
+        {
+            JsonRootObject->SetStringField("anchorTimestamp", FString::Printf(TEXT("%lld"), AnchorTimestampValue.GetValue()));
+        }
+        if (DaysValue.IsSet())
+        {
+            JsonRootObject->SetNumberField("days", DaysValue.GetValue());
         }
         if (CompleteNotificationNamespaceIdValue.IsSet())
         {

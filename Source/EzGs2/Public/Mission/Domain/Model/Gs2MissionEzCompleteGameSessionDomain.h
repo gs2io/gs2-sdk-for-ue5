@@ -106,6 +106,26 @@ namespace Gs2::UE5::Mission::Domain::Model
             TArray<FString> MissionTaskNames
         );
 
+        class EZGS2_API FEvaluateCompleteTask :
+            public Gs2::Core::Util::TGs2Future<Gs2::UE5::Mission::Domain::Model::FEzCompleteGameSessionDomain>,
+            public TSharedFromThis<FEvaluateCompleteTask>
+        {
+            TSharedPtr<FEzCompleteGameSessionDomain> Self;
+
+        public:
+            explicit FEvaluateCompleteTask(
+                TSharedPtr<FEzCompleteGameSessionDomain> Self
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::UE5::Mission::Domain::Model::FEzCompleteGameSessionDomain>> Result
+            ) override;
+        };
+        friend FEvaluateCompleteTask;
+
+        TSharedPtr<FAsyncTask<FEvaluateCompleteTask>> EvaluateComplete(
+        );
+
         class EZGS2_API FModelTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::Mission::Model::FEzComplete>,
             public TSharedFromThis<FModelTask>

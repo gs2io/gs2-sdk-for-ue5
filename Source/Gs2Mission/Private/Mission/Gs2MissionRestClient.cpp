@@ -118,6 +118,24 @@ namespace Gs2::Mission
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::Rest::FEvaluateCompleteTask>> FGs2MissionRestClient::EvaluateComplete(
+        const Request::FEvaluateCompleteRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FEvaluateCompleteTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FEvaluateCompleteByUserIdTask>> FGs2MissionRestClient::EvaluateCompleteByUserId(
+        const Request::FEvaluateCompleteByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FEvaluateCompleteByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::Rest::FDeleteCompleteByUserIdTask>> FGs2MissionRestClient::DeleteCompleteByUserId(
         const Request::FDeleteCompleteByUserIdRequestPtr Request) const
     {

@@ -31,6 +31,8 @@ namespace Gs2::Mission::Model
         TOptional<int32> ResetHourValue;
         TOptional<FString> ConditionNameValue;
         TSharedPtr<FVerifyAction> ConditionValue;
+        TOptional<int64> AnchorTimestampValue;
+        TOptional<int32> DaysValue;
 
     public:
         FCounterScopeModel();
@@ -46,6 +48,8 @@ namespace Gs2::Mission::Model
         TSharedPtr<FCounterScopeModel> WithResetHour(const TOptional<int32> ResetHour);
         TSharedPtr<FCounterScopeModel> WithConditionName(const TOptional<FString> ConditionName);
         TSharedPtr<FCounterScopeModel> WithCondition(const TSharedPtr<FVerifyAction> Condition);
+        TSharedPtr<FCounterScopeModel> WithAnchorTimestamp(const TOptional<int64> AnchorTimestamp);
+        TSharedPtr<FCounterScopeModel> WithDays(const TOptional<int32> Days);
 
         TOptional<FString> GetScopeType() const;
         TOptional<FString> GetResetType() const;
@@ -56,6 +60,10 @@ namespace Gs2::Mission::Model
         FString GetResetHourString() const;
         TOptional<FString> GetConditionName() const;
         TSharedPtr<FVerifyAction> GetCondition() const;
+        TOptional<int64> GetAnchorTimestamp() const;
+        FString GetAnchorTimestampString() const;
+        TOptional<int32> GetDays() const;
+        FString GetDaysString() const;
 
 
         static TSharedPtr<FCounterScopeModel> FromJson(const TSharedPtr<FJsonObject> Data);

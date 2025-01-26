@@ -247,6 +247,32 @@ namespace Gs2::Mission::Domain::Model
             Request::FGetCompleteByUserIdRequestPtr Request
         );
 
+        class GS2MISSION_API FEvaluateTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Mission::Domain::Model::FCompleteDomain>,
+            public TSharedFromThis<FEvaluateTask>
+        {
+            const TSharedPtr<FCompleteDomain> Self;
+            const Request::FEvaluateCompleteByUserIdRequestPtr Request;
+        public:
+            explicit FEvaluateTask(
+                const TSharedPtr<FCompleteDomain>& Self,
+                const Request::FEvaluateCompleteByUserIdRequestPtr Request
+            );
+
+            FEvaluateTask(
+                const FEvaluateTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Mission::Domain::Model::FCompleteDomain>> Result
+            ) override;
+        };
+        friend FEvaluateTask;
+
+        TSharedPtr<FAsyncTask<FEvaluateTask>> Evaluate(
+            Request::FEvaluateCompleteByUserIdRequestPtr Request
+        );
+
         class GS2MISSION_API FDeleteTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Mission::Domain::Model::FCompleteDomain>,
             public TSharedFromThis<FDeleteTask>

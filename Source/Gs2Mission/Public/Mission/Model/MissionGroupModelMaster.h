@@ -31,6 +31,8 @@ namespace Gs2::Mission::Model
         TOptional<int32> ResetDayOfMonthValue;
         TOptional<FString> ResetDayOfWeekValue;
         TOptional<int32> ResetHourValue;
+        TOptional<int64> AnchorTimestampValue;
+        TOptional<int32> DaysValue;
         TOptional<FString> CompleteNotificationNamespaceIdValue;
         TOptional<int64> CreatedAtValue;
         TOptional<int64> UpdatedAtValue;
@@ -51,6 +53,8 @@ namespace Gs2::Mission::Model
         TSharedPtr<FMissionGroupModelMaster> WithResetDayOfMonth(const TOptional<int32> ResetDayOfMonth);
         TSharedPtr<FMissionGroupModelMaster> WithResetDayOfWeek(const TOptional<FString> ResetDayOfWeek);
         TSharedPtr<FMissionGroupModelMaster> WithResetHour(const TOptional<int32> ResetHour);
+        TSharedPtr<FMissionGroupModelMaster> WithAnchorTimestamp(const TOptional<int64> AnchorTimestamp);
+        TSharedPtr<FMissionGroupModelMaster> WithDays(const TOptional<int32> Days);
         TSharedPtr<FMissionGroupModelMaster> WithCompleteNotificationNamespaceId(const TOptional<FString> CompleteNotificationNamespaceId);
         TSharedPtr<FMissionGroupModelMaster> WithCreatedAt(const TOptional<int64> CreatedAt);
         TSharedPtr<FMissionGroupModelMaster> WithUpdatedAt(const TOptional<int64> UpdatedAt);
@@ -66,6 +70,10 @@ namespace Gs2::Mission::Model
         TOptional<FString> GetResetDayOfWeek() const;
         TOptional<int32> GetResetHour() const;
         FString GetResetHourString() const;
+        TOptional<int64> GetAnchorTimestamp() const;
+        FString GetAnchorTimestampString() const;
+        TOptional<int32> GetDays() const;
+        FString GetDaysString() const;
         TOptional<FString> GetCompleteNotificationNamespaceId() const;
         TOptional<int64> GetCreatedAt() const;
         FString GetCreatedAtString() const;

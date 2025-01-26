@@ -118,6 +118,24 @@ namespace Gs2::Mission
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::WebSocket::FEvaluateCompleteTask>> FGs2MissionWebSocketClient::EvaluateComplete(
+        const Request::FEvaluateCompleteRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FEvaluateCompleteTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FEvaluateCompleteByUserIdTask>> FGs2MissionWebSocketClient::EvaluateCompleteByUserId(
+        const Request::FEvaluateCompleteByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FEvaluateCompleteByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::WebSocket::FDeleteCompleteByUserIdTask>> FGs2MissionWebSocketClient::DeleteCompleteByUserId(
         const Request::FDeleteCompleteByUserIdRequestPtr Request) const
     {
