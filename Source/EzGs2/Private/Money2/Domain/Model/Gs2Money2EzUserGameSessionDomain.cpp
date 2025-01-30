@@ -61,6 +61,30 @@ namespace Gs2::UE5::Money2::Domain::Model
 
     }
 
+    Gs2::UE5::Money2::Domain::Iterator::FEzDescribeWalletsIteratorPtr FEzUserGameSessionDomain::Wallets(
+    ) const
+    {
+        return MakeShared<Gs2::UE5::Money2::Domain::Iterator::FEzDescribeWalletsIterator>(
+            Domain,
+            GameSession,
+            ConnectionValue
+        );
+    }
+
+    Gs2::Core::Domain::CallbackID FEzUserGameSessionDomain::SubscribeWallets(TFunction<void()> Callback)
+    {
+        return Domain->SubscribeWallets(
+            Callback
+        );
+    }
+
+    void FEzUserGameSessionDomain::UnsubscribeWallets(Gs2::Core::Domain::CallbackID CallbackId)
+    {
+        Domain->UnsubscribeWallets(
+            CallbackId
+        );
+    }
+
     Gs2::UE5::Money2::Domain::Model::FEzWalletGameSessionDomainPtr FEzUserGameSessionDomain::Wallet(
         const int32 Slot
     ) const

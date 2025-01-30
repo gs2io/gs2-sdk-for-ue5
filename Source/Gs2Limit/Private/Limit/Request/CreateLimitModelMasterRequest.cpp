@@ -26,7 +26,9 @@ namespace Gs2::Limit::Request
         ResetTypeValue(TOptional<FString>()),
         ResetDayOfMonthValue(TOptional<int32>()),
         ResetDayOfWeekValue(TOptional<FString>()),
-        ResetHourValue(TOptional<int32>())
+        ResetHourValue(TOptional<int32>()),
+        AnchorTimestampValue(TOptional<int64>()),
+        DaysValue(TOptional<int32>())
     {
     }
 
@@ -40,7 +42,9 @@ namespace Gs2::Limit::Request
         ResetTypeValue(From.ResetTypeValue),
         ResetDayOfMonthValue(From.ResetDayOfMonthValue),
         ResetDayOfWeekValue(From.ResetDayOfWeekValue),
-        ResetHourValue(From.ResetHourValue)
+        ResetHourValue(From.ResetHourValue),
+        AnchorTimestampValue(From.AnchorTimestampValue),
+        DaysValue(From.DaysValue)
     {
     }
 
@@ -116,6 +120,22 @@ namespace Gs2::Limit::Request
         return SharedThis(this);
     }
 
+    TSharedPtr<FCreateLimitModelMasterRequest> FCreateLimitModelMasterRequest::WithAnchorTimestamp(
+        const TOptional<int64> AnchorTimestamp
+    )
+    {
+        this->AnchorTimestampValue = AnchorTimestamp;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FCreateLimitModelMasterRequest> FCreateLimitModelMasterRequest::WithDays(
+        const TOptional<int32> Days
+    )
+    {
+        this->DaysValue = Days;
+        return SharedThis(this);
+    }
+
     TOptional<FString> FCreateLimitModelMasterRequest::GetContextStack() const
     {
         return ContextStackValue;
@@ -177,6 +197,34 @@ namespace Gs2::Limit::Request
             return FString("null");
         }
         return FString::Printf(TEXT("%d"), ResetHourValue.GetValue());
+    }
+
+    TOptional<int64> FCreateLimitModelMasterRequest::GetAnchorTimestamp() const
+    {
+        return AnchorTimestampValue;
+    }
+
+    FString FCreateLimitModelMasterRequest::GetAnchorTimestampString() const
+    {
+        if (!AnchorTimestampValue.IsSet())
+        {
+            return FString("null");
+        }
+        return FString::Printf(TEXT("%lld"), AnchorTimestampValue.GetValue());
+    }
+
+    TOptional<int32> FCreateLimitModelMasterRequest::GetDays() const
+    {
+        return DaysValue;
+    }
+
+    FString FCreateLimitModelMasterRequest::GetDaysString() const
+    {
+        if (!DaysValue.IsSet())
+        {
+            return FString("null");
+        }
+        return FString::Printf(TEXT("%d"), DaysValue.GetValue());
     }
 
     TSharedPtr<FCreateLimitModelMasterRequest> FCreateLimitModelMasterRequest::FromJson(const TSharedPtr<FJsonObject> Data)
@@ -257,6 +305,24 @@ namespace Gs2::Limit::Request
                         return TOptional(v);
                   }
                   return TOptional<int32>();
+              }() : TOptional<int32>())
+            ->WithAnchorTimestamp(Data->HasField(ANSI_TO_TCHAR("anchorTimestamp")) ? [Data]() -> TOptional<int64>
+              {
+                  int64 v;
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("anchorTimestamp"), v))
+                  {
+                        return TOptional(v);
+                  }
+                  return TOptional<int64>();
+              }() : TOptional<int64>())
+            ->WithDays(Data->HasField(ANSI_TO_TCHAR("days")) ? [Data]() -> TOptional<int32>
+              {
+                  int32 v;
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("days"), v))
+                  {
+                        return TOptional(v);
+                  }
+                  return TOptional<int32>();
               }() : TOptional<int32>());
     }
 
@@ -298,6 +364,14 @@ namespace Gs2::Limit::Request
         if (ResetHourValue.IsSet())
         {
             JsonRootObject->SetNumberField("resetHour", ResetHourValue.GetValue());
+        }
+        if (AnchorTimestampValue.IsSet())
+        {
+            JsonRootObject->SetStringField("anchorTimestamp", FString::Printf(TEXT("%lld"), AnchorTimestampValue.GetValue()));
+        }
+        if (DaysValue.IsSet())
+        {
+            JsonRootObject->SetNumberField("days", DaysValue.GetValue());
         }
         return JsonRootObject;
     }

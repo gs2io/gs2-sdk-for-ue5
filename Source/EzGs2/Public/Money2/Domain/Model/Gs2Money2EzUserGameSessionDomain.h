@@ -22,6 +22,7 @@
 #include "Money2/Model/Gs2Money2EzWalletSummary.h"
 #include "Money2/Model/Gs2Money2EzDepositTransaction.h"
 #include "Gs2Money2EzWalletGameSessionDomain.h"
+#include "Money2/Domain/Iterator/Gs2Money2EzDescribeWalletsIterator.h"
 #include "Gs2Money2EzUserGameSessionDomain.h"
 #include "Util/Net/GameSession.h"
 #include "Util/Net/Gs2Connection.h"
@@ -47,6 +48,13 @@ namespace Gs2::UE5::Money2::Domain::Model
             Gs2::UE5::Util::IGameSessionPtr GameSession,
             Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
+
+        Gs2::UE5::Money2::Domain::Iterator::FEzDescribeWalletsIteratorPtr Wallets(
+        ) const;
+
+        Gs2::Core::Domain::CallbackID SubscribeWallets(TFunction<void()> Callback);
+
+        void UnsubscribeWallets(Gs2::Core::Domain::CallbackID CallbackId);
 
         Gs2::UE5::Money2::Domain::Model::FEzWalletGameSessionDomainPtr Wallet(
             const int32 Slot

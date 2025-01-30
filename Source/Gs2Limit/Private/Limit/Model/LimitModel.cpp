@@ -25,7 +25,9 @@ namespace Gs2::Limit::Model
         ResetTypeValue(TOptional<FString>()),
         ResetDayOfMonthValue(TOptional<int32>()),
         ResetDayOfWeekValue(TOptional<FString>()),
-        ResetHourValue(TOptional<int32>())
+        ResetHourValue(TOptional<int32>()),
+        AnchorTimestampValue(TOptional<int64>()),
+        DaysValue(TOptional<int32>())
     {
     }
 
@@ -38,7 +40,9 @@ namespace Gs2::Limit::Model
         ResetTypeValue(From.ResetTypeValue),
         ResetDayOfMonthValue(From.ResetDayOfMonthValue),
         ResetDayOfWeekValue(From.ResetDayOfWeekValue),
-        ResetHourValue(From.ResetHourValue)
+        ResetHourValue(From.ResetHourValue),
+        AnchorTimestampValue(From.AnchorTimestampValue),
+        DaysValue(From.DaysValue)
     {
     }
 
@@ -97,6 +101,22 @@ namespace Gs2::Limit::Model
         this->ResetHourValue = ResetHour;
         return SharedThis(this);
     }
+
+    TSharedPtr<FLimitModel> FLimitModel::WithAnchorTimestamp(
+        const TOptional<int64> AnchorTimestamp
+    )
+    {
+        this->AnchorTimestampValue = AnchorTimestamp;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FLimitModel> FLimitModel::WithDays(
+        const TOptional<int32> Days
+    )
+    {
+        this->DaysValue = Days;
+        return SharedThis(this);
+    }
     TOptional<FString> FLimitModel::GetLimitModelId() const
     {
         return LimitModelIdValue;
@@ -142,6 +162,32 @@ namespace Gs2::Limit::Model
             return FString("null");
         }
         return FString::Printf(TEXT("%d"), ResetHourValue.GetValue());
+    }
+    TOptional<int64> FLimitModel::GetAnchorTimestamp() const
+    {
+        return AnchorTimestampValue;
+    }
+
+    FString FLimitModel::GetAnchorTimestampString() const
+    {
+        if (!AnchorTimestampValue.IsSet())
+        {
+            return FString("null");
+        }
+        return FString::Printf(TEXT("%lld"), AnchorTimestampValue.GetValue());
+    }
+    TOptional<int32> FLimitModel::GetDays() const
+    {
+        return DaysValue;
+    }
+
+    FString FLimitModel::GetDaysString() const
+    {
+        if (!DaysValue.IsSet())
+        {
+            return FString("null");
+        }
+        return FString::Printf(TEXT("%d"), DaysValue.GetValue());
     }
 
     TOptional<FString> FLimitModel::GetRegionFromGrn(const FString Grn)
@@ -256,6 +302,24 @@ namespace Gs2::Limit::Model
                         return TOptional(v);
                     }
                     return TOptional<int32>();
+                }() : TOptional<int32>())
+            ->WithAnchorTimestamp(Data->HasField(ANSI_TO_TCHAR("anchorTimestamp")) ? [Data]() -> TOptional<int64>
+                {
+                    int64 v;
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("anchorTimestamp"), v))
+                    {
+                        return TOptional(v);
+                    }
+                    return TOptional<int64>();
+                }() : TOptional<int64>())
+            ->WithDays(Data->HasField(ANSI_TO_TCHAR("days")) ? [Data]() -> TOptional<int32>
+                {
+                    int32 v;
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("days"), v))
+                    {
+                        return TOptional(v);
+                    }
+                    return TOptional<int32>();
                 }() : TOptional<int32>());
     }
 
@@ -289,6 +353,14 @@ namespace Gs2::Limit::Model
         if (ResetHourValue.IsSet())
         {
             JsonRootObject->SetNumberField("resetHour", ResetHourValue.GetValue());
+        }
+        if (AnchorTimestampValue.IsSet())
+        {
+            JsonRootObject->SetStringField("anchorTimestamp", FString::Printf(TEXT("%lld"), AnchorTimestampValue.GetValue()));
+        }
+        if (DaysValue.IsSet())
+        {
+            JsonRootObject->SetNumberField("days", DaysValue.GetValue());
         }
         return JsonRootObject;
     }

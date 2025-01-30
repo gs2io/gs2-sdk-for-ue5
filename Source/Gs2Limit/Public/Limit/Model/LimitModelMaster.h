@@ -31,6 +31,8 @@ namespace Gs2::Limit::Model
         TOptional<int32> ResetDayOfMonthValue;
         TOptional<FString> ResetDayOfWeekValue;
         TOptional<int32> ResetHourValue;
+        TOptional<int64> AnchorTimestampValue;
+        TOptional<int32> DaysValue;
         TOptional<int64> CreatedAtValue;
         TOptional<int64> UpdatedAtValue;
         TOptional<int64> RevisionValue;
@@ -50,6 +52,8 @@ namespace Gs2::Limit::Model
         TSharedPtr<FLimitModelMaster> WithResetDayOfMonth(const TOptional<int32> ResetDayOfMonth);
         TSharedPtr<FLimitModelMaster> WithResetDayOfWeek(const TOptional<FString> ResetDayOfWeek);
         TSharedPtr<FLimitModelMaster> WithResetHour(const TOptional<int32> ResetHour);
+        TSharedPtr<FLimitModelMaster> WithAnchorTimestamp(const TOptional<int64> AnchorTimestamp);
+        TSharedPtr<FLimitModelMaster> WithDays(const TOptional<int32> Days);
         TSharedPtr<FLimitModelMaster> WithCreatedAt(const TOptional<int64> CreatedAt);
         TSharedPtr<FLimitModelMaster> WithUpdatedAt(const TOptional<int64> UpdatedAt);
         TSharedPtr<FLimitModelMaster> WithRevision(const TOptional<int64> Revision);
@@ -64,6 +68,10 @@ namespace Gs2::Limit::Model
         TOptional<FString> GetResetDayOfWeek() const;
         TOptional<int32> GetResetHour() const;
         FString GetResetHourString() const;
+        TOptional<int64> GetAnchorTimestamp() const;
+        FString GetAnchorTimestampString() const;
+        TOptional<int32> GetDays() const;
+        FString GetDaysString() const;
         TOptional<int64> GetCreatedAt() const;
         FString GetCreatedAtString() const;
         TOptional<int64> GetUpdatedAt() const;

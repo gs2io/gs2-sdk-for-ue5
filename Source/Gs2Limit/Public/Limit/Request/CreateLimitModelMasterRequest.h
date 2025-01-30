@@ -34,6 +34,8 @@ namespace Gs2::Limit::Request
         TOptional<int32> ResetDayOfMonthValue;
         TOptional<FString> ResetDayOfWeekValue;
         TOptional<int32> ResetHourValue;
+        TOptional<int64> AnchorTimestampValue;
+        TOptional<int32> DaysValue;
         
     public:
         
@@ -52,6 +54,8 @@ namespace Gs2::Limit::Request
         TSharedPtr<FCreateLimitModelMasterRequest> WithResetDayOfMonth(const TOptional<int32> ResetDayOfMonth);
         TSharedPtr<FCreateLimitModelMasterRequest> WithResetDayOfWeek(const TOptional<FString> ResetDayOfWeek);
         TSharedPtr<FCreateLimitModelMasterRequest> WithResetHour(const TOptional<int32> ResetHour);
+        TSharedPtr<FCreateLimitModelMasterRequest> WithAnchorTimestamp(const TOptional<int64> AnchorTimestamp);
+        TSharedPtr<FCreateLimitModelMasterRequest> WithDays(const TOptional<int32> Days);
 
         TOptional<FString> GetContextStack() const;
         TOptional<FString> GetNamespaceName() const;
@@ -64,6 +68,10 @@ namespace Gs2::Limit::Request
         TOptional<FString> GetResetDayOfWeek() const;
         TOptional<int32> GetResetHour() const;
         FString GetResetHourString() const;
+        TOptional<int64> GetAnchorTimestamp() const;
+        FString GetAnchorTimestampString() const;
+        TOptional<int32> GetDays() const;
+        FString GetDaysString() const;
 
         static TSharedPtr<FCreateLimitModelMasterRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;

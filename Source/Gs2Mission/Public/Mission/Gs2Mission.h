@@ -362,6 +362,18 @@
 #include "Task/Rest/VerifyCounterValueByUserIdTask.h"
 #include "Task/WebSocket/VerifyCounterValueByUserIdTask.h"
 
+// ResetCounter
+#include "Request/ResetCounterRequest.h"
+#include "Result/ResetCounterResult.h"
+#include "Task/Rest/ResetCounterTask.h"
+#include "Task/WebSocket/ResetCounterTask.h"
+
+// ResetCounterByUserId
+#include "Request/ResetCounterByUserIdRequest.h"
+#include "Result/ResetCounterByUserIdResult.h"
+#include "Task/Rest/ResetCounterByUserIdTask.h"
+#include "Task/WebSocket/ResetCounterByUserIdTask.h"
+
 // DeleteCounter
 #include "Request/DeleteCounterRequest.h"
 #include "Result/DeleteCounterResult.h"
@@ -391,6 +403,12 @@
 #include "Result/DecreaseByStampTaskResult.h"
 #include "Task/Rest/DecreaseByStampTaskTask.h"
 #include "Task/WebSocket/DecreaseByStampTaskTask.h"
+
+// ResetByStampTask
+#include "Request/ResetByStampTaskRequest.h"
+#include "Result/ResetByStampTaskResult.h"
+#include "Task/Rest/ResetByStampTaskTask.h"
+#include "Task/WebSocket/ResetByStampTaskTask.h"
 
 // VerifyCounterValueByStampTask
 #include "Request/VerifyCounterValueByStampTaskRequest.h"

@@ -14,7 +14,7 @@
  * permissions and limitations under the License.
  */
 
-#include "Limit/Task/Rest/UpdateLimitModelMasterTask.h"
+#include "Mission/Task/Rest/ResetCounterTask.h"
 
 #include "HttpManager.h"
 #include "HttpModule.h"
@@ -23,23 +23,23 @@
 #include "Core/Net/Rest/Gs2RestSession.h"
 #include "Interfaces/IHttpResponse.h"
 
-namespace Gs2::Limit::Task::Rest
+namespace Gs2::Mission::Task::Rest
 {
-    FUpdateLimitModelMasterTask::FUpdateLimitModelMasterTask(
+    FResetCounterTask::FResetCounterTask(
         const Core::Net::Rest::FGs2RestSessionPtr Session,
-        const Request::FUpdateLimitModelMasterRequestPtr Request
+        const Request::FResetCounterRequestPtr Request
     ): Session(Session), Request(Request)
     {
     }
 
-    FUpdateLimitModelMasterTask::FUpdateLimitModelMasterTask(
-        const FUpdateLimitModelMasterTask& From
+    FResetCounterTask::FResetCounterTask(
+        const FResetCounterTask& From
     ): TGs2Future(From), Session(From.Session), Request(From.Request)
     {
     }
 
-    Core::Model::FGs2ErrorPtr FUpdateLimitModelMasterTask::Action(
-        const TSharedPtr<Result::FUpdateLimitModelMasterResultPtr> Result
+    Core::Model::FGs2ErrorPtr FResetCounterTask::Action(
+        const TSharedPtr<Result::FResetCounterResultPtr> Result
     )
     {
 
@@ -67,9 +67,9 @@ namespace Gs2::Limit::Task::Rest
                 }
             );
             auto Url = Core::FGs2Constant::EndpointHost
-                .Replace(TEXT("{service}"), TEXT("limit"))
+                .Replace(TEXT("{service}"), TEXT("mission"))
                 .Replace(TEXT("{region}"), *this->Session->RegionName())
-                .Append("/{namespaceName}/master/limit/{limitName}");
+                .Append("/{namespaceName}/user/me/counter/{counterName}/reset");
 
             Url = Url.Replace(
                 TEXT("{namespaceName}"),
@@ -77,49 +77,26 @@ namespace Gs2::Limit::Task::Rest
                     TEXT("null") : ToCStr(*this->Request->GetNamespaceName())
             );
             Url = Url.Replace(
-                TEXT("{limitName}"),
-                !this->Request->GetLimitName().IsSet() || this->Request->GetLimitName().GetValue().Len() == 0 ?
-                    TEXT("null") : ToCStr(*this->Request->GetLimitName())
+                TEXT("{counterName}"),
+                !this->Request->GetCounterName().IsSet() || this->Request->GetCounterName().GetValue().Len() == 0 ?
+                    TEXT("null") : ToCStr(*this->Request->GetCounterName())
             );
 
             request->SetURL(Url);
 
-            request->SetVerb(TEXT("PUT"));
+            request->SetVerb(TEXT("POST"));
 
             FString Body;
             const TSharedRef<TJsonWriter<TCHAR>> Writer = TJsonWriterFactory<TCHAR>::Create(&Body);
             const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
-            if (this->Request->GetDescription().IsSet())
+            if (this->Request->GetScopes() != nullptr && this->Request->GetScopes().IsValid())
             {
-                JsonRootObject->SetStringField("description", this->Request->GetDescription().GetValue());
-            }
-            if (this->Request->GetMetadata().IsSet())
-            {
-                JsonRootObject->SetStringField("metadata", this->Request->GetMetadata().GetValue());
-            }
-            if (this->Request->GetResetType().IsSet())
-            {
-                JsonRootObject->SetStringField("resetType", this->Request->GetResetType().GetValue());
-            }
-            if (this->Request->GetResetDayOfMonth().IsSet())
-            {
-                JsonRootObject->SetNumberField("resetDayOfMonth", this->Request->GetResetDayOfMonth().GetValue());
-            }
-            if (this->Request->GetResetDayOfWeek().IsSet())
-            {
-                JsonRootObject->SetStringField("resetDayOfWeek", this->Request->GetResetDayOfWeek().GetValue());
-            }
-            if (this->Request->GetResetHour().IsSet())
-            {
-                JsonRootObject->SetNumberField("resetHour", this->Request->GetResetHour().GetValue());
-            }
-            if (this->Request->GetAnchorTimestamp().IsSet())
-            {
-                JsonRootObject->SetStringField("anchorTimestamp", FString::Printf(TEXT("%lld"), this->Request->GetAnchorTimestamp().GetValue()));
-            }
-            if (this->Request->GetDays().IsSet())
-            {
-                JsonRootObject->SetNumberField("days", this->Request->GetDays().GetValue());
+                TArray<TSharedPtr<FJsonValue>> v;
+                for (auto JsonObjectValue : *this->Request->GetScopes())
+                {
+                    v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
+                }
+                JsonRootObject->SetArrayField("scopes", v);
             }
             if (this->Request->GetContextStack().IsSet())
             {
@@ -131,9 +108,17 @@ namespace Gs2::Limit::Task::Rest
             request->SetHeader("X-GS2-CLIENT-ID", this->Session->Credential()->ClientId());
             request->SetHeader("Authorization", "Bearer " + this->Session->Credential()->ProjectToken());
             request->SetHeader("Content-Type", "application/json");
+            if (this->Request->GetAccessToken().IsSet())
+            {
+                request->SetHeader("X-GS2-ACCESS-TOKEN", this->Request->GetAccessToken().GetValue());
+            }
+            if (this->Request->GetDuplicationAvoider().IsSet())
+            {
+                request->SetHeader("X-GS2-DUPLICATION-AVOIDER", this->Request->GetDuplicationAvoider().GetValue());
+            }
 
             request->ProcessRequest();
-            UE_LOG(Gs2Log, VeryVerbose, TEXT("[%s] %s %s"), TEXT("PUT"), ToCStr(Url), ToCStr(Body));
+            UE_LOG(Gs2Log, VeryVerbose, TEXT("[%s] %s %s"), TEXT("POST"), ToCStr(Url), ToCStr(Body));
         }
 
         if (FPlatformTLS::GetCurrentThreadId() == GGameThreadId)
@@ -157,7 +142,7 @@ namespace Gs2::Limit::Task::Rest
                 FJsonSerializer::Deserialize(JsonReader, JsonRootObject))
             {
                 auto Details = TArray<TSharedPtr<Core::Model::FGs2ErrorDetail>>();
-                *Result = Result::FUpdateLimitModelMasterResult::FromJson(JsonRootObject);
+                *Result = Result::FResetCounterResult::FromJson(JsonRootObject);
                 return nullptr;
             }
             const auto Details = MakeShared<TArray<TSharedPtr<Core::Model::FGs2ErrorDetail>>>();

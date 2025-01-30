@@ -112,6 +112,14 @@ namespace Gs2::Limit::Task::Rest
             {
                 JsonRootObject->SetNumberField("resetHour", this->Request->GetResetHour().GetValue());
             }
+            if (this->Request->GetAnchorTimestamp().IsSet())
+            {
+                JsonRootObject->SetStringField("anchorTimestamp", FString::Printf(TEXT("%lld"), this->Request->GetAnchorTimestamp().GetValue()));
+            }
+            if (this->Request->GetDays().IsSet())
+            {
+                JsonRootObject->SetNumberField("days", this->Request->GetDays().GetValue());
+            }
             if (this->Request->GetContextStack().IsSet())
             {
                 JsonRootObject->SetStringField("contextStack", this->Request->GetContextStack().GetValue());

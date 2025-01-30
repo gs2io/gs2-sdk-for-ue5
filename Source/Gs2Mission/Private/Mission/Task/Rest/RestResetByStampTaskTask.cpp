@@ -14,7 +14,7 @@
  * permissions and limitations under the License.
  */
 
-#include "Limit/Task/Rest/UpdateLimitModelMasterTask.h"
+#include "Mission/Task/Rest/ResetByStampTaskTask.h"
 
 #include "HttpManager.h"
 #include "HttpModule.h"
@@ -23,23 +23,23 @@
 #include "Core/Net/Rest/Gs2RestSession.h"
 #include "Interfaces/IHttpResponse.h"
 
-namespace Gs2::Limit::Task::Rest
+namespace Gs2::Mission::Task::Rest
 {
-    FUpdateLimitModelMasterTask::FUpdateLimitModelMasterTask(
+    FResetByStampTaskTask::FResetByStampTaskTask(
         const Core::Net::Rest::FGs2RestSessionPtr Session,
-        const Request::FUpdateLimitModelMasterRequestPtr Request
+        const Request::FResetByStampTaskRequestPtr Request
     ): Session(Session), Request(Request)
     {
     }
 
-    FUpdateLimitModelMasterTask::FUpdateLimitModelMasterTask(
-        const FUpdateLimitModelMasterTask& From
+    FResetByStampTaskTask::FResetByStampTaskTask(
+        const FResetByStampTaskTask& From
     ): TGs2Future(From), Session(From.Session), Request(From.Request)
     {
     }
 
-    Core::Model::FGs2ErrorPtr FUpdateLimitModelMasterTask::Action(
-        const TSharedPtr<Result::FUpdateLimitModelMasterResultPtr> Result
+    Core::Model::FGs2ErrorPtr FResetByStampTaskTask::Action(
+        const TSharedPtr<Result::FResetByStampTaskResultPtr> Result
     )
     {
 
@@ -67,59 +67,24 @@ namespace Gs2::Limit::Task::Rest
                 }
             );
             auto Url = Core::FGs2Constant::EndpointHost
-                .Replace(TEXT("{service}"), TEXT("limit"))
+                .Replace(TEXT("{service}"), TEXT("mission"))
                 .Replace(TEXT("{region}"), *this->Session->RegionName())
-                .Append("/{namespaceName}/master/limit/{limitName}");
-
-            Url = Url.Replace(
-                TEXT("{namespaceName}"),
-                !this->Request->GetNamespaceName().IsSet() || this->Request->GetNamespaceName().GetValue().Len() == 0 ?
-                    TEXT("null") : ToCStr(*this->Request->GetNamespaceName())
-            );
-            Url = Url.Replace(
-                TEXT("{limitName}"),
-                !this->Request->GetLimitName().IsSet() || this->Request->GetLimitName().GetValue().Len() == 0 ?
-                    TEXT("null") : ToCStr(*this->Request->GetLimitName())
-            );
+                .Append("/stamp/reset");
 
             request->SetURL(Url);
 
-            request->SetVerb(TEXT("PUT"));
+            request->SetVerb(TEXT("POST"));
 
             FString Body;
             const TSharedRef<TJsonWriter<TCHAR>> Writer = TJsonWriterFactory<TCHAR>::Create(&Body);
             const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
-            if (this->Request->GetDescription().IsSet())
+            if (this->Request->GetStampTask().IsSet())
             {
-                JsonRootObject->SetStringField("description", this->Request->GetDescription().GetValue());
+                JsonRootObject->SetStringField("stampTask", this->Request->GetStampTask().GetValue());
             }
-            if (this->Request->GetMetadata().IsSet())
+            if (this->Request->GetKeyId().IsSet())
             {
-                JsonRootObject->SetStringField("metadata", this->Request->GetMetadata().GetValue());
-            }
-            if (this->Request->GetResetType().IsSet())
-            {
-                JsonRootObject->SetStringField("resetType", this->Request->GetResetType().GetValue());
-            }
-            if (this->Request->GetResetDayOfMonth().IsSet())
-            {
-                JsonRootObject->SetNumberField("resetDayOfMonth", this->Request->GetResetDayOfMonth().GetValue());
-            }
-            if (this->Request->GetResetDayOfWeek().IsSet())
-            {
-                JsonRootObject->SetStringField("resetDayOfWeek", this->Request->GetResetDayOfWeek().GetValue());
-            }
-            if (this->Request->GetResetHour().IsSet())
-            {
-                JsonRootObject->SetNumberField("resetHour", this->Request->GetResetHour().GetValue());
-            }
-            if (this->Request->GetAnchorTimestamp().IsSet())
-            {
-                JsonRootObject->SetStringField("anchorTimestamp", FString::Printf(TEXT("%lld"), this->Request->GetAnchorTimestamp().GetValue()));
-            }
-            if (this->Request->GetDays().IsSet())
-            {
-                JsonRootObject->SetNumberField("days", this->Request->GetDays().GetValue());
+                JsonRootObject->SetStringField("keyId", this->Request->GetKeyId().GetValue());
             }
             if (this->Request->GetContextStack().IsSet())
             {
@@ -133,7 +98,7 @@ namespace Gs2::Limit::Task::Rest
             request->SetHeader("Content-Type", "application/json");
 
             request->ProcessRequest();
-            UE_LOG(Gs2Log, VeryVerbose, TEXT("[%s] %s %s"), TEXT("PUT"), ToCStr(Url), ToCStr(Body));
+            UE_LOG(Gs2Log, VeryVerbose, TEXT("[%s] %s %s"), TEXT("POST"), ToCStr(Url), ToCStr(Body));
         }
 
         if (FPlatformTLS::GetCurrentThreadId() == GGameThreadId)
@@ -157,7 +122,7 @@ namespace Gs2::Limit::Task::Rest
                 FJsonSerializer::Deserialize(JsonReader, JsonRootObject))
             {
                 auto Details = TArray<TSharedPtr<Core::Model::FGs2ErrorDetail>>();
-                *Result = Result::FUpdateLimitModelMasterResult::FromJson(JsonRootObject);
+                *Result = Result::FResetByStampTaskResult::FromJson(JsonRootObject);
                 return nullptr;
             }
             const auto Details = MakeShared<TArray<TSharedPtr<Core::Model::FGs2ErrorDetail>>>();

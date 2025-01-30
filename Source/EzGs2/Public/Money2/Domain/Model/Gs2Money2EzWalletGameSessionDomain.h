@@ -22,6 +22,7 @@
 #include "Money2/Model/Gs2Money2EzWalletSummary.h"
 #include "Money2/Model/Gs2Money2EzDepositTransaction.h"
 #include "Gs2Money2EzWalletGameSessionDomain.h"
+#include "Money2/Domain/Iterator/Gs2Money2EzDescribeWalletsIterator.h"
 #include "Util/Net/GameSession.h"
 #include "Util/Net/Gs2Connection.h"
 

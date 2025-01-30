@@ -496,6 +496,24 @@ namespace Gs2::Mission
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::WebSocket::FResetCounterTask>> FGs2MissionWebSocketClient::ResetCounter(
+        const Request::FResetCounterRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FResetCounterTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FResetCounterByUserIdTask>> FGs2MissionWebSocketClient::ResetCounterByUserId(
+        const Request::FResetCounterByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FResetCounterByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::WebSocket::FDeleteCounterTask>> FGs2MissionWebSocketClient::DeleteCounter(
         const Request::FDeleteCounterRequestPtr Request) const
     {
@@ -536,6 +554,15 @@ namespace Gs2::Mission
         const Request::FDecreaseByStampTaskRequestPtr Request) const
     {
         return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FDecreaseByStampTaskTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FResetByStampTaskTask>> FGs2MissionWebSocketClient::ResetByStampTask(
+        const Request::FResetByStampTaskRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FResetByStampTaskTask>>(
             Session,
             Request
         );

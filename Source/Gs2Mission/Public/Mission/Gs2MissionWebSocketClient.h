@@ -124,6 +124,10 @@
 #include "Task/WebSocket/VerifyCounterValueTask.h"
 #include "Request/VerifyCounterValueByUserIdRequest.h"
 #include "Task/WebSocket/VerifyCounterValueByUserIdTask.h"
+#include "Request/ResetCounterRequest.h"
+#include "Task/WebSocket/ResetCounterTask.h"
+#include "Request/ResetCounterByUserIdRequest.h"
+#include "Task/WebSocket/ResetCounterByUserIdTask.h"
 #include "Request/DeleteCounterRequest.h"
 #include "Task/WebSocket/DeleteCounterTask.h"
 #include "Request/DeleteCounterByUserIdRequest.h"
@@ -134,6 +138,8 @@
 #include "Task/WebSocket/SetByStampSheetTask.h"
 #include "Request/DecreaseByStampTaskRequest.h"
 #include "Task/WebSocket/DecreaseByStampTaskTask.h"
+#include "Request/ResetByStampTaskRequest.h"
+#include "Task/WebSocket/ResetByStampTaskTask.h"
 #include "Request/VerifyCounterValueByStampTaskRequest.h"
 #include "Task/WebSocket/VerifyCounterValueByStampTaskTask.h"
 #include "Request/ExportMasterRequest.h"
@@ -390,6 +396,14 @@ namespace Gs2::Mission
             const Request::FVerifyCounterValueByUserIdRequestPtr Request
         ) const;
 
+        TSharedPtr<FAsyncTask<Task::WebSocket::FResetCounterTask>> ResetCounter(
+            const Request::FResetCounterRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FResetCounterByUserIdTask>> ResetCounterByUserId(
+            const Request::FResetCounterByUserIdRequestPtr Request
+        ) const;
+
         TSharedPtr<FAsyncTask<Task::WebSocket::FDeleteCounterTask>> DeleteCounter(
             const Request::FDeleteCounterRequestPtr Request
         ) const;
@@ -408,6 +422,10 @@ namespace Gs2::Mission
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FDecreaseByStampTaskTask>> DecreaseByStampTask(
             const Request::FDecreaseByStampTaskRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FResetByStampTaskTask>> ResetByStampTask(
+            const Request::FResetByStampTaskRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FVerifyCounterValueByStampTaskTask>> VerifyCounterValueByStampTask(

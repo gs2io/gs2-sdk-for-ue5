@@ -496,6 +496,24 @@ namespace Gs2::Mission
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::Rest::FResetCounterTask>> FGs2MissionRestClient::ResetCounter(
+        const Request::FResetCounterRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FResetCounterTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FResetCounterByUserIdTask>> FGs2MissionRestClient::ResetCounterByUserId(
+        const Request::FResetCounterByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FResetCounterByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::Rest::FDeleteCounterTask>> FGs2MissionRestClient::DeleteCounter(
         const Request::FDeleteCounterRequestPtr Request) const
     {
@@ -536,6 +554,15 @@ namespace Gs2::Mission
         const Request::FDecreaseByStampTaskRequestPtr Request) const
     {
         return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FDecreaseByStampTaskTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FResetByStampTaskTask>> FGs2MissionRestClient::ResetByStampTask(
+        const Request::FResetByStampTaskRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FResetByStampTaskTask>>(
             Session,
             Request
         );

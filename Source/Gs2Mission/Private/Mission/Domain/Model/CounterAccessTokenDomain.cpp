@@ -282,6 +282,73 @@ namespace Gs2::Mission::Domain::Model
         return Gs2::Core::Util::New<FAsyncTask<FVerifyValueTask>>(this->AsShared(), Request);
     }
 
+    FCounterAccessTokenDomain::FResetTask::FResetTask(
+        const TSharedPtr<FCounterAccessTokenDomain>& Self,
+        const Request::FResetCounterRequestPtr Request
+    ): Self(Self), Request(Request)
+    {
+
+    }
+
+    FCounterAccessTokenDomain::FResetTask::FResetTask(
+        const FResetTask& From
+    ): TGs2Future(From), Self(From.Self), Request(From.Request)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FCounterAccessTokenDomain::FResetTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::Mission::Domain::Model::FCounterAccessTokenDomain>> Result
+    )
+    {
+        Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
+            ->WithNamespaceName(Self->NamespaceName)
+            ->WithAccessToken(Self->AccessToken->GetToken())
+            ->WithCounterName(Self->CounterName);
+        const auto Future = Self->Client->ResetCounter(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto RequestModel = Request;
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
+        if (ResultModel != nullptr) {
+            
+            if (ResultModel->GetItem() != nullptr)
+            {
+                const auto ParentKey = Gs2::Mission::Domain::Model::FUserDomain::CreateCacheParentKey(
+                    Self->NamespaceName,
+                    Self->UserId(),
+                    "Counter"
+                );
+                const auto Key = Gs2::Mission::Domain::Model::FCounterDomain::CreateCacheKey(
+                    ResultModel->GetItem()->GetName()
+                );
+                Self->Gs2->Cache->Put(
+                    Gs2::Mission::Model::FCounter::TypeName,
+                    ParentKey,
+                    Key,
+                    ResultModel->GetItem(),
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+            }
+        }
+        auto Domain = Self;
+
+        *Result = Domain;
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FCounterAccessTokenDomain::FResetTask>> FCounterAccessTokenDomain::Reset(
+        Request::FResetCounterRequestPtr Request
+    ) {
+        return Gs2::Core::Util::New<FAsyncTask<FResetTask>>(this->AsShared(), Request);
+    }
+
     FCounterAccessTokenDomain::FDeleteTask::FDeleteTask(
         const TSharedPtr<FCounterAccessTokenDomain>& Self,
         const Request::FDeleteCounterRequestPtr Request
