@@ -102,6 +102,10 @@ namespace Gs2::Schedule::Task::Rest
             {
                 JsonRootObject->SetNumberField("ttl", this->Request->GetTtl().GetValue());
             }
+            if (this->Request->GetEventId().IsSet())
+            {
+                JsonRootObject->SetStringField("eventId", this->Request->GetEventId().GetValue());
+            }
             if (this->Request->GetContextStack().IsSet())
             {
                 JsonRootObject->SetStringField("contextStack", this->Request->GetContextStack().GetValue());

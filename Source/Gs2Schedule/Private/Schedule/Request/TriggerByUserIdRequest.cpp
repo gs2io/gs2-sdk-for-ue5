@@ -24,6 +24,7 @@ namespace Gs2::Schedule::Request
         UserIdValue(TOptional<FString>()),
         TriggerStrategyValue(TOptional<FString>()),
         TtlValue(TOptional<int32>()),
+        EventIdValue(TOptional<FString>()),
         TimeOffsetTokenValue(TOptional<FString>())
     {
     }
@@ -36,6 +37,7 @@ namespace Gs2::Schedule::Request
         UserIdValue(From.UserIdValue),
         TriggerStrategyValue(From.TriggerStrategyValue),
         TtlValue(From.TtlValue),
+        EventIdValue(From.EventIdValue),
         TimeOffsetTokenValue(From.TimeOffsetTokenValue)
     {
     }
@@ -85,6 +87,14 @@ namespace Gs2::Schedule::Request
     )
     {
         this->TtlValue = Ttl;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FTriggerByUserIdRequest> FTriggerByUserIdRequest::WithEventId(
+        const TOptional<FString> EventId
+    )
+    {
+        this->EventIdValue = EventId;
         return SharedThis(this);
     }
 
@@ -141,6 +151,11 @@ namespace Gs2::Schedule::Request
             return FString("null");
         }
         return FString::Printf(TEXT("%d"), TtlValue.GetValue());
+    }
+
+    TOptional<FString> FTriggerByUserIdRequest::GetEventId() const
+    {
+        return EventIdValue;
     }
 
     TOptional<FString> FTriggerByUserIdRequest::GetTimeOffsetToken() const
@@ -205,6 +220,15 @@ namespace Gs2::Schedule::Request
                   }
                   return TOptional<int32>();
               }() : TOptional<int32>())
+            ->WithEventId(Data->HasField(ANSI_TO_TCHAR("eventId")) ? [Data]() -> TOptional<FString>
+              {
+                  FString v("");
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("eventId"), v))
+                  {
+                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                  }
+                  return TOptional<FString>();
+              }() : TOptional<FString>())
             ->WithTimeOffsetToken(Data->HasField(ANSI_TO_TCHAR("timeOffsetToken")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
@@ -243,6 +267,10 @@ namespace Gs2::Schedule::Request
         if (TtlValue.IsSet())
         {
             JsonRootObject->SetNumberField("ttl", TtlValue.GetValue());
+        }
+        if (EventIdValue.IsSet())
+        {
+            JsonRootObject->SetStringField("eventId", EventIdValue.GetValue());
         }
         if (TimeOffsetTokenValue.IsSet())
         {

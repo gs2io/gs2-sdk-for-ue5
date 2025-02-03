@@ -232,15 +232,15 @@ namespace Gs2::Schedule::Domain::Model
             Request::FCreateEventMasterRequestPtr Request
         );
 
+        TSharedPtr<Gs2::Schedule::Domain::Model::FCurrentEventMasterDomain> CurrentEventMaster(
+        );
+
         TSharedPtr<Gs2::Schedule::Domain::Model::FUserDomain> User(
             const FString UserId
         );
 
         TSharedPtr<Gs2::Schedule::Domain::Model::FUserAccessTokenDomain> AccessToken(
             Gs2::Auth::Model::FAccessTokenPtr AccessToken
-        );
-
-        TSharedPtr<Gs2::Schedule::Domain::Model::FCurrentEventMasterDomain> CurrentEventMaster(
         );
 
         Gs2::Schedule::Domain::Iterator::FDescribeEventMastersIteratorPtr EventMasters(

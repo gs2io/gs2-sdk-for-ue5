@@ -361,6 +361,16 @@ namespace Gs2::Schedule::Domain::Model
         return Gs2::Core::Util::New<FAsyncTask<FCreateEventMasterTask>>(this->AsShared(), Request);
     }
 
+    TSharedPtr<Gs2::Schedule::Domain::Model::FCurrentEventMasterDomain> FNamespaceDomain::CurrentEventMaster(
+    )
+    {
+        return MakeShared<Gs2::Schedule::Domain::Model::FCurrentEventMasterDomain>(
+            Gs2,
+            Service,
+            NamespaceName
+        );
+    }
+
     TSharedPtr<Gs2::Schedule::Domain::Model::FUserDomain> FNamespaceDomain::User(
         const FString UserId
     )
@@ -382,16 +392,6 @@ namespace Gs2::Schedule::Domain::Model
             Service,
             NamespaceName,
             AccessToken
-        );
-    }
-
-    TSharedPtr<Gs2::Schedule::Domain::Model::FCurrentEventMasterDomain> FNamespaceDomain::CurrentEventMaster(
-    )
-    {
-        return MakeShared<Gs2::Schedule::Domain::Model::FCurrentEventMasterDomain>(
-            Gs2,
-            Service,
-            NamespaceName
         );
     }
 

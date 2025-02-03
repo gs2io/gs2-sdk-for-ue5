@@ -31,6 +31,7 @@ namespace Gs2::Schedule::Request
         TOptional<FString> UserIdValue;
         TOptional<FString> TriggerStrategyValue;
         TOptional<int32> TtlValue;
+        TOptional<FString> EventIdValue;
         TOptional<FString> TimeOffsetTokenValue;
         TOptional<FString> DuplicationAvoiderValue;
         
@@ -48,6 +49,7 @@ namespace Gs2::Schedule::Request
         TSharedPtr<FTriggerByUserIdRequest> WithUserId(const TOptional<FString> UserId);
         TSharedPtr<FTriggerByUserIdRequest> WithTriggerStrategy(const TOptional<FString> TriggerStrategy);
         TSharedPtr<FTriggerByUserIdRequest> WithTtl(const TOptional<int32> Ttl);
+        TSharedPtr<FTriggerByUserIdRequest> WithEventId(const TOptional<FString> EventId);
         TSharedPtr<FTriggerByUserIdRequest> WithTimeOffsetToken(const TOptional<FString> TimeOffsetToken);
         TSharedPtr<FTriggerByUserIdRequest> WithDuplicationAvoider(const TOptional<FString> DuplicationAvoider);
 
@@ -58,6 +60,7 @@ namespace Gs2::Schedule::Request
         TOptional<FString> GetTriggerStrategy() const;
         TOptional<int32> GetTtl() const;
         FString GetTtlString() const;
+        TOptional<FString> GetEventId() const;
         TOptional<FString> GetTimeOffsetToken() const;
         TOptional<FString> GetDuplicationAvoider() const;
 
