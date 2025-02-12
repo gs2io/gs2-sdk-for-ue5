@@ -108,6 +108,10 @@ namespace Gs2::Exchange::Task::Rest
             {
                 JsonRootObject->SetObjectField("incrementalExchangeScript", this->Request->GetIncrementalExchangeScript()->ToJson());
             }
+            if (this->Request->GetAcquireAwaitScript() != nullptr && this->Request->GetAcquireAwaitScript().IsValid())
+            {
+                JsonRootObject->SetObjectField("acquireAwaitScript", this->Request->GetAcquireAwaitScript()->ToJson());
+            }
             if (this->Request->GetLogSetting() != nullptr && this->Request->GetLogSetting().IsValid())
             {
                 JsonRootObject->SetObjectField("logSetting", this->Request->GetLogSetting()->ToJson());

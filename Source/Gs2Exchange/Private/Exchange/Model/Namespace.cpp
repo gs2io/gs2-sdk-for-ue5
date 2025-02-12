@@ -27,6 +27,7 @@ namespace Gs2::Exchange::Model
         TransactionSettingValue(nullptr),
         ExchangeScriptValue(nullptr),
         IncrementalExchangeScriptValue(nullptr),
+        AcquireAwaitScriptValue(nullptr),
         LogSettingValue(nullptr),
         CreatedAtValue(TOptional<int64>()),
         UpdatedAtValue(TOptional<int64>()),
@@ -47,6 +48,7 @@ namespace Gs2::Exchange::Model
         TransactionSettingValue(From.TransactionSettingValue),
         ExchangeScriptValue(From.ExchangeScriptValue),
         IncrementalExchangeScriptValue(From.IncrementalExchangeScriptValue),
+        AcquireAwaitScriptValue(From.AcquireAwaitScriptValue),
         LogSettingValue(From.LogSettingValue),
         CreatedAtValue(From.CreatedAtValue),
         UpdatedAtValue(From.UpdatedAtValue),
@@ -117,6 +119,14 @@ namespace Gs2::Exchange::Model
     )
     {
         this->IncrementalExchangeScriptValue = IncrementalExchangeScript;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FNamespace> FNamespace::WithAcquireAwaitScript(
+        const TSharedPtr<FScriptSetting> AcquireAwaitScript
+    )
+    {
+        this->AcquireAwaitScriptValue = AcquireAwaitScript;
         return SharedThis(this);
     }
 
@@ -216,6 +226,10 @@ namespace Gs2::Exchange::Model
     TSharedPtr<FScriptSetting> FNamespace::GetIncrementalExchangeScript() const
     {
         return IncrementalExchangeScriptValue;
+    }
+    TSharedPtr<FScriptSetting> FNamespace::GetAcquireAwaitScript() const
+    {
+        return AcquireAwaitScriptValue;
     }
     TSharedPtr<FLogSetting> FNamespace::GetLogSetting() const
     {
@@ -377,6 +391,14 @@ namespace Gs2::Exchange::Model
                     }
                     return Model::FScriptSetting::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("incrementalExchangeScript")));
                  }() : nullptr)
+            ->WithAcquireAwaitScript(Data->HasField(ANSI_TO_TCHAR("acquireAwaitScript")) ? [Data]() -> Model::FScriptSettingPtr
+                {
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("acquireAwaitScript")))
+                    {
+                        return nullptr;
+                    }
+                    return Model::FScriptSetting::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("acquireAwaitScript")));
+                 }() : nullptr)
             ->WithLogSetting(Data->HasField(ANSI_TO_TCHAR("logSetting")) ? [Data]() -> Model::FLogSettingPtr
                 {
                     if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("logSetting")))
@@ -466,6 +488,10 @@ namespace Gs2::Exchange::Model
         if (IncrementalExchangeScriptValue != nullptr && IncrementalExchangeScriptValue.IsValid())
         {
             JsonRootObject->SetObjectField("incrementalExchangeScript", IncrementalExchangeScriptValue->ToJson());
+        }
+        if (AcquireAwaitScriptValue != nullptr && AcquireAwaitScriptValue.IsValid())
+        {
+            JsonRootObject->SetObjectField("acquireAwaitScript", AcquireAwaitScriptValue->ToJson());
         }
         if (LogSettingValue != nullptr && LogSettingValue.IsValid())
         {
