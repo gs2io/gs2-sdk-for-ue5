@@ -180,6 +180,18 @@
 #include "Task/Rest/ReadMessageByUserIdTask.h"
 #include "Task/WebSocket/ReadMessageByUserIdTask.h"
 
+// BatchReadMessages
+#include "Request/BatchReadMessagesRequest.h"
+#include "Result/BatchReadMessagesResult.h"
+#include "Task/Rest/BatchReadMessagesTask.h"
+#include "Task/WebSocket/BatchReadMessagesTask.h"
+
+// BatchReadMessagesByUserId
+#include "Request/BatchReadMessagesByUserIdRequest.h"
+#include "Result/BatchReadMessagesByUserIdResult.h"
+#include "Task/Rest/BatchReadMessagesByUserIdTask.h"
+#include "Task/WebSocket/BatchReadMessagesByUserIdTask.h"
+
 // DeleteMessage
 #include "Request/DeleteMessageRequest.h"
 #include "Result/DeleteMessageResult.h"

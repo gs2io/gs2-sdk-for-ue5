@@ -66,6 +66,10 @@
 #include "Task/Rest/ReadMessageTask.h"
 #include "Request/ReadMessageByUserIdRequest.h"
 #include "Task/Rest/ReadMessageByUserIdTask.h"
+#include "Request/BatchReadMessagesRequest.h"
+#include "Task/Rest/BatchReadMessagesTask.h"
+#include "Request/BatchReadMessagesByUserIdRequest.h"
+#include "Task/Rest/BatchReadMessagesByUserIdTask.h"
 #include "Request/DeleteMessageRequest.h"
 #include "Task/Rest/DeleteMessageTask.h"
 #include "Request/DeleteMessageByUserIdRequest.h"
@@ -210,6 +214,14 @@ namespace Gs2::Inbox
 
         TSharedPtr<FAsyncTask<Task::Rest::FReadMessageByUserIdTask>> ReadMessageByUserId(
             const Request::FReadMessageByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FBatchReadMessagesTask>> BatchReadMessages(
+            const Request::FBatchReadMessagesRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FBatchReadMessagesByUserIdTask>> BatchReadMessagesByUserId(
+            const Request::FBatchReadMessagesByUserIdRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::Rest::FDeleteMessageTask>> DeleteMessage(

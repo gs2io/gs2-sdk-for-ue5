@@ -235,6 +235,24 @@ namespace Gs2::Inbox
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::WebSocket::FBatchReadMessagesTask>> FGs2InboxWebSocketClient::BatchReadMessages(
+        const Request::FBatchReadMessagesRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FBatchReadMessagesTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FBatchReadMessagesByUserIdTask>> FGs2InboxWebSocketClient::BatchReadMessagesByUserId(
+        const Request::FBatchReadMessagesByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FBatchReadMessagesByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::WebSocket::FDeleteMessageTask>> FGs2InboxWebSocketClient::DeleteMessage(
         const Request::FDeleteMessageRequestPtr Request) const
     {

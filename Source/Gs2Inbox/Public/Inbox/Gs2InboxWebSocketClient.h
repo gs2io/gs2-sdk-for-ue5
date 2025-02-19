@@ -66,6 +66,10 @@
 #include "Task/WebSocket/ReadMessageTask.h"
 #include "Request/ReadMessageByUserIdRequest.h"
 #include "Task/WebSocket/ReadMessageByUserIdTask.h"
+#include "Request/BatchReadMessagesRequest.h"
+#include "Task/WebSocket/BatchReadMessagesTask.h"
+#include "Request/BatchReadMessagesByUserIdRequest.h"
+#include "Task/WebSocket/BatchReadMessagesByUserIdTask.h"
 #include "Request/DeleteMessageRequest.h"
 #include "Task/WebSocket/DeleteMessageTask.h"
 #include "Request/DeleteMessageByUserIdRequest.h"
@@ -210,6 +214,14 @@ namespace Gs2::Inbox
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FReadMessageByUserIdTask>> ReadMessageByUserId(
             const Request::FReadMessageByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FBatchReadMessagesTask>> BatchReadMessages(
+            const Request::FBatchReadMessagesRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FBatchReadMessagesByUserIdTask>> BatchReadMessagesByUserId(
+            const Request::FBatchReadMessagesByUserIdRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FDeleteMessageTask>> DeleteMessage(

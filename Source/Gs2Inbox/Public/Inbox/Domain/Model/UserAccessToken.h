@@ -112,6 +112,35 @@ namespace Gs2::Inbox::Domain::Model
             Request::FReceiveGlobalMessageRequestPtr Request
         );
 
+        class GS2INBOX_API FBatchReadMessagesTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Inbox::Domain::Model::FUserAccessTokenDomain>,
+            public TSharedFromThis<FBatchReadMessagesTask>
+        {
+            const TSharedPtr<FUserAccessTokenDomain> Self;
+            const Request::FBatchReadMessagesRequestPtr Request;
+            bool SpeculativeExecute;
+        public:
+            explicit FBatchReadMessagesTask(
+                const TSharedPtr<FUserAccessTokenDomain>& Self,
+                const Request::FBatchReadMessagesRequestPtr Request,
+                bool SpeculativeExecute
+            );
+
+            FBatchReadMessagesTask(
+                const FBatchReadMessagesTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Inbox::Domain::Model::FUserAccessTokenDomain>> Result
+            ) override;
+        };
+        friend FBatchReadMessagesTask;
+
+        TSharedPtr<FAsyncTask<FBatchReadMessagesTask>> BatchReadMessages(
+            Request::FBatchReadMessagesRequestPtr Request,
+            bool SpeculativeExecute = true
+        );
+
         Gs2::Inbox::Domain::Iterator::FDescribeMessagesIteratorPtr Messages(
             const TOptional<bool> IsRead = TOptional<bool>()
         ) const;

@@ -72,6 +72,29 @@ namespace Gs2::UE5::Inbox::Domain::Model
         TSharedPtr<FAsyncTask<FReceiveGlobalMessageTask>> ReceiveGlobalMessage(
         );
 
+        class EZGS2_API FBatchReadTask :
+            public Gs2::Core::Util::TGs2Future<Gs2::UE5::Inbox::Domain::Model::FEzUserGameSessionDomain>,
+            public TSharedFromThis<FBatchReadTask>
+        {
+            TSharedPtr<FEzUserGameSessionDomain> Self;
+            TArray<FString> MessageNames;
+
+        public:
+            explicit FBatchReadTask(
+                TSharedPtr<FEzUserGameSessionDomain> Self,
+                TArray<FString> MessageNames
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::UE5::Inbox::Domain::Model::FEzUserGameSessionDomain>> Result
+            ) override;
+        };
+        friend FBatchReadTask;
+
+        TSharedPtr<FAsyncTask<FBatchReadTask>> BatchRead(
+            TArray<FString> MessageNames
+        );
+
         Gs2::UE5::Inbox::Domain::Iterator::FEzDescribeMessagesIteratorPtr Messages(
             const TOptional<bool> IsRead = TOptional<bool>()
         ) const;

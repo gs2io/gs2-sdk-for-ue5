@@ -249,6 +249,93 @@ namespace Gs2::Inbox::Domain::Model
         return Gs2::Core::Util::New<FAsyncTask<FReceiveGlobalMessageTask>>(this->AsShared(), Request);
     }
 
+    FUserDomain::FBatchReadMessagesTask::FBatchReadMessagesTask(
+        const TSharedPtr<FUserDomain>& Self,
+        const Request::FBatchReadMessagesByUserIdRequestPtr Request
+    ): Self(Self), Request(Request)
+    {
+
+    }
+
+    FUserDomain::FBatchReadMessagesTask::FBatchReadMessagesTask(
+        const FBatchReadMessagesTask& From
+    ): TGs2Future(From), Self(From.Self), Request(From.Request)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FUserDomain::FBatchReadMessagesTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::Inbox::Domain::Model::FUserDomain>> Result
+    )
+    {
+        Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
+            ->WithNamespaceName(Self->NamespaceName)
+            ->WithUserId(Self->UserId);
+        const auto Future = Self->Client->BatchReadMessagesByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto RequestModel = Request;
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
+        if (ResultModel != nullptr) {
+            {
+                for (auto Item : *ResultModel->GetItems())
+                {
+                    const auto ParentKey = Gs2::Inbox::Domain::Model::FUserDomain::CreateCacheParentKey(
+                        Self->NamespaceName,
+                        Self->UserId,
+                        "Message"
+                    );
+                    const auto Key = Gs2::Inbox::Domain::Model::FMessageDomain::CreateCacheKey(
+                        Item->GetName()
+                    );
+                    Self->Gs2->Cache->Put(
+                        Gs2::Inbox::Model::FMessage::TypeName,
+                        ParentKey,
+                        Key,
+                        Item,
+                        Item->GetExpiresAt().IsSet() ? FDateTime::FromUnixTimestamp(*Item->GetExpiresAt()/1000) : FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                    );
+                }
+            }
+        }
+        if (ResultModel && ResultModel->GetStampSheet())
+        {
+            const auto Transaction = Gs2::Core::Domain::Internal::FTransactionDomainFactory::ToTransaction(
+                Self->Gs2,
+                *Self->UserId,
+                false,
+                *ResultModel->GetTransactionId(),
+                *ResultModel->GetStampSheet(),
+                *ResultModel->GetStampSheetEncryptionKeyId()
+            );
+            const auto Future3 = Transaction->Wait(true);
+            Future3->StartSynchronousTask();
+            if (Future3->GetTask().IsError())
+            {
+                return Future3->GetTask().Error();
+            }
+        }
+        if (ResultModel != nullptr)
+        {
+            Self->AutoRunStampSheet = ResultModel->GetAutoRunStampSheet();
+            Self->TransactionId = ResultModel->GetTransactionId();
+        }
+        *Result = Self;
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FUserDomain::FBatchReadMessagesTask>> FUserDomain::BatchReadMessages(
+        Request::FBatchReadMessagesByUserIdRequestPtr Request
+    ) {
+        return Gs2::Core::Util::New<FAsyncTask<FBatchReadMessagesTask>>(this->AsShared(), Request);
+    }
+
     Gs2::Inbox::Domain::Iterator::FDescribeMessagesByUserIdIteratorPtr FUserDomain::Messages(
         const TOptional<bool> IsRead,
         const TOptional<FString> TimeOffsetToken

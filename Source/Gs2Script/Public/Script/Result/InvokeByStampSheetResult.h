@@ -19,6 +19,7 @@
 #include "CoreMinimal.h"
 #include "../Model/Transaction.h"
 #include "../Model/RandomStatus.h"
+#include "Gs2Core/Public/Core/Model/TransactionResult.h"
 
 namespace Gs2::Script::Result
 {
@@ -28,6 +29,8 @@ namespace Gs2::Script::Result
         TOptional<FString> ResultValue;
         TSharedPtr<Model::FTransaction> TransactionValue;
         TSharedPtr<Model::FRandomStatus> RandomStatusValue;
+        TOptional<bool> AtomicCommitValue;
+        TSharedPtr<Gs2::Core::Model::FTransactionResult> TransactionResultValue;
         TOptional<int32> ExecuteTimeValue;
         TOptional<int32> ChargedValue;
         TSharedPtr<TArray<FString>> OutputValue;
@@ -44,6 +47,8 @@ namespace Gs2::Script::Result
         TSharedPtr<FInvokeByStampSheetResult> WithResult(const TOptional<FString> Result);
         TSharedPtr<FInvokeByStampSheetResult> WithTransaction(const TSharedPtr<Model::FTransaction> Transaction);
         TSharedPtr<FInvokeByStampSheetResult> WithRandomStatus(const TSharedPtr<Model::FRandomStatus> RandomStatus);
+        TSharedPtr<FInvokeByStampSheetResult> WithAtomicCommit(const TOptional<bool> AtomicCommit);
+        TSharedPtr<FInvokeByStampSheetResult> WithTransactionResult(const TSharedPtr<Gs2::Core::Model::FTransactionResult> TransactionResult);
         TSharedPtr<FInvokeByStampSheetResult> WithExecuteTime(const TOptional<int32> ExecuteTime);
         TSharedPtr<FInvokeByStampSheetResult> WithCharged(const TOptional<int32> Charged);
         TSharedPtr<FInvokeByStampSheetResult> WithOutput(const TSharedPtr<TArray<FString>> Output);
@@ -53,6 +58,9 @@ namespace Gs2::Script::Result
         TOptional<FString> GetResult() const;
         TSharedPtr<Model::FTransaction> GetTransaction() const;
         TSharedPtr<Model::FRandomStatus> GetRandomStatus() const;
+        TOptional<bool> GetAtomicCommit() const;
+        FString GetAtomicCommitString() const;
+        TSharedPtr<Gs2::Core::Model::FTransactionResult> GetTransactionResult() const;
         TOptional<int32> GetExecuteTime() const;
         FString GetExecuteTimeString() const;
         TOptional<int32> GetCharged() const;

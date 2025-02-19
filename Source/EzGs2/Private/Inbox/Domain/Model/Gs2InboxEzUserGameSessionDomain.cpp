@@ -99,6 +99,66 @@ namespace Gs2::UE5::Inbox::Domain::Model
         );
     }
 
+    FEzUserGameSessionDomain::FBatchReadTask::FBatchReadTask(
+        TSharedPtr<FEzUserGameSessionDomain> Self,
+        TArray<FString> MessageNames
+    ): Self(Self), MessageNames(MessageNames)
+    {
+
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FEzUserGameSessionDomain::FBatchReadTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::UE5::Inbox::Domain::Model::FEzUserGameSessionDomain>> Result
+    )
+    {
+        const auto Future = Self->ConnectionValue->Run(
+            [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
+                const auto Task = Self->Domain->BatchReadMessages(
+                    MakeShared<Gs2::Inbox::Request::FBatchReadMessagesRequest>()
+                        ->WithMessageNames([&]{
+                            auto Arr = MakeShared<TArray<FString>>();
+                            for (auto Value : MessageNames) {
+                                Arr->Add(Value);
+                            }
+                            return Arr;
+                        }())
+                );
+                Task->StartSynchronousTask();
+                if (Task->GetTask().IsError())
+                {
+                    Task->EnsureCompletion();
+                    return Task->GetTask().Error();
+                }
+                *Result = MakeShared<Gs2::UE5::Inbox::Domain::Model::FEzUserGameSessionDomain>(
+                    Task->GetTask().Result(),
+                    Self->GameSession,
+                    Self->ConnectionValue
+                );
+                Task->EnsureCompletion();
+                return nullptr;
+            },
+            nullptr
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            Future->EnsureCompletion();
+            return Future->GetTask().Error();
+        }
+        Future->EnsureCompletion();
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FEzUserGameSessionDomain::FBatchReadTask>> FEzUserGameSessionDomain::BatchRead(
+        TArray<FString> MessageNames
+    )
+    {
+        return Gs2::Core::Util::New<FAsyncTask<FBatchReadTask>>(
+            this->AsShared(),
+            MessageNames
+        );
+    }
+
     Gs2::UE5::Inbox::Domain::Iterator::FEzDescribeMessagesIteratorPtr FEzUserGameSessionDomain::Messages(
           const TOptional<bool> IsRead
     ) const

@@ -23,6 +23,8 @@ namespace Gs2::Script::Result
         ResultValue(TOptional<FString>()),
         TransactionValue(nullptr),
         RandomStatusValue(nullptr),
+        AtomicCommitValue(TOptional<bool>()),
+        TransactionResultValue(nullptr),
         ExecuteTimeValue(TOptional<int32>()),
         ChargedValue(TOptional<int32>()),
         OutputValue(nullptr)
@@ -36,6 +38,8 @@ namespace Gs2::Script::Result
         ResultValue(From.ResultValue),
         TransactionValue(From.TransactionValue),
         RandomStatusValue(From.RandomStatusValue),
+        AtomicCommitValue(From.AtomicCommitValue),
+        TransactionResultValue(From.TransactionResultValue),
         ExecuteTimeValue(From.ExecuteTimeValue),
         ChargedValue(From.ChargedValue),
         OutputValue(From.OutputValue)
@@ -71,6 +75,22 @@ namespace Gs2::Script::Result
     )
     {
         this->RandomStatusValue = RandomStatus;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FInvokeScriptResult> FInvokeScriptResult::WithAtomicCommit(
+        const TOptional<bool> AtomicCommit
+    )
+    {
+        this->AtomicCommitValue = AtomicCommit;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FInvokeScriptResult> FInvokeScriptResult::WithTransactionResult(
+        const TSharedPtr<Gs2::Core::Model::FTransactionResult> TransactionResult
+    )
+    {
+        this->TransactionResultValue = TransactionResult;
         return SharedThis(this);
     }
 
@@ -133,6 +153,29 @@ namespace Gs2::Script::Result
             return nullptr;
         }
         return RandomStatusValue;
+    }
+
+    TOptional<bool> FInvokeScriptResult::GetAtomicCommit() const
+    {
+        return AtomicCommitValue;
+    }
+
+    FString FInvokeScriptResult::GetAtomicCommitString() const
+    {
+        if (!AtomicCommitValue.IsSet())
+        {
+            return FString("null");
+        }
+        return FString(AtomicCommitValue.GetValue() ? "true" : "false");
+    }
+
+    TSharedPtr<Gs2::Core::Model::FTransactionResult> FInvokeScriptResult::GetTransactionResult() const
+    {
+        if (!TransactionResultValue.IsValid())
+        {
+            return nullptr;
+        }
+        return TransactionResultValue;
     }
 
     TOptional<int32> FInvokeScriptResult::GetExecuteTime() const
@@ -212,6 +255,23 @@ namespace Gs2::Script::Result
                     }
                     return Model::FRandomStatus::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("randomStatus")));
                  }() : nullptr)
+            ->WithAtomicCommit(Data->HasField(ANSI_TO_TCHAR("atomicCommit")) ? [Data]() -> TOptional<bool>
+                {
+                    bool v;
+                    if (Data->TryGetBoolField(ANSI_TO_TCHAR("atomicCommit"), v))
+                    {
+                        return TOptional(v);
+                    }
+                    return TOptional<bool>();
+                }() : TOptional<bool>())
+            ->WithTransactionResult(Data->HasField(ANSI_TO_TCHAR("transactionResult")) ? [Data]() -> Gs2::Core::Model::FTransactionResultPtr
+                 {
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("transactionResult")))
+                    {
+                        return nullptr;
+                    }
+                    return Gs2::Core::Model::FTransactionResult::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("transactionResult")));
+                 }() : nullptr)
             ->WithExecuteTime(Data->HasField(ANSI_TO_TCHAR("executeTime")) ? [Data]() -> TOptional<int32>
                 {
                     int32 v;
@@ -262,6 +322,14 @@ namespace Gs2::Script::Result
         if (RandomStatusValue != nullptr && RandomStatusValue.IsValid())
         {
             JsonRootObject->SetObjectField("randomStatus", RandomStatusValue->ToJson());
+        }
+        if (AtomicCommitValue.IsSet())
+        {
+            JsonRootObject->SetBoolField("atomicCommit", AtomicCommitValue.GetValue());
+        }
+        if (TransactionResultValue != nullptr && TransactionResultValue.IsValid())
+        {
+            JsonRootObject->SetObjectField("transactionResult", TransactionResultValue->ToJson());
         }
         if (ExecuteTimeValue.IsSet())
         {
