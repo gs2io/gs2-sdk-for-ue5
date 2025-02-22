@@ -15,6 +15,7 @@
  */
 
 #include "Auth/Model/Gs2Auth.h"
+#include "Auth/Domain/EzGs2Auth.h"
 #include "Auth/Model/Gs2AuthAccessToken.h"
 #include "Core/BpGs2Constant.h"
 
