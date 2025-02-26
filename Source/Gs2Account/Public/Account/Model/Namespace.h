@@ -34,6 +34,7 @@ namespace Gs2::Account::Model
         TSharedPtr<FScriptSetting> AuthenticationScriptValue;
         TSharedPtr<FScriptSetting> CreateTakeOverScriptValue;
         TSharedPtr<FScriptSetting> DoTakeOverScriptValue;
+        TSharedPtr<FScriptSetting> BanScriptValue;
         TSharedPtr<FLogSetting> LogSettingValue;
         TOptional<int64> CreatedAtValue;
         TOptional<int64> UpdatedAtValue;
@@ -55,6 +56,7 @@ namespace Gs2::Account::Model
         TSharedPtr<FNamespace> WithAuthenticationScript(const TSharedPtr<FScriptSetting> AuthenticationScript);
         TSharedPtr<FNamespace> WithCreateTakeOverScript(const TSharedPtr<FScriptSetting> CreateTakeOverScript);
         TSharedPtr<FNamespace> WithDoTakeOverScript(const TSharedPtr<FScriptSetting> DoTakeOverScript);
+        TSharedPtr<FNamespace> WithBanScript(const TSharedPtr<FScriptSetting> BanScript);
         TSharedPtr<FNamespace> WithLogSetting(const TSharedPtr<FLogSetting> LogSetting);
         TSharedPtr<FNamespace> WithCreatedAt(const TOptional<int64> CreatedAt);
         TSharedPtr<FNamespace> WithUpdatedAt(const TOptional<int64> UpdatedAt);
@@ -71,6 +73,7 @@ namespace Gs2::Account::Model
         TSharedPtr<FScriptSetting> GetAuthenticationScript() const;
         TSharedPtr<FScriptSetting> GetCreateTakeOverScript() const;
         TSharedPtr<FScriptSetting> GetDoTakeOverScript() const;
+        TSharedPtr<FScriptSetting> GetBanScript() const;
         TSharedPtr<FLogSetting> GetLogSetting() const;
         TOptional<int64> GetCreatedAt() const;
         FString GetCreatedAtString() const;

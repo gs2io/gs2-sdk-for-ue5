@@ -110,6 +110,10 @@ namespace Gs2::Account::Task::Rest
             {
                 JsonRootObject->SetObjectField("doTakeOverScript", this->Request->GetDoTakeOverScript()->ToJson());
             }
+            if (this->Request->GetBanScript() != nullptr && this->Request->GetBanScript().IsValid())
+            {
+                JsonRootObject->SetObjectField("banScript", this->Request->GetBanScript()->ToJson());
+            }
             if (this->Request->GetLogSetting() != nullptr && this->Request->GetLogSetting().IsValid())
             {
                 JsonRootObject->SetObjectField("logSetting", this->Request->GetLogSetting()->ToJson());

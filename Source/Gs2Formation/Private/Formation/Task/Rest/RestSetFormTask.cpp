@@ -69,7 +69,7 @@ namespace Gs2::Formation::Task::Rest
             auto Url = Core::FGs2Constant::EndpointHost
                 .Replace(TEXT("{service}"), TEXT("formation"))
                 .Replace(TEXT("{region}"), *this->Session->RegionName())
-                .Append("/{namespaceName}/user/me/mold/{moldModelName}/form/{index}");
+                .Append("/{namespaceName}/user/me/mold/{moldModelName}/form/{index}/raw");
 
             Url = Url.Replace(
                 TEXT("{namespaceName}"),

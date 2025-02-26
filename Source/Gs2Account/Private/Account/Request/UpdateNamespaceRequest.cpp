@@ -26,6 +26,7 @@ namespace Gs2::Account::Request
         AuthenticationScriptValue(nullptr),
         CreateTakeOverScriptValue(nullptr),
         DoTakeOverScriptValue(nullptr),
+        BanScriptValue(nullptr),
         LogSettingValue(nullptr)
     {
     }
@@ -40,6 +41,7 @@ namespace Gs2::Account::Request
         AuthenticationScriptValue(From.AuthenticationScriptValue),
         CreateTakeOverScriptValue(From.CreateTakeOverScriptValue),
         DoTakeOverScriptValue(From.DoTakeOverScriptValue),
+        BanScriptValue(From.BanScriptValue),
         LogSettingValue(From.LogSettingValue)
     {
     }
@@ -105,6 +107,14 @@ namespace Gs2::Account::Request
     )
     {
         this->DoTakeOverScriptValue = DoTakeOverScript;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FUpdateNamespaceRequest> FUpdateNamespaceRequest::WithBanScript(
+        const TSharedPtr<Model::FScriptSetting> BanScript
+    )
+    {
+        this->BanScriptValue = BanScript;
         return SharedThis(this);
     }
 
@@ -179,6 +189,15 @@ namespace Gs2::Account::Request
             return nullptr;
         }
         return DoTakeOverScriptValue;
+    }
+
+    TSharedPtr<Model::FScriptSetting> FUpdateNamespaceRequest::GetBanScript() const
+    {
+        if (!BanScriptValue.IsValid())
+        {
+            return nullptr;
+        }
+        return BanScriptValue;
     }
 
     TSharedPtr<Model::FLogSetting> FUpdateNamespaceRequest::GetLogSetting() const
@@ -256,6 +275,14 @@ namespace Gs2::Account::Request
                   }
                   return Model::FScriptSetting::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("doTakeOverScript")));
               }() : nullptr)
+          ->WithBanScript(Data->HasField(ANSI_TO_TCHAR("banScript")) ? [Data]() -> Model::FScriptSettingPtr
+              {
+                  if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("banScript")))
+                  {
+                      return nullptr;
+                  }
+                  return Model::FScriptSetting::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("banScript")));
+              }() : nullptr)
           ->WithLogSetting(Data->HasField(ANSI_TO_TCHAR("logSetting")) ? [Data]() -> Model::FLogSettingPtr
               {
                   if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("logSetting")))
@@ -300,6 +327,10 @@ namespace Gs2::Account::Request
         if (DoTakeOverScriptValue != nullptr && DoTakeOverScriptValue.IsValid())
         {
             JsonRootObject->SetObjectField("doTakeOverScript", DoTakeOverScriptValue->ToJson());
+        }
+        if (BanScriptValue != nullptr && BanScriptValue.IsValid())
+        {
+            JsonRootObject->SetObjectField("banScript", BanScriptValue->ToJson());
         }
         if (LogSettingValue != nullptr && LogSettingValue.IsValid())
         {
