@@ -235,6 +235,12 @@
 #include "Task/Rest/FreezeMasterDataBySignedTimestampTask.h"
 #include "Task/WebSocket/FreezeMasterDataBySignedTimestampTask.h"
 
+// FreezeMasterDataByTimestamp
+#include "Request/FreezeMasterDataByTimestampRequest.h"
+#include "Result/FreezeMasterDataByTimestampResult.h"
+#include "Task/Rest/FreezeMasterDataByTimestampTask.h"
+#include "Task/WebSocket/FreezeMasterDataByTimestampTask.h"
+
 // BatchExecuteApi
 #include "Request/BatchExecuteApiRequest.h"
 #include "Result/BatchExecuteApiResult.h"

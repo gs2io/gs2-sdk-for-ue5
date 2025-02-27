@@ -84,6 +84,8 @@
 #include "Task/WebSocket/SignFreezeMasterDataTimestampTask.h"
 #include "Request/FreezeMasterDataBySignedTimestampRequest.h"
 #include "Task/WebSocket/FreezeMasterDataBySignedTimestampTask.h"
+#include "Request/FreezeMasterDataByTimestampRequest.h"
+#include "Task/WebSocket/FreezeMasterDataByTimestampTask.h"
 #include "Request/BatchExecuteApiRequest.h"
 #include "Task/WebSocket/BatchExecuteApiTask.h"
 #include "Request/IfExpressionByUserIdRequest.h"
@@ -250,6 +252,10 @@ namespace Gs2::Distributor
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FFreezeMasterDataBySignedTimestampTask>> FreezeMasterDataBySignedTimestamp(
             const Request::FFreezeMasterDataBySignedTimestampRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FFreezeMasterDataByTimestampTask>> FreezeMasterDataByTimestamp(
+            const Request::FFreezeMasterDataByTimestampRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FBatchExecuteApiTask>> BatchExecuteApi(

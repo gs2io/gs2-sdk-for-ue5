@@ -316,6 +316,15 @@ namespace Gs2::Distributor
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::Rest::FFreezeMasterDataByTimestampTask>> FGs2DistributorRestClient::FreezeMasterDataByTimestamp(
+        const Request::FFreezeMasterDataByTimestampRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FFreezeMasterDataByTimestampTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::Rest::FBatchExecuteApiTask>> FGs2DistributorRestClient::BatchExecuteApi(
         const Request::FBatchExecuteApiRequestPtr Request) const
     {

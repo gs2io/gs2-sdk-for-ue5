@@ -84,6 +84,8 @@
 #include "Task/Rest/SignFreezeMasterDataTimestampTask.h"
 #include "Request/FreezeMasterDataBySignedTimestampRequest.h"
 #include "Task/Rest/FreezeMasterDataBySignedTimestampTask.h"
+#include "Request/FreezeMasterDataByTimestampRequest.h"
+#include "Task/Rest/FreezeMasterDataByTimestampTask.h"
 #include "Request/BatchExecuteApiRequest.h"
 #include "Task/Rest/BatchExecuteApiTask.h"
 #include "Request/IfExpressionByUserIdRequest.h"
@@ -250,6 +252,10 @@ namespace Gs2::Distributor
 
         TSharedPtr<FAsyncTask<Task::Rest::FFreezeMasterDataBySignedTimestampTask>> FreezeMasterDataBySignedTimestamp(
             const Request::FFreezeMasterDataBySignedTimestampRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FFreezeMasterDataByTimestampTask>> FreezeMasterDataByTimestamp(
+            const Request::FFreezeMasterDataByTimestampRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::Rest::FBatchExecuteApiTask>> BatchExecuteApi(
