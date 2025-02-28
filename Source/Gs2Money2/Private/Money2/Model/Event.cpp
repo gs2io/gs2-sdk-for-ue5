@@ -26,6 +26,7 @@ namespace Gs2::Money2::Model
         VerifyReceiptEventValue(nullptr),
         DepositEventValue(nullptr),
         WithdrawEventValue(nullptr),
+        RefundEventValue(nullptr),
         CreatedAtValue(TOptional<int64>()),
         RevisionValue(TOptional<int64>())
     {
@@ -41,6 +42,7 @@ namespace Gs2::Money2::Model
         VerifyReceiptEventValue(From.VerifyReceiptEventValue),
         DepositEventValue(From.DepositEventValue),
         WithdrawEventValue(From.WithdrawEventValue),
+        RefundEventValue(From.RefundEventValue),
         CreatedAtValue(From.CreatedAtValue),
         RevisionValue(From.RevisionValue)
     {
@@ -102,6 +104,14 @@ namespace Gs2::Money2::Model
         return SharedThis(this);
     }
 
+    TSharedPtr<FEvent> FEvent::WithRefundEvent(
+        const TSharedPtr<FRefundEvent> RefundEvent
+    )
+    {
+        this->RefundEventValue = RefundEvent;
+        return SharedThis(this);
+    }
+
     TSharedPtr<FEvent> FEvent::WithCreatedAt(
         const TOptional<int64> CreatedAt
     )
@@ -144,6 +154,10 @@ namespace Gs2::Money2::Model
     TSharedPtr<FWithdrawEvent> FEvent::GetWithdrawEvent() const
     {
         return WithdrawEventValue;
+    }
+    TSharedPtr<FRefundEvent> FEvent::GetRefundEvent() const
+    {
+        return RefundEventValue;
     }
     TOptional<int64> FEvent::GetCreatedAt() const
     {
@@ -282,6 +296,14 @@ namespace Gs2::Money2::Model
                     }
                     return Model::FWithdrawEvent::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("withdrawEvent")));
                  }() : nullptr)
+            ->WithRefundEvent(Data->HasField(ANSI_TO_TCHAR("refundEvent")) ? [Data]() -> Model::FRefundEventPtr
+                {
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("refundEvent")))
+                    {
+                        return nullptr;
+                    }
+                    return Model::FRefundEvent::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("refundEvent")));
+                 }() : nullptr)
             ->WithCreatedAt(Data->HasField(ANSI_TO_TCHAR("createdAt")) ? [Data]() -> TOptional<int64>
                 {
                     int64 v;
@@ -332,6 +354,10 @@ namespace Gs2::Money2::Model
         if (WithdrawEventValue != nullptr && WithdrawEventValue.IsValid())
         {
             JsonRootObject->SetObjectField("withdrawEvent", WithdrawEventValue->ToJson());
+        }
+        if (RefundEventValue != nullptr && RefundEventValue.IsValid())
+        {
+            JsonRootObject->SetObjectField("refundEvent", RefundEventValue->ToJson());
         }
         if (CreatedAtValue.IsSet())
         {

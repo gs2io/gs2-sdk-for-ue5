@@ -21,6 +21,7 @@
 #include "VerifyReceiptEvent.h"
 #include "DepositEvent.h"
 #include "WithdrawEvent.h"
+#include "RefundEvent.h"
 
 namespace Gs2::Money2::Model
 {
@@ -33,6 +34,7 @@ namespace Gs2::Money2::Model
         TSharedPtr<FVerifyReceiptEvent> VerifyReceiptEventValue;
         TSharedPtr<FDepositEvent> DepositEventValue;
         TSharedPtr<FWithdrawEvent> WithdrawEventValue;
+        TSharedPtr<FRefundEvent> RefundEventValue;
         TOptional<int64> CreatedAtValue;
         TOptional<int64> RevisionValue;
 
@@ -50,6 +52,7 @@ namespace Gs2::Money2::Model
         TSharedPtr<FEvent> WithVerifyReceiptEvent(const TSharedPtr<FVerifyReceiptEvent> VerifyReceiptEvent);
         TSharedPtr<FEvent> WithDepositEvent(const TSharedPtr<FDepositEvent> DepositEvent);
         TSharedPtr<FEvent> WithWithdrawEvent(const TSharedPtr<FWithdrawEvent> WithdrawEvent);
+        TSharedPtr<FEvent> WithRefundEvent(const TSharedPtr<FRefundEvent> RefundEvent);
         TSharedPtr<FEvent> WithCreatedAt(const TOptional<int64> CreatedAt);
         TSharedPtr<FEvent> WithRevision(const TOptional<int64> Revision);
 
@@ -60,6 +63,7 @@ namespace Gs2::Money2::Model
         TSharedPtr<FVerifyReceiptEvent> GetVerifyReceiptEvent() const;
         TSharedPtr<FDepositEvent> GetDepositEvent() const;
         TSharedPtr<FWithdrawEvent> GetWithdrawEvent() const;
+        TSharedPtr<FRefundEvent> GetRefundEvent() const;
         TOptional<int64> GetCreatedAt() const;
         FString GetCreatedAtString() const;
         TOptional<int64> GetRevision() const;

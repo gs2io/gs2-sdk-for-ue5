@@ -19,14 +19,20 @@
 namespace Gs2::Money2::Model
 {
     FAppleAppStoreSetting::FAppleAppStoreSetting():
-        BundleIdValue(TOptional<FString>())
+        BundleIdValue(TOptional<FString>()),
+        TeamIdValue(TOptional<FString>()),
+        KeyIdValue(TOptional<FString>()),
+        PrivateKeyPemValue(TOptional<FString>())
     {
     }
 
     FAppleAppStoreSetting::FAppleAppStoreSetting(
         const FAppleAppStoreSetting& From
     ):
-        BundleIdValue(From.BundleIdValue)
+        BundleIdValue(From.BundleIdValue),
+        TeamIdValue(From.TeamIdValue),
+        KeyIdValue(From.KeyIdValue),
+        PrivateKeyPemValue(From.PrivateKeyPemValue)
     {
     }
 
@@ -37,9 +43,45 @@ namespace Gs2::Money2::Model
         this->BundleIdValue = BundleId;
         return SharedThis(this);
     }
+
+    TSharedPtr<FAppleAppStoreSetting> FAppleAppStoreSetting::WithTeamId(
+        const TOptional<FString> TeamId
+    )
+    {
+        this->TeamIdValue = TeamId;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FAppleAppStoreSetting> FAppleAppStoreSetting::WithKeyId(
+        const TOptional<FString> KeyId
+    )
+    {
+        this->KeyIdValue = KeyId;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FAppleAppStoreSetting> FAppleAppStoreSetting::WithPrivateKeyPem(
+        const TOptional<FString> PrivateKeyPem
+    )
+    {
+        this->PrivateKeyPemValue = PrivateKeyPem;
+        return SharedThis(this);
+    }
     TOptional<FString> FAppleAppStoreSetting::GetBundleId() const
     {
         return BundleIdValue;
+    }
+    TOptional<FString> FAppleAppStoreSetting::GetTeamId() const
+    {
+        return TeamIdValue;
+    }
+    TOptional<FString> FAppleAppStoreSetting::GetKeyId() const
+    {
+        return KeyIdValue;
+    }
+    TOptional<FString> FAppleAppStoreSetting::GetPrivateKeyPem() const
+    {
+        return PrivateKeyPemValue;
     }
 
     TSharedPtr<FAppleAppStoreSetting> FAppleAppStoreSetting::FromJson(const TSharedPtr<FJsonObject> Data)
@@ -56,6 +98,33 @@ namespace Gs2::Money2::Model
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
+                }() : TOptional<FString>())
+            ->WithTeamId(Data->HasField(ANSI_TO_TCHAR("teamId")) ? [Data]() -> TOptional<FString>
+                {
+                    FString v("");
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("teamId"), v))
+                    {
+                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                    }
+                    return TOptional<FString>();
+                }() : TOptional<FString>())
+            ->WithKeyId(Data->HasField(ANSI_TO_TCHAR("keyId")) ? [Data]() -> TOptional<FString>
+                {
+                    FString v("");
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("keyId"), v))
+                    {
+                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                    }
+                    return TOptional<FString>();
+                }() : TOptional<FString>())
+            ->WithPrivateKeyPem(Data->HasField(ANSI_TO_TCHAR("privateKeyPem")) ? [Data]() -> TOptional<FString>
+                {
+                    FString v("");
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("privateKeyPem"), v))
+                    {
+                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                    }
+                    return TOptional<FString>();
                 }() : TOptional<FString>());
     }
 
@@ -65,6 +134,18 @@ namespace Gs2::Money2::Model
         if (BundleIdValue.IsSet())
         {
             JsonRootObject->SetStringField("bundleId", BundleIdValue.GetValue());
+        }
+        if (TeamIdValue.IsSet())
+        {
+            JsonRootObject->SetStringField("teamId", TeamIdValue.GetValue());
+        }
+        if (KeyIdValue.IsSet())
+        {
+            JsonRootObject->SetStringField("keyId", KeyIdValue.GetValue());
+        }
+        if (PrivateKeyPemValue.IsSet())
+        {
+            JsonRootObject->SetStringField("privateKeyPem", PrivateKeyPemValue.GetValue());
         }
         return JsonRootObject;
     }
