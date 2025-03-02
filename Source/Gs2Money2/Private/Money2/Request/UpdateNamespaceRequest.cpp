@@ -25,6 +25,11 @@ namespace Gs2::Money2::Request
         PlatformSettingValue(nullptr),
         DepositBalanceScriptValue(nullptr),
         WithdrawBalanceScriptValue(nullptr),
+        SubscribeScriptValue(TOptional<FString>()),
+        RenewScriptValue(TOptional<FString>()),
+        UnsubscribeScriptValue(TOptional<FString>()),
+        TakeOverScriptValue(nullptr),
+        ChangeSubscriptionStatusNotificationValue(nullptr),
         LogSettingValue(nullptr)
     {
     }
@@ -38,6 +43,11 @@ namespace Gs2::Money2::Request
         PlatformSettingValue(From.PlatformSettingValue),
         DepositBalanceScriptValue(From.DepositBalanceScriptValue),
         WithdrawBalanceScriptValue(From.WithdrawBalanceScriptValue),
+        SubscribeScriptValue(From.SubscribeScriptValue),
+        RenewScriptValue(From.RenewScriptValue),
+        UnsubscribeScriptValue(From.UnsubscribeScriptValue),
+        TakeOverScriptValue(From.TakeOverScriptValue),
+        ChangeSubscriptionStatusNotificationValue(From.ChangeSubscriptionStatusNotificationValue),
         LogSettingValue(From.LogSettingValue)
     {
     }
@@ -98,6 +108,46 @@ namespace Gs2::Money2::Request
         return SharedThis(this);
     }
 
+    TSharedPtr<FUpdateNamespaceRequest> FUpdateNamespaceRequest::WithSubscribeScript(
+        const TOptional<FString> SubscribeScript
+    )
+    {
+        this->SubscribeScriptValue = SubscribeScript;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FUpdateNamespaceRequest> FUpdateNamespaceRequest::WithRenewScript(
+        const TOptional<FString> RenewScript
+    )
+    {
+        this->RenewScriptValue = RenewScript;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FUpdateNamespaceRequest> FUpdateNamespaceRequest::WithUnsubscribeScript(
+        const TOptional<FString> UnsubscribeScript
+    )
+    {
+        this->UnsubscribeScriptValue = UnsubscribeScript;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FUpdateNamespaceRequest> FUpdateNamespaceRequest::WithTakeOverScript(
+        const TSharedPtr<Model::FScriptSetting> TakeOverScript
+    )
+    {
+        this->TakeOverScriptValue = TakeOverScript;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FUpdateNamespaceRequest> FUpdateNamespaceRequest::WithChangeSubscriptionStatusNotification(
+        const TSharedPtr<Model::FNotificationSetting> ChangeSubscriptionStatusNotification
+    )
+    {
+        this->ChangeSubscriptionStatusNotificationValue = ChangeSubscriptionStatusNotification;
+        return SharedThis(this);
+    }
+
     TSharedPtr<FUpdateNamespaceRequest> FUpdateNamespaceRequest::WithLogSetting(
         const TSharedPtr<Model::FLogSetting> LogSetting
     )
@@ -151,6 +201,39 @@ namespace Gs2::Money2::Request
             return nullptr;
         }
         return WithdrawBalanceScriptValue;
+    }
+
+    TOptional<FString> FUpdateNamespaceRequest::GetSubscribeScript() const
+    {
+        return SubscribeScriptValue;
+    }
+
+    TOptional<FString> FUpdateNamespaceRequest::GetRenewScript() const
+    {
+        return RenewScriptValue;
+    }
+
+    TOptional<FString> FUpdateNamespaceRequest::GetUnsubscribeScript() const
+    {
+        return UnsubscribeScriptValue;
+    }
+
+    TSharedPtr<Model::FScriptSetting> FUpdateNamespaceRequest::GetTakeOverScript() const
+    {
+        if (!TakeOverScriptValue.IsValid())
+        {
+            return nullptr;
+        }
+        return TakeOverScriptValue;
+    }
+
+    TSharedPtr<Model::FNotificationSetting> FUpdateNamespaceRequest::GetChangeSubscriptionStatusNotification() const
+    {
+        if (!ChangeSubscriptionStatusNotificationValue.IsValid())
+        {
+            return nullptr;
+        }
+        return ChangeSubscriptionStatusNotificationValue;
     }
 
     TSharedPtr<Model::FLogSetting> FUpdateNamespaceRequest::GetLogSetting() const
@@ -220,6 +303,49 @@ namespace Gs2::Money2::Request
                   }
                   return Model::FScriptSetting::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("withdrawBalanceScript")));
               }() : nullptr)
+            ->WithSubscribeScript(Data->HasField(ANSI_TO_TCHAR("subscribeScript")) ? [Data]() -> TOptional<FString>
+              {
+                  FString v("");
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("subscribeScript"), v))
+                  {
+                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                  }
+                  return TOptional<FString>();
+              }() : TOptional<FString>())
+            ->WithRenewScript(Data->HasField(ANSI_TO_TCHAR("renewScript")) ? [Data]() -> TOptional<FString>
+              {
+                  FString v("");
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("renewScript"), v))
+                  {
+                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                  }
+                  return TOptional<FString>();
+              }() : TOptional<FString>())
+            ->WithUnsubscribeScript(Data->HasField(ANSI_TO_TCHAR("unsubscribeScript")) ? [Data]() -> TOptional<FString>
+              {
+                  FString v("");
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("unsubscribeScript"), v))
+                  {
+                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                  }
+                  return TOptional<FString>();
+              }() : TOptional<FString>())
+          ->WithTakeOverScript(Data->HasField(ANSI_TO_TCHAR("takeOverScript")) ? [Data]() -> Model::FScriptSettingPtr
+              {
+                  if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("takeOverScript")))
+                  {
+                      return nullptr;
+                  }
+                  return Model::FScriptSetting::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("takeOverScript")));
+              }() : nullptr)
+          ->WithChangeSubscriptionStatusNotification(Data->HasField(ANSI_TO_TCHAR("changeSubscriptionStatusNotification")) ? [Data]() -> Model::FNotificationSettingPtr
+              {
+                  if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("changeSubscriptionStatusNotification")))
+                  {
+                      return nullptr;
+                  }
+                  return Model::FNotificationSetting::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("changeSubscriptionStatusNotification")));
+              }() : nullptr)
           ->WithLogSetting(Data->HasField(ANSI_TO_TCHAR("logSetting")) ? [Data]() -> Model::FLogSettingPtr
               {
                   if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("logSetting")))
@@ -260,6 +386,26 @@ namespace Gs2::Money2::Request
         if (WithdrawBalanceScriptValue != nullptr && WithdrawBalanceScriptValue.IsValid())
         {
             JsonRootObject->SetObjectField("withdrawBalanceScript", WithdrawBalanceScriptValue->ToJson());
+        }
+        if (SubscribeScriptValue.IsSet())
+        {
+            JsonRootObject->SetStringField("subscribeScript", SubscribeScriptValue.GetValue());
+        }
+        if (RenewScriptValue.IsSet())
+        {
+            JsonRootObject->SetStringField("renewScript", RenewScriptValue.GetValue());
+        }
+        if (UnsubscribeScriptValue.IsSet())
+        {
+            JsonRootObject->SetStringField("unsubscribeScript", UnsubscribeScriptValue.GetValue());
+        }
+        if (TakeOverScriptValue != nullptr && TakeOverScriptValue.IsValid())
+        {
+            JsonRootObject->SetObjectField("takeOverScript", TakeOverScriptValue->ToJson());
+        }
+        if (ChangeSubscriptionStatusNotificationValue != nullptr && ChangeSubscriptionStatusNotificationValue.IsValid())
+        {
+            JsonRootObject->SetObjectField("changeSubscriptionStatusNotification", ChangeSubscriptionStatusNotificationValue->ToJson());
         }
         if (LogSettingValue != nullptr && LogSettingValue.IsValid())
         {

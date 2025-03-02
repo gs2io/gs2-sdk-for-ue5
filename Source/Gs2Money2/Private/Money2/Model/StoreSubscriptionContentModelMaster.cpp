@@ -25,6 +25,7 @@ namespace Gs2::Money2::Model
         MetadataValue(TOptional<FString>()),
         ScheduleNamespaceIdValue(TOptional<FString>()),
         TriggerNameValue(TOptional<FString>()),
+        ReallocateSpanDaysValue(TOptional<int32>()),
         AppleAppStoreValue(nullptr),
         GooglePlayValue(nullptr),
         CreatedAtValue(TOptional<int64>()),
@@ -42,6 +43,7 @@ namespace Gs2::Money2::Model
         MetadataValue(From.MetadataValue),
         ScheduleNamespaceIdValue(From.ScheduleNamespaceIdValue),
         TriggerNameValue(From.TriggerNameValue),
+        ReallocateSpanDaysValue(From.ReallocateSpanDaysValue),
         AppleAppStoreValue(From.AppleAppStoreValue),
         GooglePlayValue(From.GooglePlayValue),
         CreatedAtValue(From.CreatedAtValue),
@@ -95,6 +97,14 @@ namespace Gs2::Money2::Model
     )
     {
         this->TriggerNameValue = TriggerName;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FStoreSubscriptionContentModelMaster> FStoreSubscriptionContentModelMaster::WithReallocateSpanDays(
+        const TOptional<int32> ReallocateSpanDays
+    )
+    {
+        this->ReallocateSpanDaysValue = ReallocateSpanDays;
         return SharedThis(this);
     }
 
@@ -160,6 +170,19 @@ namespace Gs2::Money2::Model
     TOptional<FString> FStoreSubscriptionContentModelMaster::GetTriggerName() const
     {
         return TriggerNameValue;
+    }
+    TOptional<int32> FStoreSubscriptionContentModelMaster::GetReallocateSpanDays() const
+    {
+        return ReallocateSpanDaysValue;
+    }
+
+    FString FStoreSubscriptionContentModelMaster::GetReallocateSpanDaysString() const
+    {
+        if (!ReallocateSpanDaysValue.IsSet())
+        {
+            return FString("null");
+        }
+        return FString::Printf(TEXT("%d"), ReallocateSpanDaysValue.GetValue());
     }
     TSharedPtr<FAppleAppStoreSubscriptionContent> FStoreSubscriptionContentModelMaster::GetAppleAppStore() const
     {
@@ -313,6 +336,15 @@ namespace Gs2::Money2::Model
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
+            ->WithReallocateSpanDays(Data->HasField(ANSI_TO_TCHAR("reallocateSpanDays")) ? [Data]() -> TOptional<int32>
+                {
+                    int32 v;
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("reallocateSpanDays"), v))
+                    {
+                        return TOptional(v);
+                    }
+                    return TOptional<int32>();
+                }() : TOptional<int32>())
             ->WithAppleAppStore(Data->HasField(ANSI_TO_TCHAR("appleAppStore")) ? [Data]() -> Model::FAppleAppStoreSubscriptionContentPtr
                 {
                     if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("appleAppStore")))
@@ -384,6 +416,10 @@ namespace Gs2::Money2::Model
         if (TriggerNameValue.IsSet())
         {
             JsonRootObject->SetStringField("triggerName", TriggerNameValue.GetValue());
+        }
+        if (ReallocateSpanDaysValue.IsSet())
+        {
+            JsonRootObject->SetNumberField("reallocateSpanDays", ReallocateSpanDaysValue.GetValue());
         }
         if (AppleAppStoreValue != nullptr && AppleAppStoreValue.IsValid())
         {

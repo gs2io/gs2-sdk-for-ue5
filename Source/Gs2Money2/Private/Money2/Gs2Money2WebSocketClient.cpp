@@ -298,6 +298,42 @@ namespace Gs2::Money2
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::WebSocket::FAllocateSubscriptionStatusTask>> FGs2Money2WebSocketClient::AllocateSubscriptionStatus(
+        const Request::FAllocateSubscriptionStatusRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FAllocateSubscriptionStatusTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FAllocateSubscriptionStatusByUserIdTask>> FGs2Money2WebSocketClient::AllocateSubscriptionStatusByUserId(
+        const Request::FAllocateSubscriptionStatusByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FAllocateSubscriptionStatusByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FTakeoverSubscriptionStatusTask>> FGs2Money2WebSocketClient::TakeoverSubscriptionStatus(
+        const Request::FTakeoverSubscriptionStatusRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FTakeoverSubscriptionStatusTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FTakeoverSubscriptionStatusByUserIdTask>> FGs2Money2WebSocketClient::TakeoverSubscriptionStatusByUserId(
+        const Request::FTakeoverSubscriptionStatusByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FTakeoverSubscriptionStatusByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::WebSocket::FDescribeStoreContentModelsTask>> FGs2Money2WebSocketClient::DescribeStoreContentModels(
         const Request::FDescribeStoreContentModelsRequestPtr Request) const
     {

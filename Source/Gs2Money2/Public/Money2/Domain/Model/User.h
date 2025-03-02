@@ -129,6 +129,58 @@ namespace Gs2::Money2::Domain::Model
             Request::FVerifyReceiptByUserIdRequestPtr Request
         );
 
+        class GS2MONEY2_API FAllocateSubscriptionStatusTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Money2::Domain::Model::FSubscriptionStatusDomain>,
+            public TSharedFromThis<FAllocateSubscriptionStatusTask>
+        {
+            const TSharedPtr<FUserDomain> Self;
+            const Request::FAllocateSubscriptionStatusByUserIdRequestPtr Request;
+        public:
+            explicit FAllocateSubscriptionStatusTask(
+                const TSharedPtr<FUserDomain>& Self,
+                const Request::FAllocateSubscriptionStatusByUserIdRequestPtr Request
+            );
+
+            FAllocateSubscriptionStatusTask(
+                const FAllocateSubscriptionStatusTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Money2::Domain::Model::FSubscriptionStatusDomain>> Result
+            ) override;
+        };
+        friend FAllocateSubscriptionStatusTask;
+
+        TSharedPtr<FAsyncTask<FAllocateSubscriptionStatusTask>> AllocateSubscriptionStatus(
+            Request::FAllocateSubscriptionStatusByUserIdRequestPtr Request
+        );
+
+        class GS2MONEY2_API FTakeoverSubscriptionStatusTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Money2::Domain::Model::FSubscriptionStatusDomain>,
+            public TSharedFromThis<FTakeoverSubscriptionStatusTask>
+        {
+            const TSharedPtr<FUserDomain> Self;
+            const Request::FTakeoverSubscriptionStatusByUserIdRequestPtr Request;
+        public:
+            explicit FTakeoverSubscriptionStatusTask(
+                const TSharedPtr<FUserDomain>& Self,
+                const Request::FTakeoverSubscriptionStatusByUserIdRequestPtr Request
+            );
+
+            FTakeoverSubscriptionStatusTask(
+                const FTakeoverSubscriptionStatusTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Money2::Domain::Model::FSubscriptionStatusDomain>> Result
+            ) override;
+        };
+        friend FTakeoverSubscriptionStatusTask;
+
+        TSharedPtr<FAsyncTask<FTakeoverSubscriptionStatusTask>> TakeoverSubscriptionStatus(
+            Request::FTakeoverSubscriptionStatusByUserIdRequestPtr Request
+        );
+
         Gs2::Money2::Domain::Iterator::FDescribeWalletsByUserIdIteratorPtr Wallets(
             const TOptional<FString> TimeOffsetToken = TOptional<FString>()
         ) const;

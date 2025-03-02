@@ -104,6 +104,10 @@ namespace Gs2::Money2::Task::Rest
             {
                 JsonRootObject->SetStringField("triggerName", this->Request->GetTriggerName().GetValue());
             }
+            if (this->Request->GetReallocateSpanDays().IsSet())
+            {
+                JsonRootObject->SetNumberField("reallocateSpanDays", this->Request->GetReallocateSpanDays().GetValue());
+            }
             if (this->Request->GetAppleAppStore() != nullptr && this->Request->GetAppleAppStore().IsValid())
             {
                 JsonRootObject->SetObjectField("appleAppStore", this->Request->GetAppleAppStore()->ToJson());

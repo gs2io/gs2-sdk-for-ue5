@@ -20,6 +20,7 @@
 #include "Core/Gs2Object.h"
 #include "PlatformSetting.h"
 #include "ScriptSetting.h"
+#include "NotificationSetting.h"
 #include "LogSetting.h"
 
 namespace Gs2::Money2::Model
@@ -34,6 +35,11 @@ namespace Gs2::Money2::Model
         TSharedPtr<FPlatformSetting> PlatformSettingValue;
         TSharedPtr<FScriptSetting> DepositBalanceScriptValue;
         TSharedPtr<FScriptSetting> WithdrawBalanceScriptValue;
+        TOptional<FString> SubscribeScriptValue;
+        TOptional<FString> RenewScriptValue;
+        TOptional<FString> UnsubscribeScriptValue;
+        TSharedPtr<FScriptSetting> TakeOverScriptValue;
+        TSharedPtr<FNotificationSetting> ChangeSubscriptionStatusNotificationValue;
         TSharedPtr<FLogSetting> LogSettingValue;
         TOptional<int64> CreatedAtValue;
         TOptional<int64> UpdatedAtValue;
@@ -54,6 +60,11 @@ namespace Gs2::Money2::Model
         TSharedPtr<FNamespace> WithPlatformSetting(const TSharedPtr<FPlatformSetting> PlatformSetting);
         TSharedPtr<FNamespace> WithDepositBalanceScript(const TSharedPtr<FScriptSetting> DepositBalanceScript);
         TSharedPtr<FNamespace> WithWithdrawBalanceScript(const TSharedPtr<FScriptSetting> WithdrawBalanceScript);
+        TSharedPtr<FNamespace> WithSubscribeScript(const TOptional<FString> SubscribeScript);
+        TSharedPtr<FNamespace> WithRenewScript(const TOptional<FString> RenewScript);
+        TSharedPtr<FNamespace> WithUnsubscribeScript(const TOptional<FString> UnsubscribeScript);
+        TSharedPtr<FNamespace> WithTakeOverScript(const TSharedPtr<FScriptSetting> TakeOverScript);
+        TSharedPtr<FNamespace> WithChangeSubscriptionStatusNotification(const TSharedPtr<FNotificationSetting> ChangeSubscriptionStatusNotification);
         TSharedPtr<FNamespace> WithLogSetting(const TSharedPtr<FLogSetting> LogSetting);
         TSharedPtr<FNamespace> WithCreatedAt(const TOptional<int64> CreatedAt);
         TSharedPtr<FNamespace> WithUpdatedAt(const TOptional<int64> UpdatedAt);
@@ -68,6 +79,11 @@ namespace Gs2::Money2::Model
         TSharedPtr<FPlatformSetting> GetPlatformSetting() const;
         TSharedPtr<FScriptSetting> GetDepositBalanceScript() const;
         TSharedPtr<FScriptSetting> GetWithdrawBalanceScript() const;
+        TOptional<FString> GetSubscribeScript() const;
+        TOptional<FString> GetRenewScript() const;
+        TOptional<FString> GetUnsubscribeScript() const;
+        TSharedPtr<FScriptSetting> GetTakeOverScript() const;
+        TSharedPtr<FNotificationSetting> GetChangeSubscriptionStatusNotification() const;
         TSharedPtr<FLogSetting> GetLogSetting() const;
         TOptional<int64> GetCreatedAt() const;
         FString GetCreatedAtString() const;

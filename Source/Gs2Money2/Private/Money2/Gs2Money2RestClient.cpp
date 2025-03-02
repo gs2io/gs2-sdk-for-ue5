@@ -298,6 +298,42 @@ namespace Gs2::Money2
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::Rest::FAllocateSubscriptionStatusTask>> FGs2Money2RestClient::AllocateSubscriptionStatus(
+        const Request::FAllocateSubscriptionStatusRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FAllocateSubscriptionStatusTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FAllocateSubscriptionStatusByUserIdTask>> FGs2Money2RestClient::AllocateSubscriptionStatusByUserId(
+        const Request::FAllocateSubscriptionStatusByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FAllocateSubscriptionStatusByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FTakeoverSubscriptionStatusTask>> FGs2Money2RestClient::TakeoverSubscriptionStatus(
+        const Request::FTakeoverSubscriptionStatusRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FTakeoverSubscriptionStatusTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FTakeoverSubscriptionStatusByUserIdTask>> FGs2Money2RestClient::TakeoverSubscriptionStatusByUserId(
+        const Request::FTakeoverSubscriptionStatusByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FTakeoverSubscriptionStatusByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::Rest::FDescribeStoreContentModelsTask>> FGs2Money2RestClient::DescribeStoreContentModels(
         const Request::FDescribeStoreContentModelsRequestPtr Request) const
     {

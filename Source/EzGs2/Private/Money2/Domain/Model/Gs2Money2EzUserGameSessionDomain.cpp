@@ -61,6 +61,114 @@ namespace Gs2::UE5::Money2::Domain::Model
 
     }
 
+    FEzUserGameSessionDomain::FAllocateSubscriptionStatusTask::FAllocateSubscriptionStatusTask(
+        TSharedPtr<FEzUserGameSessionDomain> Self,
+        Gs2::UE5::Money2::Model::FEzReceiptPtr Receipt
+    ): Self(Self), Receipt(Receipt)
+    {
+
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FEzUserGameSessionDomain::FAllocateSubscriptionStatusTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::UE5::Money2::Domain::Model::FEzSubscriptionStatusGameSessionDomain>> Result
+    )
+    {
+        const auto Future = Self->ConnectionValue->Run(
+            [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
+                const auto Task = Self->Domain->AllocateSubscriptionStatus(
+                    MakeShared<Gs2::Money2::Request::FAllocateSubscriptionStatusRequest>()
+                        ->WithReceipt(Receipt == nullptr ? nullptr : Receipt->ToModel())
+                );
+                Task->StartSynchronousTask();
+                if (Task->GetTask().IsError())
+                {
+                    Task->EnsureCompletion();
+                    return Task->GetTask().Error();
+                }
+                *Result = MakeShared<Gs2::UE5::Money2::Domain::Model::FEzSubscriptionStatusGameSessionDomain>(
+                    Task->GetTask().Result(),
+                    Self->GameSession,
+                    Self->ConnectionValue
+                );
+                Task->EnsureCompletion();
+                return nullptr;
+            },
+            nullptr
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            Future->EnsureCompletion();
+            return Future->GetTask().Error();
+        }
+        Future->EnsureCompletion();
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FEzUserGameSessionDomain::FAllocateSubscriptionStatusTask>> FEzUserGameSessionDomain::AllocateSubscriptionStatus(
+        Gs2::UE5::Money2::Model::FEzReceiptPtr Receipt
+    )
+    {
+        return Gs2::Core::Util::New<FAsyncTask<FAllocateSubscriptionStatusTask>>(
+            this->AsShared(),
+            Receipt
+        );
+    }
+
+    FEzUserGameSessionDomain::FTakeOverSubscriptionStatusTask::FTakeOverSubscriptionStatusTask(
+        TSharedPtr<FEzUserGameSessionDomain> Self,
+        Gs2::UE5::Money2::Model::FEzReceiptPtr Receipt
+    ): Self(Self), Receipt(Receipt)
+    {
+
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FEzUserGameSessionDomain::FTakeOverSubscriptionStatusTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::UE5::Money2::Domain::Model::FEzSubscriptionStatusGameSessionDomain>> Result
+    )
+    {
+        const auto Future = Self->ConnectionValue->Run(
+            [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
+                const auto Task = Self->Domain->TakeoverSubscriptionStatus(
+                    MakeShared<Gs2::Money2::Request::FTakeoverSubscriptionStatusRequest>()
+                        ->WithReceipt(Receipt == nullptr ? nullptr : Receipt->ToModel())
+                );
+                Task->StartSynchronousTask();
+                if (Task->GetTask().IsError())
+                {
+                    Task->EnsureCompletion();
+                    return Task->GetTask().Error();
+                }
+                *Result = MakeShared<Gs2::UE5::Money2::Domain::Model::FEzSubscriptionStatusGameSessionDomain>(
+                    Task->GetTask().Result(),
+                    Self->GameSession,
+                    Self->ConnectionValue
+                );
+                Task->EnsureCompletion();
+                return nullptr;
+            },
+            nullptr
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            Future->EnsureCompletion();
+            return Future->GetTask().Error();
+        }
+        Future->EnsureCompletion();
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FEzUserGameSessionDomain::FTakeOverSubscriptionStatusTask>> FEzUserGameSessionDomain::TakeOverSubscriptionStatus(
+        Gs2::UE5::Money2::Model::FEzReceiptPtr Receipt
+    )
+    {
+        return Gs2::Core::Util::New<FAsyncTask<FTakeOverSubscriptionStatusTask>>(
+            this->AsShared(),
+            Receipt
+        );
+    }
+
     Gs2::UE5::Money2::Domain::Iterator::FEzDescribeWalletsIteratorPtr FEzUserGameSessionDomain::Wallets(
     ) const
     {

@@ -80,6 +80,14 @@
 #include "Task/Rest/GetSubscriptionStatusTask.h"
 #include "Request/GetSubscriptionStatusByUserIdRequest.h"
 #include "Task/Rest/GetSubscriptionStatusByUserIdTask.h"
+#include "Request/AllocateSubscriptionStatusRequest.h"
+#include "Task/Rest/AllocateSubscriptionStatusTask.h"
+#include "Request/AllocateSubscriptionStatusByUserIdRequest.h"
+#include "Task/Rest/AllocateSubscriptionStatusByUserIdTask.h"
+#include "Request/TakeoverSubscriptionStatusRequest.h"
+#include "Task/Rest/TakeoverSubscriptionStatusTask.h"
+#include "Request/TakeoverSubscriptionStatusByUserIdRequest.h"
+#include "Task/Rest/TakeoverSubscriptionStatusByUserIdTask.h"
 #include "Request/DescribeStoreContentModelsRequest.h"
 #include "Task/Rest/DescribeStoreContentModelsTask.h"
 #include "Request/GetStoreContentModelRequest.h"
@@ -260,6 +268,22 @@ namespace Gs2::Money2
 
         TSharedPtr<FAsyncTask<Task::Rest::FGetSubscriptionStatusByUserIdTask>> GetSubscriptionStatusByUserId(
             const Request::FGetSubscriptionStatusByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FAllocateSubscriptionStatusTask>> AllocateSubscriptionStatus(
+            const Request::FAllocateSubscriptionStatusRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FAllocateSubscriptionStatusByUserIdTask>> AllocateSubscriptionStatusByUserId(
+            const Request::FAllocateSubscriptionStatusByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FTakeoverSubscriptionStatusTask>> TakeoverSubscriptionStatus(
+            const Request::FTakeoverSubscriptionStatusRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FTakeoverSubscriptionStatusByUserIdTask>> TakeoverSubscriptionStatusByUserId(
+            const Request::FTakeoverSubscriptionStatusByUserIdRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::Rest::FDescribeStoreContentModelsTask>> DescribeStoreContentModels(

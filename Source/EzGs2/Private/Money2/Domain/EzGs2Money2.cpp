@@ -40,4 +40,9 @@ namespace Gs2::UE5::Money2::Domain
             ConnectionValue
         );
     }
+
+    FChangeSubscriptionStatusNotificationEvent& FEzGs2Money2::OnChangeSubscriptionStatusNotification()
+    {
+        return ChangeSubscriptionStatusNotificationEvent;
+    }
 }

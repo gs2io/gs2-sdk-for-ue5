@@ -152,6 +152,150 @@ namespace Gs2::Money2::Domain::Model
         return Gs2::Core::Util::New<FAsyncTask<FVerifyReceiptTask>>(this->AsShared(), Request);
     }
 
+    FUserDomain::FAllocateSubscriptionStatusTask::FAllocateSubscriptionStatusTask(
+        const TSharedPtr<FUserDomain>& Self,
+        const Request::FAllocateSubscriptionStatusByUserIdRequestPtr Request
+    ): Self(Self), Request(Request)
+    {
+
+    }
+
+    FUserDomain::FAllocateSubscriptionStatusTask::FAllocateSubscriptionStatusTask(
+        const FAllocateSubscriptionStatusTask& From
+    ): TGs2Future(From), Self(From.Self), Request(From.Request)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FUserDomain::FAllocateSubscriptionStatusTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::Money2::Domain::Model::FSubscriptionStatusDomain>> Result
+    )
+    {
+        Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
+            ->WithNamespaceName(Self->NamespaceName)
+            ->WithUserId(Self->UserId);
+        const auto Future = Self->Client->AllocateSubscriptionStatusByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto RequestModel = Request;
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
+        if (ResultModel != nullptr) {
+            
+            if (ResultModel->GetItem() != nullptr)
+            {
+                const auto ParentKey = Gs2::Money2::Domain::Model::FUserDomain::CreateCacheParentKey(
+                    Self->NamespaceName,
+                    Self->UserId,
+                    "SubscriptionStatus"
+                );
+                const auto Key = Gs2::Money2::Domain::Model::FSubscriptionStatusDomain::CreateCacheKey(
+                    ResultModel->GetItem()->GetContentName()
+                );
+                Self->Gs2->Cache->Put(
+                    Gs2::Money2::Model::FSubscriptionStatus::TypeName,
+                    ParentKey,
+                    Key,
+                    ResultModel->GetItem(),
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+            }
+        }
+        auto Domain = MakeShared<Gs2::Money2::Domain::Model::FSubscriptionStatusDomain>(
+            Self->Gs2,
+            Self->Service,
+            Request->GetNamespaceName(),
+            ResultModel->GetItem()->GetUserId(),
+            ResultModel->GetItem()->GetContentName()
+        );
+
+        *Result = Domain;
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FUserDomain::FAllocateSubscriptionStatusTask>> FUserDomain::AllocateSubscriptionStatus(
+        Request::FAllocateSubscriptionStatusByUserIdRequestPtr Request
+    ) {
+        return Gs2::Core::Util::New<FAsyncTask<FAllocateSubscriptionStatusTask>>(this->AsShared(), Request);
+    }
+
+    FUserDomain::FTakeoverSubscriptionStatusTask::FTakeoverSubscriptionStatusTask(
+        const TSharedPtr<FUserDomain>& Self,
+        const Request::FTakeoverSubscriptionStatusByUserIdRequestPtr Request
+    ): Self(Self), Request(Request)
+    {
+
+    }
+
+    FUserDomain::FTakeoverSubscriptionStatusTask::FTakeoverSubscriptionStatusTask(
+        const FTakeoverSubscriptionStatusTask& From
+    ): TGs2Future(From), Self(From.Self), Request(From.Request)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FUserDomain::FTakeoverSubscriptionStatusTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::Money2::Domain::Model::FSubscriptionStatusDomain>> Result
+    )
+    {
+        Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
+            ->WithNamespaceName(Self->NamespaceName)
+            ->WithUserId(Self->UserId);
+        const auto Future = Self->Client->TakeoverSubscriptionStatusByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto RequestModel = Request;
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
+        if (ResultModel != nullptr) {
+            
+            if (ResultModel->GetItem() != nullptr)
+            {
+                const auto ParentKey = Gs2::Money2::Domain::Model::FUserDomain::CreateCacheParentKey(
+                    Self->NamespaceName,
+                    Self->UserId,
+                    "SubscriptionStatus"
+                );
+                const auto Key = Gs2::Money2::Domain::Model::FSubscriptionStatusDomain::CreateCacheKey(
+                    ResultModel->GetItem()->GetContentName()
+                );
+                Self->Gs2->Cache->Put(
+                    Gs2::Money2::Model::FSubscriptionStatus::TypeName,
+                    ParentKey,
+                    Key,
+                    ResultModel->GetItem(),
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+            }
+        }
+        auto Domain = MakeShared<Gs2::Money2::Domain::Model::FSubscriptionStatusDomain>(
+            Self->Gs2,
+            Self->Service,
+            Request->GetNamespaceName(),
+            ResultModel->GetItem()->GetUserId(),
+            ResultModel->GetItem()->GetContentName()
+        );
+
+        *Result = Domain;
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FUserDomain::FTakeoverSubscriptionStatusTask>> FUserDomain::TakeoverSubscriptionStatus(
+        Request::FTakeoverSubscriptionStatusByUserIdRequestPtr Request
+    ) {
+        return Gs2::Core::Util::New<FAsyncTask<FTakeoverSubscriptionStatusTask>>(this->AsShared(), Request);
+    }
+
     Gs2::Money2::Domain::Iterator::FDescribeWalletsByUserIdIteratorPtr FUserDomain::Wallets(
         const TOptional<FString> TimeOffsetToken
     ) const

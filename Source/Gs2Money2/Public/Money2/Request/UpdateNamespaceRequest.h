@@ -20,6 +20,7 @@
 #include "Dom/JsonObject.h"
 #include "../Model/PlatformSetting.h"
 #include "../Model/ScriptSetting.h"
+#include "../Model/NotificationSetting.h"
 #include "../Model/LogSetting.h"
 
 namespace Gs2::Money2::Request
@@ -35,6 +36,11 @@ namespace Gs2::Money2::Request
         TSharedPtr<Model::FPlatformSetting> PlatformSettingValue;
         TSharedPtr<Model::FScriptSetting> DepositBalanceScriptValue;
         TSharedPtr<Model::FScriptSetting> WithdrawBalanceScriptValue;
+        TOptional<FString> SubscribeScriptValue;
+        TOptional<FString> RenewScriptValue;
+        TOptional<FString> UnsubscribeScriptValue;
+        TSharedPtr<Model::FScriptSetting> TakeOverScriptValue;
+        TSharedPtr<Model::FNotificationSetting> ChangeSubscriptionStatusNotificationValue;
         TSharedPtr<Model::FLogSetting> LogSettingValue;
         
     public:
@@ -52,6 +58,11 @@ namespace Gs2::Money2::Request
         TSharedPtr<FUpdateNamespaceRequest> WithPlatformSetting(const TSharedPtr<Model::FPlatformSetting> PlatformSetting);
         TSharedPtr<FUpdateNamespaceRequest> WithDepositBalanceScript(const TSharedPtr<Model::FScriptSetting> DepositBalanceScript);
         TSharedPtr<FUpdateNamespaceRequest> WithWithdrawBalanceScript(const TSharedPtr<Model::FScriptSetting> WithdrawBalanceScript);
+        TSharedPtr<FUpdateNamespaceRequest> WithSubscribeScript(const TOptional<FString> SubscribeScript);
+        TSharedPtr<FUpdateNamespaceRequest> WithRenewScript(const TOptional<FString> RenewScript);
+        TSharedPtr<FUpdateNamespaceRequest> WithUnsubscribeScript(const TOptional<FString> UnsubscribeScript);
+        TSharedPtr<FUpdateNamespaceRequest> WithTakeOverScript(const TSharedPtr<Model::FScriptSetting> TakeOverScript);
+        TSharedPtr<FUpdateNamespaceRequest> WithChangeSubscriptionStatusNotification(const TSharedPtr<Model::FNotificationSetting> ChangeSubscriptionStatusNotification);
         TSharedPtr<FUpdateNamespaceRequest> WithLogSetting(const TSharedPtr<Model::FLogSetting> LogSetting);
 
         TOptional<FString> GetContextStack() const;
@@ -61,6 +72,11 @@ namespace Gs2::Money2::Request
         TSharedPtr<Model::FPlatformSetting> GetPlatformSetting() const;
         TSharedPtr<Model::FScriptSetting> GetDepositBalanceScript() const;
         TSharedPtr<Model::FScriptSetting> GetWithdrawBalanceScript() const;
+        TOptional<FString> GetSubscribeScript() const;
+        TOptional<FString> GetRenewScript() const;
+        TOptional<FString> GetUnsubscribeScript() const;
+        TSharedPtr<Model::FScriptSetting> GetTakeOverScript() const;
+        TSharedPtr<Model::FNotificationSetting> GetChangeSubscriptionStatusNotification() const;
         TSharedPtr<Model::FLogSetting> GetLogSetting() const;
 
         static TSharedPtr<FUpdateNamespaceRequest> FromJson(const TSharedPtr<FJsonObject> Data);

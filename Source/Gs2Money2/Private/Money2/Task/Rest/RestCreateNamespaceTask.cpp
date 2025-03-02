@@ -106,6 +106,26 @@ namespace Gs2::Money2::Task::Rest
             {
                 JsonRootObject->SetObjectField("withdrawBalanceScript", this->Request->GetWithdrawBalanceScript()->ToJson());
             }
+            if (this->Request->GetSubscribeScript().IsSet())
+            {
+                JsonRootObject->SetStringField("subscribeScript", this->Request->GetSubscribeScript().GetValue());
+            }
+            if (this->Request->GetRenewScript().IsSet())
+            {
+                JsonRootObject->SetStringField("renewScript", this->Request->GetRenewScript().GetValue());
+            }
+            if (this->Request->GetUnsubscribeScript().IsSet())
+            {
+                JsonRootObject->SetStringField("unsubscribeScript", this->Request->GetUnsubscribeScript().GetValue());
+            }
+            if (this->Request->GetTakeOverScript() != nullptr && this->Request->GetTakeOverScript().IsValid())
+            {
+                JsonRootObject->SetObjectField("takeOverScript", this->Request->GetTakeOverScript()->ToJson());
+            }
+            if (this->Request->GetChangeSubscriptionStatusNotification() != nullptr && this->Request->GetChangeSubscriptionStatusNotification().IsValid())
+            {
+                JsonRootObject->SetObjectField("changeSubscriptionStatusNotification", this->Request->GetChangeSubscriptionStatusNotification()->ToJson());
+            }
             if (this->Request->GetLogSetting() != nullptr && this->Request->GetLogSetting().IsValid())
             {
                 JsonRootObject->SetObjectField("logSetting", this->Request->GetLogSetting()->ToJson());

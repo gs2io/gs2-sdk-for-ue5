@@ -53,6 +53,52 @@ namespace Gs2::UE5::Money2::Domain::Model
             Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
 
+        class EZGS2_API FAllocateSubscriptionStatusTask :
+            public Gs2::Core::Util::TGs2Future<Gs2::UE5::Money2::Domain::Model::FEzSubscriptionStatusGameSessionDomain>,
+            public TSharedFromThis<FAllocateSubscriptionStatusTask>
+        {
+            TSharedPtr<FEzUserGameSessionDomain> Self;
+            Gs2::UE5::Money2::Model::FEzReceiptPtr Receipt;
+
+        public:
+            explicit FAllocateSubscriptionStatusTask(
+                TSharedPtr<FEzUserGameSessionDomain> Self,
+                Gs2::UE5::Money2::Model::FEzReceiptPtr Receipt
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::UE5::Money2::Domain::Model::FEzSubscriptionStatusGameSessionDomain>> Result
+            ) override;
+        };
+        friend FAllocateSubscriptionStatusTask;
+
+        TSharedPtr<FAsyncTask<FAllocateSubscriptionStatusTask>> AllocateSubscriptionStatus(
+            Gs2::UE5::Money2::Model::FEzReceiptPtr Receipt
+        );
+
+        class EZGS2_API FTakeOverSubscriptionStatusTask :
+            public Gs2::Core::Util::TGs2Future<Gs2::UE5::Money2::Domain::Model::FEzSubscriptionStatusGameSessionDomain>,
+            public TSharedFromThis<FTakeOverSubscriptionStatusTask>
+        {
+            TSharedPtr<FEzUserGameSessionDomain> Self;
+            Gs2::UE5::Money2::Model::FEzReceiptPtr Receipt;
+
+        public:
+            explicit FTakeOverSubscriptionStatusTask(
+                TSharedPtr<FEzUserGameSessionDomain> Self,
+                Gs2::UE5::Money2::Model::FEzReceiptPtr Receipt
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::UE5::Money2::Domain::Model::FEzSubscriptionStatusGameSessionDomain>> Result
+            ) override;
+        };
+        friend FTakeOverSubscriptionStatusTask;
+
+        TSharedPtr<FAsyncTask<FTakeOverSubscriptionStatusTask>> TakeOverSubscriptionStatus(
+            Gs2::UE5::Money2::Model::FEzReceiptPtr Receipt
+        );
+
         Gs2::UE5::Money2::Domain::Iterator::FEzDescribeWalletsIteratorPtr Wallets(
         ) const;
 

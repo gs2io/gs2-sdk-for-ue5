@@ -26,6 +26,7 @@ namespace Gs2::Money2::Model
         UserIdValue(TOptional<FString>()),
         StatusDetailValue(TOptional<FString>()),
         ExpiresAtValue(TOptional<int64>()),
+        LastAllocatedAtValue(TOptional<int64>()),
         CreatedAtValue(TOptional<int64>()),
         UpdatedAtValue(TOptional<int64>()),
         RevisionValue(TOptional<int64>())
@@ -42,6 +43,7 @@ namespace Gs2::Money2::Model
         UserIdValue(From.UserIdValue),
         StatusDetailValue(From.StatusDetailValue),
         ExpiresAtValue(From.ExpiresAtValue),
+        LastAllocatedAtValue(From.LastAllocatedAtValue),
         CreatedAtValue(From.CreatedAtValue),
         UpdatedAtValue(From.UpdatedAtValue),
         RevisionValue(From.RevisionValue)
@@ -104,6 +106,14 @@ namespace Gs2::Money2::Model
         return SharedThis(this);
     }
 
+    TSharedPtr<FSubscribeTransaction> FSubscribeTransaction::WithLastAllocatedAt(
+        const TOptional<int64> LastAllocatedAt
+    )
+    {
+        this->LastAllocatedAtValue = LastAllocatedAt;
+        return SharedThis(this);
+    }
+
     TSharedPtr<FSubscribeTransaction> FSubscribeTransaction::WithCreatedAt(
         const TOptional<int64> CreatedAt
     )
@@ -163,6 +173,19 @@ namespace Gs2::Money2::Model
             return FString("null");
         }
         return FString::Printf(TEXT("%lld"), ExpiresAtValue.GetValue());
+    }
+    TOptional<int64> FSubscribeTransaction::GetLastAllocatedAt() const
+    {
+        return LastAllocatedAtValue;
+    }
+
+    FString FSubscribeTransaction::GetLastAllocatedAtString() const
+    {
+        if (!LastAllocatedAtValue.IsSet())
+        {
+            return FString("null");
+        }
+        return FString::Printf(TEXT("%lld"), LastAllocatedAtValue.GetValue());
     }
     TOptional<int64> FSubscribeTransaction::GetCreatedAt() const
     {
@@ -328,6 +351,15 @@ namespace Gs2::Money2::Model
                     }
                     return TOptional<int64>();
                 }() : TOptional<int64>())
+            ->WithLastAllocatedAt(Data->HasField(ANSI_TO_TCHAR("lastAllocatedAt")) ? [Data]() -> TOptional<int64>
+                {
+                    int64 v;
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("lastAllocatedAt"), v))
+                    {
+                        return TOptional(v);
+                    }
+                    return TOptional<int64>();
+                }() : TOptional<int64>())
             ->WithCreatedAt(Data->HasField(ANSI_TO_TCHAR("createdAt")) ? [Data]() -> TOptional<int64>
                 {
                     int64 v;
@@ -387,6 +419,10 @@ namespace Gs2::Money2::Model
         if (ExpiresAtValue.IsSet())
         {
             JsonRootObject->SetStringField("expiresAt", FString::Printf(TEXT("%lld"), ExpiresAtValue.GetValue()));
+        }
+        if (LastAllocatedAtValue.IsSet())
+        {
+            JsonRootObject->SetStringField("lastAllocatedAt", FString::Printf(TEXT("%lld"), LastAllocatedAtValue.GetValue()));
         }
         if (CreatedAtValue.IsSet())
         {

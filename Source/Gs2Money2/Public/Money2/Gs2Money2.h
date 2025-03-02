@@ -47,6 +47,7 @@
 #include "Model/GooglePlayRealtimeNotificationMessage.h"
 #include "Model/GitHubCheckoutSetting.h"
 #include "Model/ScriptSetting.h"
+#include "Model/NotificationSetting.h"
 #include "Model/LogSetting.h"
 #include "Model/DailyTransactionHistory.h"
 #include "Model/UnusedBalance.h"
@@ -236,6 +237,30 @@
 #include "Result/GetSubscriptionStatusByUserIdResult.h"
 #include "Task/Rest/GetSubscriptionStatusByUserIdTask.h"
 #include "Task/WebSocket/GetSubscriptionStatusByUserIdTask.h"
+
+// AllocateSubscriptionStatus
+#include "Request/AllocateSubscriptionStatusRequest.h"
+#include "Result/AllocateSubscriptionStatusResult.h"
+#include "Task/Rest/AllocateSubscriptionStatusTask.h"
+#include "Task/WebSocket/AllocateSubscriptionStatusTask.h"
+
+// AllocateSubscriptionStatusByUserId
+#include "Request/AllocateSubscriptionStatusByUserIdRequest.h"
+#include "Result/AllocateSubscriptionStatusByUserIdResult.h"
+#include "Task/Rest/AllocateSubscriptionStatusByUserIdTask.h"
+#include "Task/WebSocket/AllocateSubscriptionStatusByUserIdTask.h"
+
+// TakeoverSubscriptionStatus
+#include "Request/TakeoverSubscriptionStatusRequest.h"
+#include "Result/TakeoverSubscriptionStatusResult.h"
+#include "Task/Rest/TakeoverSubscriptionStatusTask.h"
+#include "Task/WebSocket/TakeoverSubscriptionStatusTask.h"
+
+// TakeoverSubscriptionStatusByUserId
+#include "Request/TakeoverSubscriptionStatusByUserIdRequest.h"
+#include "Result/TakeoverSubscriptionStatusByUserIdResult.h"
+#include "Task/Rest/TakeoverSubscriptionStatusByUserIdTask.h"
+#include "Task/WebSocket/TakeoverSubscriptionStatusByUserIdTask.h"
 
 // DescribeStoreContentModels
 #include "Request/DescribeStoreContentModelsRequest.h"

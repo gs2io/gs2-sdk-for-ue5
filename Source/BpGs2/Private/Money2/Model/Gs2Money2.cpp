@@ -20,7 +20,8 @@
 #include "Core/BpGs2Constant.h"
 
 FGs2Money2 UGs2Money2FunctionLibrary::Service(
-    FGs2Client Client
+    FGs2Client Client,
+    FBpMoney2ChangeSubscriptionStatusNotificationEvent ChangeSubscriptionStatusNotification
 )
 {
     FGs2Money2 Return;
@@ -28,6 +29,10 @@ FGs2Money2 UGs2Money2FunctionLibrary::Service(
         UE_LOG(BpGs2Log, Error, TEXT("[UGs2Money2FunctionLibrary::Service] Client parameter specification is missing."))
         return Return;
     }
+    Client.Value->Money2->OnChangeSubscriptionStatusNotification().AddLambda([&ChangeSubscriptionStatusNotification](auto Notification)
+    {
+        ChangeSubscriptionStatusNotification.Value.Execute(EzChangeSubscriptionStatusNotificationToFGs2Money2ChangeSubscriptionStatusNotification(Notification));
+    });
     Return.Value = Client.Value->Money2;
     return Return;
 }

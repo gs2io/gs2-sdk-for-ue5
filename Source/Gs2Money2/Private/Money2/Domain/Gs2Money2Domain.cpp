@@ -664,6 +664,20 @@ namespace Gs2::Money2::Domain
         const FString Action,
         const FString Payload
     ) {
+        if (Action == "ChangeSubscriptionStatus") {
+            TSharedPtr<FJsonObject> PayloadJson;
+            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Payload);
+                !FJsonSerializer::Deserialize(JsonReader, PayloadJson))
+            {
+                return;
+            }
+            ChangeSubscriptionStatusNotificationEvent.Broadcast(Gs2::Money2::Model::FChangeSubscriptionStatusNotification::FromJson(PayloadJson));
+        }
+    }
+
+    FChangeSubscriptionStatusNotificationEvent& FGs2Money2Domain::OnChangeSubscriptionStatusNotification()
+    {
+        return ChangeSubscriptionStatusNotificationEvent;
     }
 }
 

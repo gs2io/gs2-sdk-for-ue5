@@ -30,6 +30,7 @@ namespace Gs2::Money2::Model
         TOptional<FString> UserIdValue;
         TOptional<FString> StatusDetailValue;
         TOptional<int64> ExpiresAtValue;
+        TOptional<int64> LastAllocatedAtValue;
         TOptional<int64> CreatedAtValue;
         TOptional<int64> UpdatedAtValue;
         TOptional<int64> RevisionValue;
@@ -48,6 +49,7 @@ namespace Gs2::Money2::Model
         TSharedPtr<FSubscribeTransaction> WithUserId(const TOptional<FString> UserId);
         TSharedPtr<FSubscribeTransaction> WithStatusDetail(const TOptional<FString> StatusDetail);
         TSharedPtr<FSubscribeTransaction> WithExpiresAt(const TOptional<int64> ExpiresAt);
+        TSharedPtr<FSubscribeTransaction> WithLastAllocatedAt(const TOptional<int64> LastAllocatedAt);
         TSharedPtr<FSubscribeTransaction> WithCreatedAt(const TOptional<int64> CreatedAt);
         TSharedPtr<FSubscribeTransaction> WithUpdatedAt(const TOptional<int64> UpdatedAt);
         TSharedPtr<FSubscribeTransaction> WithRevision(const TOptional<int64> Revision);
@@ -60,6 +62,8 @@ namespace Gs2::Money2::Model
         TOptional<FString> GetStatusDetail() const;
         TOptional<int64> GetExpiresAt() const;
         FString GetExpiresAtString() const;
+        TOptional<int64> GetLastAllocatedAt() const;
+        FString GetLastAllocatedAtString() const;
         TOptional<int64> GetCreatedAt() const;
         FString GetCreatedAtString() const;
         TOptional<int64> GetUpdatedAt() const;

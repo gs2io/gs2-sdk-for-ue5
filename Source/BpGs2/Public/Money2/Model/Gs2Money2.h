@@ -19,6 +19,7 @@
 #include "CoreMinimal.h"
 
 #include "Core/Model/Gs2Client.h"
+#include "Gs2Money2/Public/Money2/Model/ChangeSubscriptionStatusNotification.h"
 #include "Gs2Money2.generated.h"
 
 USTRUCT(BlueprintType)
@@ -29,6 +30,42 @@ struct FGs2Money2
     Gs2::UE5::Money2::Domain::FEzGs2Money2Ptr Value = nullptr;
 };
 
+USTRUCT(BlueprintType)
+struct FGs2Money2ChangeSubscriptionStatusNotification
+{
+    GENERATED_BODY()
+
+    UPROPERTY(Category = Gs2, BlueprintReadWrite)
+    FString NamespaceName = "";
+    UPROPERTY(Category = Gs2, BlueprintReadWrite)
+    FString UserId = "";
+    UPROPERTY(Category = Gs2, BlueprintReadWrite)
+    FString ContentName = "";
+};
+
+inline FGs2Money2ChangeSubscriptionStatusNotification EzChangeSubscriptionStatusNotificationToFGs2Money2ChangeSubscriptionStatusNotification(
+    const Gs2::Money2::Model::FChangeSubscriptionStatusNotificationPtr Model
+)
+{
+    FGs2Money2ChangeSubscriptionStatusNotification Value;
+    Value.NamespaceName = Model->GetNamespaceName() ? *Model->GetNamespaceName() : "";
+    Value.UserId = Model->GetUserId() ? *Model->GetUserId() : "";
+    Value.ContentName = Model->GetContentName() ? *Model->GetContentName() : "";
+    return Value;
+}
+
+UDELEGATE(BlueprintAuthorityOnly)
+DECLARE_DYNAMIC_DELEGATE_OneParam(FEzMoney2ChangeSubscriptionStatusNotificationEvent, FGs2Money2ChangeSubscriptionStatusNotification, Notification);
+
+USTRUCT(BlueprintType)
+struct FBpMoney2ChangeSubscriptionStatusNotificationEvent
+{
+    GENERATED_BODY()
+
+    UPROPERTY(Category = Gs2, BlueprintReadWrite)
+    FEzMoney2ChangeSubscriptionStatusNotificationEvent Value;
+};
+
 UCLASS()
 class BPGS2_API UGs2Money2FunctionLibrary : public UBlueprintFunctionLibrary
 {
@@ -37,7 +74,8 @@ class BPGS2_API UGs2Money2FunctionLibrary : public UBlueprintFunctionLibrary
 public:
     UFUNCTION(BlueprintCallable, DisplayName="Gs2::Money2::Service", Category="Game Server Services|GS2-Money2", meta=(WorldContext="WorldContextObject"))
     static UPARAM(DisplayName="Service") FGs2Money2 Service(
-        FGs2Client Client
+        FGs2Client Client,
+        FBpMoney2ChangeSubscriptionStatusNotificationEvent ChangeSubscriptionStatusNotification
     );
 
     UFUNCTION(BlueprintCallable, DisplayName="Gs2::Money2::Namespace", Category="Game Server Services|GS2-Money2|Namespace", meta=(WorldContext="WorldContextObject"))

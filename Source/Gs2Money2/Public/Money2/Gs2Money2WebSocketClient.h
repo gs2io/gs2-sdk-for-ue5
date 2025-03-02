@@ -80,6 +80,14 @@
 #include "Task/WebSocket/GetSubscriptionStatusTask.h"
 #include "Request/GetSubscriptionStatusByUserIdRequest.h"
 #include "Task/WebSocket/GetSubscriptionStatusByUserIdTask.h"
+#include "Request/AllocateSubscriptionStatusRequest.h"
+#include "Task/WebSocket/AllocateSubscriptionStatusTask.h"
+#include "Request/AllocateSubscriptionStatusByUserIdRequest.h"
+#include "Task/WebSocket/AllocateSubscriptionStatusByUserIdTask.h"
+#include "Request/TakeoverSubscriptionStatusRequest.h"
+#include "Task/WebSocket/TakeoverSubscriptionStatusTask.h"
+#include "Request/TakeoverSubscriptionStatusByUserIdRequest.h"
+#include "Task/WebSocket/TakeoverSubscriptionStatusByUserIdTask.h"
 #include "Request/DescribeStoreContentModelsRequest.h"
 #include "Task/WebSocket/DescribeStoreContentModelsTask.h"
 #include "Request/GetStoreContentModelRequest.h"
@@ -260,6 +268,22 @@ namespace Gs2::Money2
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FGetSubscriptionStatusByUserIdTask>> GetSubscriptionStatusByUserId(
             const Request::FGetSubscriptionStatusByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FAllocateSubscriptionStatusTask>> AllocateSubscriptionStatus(
+            const Request::FAllocateSubscriptionStatusRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FAllocateSubscriptionStatusByUserIdTask>> AllocateSubscriptionStatusByUserId(
+            const Request::FAllocateSubscriptionStatusByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FTakeoverSubscriptionStatusTask>> TakeoverSubscriptionStatus(
+            const Request::FTakeoverSubscriptionStatusRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FTakeoverSubscriptionStatusByUserIdTask>> TakeoverSubscriptionStatusByUserId(
+            const Request::FTakeoverSubscriptionStatusByUserIdRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FDescribeStoreContentModelsTask>> DescribeStoreContentModels(

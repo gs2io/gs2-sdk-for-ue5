@@ -23,12 +23,15 @@
 
 namespace Gs2::UE5::Money2::Domain
 {
+    DECLARE_EVENT_OneParam(Gs2Money2, FChangeSubscriptionStatusNotificationEvent, Gs2::Money2::Model::FChangeSubscriptionStatusNotificationPtr);
+    typedef TSharedPtr<FChangeSubscriptionStatusNotificationEvent> FChangeSubscriptionStatusNotificationEventPtr;
 
     class EZGS2_API FEzGs2Money2 {
         Gs2::Money2::Domain::FGs2Money2DomainPtr Domain;
         Gs2::UE5::Util::FGs2ConnectionPtr ConnectionValue;
 
         public:
+        FChangeSubscriptionStatusNotificationEvent ChangeSubscriptionStatusNotificationEvent;
 
         FEzGs2Money2(
             Gs2::Money2::Domain::FGs2Money2DomainPtr Domain,
@@ -38,6 +41,8 @@ namespace Gs2::UE5::Money2::Domain
         Gs2::UE5::Money2::Domain::Model::FEzNamespaceDomainPtr Namespace(
             const FString NamespaceName
         ) const;
+
+        FChangeSubscriptionStatusNotificationEvent& OnChangeSubscriptionStatusNotification();
     };
     typedef TSharedPtr<FEzGs2Money2> FEzGs2Money2Ptr;
 }

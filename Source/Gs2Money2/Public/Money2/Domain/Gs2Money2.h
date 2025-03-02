@@ -57,6 +57,7 @@
 #include "Money2/Domain/Iterator/DescribeUnusedBalancesIterator.h"
 
 // Notification
+#include "Money2/Model/ChangeSubscriptionStatusNotification.h"
 
 namespace Gs2::Core::Domain
 {
@@ -66,10 +67,12 @@ namespace Gs2::Core::Domain
 
 namespace Gs2::Money2::Domain
 {
+    DECLARE_EVENT_OneParam(FGs2Money2Domain, FChangeSubscriptionStatusNotificationEvent, Gs2::Money2::Model::FChangeSubscriptionStatusNotificationPtr);
 
     class GS2MONEY2_API FGs2Money2Domain:
         public TSharedFromThis<FGs2Money2Domain>
     {
+        FChangeSubscriptionStatusNotificationEvent ChangeSubscriptionStatusNotificationEvent;
         const Core::Domain::FGs2Ptr Gs2;
         const Gs2::Money2::FGs2Money2RestClientPtr Client;
 
@@ -344,6 +347,7 @@ namespace Gs2::Money2::Domain
             const Gs2::JobQueue::Model::FJobPtr Job,
             const Gs2::JobQueue::Model::FJobResultBodyPtr Result
         );
+        FChangeSubscriptionStatusNotificationEvent& OnChangeSubscriptionStatusNotification();
 
         void HandleNotification(
             const FString Action,
