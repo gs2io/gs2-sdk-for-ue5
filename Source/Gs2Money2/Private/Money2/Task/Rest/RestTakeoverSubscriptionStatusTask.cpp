@@ -85,9 +85,9 @@ namespace Gs2::Money2::Task::Rest
             FString Body;
             const TSharedRef<TJsonWriter<TCHAR>> Writer = TJsonWriterFactory<TCHAR>::Create(&Body);
             const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
-            if (this->Request->GetReceipt() != nullptr && this->Request->GetReceipt().IsValid())
+            if (this->Request->GetReceipt().IsSet())
             {
-                JsonRootObject->SetObjectField("receipt", this->Request->GetReceipt()->ToJson());
+                JsonRootObject->SetStringField("receipt", this->Request->GetReceipt().GetValue());
             }
             if (this->Request->GetContextStack().IsSet())
             {

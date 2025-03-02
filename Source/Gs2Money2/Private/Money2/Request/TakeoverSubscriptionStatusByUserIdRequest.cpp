@@ -21,7 +21,7 @@ namespace Gs2::Money2::Request
     FTakeoverSubscriptionStatusByUserIdRequest::FTakeoverSubscriptionStatusByUserIdRequest():
         NamespaceNameValue(TOptional<FString>()),
         UserIdValue(TOptional<FString>()),
-        ReceiptValue(nullptr),
+        ReceiptValue(TOptional<FString>()),
         TimeOffsetTokenValue(TOptional<FString>())
     {
     }
@@ -61,7 +61,7 @@ namespace Gs2::Money2::Request
     }
 
     TSharedPtr<FTakeoverSubscriptionStatusByUserIdRequest> FTakeoverSubscriptionStatusByUserIdRequest::WithReceipt(
-        const TSharedPtr<Model::FReceipt> Receipt
+        const TOptional<FString> Receipt
     )
     {
         this->ReceiptValue = Receipt;
@@ -99,12 +99,8 @@ namespace Gs2::Money2::Request
         return UserIdValue;
     }
 
-    TSharedPtr<Model::FReceipt> FTakeoverSubscriptionStatusByUserIdRequest::GetReceipt() const
+    TOptional<FString> FTakeoverSubscriptionStatusByUserIdRequest::GetReceipt() const
     {
-        if (!ReceiptValue.IsValid())
-        {
-            return nullptr;
-        }
         return ReceiptValue;
     }
 
@@ -143,14 +139,15 @@ namespace Gs2::Money2::Request
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
-          ->WithReceipt(Data->HasField(ANSI_TO_TCHAR("receipt")) ? [Data]() -> Model::FReceiptPtr
+            ->WithReceipt(Data->HasField(ANSI_TO_TCHAR("receipt")) ? [Data]() -> TOptional<FString>
               {
-                  if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("receipt")))
+                  FString v("");
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("receipt"), v))
                   {
-                      return nullptr;
+                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
-                  return Model::FReceipt::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("receipt")));
-              }() : nullptr)
+                  return TOptional<FString>();
+              }() : TOptional<FString>())
             ->WithTimeOffsetToken(Data->HasField(ANSI_TO_TCHAR("timeOffsetToken")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
@@ -178,9 +175,9 @@ namespace Gs2::Money2::Request
         {
             JsonRootObject->SetStringField("userId", UserIdValue.GetValue());
         }
-        if (ReceiptValue != nullptr && ReceiptValue.IsValid())
+        if (ReceiptValue.IsSet())
         {
-            JsonRootObject->SetObjectField("receipt", ReceiptValue->ToJson());
+            JsonRootObject->SetStringField("receipt", ReceiptValue.GetValue());
         }
         if (TimeOffsetTokenValue.IsSet())
         {

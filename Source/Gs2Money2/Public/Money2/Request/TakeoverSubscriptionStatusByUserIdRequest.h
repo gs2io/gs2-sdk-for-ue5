@@ -18,7 +18,6 @@
 
 #include "CoreMinimal.h"
 #include "Dom/JsonObject.h"
-#include "../Model/Receipt.h"
 
 namespace Gs2::Money2::Request
 {
@@ -29,7 +28,7 @@ namespace Gs2::Money2::Request
         TOptional<FString> ContextStackValue;
         TOptional<FString> NamespaceNameValue;
         TOptional<FString> UserIdValue;
-        TSharedPtr<Model::FReceipt> ReceiptValue;
+        TOptional<FString> ReceiptValue;
         TOptional<FString> TimeOffsetTokenValue;
         TOptional<FString> DuplicationAvoiderValue;
         
@@ -44,14 +43,14 @@ namespace Gs2::Money2::Request
         TSharedPtr<FTakeoverSubscriptionStatusByUserIdRequest> WithContextStack(const TOptional<FString> ContextStack);
         TSharedPtr<FTakeoverSubscriptionStatusByUserIdRequest> WithNamespaceName(const TOptional<FString> NamespaceName);
         TSharedPtr<FTakeoverSubscriptionStatusByUserIdRequest> WithUserId(const TOptional<FString> UserId);
-        TSharedPtr<FTakeoverSubscriptionStatusByUserIdRequest> WithReceipt(const TSharedPtr<Model::FReceipt> Receipt);
+        TSharedPtr<FTakeoverSubscriptionStatusByUserIdRequest> WithReceipt(const TOptional<FString> Receipt);
         TSharedPtr<FTakeoverSubscriptionStatusByUserIdRequest> WithTimeOffsetToken(const TOptional<FString> TimeOffsetToken);
         TSharedPtr<FTakeoverSubscriptionStatusByUserIdRequest> WithDuplicationAvoider(const TOptional<FString> DuplicationAvoider);
 
         TOptional<FString> GetContextStack() const;
         TOptional<FString> GetNamespaceName() const;
         TOptional<FString> GetUserId() const;
-        TSharedPtr<Model::FReceipt> GetReceipt() const;
+        TOptional<FString> GetReceipt() const;
         TOptional<FString> GetTimeOffsetToken() const;
         TOptional<FString> GetDuplicationAvoider() const;
 

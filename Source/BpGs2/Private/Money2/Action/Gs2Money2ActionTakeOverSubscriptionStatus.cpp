@@ -27,7 +27,7 @@ UGs2Money2TakeOverSubscriptionStatusAsyncFunction::UGs2Money2TakeOverSubscriptio
 UGs2Money2TakeOverSubscriptionStatusAsyncFunction* UGs2Money2TakeOverSubscriptionStatusAsyncFunction::TakeOverSubscriptionStatus(
     UObject* WorldContextObject,
     FGs2Money2OwnUser User,
-    FGs2Money2Receipt Receipt
+    FString Receipt
 )
 {
     UGs2Money2TakeOverSubscriptionStatusAsyncFunction* Action = NewObject<UGs2Money2TakeOverSubscriptionStatusAsyncFunction>();
@@ -49,7 +49,7 @@ void UGs2Money2TakeOverSubscriptionStatusAsyncFunction::Activate()
     }
 
     auto Future = User.Value->TakeOverSubscriptionStatus(
-        FGs2Money2ReceiptToEzReceipt(Receipt)
+        Receipt
     );
     Future->GetTask().OnSuccessDelegate().BindLambda([&](auto Result)
     {

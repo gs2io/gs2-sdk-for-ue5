@@ -58,12 +58,12 @@ namespace Gs2::UE5::Money2::Domain::Model
             public TSharedFromThis<FAllocateSubscriptionStatusTask>
         {
             TSharedPtr<FEzUserGameSessionDomain> Self;
-            Gs2::UE5::Money2::Model::FEzReceiptPtr Receipt;
+            FString Receipt;
 
         public:
             explicit FAllocateSubscriptionStatusTask(
                 TSharedPtr<FEzUserGameSessionDomain> Self,
-                Gs2::UE5::Money2::Model::FEzReceiptPtr Receipt
+                FString Receipt
             );
 
             virtual Gs2::Core::Model::FGs2ErrorPtr Action(
@@ -73,7 +73,7 @@ namespace Gs2::UE5::Money2::Domain::Model
         friend FAllocateSubscriptionStatusTask;
 
         TSharedPtr<FAsyncTask<FAllocateSubscriptionStatusTask>> AllocateSubscriptionStatus(
-            Gs2::UE5::Money2::Model::FEzReceiptPtr Receipt
+            FString Receipt
         );
 
         class EZGS2_API FTakeOverSubscriptionStatusTask :
@@ -81,12 +81,12 @@ namespace Gs2::UE5::Money2::Domain::Model
             public TSharedFromThis<FTakeOverSubscriptionStatusTask>
         {
             TSharedPtr<FEzUserGameSessionDomain> Self;
-            Gs2::UE5::Money2::Model::FEzReceiptPtr Receipt;
+            FString Receipt;
 
         public:
             explicit FTakeOverSubscriptionStatusTask(
                 TSharedPtr<FEzUserGameSessionDomain> Self,
-                Gs2::UE5::Money2::Model::FEzReceiptPtr Receipt
+                FString Receipt
             );
 
             virtual Gs2::Core::Model::FGs2ErrorPtr Action(
@@ -96,7 +96,7 @@ namespace Gs2::UE5::Money2::Domain::Model
         friend FTakeOverSubscriptionStatusTask;
 
         TSharedPtr<FAsyncTask<FTakeOverSubscriptionStatusTask>> TakeOverSubscriptionStatus(
-            Gs2::UE5::Money2::Model::FEzReceiptPtr Receipt
+            FString Receipt
         );
 
         Gs2::UE5::Money2::Domain::Iterator::FEzDescribeWalletsIteratorPtr Wallets(

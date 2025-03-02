@@ -27,7 +27,7 @@ UGs2Money2AllocateSubscriptionStatusAsyncFunction::UGs2Money2AllocateSubscriptio
 UGs2Money2AllocateSubscriptionStatusAsyncFunction* UGs2Money2AllocateSubscriptionStatusAsyncFunction::AllocateSubscriptionStatus(
     UObject* WorldContextObject,
     FGs2Money2OwnUser User,
-    FGs2Money2Receipt Receipt
+    FString Receipt
 )
 {
     UGs2Money2AllocateSubscriptionStatusAsyncFunction* Action = NewObject<UGs2Money2AllocateSubscriptionStatusAsyncFunction>();
@@ -49,7 +49,7 @@ void UGs2Money2AllocateSubscriptionStatusAsyncFunction::Activate()
     }
 
     auto Future = User.Value->AllocateSubscriptionStatus(
-        FGs2Money2ReceiptToEzReceipt(Receipt)
+        Receipt
     );
     Future->GetTask().OnSuccessDelegate().BindLambda([&](auto Result)
     {

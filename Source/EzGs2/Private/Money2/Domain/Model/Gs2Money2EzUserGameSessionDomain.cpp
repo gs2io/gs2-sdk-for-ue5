@@ -63,7 +63,7 @@ namespace Gs2::UE5::Money2::Domain::Model
 
     FEzUserGameSessionDomain::FAllocateSubscriptionStatusTask::FAllocateSubscriptionStatusTask(
         TSharedPtr<FEzUserGameSessionDomain> Self,
-        Gs2::UE5::Money2::Model::FEzReceiptPtr Receipt
+        FString Receipt
     ): Self(Self), Receipt(Receipt)
     {
 
@@ -77,7 +77,7 @@ namespace Gs2::UE5::Money2::Domain::Model
             [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
                 const auto Task = Self->Domain->AllocateSubscriptionStatus(
                     MakeShared<Gs2::Money2::Request::FAllocateSubscriptionStatusRequest>()
-                        ->WithReceipt(Receipt == nullptr ? nullptr : Receipt->ToModel())
+                        ->WithReceipt(Receipt)
                 );
                 Task->StartSynchronousTask();
                 if (Task->GetTask().IsError())
@@ -106,7 +106,7 @@ namespace Gs2::UE5::Money2::Domain::Model
     }
 
     TSharedPtr<FAsyncTask<FEzUserGameSessionDomain::FAllocateSubscriptionStatusTask>> FEzUserGameSessionDomain::AllocateSubscriptionStatus(
-        Gs2::UE5::Money2::Model::FEzReceiptPtr Receipt
+        FString Receipt
     )
     {
         return Gs2::Core::Util::New<FAsyncTask<FAllocateSubscriptionStatusTask>>(
@@ -117,7 +117,7 @@ namespace Gs2::UE5::Money2::Domain::Model
 
     FEzUserGameSessionDomain::FTakeOverSubscriptionStatusTask::FTakeOverSubscriptionStatusTask(
         TSharedPtr<FEzUserGameSessionDomain> Self,
-        Gs2::UE5::Money2::Model::FEzReceiptPtr Receipt
+        FString Receipt
     ): Self(Self), Receipt(Receipt)
     {
 
@@ -131,7 +131,7 @@ namespace Gs2::UE5::Money2::Domain::Model
             [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
                 const auto Task = Self->Domain->TakeoverSubscriptionStatus(
                     MakeShared<Gs2::Money2::Request::FTakeoverSubscriptionStatusRequest>()
-                        ->WithReceipt(Receipt == nullptr ? nullptr : Receipt->ToModel())
+                        ->WithReceipt(Receipt)
                 );
                 Task->StartSynchronousTask();
                 if (Task->GetTask().IsError())
@@ -160,7 +160,7 @@ namespace Gs2::UE5::Money2::Domain::Model
     }
 
     TSharedPtr<FAsyncTask<FEzUserGameSessionDomain::FTakeOverSubscriptionStatusTask>> FEzUserGameSessionDomain::TakeOverSubscriptionStatus(
-        Gs2::UE5::Money2::Model::FEzReceiptPtr Receipt
+        FString Receipt
     )
     {
         return Gs2::Core::Util::New<FAsyncTask<FTakeOverSubscriptionStatusTask>>(

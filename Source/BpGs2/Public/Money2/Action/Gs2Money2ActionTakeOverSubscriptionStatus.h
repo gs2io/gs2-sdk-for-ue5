@@ -18,7 +18,6 @@
 
 #include "CoreMinimal.h"
 #include "Money2/Model/Gs2Money2SubscriptionStatus.h"
-#include "Money2/Model/Gs2Money2Receipt.h"
 #include "Money2/Model/Gs2Money2User.h"
 #include "../../Core/Model/Gs2Error.h"
 #include "Kismet/BlueprintAsyncActionBase.h"
@@ -34,7 +33,7 @@ class BPGS2_API UGs2Money2TakeOverSubscriptionStatusAsyncFunction : public UBlue
     GENERATED_BODY()
 
     FGs2Money2OwnUser User;
-    FGs2Money2Receipt Receipt;
+    FString Receipt;
 
 public:
 
@@ -50,7 +49,7 @@ public:
     static UGs2Money2TakeOverSubscriptionStatusAsyncFunction* TakeOverSubscriptionStatus(
         UObject* WorldContextObject,
         FGs2Money2OwnUser User,
-        FGs2Money2Receipt Receipt
+        FString Receipt
     );
 
     virtual void Activate() override;
