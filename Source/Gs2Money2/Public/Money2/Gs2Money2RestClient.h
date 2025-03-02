@@ -72,6 +72,14 @@
 #include "Task/Rest/VerifyReceiptByUserIdTask.h"
 #include "Request/VerifyReceiptByStampTaskRequest.h"
 #include "Task/Rest/VerifyReceiptByStampTaskTask.h"
+#include "Request/DescribeSubscriptionStatusesRequest.h"
+#include "Task/Rest/DescribeSubscriptionStatusesTask.h"
+#include "Request/DescribeSubscriptionStatusesByUserIdRequest.h"
+#include "Task/Rest/DescribeSubscriptionStatusesByUserIdTask.h"
+#include "Request/GetSubscriptionStatusRequest.h"
+#include "Task/Rest/GetSubscriptionStatusTask.h"
+#include "Request/GetSubscriptionStatusByUserIdRequest.h"
+#include "Task/Rest/GetSubscriptionStatusByUserIdTask.h"
 #include "Request/DescribeStoreContentModelsRequest.h"
 #include "Task/Rest/DescribeStoreContentModelsTask.h"
 #include "Request/GetStoreContentModelRequest.h"
@@ -86,6 +94,20 @@
 #include "Task/Rest/UpdateStoreContentModelMasterTask.h"
 #include "Request/DeleteStoreContentModelMasterRequest.h"
 #include "Task/Rest/DeleteStoreContentModelMasterTask.h"
+#include "Request/DescribeStoreSubscriptionContentModelsRequest.h"
+#include "Task/Rest/DescribeStoreSubscriptionContentModelsTask.h"
+#include "Request/GetStoreSubscriptionContentModelRequest.h"
+#include "Task/Rest/GetStoreSubscriptionContentModelTask.h"
+#include "Request/DescribeStoreSubscriptionContentModelMastersRequest.h"
+#include "Task/Rest/DescribeStoreSubscriptionContentModelMastersTask.h"
+#include "Request/CreateStoreSubscriptionContentModelMasterRequest.h"
+#include "Task/Rest/CreateStoreSubscriptionContentModelMasterTask.h"
+#include "Request/GetStoreSubscriptionContentModelMasterRequest.h"
+#include "Task/Rest/GetStoreSubscriptionContentModelMasterTask.h"
+#include "Request/UpdateStoreSubscriptionContentModelMasterRequest.h"
+#include "Task/Rest/UpdateStoreSubscriptionContentModelMasterTask.h"
+#include "Request/DeleteStoreSubscriptionContentModelMasterRequest.h"
+#include "Task/Rest/DeleteStoreSubscriptionContentModelMasterTask.h"
 #include "Request/ExportMasterRequest.h"
 #include "Task/Rest/ExportMasterTask.h"
 #include "Request/GetCurrentModelMasterRequest.h"
@@ -224,6 +246,22 @@ namespace Gs2::Money2
             const Request::FVerifyReceiptByStampTaskRequestPtr Request
         ) const;
 
+        TSharedPtr<FAsyncTask<Task::Rest::FDescribeSubscriptionStatusesTask>> DescribeSubscriptionStatuses(
+            const Request::FDescribeSubscriptionStatusesRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FDescribeSubscriptionStatusesByUserIdTask>> DescribeSubscriptionStatusesByUserId(
+            const Request::FDescribeSubscriptionStatusesByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FGetSubscriptionStatusTask>> GetSubscriptionStatus(
+            const Request::FGetSubscriptionStatusRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FGetSubscriptionStatusByUserIdTask>> GetSubscriptionStatusByUserId(
+            const Request::FGetSubscriptionStatusByUserIdRequestPtr Request
+        ) const;
+
         TSharedPtr<FAsyncTask<Task::Rest::FDescribeStoreContentModelsTask>> DescribeStoreContentModels(
             const Request::FDescribeStoreContentModelsRequestPtr Request
         ) const;
@@ -250,6 +288,34 @@ namespace Gs2::Money2
 
         TSharedPtr<FAsyncTask<Task::Rest::FDeleteStoreContentModelMasterTask>> DeleteStoreContentModelMaster(
             const Request::FDeleteStoreContentModelMasterRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FDescribeStoreSubscriptionContentModelsTask>> DescribeStoreSubscriptionContentModels(
+            const Request::FDescribeStoreSubscriptionContentModelsRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FGetStoreSubscriptionContentModelTask>> GetStoreSubscriptionContentModel(
+            const Request::FGetStoreSubscriptionContentModelRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FDescribeStoreSubscriptionContentModelMastersTask>> DescribeStoreSubscriptionContentModelMasters(
+            const Request::FDescribeStoreSubscriptionContentModelMastersRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FCreateStoreSubscriptionContentModelMasterTask>> CreateStoreSubscriptionContentModelMaster(
+            const Request::FCreateStoreSubscriptionContentModelMasterRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FGetStoreSubscriptionContentModelMasterTask>> GetStoreSubscriptionContentModelMaster(
+            const Request::FGetStoreSubscriptionContentModelMasterRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FUpdateStoreSubscriptionContentModelMasterTask>> UpdateStoreSubscriptionContentModelMaster(
+            const Request::FUpdateStoreSubscriptionContentModelMasterRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FDeleteStoreSubscriptionContentModelMasterTask>> DeleteStoreSubscriptionContentModelMaster(
+            const Request::FDeleteStoreSubscriptionContentModelMasterRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::Rest::FExportMasterTask>> ExportMaster(

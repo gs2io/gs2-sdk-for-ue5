@@ -21,7 +21,10 @@
 #include "Money2/Model/Gs2Money2EzWallet.h"
 #include "Money2/Model/Gs2Money2EzWalletSummary.h"
 #include "Money2/Model/Gs2Money2EzDepositTransaction.h"
+#include "Money2/Model/Gs2Money2EzSubscribeTransaction.h"
+#include "Money2/Model/Gs2Money2EzSubscriptionStatus.h"
 #include "Gs2Money2EzWalletDomain.h"
+#include "Gs2Money2EzSubscriptionStatusDomain.h"
 #include "Gs2Money2EzUserDomain.h"
 #include "Gs2Money2EzUserDomain.h"
 #include "Gs2Money2EzUserGameSessionDomain.h"
@@ -50,6 +53,10 @@ namespace Gs2::UE5::Money2::Domain::Model
 
         Gs2::UE5::Money2::Domain::Model::FEzWalletDomainPtr Wallet(
             const int32 Slot
+        ) const;
+
+        Gs2::UE5::Money2::Domain::Model::FEzSubscriptionStatusDomainPtr SubscriptionStatus(
+            const FString ContentName
         ) const;
 
     };

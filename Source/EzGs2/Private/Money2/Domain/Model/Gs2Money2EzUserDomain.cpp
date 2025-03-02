@@ -70,4 +70,16 @@ namespace Gs2::UE5::Money2::Domain::Model
             ConnectionValue
         );
     }
+
+    Gs2::UE5::Money2::Domain::Model::FEzSubscriptionStatusDomainPtr FEzUserDomain::SubscriptionStatus(
+        const FString ContentName
+    ) const
+    {
+        return MakeShared<Gs2::UE5::Money2::Domain::Model::FEzSubscriptionStatusDomain>(
+            Domain->SubscriptionStatus(
+                ContentName
+            ),
+            ConnectionValue
+        );
+    }
 }

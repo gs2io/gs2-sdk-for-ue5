@@ -72,6 +72,14 @@
 #include "Task/WebSocket/VerifyReceiptByUserIdTask.h"
 #include "Request/VerifyReceiptByStampTaskRequest.h"
 #include "Task/WebSocket/VerifyReceiptByStampTaskTask.h"
+#include "Request/DescribeSubscriptionStatusesRequest.h"
+#include "Task/WebSocket/DescribeSubscriptionStatusesTask.h"
+#include "Request/DescribeSubscriptionStatusesByUserIdRequest.h"
+#include "Task/WebSocket/DescribeSubscriptionStatusesByUserIdTask.h"
+#include "Request/GetSubscriptionStatusRequest.h"
+#include "Task/WebSocket/GetSubscriptionStatusTask.h"
+#include "Request/GetSubscriptionStatusByUserIdRequest.h"
+#include "Task/WebSocket/GetSubscriptionStatusByUserIdTask.h"
 #include "Request/DescribeStoreContentModelsRequest.h"
 #include "Task/WebSocket/DescribeStoreContentModelsTask.h"
 #include "Request/GetStoreContentModelRequest.h"
@@ -86,6 +94,20 @@
 #include "Task/WebSocket/UpdateStoreContentModelMasterTask.h"
 #include "Request/DeleteStoreContentModelMasterRequest.h"
 #include "Task/WebSocket/DeleteStoreContentModelMasterTask.h"
+#include "Request/DescribeStoreSubscriptionContentModelsRequest.h"
+#include "Task/WebSocket/DescribeStoreSubscriptionContentModelsTask.h"
+#include "Request/GetStoreSubscriptionContentModelRequest.h"
+#include "Task/WebSocket/GetStoreSubscriptionContentModelTask.h"
+#include "Request/DescribeStoreSubscriptionContentModelMastersRequest.h"
+#include "Task/WebSocket/DescribeStoreSubscriptionContentModelMastersTask.h"
+#include "Request/CreateStoreSubscriptionContentModelMasterRequest.h"
+#include "Task/WebSocket/CreateStoreSubscriptionContentModelMasterTask.h"
+#include "Request/GetStoreSubscriptionContentModelMasterRequest.h"
+#include "Task/WebSocket/GetStoreSubscriptionContentModelMasterTask.h"
+#include "Request/UpdateStoreSubscriptionContentModelMasterRequest.h"
+#include "Task/WebSocket/UpdateStoreSubscriptionContentModelMasterTask.h"
+#include "Request/DeleteStoreSubscriptionContentModelMasterRequest.h"
+#include "Task/WebSocket/DeleteStoreSubscriptionContentModelMasterTask.h"
 #include "Request/ExportMasterRequest.h"
 #include "Task/WebSocket/ExportMasterTask.h"
 #include "Request/GetCurrentModelMasterRequest.h"
@@ -224,6 +246,22 @@ namespace Gs2::Money2
             const Request::FVerifyReceiptByStampTaskRequestPtr Request
         ) const;
 
+        TSharedPtr<FAsyncTask<Task::WebSocket::FDescribeSubscriptionStatusesTask>> DescribeSubscriptionStatuses(
+            const Request::FDescribeSubscriptionStatusesRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FDescribeSubscriptionStatusesByUserIdTask>> DescribeSubscriptionStatusesByUserId(
+            const Request::FDescribeSubscriptionStatusesByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FGetSubscriptionStatusTask>> GetSubscriptionStatus(
+            const Request::FGetSubscriptionStatusRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FGetSubscriptionStatusByUserIdTask>> GetSubscriptionStatusByUserId(
+            const Request::FGetSubscriptionStatusByUserIdRequestPtr Request
+        ) const;
+
         TSharedPtr<FAsyncTask<Task::WebSocket::FDescribeStoreContentModelsTask>> DescribeStoreContentModels(
             const Request::FDescribeStoreContentModelsRequestPtr Request
         ) const;
@@ -250,6 +288,34 @@ namespace Gs2::Money2
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FDeleteStoreContentModelMasterTask>> DeleteStoreContentModelMaster(
             const Request::FDeleteStoreContentModelMasterRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FDescribeStoreSubscriptionContentModelsTask>> DescribeStoreSubscriptionContentModels(
+            const Request::FDescribeStoreSubscriptionContentModelsRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FGetStoreSubscriptionContentModelTask>> GetStoreSubscriptionContentModel(
+            const Request::FGetStoreSubscriptionContentModelRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FDescribeStoreSubscriptionContentModelMastersTask>> DescribeStoreSubscriptionContentModelMasters(
+            const Request::FDescribeStoreSubscriptionContentModelMastersRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FCreateStoreSubscriptionContentModelMasterTask>> CreateStoreSubscriptionContentModelMaster(
+            const Request::FCreateStoreSubscriptionContentModelMasterRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FGetStoreSubscriptionContentModelMasterTask>> GetStoreSubscriptionContentModelMaster(
+            const Request::FGetStoreSubscriptionContentModelMasterRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FUpdateStoreSubscriptionContentModelMasterTask>> UpdateStoreSubscriptionContentModelMaster(
+            const Request::FUpdateStoreSubscriptionContentModelMasterRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FDeleteStoreSubscriptionContentModelMasterTask>> DeleteStoreSubscriptionContentModelMaster(
+            const Request::FDeleteStoreSubscriptionContentModelMasterRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FExportMasterTask>> ExportMaster(

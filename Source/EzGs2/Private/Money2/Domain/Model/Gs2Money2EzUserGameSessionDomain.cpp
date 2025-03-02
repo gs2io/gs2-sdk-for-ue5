@@ -97,4 +97,41 @@ namespace Gs2::UE5::Money2::Domain::Model
             ConnectionValue
         );
     }
+
+    Gs2::UE5::Money2::Domain::Iterator::FEzDescribeSubscriptionStatusesIteratorPtr FEzUserGameSessionDomain::SubscriptionStatuses(
+    ) const
+    {
+        return MakeShared<Gs2::UE5::Money2::Domain::Iterator::FEzDescribeSubscriptionStatusesIterator>(
+            Domain,
+            GameSession,
+            ConnectionValue
+        );
+    }
+
+    Gs2::Core::Domain::CallbackID FEzUserGameSessionDomain::SubscribeSubscriptionStatuses(TFunction<void()> Callback)
+    {
+        return Domain->SubscribeSubscriptionStatuses(
+            Callback
+        );
+    }
+
+    void FEzUserGameSessionDomain::UnsubscribeSubscriptionStatuses(Gs2::Core::Domain::CallbackID CallbackId)
+    {
+        Domain->UnsubscribeSubscriptionStatuses(
+            CallbackId
+        );
+    }
+
+    Gs2::UE5::Money2::Domain::Model::FEzSubscriptionStatusGameSessionDomainPtr FEzUserGameSessionDomain::SubscriptionStatus(
+        const FString ContentName
+    ) const
+    {
+        return MakeShared<Gs2::UE5::Money2::Domain::Model::FEzSubscriptionStatusGameSessionDomain>(
+            Domain->SubscriptionStatus(
+                ContentName
+            ),
+            GameSession,
+            ConnectionValue
+        );
+    }
 }

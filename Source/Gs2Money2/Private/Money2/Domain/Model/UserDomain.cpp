@@ -30,8 +30,12 @@
 #include "Money2/Domain/Model/WalletAccessToken.h"
 #include "Money2/Domain/Model/Event.h"
 #include "Money2/Domain/Model/EventAccessToken.h"
+#include "Money2/Domain/Model/SubscriptionStatus.h"
+#include "Money2/Domain/Model/SubscriptionStatusAccessToken.h"
 #include "Money2/Domain/Model/StoreContentModel.h"
 #include "Money2/Domain/Model/StoreContentModelMaster.h"
+#include "Money2/Domain/Model/StoreSubscriptionContentModel.h"
+#include "Money2/Domain/Model/StoreSubscriptionContentModelMaster.h"
 #include "Money2/Domain/Model/CurrentModelMaster.h"
 #include "Money2/Domain/Model/DailyTransactionHistory.h"
 #include "Money2/Domain/Model/UnusedBalance.h"
@@ -261,6 +265,62 @@ namespace Gs2::Money2::Domain::Model
             NamespaceName,
             UserId,
             TransactionId == TEXT("") ? TOptional<FString>() : TOptional<FString>(TransactionId)
+        );
+    }
+
+    Gs2::Money2::Domain::Iterator::FDescribeSubscriptionStatusesByUserIdIteratorPtr FUserDomain::SubscriptionStatuses(
+        const TOptional<FString> TimeOffsetToken
+    ) const
+    {
+        return MakeShared<Gs2::Money2::Domain::Iterator::FDescribeSubscriptionStatusesByUserIdIterator>(
+            Gs2,
+            Client,
+            NamespaceName,
+            UserId,
+            TimeOffsetToken
+        );
+    }
+
+    Gs2::Core::Domain::CallbackID FUserDomain::SubscribeSubscriptionStatuses(
+    TFunction<void()> Callback
+    )
+    {
+        return Gs2->Cache->ListSubscribe(
+            Gs2::Money2::Model::FSubscriptionStatus::TypeName,
+            Gs2::Money2::Domain::Model::FUserDomain::CreateCacheParentKey(
+                NamespaceName,
+                UserId,
+                "SubscriptionStatus"
+            ),
+            Callback
+        );
+    }
+
+    void FUserDomain::UnsubscribeSubscriptionStatuses(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Gs2->Cache->ListUnsubscribe(
+            Gs2::Money2::Model::FSubscriptionStatus::TypeName,
+            Gs2::Money2::Domain::Model::FUserDomain::CreateCacheParentKey(
+                NamespaceName,
+                UserId,
+                "SubscriptionStatus"
+            ),
+            CallbackID
+        );
+    }
+
+    TSharedPtr<Gs2::Money2::Domain::Model::FSubscriptionStatusDomain> FUserDomain::SubscriptionStatus(
+        const FString ContentName
+    )
+    {
+        return MakeShared<Gs2::Money2::Domain::Model::FSubscriptionStatusDomain>(
+            Gs2,
+            Service,
+            NamespaceName,
+            UserId,
+            ContentName == TEXT("") ? TOptional<FString>() : TOptional<FString>(ContentName)
         );
     }
 

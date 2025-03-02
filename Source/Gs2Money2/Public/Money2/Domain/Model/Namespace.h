@@ -24,8 +24,12 @@
 #include "Money2/Domain/Iterator/DescribeWalletsIterator.h"
 #include "Money2/Domain/Iterator/DescribeWalletsByUserIdIterator.h"
 #include "Money2/Domain/Iterator/DescribeEventsByUserIdIterator.h"
+#include "Money2/Domain/Iterator/DescribeSubscriptionStatusesIterator.h"
+#include "Money2/Domain/Iterator/DescribeSubscriptionStatusesByUserIdIterator.h"
 #include "Money2/Domain/Iterator/DescribeStoreContentModelsIterator.h"
 #include "Money2/Domain/Iterator/DescribeStoreContentModelMastersIterator.h"
+#include "Money2/Domain/Iterator/DescribeStoreSubscriptionContentModelsIterator.h"
+#include "Money2/Domain/Iterator/DescribeStoreSubscriptionContentModelMastersIterator.h"
 #include "Money2/Domain/Iterator/DescribeDailyTransactionHistoriesByCurrencyIterator.h"
 #include "Money2/Domain/Iterator/DescribeDailyTransactionHistoriesIterator.h"
 #include "Money2/Domain/Iterator/DescribeUnusedBalancesIterator.h"
@@ -51,8 +55,12 @@ namespace Gs2::Money2::Domain::Model
     class FWalletAccessTokenDomain;
     class FEventDomain;
     class FEventAccessTokenDomain;
+    class FSubscriptionStatusDomain;
+    class FSubscriptionStatusAccessTokenDomain;
     class FStoreContentModelDomain;
     class FStoreContentModelMasterDomain;
+    class FStoreSubscriptionContentModelDomain;
+    class FStoreSubscriptionContentModelMasterDomain;
     class FCurrentModelMasterDomain;
     class FDailyTransactionHistoryDomain;
     class FUnusedBalanceDomain;
@@ -238,6 +246,32 @@ namespace Gs2::Money2::Domain::Model
             Request::FCreateStoreContentModelMasterRequestPtr Request
         );
 
+        class GS2MONEY2_API FCreateStoreSubscriptionContentModelMasterTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Money2::Domain::Model::FStoreSubscriptionContentModelMasterDomain>,
+            public TSharedFromThis<FCreateStoreSubscriptionContentModelMasterTask>
+        {
+            const TSharedPtr<FNamespaceDomain> Self;
+            const Request::FCreateStoreSubscriptionContentModelMasterRequestPtr Request;
+        public:
+            explicit FCreateStoreSubscriptionContentModelMasterTask(
+                const TSharedPtr<FNamespaceDomain>& Self,
+                const Request::FCreateStoreSubscriptionContentModelMasterRequestPtr Request
+            );
+
+            FCreateStoreSubscriptionContentModelMasterTask(
+                const FCreateStoreSubscriptionContentModelMasterTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Money2::Domain::Model::FStoreSubscriptionContentModelMasterDomain>> Result
+            ) override;
+        };
+        friend FCreateStoreSubscriptionContentModelMasterTask;
+
+        TSharedPtr<FAsyncTask<FCreateStoreSubscriptionContentModelMasterTask>> CreateStoreSubscriptionContentModelMaster(
+            Request::FCreateStoreSubscriptionContentModelMasterRequestPtr Request
+        );
+
         Gs2::Money2::Domain::Iterator::FDescribeDailyTransactionHistoriesByCurrencyIteratorPtr DailyTransactionHistoriesByCurrency(
             const FString Currency,
             const int32 Year,
@@ -326,6 +360,36 @@ namespace Gs2::Money2::Domain::Model
         );
 
         TSharedPtr<Gs2::Money2::Domain::Model::FStoreContentModelMasterDomain> StoreContentModelMaster(
+            const FString ContentName
+        );
+
+        Gs2::Money2::Domain::Iterator::FDescribeStoreSubscriptionContentModelsIteratorPtr StoreSubscriptionContentModels(
+        ) const;
+
+        Gs2::Core::Domain::CallbackID SubscribeStoreSubscriptionContentModels(
+            TFunction<void()> Callback
+        );
+
+        void UnsubscribeStoreSubscriptionContentModels(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
+
+        TSharedPtr<Gs2::Money2::Domain::Model::FStoreSubscriptionContentModelDomain> StoreSubscriptionContentModel(
+            const FString ContentName
+        );
+
+        Gs2::Money2::Domain::Iterator::FDescribeStoreSubscriptionContentModelMastersIteratorPtr StoreSubscriptionContentModelMasters(
+        ) const;
+
+        Gs2::Core::Domain::CallbackID SubscribeStoreSubscriptionContentModelMasters(
+            TFunction<void()> Callback
+        );
+
+        void UnsubscribeStoreSubscriptionContentModelMasters(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
+
+        TSharedPtr<Gs2::Money2::Domain::Model::FStoreSubscriptionContentModelMasterDomain> StoreSubscriptionContentModelMaster(
             const FString ContentName
         );
 

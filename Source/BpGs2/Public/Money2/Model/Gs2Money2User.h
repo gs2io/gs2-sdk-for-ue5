@@ -39,4 +39,10 @@ class BPGS2_API UGs2Money2UserFunctionLibrary : public UBlueprintFunctionLibrary
         FGs2Money2OwnUser User,
         int32 Slot
     );
+
+    UFUNCTION(BlueprintCallable, DisplayName="Gs2::Money2::OwnSubscriptionStatus", Category="Game Server Services|GS2-Money2|Namespace|User|SubscriptionStatus", meta=(WorldContext="WorldContextObject"))
+    static UPARAM(DisplayName="SubscriptionStatus") FGs2Money2OwnSubscriptionStatus OwnSubscriptionStatus(
+        FGs2Money2OwnUser User,
+        FString ContentName
+    );
 };

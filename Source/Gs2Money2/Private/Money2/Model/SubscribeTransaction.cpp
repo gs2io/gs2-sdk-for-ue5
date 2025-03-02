@@ -20,10 +20,10 @@ namespace Gs2::Money2::Model
 {
     FSubscribeTransaction::FSubscribeTransaction():
         SubscribeTransactionIdValue(TOptional<FString>()),
+        ContentNameValue(TOptional<FString>()),
         TransactionIdValue(TOptional<FString>()),
         StoreValue(TOptional<FString>()),
         UserIdValue(TOptional<FString>()),
-        StatusValue(TOptional<FString>()),
         StatusDetailValue(TOptional<FString>()),
         ExpiresAtValue(TOptional<int64>()),
         CreatedAtValue(TOptional<int64>()),
@@ -36,10 +36,10 @@ namespace Gs2::Money2::Model
         const FSubscribeTransaction& From
     ):
         SubscribeTransactionIdValue(From.SubscribeTransactionIdValue),
+        ContentNameValue(From.ContentNameValue),
         TransactionIdValue(From.TransactionIdValue),
         StoreValue(From.StoreValue),
         UserIdValue(From.UserIdValue),
-        StatusValue(From.StatusValue),
         StatusDetailValue(From.StatusDetailValue),
         ExpiresAtValue(From.ExpiresAtValue),
         CreatedAtValue(From.CreatedAtValue),
@@ -53,6 +53,14 @@ namespace Gs2::Money2::Model
     )
     {
         this->SubscribeTransactionIdValue = SubscribeTransactionId;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FSubscribeTransaction> FSubscribeTransaction::WithContentName(
+        const TOptional<FString> ContentName
+    )
+    {
+        this->ContentNameValue = ContentName;
         return SharedThis(this);
     }
 
@@ -77,14 +85,6 @@ namespace Gs2::Money2::Model
     )
     {
         this->UserIdValue = UserId;
-        return SharedThis(this);
-    }
-
-    TSharedPtr<FSubscribeTransaction> FSubscribeTransaction::WithStatus(
-        const TOptional<FString> Status
-    )
-    {
-        this->StatusValue = Status;
         return SharedThis(this);
     }
 
@@ -131,6 +131,10 @@ namespace Gs2::Money2::Model
     {
         return SubscribeTransactionIdValue;
     }
+    TOptional<FString> FSubscribeTransaction::GetContentName() const
+    {
+        return ContentNameValue;
+    }
     TOptional<FString> FSubscribeTransaction::GetTransactionId() const
     {
         return TransactionIdValue;
@@ -142,10 +146,6 @@ namespace Gs2::Money2::Model
     TOptional<FString> FSubscribeTransaction::GetUserId() const
     {
         return UserIdValue;
-    }
-    TOptional<FString> FSubscribeTransaction::GetStatus() const
-    {
-        return StatusValue;
     }
     TOptional<FString> FSubscribeTransaction::GetStatusDetail() const
     {
@@ -206,7 +206,7 @@ namespace Gs2::Money2::Model
 
     TOptional<FString> FSubscribeTransaction::GetRegionFromGrn(const FString Grn)
     {
-        const auto Pattern = FRegexPattern(TEXT("grn:gs2:(?<region>.+):(?<ownerId>.+):money2:(?<namespaceName>.+):subscriptionTransaction:(?<transactionId>.+)"));
+        const auto Pattern = FRegexPattern(TEXT("grn:gs2:(?<region>.+):(?<ownerId>.+):money2:(?<namespaceName>.+):subscriptionTransaction:(?<contentName>.+):(?<transactionId>.+)"));
         FRegexMatcher Matcher(Pattern, Grn);
         while (Matcher.FindNext())
         {
@@ -217,7 +217,7 @@ namespace Gs2::Money2::Model
 
     TOptional<FString> FSubscribeTransaction::GetOwnerIdFromGrn(const FString Grn)
     {
-        const auto Pattern = FRegexPattern(TEXT("grn:gs2:(?<region>.+):(?<ownerId>.+):money2:(?<namespaceName>.+):subscriptionTransaction:(?<transactionId>.+)"));
+        const auto Pattern = FRegexPattern(TEXT("grn:gs2:(?<region>.+):(?<ownerId>.+):money2:(?<namespaceName>.+):subscriptionTransaction:(?<contentName>.+):(?<transactionId>.+)"));
         FRegexMatcher Matcher(Pattern, Grn);
         while (Matcher.FindNext())
         {
@@ -228,7 +228,7 @@ namespace Gs2::Money2::Model
 
     TOptional<FString> FSubscribeTransaction::GetNamespaceNameFromGrn(const FString Grn)
     {
-        const auto Pattern = FRegexPattern(TEXT("grn:gs2:(?<region>.+):(?<ownerId>.+):money2:(?<namespaceName>.+):subscriptionTransaction:(?<transactionId>.+)"));
+        const auto Pattern = FRegexPattern(TEXT("grn:gs2:(?<region>.+):(?<ownerId>.+):money2:(?<namespaceName>.+):subscriptionTransaction:(?<contentName>.+):(?<transactionId>.+)"));
         FRegexMatcher Matcher(Pattern, Grn);
         while (Matcher.FindNext())
         {
@@ -237,13 +237,24 @@ namespace Gs2::Money2::Model
         return TOptional<FString>();
     }
 
-    TOptional<FString> FSubscribeTransaction::GetTransactionIdFromGrn(const FString Grn)
+    TOptional<FString> FSubscribeTransaction::GetContentNameFromGrn(const FString Grn)
     {
-        const auto Pattern = FRegexPattern(TEXT("grn:gs2:(?<region>.+):(?<ownerId>.+):money2:(?<namespaceName>.+):subscriptionTransaction:(?<transactionId>.+)"));
+        const auto Pattern = FRegexPattern(TEXT("grn:gs2:(?<region>.+):(?<ownerId>.+):money2:(?<namespaceName>.+):subscriptionTransaction:(?<contentName>.+):(?<transactionId>.+)"));
         FRegexMatcher Matcher(Pattern, Grn);
         while (Matcher.FindNext())
         {
             return Matcher.GetCaptureGroup(4);
+        }
+        return TOptional<FString>();
+    }
+
+    TOptional<FString> FSubscribeTransaction::GetTransactionIdFromGrn(const FString Grn)
+    {
+        const auto Pattern = FRegexPattern(TEXT("grn:gs2:(?<region>.+):(?<ownerId>.+):money2:(?<namespaceName>.+):subscriptionTransaction:(?<contentName>.+):(?<transactionId>.+)"));
+        FRegexMatcher Matcher(Pattern, Grn);
+        while (Matcher.FindNext())
+        {
+            return Matcher.GetCaptureGroup(5);
         }
         return TOptional<FString>();
     }
@@ -258,6 +269,15 @@ namespace Gs2::Money2::Model
                 {
                     FString v("");
                     if (Data->TryGetStringField(ANSI_TO_TCHAR("subscribeTransactionId"), v))
+                    {
+                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                    }
+                    return TOptional<FString>();
+                }() : TOptional<FString>())
+            ->WithContentName(Data->HasField(ANSI_TO_TCHAR("contentName")) ? [Data]() -> TOptional<FString>
+                {
+                    FString v("");
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("contentName"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
@@ -285,15 +305,6 @@ namespace Gs2::Money2::Model
                 {
                     FString v("");
                     if (Data->TryGetStringField(ANSI_TO_TCHAR("userId"), v))
-                    {
-                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
-                    }
-                    return TOptional<FString>();
-                }() : TOptional<FString>())
-            ->WithStatus(Data->HasField(ANSI_TO_TCHAR("status")) ? [Data]() -> TOptional<FString>
-                {
-                    FString v("");
-                    if (Data->TryGetStringField(ANSI_TO_TCHAR("status"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
@@ -353,6 +364,10 @@ namespace Gs2::Money2::Model
         {
             JsonRootObject->SetStringField("subscribeTransactionId", SubscribeTransactionIdValue.GetValue());
         }
+        if (ContentNameValue.IsSet())
+        {
+            JsonRootObject->SetStringField("contentName", ContentNameValue.GetValue());
+        }
         if (TransactionIdValue.IsSet())
         {
             JsonRootObject->SetStringField("transactionId", TransactionIdValue.GetValue());
@@ -364,10 +379,6 @@ namespace Gs2::Money2::Model
         if (UserIdValue.IsSet())
         {
             JsonRootObject->SetStringField("userId", UserIdValue.GetValue());
-        }
-        if (StatusValue.IsSet())
-        {
-            JsonRootObject->SetStringField("status", StatusValue.GetValue());
         }
         if (StatusDetailValue.IsSet())
         {

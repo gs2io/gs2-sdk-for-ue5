@@ -262,6 +262,42 @@ namespace Gs2::Money2
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::WebSocket::FDescribeSubscriptionStatusesTask>> FGs2Money2WebSocketClient::DescribeSubscriptionStatuses(
+        const Request::FDescribeSubscriptionStatusesRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FDescribeSubscriptionStatusesTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FDescribeSubscriptionStatusesByUserIdTask>> FGs2Money2WebSocketClient::DescribeSubscriptionStatusesByUserId(
+        const Request::FDescribeSubscriptionStatusesByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FDescribeSubscriptionStatusesByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FGetSubscriptionStatusTask>> FGs2Money2WebSocketClient::GetSubscriptionStatus(
+        const Request::FGetSubscriptionStatusRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FGetSubscriptionStatusTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FGetSubscriptionStatusByUserIdTask>> FGs2Money2WebSocketClient::GetSubscriptionStatusByUserId(
+        const Request::FGetSubscriptionStatusByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FGetSubscriptionStatusByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::WebSocket::FDescribeStoreContentModelsTask>> FGs2Money2WebSocketClient::DescribeStoreContentModels(
         const Request::FDescribeStoreContentModelsRequestPtr Request) const
     {
@@ -320,6 +356,69 @@ namespace Gs2::Money2
         const Request::FDeleteStoreContentModelMasterRequestPtr Request) const
     {
         return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FDeleteStoreContentModelMasterTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FDescribeStoreSubscriptionContentModelsTask>> FGs2Money2WebSocketClient::DescribeStoreSubscriptionContentModels(
+        const Request::FDescribeStoreSubscriptionContentModelsRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FDescribeStoreSubscriptionContentModelsTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FGetStoreSubscriptionContentModelTask>> FGs2Money2WebSocketClient::GetStoreSubscriptionContentModel(
+        const Request::FGetStoreSubscriptionContentModelRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FGetStoreSubscriptionContentModelTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FDescribeStoreSubscriptionContentModelMastersTask>> FGs2Money2WebSocketClient::DescribeStoreSubscriptionContentModelMasters(
+        const Request::FDescribeStoreSubscriptionContentModelMastersRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FDescribeStoreSubscriptionContentModelMastersTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FCreateStoreSubscriptionContentModelMasterTask>> FGs2Money2WebSocketClient::CreateStoreSubscriptionContentModelMaster(
+        const Request::FCreateStoreSubscriptionContentModelMasterRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FCreateStoreSubscriptionContentModelMasterTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FGetStoreSubscriptionContentModelMasterTask>> FGs2Money2WebSocketClient::GetStoreSubscriptionContentModelMaster(
+        const Request::FGetStoreSubscriptionContentModelMasterRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FGetStoreSubscriptionContentModelMasterTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FUpdateStoreSubscriptionContentModelMasterTask>> FGs2Money2WebSocketClient::UpdateStoreSubscriptionContentModelMaster(
+        const Request::FUpdateStoreSubscriptionContentModelMasterRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FUpdateStoreSubscriptionContentModelMasterTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FDeleteStoreSubscriptionContentModelMasterTask>> FGs2Money2WebSocketClient::DeleteStoreSubscriptionContentModelMaster(
+        const Request::FDeleteStoreSubscriptionContentModelMasterRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FDeleteStoreSubscriptionContentModelMasterTask>>(
             Session,
             Request
         );

@@ -21,8 +21,11 @@
 #include "Model/Wallet.h"
 #include "Model/Event.h"
 #include "Model/SubscribeTransaction.h"
+#include "Model/SubscriptionStatus.h"
 #include "Model/StoreContentModel.h"
 #include "Model/StoreContentModelMaster.h"
+#include "Model/StoreSubscriptionContentModel.h"
+#include "Model/StoreSubscriptionContentModelMaster.h"
 #include "Model/CurrentModelMaster.h"
 #include "Model/Receipt.h"
 #include "Model/PlatformSetting.h"
@@ -39,6 +42,8 @@
 #include "Model/GooglePlayVerifyReceiptEvent.h"
 #include "Model/AppleAppStoreContent.h"
 #include "Model/GooglePlayContent.h"
+#include "Model/AppleAppStoreSubscriptionContent.h"
+#include "Model/GooglePlaySubscriptionContent.h"
 #include "Model/GooglePlayRealtimeNotificationMessage.h"
 #include "Model/GitHubCheckoutSetting.h"
 #include "Model/ScriptSetting.h"
@@ -208,6 +213,30 @@
 #include "Task/Rest/VerifyReceiptByStampTaskTask.h"
 #include "Task/WebSocket/VerifyReceiptByStampTaskTask.h"
 
+// DescribeSubscriptionStatuses
+#include "Request/DescribeSubscriptionStatusesRequest.h"
+#include "Result/DescribeSubscriptionStatusesResult.h"
+#include "Task/Rest/DescribeSubscriptionStatusesTask.h"
+#include "Task/WebSocket/DescribeSubscriptionStatusesTask.h"
+
+// DescribeSubscriptionStatusesByUserId
+#include "Request/DescribeSubscriptionStatusesByUserIdRequest.h"
+#include "Result/DescribeSubscriptionStatusesByUserIdResult.h"
+#include "Task/Rest/DescribeSubscriptionStatusesByUserIdTask.h"
+#include "Task/WebSocket/DescribeSubscriptionStatusesByUserIdTask.h"
+
+// GetSubscriptionStatus
+#include "Request/GetSubscriptionStatusRequest.h"
+#include "Result/GetSubscriptionStatusResult.h"
+#include "Task/Rest/GetSubscriptionStatusTask.h"
+#include "Task/WebSocket/GetSubscriptionStatusTask.h"
+
+// GetSubscriptionStatusByUserId
+#include "Request/GetSubscriptionStatusByUserIdRequest.h"
+#include "Result/GetSubscriptionStatusByUserIdResult.h"
+#include "Task/Rest/GetSubscriptionStatusByUserIdTask.h"
+#include "Task/WebSocket/GetSubscriptionStatusByUserIdTask.h"
+
 // DescribeStoreContentModels
 #include "Request/DescribeStoreContentModelsRequest.h"
 #include "Result/DescribeStoreContentModelsResult.h"
@@ -249,6 +278,48 @@
 #include "Result/DeleteStoreContentModelMasterResult.h"
 #include "Task/Rest/DeleteStoreContentModelMasterTask.h"
 #include "Task/WebSocket/DeleteStoreContentModelMasterTask.h"
+
+// DescribeStoreSubscriptionContentModels
+#include "Request/DescribeStoreSubscriptionContentModelsRequest.h"
+#include "Result/DescribeStoreSubscriptionContentModelsResult.h"
+#include "Task/Rest/DescribeStoreSubscriptionContentModelsTask.h"
+#include "Task/WebSocket/DescribeStoreSubscriptionContentModelsTask.h"
+
+// GetStoreSubscriptionContentModel
+#include "Request/GetStoreSubscriptionContentModelRequest.h"
+#include "Result/GetStoreSubscriptionContentModelResult.h"
+#include "Task/Rest/GetStoreSubscriptionContentModelTask.h"
+#include "Task/WebSocket/GetStoreSubscriptionContentModelTask.h"
+
+// DescribeStoreSubscriptionContentModelMasters
+#include "Request/DescribeStoreSubscriptionContentModelMastersRequest.h"
+#include "Result/DescribeStoreSubscriptionContentModelMastersResult.h"
+#include "Task/Rest/DescribeStoreSubscriptionContentModelMastersTask.h"
+#include "Task/WebSocket/DescribeStoreSubscriptionContentModelMastersTask.h"
+
+// CreateStoreSubscriptionContentModelMaster
+#include "Request/CreateStoreSubscriptionContentModelMasterRequest.h"
+#include "Result/CreateStoreSubscriptionContentModelMasterResult.h"
+#include "Task/Rest/CreateStoreSubscriptionContentModelMasterTask.h"
+#include "Task/WebSocket/CreateStoreSubscriptionContentModelMasterTask.h"
+
+// GetStoreSubscriptionContentModelMaster
+#include "Request/GetStoreSubscriptionContentModelMasterRequest.h"
+#include "Result/GetStoreSubscriptionContentModelMasterResult.h"
+#include "Task/Rest/GetStoreSubscriptionContentModelMasterTask.h"
+#include "Task/WebSocket/GetStoreSubscriptionContentModelMasterTask.h"
+
+// UpdateStoreSubscriptionContentModelMaster
+#include "Request/UpdateStoreSubscriptionContentModelMasterRequest.h"
+#include "Result/UpdateStoreSubscriptionContentModelMasterResult.h"
+#include "Task/Rest/UpdateStoreSubscriptionContentModelMasterTask.h"
+#include "Task/WebSocket/UpdateStoreSubscriptionContentModelMasterTask.h"
+
+// DeleteStoreSubscriptionContentModelMaster
+#include "Request/DeleteStoreSubscriptionContentModelMasterRequest.h"
+#include "Result/DeleteStoreSubscriptionContentModelMasterResult.h"
+#include "Task/Rest/DeleteStoreSubscriptionContentModelMasterTask.h"
+#include "Task/WebSocket/DeleteStoreSubscriptionContentModelMasterTask.h"
 
 // ExportMaster
 #include "Request/ExportMasterRequest.h"

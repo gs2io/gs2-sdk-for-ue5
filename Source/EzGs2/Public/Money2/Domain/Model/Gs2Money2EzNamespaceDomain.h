@@ -21,6 +21,8 @@
 #include "Money2/Model/Gs2Money2EzWallet.h"
 #include "Money2/Model/Gs2Money2EzWalletSummary.h"
 #include "Money2/Model/Gs2Money2EzDepositTransaction.h"
+#include "Money2/Model/Gs2Money2EzSubscribeTransaction.h"
+#include "Money2/Model/Gs2Money2EzSubscriptionStatus.h"
 #include "Gs2Money2EzUserDomain.h"
 #include "Gs2Money2EzUserDomain.h"
 #include "Gs2Money2EzUserGameSessionDomain.h"

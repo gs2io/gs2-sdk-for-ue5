@@ -25,8 +25,12 @@
 #include "Money2/Domain/Iterator/DescribeWalletsIterator.h"
 #include "Money2/Domain/Iterator/DescribeWalletsByUserIdIterator.h"
 #include "Money2/Domain/Iterator/DescribeEventsByUserIdIterator.h"
+#include "Money2/Domain/Iterator/DescribeSubscriptionStatusesIterator.h"
+#include "Money2/Domain/Iterator/DescribeSubscriptionStatusesByUserIdIterator.h"
 #include "Money2/Domain/Iterator/DescribeStoreContentModelsIterator.h"
 #include "Money2/Domain/Iterator/DescribeStoreContentModelMastersIterator.h"
+#include "Money2/Domain/Iterator/DescribeStoreSubscriptionContentModelsIterator.h"
+#include "Money2/Domain/Iterator/DescribeStoreSubscriptionContentModelMastersIterator.h"
 #include "Money2/Domain/Iterator/DescribeDailyTransactionHistoriesByCurrencyIterator.h"
 #include "Money2/Domain/Iterator/DescribeDailyTransactionHistoriesIterator.h"
 #include "Money2/Domain/Iterator/DescribeUnusedBalancesIterator.h"
@@ -52,8 +56,12 @@ namespace Gs2::Money2::Domain::Model
     class FWalletAccessTokenDomain;
     class FEventDomain;
     class FEventAccessTokenDomain;
+    class FSubscriptionStatusDomain;
+    class FSubscriptionStatusAccessTokenDomain;
     class FStoreContentModelDomain;
     class FStoreContentModelMasterDomain;
+    class FStoreSubscriptionContentModelDomain;
+    class FStoreSubscriptionContentModelMasterDomain;
     class FCurrentModelMasterDomain;
     class FDailyTransactionHistoryDomain;
     class FUnusedBalanceDomain;

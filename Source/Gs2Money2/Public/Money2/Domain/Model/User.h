@@ -24,8 +24,12 @@
 #include "Money2/Domain/Iterator/DescribeWalletsIterator.h"
 #include "Money2/Domain/Iterator/DescribeWalletsByUserIdIterator.h"
 #include "Money2/Domain/Iterator/DescribeEventsByUserIdIterator.h"
+#include "Money2/Domain/Iterator/DescribeSubscriptionStatusesIterator.h"
+#include "Money2/Domain/Iterator/DescribeSubscriptionStatusesByUserIdIterator.h"
 #include "Money2/Domain/Iterator/DescribeStoreContentModelsIterator.h"
 #include "Money2/Domain/Iterator/DescribeStoreContentModelMastersIterator.h"
+#include "Money2/Domain/Iterator/DescribeStoreSubscriptionContentModelsIterator.h"
+#include "Money2/Domain/Iterator/DescribeStoreSubscriptionContentModelMastersIterator.h"
 #include "Money2/Domain/Iterator/DescribeDailyTransactionHistoriesByCurrencyIterator.h"
 #include "Money2/Domain/Iterator/DescribeDailyTransactionHistoriesIterator.h"
 #include "Money2/Domain/Iterator/DescribeUnusedBalancesIterator.h"
@@ -51,8 +55,12 @@ namespace Gs2::Money2::Domain::Model
     class FWalletAccessTokenDomain;
     class FEventDomain;
     class FEventAccessTokenDomain;
+    class FSubscriptionStatusDomain;
+    class FSubscriptionStatusAccessTokenDomain;
     class FStoreContentModelDomain;
     class FStoreContentModelMasterDomain;
+    class FStoreSubscriptionContentModelDomain;
+    class FStoreSubscriptionContentModelMasterDomain;
     class FCurrentModelMasterDomain;
     class FDailyTransactionHistoryDomain;
     class FUnusedBalanceDomain;
@@ -153,6 +161,22 @@ namespace Gs2::Money2::Domain::Model
 
         TSharedPtr<Gs2::Money2::Domain::Model::FEventDomain> Event(
             const FString TransactionId
+        );
+
+        Gs2::Money2::Domain::Iterator::FDescribeSubscriptionStatusesByUserIdIteratorPtr SubscriptionStatuses(
+            const TOptional<FString> TimeOffsetToken = TOptional<FString>()
+        ) const;
+
+        Gs2::Core::Domain::CallbackID SubscribeSubscriptionStatuses(
+            TFunction<void()> Callback
+        );
+
+        void UnsubscribeSubscriptionStatuses(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
+
+        TSharedPtr<Gs2::Money2::Domain::Model::FSubscriptionStatusDomain> SubscriptionStatus(
+            const FString ContentName
         );
 
         static FString CreateCacheParentKey(

@@ -30,8 +30,12 @@
 #include "Money2/Domain/Model/WalletAccessToken.h"
 #include "Money2/Domain/Model/Event.h"
 #include "Money2/Domain/Model/EventAccessToken.h"
+#include "Money2/Domain/Model/SubscriptionStatus.h"
+#include "Money2/Domain/Model/SubscriptionStatusAccessToken.h"
 #include "Money2/Domain/Model/StoreContentModel.h"
 #include "Money2/Domain/Model/StoreContentModelMaster.h"
+#include "Money2/Domain/Model/StoreSubscriptionContentModel.h"
+#include "Money2/Domain/Model/StoreSubscriptionContentModelMaster.h"
 #include "Money2/Domain/Model/CurrentModelMaster.h"
 #include "Money2/Domain/Model/DailyTransactionHistory.h"
 #include "Money2/Domain/Model/UnusedBalance.h"
@@ -48,6 +52,7 @@ namespace Gs2::Money2::Domain::Model
         const Core::Domain::FGs2Ptr& Gs2,
         const Money2::Domain::FGs2Money2DomainPtr& Service,
         const TOptional<FString> NamespaceName,
+        const TOptional<FString> ContentName,
         const TOptional<FString> TransactionId
         // ReSharper disable once CppMemberInitializersOrder
     ):
@@ -55,6 +60,7 @@ namespace Gs2::Money2::Domain::Model
         Service(Service),
         Client(MakeShared<Gs2::Money2::FGs2Money2RestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
+        ContentName(ContentName),
         TransactionId(TransactionId),
         ParentKey(Gs2::Money2::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
             NamespaceName,
@@ -70,6 +76,7 @@ namespace Gs2::Money2::Domain::Model
         Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
+        ContentName(From.ContentName),
         TransactionId(From.TransactionId),
         ParentKey(From.ParentKey)
     {
@@ -78,21 +85,25 @@ namespace Gs2::Money2::Domain::Model
 
     FString FSubscribeTransactionDomain::CreateCacheParentKey(
         TOptional<FString> NamespaceName,
+        TOptional<FString> ContentName,
         TOptional<FString> TransactionId,
         FString ChildType
     )
     {
         return FString("") +
             (NamespaceName.IsSet() ? *NamespaceName : "null") + ":" +
+            (ContentName.IsSet() ? *ContentName : "null") + ":" +
             (TransactionId.IsSet() ? *TransactionId : "null") + ":" +
             ChildType;
     }
 
     FString FSubscribeTransactionDomain::CreateCacheKey(
+        TOptional<FString> ContentName,
         TOptional<FString> TransactionId
     )
     {
         return FString("") +
+            (ContentName.IsSet() ? *ContentName : "null") + ":" + 
             (TransactionId.IsSet() ? *TransactionId : "null");
     }
 
@@ -119,6 +130,7 @@ namespace Gs2::Money2::Domain::Model
         auto bCacheHit = Self->Gs2->Cache->TryGet<Gs2::Money2::Model::FSubscribeTransaction>(
             Self->ParentKey,
             Gs2::Money2::Domain::Model::FSubscribeTransactionDomain::CreateCacheKey(
+                Self->ContentName,
                 Self->TransactionId
             ),
             &Value
@@ -140,6 +152,7 @@ namespace Gs2::Money2::Domain::Model
             Gs2::Money2::Model::FSubscribeTransaction::TypeName,
             ParentKey,
             Gs2::Money2::Domain::Model::FSubscribeTransactionDomain::CreateCacheKey(
+                ContentName,
                 TransactionId
             ),
             [Callback](TSharedPtr<FGs2Object> obj)
@@ -157,6 +170,7 @@ namespace Gs2::Money2::Domain::Model
             Gs2::Money2::Model::FSubscribeTransaction::TypeName,
             ParentKey,
             Gs2::Money2::Domain::Model::FSubscribeTransactionDomain::CreateCacheKey(
+                ContentName,
                 TransactionId
             ),
             CallbackID

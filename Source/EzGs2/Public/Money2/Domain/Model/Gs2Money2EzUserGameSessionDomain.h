@@ -21,8 +21,12 @@
 #include "Money2/Model/Gs2Money2EzWallet.h"
 #include "Money2/Model/Gs2Money2EzWalletSummary.h"
 #include "Money2/Model/Gs2Money2EzDepositTransaction.h"
+#include "Money2/Model/Gs2Money2EzSubscribeTransaction.h"
+#include "Money2/Model/Gs2Money2EzSubscriptionStatus.h"
 #include "Gs2Money2EzWalletGameSessionDomain.h"
 #include "Money2/Domain/Iterator/Gs2Money2EzDescribeWalletsIterator.h"
+#include "Gs2Money2EzSubscriptionStatusGameSessionDomain.h"
+#include "Money2/Domain/Iterator/Gs2Money2EzDescribeSubscriptionStatusesIterator.h"
 #include "Gs2Money2EzUserGameSessionDomain.h"
 #include "Util/Net/GameSession.h"
 #include "Util/Net/Gs2Connection.h"
@@ -58,6 +62,17 @@ namespace Gs2::UE5::Money2::Domain::Model
 
         Gs2::UE5::Money2::Domain::Model::FEzWalletGameSessionDomainPtr Wallet(
             const int32 Slot
+        ) const;
+
+        Gs2::UE5::Money2::Domain::Iterator::FEzDescribeSubscriptionStatusesIteratorPtr SubscriptionStatuses(
+        ) const;
+
+        Gs2::Core::Domain::CallbackID SubscribeSubscriptionStatuses(TFunction<void()> Callback);
+
+        void UnsubscribeSubscriptionStatuses(Gs2::Core::Domain::CallbackID CallbackId);
+
+        Gs2::UE5::Money2::Domain::Model::FEzSubscriptionStatusGameSessionDomainPtr SubscriptionStatus(
+            const FString ContentName
         ) const;
 
     };

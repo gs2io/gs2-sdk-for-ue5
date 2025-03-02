@@ -30,8 +30,12 @@
 #include "Money2/Domain/Model/WalletAccessToken.h"
 #include "Money2/Domain/Model/Event.h"
 #include "Money2/Domain/Model/EventAccessToken.h"
+#include "Money2/Domain/Model/SubscriptionStatus.h"
+#include "Money2/Domain/Model/SubscriptionStatusAccessToken.h"
 #include "Money2/Domain/Model/StoreContentModel.h"
 #include "Money2/Domain/Model/StoreContentModelMaster.h"
+#include "Money2/Domain/Model/StoreSubscriptionContentModel.h"
+#include "Money2/Domain/Model/StoreSubscriptionContentModelMaster.h"
 #include "Money2/Domain/Model/CurrentModelMaster.h"
 #include "Money2/Domain/Model/DailyTransactionHistory.h"
 #include "Money2/Domain/Model/UnusedBalance.h"
@@ -364,6 +368,75 @@ namespace Gs2::Money2::Domain::Model
         return Gs2::Core::Util::New<FAsyncTask<FCreateStoreContentModelMasterTask>>(this->AsShared(), Request);
     }
 
+    FNamespaceDomain::FCreateStoreSubscriptionContentModelMasterTask::FCreateStoreSubscriptionContentModelMasterTask(
+        const TSharedPtr<FNamespaceDomain>& Self,
+        const Request::FCreateStoreSubscriptionContentModelMasterRequestPtr Request
+    ): Self(Self), Request(Request)
+    {
+
+    }
+
+    FNamespaceDomain::FCreateStoreSubscriptionContentModelMasterTask::FCreateStoreSubscriptionContentModelMasterTask(
+        const FCreateStoreSubscriptionContentModelMasterTask& From
+    ): TGs2Future(From), Self(From.Self), Request(From.Request)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FNamespaceDomain::FCreateStoreSubscriptionContentModelMasterTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::Money2::Domain::Model::FStoreSubscriptionContentModelMasterDomain>> Result
+    )
+    {
+        Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
+            ->WithNamespaceName(Self->NamespaceName);
+        const auto Future = Self->Client->CreateStoreSubscriptionContentModelMaster(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto RequestModel = Request;
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
+        if (ResultModel != nullptr) {
+            
+            if (ResultModel->GetItem() != nullptr)
+            {
+                const auto ParentKey = Gs2::Money2::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                    Self->NamespaceName,
+                    "StoreSubscriptionContentModelMaster"
+                );
+                const auto Key = Gs2::Money2::Domain::Model::FStoreSubscriptionContentModelMasterDomain::CreateCacheKey(
+                    ResultModel->GetItem()->GetName()
+                );
+                Self->Gs2->Cache->Put(
+                    Gs2::Money2::Model::FStoreSubscriptionContentModelMaster::TypeName,
+                    ParentKey,
+                    Key,
+                    ResultModel->GetItem(),
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+            }
+        }
+        auto Domain = MakeShared<Gs2::Money2::Domain::Model::FStoreSubscriptionContentModelMasterDomain>(
+            Self->Gs2,
+            Self->Service,
+            Request->GetNamespaceName(),
+            ResultModel->GetItem()->GetName()
+        );
+
+        *Result = Domain;
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FNamespaceDomain::FCreateStoreSubscriptionContentModelMasterTask>> FNamespaceDomain::CreateStoreSubscriptionContentModelMaster(
+        Request::FCreateStoreSubscriptionContentModelMasterRequestPtr Request
+    ) {
+        return Gs2::Core::Util::New<FAsyncTask<FCreateStoreSubscriptionContentModelMasterTask>>(this->AsShared(), Request);
+    }
+
     Gs2::Money2::Domain::Iterator::FDescribeDailyTransactionHistoriesByCurrencyIteratorPtr FNamespaceDomain::DailyTransactionHistoriesByCurrency(
         const FString Currency,
         const int32 Year,
@@ -647,6 +720,106 @@ namespace Gs2::Money2::Domain::Model
     )
     {
         return MakeShared<Gs2::Money2::Domain::Model::FStoreContentModelMasterDomain>(
+            Gs2,
+            Service,
+            NamespaceName,
+            ContentName == TEXT("") ? TOptional<FString>() : TOptional<FString>(ContentName)
+        );
+    }
+
+    Gs2::Money2::Domain::Iterator::FDescribeStoreSubscriptionContentModelsIteratorPtr FNamespaceDomain::StoreSubscriptionContentModels(
+    ) const
+    {
+        return MakeShared<Gs2::Money2::Domain::Iterator::FDescribeStoreSubscriptionContentModelsIterator>(
+            Gs2,
+            Client,
+            NamespaceName
+        );
+    }
+
+    Gs2::Core::Domain::CallbackID FNamespaceDomain::SubscribeStoreSubscriptionContentModels(
+    TFunction<void()> Callback
+    )
+    {
+        return Gs2->Cache->ListSubscribe(
+            Gs2::Money2::Model::FStoreSubscriptionContentModel::TypeName,
+            Gs2::Money2::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                NamespaceName,
+                "StoreSubscriptionContentModel"
+            ),
+            Callback
+        );
+    }
+
+    void FNamespaceDomain::UnsubscribeStoreSubscriptionContentModels(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Gs2->Cache->ListUnsubscribe(
+            Gs2::Money2::Model::FStoreSubscriptionContentModel::TypeName,
+            Gs2::Money2::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                NamespaceName,
+                "StoreSubscriptionContentModel"
+            ),
+            CallbackID
+        );
+    }
+
+    TSharedPtr<Gs2::Money2::Domain::Model::FStoreSubscriptionContentModelDomain> FNamespaceDomain::StoreSubscriptionContentModel(
+        const FString ContentName
+    )
+    {
+        return MakeShared<Gs2::Money2::Domain::Model::FStoreSubscriptionContentModelDomain>(
+            Gs2,
+            Service,
+            NamespaceName,
+            ContentName == TEXT("") ? TOptional<FString>() : TOptional<FString>(ContentName)
+        );
+    }
+
+    Gs2::Money2::Domain::Iterator::FDescribeStoreSubscriptionContentModelMastersIteratorPtr FNamespaceDomain::StoreSubscriptionContentModelMasters(
+    ) const
+    {
+        return MakeShared<Gs2::Money2::Domain::Iterator::FDescribeStoreSubscriptionContentModelMastersIterator>(
+            Gs2,
+            Client,
+            NamespaceName
+        );
+    }
+
+    Gs2::Core::Domain::CallbackID FNamespaceDomain::SubscribeStoreSubscriptionContentModelMasters(
+    TFunction<void()> Callback
+    )
+    {
+        return Gs2->Cache->ListSubscribe(
+            Gs2::Money2::Model::FStoreSubscriptionContentModelMaster::TypeName,
+            Gs2::Money2::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                NamespaceName,
+                "StoreSubscriptionContentModelMaster"
+            ),
+            Callback
+        );
+    }
+
+    void FNamespaceDomain::UnsubscribeStoreSubscriptionContentModelMasters(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Gs2->Cache->ListUnsubscribe(
+            Gs2::Money2::Model::FStoreSubscriptionContentModelMaster::TypeName,
+            Gs2::Money2::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                NamespaceName,
+                "StoreSubscriptionContentModelMaster"
+            ),
+            CallbackID
+        );
+    }
+
+    TSharedPtr<Gs2::Money2::Domain::Model::FStoreSubscriptionContentModelMasterDomain> FNamespaceDomain::StoreSubscriptionContentModelMaster(
+        const FString ContentName
+    )
+    {
+        return MakeShared<Gs2::Money2::Domain::Model::FStoreSubscriptionContentModelMasterDomain>(
             Gs2,
             Service,
             NamespaceName,

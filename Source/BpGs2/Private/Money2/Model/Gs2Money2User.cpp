@@ -17,8 +17,10 @@
 #include "Money2/Model/Gs2Money2User.h"
 #include "Money2/Domain/EzGs2Money2.h"
 #include "Money2/Model/Gs2Money2Wallet.h"
+#include "Money2/Model/Gs2Money2SubscriptionStatus.h"
 #include "Core/Model/Gs2AccessToken.h"
 #include "Money2/Model/Gs2Money2Wallet.h"
+#include "Money2/Model/Gs2Money2SubscriptionStatus.h"
 #include "Core/BpGs2Constant.h"
 
 FGs2Money2OwnWallet UGs2Money2UserFunctionLibrary::OwnWallet(
@@ -33,6 +35,26 @@ FGs2Money2OwnWallet UGs2Money2UserFunctionLibrary::OwnWallet(
     }
     Return.Value = User.Value->Wallet(
         Slot
+    );
+    return Return;
+}
+
+FGs2Money2OwnSubscriptionStatus UGs2Money2UserFunctionLibrary::OwnSubscriptionStatus(
+    FGs2Money2OwnUser User,
+    FString ContentName
+)
+{
+    FGs2Money2OwnSubscriptionStatus Return;
+    if (User.Value == nullptr) {
+        UE_LOG(BpGs2Log, Error, TEXT("[UGs2Money2UserFunctionLibrary::OwnSubscriptionStatus] User parameter specification is missing."))
+        return Return;
+    }
+    if (ContentName == "") {
+        UE_LOG(BpGs2Log, Error, TEXT("[UGs2Money2UserFunctionLibrary::OwnSubscriptionStatus] ContentName parameter specification is missing."))
+        return Return;
+    }
+    Return.Value = User.Value->SubscriptionStatus(
+        ContentName
     );
     return Return;
 }

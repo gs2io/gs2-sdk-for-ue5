@@ -24,8 +24,12 @@
 #include "Money2/Domain/Iterator/DescribeWalletsIterator.h"
 #include "Money2/Domain/Iterator/DescribeWalletsByUserIdIterator.h"
 #include "Money2/Domain/Iterator/DescribeEventsByUserIdIterator.h"
+#include "Money2/Domain/Iterator/DescribeSubscriptionStatusesIterator.h"
+#include "Money2/Domain/Iterator/DescribeSubscriptionStatusesByUserIdIterator.h"
 #include "Money2/Domain/Iterator/DescribeStoreContentModelsIterator.h"
 #include "Money2/Domain/Iterator/DescribeStoreContentModelMastersIterator.h"
+#include "Money2/Domain/Iterator/DescribeStoreSubscriptionContentModelsIterator.h"
+#include "Money2/Domain/Iterator/DescribeStoreSubscriptionContentModelMastersIterator.h"
 #include "Money2/Domain/Iterator/DescribeDailyTransactionHistoriesByCurrencyIterator.h"
 #include "Money2/Domain/Iterator/DescribeDailyTransactionHistoriesIterator.h"
 #include "Money2/Domain/Iterator/DescribeUnusedBalancesIterator.h"
@@ -51,8 +55,12 @@ namespace Gs2::Money2::Domain::Model
     class FWalletAccessTokenDomain;
     class FEventDomain;
     class FEventAccessTokenDomain;
+    class FSubscriptionStatusDomain;
+    class FSubscriptionStatusAccessTokenDomain;
     class FStoreContentModelDomain;
     class FStoreContentModelMasterDomain;
+    class FStoreSubscriptionContentModelDomain;
+    class FStoreSubscriptionContentModelMasterDomain;
     class FCurrentModelMasterDomain;
     class FDailyTransactionHistoryDomain;
     class FUnusedBalanceDomain;
@@ -66,6 +74,7 @@ namespace Gs2::Money2::Domain::Model
 
         public:
         TOptional<FString> NamespaceName;
+        TOptional<FString> ContentName;
         TOptional<FString> TransactionId;
     private:
 
@@ -77,6 +86,7 @@ namespace Gs2::Money2::Domain::Model
             const Core::Domain::FGs2Ptr& Gs2,
             const Money2::Domain::FGs2Money2DomainPtr& Service,
             const TOptional<FString> NamespaceName,
+            const TOptional<FString> ContentName,
             const TOptional<FString> TransactionId
             // ReSharper disable once CppMemberInitializersOrder
         );
@@ -87,11 +97,13 @@ namespace Gs2::Money2::Domain::Model
 
         static FString CreateCacheParentKey(
             TOptional<FString> NamespaceName,
+            TOptional<FString> ContentName,
             TOptional<FString> TransactionId,
             FString ChildType
         );
 
         static FString CreateCacheKey(
+            TOptional<FString> ContentName,
             TOptional<FString> TransactionId
         );
 

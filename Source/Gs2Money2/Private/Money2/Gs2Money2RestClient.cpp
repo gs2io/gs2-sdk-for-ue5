@@ -262,6 +262,42 @@ namespace Gs2::Money2
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::Rest::FDescribeSubscriptionStatusesTask>> FGs2Money2RestClient::DescribeSubscriptionStatuses(
+        const Request::FDescribeSubscriptionStatusesRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FDescribeSubscriptionStatusesTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FDescribeSubscriptionStatusesByUserIdTask>> FGs2Money2RestClient::DescribeSubscriptionStatusesByUserId(
+        const Request::FDescribeSubscriptionStatusesByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FDescribeSubscriptionStatusesByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FGetSubscriptionStatusTask>> FGs2Money2RestClient::GetSubscriptionStatus(
+        const Request::FGetSubscriptionStatusRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FGetSubscriptionStatusTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FGetSubscriptionStatusByUserIdTask>> FGs2Money2RestClient::GetSubscriptionStatusByUserId(
+        const Request::FGetSubscriptionStatusByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FGetSubscriptionStatusByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::Rest::FDescribeStoreContentModelsTask>> FGs2Money2RestClient::DescribeStoreContentModels(
         const Request::FDescribeStoreContentModelsRequestPtr Request) const
     {
@@ -320,6 +356,69 @@ namespace Gs2::Money2
         const Request::FDeleteStoreContentModelMasterRequestPtr Request) const
     {
         return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FDeleteStoreContentModelMasterTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FDescribeStoreSubscriptionContentModelsTask>> FGs2Money2RestClient::DescribeStoreSubscriptionContentModels(
+        const Request::FDescribeStoreSubscriptionContentModelsRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FDescribeStoreSubscriptionContentModelsTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FGetStoreSubscriptionContentModelTask>> FGs2Money2RestClient::GetStoreSubscriptionContentModel(
+        const Request::FGetStoreSubscriptionContentModelRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FGetStoreSubscriptionContentModelTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FDescribeStoreSubscriptionContentModelMastersTask>> FGs2Money2RestClient::DescribeStoreSubscriptionContentModelMasters(
+        const Request::FDescribeStoreSubscriptionContentModelMastersRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FDescribeStoreSubscriptionContentModelMastersTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FCreateStoreSubscriptionContentModelMasterTask>> FGs2Money2RestClient::CreateStoreSubscriptionContentModelMaster(
+        const Request::FCreateStoreSubscriptionContentModelMasterRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FCreateStoreSubscriptionContentModelMasterTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FGetStoreSubscriptionContentModelMasterTask>> FGs2Money2RestClient::GetStoreSubscriptionContentModelMaster(
+        const Request::FGetStoreSubscriptionContentModelMasterRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FGetStoreSubscriptionContentModelMasterTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FUpdateStoreSubscriptionContentModelMasterTask>> FGs2Money2RestClient::UpdateStoreSubscriptionContentModelMaster(
+        const Request::FUpdateStoreSubscriptionContentModelMasterRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FUpdateStoreSubscriptionContentModelMasterTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FDeleteStoreSubscriptionContentModelMasterTask>> FGs2Money2RestClient::DeleteStoreSubscriptionContentModelMaster(
+        const Request::FDeleteStoreSubscriptionContentModelMasterRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FDeleteStoreSubscriptionContentModelMasterTask>>(
             Session,
             Request
         );

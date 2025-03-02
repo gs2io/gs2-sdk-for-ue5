@@ -24,10 +24,10 @@ namespace Gs2::Money2::Model
     class GS2MONEY2_API FSubscribeTransaction final : public Gs2Object, public TSharedFromThis<FSubscribeTransaction>
     {
         TOptional<FString> SubscribeTransactionIdValue;
+        TOptional<FString> ContentNameValue;
         TOptional<FString> TransactionIdValue;
         TOptional<FString> StoreValue;
         TOptional<FString> UserIdValue;
-        TOptional<FString> StatusValue;
         TOptional<FString> StatusDetailValue;
         TOptional<int64> ExpiresAtValue;
         TOptional<int64> CreatedAtValue;
@@ -42,10 +42,10 @@ namespace Gs2::Money2::Model
         virtual ~FSubscribeTransaction() override = default;
 
         TSharedPtr<FSubscribeTransaction> WithSubscribeTransactionId(const TOptional<FString> SubscribeTransactionId);
+        TSharedPtr<FSubscribeTransaction> WithContentName(const TOptional<FString> ContentName);
         TSharedPtr<FSubscribeTransaction> WithTransactionId(const TOptional<FString> TransactionId);
         TSharedPtr<FSubscribeTransaction> WithStore(const TOptional<FString> Store);
         TSharedPtr<FSubscribeTransaction> WithUserId(const TOptional<FString> UserId);
-        TSharedPtr<FSubscribeTransaction> WithStatus(const TOptional<FString> Status);
         TSharedPtr<FSubscribeTransaction> WithStatusDetail(const TOptional<FString> StatusDetail);
         TSharedPtr<FSubscribeTransaction> WithExpiresAt(const TOptional<int64> ExpiresAt);
         TSharedPtr<FSubscribeTransaction> WithCreatedAt(const TOptional<int64> CreatedAt);
@@ -53,10 +53,10 @@ namespace Gs2::Money2::Model
         TSharedPtr<FSubscribeTransaction> WithRevision(const TOptional<int64> Revision);
 
         TOptional<FString> GetSubscribeTransactionId() const;
+        TOptional<FString> GetContentName() const;
         TOptional<FString> GetTransactionId() const;
         TOptional<FString> GetStore() const;
         TOptional<FString> GetUserId() const;
-        TOptional<FString> GetStatus() const;
         TOptional<FString> GetStatusDetail() const;
         TOptional<int64> GetExpiresAt() const;
         FString GetExpiresAtString() const;
@@ -70,6 +70,7 @@ namespace Gs2::Money2::Model
         static TOptional<FString> GetRegionFromGrn(const FString Grn);
         static TOptional<FString> GetOwnerIdFromGrn(const FString Grn);
         static TOptional<FString> GetNamespaceNameFromGrn(const FString Grn);
+        static TOptional<FString> GetContentNameFromGrn(const FString Grn);
         static TOptional<FString> GetTransactionIdFromGrn(const FString Grn);
 
         static TSharedPtr<FSubscribeTransaction> FromJson(const TSharedPtr<FJsonObject> Data);
