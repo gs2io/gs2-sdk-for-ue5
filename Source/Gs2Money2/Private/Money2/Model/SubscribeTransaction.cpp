@@ -27,6 +27,7 @@ namespace Gs2::Money2::Model
         StatusDetailValue(TOptional<FString>()),
         ExpiresAtValue(TOptional<int64>()),
         LastAllocatedAtValue(TOptional<int64>()),
+        LastTakeOverAtValue(TOptional<int64>()),
         CreatedAtValue(TOptional<int64>()),
         UpdatedAtValue(TOptional<int64>()),
         RevisionValue(TOptional<int64>())
@@ -44,6 +45,7 @@ namespace Gs2::Money2::Model
         StatusDetailValue(From.StatusDetailValue),
         ExpiresAtValue(From.ExpiresAtValue),
         LastAllocatedAtValue(From.LastAllocatedAtValue),
+        LastTakeOverAtValue(From.LastTakeOverAtValue),
         CreatedAtValue(From.CreatedAtValue),
         UpdatedAtValue(From.UpdatedAtValue),
         RevisionValue(From.RevisionValue)
@@ -111,6 +113,14 @@ namespace Gs2::Money2::Model
     )
     {
         this->LastAllocatedAtValue = LastAllocatedAt;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FSubscribeTransaction> FSubscribeTransaction::WithLastTakeOverAt(
+        const TOptional<int64> LastTakeOverAt
+    )
+    {
+        this->LastTakeOverAtValue = LastTakeOverAt;
         return SharedThis(this);
     }
 
@@ -186,6 +196,19 @@ namespace Gs2::Money2::Model
             return FString("null");
         }
         return FString::Printf(TEXT("%lld"), LastAllocatedAtValue.GetValue());
+    }
+    TOptional<int64> FSubscribeTransaction::GetLastTakeOverAt() const
+    {
+        return LastTakeOverAtValue;
+    }
+
+    FString FSubscribeTransaction::GetLastTakeOverAtString() const
+    {
+        if (!LastTakeOverAtValue.IsSet())
+        {
+            return FString("null");
+        }
+        return FString::Printf(TEXT("%lld"), LastTakeOverAtValue.GetValue());
     }
     TOptional<int64> FSubscribeTransaction::GetCreatedAt() const
     {
@@ -360,6 +383,15 @@ namespace Gs2::Money2::Model
                     }
                     return TOptional<int64>();
                 }() : TOptional<int64>())
+            ->WithLastTakeOverAt(Data->HasField(ANSI_TO_TCHAR("lastTakeOverAt")) ? [Data]() -> TOptional<int64>
+                {
+                    int64 v;
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("lastTakeOverAt"), v))
+                    {
+                        return TOptional(v);
+                    }
+                    return TOptional<int64>();
+                }() : TOptional<int64>())
             ->WithCreatedAt(Data->HasField(ANSI_TO_TCHAR("createdAt")) ? [Data]() -> TOptional<int64>
                 {
                     int64 v;
@@ -423,6 +455,10 @@ namespace Gs2::Money2::Model
         if (LastAllocatedAtValue.IsSet())
         {
             JsonRootObject->SetStringField("lastAllocatedAt", FString::Printf(TEXT("%lld"), LastAllocatedAtValue.GetValue()));
+        }
+        if (LastTakeOverAtValue.IsSet())
+        {
+            JsonRootObject->SetStringField("lastTakeOverAt", FString::Printf(TEXT("%lld"), LastTakeOverAtValue.GetValue()));
         }
         if (CreatedAtValue.IsSet())
         {

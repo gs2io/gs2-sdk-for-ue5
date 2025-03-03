@@ -73,6 +73,11 @@ namespace Gs2::Money2::Domain::Model
         const Gs2::Money2::FGs2Money2RestClientPtr Client;
 
         public:
+        TOptional<FString> Message;
+        TOptional<FString> GetMessage() const
+        {
+            return Message;
+        }
         TOptional<FString> NamespaceName;
         TOptional<FString> UserId;
         TOptional<FString> TransactionId;
