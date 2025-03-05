@@ -21,7 +21,7 @@
 
 FGs2Money2 UGs2Money2FunctionLibrary::Service(
     FGs2Client Client,
-    FBpMoney2ChangeSubscriptionStatusNotificationEvent ChangeSubscriptionStatusNotification
+    FBpMoney2ChangeSubscriptionStatusEvent ChangeSubscriptionStatus
 )
 {
     FGs2Money2 Return;
@@ -29,9 +29,9 @@ FGs2Money2 UGs2Money2FunctionLibrary::Service(
         UE_LOG(BpGs2Log, Error, TEXT("[UGs2Money2FunctionLibrary::Service] Client parameter specification is missing."))
         return Return;
     }
-    Client.Value->Money2->OnChangeSubscriptionStatusNotification().AddLambda([&ChangeSubscriptionStatusNotification](auto Notification)
+    Client.Value->Money2->OnChangeSubscriptionStatus().AddLambda([&ChangeSubscriptionStatus](auto Notification)
     {
-        ChangeSubscriptionStatusNotification.Value.Execute(EzChangeSubscriptionStatusNotificationToFGs2Money2ChangeSubscriptionStatusNotification(Notification));
+        ChangeSubscriptionStatus.Value.Execute(EzChangeSubscriptionStatusToFGs2Money2ChangeSubscriptionStatus(Notification));
     });
     Return.Value = Client.Value->Money2;
     return Return;

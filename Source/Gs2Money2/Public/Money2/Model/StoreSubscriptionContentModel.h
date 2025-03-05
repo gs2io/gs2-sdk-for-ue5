@@ -30,6 +30,8 @@ namespace Gs2::Money2::Model
         TOptional<FString> MetadataValue;
         TOptional<FString> ScheduleNamespaceIdValue;
         TOptional<FString> TriggerNameValue;
+        TOptional<FString> TriggerExtendModeValue;
+        TOptional<int32> RollupHourValue;
         TOptional<int32> ReallocateSpanDaysValue;
         TSharedPtr<FAppleAppStoreSubscriptionContent> AppleAppStoreValue;
         TSharedPtr<FGooglePlaySubscriptionContent> GooglePlayValue;
@@ -46,6 +48,8 @@ namespace Gs2::Money2::Model
         TSharedPtr<FStoreSubscriptionContentModel> WithMetadata(const TOptional<FString> Metadata);
         TSharedPtr<FStoreSubscriptionContentModel> WithScheduleNamespaceId(const TOptional<FString> ScheduleNamespaceId);
         TSharedPtr<FStoreSubscriptionContentModel> WithTriggerName(const TOptional<FString> TriggerName);
+        TSharedPtr<FStoreSubscriptionContentModel> WithTriggerExtendMode(const TOptional<FString> TriggerExtendMode);
+        TSharedPtr<FStoreSubscriptionContentModel> WithRollupHour(const TOptional<int32> RollupHour);
         TSharedPtr<FStoreSubscriptionContentModel> WithReallocateSpanDays(const TOptional<int32> ReallocateSpanDays);
         TSharedPtr<FStoreSubscriptionContentModel> WithAppleAppStore(const TSharedPtr<FAppleAppStoreSubscriptionContent> AppleAppStore);
         TSharedPtr<FStoreSubscriptionContentModel> WithGooglePlay(const TSharedPtr<FGooglePlaySubscriptionContent> GooglePlay);
@@ -55,6 +59,9 @@ namespace Gs2::Money2::Model
         TOptional<FString> GetMetadata() const;
         TOptional<FString> GetScheduleNamespaceId() const;
         TOptional<FString> GetTriggerName() const;
+        TOptional<FString> GetTriggerExtendMode() const;
+        TOptional<int32> GetRollupHour() const;
+        FString GetRollupHourString() const;
         TOptional<int32> GetReallocateSpanDays() const;
         FString GetReallocateSpanDaysString() const;
         TSharedPtr<FAppleAppStoreSubscriptionContent> GetAppleAppStore() const;

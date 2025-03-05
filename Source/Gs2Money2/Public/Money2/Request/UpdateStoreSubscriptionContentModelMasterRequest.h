@@ -34,6 +34,8 @@ namespace Gs2::Money2::Request
         TOptional<FString> MetadataValue;
         TOptional<FString> ScheduleNamespaceIdValue;
         TOptional<FString> TriggerNameValue;
+        TOptional<FString> TriggerExtendModeValue;
+        TOptional<int32> RollupHourValue;
         TOptional<int32> ReallocateSpanDaysValue;
         TSharedPtr<Model::FAppleAppStoreSubscriptionContent> AppleAppStoreValue;
         TSharedPtr<Model::FGooglePlaySubscriptionContent> GooglePlayValue;
@@ -53,6 +55,8 @@ namespace Gs2::Money2::Request
         TSharedPtr<FUpdateStoreSubscriptionContentModelMasterRequest> WithMetadata(const TOptional<FString> Metadata);
         TSharedPtr<FUpdateStoreSubscriptionContentModelMasterRequest> WithScheduleNamespaceId(const TOptional<FString> ScheduleNamespaceId);
         TSharedPtr<FUpdateStoreSubscriptionContentModelMasterRequest> WithTriggerName(const TOptional<FString> TriggerName);
+        TSharedPtr<FUpdateStoreSubscriptionContentModelMasterRequest> WithTriggerExtendMode(const TOptional<FString> TriggerExtendMode);
+        TSharedPtr<FUpdateStoreSubscriptionContentModelMasterRequest> WithRollupHour(const TOptional<int32> RollupHour);
         TSharedPtr<FUpdateStoreSubscriptionContentModelMasterRequest> WithReallocateSpanDays(const TOptional<int32> ReallocateSpanDays);
         TSharedPtr<FUpdateStoreSubscriptionContentModelMasterRequest> WithAppleAppStore(const TSharedPtr<Model::FAppleAppStoreSubscriptionContent> AppleAppStore);
         TSharedPtr<FUpdateStoreSubscriptionContentModelMasterRequest> WithGooglePlay(const TSharedPtr<Model::FGooglePlaySubscriptionContent> GooglePlay);
@@ -64,6 +68,9 @@ namespace Gs2::Money2::Request
         TOptional<FString> GetMetadata() const;
         TOptional<FString> GetScheduleNamespaceId() const;
         TOptional<FString> GetTriggerName() const;
+        TOptional<FString> GetTriggerExtendMode() const;
+        TOptional<int32> GetRollupHour() const;
+        FString GetRollupHourString() const;
         TOptional<int32> GetReallocateSpanDays() const;
         FString GetReallocateSpanDaysString() const;
         TSharedPtr<Model::FAppleAppStoreSubscriptionContent> GetAppleAppStore() const;

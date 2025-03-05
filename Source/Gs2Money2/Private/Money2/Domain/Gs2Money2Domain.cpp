@@ -671,13 +671,13 @@ namespace Gs2::Money2::Domain
             {
                 return;
             }
-            ChangeSubscriptionStatusNotificationEvent.Broadcast(Gs2::Money2::Model::FChangeSubscriptionStatusNotification::FromJson(PayloadJson));
+            ChangeSubscriptionStatusEvent.Broadcast(Gs2::Money2::Model::FChangeSubscriptionStatus::FromJson(PayloadJson));
         }
     }
 
-    FChangeSubscriptionStatusNotificationEvent& FGs2Money2Domain::OnChangeSubscriptionStatusNotification()
+    FChangeSubscriptionStatusEvent& FGs2Money2Domain::OnChangeSubscriptionStatus()
     {
-        return ChangeSubscriptionStatusNotificationEvent;
+        return ChangeSubscriptionStatusEvent;
     }
 }
 

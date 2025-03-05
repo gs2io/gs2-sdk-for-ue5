@@ -26,6 +26,8 @@ namespace Gs2::Money2::Model
         ScheduleNamespaceIdValue(TOptional<FString>()),
         TriggerNameValue(TOptional<FString>()),
         ReallocateSpanDaysValue(TOptional<int32>()),
+        TriggerExtendModeValue(TOptional<FString>()),
+        RollupHourValue(TOptional<int32>()),
         AppleAppStoreValue(nullptr),
         GooglePlayValue(nullptr),
         CreatedAtValue(TOptional<int64>()),
@@ -44,6 +46,8 @@ namespace Gs2::Money2::Model
         ScheduleNamespaceIdValue(From.ScheduleNamespaceIdValue),
         TriggerNameValue(From.TriggerNameValue),
         ReallocateSpanDaysValue(From.ReallocateSpanDaysValue),
+        TriggerExtendModeValue(From.TriggerExtendModeValue),
+        RollupHourValue(From.RollupHourValue),
         AppleAppStoreValue(From.AppleAppStoreValue),
         GooglePlayValue(From.GooglePlayValue),
         CreatedAtValue(From.CreatedAtValue),
@@ -105,6 +109,22 @@ namespace Gs2::Money2::Model
     )
     {
         this->ReallocateSpanDaysValue = ReallocateSpanDays;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FStoreSubscriptionContentModelMaster> FStoreSubscriptionContentModelMaster::WithTriggerExtendMode(
+        const TOptional<FString> TriggerExtendMode
+    )
+    {
+        this->TriggerExtendModeValue = TriggerExtendMode;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FStoreSubscriptionContentModelMaster> FStoreSubscriptionContentModelMaster::WithRollupHour(
+        const TOptional<int32> RollupHour
+    )
+    {
+        this->RollupHourValue = RollupHour;
         return SharedThis(this);
     }
 
@@ -183,6 +203,23 @@ namespace Gs2::Money2::Model
             return FString("null");
         }
         return FString::Printf(TEXT("%d"), ReallocateSpanDaysValue.GetValue());
+    }
+    TOptional<FString> FStoreSubscriptionContentModelMaster::GetTriggerExtendMode() const
+    {
+        return TriggerExtendModeValue;
+    }
+    TOptional<int32> FStoreSubscriptionContentModelMaster::GetRollupHour() const
+    {
+        return RollupHourValue;
+    }
+
+    FString FStoreSubscriptionContentModelMaster::GetRollupHourString() const
+    {
+        if (!RollupHourValue.IsSet())
+        {
+            return FString("null");
+        }
+        return FString::Printf(TEXT("%d"), RollupHourValue.GetValue());
     }
     TSharedPtr<FAppleAppStoreSubscriptionContent> FStoreSubscriptionContentModelMaster::GetAppleAppStore() const
     {
@@ -345,6 +382,24 @@ namespace Gs2::Money2::Model
                     }
                     return TOptional<int32>();
                 }() : TOptional<int32>())
+            ->WithTriggerExtendMode(Data->HasField(ANSI_TO_TCHAR("triggerExtendMode")) ? [Data]() -> TOptional<FString>
+                {
+                    FString v("");
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("triggerExtendMode"), v))
+                    {
+                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                    }
+                    return TOptional<FString>();
+                }() : TOptional<FString>())
+            ->WithRollupHour(Data->HasField(ANSI_TO_TCHAR("rollupHour")) ? [Data]() -> TOptional<int32>
+                {
+                    int32 v;
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("rollupHour"), v))
+                    {
+                        return TOptional(v);
+                    }
+                    return TOptional<int32>();
+                }() : TOptional<int32>())
             ->WithAppleAppStore(Data->HasField(ANSI_TO_TCHAR("appleAppStore")) ? [Data]() -> Model::FAppleAppStoreSubscriptionContentPtr
                 {
                     if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("appleAppStore")))
@@ -420,6 +475,14 @@ namespace Gs2::Money2::Model
         if (ReallocateSpanDaysValue.IsSet())
         {
             JsonRootObject->SetNumberField("reallocateSpanDays", ReallocateSpanDaysValue.GetValue());
+        }
+        if (TriggerExtendModeValue.IsSet())
+        {
+            JsonRootObject->SetStringField("triggerExtendMode", TriggerExtendModeValue.GetValue());
+        }
+        if (RollupHourValue.IsSet())
+        {
+            JsonRootObject->SetNumberField("rollupHour", RollupHourValue.GetValue());
         }
         if (AppleAppStoreValue != nullptr && AppleAppStoreValue.IsValid())
         {

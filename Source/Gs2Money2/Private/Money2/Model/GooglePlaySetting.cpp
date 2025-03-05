@@ -20,8 +20,7 @@ namespace Gs2::Money2::Model
 {
     FGooglePlaySetting::FGooglePlaySetting():
         PackageNameValue(TOptional<FString>()),
-        PublicKeyValue(TOptional<FString>()),
-        CredentialsJSONValue(TOptional<FString>())
+        PublicKeyValue(TOptional<FString>())
     {
     }
 
@@ -29,8 +28,7 @@ namespace Gs2::Money2::Model
         const FGooglePlaySetting& From
     ):
         PackageNameValue(From.PackageNameValue),
-        PublicKeyValue(From.PublicKeyValue),
-        CredentialsJSONValue(From.CredentialsJSONValue)
+        PublicKeyValue(From.PublicKeyValue)
     {
     }
 
@@ -49,14 +47,6 @@ namespace Gs2::Money2::Model
         this->PublicKeyValue = PublicKey;
         return SharedThis(this);
     }
-
-    TSharedPtr<FGooglePlaySetting> FGooglePlaySetting::WithCredentialsJSON(
-        const TOptional<FString> CredentialsJSON
-    )
-    {
-        this->CredentialsJSONValue = CredentialsJSON;
-        return SharedThis(this);
-    }
     TOptional<FString> FGooglePlaySetting::GetPackageName() const
     {
         return PackageNameValue;
@@ -64,10 +54,6 @@ namespace Gs2::Money2::Model
     TOptional<FString> FGooglePlaySetting::GetPublicKey() const
     {
         return PublicKeyValue;
-    }
-    TOptional<FString> FGooglePlaySetting::GetCredentialsJSON() const
-    {
-        return CredentialsJSONValue;
     }
 
     TSharedPtr<FGooglePlaySetting> FGooglePlaySetting::FromJson(const TSharedPtr<FJsonObject> Data)
@@ -93,15 +79,6 @@ namespace Gs2::Money2::Model
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
-                }() : TOptional<FString>())
-            ->WithCredentialsJSON(Data->HasField(ANSI_TO_TCHAR("credentialsJSON")) ? [Data]() -> TOptional<FString>
-                {
-                    FString v("");
-                    if (Data->TryGetStringField(ANSI_TO_TCHAR("credentialsJSON"), v))
-                    {
-                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
-                    }
-                    return TOptional<FString>();
                 }() : TOptional<FString>());
     }
 
@@ -115,10 +92,6 @@ namespace Gs2::Money2::Model
         if (PublicKeyValue.IsSet())
         {
             JsonRootObject->SetStringField("publicKey", PublicKeyValue.GetValue());
-        }
-        if (CredentialsJSONValue.IsSet())
-        {
-            JsonRootObject->SetStringField("credentialsJSON", CredentialsJSONValue.GetValue());
         }
         return JsonRootObject;
     }

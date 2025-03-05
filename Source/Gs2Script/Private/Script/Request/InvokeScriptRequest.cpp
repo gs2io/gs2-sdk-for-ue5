@@ -23,6 +23,7 @@ namespace Gs2::Script::Request
         UserIdValue(TOptional<FString>()),
         ArgsValue(TOptional<FString>()),
         RandomStatusValue(nullptr),
+        ForceUseDistributorValue(TOptional<bool>()),
         TimeOffsetTokenValue(TOptional<FString>())
     {
     }
@@ -34,6 +35,7 @@ namespace Gs2::Script::Request
         UserIdValue(From.UserIdValue),
         ArgsValue(From.ArgsValue),
         RandomStatusValue(From.RandomStatusValue),
+        ForceUseDistributorValue(From.ForceUseDistributorValue),
         TimeOffsetTokenValue(From.TimeOffsetTokenValue)
     {
     }
@@ -75,6 +77,14 @@ namespace Gs2::Script::Request
     )
     {
         this->RandomStatusValue = RandomStatus;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FInvokeScriptRequest> FInvokeScriptRequest::WithForceUseDistributor(
+        const TOptional<bool> ForceUseDistributor
+    )
+    {
+        this->ForceUseDistributorValue = ForceUseDistributor;
         return SharedThis(this);
     }
 
@@ -121,6 +131,20 @@ namespace Gs2::Script::Request
             return nullptr;
         }
         return RandomStatusValue;
+    }
+
+    TOptional<bool> FInvokeScriptRequest::GetForceUseDistributor() const
+    {
+        return ForceUseDistributorValue;
+    }
+
+    FString FInvokeScriptRequest::GetForceUseDistributorString() const
+    {
+        if (!ForceUseDistributorValue.IsSet())
+        {
+            return FString("null");
+        }
+        return FString(ForceUseDistributorValue.GetValue() ? "true" : "false");
     }
 
     TOptional<FString> FInvokeScriptRequest::GetTimeOffsetToken() const
@@ -175,6 +199,15 @@ namespace Gs2::Script::Request
                   }
                   return Model::FRandomStatus::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("randomStatus")));
               }() : nullptr)
+            ->WithForceUseDistributor(Data->HasField(ANSI_TO_TCHAR("forceUseDistributor")) ? [Data]() -> TOptional<bool>
+              {
+                  bool v;
+                    if (Data->TryGetBoolField(ANSI_TO_TCHAR("forceUseDistributor"), v))
+                  {
+                        return TOptional(v);
+                  }
+                  return TOptional<bool>();
+              }() : TOptional<bool>())
             ->WithTimeOffsetToken(Data->HasField(ANSI_TO_TCHAR("timeOffsetToken")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
@@ -209,6 +242,10 @@ namespace Gs2::Script::Request
         if (RandomStatusValue != nullptr && RandomStatusValue.IsValid())
         {
             JsonRootObject->SetObjectField("randomStatus", RandomStatusValue->ToJson());
+        }
+        if (ForceUseDistributorValue.IsSet())
+        {
+            JsonRootObject->SetBoolField("forceUseDistributor", ForceUseDistributorValue.GetValue());
         }
         if (TimeOffsetTokenValue.IsSet())
         {

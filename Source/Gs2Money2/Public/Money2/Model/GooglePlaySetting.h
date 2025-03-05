@@ -25,7 +25,6 @@ namespace Gs2::Money2::Model
     {
         TOptional<FString> PackageNameValue;
         TOptional<FString> PublicKeyValue;
-        TOptional<FString> CredentialsJSONValue;
 
     public:
         FGooglePlaySetting();
@@ -36,11 +35,9 @@ namespace Gs2::Money2::Model
 
         TSharedPtr<FGooglePlaySetting> WithPackageName(const TOptional<FString> PackageName);
         TSharedPtr<FGooglePlaySetting> WithPublicKey(const TOptional<FString> PublicKey);
-        TSharedPtr<FGooglePlaySetting> WithCredentialsJSON(const TOptional<FString> CredentialsJSON);
 
         TOptional<FString> GetPackageName() const;
         TOptional<FString> GetPublicKey() const;
-        TOptional<FString> GetCredentialsJSON() const;
 
 
         static TSharedPtr<FGooglePlaySetting> FromJson(const TSharedPtr<FJsonObject> Data);

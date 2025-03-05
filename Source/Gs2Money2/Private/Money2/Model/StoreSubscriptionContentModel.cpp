@@ -24,6 +24,8 @@ namespace Gs2::Money2::Model
         MetadataValue(TOptional<FString>()),
         ScheduleNamespaceIdValue(TOptional<FString>()),
         TriggerNameValue(TOptional<FString>()),
+        TriggerExtendModeValue(TOptional<FString>()),
+        RollupHourValue(TOptional<int32>()),
         ReallocateSpanDaysValue(TOptional<int32>()),
         AppleAppStoreValue(nullptr),
         GooglePlayValue(nullptr)
@@ -38,6 +40,8 @@ namespace Gs2::Money2::Model
         MetadataValue(From.MetadataValue),
         ScheduleNamespaceIdValue(From.ScheduleNamespaceIdValue),
         TriggerNameValue(From.TriggerNameValue),
+        TriggerExtendModeValue(From.TriggerExtendModeValue),
+        RollupHourValue(From.RollupHourValue),
         ReallocateSpanDaysValue(From.ReallocateSpanDaysValue),
         AppleAppStoreValue(From.AppleAppStoreValue),
         GooglePlayValue(From.GooglePlayValue)
@@ -84,6 +88,22 @@ namespace Gs2::Money2::Model
         return SharedThis(this);
     }
 
+    TSharedPtr<FStoreSubscriptionContentModel> FStoreSubscriptionContentModel::WithTriggerExtendMode(
+        const TOptional<FString> TriggerExtendMode
+    )
+    {
+        this->TriggerExtendModeValue = TriggerExtendMode;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FStoreSubscriptionContentModel> FStoreSubscriptionContentModel::WithRollupHour(
+        const TOptional<int32> RollupHour
+    )
+    {
+        this->RollupHourValue = RollupHour;
+        return SharedThis(this);
+    }
+
     TSharedPtr<FStoreSubscriptionContentModel> FStoreSubscriptionContentModel::WithReallocateSpanDays(
         const TOptional<int32> ReallocateSpanDays
     )
@@ -126,6 +146,23 @@ namespace Gs2::Money2::Model
     TOptional<FString> FStoreSubscriptionContentModel::GetTriggerName() const
     {
         return TriggerNameValue;
+    }
+    TOptional<FString> FStoreSubscriptionContentModel::GetTriggerExtendMode() const
+    {
+        return TriggerExtendModeValue;
+    }
+    TOptional<int32> FStoreSubscriptionContentModel::GetRollupHour() const
+    {
+        return RollupHourValue;
+    }
+
+    FString FStoreSubscriptionContentModel::GetRollupHourString() const
+    {
+        if (!RollupHourValue.IsSet())
+        {
+            return FString("null");
+        }
+        return FString::Printf(TEXT("%d"), RollupHourValue.GetValue());
     }
     TOptional<int32> FStoreSubscriptionContentModel::GetReallocateSpanDays() const
     {
@@ -244,6 +281,24 @@ namespace Gs2::Money2::Model
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
+            ->WithTriggerExtendMode(Data->HasField(ANSI_TO_TCHAR("triggerExtendMode")) ? [Data]() -> TOptional<FString>
+                {
+                    FString v("");
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("triggerExtendMode"), v))
+                    {
+                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                    }
+                    return TOptional<FString>();
+                }() : TOptional<FString>())
+            ->WithRollupHour(Data->HasField(ANSI_TO_TCHAR("rollupHour")) ? [Data]() -> TOptional<int32>
+                {
+                    int32 v;
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("rollupHour"), v))
+                    {
+                        return TOptional(v);
+                    }
+                    return TOptional<int32>();
+                }() : TOptional<int32>())
             ->WithReallocateSpanDays(Data->HasField(ANSI_TO_TCHAR("reallocateSpanDays")) ? [Data]() -> TOptional<int32>
                 {
                     int32 v;
@@ -293,6 +348,14 @@ namespace Gs2::Money2::Model
         if (TriggerNameValue.IsSet())
         {
             JsonRootObject->SetStringField("triggerName", TriggerNameValue.GetValue());
+        }
+        if (TriggerExtendModeValue.IsSet())
+        {
+            JsonRootObject->SetStringField("triggerExtendMode", TriggerExtendModeValue.GetValue());
+        }
+        if (RollupHourValue.IsSet())
+        {
+            JsonRootObject->SetNumberField("rollupHour", RollupHourValue.GetValue());
         }
         if (ReallocateSpanDaysValue.IsSet())
         {

@@ -19,7 +19,7 @@
 #include "CoreMinimal.h"
 
 #include "Core/Model/Gs2Client.h"
-#include "Gs2Money2/Public/Money2/Model/ChangeSubscriptionStatusNotification.h"
+#include "Gs2Money2/Public/Money2/Model/ChangeSubscriptionStatus.h"
 #include "Gs2Money2.generated.h"
 
 USTRUCT(BlueprintType)
@@ -31,7 +31,7 @@ struct FGs2Money2
 };
 
 USTRUCT(BlueprintType)
-struct FGs2Money2ChangeSubscriptionStatusNotification
+struct FGs2Money2ChangeSubscriptionStatus
 {
     GENERATED_BODY()
 
@@ -43,11 +43,11 @@ struct FGs2Money2ChangeSubscriptionStatusNotification
     FString ContentName = "";
 };
 
-inline FGs2Money2ChangeSubscriptionStatusNotification EzChangeSubscriptionStatusNotificationToFGs2Money2ChangeSubscriptionStatusNotification(
-    const Gs2::Money2::Model::FChangeSubscriptionStatusNotificationPtr Model
+inline FGs2Money2ChangeSubscriptionStatus EzChangeSubscriptionStatusToFGs2Money2ChangeSubscriptionStatus(
+    const Gs2::Money2::Model::FChangeSubscriptionStatusPtr Model
 )
 {
-    FGs2Money2ChangeSubscriptionStatusNotification Value;
+    FGs2Money2ChangeSubscriptionStatus Value;
     Value.NamespaceName = Model->GetNamespaceName() ? *Model->GetNamespaceName() : "";
     Value.UserId = Model->GetUserId() ? *Model->GetUserId() : "";
     Value.ContentName = Model->GetContentName() ? *Model->GetContentName() : "";
@@ -55,15 +55,15 @@ inline FGs2Money2ChangeSubscriptionStatusNotification EzChangeSubscriptionStatus
 }
 
 UDELEGATE(BlueprintAuthorityOnly)
-DECLARE_DYNAMIC_DELEGATE_OneParam(FEzMoney2ChangeSubscriptionStatusNotificationEvent, FGs2Money2ChangeSubscriptionStatusNotification, Notification);
+DECLARE_DYNAMIC_DELEGATE_OneParam(FEzMoney2ChangeSubscriptionStatusEvent, FGs2Money2ChangeSubscriptionStatus, Notification);
 
 USTRUCT(BlueprintType)
-struct FBpMoney2ChangeSubscriptionStatusNotificationEvent
+struct FBpMoney2ChangeSubscriptionStatusEvent
 {
     GENERATED_BODY()
 
     UPROPERTY(Category = Gs2, BlueprintReadWrite)
-    FEzMoney2ChangeSubscriptionStatusNotificationEvent Value;
+    FEzMoney2ChangeSubscriptionStatusEvent Value;
 };
 
 UCLASS()
@@ -75,7 +75,7 @@ public:
     UFUNCTION(BlueprintCallable, DisplayName="Gs2::Money2::Service", Category="Game Server Services|GS2-Money2", meta=(WorldContext="WorldContextObject"))
     static UPARAM(DisplayName="Service") FGs2Money2 Service(
         FGs2Client Client,
-        FBpMoney2ChangeSubscriptionStatusNotificationEvent ChangeSubscriptionStatusNotification
+        FBpMoney2ChangeSubscriptionStatusEvent ChangeSubscriptionStatus
     );
 
     UFUNCTION(BlueprintCallable, DisplayName="Gs2::Money2::Namespace", Category="Game Server Services|GS2-Money2|Namespace", meta=(WorldContext="WorldContextObject"))

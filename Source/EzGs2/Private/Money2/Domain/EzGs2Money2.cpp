@@ -41,8 +41,8 @@ namespace Gs2::UE5::Money2::Domain
         );
     }
 
-    FChangeSubscriptionStatusNotificationEvent& FEzGs2Money2::OnChangeSubscriptionStatusNotification()
+    FChangeSubscriptionStatusEvent& FEzGs2Money2::OnChangeSubscriptionStatus()
     {
-        return ChangeSubscriptionStatusNotificationEvent;
+        return ChangeSubscriptionStatusEvent;
     }
 }

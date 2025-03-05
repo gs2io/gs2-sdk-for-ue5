@@ -104,6 +104,14 @@ namespace Gs2::Money2::Task::Rest
             {
                 JsonRootObject->SetStringField("triggerName", this->Request->GetTriggerName().GetValue());
             }
+            if (this->Request->GetTriggerExtendMode().IsSet())
+            {
+                JsonRootObject->SetStringField("triggerExtendMode", this->Request->GetTriggerExtendMode().GetValue());
+            }
+            if (this->Request->GetRollupHour().IsSet())
+            {
+                JsonRootObject->SetNumberField("rollupHour", this->Request->GetRollupHour().GetValue());
+            }
             if (this->Request->GetReallocateSpanDays().IsSet())
             {
                 JsonRootObject->SetNumberField("reallocateSpanDays", this->Request->GetReallocateSpanDays().GetValue());

@@ -32,6 +32,8 @@ namespace Gs2::Money2::Model
         TOptional<FString> ScheduleNamespaceIdValue;
         TOptional<FString> TriggerNameValue;
         TOptional<int32> ReallocateSpanDaysValue;
+        TOptional<FString> TriggerExtendModeValue;
+        TOptional<int32> RollupHourValue;
         TSharedPtr<FAppleAppStoreSubscriptionContent> AppleAppStoreValue;
         TSharedPtr<FGooglePlaySubscriptionContent> GooglePlayValue;
         TOptional<int64> CreatedAtValue;
@@ -52,6 +54,8 @@ namespace Gs2::Money2::Model
         TSharedPtr<FStoreSubscriptionContentModelMaster> WithScheduleNamespaceId(const TOptional<FString> ScheduleNamespaceId);
         TSharedPtr<FStoreSubscriptionContentModelMaster> WithTriggerName(const TOptional<FString> TriggerName);
         TSharedPtr<FStoreSubscriptionContentModelMaster> WithReallocateSpanDays(const TOptional<int32> ReallocateSpanDays);
+        TSharedPtr<FStoreSubscriptionContentModelMaster> WithTriggerExtendMode(const TOptional<FString> TriggerExtendMode);
+        TSharedPtr<FStoreSubscriptionContentModelMaster> WithRollupHour(const TOptional<int32> RollupHour);
         TSharedPtr<FStoreSubscriptionContentModelMaster> WithAppleAppStore(const TSharedPtr<FAppleAppStoreSubscriptionContent> AppleAppStore);
         TSharedPtr<FStoreSubscriptionContentModelMaster> WithGooglePlay(const TSharedPtr<FGooglePlaySubscriptionContent> GooglePlay);
         TSharedPtr<FStoreSubscriptionContentModelMaster> WithCreatedAt(const TOptional<int64> CreatedAt);
@@ -66,6 +70,9 @@ namespace Gs2::Money2::Model
         TOptional<FString> GetTriggerName() const;
         TOptional<int32> GetReallocateSpanDays() const;
         FString GetReallocateSpanDaysString() const;
+        TOptional<FString> GetTriggerExtendMode() const;
+        TOptional<int32> GetRollupHour() const;
+        FString GetRollupHourString() const;
         TSharedPtr<FAppleAppStoreSubscriptionContent> GetAppleAppStore() const;
         TSharedPtr<FGooglePlaySubscriptionContent> GetGooglePlay() const;
         TOptional<int64> GetCreatedAt() const;
