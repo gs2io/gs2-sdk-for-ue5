@@ -24,6 +24,7 @@ namespace Gs2::Money2::Model
     class GS2MONEY2_API FAppleAppStoreSetting final : public Gs2Object, public TSharedFromThis<FAppleAppStoreSetting>
     {
         TOptional<FString> BundleIdValue;
+        TOptional<FString> SharedSecretKeyValue;
         TOptional<FString> IssuerIdValue;
         TOptional<FString> KeyIdValue;
         TOptional<FString> PrivateKeyPemValue;
@@ -36,11 +37,13 @@ namespace Gs2::Money2::Model
         virtual ~FAppleAppStoreSetting() override = default;
 
         TSharedPtr<FAppleAppStoreSetting> WithBundleId(const TOptional<FString> BundleId);
+        TSharedPtr<FAppleAppStoreSetting> WithSharedSecretKey(const TOptional<FString> SharedSecretKey);
         TSharedPtr<FAppleAppStoreSetting> WithIssuerId(const TOptional<FString> IssuerId);
         TSharedPtr<FAppleAppStoreSetting> WithKeyId(const TOptional<FString> KeyId);
         TSharedPtr<FAppleAppStoreSetting> WithPrivateKeyPem(const TOptional<FString> PrivateKeyPem);
 
         TOptional<FString> GetBundleId() const;
+        TOptional<FString> GetSharedSecretKey() const;
         TOptional<FString> GetIssuerId() const;
         TOptional<FString> GetKeyId() const;
         TOptional<FString> GetPrivateKeyPem() const;

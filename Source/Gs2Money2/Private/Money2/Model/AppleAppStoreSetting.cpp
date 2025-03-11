@@ -20,6 +20,7 @@ namespace Gs2::Money2::Model
 {
     FAppleAppStoreSetting::FAppleAppStoreSetting():
         BundleIdValue(TOptional<FString>()),
+        SharedSecretKeyValue(TOptional<FString>()),
         IssuerIdValue(TOptional<FString>()),
         KeyIdValue(TOptional<FString>()),
         PrivateKeyPemValue(TOptional<FString>())
@@ -30,6 +31,7 @@ namespace Gs2::Money2::Model
         const FAppleAppStoreSetting& From
     ):
         BundleIdValue(From.BundleIdValue),
+        SharedSecretKeyValue(From.SharedSecretKeyValue),
         IssuerIdValue(From.IssuerIdValue),
         KeyIdValue(From.KeyIdValue),
         PrivateKeyPemValue(From.PrivateKeyPemValue)
@@ -41,6 +43,14 @@ namespace Gs2::Money2::Model
     )
     {
         this->BundleIdValue = BundleId;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FAppleAppStoreSetting> FAppleAppStoreSetting::WithSharedSecretKey(
+        const TOptional<FString> SharedSecretKey
+    )
+    {
+        this->SharedSecretKeyValue = SharedSecretKey;
         return SharedThis(this);
     }
 
@@ -71,6 +81,10 @@ namespace Gs2::Money2::Model
     {
         return BundleIdValue;
     }
+    TOptional<FString> FAppleAppStoreSetting::GetSharedSecretKey() const
+    {
+        return SharedSecretKeyValue;
+    }
     TOptional<FString> FAppleAppStoreSetting::GetIssuerId() const
     {
         return IssuerIdValue;
@@ -94,6 +108,15 @@ namespace Gs2::Money2::Model
                 {
                     FString v("");
                     if (Data->TryGetStringField(ANSI_TO_TCHAR("bundleId"), v))
+                    {
+                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                    }
+                    return TOptional<FString>();
+                }() : TOptional<FString>())
+            ->WithSharedSecretKey(Data->HasField(ANSI_TO_TCHAR("sharedSecretKey")) ? [Data]() -> TOptional<FString>
+                {
+                    FString v("");
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("sharedSecretKey"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
@@ -134,6 +157,10 @@ namespace Gs2::Money2::Model
         if (BundleIdValue.IsSet())
         {
             JsonRootObject->SetStringField("bundleId", BundleIdValue.GetValue());
+        }
+        if (SharedSecretKeyValue.IsSet())
+        {
+            JsonRootObject->SetStringField("sharedSecretKey", SharedSecretKeyValue.GetValue());
         }
         if (IssuerIdValue.IsSet())
         {
