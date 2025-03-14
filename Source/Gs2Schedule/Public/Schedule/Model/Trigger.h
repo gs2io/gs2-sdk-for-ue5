@@ -26,8 +26,9 @@ namespace Gs2::Schedule::Model
         TOptional<FString> TriggerIdValue;
         TOptional<FString> NameValue;
         TOptional<FString> UserIdValue;
-        TOptional<int64> CreatedAtValue;
+        TOptional<int64> TriggeredAtValue;
         TOptional<int64> ExpiresAtValue;
+        TOptional<int64> CreatedAtValue;
         TOptional<int64> RevisionValue;
 
     public:
@@ -40,17 +41,20 @@ namespace Gs2::Schedule::Model
         TSharedPtr<FTrigger> WithTriggerId(const TOptional<FString> TriggerId);
         TSharedPtr<FTrigger> WithName(const TOptional<FString> Name);
         TSharedPtr<FTrigger> WithUserId(const TOptional<FString> UserId);
-        TSharedPtr<FTrigger> WithCreatedAt(const TOptional<int64> CreatedAt);
+        TSharedPtr<FTrigger> WithTriggeredAt(const TOptional<int64> TriggeredAt);
         TSharedPtr<FTrigger> WithExpiresAt(const TOptional<int64> ExpiresAt);
+        TSharedPtr<FTrigger> WithCreatedAt(const TOptional<int64> CreatedAt);
         TSharedPtr<FTrigger> WithRevision(const TOptional<int64> Revision);
 
         TOptional<FString> GetTriggerId() const;
         TOptional<FString> GetName() const;
         TOptional<FString> GetUserId() const;
-        TOptional<int64> GetCreatedAt() const;
-        FString GetCreatedAtString() const;
+        TOptional<int64> GetTriggeredAt() const;
+        FString GetTriggeredAtString() const;
         TOptional<int64> GetExpiresAt() const;
         FString GetExpiresAtString() const;
+        TOptional<int64> GetCreatedAt() const;
+        FString GetCreatedAtString() const;
         TOptional<int64> GetRevision() const;
         FString GetRevisionString() const;
 

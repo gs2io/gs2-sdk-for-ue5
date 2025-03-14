@@ -22,8 +22,9 @@ namespace Gs2::Schedule::Model
         TriggerIdValue(TOptional<FString>()),
         NameValue(TOptional<FString>()),
         UserIdValue(TOptional<FString>()),
-        CreatedAtValue(TOptional<int64>()),
+        TriggeredAtValue(TOptional<int64>()),
         ExpiresAtValue(TOptional<int64>()),
+        CreatedAtValue(TOptional<int64>()),
         RevisionValue(TOptional<int64>())
     {
     }
@@ -34,8 +35,9 @@ namespace Gs2::Schedule::Model
         TriggerIdValue(From.TriggerIdValue),
         NameValue(From.NameValue),
         UserIdValue(From.UserIdValue),
-        CreatedAtValue(From.CreatedAtValue),
+        TriggeredAtValue(From.TriggeredAtValue),
         ExpiresAtValue(From.ExpiresAtValue),
+        CreatedAtValue(From.CreatedAtValue),
         RevisionValue(From.RevisionValue)
     {
     }
@@ -64,11 +66,11 @@ namespace Gs2::Schedule::Model
         return SharedThis(this);
     }
 
-    TSharedPtr<FTrigger> FTrigger::WithCreatedAt(
-        const TOptional<int64> CreatedAt
+    TSharedPtr<FTrigger> FTrigger::WithTriggeredAt(
+        const TOptional<int64> TriggeredAt
     )
     {
-        this->CreatedAtValue = CreatedAt;
+        this->TriggeredAtValue = TriggeredAt;
         return SharedThis(this);
     }
 
@@ -77,6 +79,14 @@ namespace Gs2::Schedule::Model
     )
     {
         this->ExpiresAtValue = ExpiresAt;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FTrigger> FTrigger::WithCreatedAt(
+        const TOptional<int64> CreatedAt
+    )
+    {
+        this->CreatedAtValue = CreatedAt;
         return SharedThis(this);
     }
 
@@ -99,18 +109,18 @@ namespace Gs2::Schedule::Model
     {
         return UserIdValue;
     }
-    TOptional<int64> FTrigger::GetCreatedAt() const
+    TOptional<int64> FTrigger::GetTriggeredAt() const
     {
-        return CreatedAtValue;
+        return TriggeredAtValue;
     }
 
-    FString FTrigger::GetCreatedAtString() const
+    FString FTrigger::GetTriggeredAtString() const
     {
-        if (!CreatedAtValue.IsSet())
+        if (!TriggeredAtValue.IsSet())
         {
             return FString("null");
         }
-        return FString::Printf(TEXT("%lld"), CreatedAtValue.GetValue());
+        return FString::Printf(TEXT("%lld"), TriggeredAtValue.GetValue());
     }
     TOptional<int64> FTrigger::GetExpiresAt() const
     {
@@ -124,6 +134,19 @@ namespace Gs2::Schedule::Model
             return FString("null");
         }
         return FString::Printf(TEXT("%lld"), ExpiresAtValue.GetValue());
+    }
+    TOptional<int64> FTrigger::GetCreatedAt() const
+    {
+        return CreatedAtValue;
+    }
+
+    FString FTrigger::GetCreatedAtString() const
+    {
+        if (!CreatedAtValue.IsSet())
+        {
+            return FString("null");
+        }
+        return FString::Printf(TEXT("%lld"), CreatedAtValue.GetValue());
     }
     TOptional<int64> FTrigger::GetRevision() const
     {
@@ -227,10 +250,10 @@ namespace Gs2::Schedule::Model
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithCreatedAt(Data->HasField(ANSI_TO_TCHAR("createdAt")) ? [Data]() -> TOptional<int64>
+            ->WithTriggeredAt(Data->HasField(ANSI_TO_TCHAR("triggeredAt")) ? [Data]() -> TOptional<int64>
                 {
                     int64 v;
-                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("createdAt"), v))
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("triggeredAt"), v))
                     {
                         return TOptional(v);
                     }
@@ -240,6 +263,15 @@ namespace Gs2::Schedule::Model
                 {
                     int64 v;
                     if (Data->TryGetNumberField(ANSI_TO_TCHAR("expiresAt"), v))
+                    {
+                        return TOptional(v);
+                    }
+                    return TOptional<int64>();
+                }() : TOptional<int64>())
+            ->WithCreatedAt(Data->HasField(ANSI_TO_TCHAR("createdAt")) ? [Data]() -> TOptional<int64>
+                {
+                    int64 v;
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("createdAt"), v))
                     {
                         return TOptional(v);
                     }
@@ -271,13 +303,17 @@ namespace Gs2::Schedule::Model
         {
             JsonRootObject->SetStringField("userId", UserIdValue.GetValue());
         }
-        if (CreatedAtValue.IsSet())
+        if (TriggeredAtValue.IsSet())
         {
-            JsonRootObject->SetStringField("createdAt", FString::Printf(TEXT("%lld"), CreatedAtValue.GetValue()));
+            JsonRootObject->SetStringField("triggeredAt", FString::Printf(TEXT("%lld"), TriggeredAtValue.GetValue()));
         }
         if (ExpiresAtValue.IsSet())
         {
             JsonRootObject->SetStringField("expiresAt", FString::Printf(TEXT("%lld"), ExpiresAtValue.GetValue()));
+        }
+        if (CreatedAtValue.IsSet())
+        {
+            JsonRootObject->SetStringField("createdAt", FString::Printf(TEXT("%lld"), CreatedAtValue.GetValue()));
         }
         if (RevisionValue.IsSet())
         {

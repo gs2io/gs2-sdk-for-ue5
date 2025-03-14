@@ -334,6 +334,33 @@ namespace Gs2::Money2
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::WebSocket::FDescribeRefundHistoriesByUserIdTask>> FGs2Money2WebSocketClient::DescribeRefundHistoriesByUserId(
+        const Request::FDescribeRefundHistoriesByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FDescribeRefundHistoriesByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FDescribeRefundHistoriesByDateTask>> FGs2Money2WebSocketClient::DescribeRefundHistoriesByDate(
+        const Request::FDescribeRefundHistoriesByDateRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FDescribeRefundHistoriesByDateTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FGetRefundHistoryTask>> FGs2Money2WebSocketClient::GetRefundHistory(
+        const Request::FGetRefundHistoryRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FGetRefundHistoryTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::WebSocket::FDescribeStoreContentModelsTask>> FGs2Money2WebSocketClient::DescribeStoreContentModels(
         const Request::FDescribeStoreContentModelsRequestPtr Request) const
     {

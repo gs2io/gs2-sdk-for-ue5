@@ -31,6 +31,7 @@
 #include "Money2/Domain/Model/Wallet.h"
 #include "Money2/Domain/Model/Event.h"
 #include "Money2/Domain/Model/SubscriptionStatus.h"
+#include "Money2/Domain/Model/RefundHistory.h"
 #include "Money2/Domain/Model/StoreContentModel.h"
 #include "Money2/Domain/Model/StoreContentModelMaster.h"
 #include "Money2/Domain/Model/StoreSubscriptionContentModel.h"

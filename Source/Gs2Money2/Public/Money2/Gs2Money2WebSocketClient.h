@@ -88,6 +88,12 @@
 #include "Task/WebSocket/TakeoverSubscriptionStatusTask.h"
 #include "Request/TakeoverSubscriptionStatusByUserIdRequest.h"
 #include "Task/WebSocket/TakeoverSubscriptionStatusByUserIdTask.h"
+#include "Request/DescribeRefundHistoriesByUserIdRequest.h"
+#include "Task/WebSocket/DescribeRefundHistoriesByUserIdTask.h"
+#include "Request/DescribeRefundHistoriesByDateRequest.h"
+#include "Task/WebSocket/DescribeRefundHistoriesByDateTask.h"
+#include "Request/GetRefundHistoryRequest.h"
+#include "Task/WebSocket/GetRefundHistoryTask.h"
 #include "Request/DescribeStoreContentModelsRequest.h"
 #include "Task/WebSocket/DescribeStoreContentModelsTask.h"
 #include "Request/GetStoreContentModelRequest.h"
@@ -284,6 +290,18 @@ namespace Gs2::Money2
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FTakeoverSubscriptionStatusByUserIdTask>> TakeoverSubscriptionStatusByUserId(
             const Request::FTakeoverSubscriptionStatusByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FDescribeRefundHistoriesByUserIdTask>> DescribeRefundHistoriesByUserId(
+            const Request::FDescribeRefundHistoriesByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FDescribeRefundHistoriesByDateTask>> DescribeRefundHistoriesByDate(
+            const Request::FDescribeRefundHistoriesByDateRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FGetRefundHistoryTask>> GetRefundHistory(
+            const Request::FGetRefundHistoryRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FDescribeStoreContentModelsTask>> DescribeStoreContentModels(

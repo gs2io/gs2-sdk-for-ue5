@@ -33,6 +33,7 @@
 #include "Money2/Domain/Model/EventAccessToken.h"
 #include "Money2/Domain/Model/SubscriptionStatus.h"
 #include "Money2/Domain/Model/SubscriptionStatusAccessToken.h"
+#include "Money2/Domain/Model/RefundHistory.h"
 #include "Money2/Domain/Model/StoreContentModel.h"
 #include "Money2/Domain/Model/StoreContentModelMaster.h"
 #include "Money2/Domain/Model/StoreSubscriptionContentModel.h"

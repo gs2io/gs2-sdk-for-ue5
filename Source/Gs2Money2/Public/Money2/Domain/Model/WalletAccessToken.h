@@ -27,6 +27,8 @@
 #include "Money2/Domain/Iterator/DescribeEventsByUserIdIterator.h"
 #include "Money2/Domain/Iterator/DescribeSubscriptionStatusesIterator.h"
 #include "Money2/Domain/Iterator/DescribeSubscriptionStatusesByUserIdIterator.h"
+#include "Money2/Domain/Iterator/DescribeRefundHistoriesByUserIdIterator.h"
+#include "Money2/Domain/Iterator/DescribeRefundHistoriesByDateIterator.h"
 #include "Money2/Domain/Iterator/DescribeStoreContentModelsIterator.h"
 #include "Money2/Domain/Iterator/DescribeStoreContentModelMastersIterator.h"
 #include "Money2/Domain/Iterator/DescribeStoreSubscriptionContentModelsIterator.h"
@@ -58,6 +60,7 @@ namespace Gs2::Money2::Domain::Model
     class FEventAccessTokenDomain;
     class FSubscriptionStatusDomain;
     class FSubscriptionStatusAccessTokenDomain;
+    class FRefundHistoryDomain;
     class FStoreContentModelDomain;
     class FStoreContentModelMasterDomain;
     class FStoreSubscriptionContentModelDomain;

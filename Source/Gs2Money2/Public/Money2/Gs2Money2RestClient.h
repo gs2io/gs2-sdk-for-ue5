@@ -88,6 +88,12 @@
 #include "Task/Rest/TakeoverSubscriptionStatusTask.h"
 #include "Request/TakeoverSubscriptionStatusByUserIdRequest.h"
 #include "Task/Rest/TakeoverSubscriptionStatusByUserIdTask.h"
+#include "Request/DescribeRefundHistoriesByUserIdRequest.h"
+#include "Task/Rest/DescribeRefundHistoriesByUserIdTask.h"
+#include "Request/DescribeRefundHistoriesByDateRequest.h"
+#include "Task/Rest/DescribeRefundHistoriesByDateTask.h"
+#include "Request/GetRefundHistoryRequest.h"
+#include "Task/Rest/GetRefundHistoryTask.h"
 #include "Request/DescribeStoreContentModelsRequest.h"
 #include "Task/Rest/DescribeStoreContentModelsTask.h"
 #include "Request/GetStoreContentModelRequest.h"
@@ -284,6 +290,18 @@ namespace Gs2::Money2
 
         TSharedPtr<FAsyncTask<Task::Rest::FTakeoverSubscriptionStatusByUserIdTask>> TakeoverSubscriptionStatusByUserId(
             const Request::FTakeoverSubscriptionStatusByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FDescribeRefundHistoriesByUserIdTask>> DescribeRefundHistoriesByUserId(
+            const Request::FDescribeRefundHistoriesByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FDescribeRefundHistoriesByDateTask>> DescribeRefundHistoriesByDate(
+            const Request::FDescribeRefundHistoriesByDateRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FGetRefundHistoryTask>> GetRefundHistory(
+            const Request::FGetRefundHistoryRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::Rest::FDescribeStoreContentModelsTask>> DescribeStoreContentModels(

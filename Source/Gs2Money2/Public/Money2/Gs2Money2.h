@@ -22,6 +22,7 @@
 #include "Model/Event.h"
 #include "Model/SubscribeTransaction.h"
 #include "Model/SubscriptionStatus.h"
+#include "Model/RefundHistory.h"
 #include "Model/StoreContentModel.h"
 #include "Model/StoreContentModelMaster.h"
 #include "Model/StoreSubscriptionContentModel.h"
@@ -261,6 +262,24 @@
 #include "Result/TakeoverSubscriptionStatusByUserIdResult.h"
 #include "Task/Rest/TakeoverSubscriptionStatusByUserIdTask.h"
 #include "Task/WebSocket/TakeoverSubscriptionStatusByUserIdTask.h"
+
+// DescribeRefundHistoriesByUserId
+#include "Request/DescribeRefundHistoriesByUserIdRequest.h"
+#include "Result/DescribeRefundHistoriesByUserIdResult.h"
+#include "Task/Rest/DescribeRefundHistoriesByUserIdTask.h"
+#include "Task/WebSocket/DescribeRefundHistoriesByUserIdTask.h"
+
+// DescribeRefundHistoriesByDate
+#include "Request/DescribeRefundHistoriesByDateRequest.h"
+#include "Result/DescribeRefundHistoriesByDateResult.h"
+#include "Task/Rest/DescribeRefundHistoriesByDateTask.h"
+#include "Task/WebSocket/DescribeRefundHistoriesByDateTask.h"
+
+// GetRefundHistory
+#include "Request/GetRefundHistoryRequest.h"
+#include "Result/GetRefundHistoryResult.h"
+#include "Task/Rest/GetRefundHistoryTask.h"
+#include "Task/WebSocket/GetRefundHistoryTask.h"
 
 // DescribeStoreContentModels
 #include "Request/DescribeStoreContentModelsRequest.h"
