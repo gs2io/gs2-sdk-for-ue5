@@ -92,36 +92,6 @@ namespace Gs2::SeasonRating::Domain::Model
         Request
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName);
-        const auto Future = Self->Client->ExportMaster(
-            Request
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            return Future->GetTask().Error();
-        }
-        const auto RequestModel = Request;
-        const auto ResultModel = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::SeasonRating::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
-                    Self->NamespaceName,
-                    "CurrentSeasonModelMaster"
-                );
-                const auto Key = Gs2::SeasonRating::Domain::Model::FCurrentSeasonModelMasterDomain::CreateCacheKey(
-                );
-                Self->Gs2->Cache->Put(
-                    Gs2::SeasonRating::Model::FCurrentSeasonModelMaster::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
-        }
         auto Domain = Self;
 
         *Result = Domain;
@@ -155,36 +125,6 @@ namespace Gs2::SeasonRating::Domain::Model
         Request
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName);
-        const auto Future = Self->Client->GetCurrentSeasonModelMaster(
-            Request
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            return Future->GetTask().Error();
-        }
-        const auto RequestModel = Request;
-        const auto ResultModel = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::SeasonRating::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
-                    Self->NamespaceName,
-                    "CurrentSeasonModelMaster"
-                );
-                const auto Key = Gs2::SeasonRating::Domain::Model::FCurrentSeasonModelMasterDomain::CreateCacheKey(
-                );
-                Self->Gs2->Cache->Put(
-                    Gs2::SeasonRating::Model::FCurrentSeasonModelMaster::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
-        }
         *Result = ResultModel->GetItem();
         return nullptr;
     }
@@ -216,36 +156,6 @@ namespace Gs2::SeasonRating::Domain::Model
         Request
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName);
-        const auto Future = Self->Client->UpdateCurrentSeasonModelMaster(
-            Request
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            return Future->GetTask().Error();
-        }
-        const auto RequestModel = Request;
-        const auto ResultModel = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::SeasonRating::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
-                    Self->NamespaceName,
-                    "CurrentSeasonModelMaster"
-                );
-                const auto Key = Gs2::SeasonRating::Domain::Model::FCurrentSeasonModelMasterDomain::CreateCacheKey(
-                );
-                Self->Gs2->Cache->Put(
-                    Gs2::SeasonRating::Model::FCurrentSeasonModelMaster::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
-        }
         auto Domain = Self;
 
         *Result = Domain;
@@ -279,36 +189,6 @@ namespace Gs2::SeasonRating::Domain::Model
         Request
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName);
-        const auto Future = Self->Client->UpdateCurrentSeasonModelMasterFromGitHub(
-            Request
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            return Future->GetTask().Error();
-        }
-        const auto RequestModel = Request;
-        const auto ResultModel = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::SeasonRating::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
-                    Self->NamespaceName,
-                    "CurrentSeasonModelMaster"
-                );
-                const auto Key = Gs2::SeasonRating::Domain::Model::FCurrentSeasonModelMasterDomain::CreateCacheKey(
-                );
-                Self->Gs2->Cache->Put(
-                    Gs2::SeasonRating::Model::FCurrentSeasonModelMaster::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
-        }
         auto Domain = Self;
 
         *Result = Domain;

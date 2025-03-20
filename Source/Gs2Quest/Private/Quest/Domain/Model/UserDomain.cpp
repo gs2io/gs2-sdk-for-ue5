@@ -98,37 +98,6 @@ namespace Gs2::Quest::Domain::Model
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithUserId(Self->UserId);
-        const auto Future = Self->Client->CreateProgressByUserId(
-            Request
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            return Future->GetTask().Error();
-        }
-        const auto RequestModel = Request;
-        const auto ResultModel = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::Quest::Domain::Model::FUserDomain::CreateCacheParentKey(
-                    Self->NamespaceName,
-                    Self->UserId,
-                    "Progress"
-                );
-                const auto Key = Gs2::Quest::Domain::Model::FProgressDomain::CreateCacheKey(
-                );
-                Self->Gs2->Cache->Put(
-                    Gs2::Quest::Model::FProgress::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
-        }
         auto Domain = MakeShared<Gs2::Quest::Domain::Model::FProgressDomain>(
             Self->Gs2,
             Self->Service,
@@ -168,43 +137,23 @@ namespace Gs2::Quest::Domain::Model
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithUserId(Self->UserId);
-        const auto Future = Self->Client->StartByUserId(
-            Request
+        const auto Transaction = Gs2::Core::Domain::Internal::FTransactionDomainFactory::ToTransaction(
+            Self->Gs2,
+            *Self->UserId,
+            ResultModel->AutoRunStampSheet() == nullptr ? false : *ResultModel->AutoRunStampSheet(),
+            *ResultModel->GetTransactionId(),
+            *ResultModel->GetStampSheet(),
+            *ResultModel->GetStampSheetEncryptionKeyId(),
+            *ResultModel->GetAtomicCommit(),
+            *ResultModel->GetTransactionResult()
         );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
+        const auto Future3 = Transaction->Wait(true);
+        Future3->StartSynchronousTask();
+        if (Future3->GetTask().IsError())
         {
-            return Future->GetTask().Error();
+            return Future3->GetTask().Error();
         }
-        const auto RequestModel = Request;
-        const auto ResultModel = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-        }
-        if (ResultModel && ResultModel->GetStampSheet())
-        {
-            const auto Transaction = Gs2::Core::Domain::Internal::FTransactionDomainFactory::ToTransaction(
-                Self->Gs2,
-                *Self->UserId,
-                false,
-                *ResultModel->GetTransactionId(),
-                *ResultModel->GetStampSheet(),
-                *ResultModel->GetStampSheetEncryptionKeyId()
-            );
-            const auto Future3 = Transaction->Wait(true);
-            Future3->StartSynchronousTask();
-            if (Future3->GetTask().IsError())
-            {
-                return Future3->GetTask().Error();
-            }
-        }
-        if (ResultModel != nullptr)
-        {
-            Self->AutoRunStampSheet = ResultModel->GetAutoRunStampSheet();
-            Self->TransactionId = ResultModel->GetTransactionId();
-        }
-        *Result = Self;
+        *Result = Transaction;
         return nullptr;
     }
 

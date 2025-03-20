@@ -97,37 +97,6 @@ namespace Gs2::Log::Domain::Model
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithInsightName(Self->InsightName);
-        const auto Future = Self->Client->GetInsight(
-            Request
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            return Future->GetTask().Error();
-        }
-        const auto RequestModel = Request;
-        const auto ResultModel = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::Log::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
-                    Self->NamespaceName,
-                    "Insight"
-                );
-                const auto Key = Gs2::Log::Domain::Model::FInsightDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetName()
-                );
-                Self->Gs2->Cache->Put(
-                    Gs2::Log::Model::FInsight::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
-        }
         *Result = ResultModel->GetItem();
         return nullptr;
     }
@@ -160,31 +129,6 @@ namespace Gs2::Log::Domain::Model
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithInsightName(Self->InsightName);
-        const auto Future = Self->Client->DeleteInsight(
-            Request
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            return Future->GetTask().Error();
-        }
-        const auto RequestModel = Request;
-        const auto ResultModel = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::Log::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
-                    Self->NamespaceName,
-                    "Insight"
-                );
-                const auto Key = Gs2::Log::Domain::Model::FInsightDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetName()
-                );
-                Self->Gs2->Cache->Delete(Gs2::Log::Model::FInsight::TypeName, ParentKey, Key);
-            }
-        }
         auto Domain = Self;
 
         *Result = Domain;

@@ -21,7 +21,7 @@
 
 namespace Gs2::Account::Model
 {
-    class GS2ACCOUNT_API FCurrentModelMaster final : public Gs2Object, public TSharedFromThis<FCurrentModelMaster>
+    class GS2ACCOUNT_API FCurrentModelMaster final : public FGs2Object, public TSharedFromThis<FCurrentModelMaster>
     {
         TOptional<FString> NamespaceIdValue;
         TOptional<FString> SettingsValue;

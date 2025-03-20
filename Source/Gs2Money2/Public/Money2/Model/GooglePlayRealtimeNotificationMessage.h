@@ -21,7 +21,7 @@
 
 namespace Gs2::Money2::Model
 {
-    class GS2MONEY2_API FGooglePlayRealtimeNotificationMessage final : public Gs2Object, public TSharedFromThis<FGooglePlayRealtimeNotificationMessage>
+    class GS2MONEY2_API FGooglePlayRealtimeNotificationMessage final : public FGs2Object, public TSharedFromThis<FGooglePlayRealtimeNotificationMessage>
     {
         TOptional<FString> DataValue;
         TOptional<FString> MessageIdValue;

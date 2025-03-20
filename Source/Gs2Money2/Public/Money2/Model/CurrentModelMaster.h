@@ -21,7 +21,7 @@
 
 namespace Gs2::Money2::Model
 {
-    class GS2MONEY2_API FCurrentModelMaster final : public Gs2Object, public TSharedFromThis<FCurrentModelMaster>
+    class GS2MONEY2_API FCurrentModelMaster final : public FGs2Object, public TSharedFromThis<FCurrentModelMaster>
     {
         TOptional<FString> NamespaceIdValue;
         TOptional<FString> SettingsValue;

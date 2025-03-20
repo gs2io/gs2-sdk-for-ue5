@@ -21,7 +21,7 @@
 
 namespace Gs2::LoginReward::Model
 {
-    class GS2LOGINREWARD_API FReceiveStatus final : public Gs2Object, public TSharedFromThis<FReceiveStatus>
+    class GS2LOGINREWARD_API FReceiveStatus final : public FGs2Object, public TSharedFromThis<FReceiveStatus>
     {
         TOptional<FString> ReceiveStatusIdValue;
         TOptional<FString> BonusModelNameValue;

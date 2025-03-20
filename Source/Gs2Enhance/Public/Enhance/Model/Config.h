@@ -21,7 +21,7 @@
 
 namespace Gs2::Enhance::Model
 {
-    class GS2ENHANCE_API FConfig final : public Gs2Object, public TSharedFromThis<FConfig>
+    class GS2ENHANCE_API FConfig final : public FGs2Object, public TSharedFromThis<FConfig>
     {
         TOptional<FString> KeyValue;
         TOptional<FString> ValueValue;

@@ -95,20 +95,6 @@ namespace Gs2::Gateway::Domain::Model
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithUserId(Self->UserId);
-        const auto Future = Self->Client->SendNotification(
-            Request
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            return Future->GetTask().Error();
-        }
-        const auto RequestModel = Request;
-        const auto ResultModel = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-        }
         const auto Domain = Self;
         if (ResultModel != nullptr)
         {
@@ -150,38 +136,6 @@ namespace Gs2::Gateway::Domain::Model
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithUserId(Self->UserId);
-        const auto Future = Self->Client->DisconnectByUserId(
-            Request
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            return Future->GetTask().Error();
-        }
-        const auto RequestModel = Request;
-        const auto ResultModel = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            {
-                for (auto Item : *ResultModel->GetItems())
-                {
-                    const auto ParentKey = Gs2::Gateway::Domain::Model::FUserDomain::CreateCacheParentKey(
-                        Self->NamespaceName,
-                        Self->UserId,
-                        "WebSocketSession"
-                    );
-                    const auto Key = Gs2::Gateway::Domain::Model::FWebSocketSessionDomain::CreateCacheKey(
-                    );
-                    Self->Gs2->Cache->Put(
-                        Gs2::Gateway::Model::FWebSocketSession::TypeName,
-                        ParentKey,
-                        Key,
-                        Item,
-                        FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                    );
-                }
-            }
-        }
         auto Domain = MakeShared<TArray<TSharedPtr<Gs2::Gateway::Domain::Model::FWebSocketSessionDomain>>>();
         for (auto i=0; i<ResultModel->GetItems()->Num(); i++)
         {
@@ -239,20 +193,6 @@ namespace Gs2::Gateway::Domain::Model
         Request
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName);
-        const auto Future = Self->Client->DisconnectAll(
-            Request
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            return Future->GetTask().Error();
-        }
-        const auto RequestModel = Request;
-        const auto ResultModel = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-        }
         const auto Domain = Self;
         *Result = Domain;
         return nullptr;

@@ -21,7 +21,7 @@
 
 namespace Gs2::Ranking::Model
 {
-    class GS2RANKING_API FScope final : public Gs2Object, public TSharedFromThis<FScope>
+    class GS2RANKING_API FScope final : public FGs2Object, public TSharedFromThis<FScope>
     {
         TOptional<FString> NameValue;
         TOptional<int64> TargetDaysValue;

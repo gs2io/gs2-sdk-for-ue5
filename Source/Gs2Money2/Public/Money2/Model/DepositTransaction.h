@@ -21,7 +21,7 @@
 
 namespace Gs2::Money2::Model
 {
-    class GS2MONEY2_API FDepositTransaction final : public Gs2Object, public TSharedFromThis<FDepositTransaction>
+    class GS2MONEY2_API FDepositTransaction final : public FGs2Object, public TSharedFromThis<FDepositTransaction>
     {
         TOptional<float> PriceValue;
         TOptional<FString> CurrencyValue;

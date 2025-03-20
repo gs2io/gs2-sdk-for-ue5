@@ -83,6 +83,30 @@ namespace Gs2::UE5::Dictionary::Domain::Model
         );
     }
 
+    Gs2::UE5::Dictionary::Domain::Iterator::FEzDescribeLikesIteratorPtr FEzUserGameSessionDomain::Likes(
+    ) const
+    {
+        return MakeShared<Gs2::UE5::Dictionary::Domain::Iterator::FEzDescribeLikesIterator>(
+            Domain,
+            GameSession,
+            ConnectionValue
+        );
+    }
+
+    Gs2::Core::Domain::CallbackID FEzUserGameSessionDomain::SubscribeLikes(TFunction<void()> Callback)
+    {
+        return Domain->SubscribeLikes(
+            Callback
+        );
+    }
+
+    void FEzUserGameSessionDomain::UnsubscribeLikes(Gs2::Core::Domain::CallbackID CallbackId)
+    {
+        Domain->UnsubscribeLikes(
+            CallbackId
+        );
+    }
+
     Gs2::UE5::Dictionary::Domain::Model::FEzLikeGameSessionDomainPtr FEzUserGameSessionDomain::Like(
         const FString EntryModelName
     ) const

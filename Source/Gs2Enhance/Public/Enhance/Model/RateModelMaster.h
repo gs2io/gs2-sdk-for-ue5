@@ -22,7 +22,7 @@
 
 namespace Gs2::Enhance::Model
 {
-    class GS2ENHANCE_API FRateModelMaster final : public Gs2Object, public TSharedFromThis<FRateModelMaster>
+    class GS2ENHANCE_API FRateModelMaster final : public FGs2Object, public TSharedFromThis<FRateModelMaster>
     {
         TOptional<FString> RateModelIdValue;
         TOptional<FString> NameValue;

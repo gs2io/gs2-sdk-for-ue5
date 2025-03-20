@@ -21,7 +21,7 @@
 
 namespace Gs2::News::Model
 {
-    class GS2NEWS_API FSetCookieRequestEntry final : public Gs2Object, public TSharedFromThis<FSetCookieRequestEntry>
+    class GS2NEWS_API FSetCookieRequestEntry final : public FGs2Object, public TSharedFromThis<FSetCookieRequestEntry>
     {
         TOptional<FString> KeyValue;
         TOptional<FString> ValueValue;

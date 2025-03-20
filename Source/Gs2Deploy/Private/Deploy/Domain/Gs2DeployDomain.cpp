@@ -72,33 +72,6 @@ namespace Gs2::Deploy::Domain
         TSharedPtr<TSharedPtr<Gs2::Deploy::Domain::Model::FStackDomain>> Result
     )
     {
-        const auto Future = Self->Client->CreateStack(
-            Request
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            return Future->GetTask().Error();
-        }
-        const auto RequestModel = Request;
-        const auto ResultModel = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-            {
-                const auto ParentKey = FString("deploy:Stack");
-                const auto Key = Gs2::Deploy::Domain::Model::FStackDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetName()
-                );
-                Self->Gs2->Cache->Put(
-                    Gs2::Deploy::Model::FStack::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
-        }
         auto Domain = MakeShared<Gs2::Deploy::Domain::Model::FStackDomain>(
             Self->Gs2,
             Self,
@@ -132,33 +105,6 @@ namespace Gs2::Deploy::Domain
         TSharedPtr<TSharedPtr<Gs2::Deploy::Domain::Model::FStackDomain>> Result
     )
     {
-        const auto Future = Self->Client->CreateStackFromGitHub(
-            Request
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            return Future->GetTask().Error();
-        }
-        const auto RequestModel = Request;
-        const auto ResultModel = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-            {
-                const auto ParentKey = FString("deploy:Stack");
-                const auto Key = Gs2::Deploy::Domain::Model::FStackDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetName()
-                );
-                Self->Gs2->Cache->Put(
-                    Gs2::Deploy::Model::FStack::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
-        }
         auto Domain = MakeShared<Gs2::Deploy::Domain::Model::FStackDomain>(
             Self->Gs2,
             Self,
@@ -192,20 +138,6 @@ namespace Gs2::Deploy::Domain
         TSharedPtr<TSharedPtr<FGs2DeployDomain>> Result
     )
     {
-        const auto Future = Self->Client->Validate(
-            Request
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            return Future->GetTask().Error();
-        }
-        const auto RequestModel = Request;
-        const auto ResultModel = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-        }
         const auto Domain = Self;
         *Result = Domain;
         return nullptr;

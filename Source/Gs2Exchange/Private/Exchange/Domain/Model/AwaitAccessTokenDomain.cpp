@@ -106,38 +106,6 @@ namespace Gs2::Exchange::Domain::Model
             ->WithNamespaceName(Self->NamespaceName)
             ->WithAccessToken(Self->AccessToken->GetToken())
             ->WithAwaitName(Self->AwaitName);
-        const auto Future = Self->Client->GetAwait(
-            Request
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            return Future->GetTask().Error();
-        }
-        const auto RequestModel = Request;
-        const auto ResultModel = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::Exchange::Domain::Model::FUserDomain::CreateCacheParentKey(
-                    Self->NamespaceName,
-                    Self->UserId(),
-                    "Await"
-                );
-                const auto Key = Gs2::Exchange::Domain::Model::FAwaitDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetName()
-                );
-                Self->Gs2->Cache->Put(
-                    Gs2::Exchange::Model::FAwait::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
-        }
         *Result = ResultModel->GetItem();
         return nullptr;
     }
@@ -172,81 +140,23 @@ namespace Gs2::Exchange::Domain::Model
             ->WithNamespaceName(Self->NamespaceName)
             ->WithAccessToken(Self->AccessToken->GetToken())
             ->WithAwaitName(Self->AwaitName);
-
-        if (SpeculativeExecute) {
-            const auto SpeculativeExecuteFuture = Transaction::SpeculativeExecutor::FAcquireByUserIdSpeculativeExecutor::Execute(
-                Self->Gs2,
-                Self->Service,
-                Self->AccessToken,
-                Request::FAcquireByUserIdRequest::FromJson(Request->ToJson())
-            );
-            SpeculativeExecuteFuture->StartSynchronousTask();
-            if (SpeculativeExecuteFuture->GetTask().IsError())
-            {
-                return SpeculativeExecuteFuture->GetTask().Error();
-            }
-            const auto Commit = SpeculativeExecuteFuture->GetTask().Result();
-            SpeculativeExecuteFuture->EnsureCompletion();
-
-            if (Commit.IsValid()) {
-                (*Commit)();
-            }
-        }
-        const auto Future = Self->Client->Acquire(
-            Request
+        const auto Transaction = Gs2::Core::Domain::Internal::FTransactionDomainFactory::ToTransaction(
+            Self->Gs2,
+            Self->AccessToken,
+            ResultModel->AutoRunStampSheet() == nullptr ? false : *ResultModel->AutoRunStampSheet(),
+            *ResultModel->GetTransactionId(),
+            *ResultModel->GetStampSheet(),
+            *ResultModel->GetStampSheetEncryptionKeyId(),
+            *ResultModel->GetAtomicCommit(),
+            *ResultModel->GetTransactionResult()
         );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
+        const auto Future3 = Transaction->Wait(true);
+        Future3->StartSynchronousTask();
+        if (Future3->GetTask().IsError())
         {
-            return Future->GetTask().Error();
+            return Future3->GetTask().Error();
         }
-        const auto RequestModel = Request;
-        const auto ResultModel = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::Exchange::Domain::Model::FUserDomain::CreateCacheParentKey(
-                    Self->NamespaceName,
-                    Self->UserId(),
-                    "Await"
-                );
-                const auto Key = Gs2::Exchange::Domain::Model::FAwaitDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetName()
-                );
-                Self->Gs2->Cache->Put(
-                    Gs2::Exchange::Model::FAwait::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
-        }
-        if (ResultModel && ResultModel->GetStampSheet())
-        {
-            const auto Transaction = Gs2::Core::Domain::Internal::FTransactionDomainFactory::ToTransaction(
-                Self->Gs2,
-                Self->AccessToken,
-                false,
-                *ResultModel->GetTransactionId(),
-                *ResultModel->GetStampSheet(),
-                *ResultModel->GetStampSheetEncryptionKeyId()
-            );
-            const auto Future3 = Transaction->Wait(true);
-            Future3->StartSynchronousTask();
-            if (Future3->GetTask().IsError())
-            {
-                return Future3->GetTask().Error();
-            }
-        }
-        if (ResultModel != nullptr)
-        {
-            Self->AutoRunStampSheet = ResultModel->GetAutoRunStampSheet();
-            Self->TransactionId = ResultModel->GetTransactionId();
-        }
-        *Result = Self;
+        *Result = Transaction;
         return nullptr;
     }
 
@@ -280,32 +190,6 @@ namespace Gs2::Exchange::Domain::Model
             ->WithNamespaceName(Self->NamespaceName)
             ->WithAccessToken(Self->AccessToken->GetToken())
             ->WithAwaitName(Self->AwaitName);
-        const auto Future = Self->Client->DeleteAwait(
-            Request
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            return Future->GetTask().Error();
-        }
-        const auto RequestModel = Request;
-        const auto ResultModel = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::Exchange::Domain::Model::FUserDomain::CreateCacheParentKey(
-                    Self->NamespaceName,
-                    Self->UserId(),
-                    "Await"
-                );
-                const auto Key = Gs2::Exchange::Domain::Model::FAwaitDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetName()
-                );
-                Self->Gs2->Cache->Delete(Gs2::Exchange::Model::FAwait::TypeName, ParentKey, Key);
-            }
-        }
         auto Domain = Self;
 
         *Result = Domain;

@@ -100,20 +100,6 @@ namespace Gs2::Matchmaking::Domain::Model
         Request
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName);
-        const auto Future = Self->Client->GetNamespaceStatus(
-            Request
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            return Future->GetTask().Error();
-        }
-        const auto RequestModel = Request;
-        const auto ResultModel = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-        }
         const auto Domain = Self;
         if (ResultModel != nullptr)
         {
@@ -153,33 +139,6 @@ namespace Gs2::Matchmaking::Domain::Model
         Request
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName);
-        const auto Future = Self->Client->GetNamespace(
-            Request
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            return Future->GetTask().Error();
-        }
-        const auto RequestModel = Request;
-        const auto ResultModel = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-            {
-                const auto ParentKey = FString("matchmaking:Namespace");
-                const auto Key = Gs2::Matchmaking::Domain::Model::FNamespaceDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetName()
-                );
-                Self->Gs2->Cache->Put(
-                    Gs2::Matchmaking::Model::FNamespace::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
-        }
         *Result = ResultModel->GetItem();
         return nullptr;
     }
@@ -211,33 +170,6 @@ namespace Gs2::Matchmaking::Domain::Model
         Request
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName);
-        const auto Future = Self->Client->UpdateNamespace(
-            Request
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            return Future->GetTask().Error();
-        }
-        const auto RequestModel = Request;
-        const auto ResultModel = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-            {
-                const auto ParentKey = FString("matchmaking:Namespace");
-                const auto Key = Gs2::Matchmaking::Domain::Model::FNamespaceDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetName()
-                );
-                Self->Gs2->Cache->Put(
-                    Gs2::Matchmaking::Model::FNamespace::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
-        }
         auto Domain = Self;
 
         *Result = Domain;
@@ -271,27 +203,6 @@ namespace Gs2::Matchmaking::Domain::Model
         Request
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName);
-        const auto Future = Self->Client->DeleteNamespace(
-            Request
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            return Future->GetTask().Error();
-        }
-        const auto RequestModel = Request;
-        const auto ResultModel = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-            {
-                const auto ParentKey = FString("matchmaking:Namespace");
-                const auto Key = Gs2::Matchmaking::Domain::Model::FNamespaceDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetName()
-                );
-                Self->Gs2->Cache->Delete(Gs2::Matchmaking::Model::FNamespace::TypeName, ParentKey, Key);
-            }
-        }
         auto Domain = Self;
 
         *Result = Domain;
@@ -325,37 +236,6 @@ namespace Gs2::Matchmaking::Domain::Model
         Request
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName);
-        const auto Future = Self->Client->CreateRatingModelMaster(
-            Request
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            return Future->GetTask().Error();
-        }
-        const auto RequestModel = Request;
-        const auto ResultModel = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::Matchmaking::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
-                    Self->NamespaceName,
-                    "RatingModelMaster"
-                );
-                const auto Key = Gs2::Matchmaking::Domain::Model::FRatingModelMasterDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetName()
-                );
-                Self->Gs2->Cache->Put(
-                    Gs2::Matchmaking::Model::FRatingModelMaster::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
-        }
         auto Domain = MakeShared<Gs2::Matchmaking::Domain::Model::FRatingModelMasterDomain>(
             Self->Gs2,
             Self->Service,
@@ -394,41 +274,6 @@ namespace Gs2::Matchmaking::Domain::Model
         Request
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName);
-        const auto Future = Self->Client->Vote(
-            Request
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            return Future->GetTask().Error();
-        }
-        const auto RequestModel = Request;
-        const auto ResultModel = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::Matchmaking::Domain::Model::FUserDomain::CreateCacheParentKey(
-                    Self->NamespaceName,
-                    ResultModel->GetItem()->GetUserId(),
-                    "Ballot"
-                );
-                const auto Key = Gs2::Matchmaking::Domain::Model::FBallotDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetRatingName(),
-                    ResultModel->GetItem()->GetGatheringName(),
-                    ResultModel->GetItem()->GetNumberOfPlayer().IsSet() ? FString::FromInt(*ResultModel->GetItem()->GetNumberOfPlayer()) : TOptional<FString>(),
-                    RequestModel->GetKeyId()
-                );
-                Self->Gs2->Cache->Put(
-                    Gs2::Matchmaking::Model::FBallot::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
-        }
         auto Domain = MakeShared<Gs2::Matchmaking::Domain::Model::FBallotDomain>(
             Self->Gs2,
             Self->Service,
@@ -471,41 +316,6 @@ namespace Gs2::Matchmaking::Domain::Model
         Request
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName);
-        const auto Future = Self->Client->VoteMultiple(
-            Request
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            return Future->GetTask().Error();
-        }
-        const auto RequestModel = Request;
-        const auto ResultModel = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::Matchmaking::Domain::Model::FUserDomain::CreateCacheParentKey(
-                    Self->NamespaceName,
-                    ResultModel->GetItem()->GetUserId(),
-                    "Ballot"
-                );
-                const auto Key = Gs2::Matchmaking::Domain::Model::FBallotDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetRatingName(),
-                    ResultModel->GetItem()->GetGatheringName(),
-                    ResultModel->GetItem()->GetNumberOfPlayer().IsSet() ? FString::FromInt(*ResultModel->GetItem()->GetNumberOfPlayer()) : TOptional<FString>(),
-                    RequestModel->GetKeyId()
-                );
-                Self->Gs2->Cache->Put(
-                    Gs2::Matchmaking::Model::FBallot::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
-        }
         auto Domain = MakeShared<Gs2::Matchmaking::Domain::Model::FBallotDomain>(
             Self->Gs2,
             Self->Service,
@@ -548,37 +358,6 @@ namespace Gs2::Matchmaking::Domain::Model
         Request
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName);
-        const auto Future = Self->Client->CreateSeasonModelMaster(
-            Request
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            return Future->GetTask().Error();
-        }
-        const auto RequestModel = Request;
-        const auto ResultModel = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::Matchmaking::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
-                    Self->NamespaceName,
-                    "SeasonModelMaster"
-                );
-                const auto Key = Gs2::Matchmaking::Domain::Model::FSeasonModelMasterDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetName()
-                );
-                Self->Gs2->Cache->Put(
-                    Gs2::Matchmaking::Model::FSeasonModelMaster::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
-        }
         auto Domain = MakeShared<Gs2::Matchmaking::Domain::Model::FSeasonModelMasterDomain>(
             Self->Gs2,
             Self->Service,

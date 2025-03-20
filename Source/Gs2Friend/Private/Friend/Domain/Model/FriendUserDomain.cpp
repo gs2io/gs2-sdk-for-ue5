@@ -118,39 +118,6 @@ namespace Gs2::Friend::Domain::Model
             ->WithUserId(Self->UserId)
             ->WithTargetUserId(Self->TargetUserId)
             ->WithWithProfile(Self->WithProfile);
-        const auto Future = Self->Client->GetFriendByUserId(
-            Request
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            return Future->GetTask().Error();
-        }
-        const auto RequestModel = Request;
-        const auto ResultModel = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::Friend::Domain::Model::FFriendDomain::CreateCacheParentKey(
-                    Self->NamespaceName,
-                    Self->UserId,
-                    Self->WithProfile.IsSet() ? *Self->WithProfile ? TOptional<FString>("True") : TOptional<FString>("False") : TOptional<FString>("False"),
-                    "FriendUser"
-                );
-                const auto Key = Gs2::Friend::Domain::Model::FFriendUserDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetUserId()
-                );
-                Self->Gs2->Cache->Put(
-                    Gs2::Friend::Model::FFriendUser::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
-        }
         *Result = ResultModel->GetItem();
         return nullptr;
     }

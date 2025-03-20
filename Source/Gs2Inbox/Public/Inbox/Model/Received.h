@@ -21,7 +21,7 @@
 
 namespace Gs2::Inbox::Model
 {
-    class GS2INBOX_API FReceived final : public Gs2Object, public TSharedFromThis<FReceived>
+    class GS2INBOX_API FReceived final : public FGs2Object, public TSharedFromThis<FReceived>
     {
         TOptional<FString> ReceivedIdValue;
         TOptional<FString> UserIdValue;

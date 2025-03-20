@@ -21,7 +21,7 @@
 
 namespace Gs2::SeasonRating::Model
 {
-    class GS2SEASONRATING_API FBallot final : public Gs2Object, public TSharedFromThis<FBallot>
+    class GS2SEASONRATING_API FBallot final : public FGs2Object, public TSharedFromThis<FBallot>
     {
         TOptional<FString> UserIdValue;
         TOptional<FString> SeasonNameValue;

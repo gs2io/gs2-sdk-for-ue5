@@ -21,7 +21,7 @@
 
 namespace Gs2::SkillTree::Model
 {
-    class GS2SKILLTREE_API FLogSetting final : public Gs2Object, public TSharedFromThis<FLogSetting>
+    class GS2SKILLTREE_API FLogSetting final : public FGs2Object, public TSharedFromThis<FLogSetting>
     {
         TOptional<FString> LoggingNamespaceIdValue;
 

@@ -21,7 +21,7 @@
 
 namespace Gs2::Enchant::Model
 {
-    class GS2ENCHANT_API FBalanceParameterValueModel final : public Gs2Object, public TSharedFromThis<FBalanceParameterValueModel>
+    class GS2ENCHANT_API FBalanceParameterValueModel final : public FGs2Object, public TSharedFromThis<FBalanceParameterValueModel>
     {
         TOptional<FString> NameValue;
         TOptional<FString> MetadataValue;

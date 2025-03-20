@@ -21,7 +21,7 @@
 
 namespace Gs2::SeasonRating::Model
 {
-    class GS2SEASONRATING_API FMatchSession final : public Gs2Object, public TSharedFromThis<FMatchSession>
+    class GS2SEASONRATING_API FMatchSession final : public FGs2Object, public TSharedFromThis<FMatchSession>
     {
         TOptional<FString> SessionIdValue;
         TOptional<FString> NameValue;

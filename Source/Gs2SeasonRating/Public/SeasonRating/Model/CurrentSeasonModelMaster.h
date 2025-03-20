@@ -21,7 +21,7 @@
 
 namespace Gs2::SeasonRating::Model
 {
-    class GS2SEASONRATING_API FCurrentSeasonModelMaster final : public Gs2Object, public TSharedFromThis<FCurrentSeasonModelMaster>
+    class GS2SEASONRATING_API FCurrentSeasonModelMaster final : public FGs2Object, public TSharedFromThis<FCurrentSeasonModelMaster>
     {
         TOptional<FString> NamespaceIdValue;
         TOptional<FString> SettingsValue;

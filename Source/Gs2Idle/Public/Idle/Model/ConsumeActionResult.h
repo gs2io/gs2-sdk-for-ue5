@@ -21,7 +21,7 @@
 
 namespace Gs2::Idle::Model
 {
-    class GS2IDLE_API FConsumeActionResult final : public Gs2Object, public TSharedFromThis<FConsumeActionResult>
+    class GS2IDLE_API FConsumeActionResult final : public FGs2Object, public TSharedFromThis<FConsumeActionResult>
     {
         TOptional<FString> ActionValue;
         TOptional<FString> ConsumeRequestValue;

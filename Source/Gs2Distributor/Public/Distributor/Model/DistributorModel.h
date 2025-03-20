@@ -21,7 +21,7 @@
 
 namespace Gs2::Distributor::Model
 {
-    class GS2DISTRIBUTOR_API FDistributorModel final : public Gs2Object, public TSharedFromThis<FDistributorModel>
+    class GS2DISTRIBUTOR_API FDistributorModel final : public FGs2Object, public TSharedFromThis<FDistributorModel>
     {
         TOptional<FString> DistributorModelIdValue;
         TOptional<FString> NameValue;

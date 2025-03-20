@@ -21,7 +21,7 @@
 
 namespace Gs2::LoginReward::Model
 {
-    class GS2LOGINREWARD_API FScriptSetting final : public Gs2Object, public TSharedFromThis<FScriptSetting>
+    class GS2LOGINREWARD_API FScriptSetting final : public FGs2Object, public TSharedFromThis<FScriptSetting>
     {
         TOptional<FString> TriggerScriptIdValue;
         TOptional<FString> DoneTriggerTargetTypeValue;

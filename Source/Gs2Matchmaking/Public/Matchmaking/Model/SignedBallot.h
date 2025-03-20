@@ -21,7 +21,7 @@
 
 namespace Gs2::Matchmaking::Model
 {
-    class GS2MATCHMAKING_API FSignedBallot final : public Gs2Object, public TSharedFromThis<FSignedBallot>
+    class GS2MATCHMAKING_API FSignedBallot final : public FGs2Object, public TSharedFromThis<FSignedBallot>
     {
         TOptional<FString> BodyValue;
         TOptional<FString> SignatureValue;

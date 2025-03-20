@@ -21,7 +21,7 @@
 
 namespace Gs2::Datastore::Model
 {
-    class GS2DATASTORE_API FDataObjectHistory final : public Gs2Object, public TSharedFromThis<FDataObjectHistory>
+    class GS2DATASTORE_API FDataObjectHistory final : public FGs2Object, public TSharedFromThis<FDataObjectHistory>
     {
         TOptional<FString> DataObjectHistoryIdValue;
         TOptional<FString> DataObjectNameValue;

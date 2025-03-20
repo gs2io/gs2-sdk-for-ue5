@@ -21,7 +21,7 @@
 
 namespace Gs2::Experience::Model
 {
-    class GS2EXPERIENCE_API FThresholdMaster final : public Gs2Object, public TSharedFromThis<FThresholdMaster>
+    class GS2EXPERIENCE_API FThresholdMaster final : public FGs2Object, public TSharedFromThis<FThresholdMaster>
     {
         TOptional<FString> ThresholdIdValue;
         TOptional<FString> NameValue;

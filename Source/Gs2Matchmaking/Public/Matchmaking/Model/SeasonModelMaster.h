@@ -21,7 +21,7 @@
 
 namespace Gs2::Matchmaking::Model
 {
-    class GS2MATCHMAKING_API FSeasonModelMaster final : public Gs2Object, public TSharedFromThis<FSeasonModelMaster>
+    class GS2MATCHMAKING_API FSeasonModelMaster final : public FGs2Object, public TSharedFromThis<FSeasonModelMaster>
     {
         TOptional<FString> SeasonModelIdValue;
         TOptional<FString> NameValue;

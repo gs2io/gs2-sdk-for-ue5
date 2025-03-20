@@ -21,7 +21,7 @@
 
 namespace Gs2::Account::Model
 {
-    class GS2ACCOUNT_API FPlatformUser final : public Gs2Object, public TSharedFromThis<FPlatformUser>
+    class GS2ACCOUNT_API FPlatformUser final : public FGs2Object, public TSharedFromThis<FPlatformUser>
     {
         TOptional<int32> TypeValue;
         TOptional<FString> UserIdentifierValue;

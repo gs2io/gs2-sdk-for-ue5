@@ -23,7 +23,7 @@
 
 namespace Gs2::Exchange::Model
 {
-    class GS2EXCHANGE_API FIncrementalRateModelMaster final : public Gs2Object, public TSharedFromThis<FIncrementalRateModelMaster>
+    class GS2EXCHANGE_API FIncrementalRateModelMaster final : public FGs2Object, public TSharedFromThis<FIncrementalRateModelMaster>
     {
         TOptional<FString> IncrementalRateModelIdValue;
         TOptional<FString> NameValue;

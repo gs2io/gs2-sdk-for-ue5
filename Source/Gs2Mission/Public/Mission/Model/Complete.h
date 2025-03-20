@@ -21,7 +21,7 @@
 
 namespace Gs2::Mission::Model
 {
-    class GS2MISSION_API FComplete final : public Gs2Object, public TSharedFromThis<FComplete>
+    class GS2MISSION_API FComplete final : public FGs2Object, public TSharedFromThis<FComplete>
     {
         TOptional<FString> CompleteIdValue;
         TOptional<FString> UserIdValue;

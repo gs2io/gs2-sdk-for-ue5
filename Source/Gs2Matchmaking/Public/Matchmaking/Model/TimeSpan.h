@@ -21,7 +21,7 @@
 
 namespace Gs2::Matchmaking::Model
 {
-    class GS2MATCHMAKING_API FTimeSpan final : public Gs2Object, public TSharedFromThis<FTimeSpan>
+    class GS2MATCHMAKING_API FTimeSpan final : public FGs2Object, public TSharedFromThis<FTimeSpan>
     {
         TOptional<int32> DaysValue;
         TOptional<int32> HoursValue;

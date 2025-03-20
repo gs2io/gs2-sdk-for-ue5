@@ -21,7 +21,7 @@
 
 namespace Gs2::Account::Model
 {
-    class GS2ACCOUNT_API FScopeValue final : public Gs2Object, public TSharedFromThis<FScopeValue>
+    class GS2ACCOUNT_API FScopeValue final : public FGs2Object, public TSharedFromThis<FScopeValue>
     {
         TOptional<FString> KeyValue;
         TOptional<FString> ValueValue;

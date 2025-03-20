@@ -22,7 +22,7 @@
 
 namespace Gs2::Lottery::Model
 {
-    class GS2LOTTERY_API FBoxItem final : public Gs2Object, public TSharedFromThis<FBoxItem>
+    class GS2LOTTERY_API FBoxItem final : public FGs2Object, public TSharedFromThis<FBoxItem>
     {
         TOptional<FString> PrizeIdValue;
         TSharedPtr<TArray<TSharedPtr<FAcquireAction>>> AcquireActionsValue;

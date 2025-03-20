@@ -21,7 +21,7 @@
 
 namespace Gs2::Showcase::Model
 {
-    class GS2SHOWCASE_API FPurchaseCount final : public Gs2Object, public TSharedFromThis<FPurchaseCount>
+    class GS2SHOWCASE_API FPurchaseCount final : public FGs2Object, public TSharedFromThis<FPurchaseCount>
     {
         TOptional<FString> NameValue;
         TOptional<int32> CountValue;

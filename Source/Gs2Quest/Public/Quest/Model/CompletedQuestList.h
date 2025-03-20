@@ -21,7 +21,7 @@
 
 namespace Gs2::Quest::Model
 {
-    class GS2QUEST_API FCompletedQuestList final : public Gs2Object, public TSharedFromThis<FCompletedQuestList>
+    class GS2QUEST_API FCompletedQuestList final : public FGs2Object, public TSharedFromThis<FCompletedQuestList>
     {
         TOptional<FString> CompletedQuestListIdValue;
         TOptional<FString> UserIdValue;

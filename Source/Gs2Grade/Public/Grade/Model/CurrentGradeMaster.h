@@ -21,7 +21,7 @@
 
 namespace Gs2::Grade::Model
 {
-    class GS2GRADE_API FCurrentGradeMaster final : public Gs2Object, public TSharedFromThis<FCurrentGradeMaster>
+    class GS2GRADE_API FCurrentGradeMaster final : public FGs2Object, public TSharedFromThis<FCurrentGradeMaster>
     {
         TOptional<FString> NamespaceIdValue;
         TOptional<FString> SettingsValue;

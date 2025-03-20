@@ -21,7 +21,7 @@
 
 namespace Gs2::Guild::Model
 {
-    class GS2GUILD_API FIgnoreUser final : public Gs2Object, public TSharedFromThis<FIgnoreUser>
+    class GS2GUILD_API FIgnoreUser final : public FGs2Object, public TSharedFromThis<FIgnoreUser>
     {
         TOptional<FString> UserIdValue;
         TOptional<int64> CreatedAtValue;

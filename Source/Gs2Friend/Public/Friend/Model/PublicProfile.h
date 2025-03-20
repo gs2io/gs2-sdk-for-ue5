@@ -21,7 +21,7 @@
 
 namespace Gs2::Friend::Model
 {
-    class GS2FRIEND_API FPublicProfile final : public Gs2Object, public TSharedFromThis<FPublicProfile>
+    class GS2FRIEND_API FPublicProfile final : public FGs2Object, public TSharedFromThis<FPublicProfile>
     {
         TOptional<FString> UserIdValue;
         TOptional<FString> PublicProfileValue;

@@ -21,7 +21,7 @@
 
 namespace Gs2::Matchmaking::Model
 {
-    class GS2MATCHMAKING_API FCurrentModelMaster final : public Gs2Object, public TSharedFromThis<FCurrentModelMaster>
+    class GS2MATCHMAKING_API FCurrentModelMaster final : public FGs2Object, public TSharedFromThis<FCurrentModelMaster>
     {
         TOptional<FString> NamespaceIdValue;
         TOptional<FString> SettingsValue;

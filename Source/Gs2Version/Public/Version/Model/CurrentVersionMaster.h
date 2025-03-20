@@ -21,7 +21,7 @@
 
 namespace Gs2::Version::Model
 {
-    class GS2VERSION_API FCurrentVersionMaster final : public Gs2Object, public TSharedFromThis<FCurrentVersionMaster>
+    class GS2VERSION_API FCurrentVersionMaster final : public FGs2Object, public TSharedFromThis<FCurrentVersionMaster>
     {
         TOptional<FString> NamespaceIdValue;
         TOptional<FString> SettingsValue;

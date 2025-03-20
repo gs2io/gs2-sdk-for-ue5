@@ -21,7 +21,7 @@
 
 namespace Gs2::Account::Model
 {
-    class GS2ACCOUNT_API FTakeOver final : public Gs2Object, public TSharedFromThis<FTakeOver>
+    class GS2ACCOUNT_API FTakeOver final : public FGs2Object, public TSharedFromThis<FTakeOver>
     {
         TOptional<FString> TakeOverIdValue;
         TOptional<FString> UserIdValue;

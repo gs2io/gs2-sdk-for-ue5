@@ -21,7 +21,7 @@
 
 namespace Gs2::Matchmaking::Model
 {
-    class GS2MATCHMAKING_API FAttributeRange final : public Gs2Object, public TSharedFromThis<FAttributeRange>
+    class GS2MATCHMAKING_API FAttributeRange final : public FGs2Object, public TSharedFromThis<FAttributeRange>
     {
         TOptional<FString> NameValue;
         TOptional<int32> MinValue;

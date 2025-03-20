@@ -21,7 +21,7 @@
 
 namespace Gs2::Matchmaking::Model
 {
-    class GS2MATCHMAKING_API FGameResult final : public Gs2Object, public TSharedFromThis<FGameResult>
+    class GS2MATCHMAKING_API FGameResult final : public FGs2Object, public TSharedFromThis<FGameResult>
     {
         TOptional<int32> RankValue;
         TOptional<FString> UserIdValue;

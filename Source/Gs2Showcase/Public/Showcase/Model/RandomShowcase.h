@@ -22,7 +22,7 @@
 
 namespace Gs2::Showcase::Model
 {
-    class GS2SHOWCASE_API FRandomShowcase final : public Gs2Object, public TSharedFromThis<FRandomShowcase>
+    class GS2SHOWCASE_API FRandomShowcase final : public FGs2Object, public TSharedFromThis<FRandomShowcase>
     {
         TOptional<FString> RandomShowcaseIdValue;
         TOptional<FString> NameValue;

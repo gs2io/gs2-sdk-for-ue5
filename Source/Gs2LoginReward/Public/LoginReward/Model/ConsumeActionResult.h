@@ -21,7 +21,7 @@
 
 namespace Gs2::LoginReward::Model
 {
-    class GS2LOGINREWARD_API FConsumeActionResult final : public Gs2Object, public TSharedFromThis<FConsumeActionResult>
+    class GS2LOGINREWARD_API FConsumeActionResult final : public FGs2Object, public TSharedFromThis<FConsumeActionResult>
     {
         TOptional<FString> ActionValue;
         TOptional<FString> ConsumeRequestValue;

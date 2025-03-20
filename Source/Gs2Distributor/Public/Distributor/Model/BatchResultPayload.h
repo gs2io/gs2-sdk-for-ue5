@@ -21,7 +21,7 @@
 
 namespace Gs2::Distributor::Model
 {
-    class GS2DISTRIBUTOR_API FBatchResultPayload final : public Gs2Object, public TSharedFromThis<FBatchResultPayload>
+    class GS2DISTRIBUTOR_API FBatchResultPayload final : public FGs2Object, public TSharedFromThis<FBatchResultPayload>
     {
         TOptional<FString> RequestIdValue;
         TOptional<int32> StatusCodeValue;

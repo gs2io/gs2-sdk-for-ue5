@@ -21,7 +21,7 @@
 
 namespace Gs2::SeasonRating::Model
 {
-    class GS2SEASONRATING_API FTransactionSetting final : public Gs2Object, public TSharedFromThis<FTransactionSetting>
+    class GS2SEASONRATING_API FTransactionSetting final : public FGs2Object, public TSharedFromThis<FTransactionSetting>
     {
         TOptional<bool> EnableAtomicCommitValue;
         TOptional<bool> TransactionUseDistributorValue;

@@ -23,7 +23,7 @@
 
 namespace Gs2::Version::Model
 {
-    class GS2VERSION_API FStatus final : public Gs2Object, public TSharedFromThis<FStatus>
+    class GS2VERSION_API FStatus final : public FGs2Object, public TSharedFromThis<FStatus>
     {
         TSharedPtr<FVersionModel> VersionModelValue;
         TSharedPtr<FVersion> CurrentVersionValue;

@@ -23,7 +23,7 @@
 
 namespace Gs2::MegaField::Model
 {
-    class GS2MEGAFIELD_API FSpatial final : public Gs2Object, public TSharedFromThis<FSpatial>
+    class GS2MEGAFIELD_API FSpatial final : public FGs2Object, public TSharedFromThis<FSpatial>
     {
         TOptional<FString> SpatialIdValue;
         TOptional<FString> UserIdValue;

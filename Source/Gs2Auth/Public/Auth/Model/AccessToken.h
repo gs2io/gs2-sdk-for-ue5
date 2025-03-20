@@ -21,7 +21,7 @@
 
 namespace Gs2::Auth::Model
 {
-    class GS2AUTH_API FAccessToken final : public Gs2Object, public TSharedFromThis<FAccessToken>
+    class GS2AUTH_API FAccessToken final : public FGs2Object, public TSharedFromThis<FAccessToken>
     {
         TOptional<FString> TokenValue;
         TOptional<FString> UserIdValue;

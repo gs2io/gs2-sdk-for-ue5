@@ -21,7 +21,7 @@
 
 namespace Gs2::Identifier::Model
 {
-    class GS2IDENTIFIER_API FAttachSecurityPolicy final : public Gs2Object, public TSharedFromThis<FAttachSecurityPolicy>
+    class GS2IDENTIFIER_API FAttachSecurityPolicy final : public FGs2Object, public TSharedFromThis<FAttachSecurityPolicy>
     {
         TOptional<FString> UserIdValue;
         TSharedPtr<TArray<FString>> SecurityPolicyIdsValue;

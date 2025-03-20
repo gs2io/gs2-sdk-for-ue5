@@ -98,38 +98,6 @@ namespace Gs2::Money::Domain::Model
             ->WithNamespaceName(Self->NamespaceName)
             ->WithUserId(Self->UserId)
             ->WithTransactionId(Self->TransactionId);
-        const auto Future = Self->Client->GetByUserIdAndTransactionId(
-            Request
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            return Future->GetTask().Error();
-        }
-        const auto RequestModel = Request;
-        const auto ResultModel = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::Money::Domain::Model::FUserDomain::CreateCacheParentKey(
-                    Self->NamespaceName,
-                    Self->UserId,
-                    "Receipt"
-                );
-                const auto Key = Gs2::Money::Domain::Model::FReceiptDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetTransactionId()
-                );
-                Self->Gs2->Cache->Put(
-                    Gs2::Money::Model::FReceipt::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
-        }
         auto Domain = Self;
 
         *Result = Domain;

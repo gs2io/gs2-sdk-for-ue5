@@ -21,7 +21,7 @@
 
 namespace Gs2::Script::Model
 {
-    class GS2SCRIPT_API FLogSetting final : public Gs2Object, public TSharedFromThis<FLogSetting>
+    class GS2SCRIPT_API FLogSetting final : public FGs2Object, public TSharedFromThis<FLogSetting>
     {
         TOptional<FString> LoggingNamespaceIdValue;
 

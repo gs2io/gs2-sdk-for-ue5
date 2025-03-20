@@ -23,7 +23,7 @@
 
 namespace Gs2::Buff::Model
 {
-    class GS2BUFF_API FBuffEntryModelMaster final : public Gs2Object, public TSharedFromThis<FBuffEntryModelMaster>
+    class GS2BUFF_API FBuffEntryModelMaster final : public FGs2Object, public TSharedFromThis<FBuffEntryModelMaster>
     {
         TOptional<FString> BuffEntryModelIdValue;
         TOptional<FString> NameValue;

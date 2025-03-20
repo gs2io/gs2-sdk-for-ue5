@@ -21,7 +21,7 @@
 
 namespace Gs2::Inbox::Model
 {
-    class GS2INBOX_API FCurrentMessageMaster final : public Gs2Object, public TSharedFromThis<FCurrentMessageMaster>
+    class GS2INBOX_API FCurrentMessageMaster final : public FGs2Object, public TSharedFromThis<FCurrentMessageMaster>
     {
         TOptional<FString> NamespaceIdValue;
         TOptional<FString> SettingsValue;

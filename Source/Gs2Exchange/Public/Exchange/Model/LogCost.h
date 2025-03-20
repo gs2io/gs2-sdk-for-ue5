@@ -21,7 +21,7 @@
 
 namespace Gs2::Exchange::Model
 {
-    class GS2EXCHANGE_API FLogCost final : public Gs2Object, public TSharedFromThis<FLogCost>
+    class GS2EXCHANGE_API FLogCost final : public FGs2Object, public TSharedFromThis<FLogCost>
     {
         TOptional<double> BaseValue;
         TSharedPtr<TArray<double>> AddsValue;

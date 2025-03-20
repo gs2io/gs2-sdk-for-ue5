@@ -21,7 +21,7 @@
 
 namespace Gs2::Experience::Model
 {
-    class GS2EXPERIENCE_API FGitHubCheckoutSetting final : public Gs2Object, public TSharedFromThis<FGitHubCheckoutSetting>
+    class GS2EXPERIENCE_API FGitHubCheckoutSetting final : public FGs2Object, public TSharedFromThis<FGitHubCheckoutSetting>
     {
         TOptional<FString> ApiKeyIdValue;
         TOptional<FString> RepositoryNameValue;

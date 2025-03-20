@@ -21,7 +21,7 @@
 
 namespace Gs2::Log::Model
 {
-    class GS2LOG_API FInsight final : public Gs2Object, public TSharedFromThis<FInsight>
+    class GS2LOG_API FInsight final : public FGs2Object, public TSharedFromThis<FInsight>
     {
         TOptional<FString> InsightIdValue;
         TOptional<FString> NameValue;

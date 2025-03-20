@@ -22,7 +22,7 @@
 
 namespace Gs2::Account::Model
 {
-    class GS2ACCOUNT_API FOpenIdConnectSetting final : public Gs2Object, public TSharedFromThis<FOpenIdConnectSetting>
+    class GS2ACCOUNT_API FOpenIdConnectSetting final : public FGs2Object, public TSharedFromThis<FOpenIdConnectSetting>
     {
         TOptional<FString> ConfigurationPathValue;
         TOptional<FString> ClientIdValue;

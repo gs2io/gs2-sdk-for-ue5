@@ -21,7 +21,7 @@
 
 namespace Gs2::Inventory::Model
 {
-    class GS2INVENTORY_API FSimpleItemModelMaster final : public Gs2Object, public TSharedFromThis<FSimpleItemModelMaster>
+    class GS2INVENTORY_API FSimpleItemModelMaster final : public FGs2Object, public TSharedFromThis<FSimpleItemModelMaster>
     {
         TOptional<FString> ItemModelIdValue;
         TOptional<FString> NameValue;

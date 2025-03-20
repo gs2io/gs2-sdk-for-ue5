@@ -22,7 +22,7 @@
 
 namespace Gs2::Limit::Model
 {
-    class GS2LIMIT_API FNamespace final : public Gs2Object, public TSharedFromThis<FNamespace>
+    class GS2LIMIT_API FNamespace final : public FGs2Object, public TSharedFromThis<FNamespace>
     {
         TOptional<FString> NamespaceIdValue;
         TOptional<FString> NameValue;

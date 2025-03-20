@@ -21,7 +21,7 @@
 
 namespace Gs2::Guild::Model
 {
-    class GS2GUILD_API FJoinedGuild final : public Gs2Object, public TSharedFromThis<FJoinedGuild>
+    class GS2GUILD_API FJoinedGuild final : public FGs2Object, public TSharedFromThis<FJoinedGuild>
     {
         TOptional<FString> JoinedGuildIdValue;
         TOptional<FString> GuildModelNameValue;

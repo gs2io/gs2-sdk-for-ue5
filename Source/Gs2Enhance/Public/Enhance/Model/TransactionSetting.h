@@ -21,7 +21,7 @@
 
 namespace Gs2::Enhance::Model
 {
-    class GS2ENHANCE_API FTransactionSetting final : public Gs2Object, public TSharedFromThis<FTransactionSetting>
+    class GS2ENHANCE_API FTransactionSetting final : public FGs2Object, public TSharedFromThis<FTransactionSetting>
     {
         TOptional<bool> EnableAutoRunValue;
         TOptional<bool> EnableAtomicCommitValue;

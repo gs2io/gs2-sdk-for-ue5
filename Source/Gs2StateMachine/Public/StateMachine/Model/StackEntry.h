@@ -21,7 +21,7 @@
 
 namespace Gs2::StateMachine::Model
 {
-    class GS2STATEMACHINE_API FStackEntry final : public Gs2Object, public TSharedFromThis<FStackEntry>
+    class GS2STATEMACHINE_API FStackEntry final : public FGs2Object, public TSharedFromThis<FStackEntry>
     {
         TOptional<FString> StateMachineNameValue;
         TOptional<FString> TaskNameValue;

@@ -21,7 +21,7 @@
 
 namespace Gs2::MegaField::Model
 {
-    class GS2MEGAFIELD_API FPosition final : public Gs2Object, public TSharedFromThis<FPosition>
+    class GS2MEGAFIELD_API FPosition final : public FGs2Object, public TSharedFromThis<FPosition>
     {
         TOptional<float> XValue;
         TOptional<float> YValue;

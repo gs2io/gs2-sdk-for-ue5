@@ -21,7 +21,7 @@
 
 namespace Gs2::SkillTree::Model
 {
-    class GS2SKILLTREE_API FCurrentTreeMaster final : public Gs2Object, public TSharedFromThis<FCurrentTreeMaster>
+    class GS2SKILLTREE_API FCurrentTreeMaster final : public FGs2Object, public TSharedFromThis<FCurrentTreeMaster>
     {
         TOptional<FString> NamespaceIdValue;
         TOptional<FString> SettingsValue;

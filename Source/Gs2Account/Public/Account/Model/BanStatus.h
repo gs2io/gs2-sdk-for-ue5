@@ -21,7 +21,7 @@
 
 namespace Gs2::Account::Model
 {
-    class GS2ACCOUNT_API FBanStatus final : public Gs2Object, public TSharedFromThis<FBanStatus>
+    class GS2ACCOUNT_API FBanStatus final : public FGs2Object, public TSharedFromThis<FBanStatus>
     {
         TOptional<FString> NameValue;
         TOptional<FString> ReasonValue;

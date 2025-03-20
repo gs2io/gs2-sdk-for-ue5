@@ -21,7 +21,7 @@
 
 namespace Gs2::Version::Model
 {
-    class GS2VERSION_API FGitHubCheckoutSetting final : public Gs2Object, public TSharedFromThis<FGitHubCheckoutSetting>
+    class GS2VERSION_API FGitHubCheckoutSetting final : public FGs2Object, public TSharedFromThis<FGitHubCheckoutSetting>
     {
         TOptional<FString> ApiKeyIdValue;
         TOptional<FString> RepositoryNameValue;

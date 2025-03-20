@@ -127,57 +127,6 @@ namespace Gs2::Inventory::Domain::Model
             ->WithInventoryName(Self->InventoryName)
             ->WithUserId(Self->UserId)
             ->WithItemName(Self->ItemName);
-        const auto Future = Self->Client->GetBigItemByUserId(
-            Request
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            return Future->GetTask().Error();
-        }
-        const auto RequestModel = Request;
-        const auto ResultModel = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::Inventory::Domain::Model::FBigInventoryDomain::CreateCacheParentKey(
-                    Self->NamespaceName,
-                    Self->UserId,
-                    Self->InventoryName,
-                    "BigItem"
-                );
-                const auto Key = Gs2::Inventory::Domain::Model::FBigItemDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetItemName()
-                );
-                Self->Gs2->Cache->Put(
-                    Gs2::Inventory::Model::FBigItem::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
-            if (ResultModel->GetItemModel() != nullptr)
-            {
-                const auto ParentKey = Gs2::Inventory::Domain::Model::FBigInventoryModelDomain::CreateCacheParentKey(
-                    Self->NamespaceName,
-                    Self->InventoryName,
-                    "BigItemModel"
-                );
-                const auto Key = Gs2::Inventory::Domain::Model::FBigItemModelDomain::CreateCacheKey(
-                    ResultModel->GetItemModel()->GetName()
-                );
-                Self->Gs2->Cache->Put(
-                    Gs2::Inventory::Model::FBigItemModel::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItemModel(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
-        }
         *Result = ResultModel->GetItem();
         return nullptr;
     }
@@ -212,39 +161,6 @@ namespace Gs2::Inventory::Domain::Model
             ->WithInventoryName(Self->InventoryName)
             ->WithUserId(Self->UserId)
             ->WithItemName(Self->ItemName);
-        const auto Future = Self->Client->AcquireBigItemByUserId(
-            Request
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            return Future->GetTask().Error();
-        }
-        const auto RequestModel = Request;
-        const auto ResultModel = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::Inventory::Domain::Model::FBigInventoryDomain::CreateCacheParentKey(
-                    Self->NamespaceName,
-                    Self->UserId,
-                    Self->InventoryName,
-                    "BigItem"
-                );
-                const auto Key = Gs2::Inventory::Domain::Model::FBigItemDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetItemName()
-                );
-                Self->Gs2->Cache->Put(
-                    Gs2::Inventory::Model::FBigItem::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
-        }
         auto Domain = Self;
 
         *Result = Domain;
@@ -281,39 +197,6 @@ namespace Gs2::Inventory::Domain::Model
             ->WithInventoryName(Self->InventoryName)
             ->WithUserId(Self->UserId)
             ->WithItemName(Self->ItemName);
-        const auto Future = Self->Client->ConsumeBigItemByUserId(
-            Request
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            return Future->GetTask().Error();
-        }
-        const auto RequestModel = Request;
-        const auto ResultModel = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::Inventory::Domain::Model::FBigInventoryDomain::CreateCacheParentKey(
-                    Self->NamespaceName,
-                    Self->UserId,
-                    Self->InventoryName,
-                    "BigItem"
-                );
-                const auto Key = Gs2::Inventory::Domain::Model::FBigItemDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetItemName()
-                );
-                Self->Gs2->Cache->Put(
-                    Gs2::Inventory::Model::FBigItem::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
-        }
         auto Domain = Self;
 
         *Result = Domain;
@@ -350,39 +233,6 @@ namespace Gs2::Inventory::Domain::Model
             ->WithInventoryName(Self->InventoryName)
             ->WithUserId(Self->UserId)
             ->WithItemName(Self->ItemName);
-        const auto Future = Self->Client->SetBigItemByUserId(
-            Request
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            return Future->GetTask().Error();
-        }
-        const auto RequestModel = Request;
-        const auto ResultModel = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::Inventory::Domain::Model::FBigInventoryDomain::CreateCacheParentKey(
-                    Self->NamespaceName,
-                    Self->UserId,
-                    Self->InventoryName,
-                    "BigItem"
-                );
-                const auto Key = Gs2::Inventory::Domain::Model::FBigItemDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetItemName()
-                );
-                Self->Gs2->Cache->Put(
-                    Gs2::Inventory::Model::FBigItem::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
-        }
         auto Domain = Self;
 
         *Result = Domain;
@@ -419,33 +269,6 @@ namespace Gs2::Inventory::Domain::Model
             ->WithInventoryName(Self->InventoryName)
             ->WithUserId(Self->UserId)
             ->WithItemName(Self->ItemName);
-        const auto Future = Self->Client->DeleteBigItemByUserId(
-            Request
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            return Future->GetTask().Error();
-        }
-        const auto RequestModel = Request;
-        const auto ResultModel = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::Inventory::Domain::Model::FBigInventoryDomain::CreateCacheParentKey(
-                    Self->NamespaceName,
-                    Self->UserId,
-                    Self->InventoryName,
-                    "BigItem"
-                );
-                const auto Key = Gs2::Inventory::Domain::Model::FBigItemDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetItemName()
-                );
-                Self->Gs2->Cache->Delete(Gs2::Inventory::Model::FBigItem::TypeName, ParentKey, Key);
-            }
-        }
         auto Domain = Self;
 
         *Result = Domain;
@@ -482,20 +305,6 @@ namespace Gs2::Inventory::Domain::Model
             ->WithUserId(Self->UserId)
             ->WithInventoryName(Self->InventoryName)
             ->WithItemName(Self->ItemName);
-        const auto Future = Self->Client->VerifyBigItemByUserId(
-            Request
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            return Future->GetTask().Error();
-        }
-        const auto RequestModel = Request;
-        const auto ResultModel = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-        }
         const auto Domain = Self;
         *Result = Domain;
         return nullptr;

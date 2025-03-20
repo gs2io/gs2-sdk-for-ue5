@@ -21,7 +21,7 @@
 
 namespace Gs2::Guard::Model
 {
-    class GS2GUARD_API FBlockingPolicyModel final : public Gs2Object, public TSharedFromThis<FBlockingPolicyModel>
+    class GS2GUARD_API FBlockingPolicyModel final : public FGs2Object, public TSharedFromThis<FBlockingPolicyModel>
     {
         TSharedPtr<TArray<FString>> PassServicesValue;
         TOptional<FString> DefaultRestrictionValue;

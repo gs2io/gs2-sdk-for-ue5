@@ -21,7 +21,7 @@
 
 namespace Gs2::Ranking2::Model
 {
-    class GS2RANKING2_API FTransactionSetting final : public Gs2Object, public TSharedFromThis<FTransactionSetting>
+    class GS2RANKING2_API FTransactionSetting final : public FGs2Object, public TSharedFromThis<FTransactionSetting>
     {
         TOptional<bool> EnableAutoRunValue;
         TOptional<bool> EnableAtomicCommitValue;

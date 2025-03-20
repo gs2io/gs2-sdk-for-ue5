@@ -21,7 +21,7 @@
 
 namespace Gs2::SkillTree::Model
 {
-    class GS2SKILLTREE_API FStatus final : public Gs2Object, public TSharedFromThis<FStatus>
+    class GS2SKILLTREE_API FStatus final : public FGs2Object, public TSharedFromThis<FStatus>
     {
         TOptional<FString> StatusIdValue;
         TOptional<FString> UserIdValue;

@@ -21,7 +21,7 @@
 
 namespace Gs2::StateMachine::Model
 {
-    class GS2STATEMACHINE_API FVerifyActionResult final : public Gs2Object, public TSharedFromThis<FVerifyActionResult>
+    class GS2STATEMACHINE_API FVerifyActionResult final : public FGs2Object, public TSharedFromThis<FVerifyActionResult>
     {
         TOptional<FString> ActionValue;
         TOptional<FString> VerifyRequestValue;

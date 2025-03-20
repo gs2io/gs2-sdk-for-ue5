@@ -22,7 +22,7 @@
 
 namespace Gs2::Guild::Model
 {
-    class GS2GUILD_API FInbox final : public Gs2Object, public TSharedFromThis<FInbox>
+    class GS2GUILD_API FInbox final : public FGs2Object, public TSharedFromThis<FInbox>
     {
         TOptional<FString> InboxIdValue;
         TOptional<FString> GuildNameValue;

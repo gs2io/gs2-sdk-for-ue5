@@ -24,7 +24,7 @@
 
 namespace Gs2::SkillTree::Model
 {
-    class GS2SKILLTREE_API FNodeModel final : public Gs2Object, public TSharedFromThis<FNodeModel>
+    class GS2SKILLTREE_API FNodeModel final : public FGs2Object, public TSharedFromThis<FNodeModel>
     {
         TOptional<FString> NodeModelIdValue;
         TOptional<FString> NameValue;

@@ -21,7 +21,7 @@
 
 namespace Gs2::Schedule::Model
 {
-    class GS2SCHEDULE_API FRepeatSchedule final : public Gs2Object, public TSharedFromThis<FRepeatSchedule>
+    class GS2SCHEDULE_API FRepeatSchedule final : public FGs2Object, public TSharedFromThis<FRepeatSchedule>
     {
         TOptional<int32> RepeatCountValue;
         TOptional<int64> CurrentRepeatStartAtValue;

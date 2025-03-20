@@ -106,39 +106,6 @@ namespace Gs2::Experience::Domain::Model
             ->WithAccessToken(Self->AccessToken->GetToken())
             ->WithExperienceName(Self->ExperienceName)
             ->WithPropertyId(Self->PropertyId);
-        const auto Future = Self->Client->GetStatus(
-            Request
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            return Future->GetTask().Error();
-        }
-        const auto RequestModel = Request;
-        const auto ResultModel = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::Experience::Domain::Model::FUserDomain::CreateCacheParentKey(
-                    Self->NamespaceName,
-                    Self->UserId(),
-                    "Status"
-                );
-                const auto Key = Gs2::Experience::Domain::Model::FStatusDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetExperienceName(),
-                    ResultModel->GetItem()->GetPropertyId()
-                );
-                Self->Gs2->Cache->Put(
-                    Gs2::Experience::Model::FStatus::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
-        }
         *Result = ResultModel->GetItem();
         return nullptr;
     }
@@ -173,39 +140,6 @@ namespace Gs2::Experience::Domain::Model
             ->WithAccessToken(Self->AccessToken->GetToken())
             ->WithExperienceName(Self->ExperienceName)
             ->WithPropertyId(Self->PropertyId);
-        const auto Future = Self->Client->GetStatusWithSignature(
-            Request
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            return Future->GetTask().Error();
-        }
-        const auto RequestModel = Request;
-        const auto ResultModel = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::Experience::Domain::Model::FUserDomain::CreateCacheParentKey(
-                    Self->NamespaceName,
-                    Self->UserId(),
-                    "Status"
-                );
-                const auto Key = Gs2::Experience::Domain::Model::FStatusDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetExperienceName(),
-                    ResultModel->GetItem()->GetPropertyId()
-                );
-                Self->Gs2->Cache->Put(
-                    Gs2::Experience::Model::FStatus::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
-        }
         auto Domain = Self;
         if (ResultModel != nullptr)
         {
@@ -247,39 +181,6 @@ namespace Gs2::Experience::Domain::Model
             ->WithAccessToken(Self->AccessToken->GetToken())
             ->WithExperienceName(Self->ExperienceName)
             ->WithPropertyId(Self->PropertyId);
-        const auto Future = Self->Client->SubExperience(
-            Request
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            return Future->GetTask().Error();
-        }
-        const auto RequestModel = Request;
-        const auto ResultModel = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::Experience::Domain::Model::FUserDomain::CreateCacheParentKey(
-                    Self->NamespaceName,
-                    Self->UserId(),
-                    "Status"
-                );
-                const auto Key = Gs2::Experience::Domain::Model::FStatusDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetExperienceName(),
-                    ResultModel->GetItem()->GetPropertyId()
-                );
-                Self->Gs2->Cache->Put(
-                    Gs2::Experience::Model::FStatus::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
-        }
         auto Domain = Self;
 
         *Result = Domain;
@@ -316,39 +217,6 @@ namespace Gs2::Experience::Domain::Model
             ->WithAccessToken(Self->AccessToken->GetToken())
             ->WithExperienceName(Self->ExperienceName)
             ->WithPropertyId(Self->PropertyId);
-        const auto Future = Self->Client->SubRankCap(
-            Request
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            return Future->GetTask().Error();
-        }
-        const auto RequestModel = Request;
-        const auto ResultModel = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::Experience::Domain::Model::FUserDomain::CreateCacheParentKey(
-                    Self->NamespaceName,
-                    Self->UserId(),
-                    "Status"
-                );
-                const auto Key = Gs2::Experience::Domain::Model::FStatusDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetExperienceName(),
-                    ResultModel->GetItem()->GetPropertyId()
-                );
-                Self->Gs2->Cache->Put(
-                    Gs2::Experience::Model::FStatus::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
-        }
         auto Domain = Self;
 
         *Result = Domain;
@@ -385,20 +253,6 @@ namespace Gs2::Experience::Domain::Model
             ->WithAccessToken(Self->AccessToken->GetToken())
             ->WithExperienceName(Self->ExperienceName)
             ->WithPropertyId(Self->PropertyId);
-        const auto Future = Self->Client->VerifyRank(
-            Request
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            return Future->GetTask().Error();
-        }
-        const auto RequestModel = Request;
-        const auto ResultModel = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-        }
         const auto Domain = Self;
         *Result = Domain;
         return nullptr;
@@ -434,20 +288,6 @@ namespace Gs2::Experience::Domain::Model
             ->WithAccessToken(Self->AccessToken->GetToken())
             ->WithExperienceName(Self->ExperienceName)
             ->WithPropertyId(Self->PropertyId);
-        const auto Future = Self->Client->VerifyRankCap(
-            Request
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            return Future->GetTask().Error();
-        }
-        const auto RequestModel = Request;
-        const auto ResultModel = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-        }
         const auto Domain = Self;
         *Result = Domain;
         return nullptr;

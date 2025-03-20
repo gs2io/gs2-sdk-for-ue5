@@ -98,38 +98,6 @@ namespace Gs2::Log::Domain::Model
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithAccessToken(Self->AccessToken->GetToken());
-        const auto Future = Self->Client->SendInGameLog(
-            Request
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            return Future->GetTask().Error();
-        }
-        const auto RequestModel = Request;
-        const auto ResultModel = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::Log::Domain::Model::FUserDomain::CreateCacheParentKey(
-                    Self->NamespaceName,
-                    Self->UserId(),
-                    "InGameLog"
-                );
-                const auto Key = Gs2::Log::Domain::Model::FInGameLogDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetRequestId()
-                );
-                Self->Gs2->Cache->Put(
-                    Gs2::Log::Model::FInGameLog::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
-        }
         auto Domain = MakeShared<Gs2::Log::Domain::Model::FInGameLogAccessTokenDomain>(
             Self->Gs2,
             Self->Service,

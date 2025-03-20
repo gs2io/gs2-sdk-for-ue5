@@ -21,7 +21,7 @@
 
 namespace Gs2::Ranking2::Model
 {
-    class GS2RANKING2_API FVerifyActionResult final : public Gs2Object, public TSharedFromThis<FVerifyActionResult>
+    class GS2RANKING2_API FVerifyActionResult final : public FGs2Object, public TSharedFromThis<FVerifyActionResult>
     {
         TOptional<FString> ActionValue;
         TOptional<FString> VerifyRequestValue;

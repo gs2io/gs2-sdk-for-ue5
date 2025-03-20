@@ -21,7 +21,7 @@
 
 namespace Gs2::Quest::Model
 {
-    class GS2QUEST_API FTransactionSetting final : public Gs2Object, public TSharedFromThis<FTransactionSetting>
+    class GS2QUEST_API FTransactionSetting final : public FGs2Object, public TSharedFromThis<FTransactionSetting>
     {
         TOptional<bool> EnableAutoRunValue;
         TOptional<bool> EnableAtomicCommitValue;

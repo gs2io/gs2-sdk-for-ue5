@@ -21,7 +21,7 @@
 
 namespace Gs2::Enchant::Model
 {
-    class GS2ENCHANT_API FVerifyActionResult final : public Gs2Object, public TSharedFromThis<FVerifyActionResult>
+    class GS2ENCHANT_API FVerifyActionResult final : public FGs2Object, public TSharedFromThis<FVerifyActionResult>
     {
         TOptional<FString> ActionValue;
         TOptional<FString> VerifyRequestValue;

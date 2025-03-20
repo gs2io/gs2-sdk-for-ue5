@@ -21,7 +21,7 @@
 
 namespace Gs2::Friend::Model
 {
-    class GS2FRIEND_API FBlackList final : public Gs2Object, public TSharedFromThis<FBlackList>
+    class GS2FRIEND_API FBlackList final : public FGs2Object, public TSharedFromThis<FBlackList>
     {
         TOptional<FString> BlackListIdValue;
         TOptional<FString> UserIdValue;

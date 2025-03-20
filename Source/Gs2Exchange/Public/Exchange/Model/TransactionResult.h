@@ -24,7 +24,7 @@
 
 namespace Gs2::Exchange::Model
 {
-    class GS2EXCHANGE_API FTransactionResult final : public Gs2Object, public TSharedFromThis<FTransactionResult>
+    class GS2EXCHANGE_API FTransactionResult final : public FGs2Object, public TSharedFromThis<FTransactionResult>
     {
         TOptional<FString> TransactionIdValue;
         TSharedPtr<TArray<TSharedPtr<FVerifyActionResult>>> VerifyResultsValue;

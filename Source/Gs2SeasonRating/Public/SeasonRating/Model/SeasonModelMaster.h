@@ -22,7 +22,7 @@
 
 namespace Gs2::SeasonRating::Model
 {
-    class GS2SEASONRATING_API FSeasonModelMaster final : public Gs2Object, public TSharedFromThis<FSeasonModelMaster>
+    class GS2SEASONRATING_API FSeasonModelMaster final : public FGs2Object, public TSharedFromThis<FSeasonModelMaster>
     {
         TOptional<FString> SeasonModelIdValue;
         TOptional<FString> NameValue;

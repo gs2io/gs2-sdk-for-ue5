@@ -21,7 +21,7 @@
 
 namespace Gs2::Chat::Model
 {
-    class GS2CHAT_API FNotificationType final : public Gs2Object, public TSharedFromThis<FNotificationType>
+    class GS2CHAT_API FNotificationType final : public FGs2Object, public TSharedFromThis<FNotificationType>
     {
         TOptional<int32> CategoryValue;
         TOptional<bool> EnableTransferMobilePushNotificationValue;

@@ -28,6 +28,7 @@ namespace Gs2::Exchange::Model
         ConfigValue(nullptr),
         AcquirableAtValue(TOptional<int64>()),
         ExchangedAtValue(TOptional<int64>()),
+        CreatedAtValue(TOptional<int64>()),
         RevisionValue(TOptional<int64>())
     {
     }
@@ -44,6 +45,7 @@ namespace Gs2::Exchange::Model
         ConfigValue(From.ConfigValue),
         AcquirableAtValue(From.AcquirableAtValue),
         ExchangedAtValue(From.ExchangedAtValue),
+        CreatedAtValue(From.CreatedAtValue),
         RevisionValue(From.RevisionValue)
     {
     }
@@ -117,6 +119,14 @@ namespace Gs2::Exchange::Model
     )
     {
         this->ExchangedAtValue = ExchangedAt;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FAwait> FAwait::WithCreatedAt(
+        const TOptional<int64> CreatedAt
+    )
+    {
+        this->CreatedAtValue = CreatedAt;
         return SharedThis(this);
     }
 
@@ -198,6 +208,19 @@ namespace Gs2::Exchange::Model
             return FString("null");
         }
         return FString::Printf(TEXT("%lld"), ExchangedAtValue.GetValue());
+    }
+    TOptional<int64> FAwait::GetCreatedAt() const
+    {
+        return CreatedAtValue;
+    }
+
+    FString FAwait::GetCreatedAtString() const
+    {
+        if (!CreatedAtValue.IsSet())
+        {
+            return FString("null");
+        }
+        return FString::Printf(TEXT("%lld"), CreatedAtValue.GetValue());
     }
     TOptional<int64> FAwait::GetRevision() const
     {
@@ -358,6 +381,15 @@ namespace Gs2::Exchange::Model
                     }
                     return TOptional<int64>();
                 }() : TOptional<int64>())
+            ->WithCreatedAt(Data->HasField(ANSI_TO_TCHAR("createdAt")) ? [Data]() -> TOptional<int64>
+                {
+                    int64 v;
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("createdAt"), v))
+                    {
+                        return TOptional(v);
+                    }
+                    return TOptional<int64>();
+                }() : TOptional<int64>())
             ->WithRevision(Data->HasField(ANSI_TO_TCHAR("revision")) ? [Data]() -> TOptional<int64>
                 {
                     int64 v;
@@ -412,6 +444,10 @@ namespace Gs2::Exchange::Model
         if (ExchangedAtValue.IsSet())
         {
             JsonRootObject->SetStringField("exchangedAt", FString::Printf(TEXT("%lld"), ExchangedAtValue.GetValue()));
+        }
+        if (CreatedAtValue.IsSet())
+        {
+            JsonRootObject->SetStringField("createdAt", FString::Printf(TEXT("%lld"), CreatedAtValue.GetValue()));
         }
         if (RevisionValue.IsSet())
         {

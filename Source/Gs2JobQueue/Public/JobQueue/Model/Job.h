@@ -21,7 +21,7 @@
 
 namespace Gs2::JobQueue::Model
 {
-    class GS2JOBQUEUE_API FJob final : public Gs2Object, public TSharedFromThis<FJob>
+    class GS2JOBQUEUE_API FJob final : public FGs2Object, public TSharedFromThis<FJob>
     {
         TOptional<FString> JobIdValue;
         TOptional<FString> NameValue;

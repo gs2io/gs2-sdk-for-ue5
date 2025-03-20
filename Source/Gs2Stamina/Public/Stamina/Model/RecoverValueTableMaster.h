@@ -21,7 +21,7 @@
 
 namespace Gs2::Stamina::Model
 {
-    class GS2STAMINA_API FRecoverValueTableMaster final : public Gs2Object, public TSharedFromThis<FRecoverValueTableMaster>
+    class GS2STAMINA_API FRecoverValueTableMaster final : public FGs2Object, public TSharedFromThis<FRecoverValueTableMaster>
     {
         TOptional<FString> RecoverValueTableIdValue;
         TOptional<FString> NameValue;

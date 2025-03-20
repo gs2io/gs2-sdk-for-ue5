@@ -22,7 +22,7 @@
 
 namespace Gs2::Ranking2::Model
 {
-    class GS2RANKING2_API FRankingReward final : public Gs2Object, public TSharedFromThis<FRankingReward>
+    class GS2RANKING2_API FRankingReward final : public FGs2Object, public TSharedFromThis<FRankingReward>
     {
         TOptional<int32> ThresholdRankValue;
         TOptional<FString> MetadataValue;

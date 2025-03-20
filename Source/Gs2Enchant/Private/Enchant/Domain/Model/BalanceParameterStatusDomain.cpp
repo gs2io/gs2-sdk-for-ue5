@@ -107,39 +107,6 @@ namespace Gs2::Enchant::Domain::Model
             ->WithUserId(Self->UserId)
             ->WithParameterName(Self->ParameterName)
             ->WithPropertyId(Self->PropertyId);
-        const auto Future = Self->Client->GetBalanceParameterStatusByUserId(
-            Request
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            return Future->GetTask().Error();
-        }
-        const auto RequestModel = Request;
-        const auto ResultModel = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::Enchant::Domain::Model::FUserDomain::CreateCacheParentKey(
-                    Self->NamespaceName,
-                    Self->UserId,
-                    "BalanceParameterStatus"
-                );
-                const auto Key = Gs2::Enchant::Domain::Model::FBalanceParameterStatusDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetParameterName(),
-                    ResultModel->GetItem()->GetPropertyId()
-                );
-                Self->Gs2->Cache->Put(
-                    Gs2::Enchant::Model::FBalanceParameterStatus::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
-        }
         *Result = ResultModel->GetItem();
         return nullptr;
     }
@@ -174,33 +141,6 @@ namespace Gs2::Enchant::Domain::Model
             ->WithUserId(Self->UserId)
             ->WithParameterName(Self->ParameterName)
             ->WithPropertyId(Self->PropertyId);
-        const auto Future = Self->Client->DeleteBalanceParameterStatusByUserId(
-            Request
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            return Future->GetTask().Error();
-        }
-        const auto RequestModel = Request;
-        const auto ResultModel = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::Enchant::Domain::Model::FUserDomain::CreateCacheParentKey(
-                    Self->NamespaceName,
-                    Self->UserId,
-                    "BalanceParameterStatus"
-                );
-                const auto Key = Gs2::Enchant::Domain::Model::FBalanceParameterStatusDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetParameterName(),
-                    ResultModel->GetItem()->GetPropertyId()
-                );
-                Self->Gs2->Cache->Delete(Gs2::Enchant::Model::FBalanceParameterStatus::TypeName, ParentKey, Key);
-            }
-        }
         auto Domain = Self;
 
         *Result = Domain;
@@ -237,39 +177,6 @@ namespace Gs2::Enchant::Domain::Model
             ->WithUserId(Self->UserId)
             ->WithParameterName(Self->ParameterName)
             ->WithPropertyId(Self->PropertyId);
-        const auto Future = Self->Client->ReDrawBalanceParameterStatusByUserId(
-            Request
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            return Future->GetTask().Error();
-        }
-        const auto RequestModel = Request;
-        const auto ResultModel = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::Enchant::Domain::Model::FUserDomain::CreateCacheParentKey(
-                    Self->NamespaceName,
-                    Self->UserId,
-                    "BalanceParameterStatus"
-                );
-                const auto Key = Gs2::Enchant::Domain::Model::FBalanceParameterStatusDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetParameterName(),
-                    ResultModel->GetItem()->GetPropertyId()
-                );
-                Self->Gs2->Cache->Put(
-                    Gs2::Enchant::Model::FBalanceParameterStatus::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
-        }
         auto Domain = Self;
 
         *Result = Domain;
@@ -306,39 +213,6 @@ namespace Gs2::Enchant::Domain::Model
             ->WithUserId(Self->UserId)
             ->WithParameterName(Self->ParameterName)
             ->WithPropertyId(Self->PropertyId);
-        const auto Future = Self->Client->SetBalanceParameterStatusByUserId(
-            Request
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            return Future->GetTask().Error();
-        }
-        const auto RequestModel = Request;
-        const auto ResultModel = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::Enchant::Domain::Model::FUserDomain::CreateCacheParentKey(
-                    Self->NamespaceName,
-                    Self->UserId,
-                    "BalanceParameterStatus"
-                );
-                const auto Key = Gs2::Enchant::Domain::Model::FBalanceParameterStatusDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetParameterName(),
-                    ResultModel->GetItem()->GetPropertyId()
-                );
-                Self->Gs2->Cache->Put(
-                    Gs2::Enchant::Model::FBalanceParameterStatus::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
-        }
         auto Domain = Self;
 
         *Result = Domain;

@@ -24,7 +24,7 @@
 
 namespace Gs2::Distributor::Model
 {
-    class GS2DISTRIBUTOR_API FTransactionResult final : public Gs2Object, public TSharedFromThis<FTransactionResult>
+    class GS2DISTRIBUTOR_API FTransactionResult final : public FGs2Object, public TSharedFromThis<FTransactionResult>
     {
         TOptional<FString> TransactionResultIdValue;
         TOptional<FString> UserIdValue;

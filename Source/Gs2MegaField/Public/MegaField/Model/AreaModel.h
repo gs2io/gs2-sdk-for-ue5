@@ -22,7 +22,7 @@
 
 namespace Gs2::MegaField::Model
 {
-    class GS2MEGAFIELD_API FAreaModel final : public Gs2Object, public TSharedFromThis<FAreaModel>
+    class GS2MEGAFIELD_API FAreaModel final : public FGs2Object, public TSharedFromThis<FAreaModel>
     {
         TOptional<FString> AreaModelIdValue;
         TOptional<FString> NameValue;

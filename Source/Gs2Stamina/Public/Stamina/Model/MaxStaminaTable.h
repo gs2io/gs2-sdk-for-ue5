@@ -21,7 +21,7 @@
 
 namespace Gs2::Stamina::Model
 {
-    class GS2STAMINA_API FMaxStaminaTable final : public Gs2Object, public TSharedFromThis<FMaxStaminaTable>
+    class GS2STAMINA_API FMaxStaminaTable final : public FGs2Object, public TSharedFromThis<FMaxStaminaTable>
     {
         TOptional<FString> NameValue;
         TOptional<FString> MetadataValue;

@@ -21,7 +21,7 @@
 
 namespace Gs2::Dictionary::Model
 {
-    class GS2DICTIONARY_API FCurrentEntryMaster final : public Gs2Object, public TSharedFromThis<FCurrentEntryMaster>
+    class GS2DICTIONARY_API FCurrentEntryMaster final : public FGs2Object, public TSharedFromThis<FCurrentEntryMaster>
     {
         TOptional<FString> NamespaceIdValue;
         TOptional<FString> SettingsValue;

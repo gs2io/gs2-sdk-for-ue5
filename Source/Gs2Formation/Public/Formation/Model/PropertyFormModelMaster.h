@@ -22,7 +22,7 @@
 
 namespace Gs2::Formation::Model
 {
-    class GS2FORMATION_API FPropertyFormModelMaster final : public Gs2Object, public TSharedFromThis<FPropertyFormModelMaster>
+    class GS2FORMATION_API FPropertyFormModelMaster final : public FGs2Object, public TSharedFromThis<FPropertyFormModelMaster>
     {
         TOptional<FString> PropertyFormModelIdValue;
         TOptional<FString> NameValue;

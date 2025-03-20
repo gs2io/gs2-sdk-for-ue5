@@ -22,7 +22,7 @@
 
 namespace Gs2::Ranking2::Model
 {
-    class GS2RANKING2_API FClusterRankingModel final : public Gs2Object, public TSharedFromThis<FClusterRankingModel>
+    class GS2RANKING2_API FClusterRankingModel final : public FGs2Object, public TSharedFromThis<FClusterRankingModel>
     {
         TOptional<FString> ClusterRankingModelIdValue;
         TOptional<FString> NameValue;

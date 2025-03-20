@@ -21,7 +21,7 @@
 
 namespace Gs2::Limit::Model
 {
-    class GS2LIMIT_API FCurrentLimitMaster final : public Gs2Object, public TSharedFromThis<FCurrentLimitMaster>
+    class GS2LIMIT_API FCurrentLimitMaster final : public FGs2Object, public TSharedFromThis<FCurrentLimitMaster>
     {
         TOptional<FString> NamespaceIdValue;
         TOptional<FString> SettingsValue;

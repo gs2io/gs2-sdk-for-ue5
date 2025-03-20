@@ -22,7 +22,7 @@
 
 namespace Gs2::Chat::Model
 {
-    class GS2CHAT_API FSubscribe final : public Gs2Object, public TSharedFromThis<FSubscribe>
+    class GS2CHAT_API FSubscribe final : public FGs2Object, public TSharedFromThis<FSubscribe>
     {
         TOptional<FString> SubscribeIdValue;
         TOptional<FString> UserIdValue;

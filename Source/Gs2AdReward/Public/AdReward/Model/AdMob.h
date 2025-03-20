@@ -21,7 +21,7 @@
 
 namespace Gs2::AdReward::Model
 {
-    class GS2ADREWARD_API FAdMob final : public Gs2Object, public TSharedFromThis<FAdMob>
+    class GS2ADREWARD_API FAdMob final : public FGs2Object, public TSharedFromThis<FAdMob>
     {
         TSharedPtr<TArray<FString>> AllowAdUnitIdsValue;
 

@@ -135,40 +135,6 @@ namespace Gs2::Ranking2::Domain::Model
             ->WithClusterName(Self->ClusterName)
             ->WithAccessToken(Self->AccessToken->GetToken())
             ->WithSeason(Self->Season);
-        const auto Future = Self->Client->CreateClusterRankingReceivedReward(
-            Request
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            return Future->GetTask().Error();
-        }
-        const auto RequestModel = Request;
-        const auto ResultModel = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::Ranking2::Domain::Model::FUserDomain::CreateCacheParentKey(
-                    Self->NamespaceName,
-                    Self->UserId(),
-                    "ClusterRankingReceivedReward"
-                );
-                const auto Key = Gs2::Ranking2::Domain::Model::FClusterRankingReceivedRewardDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetRankingName(),
-                    ResultModel->GetItem()->GetClusterName(),
-                    ResultModel->GetItem()->GetSeason().IsSet() ? FString::FromInt(*ResultModel->GetItem()->GetSeason()) : TOptional<FString>()
-                );
-                Self->Gs2->Cache->Put(
-                    Gs2::Ranking2::Model::FClusterRankingReceivedReward::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
-        }
         auto Domain = Self;
 
         *Result = Domain;
@@ -207,80 +173,23 @@ namespace Gs2::Ranking2::Domain::Model
             ->WithRankingName(Self->RankingName)
             ->WithClusterName(Self->ClusterName)
             ->WithSeason(Self->Season);
-
-        if (SpeculativeExecute) {
-            const auto SpeculativeExecuteFuture = Transaction::SpeculativeExecutor::FReceiveClusterRankingReceivedRewardByUserIdSpeculativeExecutor::Execute(
-                Self->Gs2,
-                Self->Service,
-                Self->AccessToken,
-                Request::FReceiveClusterRankingReceivedRewardByUserIdRequest::FromJson(Request->ToJson())
-            );
-            SpeculativeExecuteFuture->StartSynchronousTask();
-            if (SpeculativeExecuteFuture->GetTask().IsError())
-            {
-                return SpeculativeExecuteFuture->GetTask().Error();
-            }
-            const auto Commit = SpeculativeExecuteFuture->GetTask().Result();
-            SpeculativeExecuteFuture->EnsureCompletion();
-
-            if (Commit.IsValid()) {
-                (*Commit)();
-            }
-        }
-        const auto Future = Self->Client->ReceiveClusterRankingReceivedReward(
-            Request
+        const auto Transaction = Gs2::Core::Domain::Internal::FTransactionDomainFactory::ToTransaction(
+            Self->Gs2,
+            Self->AccessToken,
+            ResultModel->AutoRunStampSheet() == nullptr ? false : *ResultModel->AutoRunStampSheet(),
+            *ResultModel->GetTransactionId(),
+            *ResultModel->GetStampSheet(),
+            *ResultModel->GetStampSheetEncryptionKeyId(),
+            *ResultModel->GetAtomicCommit(),
+            *ResultModel->GetTransactionResult()
         );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
+        const auto Future3 = Transaction->Wait(true);
+        Future3->StartSynchronousTask();
+        if (Future3->GetTask().IsError())
         {
-            return Future->GetTask().Error();
+            return Future3->GetTask().Error();
         }
-        const auto RequestModel = Request;
-        const auto ResultModel = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::Ranking2::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
-                    Self->NamespaceName,
-                    "ClusterRankingModel"
-                );
-                const auto Key = Gs2::Ranking2::Domain::Model::FClusterRankingModelDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetName()
-                );
-                Self->Gs2->Cache->Put(
-                    Gs2::Ranking2::Model::FClusterRankingModel::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
-        }
-        if (ResultModel && ResultModel->GetStampSheet())
-        {
-            const auto Transaction = Gs2::Core::Domain::Internal::FTransactionDomainFactory::ToTransaction(
-                Self->Gs2,
-                Self->AccessToken,
-                false,
-                *ResultModel->GetTransactionId(),
-                *ResultModel->GetStampSheet(),
-                *ResultModel->GetStampSheetEncryptionKeyId()
-            );
-            const auto Future3 = Transaction->Wait(true);
-            Future3->StartSynchronousTask();
-            if (Future3->GetTask().IsError())
-            {
-                return Future3->GetTask().Error();
-            }
-        }
-        if (ResultModel != nullptr)
-        {
-            Self->AutoRunStampSheet = ResultModel->GetAutoRunStampSheet();
-            Self->TransactionId = ResultModel->GetTransactionId();
-        }
-        *Result = Self;
+        *Result = Transaction;
         return nullptr;
     }
 
@@ -316,40 +225,6 @@ namespace Gs2::Ranking2::Domain::Model
             ->WithClusterName(Self->ClusterName)
             ->WithAccessToken(Self->AccessToken->GetToken())
             ->WithSeason(Self->Season);
-        const auto Future = Self->Client->GetClusterRankingReceivedReward(
-            Request
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            return Future->GetTask().Error();
-        }
-        const auto RequestModel = Request;
-        const auto ResultModel = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::Ranking2::Domain::Model::FUserDomain::CreateCacheParentKey(
-                    Self->NamespaceName,
-                    Self->UserId(),
-                    "ClusterRankingReceivedReward"
-                );
-                const auto Key = Gs2::Ranking2::Domain::Model::FClusterRankingReceivedRewardDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetRankingName(),
-                    ResultModel->GetItem()->GetClusterName(),
-                    ResultModel->GetItem()->GetSeason().IsSet() ? FString::FromInt(*ResultModel->GetItem()->GetSeason()) : TOptional<FString>()
-                );
-                Self->Gs2->Cache->Put(
-                    Gs2::Ranking2::Model::FClusterRankingReceivedReward::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
-        }
         *Result = ResultModel->GetItem();
         return nullptr;
     }

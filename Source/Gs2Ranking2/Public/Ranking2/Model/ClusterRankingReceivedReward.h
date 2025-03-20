@@ -21,7 +21,7 @@
 
 namespace Gs2::Ranking2::Model
 {
-    class GS2RANKING2_API FClusterRankingReceivedReward final : public Gs2Object, public TSharedFromThis<FClusterRankingReceivedReward>
+    class GS2RANKING2_API FClusterRankingReceivedReward final : public FGs2Object, public TSharedFromThis<FClusterRankingReceivedReward>
     {
         TOptional<FString> ClusterRankingReceivedRewardIdValue;
         TOptional<FString> RankingNameValue;

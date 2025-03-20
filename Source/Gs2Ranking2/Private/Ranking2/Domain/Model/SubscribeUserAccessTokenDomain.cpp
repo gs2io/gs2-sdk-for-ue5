@@ -131,39 +131,6 @@ namespace Gs2::Ranking2::Domain::Model
             ->WithRankingName(Self->RankingName)
             ->WithAccessToken(Self->AccessToken->GetToken())
             ->WithTargetUserId(Self->TargetUserId);
-        const auto Future = Self->Client->GetSubscribe(
-            Request
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            return Future->GetTask().Error();
-        }
-        const auto RequestModel = Request;
-        const auto ResultModel = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::Ranking2::Domain::Model::FSubscribeDomain::CreateCacheParentKey(
-                    Self->NamespaceName,
-                    Self->UserId(),
-                    Self->RankingName,
-                    "SubscribeUser"
-                );
-                const auto Key = Gs2::Ranking2::Domain::Model::FSubscribeUserDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetTargetUserId()
-                );
-                Self->Gs2->Cache->Put(
-                    Gs2::Ranking2::Model::FSubscribeUser::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
-        }
         auto Domain = Self;
 
         *Result = Domain;
@@ -200,33 +167,6 @@ namespace Gs2::Ranking2::Domain::Model
             ->WithRankingName(Self->RankingName)
             ->WithAccessToken(Self->AccessToken->GetToken())
             ->WithTargetUserId(Self->TargetUserId);
-        const auto Future = Self->Client->DeleteSubscribe(
-            Request
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            return Future->GetTask().Error();
-        }
-        const auto RequestModel = Request;
-        const auto ResultModel = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::Ranking2::Domain::Model::FSubscribeDomain::CreateCacheParentKey(
-                    Self->NamespaceName,
-                    Self->UserId(),
-                    Self->RankingName,
-                    "SubscribeUser"
-                );
-                const auto Key = Gs2::Ranking2::Domain::Model::FSubscribeUserDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetTargetUserId()
-                );
-                Self->Gs2->Cache->Delete(Gs2::Ranking2::Model::FSubscribeUser::TypeName, ParentKey, Key);
-            }
-        }
         auto Domain = Self;
 
         *Result = Domain;

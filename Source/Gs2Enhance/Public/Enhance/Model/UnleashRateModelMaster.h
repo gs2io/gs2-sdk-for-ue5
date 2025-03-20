@@ -22,7 +22,7 @@
 
 namespace Gs2::Enhance::Model
 {
-    class GS2ENHANCE_API FUnleashRateModelMaster final : public Gs2Object, public TSharedFromThis<FUnleashRateModelMaster>
+    class GS2ENHANCE_API FUnleashRateModelMaster final : public FGs2Object, public TSharedFromThis<FUnleashRateModelMaster>
     {
         TOptional<FString> UnleashRateModelIdValue;
         TOptional<FString> NameValue;

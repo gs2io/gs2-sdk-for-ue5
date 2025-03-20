@@ -21,7 +21,7 @@
 
 namespace Gs2::Log::Model
 {
-    class GS2LOG_API FAccessLog final : public Gs2Object, public TSharedFromThis<FAccessLog>
+    class GS2LOG_API FAccessLog final : public FGs2Object, public TSharedFromThis<FAccessLog>
     {
         TOptional<int64> TimestampValue;
         TOptional<FString> RequestIdValue;

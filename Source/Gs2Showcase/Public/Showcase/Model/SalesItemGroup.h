@@ -22,7 +22,7 @@
 
 namespace Gs2::Showcase::Model
 {
-    class GS2SHOWCASE_API FSalesItemGroup final : public Gs2Object, public TSharedFromThis<FSalesItemGroup>
+    class GS2SHOWCASE_API FSalesItemGroup final : public FGs2Object, public TSharedFromThis<FSalesItemGroup>
     {
         TOptional<FString> NameValue;
         TOptional<FString> MetadataValue;

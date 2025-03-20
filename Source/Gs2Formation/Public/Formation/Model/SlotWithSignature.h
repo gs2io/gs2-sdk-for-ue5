@@ -21,7 +21,7 @@
 
 namespace Gs2::Formation::Model
 {
-    class GS2FORMATION_API FSlotWithSignature final : public Gs2Object, public TSharedFromThis<FSlotWithSignature>
+    class GS2FORMATION_API FSlotWithSignature final : public FGs2Object, public TSharedFromThis<FSlotWithSignature>
     {
         TOptional<FString> NameValue;
         TOptional<FString> PropertyTypeValue;

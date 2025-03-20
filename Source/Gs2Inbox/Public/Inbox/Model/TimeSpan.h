@@ -21,7 +21,7 @@
 
 namespace Gs2::Inbox::Model
 {
-    class GS2INBOX_API FTimeSpan final : public Gs2Object, public TSharedFromThis<FTimeSpan>
+    class GS2INBOX_API FTimeSpan final : public FGs2Object, public TSharedFromThis<FTimeSpan>
     {
         TOptional<int32> DaysValue;
         TOptional<int32> HoursValue;

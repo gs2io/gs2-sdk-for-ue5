@@ -22,7 +22,7 @@
 
 namespace Gs2::LoginReward::Model
 {
-    class GS2LOGINREWARD_API FReward final : public Gs2Object, public TSharedFromThis<FReward>
+    class GS2LOGINREWARD_API FReward final : public FGs2Object, public TSharedFromThis<FReward>
     {
         TSharedPtr<TArray<TSharedPtr<FAcquireAction>>> AcquireActionsValue;
 

@@ -23,7 +23,7 @@
 
 namespace Gs2::Ranking::Model
 {
-    class GS2RANKING_API FCategoryModelMaster final : public Gs2Object, public TSharedFromThis<FCategoryModelMaster>
+    class GS2RANKING_API FCategoryModelMaster final : public FGs2Object, public TSharedFromThis<FCategoryModelMaster>
     {
         TOptional<FString> CategoryModelIdValue;
         TOptional<FString> NameValue;

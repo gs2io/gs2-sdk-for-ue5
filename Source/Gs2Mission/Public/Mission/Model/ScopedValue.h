@@ -21,7 +21,7 @@
 
 namespace Gs2::Mission::Model
 {
-    class GS2MISSION_API FScopedValue final : public Gs2Object, public TSharedFromThis<FScopedValue>
+    class GS2MISSION_API FScopedValue final : public FGs2Object, public TSharedFromThis<FScopedValue>
     {
         TOptional<FString> ScopeTypeValue;
         TOptional<FString> ResetTypeValue;

@@ -22,7 +22,7 @@
 
 namespace Gs2::Mission::Model
 {
-    class GS2MISSION_API FMissionGroupModel final : public Gs2Object, public TSharedFromThis<FMissionGroupModel>
+    class GS2MISSION_API FMissionGroupModel final : public FGs2Object, public TSharedFromThis<FMissionGroupModel>
     {
         TOptional<FString> MissionGroupIdValue;
         TOptional<FString> NameValue;

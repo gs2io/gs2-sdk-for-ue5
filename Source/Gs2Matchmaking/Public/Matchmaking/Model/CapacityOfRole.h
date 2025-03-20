@@ -22,7 +22,7 @@
 
 namespace Gs2::Matchmaking::Model
 {
-    class GS2MATCHMAKING_API FCapacityOfRole final : public Gs2Object, public TSharedFromThis<FCapacityOfRole>
+    class GS2MATCHMAKING_API FCapacityOfRole final : public FGs2Object, public TSharedFromThis<FCapacityOfRole>
     {
         TOptional<FString> RoleNameValue;
         TSharedPtr<TArray<FString>> RoleAliasesValue;

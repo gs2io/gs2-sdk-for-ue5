@@ -22,7 +22,7 @@
 
 namespace Gs2::Matchmaking::Model
 {
-    class GS2MATCHMAKING_API FPlayer final : public Gs2Object, public TSharedFromThis<FPlayer>
+    class GS2MATCHMAKING_API FPlayer final : public FGs2Object, public TSharedFromThis<FPlayer>
     {
         TOptional<FString> UserIdValue;
         TSharedPtr<TArray<TSharedPtr<FAttribute>>> AttributesValue;

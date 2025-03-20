@@ -21,7 +21,7 @@
 
 namespace Gs2::Quest::Model
 {
-    class GS2QUEST_API FReward final : public Gs2Object, public TSharedFromThis<FReward>
+    class GS2QUEST_API FReward final : public FGs2Object, public TSharedFromThis<FReward>
     {
         TOptional<FString> ActionValue;
         TOptional<FString> RequestValue;

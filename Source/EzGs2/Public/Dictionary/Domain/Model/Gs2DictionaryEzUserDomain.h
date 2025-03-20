@@ -20,8 +20,10 @@
 #include "Dictionary/Domain/Model/User.h"
 #include "Dictionary/Model/Gs2DictionaryEzEntryModel.h"
 #include "Dictionary/Model/Gs2DictionaryEzEntry.h"
+#include "Dictionary/Model/Gs2DictionaryEzLike.h"
 #include "Dictionary/Model/Gs2DictionaryEzConfig.h"
 #include "Gs2DictionaryEzEntryDomain.h"
+#include "Gs2DictionaryEzLikeDomain.h"
 #include "Gs2DictionaryEzUserDomain.h"
 #include "Gs2DictionaryEzUserDomain.h"
 #include "Gs2DictionaryEzUserGameSessionDomain.h"
@@ -48,6 +50,10 @@ namespace Gs2::UE5::Dictionary::Domain::Model
         );
 
         Gs2::UE5::Dictionary::Domain::Model::FEzEntryDomainPtr Entry(
+            const FString EntryModelName
+        ) const;
+
+        Gs2::UE5::Dictionary::Domain::Model::FEzLikeDomainPtr Like(
             const FString EntryModelName
         ) const;
 

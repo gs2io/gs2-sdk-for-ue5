@@ -21,7 +21,7 @@
 
 namespace Gs2::Lottery::Model
 {
-    class GS2LOTTERY_API FCurrentLotteryMaster final : public Gs2Object, public TSharedFromThis<FCurrentLotteryMaster>
+    class GS2LOTTERY_API FCurrentLotteryMaster final : public FGs2Object, public TSharedFromThis<FCurrentLotteryMaster>
     {
         TOptional<FString> NamespaceIdValue;
         TOptional<FString> SettingsValue;

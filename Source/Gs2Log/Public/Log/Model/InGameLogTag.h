@@ -21,7 +21,7 @@
 
 namespace Gs2::Log::Model
 {
-    class GS2LOG_API FInGameLogTag final : public Gs2Object, public TSharedFromThis<FInGameLogTag>
+    class GS2LOG_API FInGameLogTag final : public FGs2Object, public TSharedFromThis<FInGameLogTag>
     {
         TOptional<FString> KeyValue;
         TOptional<FString> ValueValue;

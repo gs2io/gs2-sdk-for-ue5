@@ -73,33 +73,6 @@ namespace Gs2::Identifier::Domain
         TSharedPtr<TSharedPtr<Gs2::Identifier::Domain::Model::FUserDomain>> Result
     )
     {
-        const auto Future = Self->Client->CreateUser(
-            Request
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            return Future->GetTask().Error();
-        }
-        const auto RequestModel = Request;
-        const auto ResultModel = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-            {
-                const auto ParentKey = FString("identifier:User");
-                const auto Key = Gs2::Identifier::Domain::Model::FUserDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetName()
-                );
-                Self->Gs2->Cache->Put(
-                    Gs2::Identifier::Model::FUser::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
-        }
         auto Domain = MakeShared<Gs2::Identifier::Domain::Model::FUserDomain>(
             Self->Gs2,
             Self,
@@ -133,33 +106,6 @@ namespace Gs2::Identifier::Domain
         TSharedPtr<TSharedPtr<Gs2::Identifier::Domain::Model::FSecurityPolicyDomain>> Result
     )
     {
-        const auto Future = Self->Client->CreateSecurityPolicy(
-            Request
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            return Future->GetTask().Error();
-        }
-        const auto RequestModel = Request;
-        const auto ResultModel = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-            {
-                const auto ParentKey = FString("identifier:SecurityPolicy");
-                const auto Key = Gs2::Identifier::Domain::Model::FSecurityPolicyDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetName()
-                );
-                Self->Gs2->Cache->Put(
-                    Gs2::Identifier::Model::FSecurityPolicy::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
-        }
         auto Domain = MakeShared<Gs2::Identifier::Domain::Model::FSecurityPolicyDomain>(
             Self->Gs2,
             Self,

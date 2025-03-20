@@ -21,7 +21,7 @@
 
 namespace Gs2::LoginReward::Model
 {
-    class GS2LOGINREWARD_API FCurrentBonusMaster final : public Gs2Object, public TSharedFromThis<FCurrentBonusMaster>
+    class GS2LOGINREWARD_API FCurrentBonusMaster final : public FGs2Object, public TSharedFromThis<FCurrentBonusMaster>
     {
         TOptional<FString> NamespaceIdValue;
         TOptional<FString> SettingsValue;

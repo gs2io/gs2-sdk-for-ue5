@@ -21,7 +21,7 @@
 
 namespace Gs2::Money2::Model
 {
-    class GS2MONEY2_API FSubscribeTransaction final : public Gs2Object, public TSharedFromThis<FSubscribeTransaction>
+    class GS2MONEY2_API FSubscribeTransaction final : public FGs2Object, public TSharedFromThis<FSubscribeTransaction>
     {
         TOptional<FString> SubscribeTransactionIdValue;
         TOptional<FString> ContentNameValue;

@@ -20,6 +20,7 @@
 #include "Dictionary/Domain/Model/Namespace.h"
 #include "Dictionary/Model/Gs2DictionaryEzEntryModel.h"
 #include "Dictionary/Model/Gs2DictionaryEzEntry.h"
+#include "Dictionary/Model/Gs2DictionaryEzLike.h"
 #include "Dictionary/Model/Gs2DictionaryEzConfig.h"
 #include "Gs2DictionaryEzEntryModelDomain.h"
 #include "Dictionary/Domain/Iterator/Gs2DictionaryEzDescribeEntryModelsIterator.h"

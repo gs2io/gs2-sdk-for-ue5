@@ -103,38 +103,6 @@ namespace Gs2::Inbox::Domain::Model
             ->WithNamespaceName(Self->NamespaceName)
             ->WithAccessToken(Self->AccessToken->GetToken())
             ->WithMessageName(Self->MessageName);
-        const auto Future = Self->Client->GetMessage(
-            Request
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            return Future->GetTask().Error();
-        }
-        const auto RequestModel = Request;
-        const auto ResultModel = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::Inbox::Domain::Model::FUserDomain::CreateCacheParentKey(
-                    Self->NamespaceName,
-                    Self->UserId(),
-                    "Message"
-                );
-                const auto Key = Gs2::Inbox::Domain::Model::FMessageDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetName()
-                );
-                Self->Gs2->Cache->Put(
-                    Gs2::Inbox::Model::FMessage::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    ResultModel->GetItem()->GetExpiresAt().IsSet() && *ResultModel->GetItem()->GetExpiresAt() != 0 ? FDateTime::FromUnixTimestamp(*ResultModel->GetItem()->GetExpiresAt() / 1000) : FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
-        }
         *Result = ResultModel->GetItem();
         return nullptr;
     }
@@ -168,36 +136,6 @@ namespace Gs2::Inbox::Domain::Model
             ->WithNamespaceName(Self->NamespaceName)
             ->WithAccessToken(Self->AccessToken->GetToken())
             ->WithMessageName(Self->MessageName);
-        const auto Future = Self->Client->OpenMessage(
-            Request
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            return Future->GetTask().Error();
-        }
-        const auto RequestModel = Request;
-        const auto ResultModel = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::Inbox::Domain::Model::FUserDomain::CreateCacheParentKey(
-                    Self->NamespaceName,
-                    Self->UserId(),
-                    "Message"
-                );
-                const auto Key = Gs2::Inbox::Domain::Model::FMessageDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetName()
-                );
-                Self->Gs2->Cache->Delete(Gs2::Inbox::Model::FMessage::TypeName, ParentKey, Key);
-                Self->Gs2->Cache->ClearListCache(
-                    Gs2::Inbox::Model::FMessage::TypeName,
-                    ParentKey
-                );
-            }
-        }
         auto Domain = Self;
 
         *Result = Domain;
@@ -234,81 +172,23 @@ namespace Gs2::Inbox::Domain::Model
             ->WithNamespaceName(Self->NamespaceName)
             ->WithAccessToken(Self->AccessToken->GetToken())
             ->WithMessageName(Self->MessageName);
-
-        if (SpeculativeExecute) {
-            const auto SpeculativeExecuteFuture = Transaction::SpeculativeExecutor::FReadMessageByUserIdSpeculativeExecutor::Execute(
-                Self->Gs2,
-                Self->Service,
-                Self->AccessToken,
-                Request::FReadMessageByUserIdRequest::FromJson(Request->ToJson())
-            );
-            SpeculativeExecuteFuture->StartSynchronousTask();
-            if (SpeculativeExecuteFuture->GetTask().IsError())
-            {
-                return SpeculativeExecuteFuture->GetTask().Error();
-            }
-            const auto Commit = SpeculativeExecuteFuture->GetTask().Result();
-            SpeculativeExecuteFuture->EnsureCompletion();
-
-            if (Commit.IsValid()) {
-                (*Commit)();
-            }
-        }
-        const auto Future = Self->Client->ReadMessage(
-            Request
+        const auto Transaction = Gs2::Core::Domain::Internal::FTransactionDomainFactory::ToTransaction(
+            Self->Gs2,
+            Self->AccessToken,
+            ResultModel->AutoRunStampSheet() == nullptr ? false : *ResultModel->AutoRunStampSheet(),
+            *ResultModel->GetTransactionId(),
+            *ResultModel->GetStampSheet(),
+            *ResultModel->GetStampSheetEncryptionKeyId(),
+            *ResultModel->GetAtomicCommit(),
+            *ResultModel->GetTransactionResult()
         );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
+        const auto Future3 = Transaction->Wait(true);
+        Future3->StartSynchronousTask();
+        if (Future3->GetTask().IsError())
         {
-            return Future->GetTask().Error();
+            return Future3->GetTask().Error();
         }
-        const auto RequestModel = Request;
-        const auto ResultModel = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::Inbox::Domain::Model::FUserDomain::CreateCacheParentKey(
-                    Self->NamespaceName,
-                    Self->UserId(),
-                    "Message"
-                );
-                const auto Key = Gs2::Inbox::Domain::Model::FMessageDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetName()
-                );
-                Self->Gs2->Cache->Put(
-                    Gs2::Inbox::Model::FMessage::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    ResultModel->GetItem()->GetExpiresAt().IsSet() && *ResultModel->GetItem()->GetExpiresAt() != 0 ? FDateTime::FromUnixTimestamp(*ResultModel->GetItem()->GetExpiresAt() / 1000) : FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
-        }
-        if (ResultModel && ResultModel->GetStampSheet())
-        {
-            const auto Transaction = Gs2::Core::Domain::Internal::FTransactionDomainFactory::ToTransaction(
-                Self->Gs2,
-                Self->AccessToken,
-                false,
-                *ResultModel->GetTransactionId(),
-                *ResultModel->GetStampSheet(),
-                *ResultModel->GetStampSheetEncryptionKeyId()
-            );
-            const auto Future3 = Transaction->Wait(true);
-            Future3->StartSynchronousTask();
-            if (Future3->GetTask().IsError())
-            {
-                return Future3->GetTask().Error();
-            }
-        }
-        if (ResultModel != nullptr)
-        {
-            Self->AutoRunStampSheet = ResultModel->GetAutoRunStampSheet();
-            Self->TransactionId = ResultModel->GetTransactionId();
-        }
-        *Result = Self;
+        *Result = Transaction;
         return nullptr;
     }
 
@@ -342,32 +222,6 @@ namespace Gs2::Inbox::Domain::Model
             ->WithNamespaceName(Self->NamespaceName)
             ->WithAccessToken(Self->AccessToken->GetToken())
             ->WithMessageName(Self->MessageName);
-        const auto Future = Self->Client->DeleteMessage(
-            Request
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            return Future->GetTask().Error();
-        }
-        const auto RequestModel = Request;
-        const auto ResultModel = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::Inbox::Domain::Model::FUserDomain::CreateCacheParentKey(
-                    Self->NamespaceName,
-                    Self->UserId(),
-                    "Message"
-                );
-                const auto Key = Gs2::Inbox::Domain::Model::FMessageDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetName()
-                );
-                Self->Gs2->Cache->Delete(Gs2::Inbox::Model::FMessage::TypeName, ParentKey, Key);
-            }
-        }
         auto Domain = Self;
 
         *Result = Domain;

@@ -21,7 +21,7 @@
 
 namespace Gs2::Inventory::Model
 {
-    class GS2INVENTORY_API FAcquireCount final : public Gs2Object, public TSharedFromThis<FAcquireCount>
+    class GS2INVENTORY_API FAcquireCount final : public FGs2Object, public TSharedFromThis<FAcquireCount>
     {
         TOptional<FString> ItemNameValue;
         TOptional<int64> CountValue;

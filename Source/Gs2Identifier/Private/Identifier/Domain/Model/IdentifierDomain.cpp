@@ -91,37 +91,6 @@ namespace Gs2::Identifier::Domain::Model
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithUserName(Self->UserName)
             ->WithClientId(Self->ClientId);
-        const auto Future = Self->Client->GetIdentifier(
-            Request
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            return Future->GetTask().Error();
-        }
-        const auto RequestModel = Request;
-        const auto ResultModel = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::Identifier::Domain::Model::FUserDomain::CreateCacheParentKey(
-                    Self->UserName,
-                    "Identifier"
-                );
-                const auto Key = Gs2::Identifier::Domain::Model::FIdentifierDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetClientId()
-                );
-                Self->Gs2->Cache->Put(
-                    Gs2::Identifier::Model::FIdentifier::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
-        }
         *Result = ResultModel->GetItem();
         return nullptr;
     }
@@ -154,31 +123,6 @@ namespace Gs2::Identifier::Domain::Model
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithUserName(Self->UserName)
             ->WithClientId(Self->ClientId);
-        const auto Future = Self->Client->DeleteIdentifier(
-            Request
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            return Future->GetTask().Error();
-        }
-        const auto RequestModel = Request;
-        const auto ResultModel = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::Identifier::Domain::Model::FUserDomain::CreateCacheParentKey(
-                    Self->UserName,
-                    "Identifier"
-                );
-                const auto Key = Gs2::Identifier::Domain::Model::FIdentifierDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetClientId()
-                );
-                Self->Gs2->Cache->Delete(Gs2::Identifier::Model::FIdentifier::TypeName, ParentKey, Key);
-            }
-        }
         auto Domain = Self;
 
         *Result = Domain;
@@ -213,20 +157,6 @@ namespace Gs2::Identifier::Domain::Model
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithUserName(Self->UserName)
             ->WithClientId(Self->ClientId);
-        const auto Future = Self->Client->AttachGuard(
-            Request
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            return Future->GetTask().Error();
-        }
-        const auto RequestModel = Request;
-        const auto ResultModel = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-        }
         auto Domain = MakeShared<TArray<TSharedPtr<Gs2::Identifier::Domain::Model::FIdentifierDomain>>>();
         for (auto i=0; i<ResultModel->GetItems()->Num(); i++)
         {
@@ -271,20 +201,6 @@ namespace Gs2::Identifier::Domain::Model
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithUserName(Self->UserName)
             ->WithClientId(Self->ClientId);
-        const auto Future = Self->Client->DetachGuard(
-            Request
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            return Future->GetTask().Error();
-        }
-        const auto RequestModel = Request;
-        const auto ResultModel = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-        }
         auto Domain = MakeShared<TArray<TSharedPtr<Gs2::Identifier::Domain::Model::FIdentifierDomain>>>();
         for (auto i=0; i<ResultModel->GetItems()->Num(); i++)
         {

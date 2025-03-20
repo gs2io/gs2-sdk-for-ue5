@@ -23,7 +23,7 @@
 
 namespace Gs2::SeasonRating::Model
 {
-    class GS2SEASONRATING_API FWrittenBallot final : public Gs2Object, public TSharedFromThis<FWrittenBallot>
+    class GS2SEASONRATING_API FWrittenBallot final : public FGs2Object, public TSharedFromThis<FWrittenBallot>
     {
         TSharedPtr<FBallot> BallotValue;
         TSharedPtr<TArray<TSharedPtr<FGameResult>>> GameResultsValue;

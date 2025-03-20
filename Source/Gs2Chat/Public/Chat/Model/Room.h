@@ -21,7 +21,7 @@
 
 namespace Gs2::Chat::Model
 {
-    class GS2CHAT_API FRoom final : public Gs2Object, public TSharedFromThis<FRoom>
+    class GS2CHAT_API FRoom final : public FGs2Object, public TSharedFromThis<FRoom>
     {
         TOptional<FString> RoomIdValue;
         TOptional<FString> NameValue;

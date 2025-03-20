@@ -24,7 +24,7 @@
 
 namespace Gs2::Distributor::Model
 {
-    class GS2DISTRIBUTOR_API FStampSheetResult final : public Gs2Object, public TSharedFromThis<FStampSheetResult>
+    class GS2DISTRIBUTOR_API FStampSheetResult final : public FGs2Object, public TSharedFromThis<FStampSheetResult>
     {
         TOptional<FString> StampSheetResultIdValue;
         TOptional<FString> UserIdValue;

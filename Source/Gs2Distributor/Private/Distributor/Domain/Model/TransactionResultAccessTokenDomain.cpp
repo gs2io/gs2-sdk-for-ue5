@@ -104,38 +104,6 @@ namespace Gs2::Distributor::Domain::Model
             ->WithNamespaceName(Self->NamespaceName)
             ->WithAccessToken(Self->AccessToken->GetToken())
             ->WithTransactionId(Self->TransactionId);
-        const auto Future = Self->Client->GetTransactionResult(
-            Request
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            return Future->GetTask().Error();
-        }
-        const auto RequestModel = Request;
-        const auto ResultModel = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::Distributor::Domain::Model::FUserDomain::CreateCacheParentKey(
-                    Self->NamespaceName,
-                    Self->UserId(),
-                    "TransactionResult"
-                );
-                const auto Key = Gs2::Distributor::Domain::Model::FTransactionResultDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetTransactionId()
-                );
-                Self->Gs2->Cache->Put(
-                    Gs2::Distributor::Model::FTransactionResult::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
-        }
         *Result = ResultModel->GetItem();
         return nullptr;
     }

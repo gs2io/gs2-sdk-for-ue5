@@ -24,7 +24,7 @@
 
 namespace Gs2::Grade::Model
 {
-    class GS2GRADE_API FTransactionResult final : public Gs2Object, public TSharedFromThis<FTransactionResult>
+    class GS2GRADE_API FTransactionResult final : public FGs2Object, public TSharedFromThis<FTransactionResult>
     {
         TOptional<FString> TransactionIdValue;
         TSharedPtr<TArray<TSharedPtr<FVerifyActionResult>>> VerifyResultsValue;

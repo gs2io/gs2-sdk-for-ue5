@@ -21,7 +21,7 @@
 
 namespace Gs2::Guild::Model
 {
-    class GS2GUILD_API FLastGuildMasterActivity final : public Gs2Object, public TSharedFromThis<FLastGuildMasterActivity>
+    class GS2GUILD_API FLastGuildMasterActivity final : public FGs2Object, public TSharedFromThis<FLastGuildMasterActivity>
     {
         TOptional<FString> UserIdValue;
         TOptional<int64> UpdatedAtValue;

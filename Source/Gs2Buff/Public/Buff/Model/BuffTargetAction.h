@@ -22,7 +22,7 @@
 
 namespace Gs2::Buff::Model
 {
-    class GS2BUFF_API FBuffTargetAction final : public Gs2Object, public TSharedFromThis<FBuffTargetAction>
+    class GS2BUFF_API FBuffTargetAction final : public FGs2Object, public TSharedFromThis<FBuffTargetAction>
     {
         TOptional<FString> TargetActionNameValue;
         TOptional<FString> TargetFieldNameValue;

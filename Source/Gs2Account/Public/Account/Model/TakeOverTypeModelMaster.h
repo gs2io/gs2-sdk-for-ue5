@@ -22,7 +22,7 @@
 
 namespace Gs2::Account::Model
 {
-    class GS2ACCOUNT_API FTakeOverTypeModelMaster final : public Gs2Object, public TSharedFromThis<FTakeOverTypeModelMaster>
+    class GS2ACCOUNT_API FTakeOverTypeModelMaster final : public FGs2Object, public TSharedFromThis<FTakeOverTypeModelMaster>
     {
         TOptional<FString> TakeOverTypeModelIdValue;
         TOptional<int32> TypeValue;

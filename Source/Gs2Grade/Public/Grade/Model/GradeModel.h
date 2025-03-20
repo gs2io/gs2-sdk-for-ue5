@@ -24,7 +24,7 @@
 
 namespace Gs2::Grade::Model
 {
-    class GS2GRADE_API FGradeModel final : public Gs2Object, public TSharedFromThis<FGradeModel>
+    class GS2GRADE_API FGradeModel final : public FGs2Object, public TSharedFromThis<FGradeModel>
     {
         TOptional<FString> GradeModelIdValue;
         TOptional<FString> NameValue;

@@ -21,7 +21,7 @@
 
 namespace Gs2::Log::Model
 {
-    class GS2LOG_API FAccessLogCount final : public Gs2Object, public TSharedFromThis<FAccessLogCount>
+    class GS2LOG_API FAccessLogCount final : public FGs2Object, public TSharedFromThis<FAccessLogCount>
     {
         TOptional<FString> ServiceValue;
         TOptional<FString> MethodValue;

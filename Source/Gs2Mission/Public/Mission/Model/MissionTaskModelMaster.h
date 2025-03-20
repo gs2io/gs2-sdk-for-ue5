@@ -24,7 +24,7 @@
 
 namespace Gs2::Mission::Model
 {
-    class GS2MISSION_API FMissionTaskModelMaster final : public Gs2Object, public TSharedFromThis<FMissionTaskModelMaster>
+    class GS2MISSION_API FMissionTaskModelMaster final : public FGs2Object, public TSharedFromThis<FMissionTaskModelMaster>
     {
         TOptional<FString> MissionTaskIdValue;
         TOptional<FString> NameValue;

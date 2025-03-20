@@ -21,7 +21,7 @@
 
 namespace Gs2::Friend::Model
 {
-    class GS2FRIEND_API FInbox final : public Gs2Object, public TSharedFromThis<FInbox>
+    class GS2FRIEND_API FInbox final : public FGs2Object, public TSharedFromThis<FInbox>
     {
         TOptional<FString> InboxIdValue;
         TOptional<FString> UserIdValue;

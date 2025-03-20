@@ -23,7 +23,7 @@
 
 namespace Gs2::Money2::Model
 {
-    class GS2MONEY2_API FStoreContentModel final : public Gs2Object, public TSharedFromThis<FStoreContentModel>
+    class GS2MONEY2_API FStoreContentModel final : public FGs2Object, public TSharedFromThis<FStoreContentModel>
     {
         TOptional<FString> StoreContentModelIdValue;
         TOptional<FString> NameValue;

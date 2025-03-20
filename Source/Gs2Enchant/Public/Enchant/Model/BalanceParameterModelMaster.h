@@ -22,7 +22,7 @@
 
 namespace Gs2::Enchant::Model
 {
-    class GS2ENCHANT_API FBalanceParameterModelMaster final : public Gs2Object, public TSharedFromThis<FBalanceParameterModelMaster>
+    class GS2ENCHANT_API FBalanceParameterModelMaster final : public FGs2Object, public TSharedFromThis<FBalanceParameterModelMaster>
     {
         TOptional<FString> BalanceParameterModelIdValue;
         TOptional<FString> NameValue;

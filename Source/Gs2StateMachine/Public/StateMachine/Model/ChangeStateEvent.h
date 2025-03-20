@@ -21,7 +21,7 @@
 
 namespace Gs2::StateMachine::Model
 {
-    class GS2STATEMACHINE_API FChangeStateEvent final : public Gs2Object, public TSharedFromThis<FChangeStateEvent>
+    class GS2STATEMACHINE_API FChangeStateEvent final : public FGs2Object, public TSharedFromThis<FChangeStateEvent>
     {
         TOptional<FString> TaskNameValue;
         TOptional<FString> HashValue;

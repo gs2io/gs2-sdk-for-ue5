@@ -102,38 +102,6 @@ namespace Gs2::Chat::Domain::Model
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithRoomName(Self->RoomName);
-        const auto Future = Self->Client->GetRoom(
-            Request
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            return Future->GetTask().Error();
-        }
-        const auto RequestModel = Request;
-        const auto ResultModel = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::Chat::Domain::Model::FUserDomain::CreateCacheParentKey(
-                    Self->NamespaceName,
-                    TOptional<FString>("Singleton"),
-                    "Room"
-                );
-                const auto Key = Gs2::Chat::Domain::Model::FRoomDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetName()
-                );
-                Self->Gs2->Cache->Put(
-                    Gs2::Chat::Model::FRoom::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
-        }
         *Result = ResultModel->GetItem();
         return nullptr;
     }
@@ -168,38 +136,6 @@ namespace Gs2::Chat::Domain::Model
             ->WithRoomName(Self->RoomName)
             ->WithPassword(Self->Password)
             ->WithUserId(Self->UserId);
-        const auto Future = Self->Client->UpdateRoomFromBackend(
-            Request
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            return Future->GetTask().Error();
-        }
-        const auto RequestModel = Request;
-        const auto ResultModel = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::Chat::Domain::Model::FUserDomain::CreateCacheParentKey(
-                    Self->NamespaceName,
-                    TOptional<FString>("Singleton"),
-                    "Room"
-                );
-                const auto Key = Gs2::Chat::Domain::Model::FRoomDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetName()
-                );
-                Self->Gs2->Cache->Put(
-                    Gs2::Chat::Model::FRoom::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
-        }
         auto Domain = Self;
 
         *Result = Domain;
@@ -235,32 +171,6 @@ namespace Gs2::Chat::Domain::Model
             ->WithNamespaceName(Self->NamespaceName)
             ->WithRoomName(Self->RoomName)
             ->WithUserId(Self->UserId);
-        const auto Future = Self->Client->DeleteRoomFromBackend(
-            Request
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            return Future->GetTask().Error();
-        }
-        const auto RequestModel = Request;
-        const auto ResultModel = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::Chat::Domain::Model::FUserDomain::CreateCacheParentKey(
-                    Self->NamespaceName,
-                    TOptional<FString>("Singleton"),
-                    "Room"
-                );
-                const auto Key = Gs2::Chat::Domain::Model::FRoomDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetName()
-                );
-                Self->Gs2->Cache->Delete(Gs2::Chat::Model::FRoom::TypeName, ParentKey, Key);
-            }
-        }
         auto Domain = Self;
 
         *Result = Domain;
@@ -297,39 +207,6 @@ namespace Gs2::Chat::Domain::Model
             ->WithRoomName(Self->RoomName)
             ->WithUserId(Self->UserId)
             ->WithPassword(Self->Password);
-        const auto Future = Self->Client->PostByUserId(
-            Request
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            return Future->GetTask().Error();
-        }
-        const auto RequestModel = Request;
-        const auto ResultModel = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::Chat::Domain::Model::FRoomDomain::CreateCacheParentKey(
-                    Self->NamespaceName,
-                    TOptional<FString>("Singleton"),
-                    Self->RoomName,
-                    "Message"
-                );
-                const auto Key = Gs2::Chat::Domain::Model::FMessageDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetName()
-                );
-                Self->Gs2->Cache->Put(
-                    Gs2::Chat::Model::FMessage::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
-        }
         auto Domain = MakeShared<Gs2::Chat::Domain::Model::FMessageDomain>(
             Self->Gs2,
             Self->Service,

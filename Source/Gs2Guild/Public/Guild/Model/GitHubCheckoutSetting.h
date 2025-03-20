@@ -21,7 +21,7 @@
 
 namespace Gs2::Guild::Model
 {
-    class GS2GUILD_API FGitHubCheckoutSetting final : public Gs2Object, public TSharedFromThis<FGitHubCheckoutSetting>
+    class GS2GUILD_API FGitHubCheckoutSetting final : public FGs2Object, public TSharedFromThis<FGitHubCheckoutSetting>
     {
         TOptional<FString> ApiKeyIdValue;
         TOptional<FString> RepositoryNameValue;

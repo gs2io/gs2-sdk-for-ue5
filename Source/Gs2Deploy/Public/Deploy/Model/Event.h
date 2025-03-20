@@ -21,7 +21,7 @@
 
 namespace Gs2::Deploy::Model
 {
-    class GS2DEPLOY_API FEvent final : public Gs2Object, public TSharedFromThis<FEvent>
+    class GS2DEPLOY_API FEvent final : public FGs2Object, public TSharedFromThis<FEvent>
     {
         TOptional<FString> EventIdValue;
         TOptional<FString> NameValue;

@@ -103,39 +103,6 @@ namespace Gs2::Limit::Domain::Model
             ->WithLimitName(Self->LimitName)
             ->WithUserId(Self->UserId)
             ->WithCounterName(Self->CounterName);
-        const auto Future = Self->Client->GetCounterByUserId(
-            Request
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            return Future->GetTask().Error();
-        }
-        const auto RequestModel = Request;
-        const auto ResultModel = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::Limit::Domain::Model::FUserDomain::CreateCacheParentKey(
-                    Self->NamespaceName,
-                    Self->UserId,
-                    "Counter"
-                );
-                const auto Key = Gs2::Limit::Domain::Model::FCounterDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetLimitName(),
-                    ResultModel->GetItem()->GetName()
-                );
-                Self->Gs2->Cache->Put(
-                    Gs2::Limit::Model::FCounter::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
-        }
         *Result = ResultModel->GetItem();
         return nullptr;
     }
@@ -170,39 +137,6 @@ namespace Gs2::Limit::Domain::Model
             ->WithLimitName(Self->LimitName)
             ->WithCounterName(Self->CounterName)
             ->WithUserId(Self->UserId);
-        const auto Future = Self->Client->CountUpByUserId(
-            Request
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            return Future->GetTask().Error();
-        }
-        const auto RequestModel = Request;
-        const auto ResultModel = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::Limit::Domain::Model::FUserDomain::CreateCacheParentKey(
-                    Self->NamespaceName,
-                    Self->UserId,
-                    "Counter"
-                );
-                const auto Key = Gs2::Limit::Domain::Model::FCounterDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetLimitName(),
-                    ResultModel->GetItem()->GetName()
-                );
-                Self->Gs2->Cache->Put(
-                    Gs2::Limit::Model::FCounter::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
-        }
         auto Domain = Self;
 
         *Result = Domain;
@@ -239,39 +173,6 @@ namespace Gs2::Limit::Domain::Model
             ->WithLimitName(Self->LimitName)
             ->WithCounterName(Self->CounterName)
             ->WithUserId(Self->UserId);
-        const auto Future = Self->Client->CountDownByUserId(
-            Request
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            return Future->GetTask().Error();
-        }
-        const auto RequestModel = Request;
-        const auto ResultModel = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::Limit::Domain::Model::FUserDomain::CreateCacheParentKey(
-                    Self->NamespaceName,
-                    Self->UserId,
-                    "Counter"
-                );
-                const auto Key = Gs2::Limit::Domain::Model::FCounterDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetLimitName(),
-                    ResultModel->GetItem()->GetName()
-                );
-                Self->Gs2->Cache->Put(
-                    Gs2::Limit::Model::FCounter::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
-        }
         auto Domain = Self;
 
         *Result = Domain;
@@ -308,33 +209,6 @@ namespace Gs2::Limit::Domain::Model
             ->WithLimitName(Self->LimitName)
             ->WithUserId(Self->UserId)
             ->WithCounterName(Self->CounterName);
-        const auto Future = Self->Client->DeleteCounterByUserId(
-            Request
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            return Future->GetTask().Error();
-        }
-        const auto RequestModel = Request;
-        const auto ResultModel = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::Limit::Domain::Model::FUserDomain::CreateCacheParentKey(
-                    Self->NamespaceName,
-                    Self->UserId,
-                    "Counter"
-                );
-                const auto Key = Gs2::Limit::Domain::Model::FCounterDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetLimitName(),
-                    ResultModel->GetItem()->GetName()
-                );
-                Self->Gs2->Cache->Delete(Gs2::Limit::Model::FCounter::TypeName, ParentKey, Key);
-            }
-        }
         auto Domain = Self;
 
         *Result = Domain;
@@ -371,20 +245,6 @@ namespace Gs2::Limit::Domain::Model
             ->WithUserId(Self->UserId)
             ->WithLimitName(Self->LimitName)
             ->WithCounterName(Self->CounterName);
-        const auto Future = Self->Client->VerifyCounterByUserId(
-            Request
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            return Future->GetTask().Error();
-        }
-        const auto RequestModel = Request;
-        const auto ResultModel = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-        }
         const auto Domain = Self;
         *Result = Domain;
         return nullptr;

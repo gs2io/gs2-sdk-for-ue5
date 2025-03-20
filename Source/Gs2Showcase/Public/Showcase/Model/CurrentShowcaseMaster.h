@@ -21,7 +21,7 @@
 
 namespace Gs2::Showcase::Model
 {
-    class GS2SHOWCASE_API FCurrentShowcaseMaster final : public Gs2Object, public TSharedFromThis<FCurrentShowcaseMaster>
+    class GS2SHOWCASE_API FCurrentShowcaseMaster final : public FGs2Object, public TSharedFromThis<FCurrentShowcaseMaster>
     {
         TOptional<FString> NamespaceIdValue;
         TOptional<FString> SettingsValue;

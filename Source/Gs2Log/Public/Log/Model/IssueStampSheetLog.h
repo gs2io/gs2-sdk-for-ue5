@@ -21,7 +21,7 @@
 
 namespace Gs2::Log::Model
 {
-    class GS2LOG_API FIssueStampSheetLog final : public Gs2Object, public TSharedFromThis<FIssueStampSheetLog>
+    class GS2LOG_API FIssueStampSheetLog final : public FGs2Object, public TSharedFromThis<FIssueStampSheetLog>
     {
         TOptional<int64> TimestampValue;
         TOptional<FString> TransactionIdValue;

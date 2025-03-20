@@ -21,7 +21,7 @@
 
 namespace Gs2::StateMachine::Model
 {
-    class GS2STATEMACHINE_API FVariable final : public Gs2Object, public TSharedFromThis<FVariable>
+    class GS2STATEMACHINE_API FVariable final : public FGs2Object, public TSharedFromThis<FVariable>
     {
         TOptional<FString> StateMachineNameValue;
         TOptional<FString> ValueValue;

@@ -103,39 +103,6 @@ namespace Gs2::Datastore::Domain::Model
             ->WithUserId(Self->UserId)
             ->WithDataObjectName(Self->DataObjectName)
             ->WithGeneration(Self->Generation);
-        const auto Future = Self->Client->GetDataObjectHistoryByUserId(
-            Request
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            return Future->GetTask().Error();
-        }
-        const auto RequestModel = Request;
-        const auto ResultModel = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::Datastore::Domain::Model::FDataObjectDomain::CreateCacheParentKey(
-                    Self->NamespaceName,
-                    Self->UserId,
-                    Self->DataObjectName,
-                    "DataObjectHistory"
-                );
-                const auto Key = Gs2::Datastore::Domain::Model::FDataObjectHistoryDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetGeneration()
-                );
-                Self->Gs2->Cache->Put(
-                    Gs2::Datastore::Model::FDataObjectHistory::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
-        }
         *Result = ResultModel->GetItem();
         return nullptr;
     }

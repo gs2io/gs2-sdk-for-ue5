@@ -22,7 +22,7 @@
 
 namespace Gs2::Quest::Model
 {
-    class GS2QUEST_API FContents final : public Gs2Object, public TSharedFromThis<FContents>
+    class GS2QUEST_API FContents final : public FGs2Object, public TSharedFromThis<FContents>
     {
         TOptional<FString> MetadataValue;
         TSharedPtr<TArray<TSharedPtr<FAcquireAction>>> CompleteAcquireActionsValue;

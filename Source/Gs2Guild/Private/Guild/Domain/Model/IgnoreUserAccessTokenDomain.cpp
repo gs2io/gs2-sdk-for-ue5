@@ -110,38 +110,6 @@ namespace Gs2::Guild::Domain::Model
             ->WithNamespaceName(Self->NamespaceName)
             ->WithGuildModelName(Self->GuildModelName)
             ->WithAccessToken(Self->AccessToken->GetToken());
-        const auto Future = Self->Client->GetIgnoreUser(
-            Request
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            return Future->GetTask().Error();
-        }
-        const auto RequestModel = Request;
-        const auto ResultModel = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::Guild::Domain::Model::FGuildDomain::CreateCacheParentKey(
-                    Self->NamespaceName,
-                    Self->GuildModelName,
-                    Self->AccessToken->GetUserId(),
-                    "IgnoreUser"
-                );
-                const auto Key = Gs2::Guild::Domain::Model::FIgnoreUserDomain::CreateCacheKey(
-                );
-                Self->Gs2->Cache->Put(
-                    Gs2::Guild::Model::FIgnoreUser::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
-        }
         *Result = ResultModel->GetItem();
         return nullptr;
     }
@@ -175,32 +143,6 @@ namespace Gs2::Guild::Domain::Model
             ->WithNamespaceName(Self->NamespaceName)
             ->WithGuildModelName(Self->GuildModelName)
             ->WithAccessToken(Self->AccessToken->GetToken());
-        const auto Future = Self->Client->DeleteIgnoreUser(
-            Request
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            return Future->GetTask().Error();
-        }
-        const auto RequestModel = Request;
-        const auto ResultModel = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::Guild::Domain::Model::FGuildDomain::CreateCacheParentKey(
-                    Self->NamespaceName,
-                    Self->GuildModelName,
-                    Self->AccessToken->GetUserId(),
-                    "IgnoreUser"
-                );
-                const auto Key = Gs2::Guild::Domain::Model::FIgnoreUserDomain::CreateCacheKey(
-                );
-                Self->Gs2->Cache->Delete(Gs2::Guild::Model::FIgnoreUser::TypeName, ParentKey, Key);
-            }
-        }
         auto Domain = Self;
 
         *Result = Domain;

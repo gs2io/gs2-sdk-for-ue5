@@ -22,7 +22,7 @@
 
 namespace Gs2::Mission::Model
 {
-    class GS2MISSION_API FCounterModel final : public Gs2Object, public TSharedFromThis<FCounterModel>
+    class GS2MISSION_API FCounterModel final : public FGs2Object, public TSharedFromThis<FCounterModel>
     {
         TOptional<FString> CounterIdValue;
         TOptional<FString> NameValue;

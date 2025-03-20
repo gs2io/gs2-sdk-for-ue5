@@ -21,7 +21,7 @@
 
 namespace Gs2::Grade::Model
 {
-    class GS2GRADE_API FAcquireActionRate final : public Gs2Object, public TSharedFromThis<FAcquireActionRate>
+    class GS2GRADE_API FAcquireActionRate final : public FGs2Object, public TSharedFromThis<FAcquireActionRate>
     {
         TOptional<FString> NameValue;
         TOptional<FString> ModeValue;

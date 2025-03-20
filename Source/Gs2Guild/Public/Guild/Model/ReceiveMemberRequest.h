@@ -21,7 +21,7 @@
 
 namespace Gs2::Guild::Model
 {
-    class GS2GUILD_API FReceiveMemberRequest final : public Gs2Object, public TSharedFromThis<FReceiveMemberRequest>
+    class GS2GUILD_API FReceiveMemberRequest final : public FGs2Object, public TSharedFromThis<FReceiveMemberRequest>
     {
         TOptional<FString> UserIdValue;
         TOptional<FString> TargetGuildNameValue;

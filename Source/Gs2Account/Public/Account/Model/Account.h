@@ -22,7 +22,7 @@
 
 namespace Gs2::Account::Model
 {
-    class GS2ACCOUNT_API FAccount final : public Gs2Object, public TSharedFromThis<FAccount>
+    class GS2ACCOUNT_API FAccount final : public FGs2Object, public TSharedFromThis<FAccount>
     {
         TOptional<FString> AccountIdValue;
         TOptional<FString> UserIdValue;

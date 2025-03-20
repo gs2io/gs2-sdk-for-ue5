@@ -21,7 +21,7 @@
 
 namespace Gs2::Deploy::Model
 {
-    class GS2DEPLOY_API FStack final : public Gs2Object, public TSharedFromThis<FStack>
+    class GS2DEPLOY_API FStack final : public FGs2Object, public TSharedFromThis<FStack>
     {
         TOptional<FString> StackIdValue;
         TOptional<FString> NameValue;

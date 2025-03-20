@@ -20,6 +20,7 @@
 #include "Dictionary/Domain/Model/Entry.h"
 #include "Dictionary/Model/Gs2DictionaryEzEntryModel.h"
 #include "Dictionary/Model/Gs2DictionaryEzEntry.h"
+#include "Dictionary/Model/Gs2DictionaryEzLike.h"
 #include "Dictionary/Model/Gs2DictionaryEzConfig.h"
 #include "Gs2DictionaryEzEntryDomain.h"
 #include "Util/Net/GameSession.h"

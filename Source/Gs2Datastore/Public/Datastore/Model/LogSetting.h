@@ -21,7 +21,7 @@
 
 namespace Gs2::Datastore::Model
 {
-    class GS2DATASTORE_API FLogSetting final : public Gs2Object, public TSharedFromThis<FLogSetting>
+    class GS2DATASTORE_API FLogSetting final : public FGs2Object, public TSharedFromThis<FLogSetting>
     {
         TOptional<FString> LoggingNamespaceIdValue;
 

@@ -21,7 +21,7 @@
 
 namespace Gs2::MegaField::Model
 {
-    class GS2MEGAFIELD_API FCurrentFieldMaster final : public Gs2Object, public TSharedFromThis<FCurrentFieldMaster>
+    class GS2MEGAFIELD_API FCurrentFieldMaster final : public FGs2Object, public TSharedFromThis<FCurrentFieldMaster>
     {
         TOptional<FString> NamespaceIdValue;
         TOptional<FString> SettingsValue;

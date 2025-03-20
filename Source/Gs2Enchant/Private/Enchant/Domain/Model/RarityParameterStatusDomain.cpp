@@ -107,39 +107,6 @@ namespace Gs2::Enchant::Domain::Model
             ->WithUserId(Self->UserId)
             ->WithParameterName(Self->ParameterName)
             ->WithPropertyId(Self->PropertyId);
-        const auto Future = Self->Client->GetRarityParameterStatusByUserId(
-            Request
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            return Future->GetTask().Error();
-        }
-        const auto RequestModel = Request;
-        const auto ResultModel = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::Enchant::Domain::Model::FUserDomain::CreateCacheParentKey(
-                    Self->NamespaceName,
-                    Self->UserId,
-                    "RarityParameterStatus"
-                );
-                const auto Key = Gs2::Enchant::Domain::Model::FRarityParameterStatusDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetParameterName(),
-                    ResultModel->GetItem()->GetPropertyId()
-                );
-                Self->Gs2->Cache->Put(
-                    Gs2::Enchant::Model::FRarityParameterStatus::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
-        }
         *Result = ResultModel->GetItem();
         return nullptr;
     }
@@ -174,33 +141,6 @@ namespace Gs2::Enchant::Domain::Model
             ->WithUserId(Self->UserId)
             ->WithParameterName(Self->ParameterName)
             ->WithPropertyId(Self->PropertyId);
-        const auto Future = Self->Client->DeleteRarityParameterStatusByUserId(
-            Request
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            return Future->GetTask().Error();
-        }
-        const auto RequestModel = Request;
-        const auto ResultModel = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::Enchant::Domain::Model::FUserDomain::CreateCacheParentKey(
-                    Self->NamespaceName,
-                    Self->UserId,
-                    "RarityParameterStatus"
-                );
-                const auto Key = Gs2::Enchant::Domain::Model::FRarityParameterStatusDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetParameterName(),
-                    ResultModel->GetItem()->GetPropertyId()
-                );
-                Self->Gs2->Cache->Delete(Gs2::Enchant::Model::FRarityParameterStatus::TypeName, ParentKey, Key);
-            }
-        }
         auto Domain = Self;
 
         *Result = Domain;
@@ -237,39 +177,6 @@ namespace Gs2::Enchant::Domain::Model
             ->WithUserId(Self->UserId)
             ->WithParameterName(Self->ParameterName)
             ->WithPropertyId(Self->PropertyId);
-        const auto Future = Self->Client->ReDrawRarityParameterStatusByUserId(
-            Request
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            return Future->GetTask().Error();
-        }
-        const auto RequestModel = Request;
-        const auto ResultModel = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::Enchant::Domain::Model::FUserDomain::CreateCacheParentKey(
-                    Self->NamespaceName,
-                    Self->UserId,
-                    "RarityParameterStatus"
-                );
-                const auto Key = Gs2::Enchant::Domain::Model::FRarityParameterStatusDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetParameterName(),
-                    ResultModel->GetItem()->GetPropertyId()
-                );
-                Self->Gs2->Cache->Put(
-                    Gs2::Enchant::Model::FRarityParameterStatus::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
-        }
         auto Domain = Self;
 
         *Result = Domain;
@@ -306,39 +213,6 @@ namespace Gs2::Enchant::Domain::Model
             ->WithUserId(Self->UserId)
             ->WithParameterName(Self->ParameterName)
             ->WithPropertyId(Self->PropertyId);
-        const auto Future = Self->Client->AddRarityParameterStatusByUserId(
-            Request
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            return Future->GetTask().Error();
-        }
-        const auto RequestModel = Request;
-        const auto ResultModel = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::Enchant::Domain::Model::FUserDomain::CreateCacheParentKey(
-                    Self->NamespaceName,
-                    Self->UserId,
-                    "RarityParameterStatus"
-                );
-                const auto Key = Gs2::Enchant::Domain::Model::FRarityParameterStatusDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetParameterName(),
-                    ResultModel->GetItem()->GetPropertyId()
-                );
-                Self->Gs2->Cache->Put(
-                    Gs2::Enchant::Model::FRarityParameterStatus::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
-        }
         auto Domain = Self;
 
         *Result = Domain;
@@ -375,39 +249,6 @@ namespace Gs2::Enchant::Domain::Model
             ->WithParameterName(Self->ParameterName)
             ->WithUserId(Self->UserId)
             ->WithPropertyId(Self->PropertyId);
-        const auto Future = Self->Client->VerifyRarityParameterStatusByUserId(
-            Request
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            return Future->GetTask().Error();
-        }
-        const auto RequestModel = Request;
-        const auto ResultModel = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::Enchant::Domain::Model::FUserDomain::CreateCacheParentKey(
-                    Self->NamespaceName,
-                    Self->UserId,
-                    "RarityParameterStatus"
-                );
-                const auto Key = Gs2::Enchant::Domain::Model::FRarityParameterStatusDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetParameterName(),
-                    ResultModel->GetItem()->GetPropertyId()
-                );
-                Self->Gs2->Cache->Put(
-                    Gs2::Enchant::Model::FRarityParameterStatus::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
-        }
         auto Domain = Self;
 
         *Result = Domain;
@@ -444,39 +285,6 @@ namespace Gs2::Enchant::Domain::Model
             ->WithUserId(Self->UserId)
             ->WithParameterName(Self->ParameterName)
             ->WithPropertyId(Self->PropertyId);
-        const auto Future = Self->Client->SetRarityParameterStatusByUserId(
-            Request
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            return Future->GetTask().Error();
-        }
-        const auto RequestModel = Request;
-        const auto ResultModel = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::Enchant::Domain::Model::FUserDomain::CreateCacheParentKey(
-                    Self->NamespaceName,
-                    Self->UserId,
-                    "RarityParameterStatus"
-                );
-                const auto Key = Gs2::Enchant::Domain::Model::FRarityParameterStatusDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetParameterName(),
-                    ResultModel->GetItem()->GetPropertyId()
-                );
-                Self->Gs2->Cache->Put(
-                    Gs2::Enchant::Model::FRarityParameterStatus::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
-        }
         auto Domain = Self;
 
         *Result = Domain;

@@ -21,7 +21,7 @@
 
 namespace Gs2::Limit::Model
 {
-    class GS2LIMIT_API FCounter final : public Gs2Object, public TSharedFromThis<FCounter>
+    class GS2LIMIT_API FCounter final : public FGs2Object, public TSharedFromThis<FCounter>
     {
         TOptional<FString> CounterIdValue;
         TOptional<FString> LimitNameValue;

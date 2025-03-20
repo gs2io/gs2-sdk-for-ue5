@@ -21,7 +21,7 @@
 
 namespace Gs2::Buff::Model
 {
-    class GS2BUFF_API FBuffTargetGrn final : public Gs2Object, public TSharedFromThis<FBuffTargetGrn>
+    class GS2BUFF_API FBuffTargetGrn final : public FGs2Object, public TSharedFromThis<FBuffTargetGrn>
     {
         TOptional<FString> TargetModelNameValue;
         TOptional<FString> TargetGrnValue;

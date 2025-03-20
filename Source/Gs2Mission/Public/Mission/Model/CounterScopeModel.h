@@ -22,7 +22,7 @@
 
 namespace Gs2::Mission::Model
 {
-    class GS2MISSION_API FCounterScopeModel final : public Gs2Object, public TSharedFromThis<FCounterScopeModel>
+    class GS2MISSION_API FCounterScopeModel final : public FGs2Object, public TSharedFromThis<FCounterScopeModel>
     {
         TOptional<FString> ScopeTypeValue;
         TOptional<FString> ResetTypeValue;

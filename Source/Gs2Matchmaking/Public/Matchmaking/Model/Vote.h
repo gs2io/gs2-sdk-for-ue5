@@ -22,7 +22,7 @@
 
 namespace Gs2::Matchmaking::Model
 {
-    class GS2MATCHMAKING_API FVote final : public Gs2Object, public TSharedFromThis<FVote>
+    class GS2MATCHMAKING_API FVote final : public FGs2Object, public TSharedFromThis<FVote>
     {
         TOptional<FString> VoteIdValue;
         TOptional<FString> RatingNameValue;

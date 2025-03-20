@@ -23,7 +23,7 @@
 
 namespace Gs2::Money2::Model
 {
-    class GS2MONEY2_API FWithdrawEvent final : public Gs2Object, public TSharedFromThis<FWithdrawEvent>
+    class GS2MONEY2_API FWithdrawEvent final : public FGs2Object, public TSharedFromThis<FWithdrawEvent>
     {
         TOptional<int32> SlotValue;
         TSharedPtr<TArray<TSharedPtr<FDepositTransaction>>> WithdrawDetailsValue;

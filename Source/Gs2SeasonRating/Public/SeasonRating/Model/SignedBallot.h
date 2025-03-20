@@ -21,7 +21,7 @@
 
 namespace Gs2::SeasonRating::Model
 {
-    class GS2SEASONRATING_API FSignedBallot final : public Gs2Object, public TSharedFromThis<FSignedBallot>
+    class GS2SEASONRATING_API FSignedBallot final : public FGs2Object, public TSharedFromThis<FSignedBallot>
     {
         TOptional<FString> BodyValue;
         TOptional<FString> SignatureValue;

@@ -21,7 +21,7 @@
 
 namespace Gs2::Idle::Model
 {
-    class GS2IDLE_API FStatus final : public Gs2Object, public TSharedFromThis<FStatus>
+    class GS2IDLE_API FStatus final : public FGs2Object, public TSharedFromThis<FStatus>
     {
         TOptional<FString> StatusIdValue;
         TOptional<FString> CategoryNameValue;

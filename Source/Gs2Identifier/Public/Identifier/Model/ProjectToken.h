@@ -21,7 +21,7 @@
 
 namespace Gs2::Identifier::Model
 {
-    class GS2IDENTIFIER_API FProjectToken final : public Gs2Object, public TSharedFromThis<FProjectToken>
+    class GS2IDENTIFIER_API FProjectToken final : public FGs2Object, public TSharedFromThis<FProjectToken>
     {
         TOptional<FString> TokenValue;
 

@@ -21,7 +21,7 @@
 
 namespace Gs2::Money2::Model
 {
-    class GS2MONEY2_API FFakeSetting final : public Gs2Object, public TSharedFromThis<FFakeSetting>
+    class GS2MONEY2_API FFakeSetting final : public FGs2Object, public TSharedFromThis<FFakeSetting>
     {
         TOptional<FString> AcceptFakeReceiptValue;
 

@@ -21,7 +21,7 @@
 
 namespace Gs2::SerialKey::Model
 {
-    class GS2SERIALKEY_API FCampaignModel final : public Gs2Object, public TSharedFromThis<FCampaignModel>
+    class GS2SERIALKEY_API FCampaignModel final : public FGs2Object, public TSharedFromThis<FCampaignModel>
     {
         TOptional<FString> CampaignIdValue;
         TOptional<FString> NameValue;

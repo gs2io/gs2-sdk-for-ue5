@@ -22,7 +22,7 @@
 
 namespace Gs2::Money2::Model
 {
-    class GS2MONEY2_API FRefundHistory final : public Gs2Object, public TSharedFromThis<FRefundHistory>
+    class GS2MONEY2_API FRefundHistory final : public FGs2Object, public TSharedFromThis<FRefundHistory>
     {
         TOptional<FString> RefundHistoryIdValue;
         TOptional<FString> TransactionIdValue;

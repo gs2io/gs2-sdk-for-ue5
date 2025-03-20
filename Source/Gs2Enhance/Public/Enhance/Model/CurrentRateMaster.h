@@ -21,7 +21,7 @@
 
 namespace Gs2::Enhance::Model
 {
-    class GS2ENHANCE_API FCurrentRateMaster final : public Gs2Object, public TSharedFromThis<FCurrentRateMaster>
+    class GS2ENHANCE_API FCurrentRateMaster final : public FGs2Object, public TSharedFromThis<FCurrentRateMaster>
     {
         TOptional<FString> NamespaceIdValue;
         TOptional<FString> SettingsValue;

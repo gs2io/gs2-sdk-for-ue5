@@ -23,7 +23,7 @@
 
 namespace Gs2::MegaField::Model
 {
-    class GS2MEGAFIELD_API FMyPosition final : public Gs2Object, public TSharedFromThis<FMyPosition>
+    class GS2MEGAFIELD_API FMyPosition final : public FGs2Object, public TSharedFromThis<FMyPosition>
     {
         TSharedPtr<FPosition> PositionValue;
         TSharedPtr<FVector> VectorValue;

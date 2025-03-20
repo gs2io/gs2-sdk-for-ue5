@@ -21,7 +21,7 @@
 
 namespace Gs2::Enhance::Model
 {
-    class GS2ENHANCE_API FAcquireActionResult final : public Gs2Object, public TSharedFromThis<FAcquireActionResult>
+    class GS2ENHANCE_API FAcquireActionResult final : public FGs2Object, public TSharedFromThis<FAcquireActionResult>
     {
         TOptional<FString> ActionValue;
         TOptional<FString> AcquireRequestValue;

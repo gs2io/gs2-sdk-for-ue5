@@ -21,7 +21,7 @@
 
 namespace Gs2::Showcase::Model
 {
-    class GS2SHOWCASE_API FGitHubCheckoutSetting final : public Gs2Object, public TSharedFromThis<FGitHubCheckoutSetting>
+    class GS2SHOWCASE_API FGitHubCheckoutSetting final : public FGs2Object, public TSharedFromThis<FGitHubCheckoutSetting>
     {
         TOptional<FString> ApiKeyIdValue;
         TOptional<FString> RepositoryNameValue;

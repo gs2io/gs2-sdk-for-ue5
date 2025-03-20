@@ -21,7 +21,7 @@
 
 namespace Gs2::Gateway::Model
 {
-    class GS2GATEWAY_API FWebSocketSession final : public Gs2Object, public TSharedFromThis<FWebSocketSession>
+    class GS2GATEWAY_API FWebSocketSession final : public FGs2Object, public TSharedFromThis<FWebSocketSession>
     {
         TOptional<FString> WebSocketSessionIdValue;
         TOptional<FString> ConnectionIdValue;

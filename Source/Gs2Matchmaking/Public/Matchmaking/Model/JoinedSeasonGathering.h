@@ -21,7 +21,7 @@
 
 namespace Gs2::Matchmaking::Model
 {
-    class GS2MATCHMAKING_API FJoinedSeasonGathering final : public Gs2Object, public TSharedFromThis<FJoinedSeasonGathering>
+    class GS2MATCHMAKING_API FJoinedSeasonGathering final : public FGs2Object, public TSharedFromThis<FJoinedSeasonGathering>
     {
         TOptional<FString> JoinedSeasonGatheringIdValue;
         TOptional<FString> UserIdValue;

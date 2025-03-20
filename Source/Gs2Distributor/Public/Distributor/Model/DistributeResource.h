@@ -21,7 +21,7 @@
 
 namespace Gs2::Distributor::Model
 {
-    class GS2DISTRIBUTOR_API FDistributeResource final : public Gs2Object, public TSharedFromThis<FDistributeResource>
+    class GS2DISTRIBUTOR_API FDistributeResource final : public FGs2Object, public TSharedFromThis<FDistributeResource>
     {
         TOptional<FString> ActionValue;
         TOptional<FString> RequestValue;

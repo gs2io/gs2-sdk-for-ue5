@@ -122,40 +122,6 @@ namespace Gs2::Inventory::Domain::Model
             ->WithNamespaceName(Self->NamespaceName)
             ->WithInventoryName(Self->InventoryName)
             ->WithUserId(Self->UserId);
-        const auto Future = Self->Client->AcquireSimpleItemsByUserId(
-            Request
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            return Future->GetTask().Error();
-        }
-        const auto RequestModel = Request;
-        const auto ResultModel = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            {
-                for (auto Item : *ResultModel->GetItems())
-                {
-                    const auto ParentKey = Gs2::Inventory::Domain::Model::FSimpleInventoryDomain::CreateCacheParentKey(
-                        Self->NamespaceName,
-                        Self->UserId,
-                        Self->InventoryName,
-                        "SimpleItem"
-                    );
-                    const auto Key = Gs2::Inventory::Domain::Model::FSimpleItemDomain::CreateCacheKey(
-                        Item->GetItemName()
-                    );
-                    Self->Gs2->Cache->Put(
-                        Gs2::Inventory::Model::FSimpleItem::TypeName,
-                        ParentKey,
-                        Key,
-                        Item,
-                        FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                    );
-                }
-            }
-        }
         auto Domain = MakeShared<TArray<TSharedPtr<Gs2::Inventory::Domain::Model::FSimpleItemDomain>>>();
         for (auto i=0; i<ResultModel->GetItems()->Num(); i++)
         {
@@ -219,40 +185,6 @@ namespace Gs2::Inventory::Domain::Model
             ->WithNamespaceName(Self->NamespaceName)
             ->WithInventoryName(Self->InventoryName)
             ->WithUserId(Self->UserId);
-        const auto Future = Self->Client->ConsumeSimpleItemsByUserId(
-            Request
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            return Future->GetTask().Error();
-        }
-        const auto RequestModel = Request;
-        const auto ResultModel = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            {
-                for (auto Item : *ResultModel->GetItems())
-                {
-                    const auto ParentKey = Gs2::Inventory::Domain::Model::FSimpleInventoryDomain::CreateCacheParentKey(
-                        Self->NamespaceName,
-                        Self->UserId,
-                        Self->InventoryName,
-                        "SimpleItem"
-                    );
-                    const auto Key = Gs2::Inventory::Domain::Model::FSimpleItemDomain::CreateCacheKey(
-                        Item->GetItemName()
-                    );
-                    Self->Gs2->Cache->Put(
-                        Gs2::Inventory::Model::FSimpleItem::TypeName,
-                        ParentKey,
-                        Key,
-                        Item,
-                        FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                    );
-                }
-            }
-        }
         auto Domain = MakeShared<TArray<TSharedPtr<Gs2::Inventory::Domain::Model::FSimpleItemDomain>>>();
         for (auto i=0; i<ResultModel->GetItems()->Num(); i++)
         {
@@ -316,40 +248,6 @@ namespace Gs2::Inventory::Domain::Model
             ->WithNamespaceName(Self->NamespaceName)
             ->WithInventoryName(Self->InventoryName)
             ->WithUserId(Self->UserId);
-        const auto Future = Self->Client->SetSimpleItemsByUserId(
-            Request
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            return Future->GetTask().Error();
-        }
-        const auto RequestModel = Request;
-        const auto ResultModel = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            {
-                for (auto Item : *ResultModel->GetItems())
-                {
-                    const auto ParentKey = Gs2::Inventory::Domain::Model::FSimpleInventoryDomain::CreateCacheParentKey(
-                        Self->NamespaceName,
-                        Self->UserId,
-                        Self->InventoryName,
-                        "SimpleItem"
-                    );
-                    const auto Key = Gs2::Inventory::Domain::Model::FSimpleItemDomain::CreateCacheKey(
-                        Item->GetItemName()
-                    );
-                    Self->Gs2->Cache->Put(
-                        Gs2::Inventory::Model::FSimpleItem::TypeName,
-                        ParentKey,
-                        Key,
-                        Item,
-                        FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                    );
-                }
-            }
-        }
         auto Domain = MakeShared<TArray<TSharedPtr<Gs2::Inventory::Domain::Model::FSimpleItemDomain>>>();
         for (auto i=0; i<ResultModel->GetItems()->Num(); i++)
         {
@@ -413,20 +311,6 @@ namespace Gs2::Inventory::Domain::Model
             ->WithNamespaceName(Self->NamespaceName)
             ->WithInventoryName(Self->InventoryName)
             ->WithUserId(Self->UserId);
-        const auto Future = Self->Client->DeleteSimpleItemsByUserId(
-            Request
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            return Future->GetTask().Error();
-        }
-        const auto RequestModel = Request;
-        const auto ResultModel = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-        }
         const auto Domain = Self;
         *Result = Domain;
         return nullptr;

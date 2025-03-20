@@ -103,81 +103,24 @@ namespace Gs2::Enhance::Domain::Model
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithAccessToken(Self->AccessToken->GetToken());
-
-        if (SpeculativeExecute) {
-            const auto SpeculativeExecuteFuture = Transaction::SpeculativeExecutor::FDirectEnhanceByUserIdSpeculativeExecutor::Execute(
-                Self->Gs2,
-                Self->Service,
-                Self->AccessToken,
-                Request::FDirectEnhanceByUserIdRequest::FromJson(Request->ToJson())
-            );
-            SpeculativeExecuteFuture->StartSynchronousTask();
-            if (SpeculativeExecuteFuture->GetTask().IsError())
-            {
-                return SpeculativeExecuteFuture->GetTask().Error();
-            }
-            const auto Commit = SpeculativeExecuteFuture->GetTask().Result();
-            SpeculativeExecuteFuture->EnsureCompletion();
-
-            if (Commit.IsValid()) {
-                (*Commit)();
-            }
-        }
-        const auto Future = Self->Client->DirectEnhance(
-            Request
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            return Future->GetTask().Error();
-        }
-        const auto RequestModel = Request;
-        const auto ResultModel = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::Enhance::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
-                    Self->NamespaceName,
-                    "RateModel"
-                );
-                const auto Key = Gs2::Enhance::Domain::Model::FRateModelDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetName()
-                );
-                Self->Gs2->Cache->Put(
-                    Gs2::Enhance::Model::FRateModel::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
-        }
         Self->BonusRate = ResultModel->GetBonusRate();
-        if (ResultModel && ResultModel->GetStampSheet())
+        const auto Transaction = Gs2::Core::Domain::Internal::FTransactionDomainFactory::ToTransaction(
+            Self->Gs2,
+            Self->AccessToken,
+            ResultModel->AutoRunStampSheet() == nullptr ? false : *ResultModel->AutoRunStampSheet(),
+            *ResultModel->GetTransactionId(),
+            *ResultModel->GetStampSheet(),
+            *ResultModel->GetStampSheetEncryptionKeyId(),
+            *ResultModel->GetAtomicCommit(),
+            *ResultModel->GetTransactionResult()
+        );
+        const auto Future3 = Transaction->Wait(true);
+        Future3->StartSynchronousTask();
+        if (Future3->GetTask().IsError())
         {
-            const auto Transaction = Gs2::Core::Domain::Internal::FTransactionDomainFactory::ToTransaction(
-                Self->Gs2,
-                Self->AccessToken,
-                false,
-                *ResultModel->GetTransactionId(),
-                *ResultModel->GetStampSheet(),
-                *ResultModel->GetStampSheetEncryptionKeyId()
-            );
-            const auto Future3 = Transaction->Wait(true);
-            Future3->StartSynchronousTask();
-            if (Future3->GetTask().IsError())
-            {
-                return Future3->GetTask().Error();
-            }
+            return Future3->GetTask().Error();
         }
-        if (ResultModel != nullptr)
-        {
-            Self->AutoRunStampSheet = ResultModel->GetAutoRunStampSheet();
-            Self->TransactionId = ResultModel->GetTransactionId();
-        }
-        *Result = Self;
+        *Result = Transaction;
         return nullptr;
     }
 
@@ -211,80 +154,23 @@ namespace Gs2::Enhance::Domain::Model
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithAccessToken(Self->AccessToken->GetToken());
-
-        if (SpeculativeExecute) {
-            const auto SpeculativeExecuteFuture = Transaction::SpeculativeExecutor::FUnleashByUserIdSpeculativeExecutor::Execute(
-                Self->Gs2,
-                Self->Service,
-                Self->AccessToken,
-                Request::FUnleashByUserIdRequest::FromJson(Request->ToJson())
-            );
-            SpeculativeExecuteFuture->StartSynchronousTask();
-            if (SpeculativeExecuteFuture->GetTask().IsError())
-            {
-                return SpeculativeExecuteFuture->GetTask().Error();
-            }
-            const auto Commit = SpeculativeExecuteFuture->GetTask().Result();
-            SpeculativeExecuteFuture->EnsureCompletion();
-
-            if (Commit.IsValid()) {
-                (*Commit)();
-            }
-        }
-        const auto Future = Self->Client->Unleash(
-            Request
+        const auto Transaction = Gs2::Core::Domain::Internal::FTransactionDomainFactory::ToTransaction(
+            Self->Gs2,
+            Self->AccessToken,
+            ResultModel->AutoRunStampSheet() == nullptr ? false : *ResultModel->AutoRunStampSheet(),
+            *ResultModel->GetTransactionId(),
+            *ResultModel->GetStampSheet(),
+            *ResultModel->GetStampSheetEncryptionKeyId(),
+            *ResultModel->GetAtomicCommit(),
+            *ResultModel->GetTransactionResult()
         );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
+        const auto Future3 = Transaction->Wait(true);
+        Future3->StartSynchronousTask();
+        if (Future3->GetTask().IsError())
         {
-            return Future->GetTask().Error();
+            return Future3->GetTask().Error();
         }
-        const auto RequestModel = Request;
-        const auto ResultModel = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::Enhance::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
-                    Self->NamespaceName,
-                    "UnleashRateModel"
-                );
-                const auto Key = Gs2::Enhance::Domain::Model::FUnleashRateModelDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetName()
-                );
-                Self->Gs2->Cache->Put(
-                    Gs2::Enhance::Model::FUnleashRateModel::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
-        }
-        if (ResultModel && ResultModel->GetStampSheet())
-        {
-            const auto Transaction = Gs2::Core::Domain::Internal::FTransactionDomainFactory::ToTransaction(
-                Self->Gs2,
-                Self->AccessToken,
-                false,
-                *ResultModel->GetTransactionId(),
-                *ResultModel->GetStampSheet(),
-                *ResultModel->GetStampSheetEncryptionKeyId()
-            );
-            const auto Future3 = Transaction->Wait(true);
-            Future3->StartSynchronousTask();
-            if (Future3->GetTask().IsError())
-            {
-                return Future3->GetTask().Error();
-            }
-        }
-        if (ResultModel != nullptr)
-        {
-            Self->AutoRunStampSheet = ResultModel->GetAutoRunStampSheet();
-            Self->TransactionId = ResultModel->GetTransactionId();
-        }
-        *Result = Self;
+        *Result = Transaction;
         return nullptr;
     }
 

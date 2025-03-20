@@ -22,7 +22,7 @@
 
 namespace Gs2::Identifier::Model
 {
-    class GS2IDENTIFIER_API FPassword final : public Gs2Object, public TSharedFromThis<FPassword>
+    class GS2IDENTIFIER_API FPassword final : public FGs2Object, public TSharedFromThis<FPassword>
     {
         TOptional<FString> PasswordIdValue;
         TOptional<FString> UserIdValue;

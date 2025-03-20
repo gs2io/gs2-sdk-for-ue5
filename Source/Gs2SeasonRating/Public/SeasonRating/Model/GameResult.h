@@ -21,7 +21,7 @@
 
 namespace Gs2::SeasonRating::Model
 {
-    class GS2SEASONRATING_API FGameResult final : public Gs2Object, public TSharedFromThis<FGameResult>
+    class GS2SEASONRATING_API FGameResult final : public FGs2Object, public TSharedFromThis<FGameResult>
     {
         TOptional<int32> RankValue;
         TOptional<FString> UserIdValue;

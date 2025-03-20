@@ -21,7 +21,7 @@
 
 namespace Gs2::Lock::Model
 {
-    class GS2LOCK_API FMutex final : public Gs2Object, public TSharedFromThis<FMutex>
+    class GS2LOCK_API FMutex final : public FGs2Object, public TSharedFromThis<FMutex>
     {
         TOptional<FString> MutexIdValue;
         TOptional<FString> UserIdValue;

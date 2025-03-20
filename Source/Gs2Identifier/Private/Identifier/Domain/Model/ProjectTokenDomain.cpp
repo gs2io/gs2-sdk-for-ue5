@@ -78,20 +78,6 @@ namespace Gs2::Identifier::Domain::Model
         TSharedPtr<TSharedPtr<Gs2::Identifier::Domain::Model::FProjectTokenDomain>> Result
     )
     {
-        const auto Future = Self->Client->Login(
-            Request
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            return Future->GetTask().Error();
-        }
-        const auto RequestModel = Request;
-        const auto ResultModel = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-        }
         const auto Domain = Self;
         if (ResultModel != nullptr)
         {
@@ -140,32 +126,6 @@ namespace Gs2::Identifier::Domain::Model
         TSharedPtr<TSharedPtr<Gs2::Identifier::Domain::Model::FProjectTokenDomain>> Result
     )
     {
-        const auto Future = Self->Client->LoginByUser(
-            Request
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            return Future->GetTask().Error();
-        }
-        const auto RequestModel = Request;
-        const auto ResultModel = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-            {
-                const auto ParentKey = FString("identifier:ProjectToken");
-                const auto Key = Gs2::Identifier::Domain::Model::FProjectTokenDomain::CreateCacheKey(
-                );
-                Self->Gs2->Cache->Put(
-                    Gs2::Identifier::Model::FProjectToken::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
-        }
         auto Domain = Self;
 
         *Result = Domain;

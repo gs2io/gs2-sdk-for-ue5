@@ -21,7 +21,7 @@
 
 namespace Gs2::MegaField::Model
 {
-    class GS2MEGAFIELD_API FLayer final : public Gs2Object, public TSharedFromThis<FLayer>
+    class GS2MEGAFIELD_API FLayer final : public FGs2Object, public TSharedFromThis<FLayer>
     {
         TOptional<FString> LayerIdValue;
         TOptional<FString> AreaModelNameValue;

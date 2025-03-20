@@ -92,37 +92,6 @@ namespace Gs2::StateMachine::Domain::Model
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithVersion(Self->Version);
-        const auto Future = Self->Client->GetStateMachineMaster(
-            Request
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            return Future->GetTask().Error();
-        }
-        const auto RequestModel = Request;
-        const auto ResultModel = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::StateMachine::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
-                    Self->NamespaceName,
-                    "StateMachineMaster"
-                );
-                const auto Key = Gs2::StateMachine::Domain::Model::FStateMachineMasterDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetVersion().IsSet() ? FString::FromInt(*ResultModel->GetItem()->GetVersion()) : TOptional<FString>()
-                );
-                Self->Gs2->Cache->Put(
-                    Gs2::StateMachine::Model::FStateMachineMaster::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
-        }
         *Result = ResultModel->GetItem();
         return nullptr;
     }
@@ -155,31 +124,6 @@ namespace Gs2::StateMachine::Domain::Model
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithVersion(Self->Version);
-        const auto Future = Self->Client->DeleteStateMachineMaster(
-            Request
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            return Future->GetTask().Error();
-        }
-        const auto RequestModel = Request;
-        const auto ResultModel = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::StateMachine::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
-                    Self->NamespaceName,
-                    "StateMachineMaster"
-                );
-                const auto Key = Gs2::StateMachine::Domain::Model::FStateMachineMasterDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetVersion().IsSet() ? FString::FromInt(*ResultModel->GetItem()->GetVersion()) : TOptional<FString>()
-                );
-                Self->Gs2->Cache->Delete(Gs2::StateMachine::Model::FStateMachineMaster::TypeName, ParentKey, Key);
-            }
-        }
         auto Domain = Self;
 
         *Result = Domain;

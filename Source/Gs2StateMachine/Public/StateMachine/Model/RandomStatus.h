@@ -22,7 +22,7 @@
 
 namespace Gs2::StateMachine::Model
 {
-    class GS2STATEMACHINE_API FRandomStatus final : public Gs2Object, public TSharedFromThis<FRandomStatus>
+    class GS2STATEMACHINE_API FRandomStatus final : public FGs2Object, public TSharedFromThis<FRandomStatus>
     {
         TOptional<int64> SeedValue;
         TSharedPtr<TArray<TSharedPtr<FRandomUsed>>> UsedValue;

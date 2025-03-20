@@ -111,20 +111,6 @@ namespace Gs2::Matchmaking::Domain::Model
             ->WithNamespaceName(Self->NamespaceName)
             ->WithRatingName(Self->RatingName)
             ->WithGatheringName(Self->GatheringName);
-        const auto Future = Self->Client->CommitVote(
-            Request
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            return Future->GetTask().Error();
-        }
-        const auto RequestModel = Request;
-        const auto ResultModel = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-        }
         const auto Domain = Self;
         *Result = Domain;
         return nullptr;

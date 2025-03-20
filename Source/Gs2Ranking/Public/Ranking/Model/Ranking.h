@@ -21,7 +21,7 @@
 
 namespace Gs2::Ranking::Model
 {
-    class GS2RANKING_API FRanking final : public Gs2Object, public TSharedFromThis<FRanking>
+    class GS2RANKING_API FRanking final : public FGs2Object, public TSharedFromThis<FRanking>
     {
         TOptional<int64> RankValue;
         TOptional<int64> IndexValue;

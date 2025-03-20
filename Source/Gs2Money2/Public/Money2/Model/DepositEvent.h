@@ -23,7 +23,7 @@
 
 namespace Gs2::Money2::Model
 {
-    class GS2MONEY2_API FDepositEvent final : public Gs2Object, public TSharedFromThis<FDepositEvent>
+    class GS2MONEY2_API FDepositEvent final : public FGs2Object, public TSharedFromThis<FDepositEvent>
     {
         TOptional<int32> SlotValue;
         TSharedPtr<TArray<TSharedPtr<FDepositTransaction>>> DepositTransactionsValue;

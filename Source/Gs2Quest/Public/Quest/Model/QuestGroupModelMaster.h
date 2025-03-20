@@ -21,7 +21,7 @@
 
 namespace Gs2::Quest::Model
 {
-    class GS2QUEST_API FQuestGroupModelMaster final : public Gs2Object, public TSharedFromThis<FQuestGroupModelMaster>
+    class GS2QUEST_API FQuestGroupModelMaster final : public FGs2Object, public TSharedFromThis<FQuestGroupModelMaster>
     {
         TOptional<FString> QuestGroupModelIdValue;
         TOptional<FString> NameValue;

@@ -22,7 +22,7 @@
 
 namespace Gs2::Idle::Model
 {
-    class GS2IDLE_API FAcquireActionList final : public Gs2Object, public TSharedFromThis<FAcquireActionList>
+    class GS2IDLE_API FAcquireActionList final : public FGs2Object, public TSharedFromThis<FAcquireActionList>
     {
         TSharedPtr<TArray<TSharedPtr<FAcquireAction>>> AcquireActionsValue;
 

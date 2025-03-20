@@ -103,38 +103,6 @@ namespace Gs2::Money2::Domain::Model
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithUserId(Self->UserId);
-        const auto Future = Self->Client->VerifyReceiptByUserId(
-            Request
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            return Future->GetTask().Error();
-        }
-        const auto RequestModel = Request;
-        const auto ResultModel = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::Money2::Domain::Model::FUserDomain::CreateCacheParentKey(
-                    Self->NamespaceName,
-                    Self->UserId,
-                    "Event"
-                );
-                const auto Key = Gs2::Money2::Domain::Model::FEventDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetTransactionId()
-                );
-                Self->Gs2->Cache->Put(
-                    Gs2::Money2::Model::FEvent::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
-        }
         auto Domain = MakeShared<Gs2::Money2::Domain::Model::FEventDomain>(
             Self->Gs2,
             Self->Service,
@@ -175,38 +143,6 @@ namespace Gs2::Money2::Domain::Model
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithUserId(Self->UserId);
-        const auto Future = Self->Client->AllocateSubscriptionStatusByUserId(
-            Request
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            return Future->GetTask().Error();
-        }
-        const auto RequestModel = Request;
-        const auto ResultModel = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::Money2::Domain::Model::FUserDomain::CreateCacheParentKey(
-                    Self->NamespaceName,
-                    Self->UserId,
-                    "SubscriptionStatus"
-                );
-                const auto Key = Gs2::Money2::Domain::Model::FSubscriptionStatusDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetContentName()
-                );
-                Self->Gs2->Cache->Put(
-                    Gs2::Money2::Model::FSubscriptionStatus::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
-        }
         auto Domain = MakeShared<Gs2::Money2::Domain::Model::FSubscriptionStatusDomain>(
             Self->Gs2,
             Self->Service,
@@ -247,38 +183,6 @@ namespace Gs2::Money2::Domain::Model
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithUserId(Self->UserId);
-        const auto Future = Self->Client->TakeoverSubscriptionStatusByUserId(
-            Request
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            return Future->GetTask().Error();
-        }
-        const auto RequestModel = Request;
-        const auto ResultModel = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::Money2::Domain::Model::FUserDomain::CreateCacheParentKey(
-                    Self->NamespaceName,
-                    Self->UserId,
-                    "SubscriptionStatus"
-                );
-                const auto Key = Gs2::Money2::Domain::Model::FSubscriptionStatusDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetContentName()
-                );
-                Self->Gs2->Cache->Put(
-                    Gs2::Money2::Model::FSubscriptionStatus::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
-        }
         auto Domain = MakeShared<Gs2::Money2::Domain::Model::FSubscriptionStatusDomain>(
             Self->Gs2,
             Self->Service,

@@ -24,7 +24,7 @@
 
 namespace Gs2::Exchange::Model
 {
-    class GS2EXCHANGE_API FNamespace final : public Gs2Object, public TSharedFromThis<FNamespace>
+    class GS2EXCHANGE_API FNamespace final : public FGs2Object, public TSharedFromThis<FNamespace>
     {
         TOptional<FString> NamespaceIdValue;
         TOptional<FString> NameValue;

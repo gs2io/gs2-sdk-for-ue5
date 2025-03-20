@@ -22,7 +22,7 @@
 
 namespace Gs2::Lottery::Model
 {
-    class GS2LOTTERY_API FPrizeTable final : public Gs2Object, public TSharedFromThis<FPrizeTable>
+    class GS2LOTTERY_API FPrizeTable final : public FGs2Object, public TSharedFromThis<FPrizeTable>
     {
         TOptional<FString> PrizeTableIdValue;
         TOptional<FString> NameValue;

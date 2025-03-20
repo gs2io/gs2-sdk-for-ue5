@@ -23,7 +23,7 @@
 
 namespace Gs2::StateMachine::Model
 {
-    class GS2STATEMACHINE_API FEvent final : public Gs2Object, public TSharedFromThis<FEvent>
+    class GS2STATEMACHINE_API FEvent final : public FGs2Object, public TSharedFromThis<FEvent>
     {
         TOptional<FString> EventTypeValue;
         TSharedPtr<FChangeStateEvent> ChangeStateEventValue;

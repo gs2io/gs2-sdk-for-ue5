@@ -22,7 +22,7 @@
 
 namespace Gs2::Log::Model
 {
-    class GS2LOG_API FInGameLog final : public Gs2Object, public TSharedFromThis<FInGameLog>
+    class GS2LOG_API FInGameLog final : public FGs2Object, public TSharedFromThis<FInGameLog>
     {
         TOptional<int64> TimestampValue;
         TOptional<FString> RequestIdValue;

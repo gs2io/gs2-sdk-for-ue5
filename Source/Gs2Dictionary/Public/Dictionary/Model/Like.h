@@ -21,7 +21,7 @@
 
 namespace Gs2::Dictionary::Model
 {
-    class GS2DICTIONARY_API FLike final : public Gs2Object, public TSharedFromThis<FLike>
+    class GS2DICTIONARY_API FLike final : public FGs2Object, public TSharedFromThis<FLike>
     {
         TOptional<FString> LikeIdValue;
         TOptional<FString> UserIdValue;

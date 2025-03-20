@@ -21,7 +21,7 @@
 
 namespace Gs2::Enhance::Model
 {
-    class GS2ENHANCE_API FBonusRate final : public Gs2Object, public TSharedFromThis<FBonusRate>
+    class GS2ENHANCE_API FBonusRate final : public FGs2Object, public TSharedFromThis<FBonusRate>
     {
         TOptional<float> RateValue;
         TOptional<int32> WeightValue;

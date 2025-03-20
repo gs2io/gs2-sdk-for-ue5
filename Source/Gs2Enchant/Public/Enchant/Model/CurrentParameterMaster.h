@@ -21,7 +21,7 @@
 
 namespace Gs2::Enchant::Model
 {
-    class GS2ENCHANT_API FCurrentParameterMaster final : public Gs2Object, public TSharedFromThis<FCurrentParameterMaster>
+    class GS2ENCHANT_API FCurrentParameterMaster final : public FGs2Object, public TSharedFromThis<FCurrentParameterMaster>
     {
         TOptional<FString> NamespaceIdValue;
         TOptional<FString> SettingsValue;

@@ -22,7 +22,7 @@
 
 namespace Gs2::Exchange::Model
 {
-    class GS2EXCHANGE_API FAwait final : public Gs2Object, public TSharedFromThis<FAwait>
+    class GS2EXCHANGE_API FAwait final : public FGs2Object, public TSharedFromThis<FAwait>
     {
         TOptional<FString> AwaitIdValue;
         TOptional<FString> UserIdValue;
@@ -33,6 +33,7 @@ namespace Gs2::Exchange::Model
         TSharedPtr<TArray<TSharedPtr<FConfig>>> ConfigValue;
         TOptional<int64> AcquirableAtValue;
         TOptional<int64> ExchangedAtValue;
+        TOptional<int64> CreatedAtValue;
         TOptional<int64> RevisionValue;
 
     public:
@@ -51,6 +52,7 @@ namespace Gs2::Exchange::Model
         TSharedPtr<FAwait> WithConfig(const TSharedPtr<TArray<TSharedPtr<FConfig>>> Config);
         TSharedPtr<FAwait> WithAcquirableAt(const TOptional<int64> AcquirableAt);
         TSharedPtr<FAwait> WithExchangedAt(const TOptional<int64> ExchangedAt);
+        TSharedPtr<FAwait> WithCreatedAt(const TOptional<int64> CreatedAt);
         TSharedPtr<FAwait> WithRevision(const TOptional<int64> Revision);
 
         TOptional<FString> GetAwaitId() const;
@@ -66,6 +68,8 @@ namespace Gs2::Exchange::Model
         FString GetAcquirableAtString() const;
         TOptional<int64> GetExchangedAt() const;
         FString GetExchangedAtString() const;
+        TOptional<int64> GetCreatedAt() const;
+        FString GetCreatedAtString() const;
         TOptional<int64> GetRevision() const;
         FString GetRevisionString() const;
 

@@ -21,7 +21,7 @@
 
 namespace Gs2::Gateway::Model
 {
-    class GS2GATEWAY_API FFirebaseToken final : public Gs2Object, public TSharedFromThis<FFirebaseToken>
+    class GS2GATEWAY_API FFirebaseToken final : public FGs2Object, public TSharedFromThis<FFirebaseToken>
     {
         TOptional<FString> FirebaseTokenIdValue;
         TOptional<FString> UserIdValue;

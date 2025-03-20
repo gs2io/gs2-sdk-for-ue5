@@ -21,7 +21,7 @@
 
 namespace Gs2::Log::Model
 {
-    class GS2LOG_API FExecuteStampTaskLog final : public Gs2Object, public TSharedFromThis<FExecuteStampTaskLog>
+    class GS2LOG_API FExecuteStampTaskLog final : public FGs2Object, public TSharedFromThis<FExecuteStampTaskLog>
     {
         TOptional<int64> TimestampValue;
         TOptional<FString> TaskIdValue;

@@ -101,63 +101,23 @@ namespace Gs2::Quest::Domain::Model
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithAccessToken(Self->AccessToken->GetToken());
-
-        if (SpeculativeExecute) {
-            const auto SpeculativeExecuteFuture = Transaction::SpeculativeExecutor::FStartByUserIdSpeculativeExecutor::Execute(
-                Self->Gs2,
-                Self->Service,
-                Self->AccessToken,
-                Request::FStartByUserIdRequest::FromJson(Request->ToJson())
-            );
-            SpeculativeExecuteFuture->StartSynchronousTask();
-            if (SpeculativeExecuteFuture->GetTask().IsError())
-            {
-                return SpeculativeExecuteFuture->GetTask().Error();
-            }
-            const auto Commit = SpeculativeExecuteFuture->GetTask().Result();
-            SpeculativeExecuteFuture->EnsureCompletion();
-
-            if (Commit.IsValid()) {
-                (*Commit)();
-            }
-        }
-        const auto Future = Self->Client->Start(
-            Request
+        const auto Transaction = Gs2::Core::Domain::Internal::FTransactionDomainFactory::ToTransaction(
+            Self->Gs2,
+            Self->AccessToken,
+            ResultModel->AutoRunStampSheet() == nullptr ? false : *ResultModel->AutoRunStampSheet(),
+            *ResultModel->GetTransactionId(),
+            *ResultModel->GetStampSheet(),
+            *ResultModel->GetStampSheetEncryptionKeyId(),
+            *ResultModel->GetAtomicCommit(),
+            *ResultModel->GetTransactionResult()
         );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
+        const auto Future3 = Transaction->Wait(true);
+        Future3->StartSynchronousTask();
+        if (Future3->GetTask().IsError())
         {
-            return Future->GetTask().Error();
+            return Future3->GetTask().Error();
         }
-        const auto RequestModel = Request;
-        const auto ResultModel = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-        }
-        if (ResultModel && ResultModel->GetStampSheet())
-        {
-            const auto Transaction = Gs2::Core::Domain::Internal::FTransactionDomainFactory::ToTransaction(
-                Self->Gs2,
-                Self->AccessToken,
-                false,
-                *ResultModel->GetTransactionId(),
-                *ResultModel->GetStampSheet(),
-                *ResultModel->GetStampSheetEncryptionKeyId()
-            );
-            const auto Future3 = Transaction->Wait(true);
-            Future3->StartSynchronousTask();
-            if (Future3->GetTask().IsError())
-            {
-                return Future3->GetTask().Error();
-            }
-        }
-        if (ResultModel != nullptr)
-        {
-            Self->AutoRunStampSheet = ResultModel->GetAutoRunStampSheet();
-            Self->TransactionId = ResultModel->GetTransactionId();
-        }
-        *Result = Self;
+        *Result = Transaction;
         return nullptr;
     }
 

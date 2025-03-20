@@ -21,7 +21,7 @@
 
 namespace Gs2::Grade::Model
 {
-    class GS2GRADE_API FDefaultGradeModel final : public Gs2Object, public TSharedFromThis<FDefaultGradeModel>
+    class GS2GRADE_API FDefaultGradeModel final : public FGs2Object, public TSharedFromThis<FDefaultGradeModel>
     {
         TOptional<FString> PropertyIdRegexValue;
         TOptional<int64> DefaultGradeValueValue;

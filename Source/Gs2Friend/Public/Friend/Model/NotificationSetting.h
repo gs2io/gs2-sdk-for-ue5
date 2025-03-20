@@ -21,7 +21,7 @@
 
 namespace Gs2::Friend::Model
 {
-    class GS2FRIEND_API FNotificationSetting final : public Gs2Object, public TSharedFromThis<FNotificationSetting>
+    class GS2FRIEND_API FNotificationSetting final : public FGs2Object, public TSharedFromThis<FNotificationSetting>
     {
         TOptional<FString> GatewayNamespaceIdValue;
         TOptional<bool> EnableTransferMobileNotificationValue;

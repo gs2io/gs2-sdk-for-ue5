@@ -21,7 +21,7 @@
 
 namespace Gs2::Friend::Model
 {
-    class GS2FRIEND_API FSendFriendRequest final : public Gs2Object, public TSharedFromThis<FSendFriendRequest>
+    class GS2FRIEND_API FSendFriendRequest final : public FGs2Object, public TSharedFromThis<FSendFriendRequest>
     {
         TOptional<FString> UserIdValue;
         TOptional<FString> TargetUserIdValue;

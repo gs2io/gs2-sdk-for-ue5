@@ -21,7 +21,7 @@
 
 namespace Gs2::Experience::Model
 {
-    class GS2EXPERIENCE_API FLogSetting final : public Gs2Object, public TSharedFromThis<FLogSetting>
+    class GS2EXPERIENCE_API FLogSetting final : public FGs2Object, public TSharedFromThis<FLogSetting>
     {
         TOptional<FString> LoggingNamespaceIdValue;
 

@@ -103,38 +103,6 @@ namespace Gs2::Quest::Domain::Model
             ->WithNamespaceName(Self->NamespaceName)
             ->WithQuestGroupName(Self->QuestGroupName)
             ->WithQuestName(Self->QuestName);
-        const auto Future = Self->Client->GetQuestModel(
-            Request
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            return Future->GetTask().Error();
-        }
-        const auto RequestModel = Request;
-        const auto ResultModel = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::Quest::Domain::Model::FQuestGroupModelDomain::CreateCacheParentKey(
-                    Self->NamespaceName,
-                    Self->QuestGroupName,
-                    "QuestModel"
-                );
-                const auto Key = Gs2::Quest::Domain::Model::FQuestModelDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetName()
-                );
-                Self->Gs2->Cache->Put(
-                    Gs2::Quest::Model::FQuestModel::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
-        }
         *Result = ResultModel->GetItem();
         return nullptr;
     }

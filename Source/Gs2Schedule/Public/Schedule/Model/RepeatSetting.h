@@ -21,7 +21,7 @@
 
 namespace Gs2::Schedule::Model
 {
-    class GS2SCHEDULE_API FRepeatSetting final : public Gs2Object, public TSharedFromThis<FRepeatSetting>
+    class GS2SCHEDULE_API FRepeatSetting final : public FGs2Object, public TSharedFromThis<FRepeatSetting>
     {
         TOptional<FString> RepeatTypeValue;
         TOptional<int32> BeginDayOfMonthValue;

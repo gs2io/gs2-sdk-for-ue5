@@ -21,7 +21,7 @@
 
 namespace Gs2::Money2::Model
 {
-    class GS2MONEY2_API FGooglePlaySubscriptionContent final : public Gs2Object, public TSharedFromThis<FGooglePlaySubscriptionContent>
+    class GS2MONEY2_API FGooglePlaySubscriptionContent final : public FGs2Object, public TSharedFromThis<FGooglePlaySubscriptionContent>
     {
         TOptional<FString> ProductIdValue;
 

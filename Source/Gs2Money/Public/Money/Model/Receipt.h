@@ -21,7 +21,7 @@
 
 namespace Gs2::Money::Model
 {
-    class GS2MONEY_API FReceipt final : public Gs2Object, public TSharedFromThis<FReceipt>
+    class GS2MONEY_API FReceipt final : public FGs2Object, public TSharedFromThis<FReceipt>
     {
         TOptional<FString> ReceiptIdValue;
         TOptional<FString> TransactionIdValue;

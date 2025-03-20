@@ -125,41 +125,6 @@ namespace Gs2::Matchmaking::Domain::Model
             ->WithSeason(Self->Season)
             ->WithTier(Self->Tier)
             ->WithSeasonGatheringName(Self->SeasonGatheringName);
-        const auto Future = Self->Client->GetSeasonGathering(
-            Request
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            return Future->GetTask().Error();
-        }
-        const auto RequestModel = Request;
-        const auto ResultModel = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::Matchmaking::Domain::Model::FSeasonDomain::CreateCacheParentKey(
-                    Self->NamespaceName,
-                    TOptional<FString>("Singleton"),
-                    Self->SeasonName,
-                    Self->Season,
-                    "SeasonGathering"
-                );
-                const auto Key = Gs2::Matchmaking::Domain::Model::FSeasonGatheringDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetTier().IsSet() ? FString::FromInt(*ResultModel->GetItem()->GetTier()) : TOptional<FString>(),
-                    ResultModel->GetItem()->GetName()
-                );
-                Self->Gs2->Cache->Put(
-                    Gs2::Matchmaking::Model::FSeasonGathering::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
-        }
         *Result = ResultModel->GetItem();
         return nullptr;
     }
@@ -196,20 +161,6 @@ namespace Gs2::Matchmaking::Domain::Model
             ->WithTier(Self->Tier)
             ->WithSeasonGatheringName(Self->SeasonGatheringName)
             ->WithUserId(Self->UserId);
-        const auto Future = Self->Client->VerifyIncludeParticipantByUserId(
-            Request
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            return Future->GetTask().Error();
-        }
-        const auto RequestModel = Request;
-        const auto ResultModel = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-        }
         const auto Domain = Self;
         *Result = Domain;
         return nullptr;
@@ -246,35 +197,6 @@ namespace Gs2::Matchmaking::Domain::Model
             ->WithSeason(Self->Season)
             ->WithTier(Self->Tier)
             ->WithSeasonGatheringName(Self->SeasonGatheringName);
-        const auto Future = Self->Client->DeleteSeasonGathering(
-            Request
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            return Future->GetTask().Error();
-        }
-        const auto RequestModel = Request;
-        const auto ResultModel = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::Matchmaking::Domain::Model::FSeasonDomain::CreateCacheParentKey(
-                    Self->NamespaceName,
-                    TOptional<FString>("Singleton"),
-                    Self->SeasonName,
-                    Self->Season,
-                    "SeasonGathering"
-                );
-                const auto Key = Gs2::Matchmaking::Domain::Model::FSeasonGatheringDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetTier().IsSet() ? FString::FromInt(*ResultModel->GetItem()->GetTier()) : TOptional<FString>(),
-                    ResultModel->GetItem()->GetName()
-                );
-                Self->Gs2->Cache->Delete(Gs2::Matchmaking::Model::FSeasonGathering::TypeName, ParentKey, Key);
-            }
-        }
         auto Domain = Self;
 
         *Result = Domain;

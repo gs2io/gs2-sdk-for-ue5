@@ -21,7 +21,7 @@
 
 namespace Gs2::Ranking::Model
 {
-    class GS2RANKING_API FSubscribe final : public Gs2Object, public TSharedFromThis<FSubscribe>
+    class GS2RANKING_API FSubscribe final : public FGs2Object, public TSharedFromThis<FSubscribe>
     {
         TOptional<FString> SubscribeIdValue;
         TOptional<FString> CategoryNameValue;

@@ -101,38 +101,6 @@ namespace Gs2::Version::Domain::Model
             ->WithNamespaceName(Self->NamespaceName)
             ->WithVersionName(Self->VersionName)
             ->WithUserId(Self->UserId);
-        const auto Future = Self->Client->AcceptByUserId(
-            Request
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            return Future->GetTask().Error();
-        }
-        const auto RequestModel = Request;
-        const auto ResultModel = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::Version::Domain::Model::FUserDomain::CreateCacheParentKey(
-                    Self->NamespaceName,
-                    Self->UserId,
-                    "AcceptVersion"
-                );
-                const auto Key = Gs2::Version::Domain::Model::FAcceptVersionDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetVersionName()
-                );
-                Self->Gs2->Cache->Put(
-                    Gs2::Version::Model::FAcceptVersion::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
-        }
         auto Domain = Self;
 
         *Result = Domain;
@@ -168,38 +136,6 @@ namespace Gs2::Version::Domain::Model
             ->WithNamespaceName(Self->NamespaceName)
             ->WithVersionName(Self->VersionName)
             ->WithUserId(Self->UserId);
-        const auto Future = Self->Client->RejectByUserId(
-            Request
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            return Future->GetTask().Error();
-        }
-        const auto RequestModel = Request;
-        const auto ResultModel = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::Version::Domain::Model::FUserDomain::CreateCacheParentKey(
-                    Self->NamespaceName,
-                    Self->UserId,
-                    "AcceptVersion"
-                );
-                const auto Key = Gs2::Version::Domain::Model::FAcceptVersionDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetVersionName()
-                );
-                Self->Gs2->Cache->Put(
-                    Gs2::Version::Model::FAcceptVersion::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
-        }
         auto Domain = Self;
 
         *Result = Domain;
@@ -235,38 +171,6 @@ namespace Gs2::Version::Domain::Model
             ->WithNamespaceName(Self->NamespaceName)
             ->WithUserId(Self->UserId)
             ->WithVersionName(Self->VersionName);
-        const auto Future = Self->Client->GetAcceptVersionByUserId(
-            Request
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            return Future->GetTask().Error();
-        }
-        const auto RequestModel = Request;
-        const auto ResultModel = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::Version::Domain::Model::FUserDomain::CreateCacheParentKey(
-                    Self->NamespaceName,
-                    Self->UserId,
-                    "AcceptVersion"
-                );
-                const auto Key = Gs2::Version::Domain::Model::FAcceptVersionDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetVersionName()
-                );
-                Self->Gs2->Cache->Put(
-                    Gs2::Version::Model::FAcceptVersion::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
-        }
         *Result = ResultModel->GetItem();
         return nullptr;
     }
@@ -300,32 +204,6 @@ namespace Gs2::Version::Domain::Model
             ->WithNamespaceName(Self->NamespaceName)
             ->WithUserId(Self->UserId)
             ->WithVersionName(Self->VersionName);
-        const auto Future = Self->Client->DeleteAcceptVersionByUserId(
-            Request
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            return Future->GetTask().Error();
-        }
-        const auto RequestModel = Request;
-        const auto ResultModel = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::Version::Domain::Model::FUserDomain::CreateCacheParentKey(
-                    Self->NamespaceName,
-                    Self->UserId,
-                    "AcceptVersion"
-                );
-                const auto Key = Gs2::Version::Domain::Model::FAcceptVersionDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetVersionName()
-                );
-                Self->Gs2->Cache->Delete(Gs2::Version::Model::FAcceptVersion::TypeName, ParentKey, Key);
-            }
-        }
         auto Domain = Self;
 
         *Result = Domain;

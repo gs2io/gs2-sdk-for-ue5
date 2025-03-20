@@ -24,7 +24,7 @@
 
 namespace Gs2::Exchange::Model
 {
-    class GS2EXCHANGE_API FRateModelMaster final : public Gs2Object, public TSharedFromThis<FRateModelMaster>
+    class GS2EXCHANGE_API FRateModelMaster final : public FGs2Object, public TSharedFromThis<FRateModelMaster>
     {
         TOptional<FString> RateModelIdValue;
         TOptional<FString> NameValue;

@@ -97,38 +97,6 @@ namespace Gs2::Lock::Domain::Model
             ->WithNamespaceName(Self->NamespaceName)
             ->WithPropertyId(Self->PropertyId)
             ->WithAccessToken(Self->AccessToken->GetToken());
-        const auto Future = Self->Client->Lock(
-            Request
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            return Future->GetTask().Error();
-        }
-        const auto RequestModel = Request;
-        const auto ResultModel = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::Lock::Domain::Model::FUserDomain::CreateCacheParentKey(
-                    Self->NamespaceName,
-                    Self->UserId(),
-                    "Mutex"
-                );
-                const auto Key = Gs2::Lock::Domain::Model::FMutexDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetPropertyId()
-                );
-                Self->Gs2->Cache->Put(
-                    Gs2::Lock::Model::FMutex::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
-        }
         auto Domain = Self;
 
         *Result = Domain;
@@ -164,32 +132,6 @@ namespace Gs2::Lock::Domain::Model
             ->WithNamespaceName(Self->NamespaceName)
             ->WithPropertyId(Self->PropertyId)
             ->WithAccessToken(Self->AccessToken->GetToken());
-        const auto Future = Self->Client->Unlock(
-            Request
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            return Future->GetTask().Error();
-        }
-        const auto RequestModel = Request;
-        const auto ResultModel = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::Lock::Domain::Model::FUserDomain::CreateCacheParentKey(
-                    Self->NamespaceName,
-                    Self->UserId(),
-                    "Mutex"
-                );
-                const auto Key = Gs2::Lock::Domain::Model::FMutexDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetPropertyId()
-                );
-                Self->Gs2->Cache->Delete(Gs2::Lock::Model::FMutex::TypeName, ParentKey, Key);
-            }
-        }
         auto Domain = Self;
 
         *Result = Domain;
@@ -225,38 +167,6 @@ namespace Gs2::Lock::Domain::Model
             ->WithNamespaceName(Self->NamespaceName)
             ->WithAccessToken(Self->AccessToken->GetToken())
             ->WithPropertyId(Self->PropertyId);
-        const auto Future = Self->Client->GetMutex(
-            Request
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            return Future->GetTask().Error();
-        }
-        const auto RequestModel = Request;
-        const auto ResultModel = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::Lock::Domain::Model::FUserDomain::CreateCacheParentKey(
-                    Self->NamespaceName,
-                    Self->UserId(),
-                    "Mutex"
-                );
-                const auto Key = Gs2::Lock::Domain::Model::FMutexDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetPropertyId()
-                );
-                Self->Gs2->Cache->Put(
-                    Gs2::Lock::Model::FMutex::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
-        }
         *Result = ResultModel->GetItem();
         return nullptr;
     }

@@ -22,7 +22,7 @@
 
 namespace Gs2::Idle::Model
 {
-    class GS2IDLE_API FCategoryModelMaster final : public Gs2Object, public TSharedFromThis<FCategoryModelMaster>
+    class GS2IDLE_API FCategoryModelMaster final : public FGs2Object, public TSharedFromThis<FCategoryModelMaster>
     {
         TOptional<FString> CategoryModelIdValue;
         TOptional<FString> NameValue;

@@ -90,37 +90,6 @@ namespace Gs2::Deploy::Domain::Model
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithStackName(Self->StackName)
             ->WithOutputName(Self->OutputName);
-        const auto Future = Self->Client->GetOutput(
-            Request
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            return Future->GetTask().Error();
-        }
-        const auto RequestModel = Request;
-        const auto ResultModel = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::Deploy::Domain::Model::FStackDomain::CreateCacheParentKey(
-                    Self->StackName,
-                    "Output"
-                );
-                const auto Key = Gs2::Deploy::Domain::Model::FOutputDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetName()
-                );
-                Self->Gs2->Cache->Put(
-                    Gs2::Deploy::Model::FOutput::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
-        }
         *Result = ResultModel->GetItem();
         return nullptr;
     }

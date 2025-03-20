@@ -21,7 +21,7 @@
 
 namespace Gs2::Formation::Model
 {
-    class GS2FORMATION_API FScriptSetting final : public Gs2Object, public TSharedFromThis<FScriptSetting>
+    class GS2FORMATION_API FScriptSetting final : public FGs2Object, public TSharedFromThis<FScriptSetting>
     {
         TOptional<FString> TriggerScriptIdValue;
         TOptional<FString> DoneTriggerTargetTypeValue;

@@ -23,7 +23,7 @@
 
 namespace Gs2::Money2::Model
 {
-    class GS2MONEY2_API FRefundEvent final : public Gs2Object, public TSharedFromThis<FRefundEvent>
+    class GS2MONEY2_API FRefundEvent final : public FGs2Object, public TSharedFromThis<FRefundEvent>
     {
         TOptional<FString> ContentNameValue;
         TOptional<FString> PlatformValue;

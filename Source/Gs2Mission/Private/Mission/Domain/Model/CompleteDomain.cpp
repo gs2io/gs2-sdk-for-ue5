@@ -105,43 +105,23 @@ namespace Gs2::Mission::Domain::Model
             ->WithNamespaceName(Self->NamespaceName)
             ->WithMissionGroupName(Self->MissionGroupName)
             ->WithUserId(Self->UserId);
-        const auto Future = Self->Client->CompleteByUserId(
-            Request
+        const auto Transaction = Gs2::Core::Domain::Internal::FTransactionDomainFactory::ToTransaction(
+            Self->Gs2,
+            *Self->UserId,
+            ResultModel->AutoRunStampSheet() == nullptr ? false : *ResultModel->AutoRunStampSheet(),
+            *ResultModel->GetTransactionId(),
+            *ResultModel->GetStampSheet(),
+            *ResultModel->GetStampSheetEncryptionKeyId(),
+            *ResultModel->GetAtomicCommit(),
+            *ResultModel->GetTransactionResult()
         );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
+        const auto Future3 = Transaction->Wait(true);
+        Future3->StartSynchronousTask();
+        if (Future3->GetTask().IsError())
         {
-            return Future->GetTask().Error();
+            return Future3->GetTask().Error();
         }
-        const auto RequestModel = Request;
-        const auto ResultModel = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-        }
-        if (ResultModel && ResultModel->GetStampSheet())
-        {
-            const auto Transaction = Gs2::Core::Domain::Internal::FTransactionDomainFactory::ToTransaction(
-                Self->Gs2,
-                *Self->UserId,
-                false,
-                *ResultModel->GetTransactionId(),
-                *ResultModel->GetStampSheet(),
-                *ResultModel->GetStampSheetEncryptionKeyId()
-            );
-            const auto Future3 = Transaction->Wait(true);
-            Future3->StartSynchronousTask();
-            if (Future3->GetTask().IsError())
-            {
-                return Future3->GetTask().Error();
-            }
-        }
-        if (ResultModel != nullptr)
-        {
-            Self->AutoRunStampSheet = ResultModel->GetAutoRunStampSheet();
-            Self->TransactionId = ResultModel->GetTransactionId();
-        }
-        *Result = Self;
+        *Result = Transaction;
         return nullptr;
     }
 
@@ -174,43 +154,23 @@ namespace Gs2::Mission::Domain::Model
             ->WithNamespaceName(Self->NamespaceName)
             ->WithMissionGroupName(Self->MissionGroupName)
             ->WithUserId(Self->UserId);
-        const auto Future = Self->Client->BatchCompleteByUserId(
-            Request
+        const auto Transaction = Gs2::Core::Domain::Internal::FTransactionDomainFactory::ToTransaction(
+            Self->Gs2,
+            *Self->UserId,
+            ResultModel->AutoRunStampSheet() == nullptr ? false : *ResultModel->AutoRunStampSheet(),
+            *ResultModel->GetTransactionId(),
+            *ResultModel->GetStampSheet(),
+            *ResultModel->GetStampSheetEncryptionKeyId(),
+            *ResultModel->GetAtomicCommit(),
+            *ResultModel->GetTransactionResult()
         );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
+        const auto Future3 = Transaction->Wait(true);
+        Future3->StartSynchronousTask();
+        if (Future3->GetTask().IsError())
         {
-            return Future->GetTask().Error();
+            return Future3->GetTask().Error();
         }
-        const auto RequestModel = Request;
-        const auto ResultModel = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-        }
-        if (ResultModel && ResultModel->GetStampSheet())
-        {
-            const auto Transaction = Gs2::Core::Domain::Internal::FTransactionDomainFactory::ToTransaction(
-                Self->Gs2,
-                *Self->UserId,
-                false,
-                *ResultModel->GetTransactionId(),
-                *ResultModel->GetStampSheet(),
-                *ResultModel->GetStampSheetEncryptionKeyId()
-            );
-            const auto Future3 = Transaction->Wait(true);
-            Future3->StartSynchronousTask();
-            if (Future3->GetTask().IsError())
-            {
-                return Future3->GetTask().Error();
-            }
-        }
-        if (ResultModel != nullptr)
-        {
-            Self->AutoRunStampSheet = ResultModel->GetAutoRunStampSheet();
-            Self->TransactionId = ResultModel->GetTransactionId();
-        }
-        *Result = Self;
+        *Result = Transaction;
         return nullptr;
     }
 
@@ -243,38 +203,6 @@ namespace Gs2::Mission::Domain::Model
             ->WithNamespaceName(Self->NamespaceName)
             ->WithMissionGroupName(Self->MissionGroupName)
             ->WithUserId(Self->UserId);
-        const auto Future = Self->Client->ReceiveByUserId(
-            Request
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            return Future->GetTask().Error();
-        }
-        const auto RequestModel = Request;
-        const auto ResultModel = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::Mission::Domain::Model::FUserDomain::CreateCacheParentKey(
-                    Self->NamespaceName,
-                    Self->UserId,
-                    "Complete"
-                );
-                const auto Key = Gs2::Mission::Domain::Model::FCompleteDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetMissionGroupName()
-                );
-                Self->Gs2->Cache->Put(
-                    Gs2::Mission::Model::FComplete::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    ResultModel->GetItem()->GetNextResetAt().IsSet() && *ResultModel->GetItem()->GetNextResetAt() != 0 ? FDateTime::FromUnixTimestamp(*ResultModel->GetItem()->GetNextResetAt() / 1000) : FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
-        }
         auto Domain = Self;
 
         *Result = Domain;
@@ -310,38 +238,6 @@ namespace Gs2::Mission::Domain::Model
             ->WithNamespaceName(Self->NamespaceName)
             ->WithMissionGroupName(Self->MissionGroupName)
             ->WithUserId(Self->UserId);
-        const auto Future = Self->Client->BatchReceiveByUserId(
-            Request
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            return Future->GetTask().Error();
-        }
-        const auto RequestModel = Request;
-        const auto ResultModel = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::Mission::Domain::Model::FUserDomain::CreateCacheParentKey(
-                    Self->NamespaceName,
-                    Self->UserId,
-                    "Complete"
-                );
-                const auto Key = Gs2::Mission::Domain::Model::FCompleteDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetMissionGroupName()
-                );
-                Self->Gs2->Cache->Put(
-                    Gs2::Mission::Model::FComplete::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    ResultModel->GetItem()->GetNextResetAt().IsSet() && *ResultModel->GetItem()->GetNextResetAt() != 0 ? FDateTime::FromUnixTimestamp(*ResultModel->GetItem()->GetNextResetAt() / 1000) : FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
-        }
         auto Domain = Self;
 
         *Result = Domain;
@@ -377,38 +273,6 @@ namespace Gs2::Mission::Domain::Model
             ->WithNamespaceName(Self->NamespaceName)
             ->WithMissionGroupName(Self->MissionGroupName)
             ->WithUserId(Self->UserId);
-        const auto Future = Self->Client->RevertReceiveByUserId(
-            Request
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            return Future->GetTask().Error();
-        }
-        const auto RequestModel = Request;
-        const auto ResultModel = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::Mission::Domain::Model::FUserDomain::CreateCacheParentKey(
-                    Self->NamespaceName,
-                    Self->UserId,
-                    "Complete"
-                );
-                const auto Key = Gs2::Mission::Domain::Model::FCompleteDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetMissionGroupName()
-                );
-                Self->Gs2->Cache->Put(
-                    Gs2::Mission::Model::FComplete::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    ResultModel->GetItem()->GetNextResetAt().IsSet() && *ResultModel->GetItem()->GetNextResetAt() != 0 ? FDateTime::FromUnixTimestamp(*ResultModel->GetItem()->GetNextResetAt() / 1000) : FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
-        }
         auto Domain = Self;
 
         *Result = Domain;
@@ -444,38 +308,6 @@ namespace Gs2::Mission::Domain::Model
             ->WithNamespaceName(Self->NamespaceName)
             ->WithMissionGroupName(Self->MissionGroupName)
             ->WithUserId(Self->UserId);
-        const auto Future = Self->Client->GetCompleteByUserId(
-            Request
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            return Future->GetTask().Error();
-        }
-        const auto RequestModel = Request;
-        const auto ResultModel = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::Mission::Domain::Model::FUserDomain::CreateCacheParentKey(
-                    Self->NamespaceName,
-                    Self->UserId,
-                    "Complete"
-                );
-                const auto Key = Gs2::Mission::Domain::Model::FCompleteDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetMissionGroupName()
-                );
-                Self->Gs2->Cache->Put(
-                    Gs2::Mission::Model::FComplete::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    ResultModel->GetItem()->GetNextResetAt().IsSet() && *ResultModel->GetItem()->GetNextResetAt() != 0 ? FDateTime::FromUnixTimestamp(*ResultModel->GetItem()->GetNextResetAt() / 1000) : FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
-        }
         *Result = ResultModel->GetItem();
         return nullptr;
     }
@@ -509,38 +341,6 @@ namespace Gs2::Mission::Domain::Model
             ->WithNamespaceName(Self->NamespaceName)
             ->WithUserId(Self->UserId)
             ->WithMissionGroupName(Self->MissionGroupName);
-        const auto Future = Self->Client->EvaluateCompleteByUserId(
-            Request
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            return Future->GetTask().Error();
-        }
-        const auto RequestModel = Request;
-        const auto ResultModel = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::Mission::Domain::Model::FUserDomain::CreateCacheParentKey(
-                    Self->NamespaceName,
-                    Self->UserId,
-                    "Complete"
-                );
-                const auto Key = Gs2::Mission::Domain::Model::FCompleteDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetMissionGroupName()
-                );
-                Self->Gs2->Cache->Put(
-                    Gs2::Mission::Model::FComplete::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    ResultModel->GetItem()->GetNextResetAt().IsSet() && *ResultModel->GetItem()->GetNextResetAt() != 0 ? FDateTime::FromUnixTimestamp(*ResultModel->GetItem()->GetNextResetAt() / 1000) : FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
-        }
         auto Domain = Self;
 
         *Result = Domain;
@@ -576,32 +376,6 @@ namespace Gs2::Mission::Domain::Model
             ->WithNamespaceName(Self->NamespaceName)
             ->WithUserId(Self->UserId)
             ->WithMissionGroupName(Self->MissionGroupName);
-        const auto Future = Self->Client->DeleteCompleteByUserId(
-            Request
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            return Future->GetTask().Error();
-        }
-        const auto RequestModel = Request;
-        const auto ResultModel = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::Mission::Domain::Model::FUserDomain::CreateCacheParentKey(
-                    Self->NamespaceName,
-                    Self->UserId,
-                    "Complete"
-                );
-                const auto Key = Gs2::Mission::Domain::Model::FCompleteDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetMissionGroupName()
-                );
-                Self->Gs2->Cache->Delete(Gs2::Mission::Model::FComplete::TypeName, ParentKey, Key);
-            }
-        }
         auto Domain = Self;
 
         *Result = Domain;
@@ -637,20 +411,6 @@ namespace Gs2::Mission::Domain::Model
             ->WithNamespaceName(Self->NamespaceName)
             ->WithMissionGroupName(Self->MissionGroupName)
             ->WithUserId(Self->UserId);
-        const auto Future = Self->Client->VerifyCompleteByUserId(
-            Request
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            return Future->GetTask().Error();
-        }
-        const auto RequestModel = Request;
-        const auto ResultModel = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-        }
         const auto Domain = Self;
         *Result = Domain;
         return nullptr;

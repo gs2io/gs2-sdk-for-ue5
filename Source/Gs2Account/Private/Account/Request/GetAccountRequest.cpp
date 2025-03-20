@@ -21,6 +21,7 @@ namespace Gs2::Account::Request
     FGetAccountRequest::FGetAccountRequest():
         NamespaceNameValue(TOptional<FString>()),
         UserIdValue(TOptional<FString>()),
+        IncludeLastAuthenticatedAtValue(TOptional<bool>()),
         TimeOffsetTokenValue(TOptional<FString>())
     {
     }
@@ -30,6 +31,7 @@ namespace Gs2::Account::Request
     ):
         NamespaceNameValue(From.NamespaceNameValue),
         UserIdValue(From.UserIdValue),
+        IncludeLastAuthenticatedAtValue(From.IncludeLastAuthenticatedAtValue),
         TimeOffsetTokenValue(From.TimeOffsetTokenValue)
     {
     }
@@ -58,6 +60,14 @@ namespace Gs2::Account::Request
         return SharedThis(this);
     }
 
+    TSharedPtr<FGetAccountRequest> FGetAccountRequest::WithIncludeLastAuthenticatedAt(
+        const TOptional<bool> IncludeLastAuthenticatedAt
+    )
+    {
+        this->IncludeLastAuthenticatedAtValue = IncludeLastAuthenticatedAt;
+        return SharedThis(this);
+    }
+
     TSharedPtr<FGetAccountRequest> FGetAccountRequest::WithTimeOffsetToken(
         const TOptional<FString> TimeOffsetToken
     )
@@ -79,6 +89,20 @@ namespace Gs2::Account::Request
     TOptional<FString> FGetAccountRequest::GetUserId() const
     {
         return UserIdValue;
+    }
+
+    TOptional<bool> FGetAccountRequest::GetIncludeLastAuthenticatedAt() const
+    {
+        return IncludeLastAuthenticatedAtValue;
+    }
+
+    FString FGetAccountRequest::GetIncludeLastAuthenticatedAtString() const
+    {
+        if (!IncludeLastAuthenticatedAtValue.IsSet())
+        {
+            return FString("null");
+        }
+        return FString(IncludeLastAuthenticatedAtValue.GetValue() ? "true" : "false");
     }
 
     TOptional<FString> FGetAccountRequest::GetTimeOffsetToken() const
@@ -111,6 +135,15 @@ namespace Gs2::Account::Request
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
+            ->WithIncludeLastAuthenticatedAt(Data->HasField(ANSI_TO_TCHAR("includeLastAuthenticatedAt")) ? [Data]() -> TOptional<bool>
+              {
+                  bool v;
+                    if (Data->TryGetBoolField(ANSI_TO_TCHAR("includeLastAuthenticatedAt"), v))
+                  {
+                        return TOptional(v);
+                  }
+                  return TOptional<bool>();
+              }() : TOptional<bool>())
             ->WithTimeOffsetToken(Data->HasField(ANSI_TO_TCHAR("timeOffsetToken")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
@@ -136,6 +169,10 @@ namespace Gs2::Account::Request
         if (UserIdValue.IsSet())
         {
             JsonRootObject->SetStringField("userId", UserIdValue.GetValue());
+        }
+        if (IncludeLastAuthenticatedAtValue.IsSet())
+        {
+            JsonRootObject->SetBoolField("includeLastAuthenticatedAt", IncludeLastAuthenticatedAtValue.GetValue());
         }
         if (TimeOffsetTokenValue.IsSet())
         {

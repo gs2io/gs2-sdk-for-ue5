@@ -22,7 +22,7 @@
 
 namespace Gs2::Deploy::Model
 {
-    class GS2DEPLOY_API FResource final : public Gs2Object, public TSharedFromThis<FResource>
+    class GS2DEPLOY_API FResource final : public FGs2Object, public TSharedFromThis<FResource>
     {
         TOptional<FString> ResourceIdValue;
         TOptional<FString> TypeValue;

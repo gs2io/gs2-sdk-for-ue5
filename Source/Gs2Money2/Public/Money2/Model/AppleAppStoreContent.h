@@ -21,7 +21,7 @@
 
 namespace Gs2::Money2::Model
 {
-    class GS2MONEY2_API FAppleAppStoreContent final : public Gs2Object, public TSharedFromThis<FAppleAppStoreContent>
+    class GS2MONEY2_API FAppleAppStoreContent final : public FGs2Object, public TSharedFromThis<FAppleAppStoreContent>
     {
         TOptional<FString> ProductIdValue;
 

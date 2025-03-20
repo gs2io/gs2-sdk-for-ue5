@@ -21,7 +21,7 @@
 
 namespace Gs2::Mission::Model
 {
-    class GS2MISSION_API FTargetCounterModel final : public Gs2Object, public TSharedFromThis<FTargetCounterModel>
+    class GS2MISSION_API FTargetCounterModel final : public FGs2Object, public TSharedFromThis<FTargetCounterModel>
     {
         TOptional<FString> CounterNameValue;
         TOptional<FString> ScopeTypeValue;

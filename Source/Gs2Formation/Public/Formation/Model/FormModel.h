@@ -22,7 +22,7 @@
 
 namespace Gs2::Formation::Model
 {
-    class GS2FORMATION_API FFormModel final : public Gs2Object, public TSharedFromThis<FFormModel>
+    class GS2FORMATION_API FFormModel final : public FGs2Object, public TSharedFromThis<FFormModel>
     {
         TOptional<FString> FormModelIdValue;
         TOptional<FString> NameValue;

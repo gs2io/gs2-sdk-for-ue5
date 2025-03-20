@@ -110,39 +110,6 @@ namespace Gs2::Chat::Domain::Model
             ->WithMessageName(Self->MessageName)
             ->WithPassword(Self->Password)
             ->WithAccessToken(Self->AccessToken->GetToken());
-        const auto Future = Self->Client->GetMessage(
-            Request
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            return Future->GetTask().Error();
-        }
-        const auto RequestModel = Request;
-        const auto ResultModel = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::Chat::Domain::Model::FRoomDomain::CreateCacheParentKey(
-                    Self->NamespaceName,
-                    TOptional<FString>("Singleton"),
-                    Self->RoomName,
-                    "Message"
-                );
-                const auto Key = Gs2::Chat::Domain::Model::FMessageDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetName()
-                );
-                Self->Gs2->Cache->Put(
-                    Gs2::Chat::Model::FMessage::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
-        }
         *Result = ResultModel->GetItem();
         return nullptr;
     }

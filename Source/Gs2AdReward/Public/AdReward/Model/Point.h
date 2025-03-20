@@ -21,7 +21,7 @@
 
 namespace Gs2::AdReward::Model
 {
-    class GS2ADREWARD_API FPoint final : public Gs2Object, public TSharedFromThis<FPoint>
+    class GS2ADREWARD_API FPoint final : public FGs2Object, public TSharedFromThis<FPoint>
     {
         TOptional<FString> PointIdValue;
         TOptional<FString> UserIdValue;

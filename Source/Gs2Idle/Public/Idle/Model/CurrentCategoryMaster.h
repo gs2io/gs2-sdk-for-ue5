@@ -21,7 +21,7 @@
 
 namespace Gs2::Idle::Model
 {
-    class GS2IDLE_API FCurrentCategoryMaster final : public Gs2Object, public TSharedFromThis<FCurrentCategoryMaster>
+    class GS2IDLE_API FCurrentCategoryMaster final : public FGs2Object, public TSharedFromThis<FCurrentCategoryMaster>
     {
         TOptional<FString> NamespaceIdValue;
         TOptional<FString> SettingsValue;

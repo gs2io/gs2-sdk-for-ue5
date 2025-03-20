@@ -21,7 +21,7 @@
 
 namespace Gs2::Experience::Model
 {
-    class GS2EXPERIENCE_API FAcquireActionRate final : public Gs2Object, public TSharedFromThis<FAcquireActionRate>
+    class GS2EXPERIENCE_API FAcquireActionRate final : public FGs2Object, public TSharedFromThis<FAcquireActionRate>
     {
         TOptional<FString> NameValue;
         TOptional<FString> ModeValue;

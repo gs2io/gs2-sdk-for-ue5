@@ -21,7 +21,7 @@
 
 namespace Gs2::SerialKey::Model
 {
-    class GS2SERIALKEY_API FIssueJob final : public Gs2Object, public TSharedFromThis<FIssueJob>
+    class GS2SERIALKEY_API FIssueJob final : public FGs2Object, public TSharedFromThis<FIssueJob>
     {
         TOptional<FString> IssueJobIdValue;
         TOptional<FString> NameValue;

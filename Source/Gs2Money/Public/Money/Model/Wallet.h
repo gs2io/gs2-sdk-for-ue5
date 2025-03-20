@@ -22,7 +22,7 @@
 
 namespace Gs2::Money::Model
 {
-    class GS2MONEY_API FWallet final : public Gs2Object, public TSharedFromThis<FWallet>
+    class GS2MONEY_API FWallet final : public FGs2Object, public TSharedFromThis<FWallet>
     {
         TOptional<FString> WalletIdValue;
         TOptional<FString> UserIdValue;

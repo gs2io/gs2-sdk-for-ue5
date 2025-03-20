@@ -21,7 +21,7 @@
 
 namespace Gs2::Deploy::Model
 {
-    class GS2DEPLOY_API FChangeSet final : public Gs2Object, public TSharedFromThis<FChangeSet>
+    class GS2DEPLOY_API FChangeSet final : public FGs2Object, public TSharedFromThis<FChangeSet>
     {
         TOptional<FString> ResourceNameValue;
         TOptional<FString> ResourceTypeValue;

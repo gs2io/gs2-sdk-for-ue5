@@ -21,7 +21,7 @@
 
 namespace Gs2::Enhance::Model
 {
-    class GS2ENHANCE_API FMaterial final : public Gs2Object, public TSharedFromThis<FMaterial>
+    class GS2ENHANCE_API FMaterial final : public FGs2Object, public TSharedFromThis<FMaterial>
     {
         TOptional<FString> MaterialItemSetIdValue;
         TOptional<int32> CountValue;

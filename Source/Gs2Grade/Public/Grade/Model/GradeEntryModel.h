@@ -21,7 +21,7 @@
 
 namespace Gs2::Grade::Model
 {
-    class GS2GRADE_API FGradeEntryModel final : public Gs2Object, public TSharedFromThis<FGradeEntryModel>
+    class GS2GRADE_API FGradeEntryModel final : public FGs2Object, public TSharedFromThis<FGradeEntryModel>
     {
         TOptional<FString> MetadataValue;
         TOptional<int64> RankCapValueValue;

@@ -21,7 +21,7 @@
 
 namespace Gs2::Idle::Model
 {
-    class GS2IDLE_API FScriptSetting final : public Gs2Object, public TSharedFromThis<FScriptSetting>
+    class GS2IDLE_API FScriptSetting final : public FGs2Object, public TSharedFromThis<FScriptSetting>
     {
         TOptional<FString> TriggerScriptIdValue;
         TOptional<FString> DoneTriggerTargetTypeValue;

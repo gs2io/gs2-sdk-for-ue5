@@ -21,7 +21,7 @@
 
 namespace Gs2::Buff::Model
 {
-    class GS2BUFF_API FOverrideBuffRate final : public Gs2Object, public TSharedFromThis<FOverrideBuffRate>
+    class GS2BUFF_API FOverrideBuffRate final : public FGs2Object, public TSharedFromThis<FOverrideBuffRate>
     {
         TOptional<FString> NameValue;
         TOptional<float> RateValue;

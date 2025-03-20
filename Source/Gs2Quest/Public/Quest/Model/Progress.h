@@ -22,7 +22,7 @@
 
 namespace Gs2::Quest::Model
 {
-    class GS2QUEST_API FProgress final : public Gs2Object, public TSharedFromThis<FProgress>
+    class GS2QUEST_API FProgress final : public FGs2Object, public TSharedFromThis<FProgress>
     {
         TOptional<FString> ProgressIdValue;
         TOptional<FString> UserIdValue;

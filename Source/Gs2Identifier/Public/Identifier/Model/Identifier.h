@@ -21,7 +21,7 @@
 
 namespace Gs2::Identifier::Model
 {
-    class GS2IDENTIFIER_API FIdentifier final : public Gs2Object, public TSharedFromThis<FIdentifier>
+    class GS2IDENTIFIER_API FIdentifier final : public FGs2Object, public TSharedFromThis<FIdentifier>
     {
         TOptional<FString> ClientIdValue;
         TOptional<FString> UserNameValue;

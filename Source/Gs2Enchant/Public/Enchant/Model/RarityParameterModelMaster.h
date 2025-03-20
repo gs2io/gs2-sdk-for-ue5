@@ -23,7 +23,7 @@
 
 namespace Gs2::Enchant::Model
 {
-    class GS2ENCHANT_API FRarityParameterModelMaster final : public Gs2Object, public TSharedFromThis<FRarityParameterModelMaster>
+    class GS2ENCHANT_API FRarityParameterModelMaster final : public FGs2Object, public TSharedFromThis<FRarityParameterModelMaster>
     {
         TOptional<FString> RarityParameterModelIdValue;
         TOptional<FString> NameValue;

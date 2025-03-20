@@ -22,7 +22,7 @@
 
 namespace Gs2::Lottery::Model
 {
-    class GS2LOTTERY_API FProbability final : public Gs2Object, public TSharedFromThis<FProbability>
+    class GS2LOTTERY_API FProbability final : public FGs2Object, public TSharedFromThis<FProbability>
     {
         TSharedPtr<FDrawnPrize> PrizeValue;
         TOptional<float> RateValue;

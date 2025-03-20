@@ -21,7 +21,7 @@
 
 namespace Gs2::Schedule::Model
 {
-    class GS2SCHEDULE_API FCurrentEventMaster final : public Gs2Object, public TSharedFromThis<FCurrentEventMaster>
+    class GS2SCHEDULE_API FCurrentEventMaster final : public FGs2Object, public TSharedFromThis<FCurrentEventMaster>
     {
         TOptional<FString> NamespaceIdValue;
         TOptional<FString> SettingsValue;

@@ -21,7 +21,7 @@
 
 namespace Gs2::Inventory::Model
 {
-    class GS2INVENTORY_API FBigItem final : public Gs2Object, public TSharedFromThis<FBigItem>
+    class GS2INVENTORY_API FBigItem final : public FGs2Object, public TSharedFromThis<FBigItem>
     {
         TOptional<FString> ItemIdValue;
         TOptional<FString> UserIdValue;

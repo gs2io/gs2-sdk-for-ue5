@@ -21,7 +21,7 @@
 
 namespace Gs2::Money2::Model
 {
-    class GS2MONEY2_API FWalletSummary final : public Gs2Object, public TSharedFromThis<FWalletSummary>
+    class GS2MONEY2_API FWalletSummary final : public FGs2Object, public TSharedFromThis<FWalletSummary>
     {
         TOptional<int32> PaidValue;
         TOptional<int32> FreeValue;

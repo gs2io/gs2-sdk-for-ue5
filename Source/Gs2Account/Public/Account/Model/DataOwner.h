@@ -21,7 +21,7 @@
 
 namespace Gs2::Account::Model
 {
-    class GS2ACCOUNT_API FDataOwner final : public Gs2Object, public TSharedFromThis<FDataOwner>
+    class GS2ACCOUNT_API FDataOwner final : public FGs2Object, public TSharedFromThis<FDataOwner>
     {
         TOptional<FString> DataOwnerIdValue;
         TOptional<FString> UserIdValue;

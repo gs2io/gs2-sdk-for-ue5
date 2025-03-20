@@ -21,7 +21,7 @@
 
 namespace Gs2::StateMachine::Model
 {
-    class GS2STATEMACHINE_API FEmitEvent final : public Gs2Object, public TSharedFromThis<FEmitEvent>
+    class GS2STATEMACHINE_API FEmitEvent final : public FGs2Object, public TSharedFromThis<FEmitEvent>
     {
         TOptional<FString> EventValue;
         TOptional<FString> ParametersValue;

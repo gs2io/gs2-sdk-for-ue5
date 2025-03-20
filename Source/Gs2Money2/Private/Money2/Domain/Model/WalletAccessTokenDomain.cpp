@@ -109,38 +109,6 @@ namespace Gs2::Money2::Domain::Model
             ->WithNamespaceName(Self->NamespaceName)
             ->WithAccessToken(Self->AccessToken->GetToken())
             ->WithSlot(Self->Slot);
-        const auto Future = Self->Client->GetWallet(
-            Request
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            return Future->GetTask().Error();
-        }
-        const auto RequestModel = Request;
-        const auto ResultModel = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::Money2::Domain::Model::FUserDomain::CreateCacheParentKey(
-                    Self->NamespaceName,
-                    Self->UserId(),
-                    "Wallet"
-                );
-                const auto Key = Gs2::Money2::Domain::Model::FWalletDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetSlot().IsSet() ? FString::FromInt(*ResultModel->GetItem()->GetSlot()) : TOptional<FString>()
-                );
-                Self->Gs2->Cache->Put(
-                    Gs2::Money2::Model::FWallet::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
-        }
         *Result = ResultModel->GetItem();
         return nullptr;
     }
@@ -174,38 +142,6 @@ namespace Gs2::Money2::Domain::Model
             ->WithNamespaceName(Self->NamespaceName)
             ->WithAccessToken(Self->AccessToken->GetToken())
             ->WithSlot(Self->Slot);
-        const auto Future = Self->Client->Withdraw(
-            Request
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            return Future->GetTask().Error();
-        }
-        const auto RequestModel = Request;
-        const auto ResultModel = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::Money2::Domain::Model::FUserDomain::CreateCacheParentKey(
-                    Self->NamespaceName,
-                    Self->UserId(),
-                    "Wallet"
-                );
-                const auto Key = Gs2::Money2::Domain::Model::FWalletDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetSlot().IsSet() ? FString::FromInt(*ResultModel->GetItem()->GetSlot()) : TOptional<FString>()
-                );
-                Self->Gs2->Cache->Put(
-                    Gs2::Money2::Model::FWallet::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
-        }
         auto Domain = Self;
 
         *Result = Domain;

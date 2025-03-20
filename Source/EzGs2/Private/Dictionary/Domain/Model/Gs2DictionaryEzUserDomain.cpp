@@ -55,4 +55,16 @@ namespace Gs2::UE5::Dictionary::Domain::Model
             ConnectionValue
         );
     }
+
+    Gs2::UE5::Dictionary::Domain::Model::FEzLikeDomainPtr FEzUserDomain::Like(
+        const FString EntryModelName
+    ) const
+    {
+        return MakeShared<Gs2::UE5::Dictionary::Domain::Model::FEzLikeDomain>(
+            Domain->Like(
+                EntryModelName
+            ),
+            ConnectionValue
+        );
+    }
 }

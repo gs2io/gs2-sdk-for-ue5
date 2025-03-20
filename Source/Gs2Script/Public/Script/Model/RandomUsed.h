@@ -21,7 +21,7 @@
 
 namespace Gs2::Script::Model
 {
-    class GS2SCRIPT_API FRandomUsed final : public Gs2Object, public TSharedFromThis<FRandomUsed>
+    class GS2SCRIPT_API FRandomUsed final : public FGs2Object, public TSharedFromThis<FRandomUsed>
     {
         TOptional<int64> CategoryValue;
         TOptional<int64> UsedValue;

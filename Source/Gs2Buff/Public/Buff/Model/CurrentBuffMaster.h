@@ -21,7 +21,7 @@
 
 namespace Gs2::Buff::Model
 {
-    class GS2BUFF_API FCurrentBuffMaster final : public Gs2Object, public TSharedFromThis<FCurrentBuffMaster>
+    class GS2BUFF_API FCurrentBuffMaster final : public FGs2Object, public TSharedFromThis<FCurrentBuffMaster>
     {
         TOptional<FString> NamespaceIdValue;
         TOptional<FString> SettingsValue;

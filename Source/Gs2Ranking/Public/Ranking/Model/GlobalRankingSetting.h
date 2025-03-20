@@ -23,7 +23,7 @@
 
 namespace Gs2::Ranking::Model
 {
-    class GS2RANKING_API FGlobalRankingSetting final : public Gs2Object, public TSharedFromThis<FGlobalRankingSetting>
+    class GS2RANKING_API FGlobalRankingSetting final : public FGs2Object, public TSharedFromThis<FGlobalRankingSetting>
     {
         TOptional<bool> UniqueByUserIdValue;
         TOptional<int32> CalculateIntervalMinutesValue;

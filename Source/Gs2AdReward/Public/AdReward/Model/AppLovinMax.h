@@ -21,7 +21,7 @@
 
 namespace Gs2::AdReward::Model
 {
-    class GS2ADREWARD_API FAppLovinMax final : public Gs2Object, public TSharedFromThis<FAppLovinMax>
+    class GS2ADREWARD_API FAppLovinMax final : public FGs2Object, public TSharedFromThis<FAppLovinMax>
     {
         TOptional<FString> AllowAdUnitIdValue;
         TOptional<FString> EventKeyValue;

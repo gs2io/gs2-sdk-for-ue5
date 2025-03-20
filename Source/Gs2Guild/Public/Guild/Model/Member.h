@@ -21,7 +21,7 @@
 
 namespace Gs2::Guild::Model
 {
-    class GS2GUILD_API FMember final : public Gs2Object, public TSharedFromThis<FMember>
+    class GS2GUILD_API FMember final : public FGs2Object, public TSharedFromThis<FMember>
     {
         TOptional<FString> UserIdValue;
         TOptional<FString> RoleNameValue;

@@ -21,7 +21,7 @@
 
 namespace Gs2::Identifier::Model
 {
-    class GS2IDENTIFIER_API FTwoFactorAuthenticationSetting final : public Gs2Object, public TSharedFromThis<FTwoFactorAuthenticationSetting>
+    class GS2IDENTIFIER_API FTwoFactorAuthenticationSetting final : public FGs2Object, public TSharedFromThis<FTwoFactorAuthenticationSetting>
     {
         TOptional<FString> StatusValue;
 

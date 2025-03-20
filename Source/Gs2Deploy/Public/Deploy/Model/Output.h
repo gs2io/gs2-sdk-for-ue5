@@ -21,7 +21,7 @@
 
 namespace Gs2::Deploy::Model
 {
-    class GS2DEPLOY_API FOutput final : public Gs2Object, public TSharedFromThis<FOutput>
+    class GS2DEPLOY_API FOutput final : public FGs2Object, public TSharedFromThis<FOutput>
     {
         TOptional<FString> OutputIdValue;
         TOptional<FString> NameValue;

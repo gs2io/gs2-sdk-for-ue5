@@ -22,7 +22,7 @@
 
 namespace Gs2::Schedule::Model
 {
-    class GS2SCHEDULE_API FEventMaster final : public Gs2Object, public TSharedFromThis<FEventMaster>
+    class GS2SCHEDULE_API FEventMaster final : public FGs2Object, public TSharedFromThis<FEventMaster>
     {
         TOptional<FString> EventIdValue;
         TOptional<FString> NameValue;

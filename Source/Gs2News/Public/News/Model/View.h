@@ -22,7 +22,7 @@
 
 namespace Gs2::News::Model
 {
-    class GS2NEWS_API FView final : public Gs2Object, public TSharedFromThis<FView>
+    class GS2NEWS_API FView final : public FGs2Object, public TSharedFromThis<FView>
     {
         TSharedPtr<TArray<TSharedPtr<FContent>>> ContentsValue;
         TSharedPtr<TArray<TSharedPtr<FContent>>> RemoveContentsValue;

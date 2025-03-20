@@ -96,39 +96,6 @@ namespace Gs2::Dictionary::Domain::Model
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithUserId(Self->UserId);
-        const auto Future = Self->Client->AddEntriesByUserId(
-            Request
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            return Future->GetTask().Error();
-        }
-        const auto RequestModel = Request;
-        const auto ResultModel = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            {
-                for (auto Item : *ResultModel->GetItems())
-                {
-                    const auto ParentKey = Gs2::Dictionary::Domain::Model::FUserDomain::CreateCacheParentKey(
-                        Self->NamespaceName,
-                        Self->UserId,
-                        "Entry"
-                    );
-                    const auto Key = Gs2::Dictionary::Domain::Model::FEntryDomain::CreateCacheKey(
-                        Item->GetName()
-                    );
-                    Self->Gs2->Cache->Put(
-                        Gs2::Dictionary::Model::FEntry::TypeName,
-                        ParentKey,
-                        Key,
-                        Item,
-                        FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                    );
-                }
-            }
-        }
         auto Domain = MakeShared<TArray<TSharedPtr<Gs2::Dictionary::Domain::Model::FEntryDomain>>>();
         for (auto i=0; i<ResultModel->GetItems()->Num(); i++)
         {
@@ -189,38 +156,6 @@ namespace Gs2::Dictionary::Domain::Model
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithUserId(Self->UserId);
-        const auto Future = Self->Client->ResetByUserId(
-            Request
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            return Future->GetTask().Error();
-        }
-        const auto RequestModel = Request;
-        const auto ResultModel = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-            const auto ParentKey = CreateCacheParentKey(
-                RequestModel->GetNamespaceName(),
-                RequestModel->GetUserId(),
-                "Entry"
-            );
-            auto List = Self->Gs2->Cache->TryGetList<Gs2::Dictionary::Model::FEntry>(ParentKey);
-            if (List)
-            {
-                for (auto Item : *List) {
-                    Self->Gs2->Cache->Delete(
-                        Gs2::Dictionary::Model::FEntry::TypeName,
-                        ParentKey,
-                        Gs2::Dictionary::Domain::Model::FEntryDomain::CreateCacheKey(
-                            Item->GetName()
-                        )
-                    );
-                }
-            }
-        }
         const auto Domain = Self;
         *Result = Domain;
         return nullptr;
@@ -254,37 +189,6 @@ namespace Gs2::Dictionary::Domain::Model
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithUserId(Self->UserId);
-        const auto Future = Self->Client->DeleteEntriesByUserId(
-            Request
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            return Future->GetTask().Error();
-        }
-        const auto RequestModel = Request;
-        const auto ResultModel = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            {
-                for (auto Item : *ResultModel->GetItems())
-                {
-                    const auto ParentKey = Gs2::Dictionary::Domain::Model::FUserDomain::CreateCacheParentKey(
-                        Self->NamespaceName,
-                        Self->UserId,
-                        "Entry"
-                    );
-                    const auto Key = Gs2::Dictionary::Domain::Model::FEntryDomain::CreateCacheKey(
-                        Item->GetName()
-                    );
-                    Self->Gs2->Cache->Delete(
-                        Gs2::Dictionary::Model::FEntry::TypeName,
-                        ParentKey,
-                        Key
-                    );
-                }
-            }
-        }
         auto Domain = MakeShared<TArray<TSharedPtr<Gs2::Dictionary::Domain::Model::FEntryDomain>>>();
         for (auto i=0; i<ResultModel->GetItems()->Num(); i++)
         {
@@ -345,39 +249,6 @@ namespace Gs2::Dictionary::Domain::Model
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithUserId(Self->UserId);
-        const auto Future = Self->Client->AddLikesByUserId(
-            Request
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            return Future->GetTask().Error();
-        }
-        const auto RequestModel = Request;
-        const auto ResultModel = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            {
-                for (auto Item : *ResultModel->GetItems())
-                {
-                    const auto ParentKey = Gs2::Dictionary::Domain::Model::FUserDomain::CreateCacheParentKey(
-                        Self->NamespaceName,
-                        Self->UserId,
-                        "Like"
-                    );
-                    const auto Key = Gs2::Dictionary::Domain::Model::FLikeDomain::CreateCacheKey(
-                        Item->GetName()
-                    );
-                    Self->Gs2->Cache->Put(
-                        Gs2::Dictionary::Model::FLike::TypeName,
-                        ParentKey,
-                        Key,
-                        Item,
-                        FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                    );
-                }
-            }
-        }
         auto Domain = MakeShared<TArray<TSharedPtr<Gs2::Dictionary::Domain::Model::FLikeDomain>>>();
         for (auto i=0; i<ResultModel->GetItems()->Num(); i++)
         {
@@ -438,20 +309,6 @@ namespace Gs2::Dictionary::Domain::Model
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithUserId(Self->UserId);
-        const auto Future = Self->Client->ResetLikesByUserId(
-            Request
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            return Future->GetTask().Error();
-        }
-        const auto RequestModel = Request;
-        const auto ResultModel = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-        }
         const auto Domain = Self;
         *Result = Domain;
         return nullptr;
@@ -485,37 +342,6 @@ namespace Gs2::Dictionary::Domain::Model
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithUserId(Self->UserId);
-        const auto Future = Self->Client->DeleteLikesByUserId(
-            Request
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            return Future->GetTask().Error();
-        }
-        const auto RequestModel = Request;
-        const auto ResultModel = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            {
-                for (auto Item : *ResultModel->GetItems())
-                {
-                    const auto ParentKey = Gs2::Dictionary::Domain::Model::FUserDomain::CreateCacheParentKey(
-                        Self->NamespaceName,
-                        Self->UserId,
-                        "Like"
-                    );
-                    const auto Key = Gs2::Dictionary::Domain::Model::FLikeDomain::CreateCacheKey(
-                        Item->GetName()
-                    );
-                    Self->Gs2->Cache->Delete(
-                        Gs2::Dictionary::Model::FLike::TypeName,
-                        ParentKey,
-                        Key
-                    );
-                }
-            }
-        }
         auto Domain = MakeShared<TArray<TSharedPtr<Gs2::Dictionary::Domain::Model::FLikeDomain>>>();
         for (auto i=0; i<ResultModel->GetItems()->Num(); i++)
         {

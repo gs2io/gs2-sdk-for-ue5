@@ -23,7 +23,7 @@
 
 namespace Gs2::Realtime::Model
 {
-    class GS2REALTIME_API FNamespace final : public Gs2Object, public TSharedFromThis<FNamespace>
+    class GS2REALTIME_API FNamespace final : public FGs2Object, public TSharedFromThis<FNamespace>
     {
         TOptional<FString> NamespaceIdValue;
         TOptional<FString> NameValue;

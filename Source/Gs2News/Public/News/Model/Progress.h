@@ -21,7 +21,7 @@
 
 namespace Gs2::News::Model
 {
-    class GS2NEWS_API FProgress final : public Gs2Object, public TSharedFromThis<FProgress>
+    class GS2NEWS_API FProgress final : public FGs2Object, public TSharedFromThis<FProgress>
     {
         TOptional<FString> ProgressIdValue;
         TOptional<FString> UploadTokenValue;

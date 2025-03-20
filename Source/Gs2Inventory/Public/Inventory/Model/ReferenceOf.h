@@ -21,7 +21,7 @@
 
 namespace Gs2::Inventory::Model
 {
-    class GS2INVENTORY_API FReferenceOf final : public Gs2Object, public TSharedFromThis<FReferenceOf>
+    class GS2INVENTORY_API FReferenceOf final : public FGs2Object, public TSharedFromThis<FReferenceOf>
     {
         TOptional<FString> ReferenceOfIdValue;
         TOptional<FString> NameValue;

@@ -21,7 +21,7 @@
 
 namespace Gs2::Version::Model
 {
-    class GS2VERSION_API FVersion final : public Gs2Object, public TSharedFromThis<FVersion>
+    class GS2VERSION_API FVersion final : public FGs2Object, public TSharedFromThis<FVersion>
     {
         TOptional<int32> MajorValue;
         TOptional<int32> MinorValue;

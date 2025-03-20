@@ -21,7 +21,7 @@
 
 namespace Gs2::SeasonRating::Model
 {
-    class GS2SEASONRATING_API FTierModel final : public Gs2Object, public TSharedFromThis<FTierModel>
+    class GS2SEASONRATING_API FTierModel final : public FGs2Object, public TSharedFromThis<FTierModel>
     {
         TOptional<FString> MetadataValue;
         TOptional<int32> RaiseRankBonusValue;

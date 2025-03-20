@@ -22,7 +22,7 @@
 
 namespace Gs2::Experience::Model
 {
-    class GS2EXPERIENCE_API FExperienceModelMaster final : public Gs2Object, public TSharedFromThis<FExperienceModelMaster>
+    class GS2EXPERIENCE_API FExperienceModelMaster final : public FGs2Object, public TSharedFromThis<FExperienceModelMaster>
     {
         TOptional<FString> ExperienceModelIdValue;
         TOptional<FString> NameValue;

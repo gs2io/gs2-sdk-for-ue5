@@ -21,7 +21,7 @@
 
 namespace Gs2::Guild::Model
 {
-    class GS2GUILD_API FRoleModel final : public Gs2Object, public TSharedFromThis<FRoleModel>
+    class GS2GUILD_API FRoleModel final : public FGs2Object, public TSharedFromThis<FRoleModel>
     {
         TOptional<FString> NameValue;
         TOptional<FString> MetadataValue;

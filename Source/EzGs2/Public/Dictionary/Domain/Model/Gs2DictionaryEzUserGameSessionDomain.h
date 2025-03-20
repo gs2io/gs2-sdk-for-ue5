@@ -20,10 +20,12 @@
 #include "Dictionary/Domain/Model/UserAccessToken.h"
 #include "Dictionary/Model/Gs2DictionaryEzEntryModel.h"
 #include "Dictionary/Model/Gs2DictionaryEzEntry.h"
+#include "Dictionary/Model/Gs2DictionaryEzLike.h"
 #include "Dictionary/Model/Gs2DictionaryEzConfig.h"
 #include "Gs2DictionaryEzEntryGameSessionDomain.h"
 #include "Dictionary/Domain/Iterator/Gs2DictionaryEzDescribeEntriesIterator.h"
 #include "Gs2DictionaryEzLikeGameSessionDomain.h"
+#include "Dictionary/Domain/Iterator/Gs2DictionaryEzDescribeLikesIterator.h"
 #include "Gs2DictionaryEzUserGameSessionDomain.h"
 #include "Util/Net/GameSession.h"
 #include "Util/Net/Gs2Connection.h"
@@ -59,6 +61,13 @@ namespace Gs2::UE5::Dictionary::Domain::Model
         Gs2::UE5::Dictionary::Domain::Model::FEzEntryGameSessionDomainPtr Entry(
             const FString EntryModelName
         ) const;
+
+        Gs2::UE5::Dictionary::Domain::Iterator::FEzDescribeLikesIteratorPtr Likes(
+        ) const;
+
+        Gs2::Core::Domain::CallbackID SubscribeLikes(TFunction<void()> Callback);
+
+        void UnsubscribeLikes(Gs2::Core::Domain::CallbackID CallbackId);
 
         Gs2::UE5::Dictionary::Domain::Model::FEzLikeGameSessionDomainPtr Like(
             const FString EntryModelName

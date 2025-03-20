@@ -21,7 +21,7 @@
 
 namespace Gs2::Inventory::Model
 {
-    class GS2INVENTORY_API FConsumeCount final : public Gs2Object, public TSharedFromThis<FConsumeCount>
+    class GS2INVENTORY_API FConsumeCount final : public FGs2Object, public TSharedFromThis<FConsumeCount>
     {
         TOptional<FString> ItemNameValue;
         TOptional<int64> CountValue;

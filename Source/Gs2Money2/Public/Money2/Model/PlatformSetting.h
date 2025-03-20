@@ -24,7 +24,7 @@
 
 namespace Gs2::Money2::Model
 {
-    class GS2MONEY2_API FPlatformSetting final : public Gs2Object, public TSharedFromThis<FPlatformSetting>
+    class GS2MONEY2_API FPlatformSetting final : public FGs2Object, public TSharedFromThis<FPlatformSetting>
     {
         TSharedPtr<FAppleAppStoreSetting> AppleAppStoreValue;
         TSharedPtr<FGooglePlaySetting> GooglePlayValue;

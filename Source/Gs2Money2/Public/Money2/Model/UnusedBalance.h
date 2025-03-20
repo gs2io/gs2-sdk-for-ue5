@@ -21,7 +21,7 @@
 
 namespace Gs2::Money2::Model
 {
-    class GS2MONEY2_API FUnusedBalance final : public Gs2Object, public TSharedFromThis<FUnusedBalance>
+    class GS2MONEY2_API FUnusedBalance final : public FGs2Object, public TSharedFromThis<FUnusedBalance>
     {
         TOptional<FString> UnusedBalanceIdValue;
         TOptional<FString> CurrencyValue;

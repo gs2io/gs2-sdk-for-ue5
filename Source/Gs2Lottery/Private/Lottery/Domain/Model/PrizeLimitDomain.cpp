@@ -106,38 +106,6 @@ namespace Gs2::Lottery::Domain::Model
             ->WithNamespaceName(Self->NamespaceName)
             ->WithPrizeTableName(Self->PrizeTableName)
             ->WithPrizeId(Self->PrizeId);
-        const auto Future = Self->Client->GetPrizeLimit(
-            Request
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            return Future->GetTask().Error();
-        }
-        const auto RequestModel = Request;
-        const auto ResultModel = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::Lottery::Domain::Model::FPrizeTableDomain::CreateCacheParentKey(
-                    Self->NamespaceName,
-                    Self->PrizeTableName,
-                    "PrizeLimit"
-                );
-                const auto Key = Gs2::Lottery::Domain::Model::FPrizeLimitDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetPrizeId()
-                );
-                Self->Gs2->Cache->Put(
-                    Gs2::Lottery::Model::FPrizeLimit::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
-        }
         *Result = ResultModel->GetItem();
         return nullptr;
     }
@@ -171,20 +139,6 @@ namespace Gs2::Lottery::Domain::Model
             ->WithNamespaceName(Self->NamespaceName)
             ->WithPrizeTableName(Self->PrizeTableName)
             ->WithPrizeId(Self->PrizeId);
-        const auto Future = Self->Client->ResetPrizeLimit(
-            Request
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            return Future->GetTask().Error();
-        }
-        const auto RequestModel = Request;
-        const auto ResultModel = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-        }
         const auto Domain = Self;
         *Result = Domain;
         return nullptr;

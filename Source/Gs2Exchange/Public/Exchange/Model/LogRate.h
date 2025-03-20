@@ -21,7 +21,7 @@
 
 namespace Gs2::Exchange::Model
 {
-    class GS2EXCHANGE_API FLogRate final : public Gs2Object, public TSharedFromThis<FLogRate>
+    class GS2EXCHANGE_API FLogRate final : public FGs2Object, public TSharedFromThis<FLogRate>
     {
         TOptional<double> BaseValue;
         TSharedPtr<TArray<double>> LogsValue;

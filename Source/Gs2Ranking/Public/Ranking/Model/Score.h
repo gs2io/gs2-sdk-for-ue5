@@ -21,7 +21,7 @@
 
 namespace Gs2::Ranking::Model
 {
-    class GS2RANKING_API FScore final : public Gs2Object, public TSharedFromThis<FScore>
+    class GS2RANKING_API FScore final : public FGs2Object, public TSharedFromThis<FScore>
     {
         TOptional<FString> ScoreIdValue;
         TOptional<FString> CategoryNameValue;

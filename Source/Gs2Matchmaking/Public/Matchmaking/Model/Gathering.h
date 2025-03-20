@@ -23,7 +23,7 @@
 
 namespace Gs2::Matchmaking::Model
 {
-    class GS2MATCHMAKING_API FGathering final : public Gs2Object, public TSharedFromThis<FGathering>
+    class GS2MATCHMAKING_API FGathering final : public FGs2Object, public TSharedFromThis<FGathering>
     {
         TOptional<FString> GatheringIdValue;
         TOptional<FString> NameValue;

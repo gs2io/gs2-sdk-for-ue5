@@ -21,7 +21,7 @@
 
 namespace Gs2::Matchmaking::Model
 {
-    class GS2MATCHMAKING_API FRating final : public Gs2Object, public TSharedFromThis<FRating>
+    class GS2MATCHMAKING_API FRating final : public FGs2Object, public TSharedFromThis<FRating>
     {
         TOptional<FString> RatingIdValue;
         TOptional<FString> NameValue;

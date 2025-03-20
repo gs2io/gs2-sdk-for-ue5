@@ -22,7 +22,7 @@
 
 namespace Gs2::Script::Model
 {
-    class GS2SCRIPT_API FRandomStatus final : public Gs2Object, public TSharedFromThis<FRandomStatus>
+    class GS2SCRIPT_API FRandomStatus final : public FGs2Object, public TSharedFromThis<FRandomStatus>
     {
         TOptional<int64> SeedValue;
         TSharedPtr<TArray<TSharedPtr<FRandomUsed>>> UsedValue;

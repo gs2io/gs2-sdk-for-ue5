@@ -21,7 +21,7 @@
 
 namespace Gs2::Guild::Model
 {
-    class GS2GUILD_API FCurrentGuildMaster final : public Gs2Object, public TSharedFromThis<FCurrentGuildMaster>
+    class GS2GUILD_API FCurrentGuildMaster final : public FGs2Object, public TSharedFromThis<FCurrentGuildMaster>
     {
         TOptional<FString> NamespaceIdValue;
         TOptional<FString> SettingsValue;

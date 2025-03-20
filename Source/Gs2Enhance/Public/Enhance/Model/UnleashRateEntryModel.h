@@ -21,7 +21,7 @@
 
 namespace Gs2::Enhance::Model
 {
-    class GS2ENHANCE_API FUnleashRateEntryModel final : public Gs2Object, public TSharedFromThis<FUnleashRateEntryModel>
+    class GS2ENHANCE_API FUnleashRateEntryModel final : public FGs2Object, public TSharedFromThis<FUnleashRateEntryModel>
     {
         TOptional<int64> GradeValueValue;
         TOptional<int32> NeedCountValue;

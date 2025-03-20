@@ -21,7 +21,7 @@
 
 namespace Gs2::JobQueue::Model
 {
-    class GS2JOBQUEUE_API FLogSetting final : public Gs2Object, public TSharedFromThis<FLogSetting>
+    class GS2JOBQUEUE_API FLogSetting final : public FGs2Object, public TSharedFromThis<FLogSetting>
     {
         TOptional<FString> LoggingNamespaceIdValue;
 

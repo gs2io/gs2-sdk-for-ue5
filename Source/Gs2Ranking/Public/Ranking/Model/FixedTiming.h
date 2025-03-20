@@ -21,7 +21,7 @@
 
 namespace Gs2::Ranking::Model
 {
-    class GS2RANKING_API FFixedTiming final : public Gs2Object, public TSharedFromThis<FFixedTiming>
+    class GS2RANKING_API FFixedTiming final : public FGs2Object, public TSharedFromThis<FFixedTiming>
     {
         TOptional<int32> HourValue;
         TOptional<int32> MinuteValue;

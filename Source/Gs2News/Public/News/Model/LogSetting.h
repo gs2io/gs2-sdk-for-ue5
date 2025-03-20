@@ -21,7 +21,7 @@
 
 namespace Gs2::News::Model
 {
-    class GS2NEWS_API FLogSetting final : public Gs2Object, public TSharedFromThis<FLogSetting>
+    class GS2NEWS_API FLogSetting final : public FGs2Object, public TSharedFromThis<FLogSetting>
     {
         TOptional<FString> LoggingNamespaceIdValue;
 

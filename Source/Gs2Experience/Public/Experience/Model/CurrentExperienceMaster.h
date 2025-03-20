@@ -21,7 +21,7 @@
 
 namespace Gs2::Experience::Model
 {
-    class GS2EXPERIENCE_API FCurrentExperienceMaster final : public Gs2Object, public TSharedFromThis<FCurrentExperienceMaster>
+    class GS2EXPERIENCE_API FCurrentExperienceMaster final : public FGs2Object, public TSharedFromThis<FCurrentExperienceMaster>
     {
         TOptional<FString> NamespaceIdValue;
         TOptional<FString> SettingsValue;

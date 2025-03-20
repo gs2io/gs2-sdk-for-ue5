@@ -21,7 +21,7 @@
 
 namespace Gs2::Enchant::Model
 {
-    class GS2ENCHANT_API FRarityParameterCountModel final : public Gs2Object, public TSharedFromThis<FRarityParameterCountModel>
+    class GS2ENCHANT_API FRarityParameterCountModel final : public FGs2Object, public TSharedFromThis<FRarityParameterCountModel>
     {
         TOptional<int32> CountValue;
         TOptional<int32> WeightValue;

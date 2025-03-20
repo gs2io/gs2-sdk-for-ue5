@@ -23,7 +23,7 @@
 
 namespace Gs2::Inbox::Model
 {
-    class GS2INBOX_API FGlobalMessageMaster final : public Gs2Object, public TSharedFromThis<FGlobalMessageMaster>
+    class GS2INBOX_API FGlobalMessageMaster final : public FGs2Object, public TSharedFromThis<FGlobalMessageMaster>
     {
         TOptional<FString> GlobalMessageIdValue;
         TOptional<FString> NameValue;

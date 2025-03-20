@@ -21,7 +21,7 @@
 
 namespace Gs2::Money2::Model
 {
-    class GS2MONEY2_API FGooglePlaySetting final : public Gs2Object, public TSharedFromThis<FGooglePlaySetting>
+    class GS2MONEY2_API FGooglePlaySetting final : public FGs2Object, public TSharedFromThis<FGooglePlaySetting>
     {
         TOptional<FString> PackageNameValue;
         TOptional<FString> PublicKeyValue;

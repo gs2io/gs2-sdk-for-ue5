@@ -24,7 +24,7 @@
 
 namespace Gs2::Formation::Model
 {
-    class GS2FORMATION_API FNamespace final : public Gs2Object, public TSharedFromThis<FNamespace>
+    class GS2FORMATION_API FNamespace final : public FGs2Object, public TSharedFromThis<FNamespace>
     {
         TOptional<FString> NamespaceIdValue;
         TOptional<FString> NameValue;

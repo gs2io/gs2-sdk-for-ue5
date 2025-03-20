@@ -21,7 +21,7 @@
 
 namespace Gs2::Schedule::Model
 {
-    class GS2SCHEDULE_API FTrigger final : public Gs2Object, public TSharedFromThis<FTrigger>
+    class GS2SCHEDULE_API FTrigger final : public FGs2Object, public TSharedFromThis<FTrigger>
     {
         TOptional<FString> TriggerIdValue;
         TOptional<FString> NameValue;

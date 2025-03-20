@@ -24,7 +24,7 @@
 
 namespace Gs2::Lottery::Model
 {
-    class GS2LOTTERY_API FTransactionResult final : public Gs2Object, public TSharedFromThis<FTransactionResult>
+    class GS2LOTTERY_API FTransactionResult final : public FGs2Object, public TSharedFromThis<FTransactionResult>
     {
         TOptional<FString> TransactionIdValue;
         TSharedPtr<TArray<TSharedPtr<FVerifyActionResult>>> VerifyResultsValue;

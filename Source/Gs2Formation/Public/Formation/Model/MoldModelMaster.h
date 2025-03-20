@@ -21,7 +21,7 @@
 
 namespace Gs2::Formation::Model
 {
-    class GS2FORMATION_API FMoldModelMaster final : public Gs2Object, public TSharedFromThis<FMoldModelMaster>
+    class GS2FORMATION_API FMoldModelMaster final : public FGs2Object, public TSharedFromThis<FMoldModelMaster>
     {
         TOptional<FString> MoldModelIdValue;
         TOptional<FString> NameValue;

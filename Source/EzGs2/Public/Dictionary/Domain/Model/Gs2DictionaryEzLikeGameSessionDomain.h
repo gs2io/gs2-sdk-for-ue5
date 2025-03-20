@@ -20,8 +20,10 @@
 #include "Dictionary/Domain/Model/LikeAccessToken.h"
 #include "Dictionary/Model/Gs2DictionaryEzEntryModel.h"
 #include "Dictionary/Model/Gs2DictionaryEzEntry.h"
+#include "Dictionary/Model/Gs2DictionaryEzLike.h"
 #include "Dictionary/Model/Gs2DictionaryEzConfig.h"
 #include "Gs2DictionaryEzLikeGameSessionDomain.h"
+#include "Dictionary/Domain/Iterator/Gs2DictionaryEzDescribeLikesIterator.h"
 #include "Util/Net/GameSession.h"
 #include "Util/Net/Gs2Connection.h"
 
@@ -45,6 +47,28 @@ namespace Gs2::UE5::Dictionary::Domain::Model
             Gs2::UE5::Util::IGameSessionPtr GameSession,
             Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
+
+        class EZGS2_API FModelTask :
+            public Gs2::Core::Util::TGs2Future<Gs2::UE5::Dictionary::Model::FEzLike>,
+            public TSharedFromThis<FModelTask>
+        {
+            TSharedPtr<FEzLikeGameSessionDomain> Self;
+
+        public:
+            explicit FModelTask(
+                TSharedPtr<FEzLikeGameSessionDomain> Self
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<Gs2::UE5::Dictionary::Model::FEzLikePtr> Result
+            ) override;
+        };
+
+        TSharedPtr<FAsyncTask<FModelTask>> Model();
+
+        Gs2::Core::Domain::CallbackID Subscribe(TFunction<void(Gs2::UE5::Dictionary::Model::FEzLikePtr)> Callback);
+
+        void Unsubscribe(Gs2::Core::Domain::CallbackID CallbackId);
 
     };
     typedef TSharedPtr<FEzLikeGameSessionDomain> FEzLikeGameSessionDomainPtr;

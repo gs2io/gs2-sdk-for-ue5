@@ -24,7 +24,7 @@
 
 namespace Gs2::Showcase::Model
 {
-    class GS2SHOWCASE_API FSalesItem final : public Gs2Object, public TSharedFromThis<FSalesItem>
+    class GS2SHOWCASE_API FSalesItem final : public FGs2Object, public TSharedFromThis<FSalesItem>
     {
         TOptional<FString> NameValue;
         TOptional<FString> MetadataValue;

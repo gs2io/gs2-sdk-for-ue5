@@ -39,4 +39,10 @@ class BPGS2_API UGs2DictionaryUserFunctionLibrary : public UBlueprintFunctionLib
         FGs2DictionaryOwnUser User,
         FString EntryModelName
     );
+
+    UFUNCTION(BlueprintCallable, DisplayName="Gs2::Dictionary::OwnLike", Category="Game Server Services|GS2-Dictionary|Namespace|User|Like", meta=(WorldContext="WorldContextObject"))
+    static UPARAM(DisplayName="Like") FGs2DictionaryOwnLike OwnLike(
+        FGs2DictionaryOwnUser User,
+        FString EntryModelName
+    );
 };

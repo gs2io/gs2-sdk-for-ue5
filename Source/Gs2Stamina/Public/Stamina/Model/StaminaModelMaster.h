@@ -21,7 +21,7 @@
 
 namespace Gs2::Stamina::Model
 {
-    class GS2STAMINA_API FStaminaModelMaster final : public Gs2Object, public TSharedFromThis<FStaminaModelMaster>
+    class GS2STAMINA_API FStaminaModelMaster final : public FGs2Object, public TSharedFromThis<FStaminaModelMaster>
     {
         TOptional<FString> StaminaModelIdValue;
         TOptional<FString> NameValue;

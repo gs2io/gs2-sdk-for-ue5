@@ -25,7 +25,7 @@
 
 namespace Gs2::Money2::Model
 {
-    class GS2MONEY2_API FEvent final : public Gs2Object, public TSharedFromThis<FEvent>
+    class GS2MONEY2_API FEvent final : public FGs2Object, public TSharedFromThis<FEvent>
     {
         TOptional<FString> EventIdValue;
         TOptional<FString> TransactionIdValue;

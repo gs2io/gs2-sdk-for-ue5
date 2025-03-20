@@ -22,7 +22,7 @@
 
 namespace Gs2::Version::Model
 {
-    class GS2VERSION_API FTargetVersion final : public Gs2Object, public TSharedFromThis<FTargetVersion>
+    class GS2VERSION_API FTargetVersion final : public FGs2Object, public TSharedFromThis<FTargetVersion>
     {
         TOptional<FString> VersionNameValue;
         TOptional<FString> BodyValue;

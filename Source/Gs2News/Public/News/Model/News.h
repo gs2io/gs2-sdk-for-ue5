@@ -21,7 +21,7 @@
 
 namespace Gs2::News::Model
 {
-    class GS2NEWS_API FNews final : public Gs2Object, public TSharedFromThis<FNews>
+    class GS2NEWS_API FNews final : public FGs2Object, public TSharedFromThis<FNews>
     {
         TOptional<FString> SectionValue;
         TOptional<FString> ContentValue;

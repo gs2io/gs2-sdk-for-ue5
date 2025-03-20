@@ -21,7 +21,7 @@
 
 namespace Gs2::Ranking::Model
 {
-    class GS2RANKING_API FCalculatedAt final : public Gs2Object, public TSharedFromThis<FCalculatedAt>
+    class GS2RANKING_API FCalculatedAt final : public FGs2Object, public TSharedFromThis<FCalculatedAt>
     {
         TOptional<FString> CategoryNameValue;
         TOptional<int64> CalculatedAtValue;

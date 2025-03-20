@@ -21,7 +21,7 @@
 
 namespace Gs2::JobQueue::Model
 {
-    class GS2JOBQUEUE_API FNotificationSetting final : public Gs2Object, public TSharedFromThis<FNotificationSetting>
+    class GS2JOBQUEUE_API FNotificationSetting final : public FGs2Object, public TSharedFromThis<FNotificationSetting>
     {
         TOptional<FString> GatewayNamespaceIdValue;
         TOptional<bool> EnableTransferMobileNotificationValue;

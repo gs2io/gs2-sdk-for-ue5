@@ -86,6 +86,9 @@ namespace Gs2::Account::Task::Rest
             if (this->Request->GetContextStack().IsSet()) {
                 queryStrings.Add("contextStack=" + FGenericPlatformHttp::UrlEncode(*this->Request->GetContextStack().GetValue()));
             }
+            if (this->Request->GetIncludeLastAuthenticatedAt().IsSet()) {
+                queryStrings.Add("includeLastAuthenticatedAt=" + this->Request->GetIncludeLastAuthenticatedAtString());
+            }
             Url += "?" + FString::Join(queryStrings, TEXT("&"));
 
             request->SetURL(Url);

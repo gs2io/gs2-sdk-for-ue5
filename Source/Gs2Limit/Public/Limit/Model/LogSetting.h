@@ -21,7 +21,7 @@
 
 namespace Gs2::Limit::Model
 {
-    class GS2LIMIT_API FLogSetting final : public Gs2Object, public TSharedFromThis<FLogSetting>
+    class GS2LIMIT_API FLogSetting final : public FGs2Object, public TSharedFromThis<FLogSetting>
     {
         TOptional<FString> LoggingNamespaceIdValue;
 
