@@ -466,6 +466,176 @@ namespace Gs2::Stamina::Domain::Model
         return Gs2::Core::Util::New<FAsyncTask<FDeleteTask>>(this->AsShared(), Request);
     }
 
+    FStaminaDomain::FVerifyValueTask::FVerifyValueTask(
+        const TSharedPtr<FStaminaDomain>& Self,
+        const Request::FVerifyStaminaValueByUserIdRequestPtr Request
+    ): Self(Self), Request(Request)
+    {
+
+    }
+
+    FStaminaDomain::FVerifyValueTask::FVerifyValueTask(
+        const FVerifyValueTask& From
+    ): TGs2Future(From), Self(From.Self), Request(From.Request)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FStaminaDomain::FVerifyValueTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::Stamina::Domain::Model::FStaminaDomain>> Result
+    )
+    {
+        Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
+            ->WithNamespaceName(Self->NamespaceName)
+            ->WithUserId(Self->UserId)
+            ->WithStaminaName(Self->StaminaName);
+        const auto Domain = Self;
+        *Result = Domain;
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FStaminaDomain::FVerifyValueTask>> FStaminaDomain::VerifyValue(
+        Request::FVerifyStaminaValueByUserIdRequestPtr Request
+    ) {
+        return Gs2::Core::Util::New<FAsyncTask<FVerifyValueTask>>(this->AsShared(), Request);
+    }
+
+    FStaminaDomain::FVerifyMaxValueTask::FVerifyMaxValueTask(
+        const TSharedPtr<FStaminaDomain>& Self,
+        const Request::FVerifyStaminaMaxValueByUserIdRequestPtr Request
+    ): Self(Self), Request(Request)
+    {
+
+    }
+
+    FStaminaDomain::FVerifyMaxValueTask::FVerifyMaxValueTask(
+        const FVerifyMaxValueTask& From
+    ): TGs2Future(From), Self(From.Self), Request(From.Request)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FStaminaDomain::FVerifyMaxValueTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::Stamina::Domain::Model::FStaminaDomain>> Result
+    )
+    {
+        Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
+            ->WithNamespaceName(Self->NamespaceName)
+            ->WithUserId(Self->UserId)
+            ->WithStaminaName(Self->StaminaName);
+        const auto Domain = Self;
+        *Result = Domain;
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FStaminaDomain::FVerifyMaxValueTask>> FStaminaDomain::VerifyMaxValue(
+        Request::FVerifyStaminaMaxValueByUserIdRequestPtr Request
+    ) {
+        return Gs2::Core::Util::New<FAsyncTask<FVerifyMaxValueTask>>(this->AsShared(), Request);
+    }
+
+    FStaminaDomain::FVerifyRecoverIntervalMinutesTask::FVerifyRecoverIntervalMinutesTask(
+        const TSharedPtr<FStaminaDomain>& Self,
+        const Request::FVerifyStaminaRecoverIntervalMinutesByUserIdRequestPtr Request
+    ): Self(Self), Request(Request)
+    {
+
+    }
+
+    FStaminaDomain::FVerifyRecoverIntervalMinutesTask::FVerifyRecoverIntervalMinutesTask(
+        const FVerifyRecoverIntervalMinutesTask& From
+    ): TGs2Future(From), Self(From.Self), Request(From.Request)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FStaminaDomain::FVerifyRecoverIntervalMinutesTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::Stamina::Domain::Model::FStaminaDomain>> Result
+    )
+    {
+        Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
+            ->WithNamespaceName(Self->NamespaceName)
+            ->WithUserId(Self->UserId)
+            ->WithStaminaName(Self->StaminaName);
+        const auto Domain = Self;
+        *Result = Domain;
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FStaminaDomain::FVerifyRecoverIntervalMinutesTask>> FStaminaDomain::VerifyRecoverIntervalMinutes(
+        Request::FVerifyStaminaRecoverIntervalMinutesByUserIdRequestPtr Request
+    ) {
+        return Gs2::Core::Util::New<FAsyncTask<FVerifyRecoverIntervalMinutesTask>>(this->AsShared(), Request);
+    }
+
+    FStaminaDomain::FVerifyRecoverValueTask::FVerifyRecoverValueTask(
+        const TSharedPtr<FStaminaDomain>& Self,
+        const Request::FVerifyStaminaRecoverValueByUserIdRequestPtr Request
+    ): Self(Self), Request(Request)
+    {
+
+    }
+
+    FStaminaDomain::FVerifyRecoverValueTask::FVerifyRecoverValueTask(
+        const FVerifyRecoverValueTask& From
+    ): TGs2Future(From), Self(From.Self), Request(From.Request)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FStaminaDomain::FVerifyRecoverValueTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::Stamina::Domain::Model::FStaminaDomain>> Result
+    )
+    {
+        Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
+            ->WithNamespaceName(Self->NamespaceName)
+            ->WithUserId(Self->UserId)
+            ->WithStaminaName(Self->StaminaName);
+        const auto Domain = Self;
+        *Result = Domain;
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FStaminaDomain::FVerifyRecoverValueTask>> FStaminaDomain::VerifyRecoverValue(
+        Request::FVerifyStaminaRecoverValueByUserIdRequestPtr Request
+    ) {
+        return Gs2::Core::Util::New<FAsyncTask<FVerifyRecoverValueTask>>(this->AsShared(), Request);
+    }
+
+    FStaminaDomain::FVerifyOverflowValueTask::FVerifyOverflowValueTask(
+        const TSharedPtr<FStaminaDomain>& Self,
+        const Request::FVerifyStaminaOverflowValueByUserIdRequestPtr Request
+    ): Self(Self), Request(Request)
+    {
+
+    }
+
+    FStaminaDomain::FVerifyOverflowValueTask::FVerifyOverflowValueTask(
+        const FVerifyOverflowValueTask& From
+    ): TGs2Future(From), Self(From.Self), Request(From.Request)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FStaminaDomain::FVerifyOverflowValueTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::Stamina::Domain::Model::FStaminaDomain>> Result
+    )
+    {
+        Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
+            ->WithNamespaceName(Self->NamespaceName)
+            ->WithUserId(Self->UserId)
+            ->WithStaminaName(Self->StaminaName);
+        const auto Domain = Self;
+        *Result = Domain;
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FStaminaDomain::FVerifyOverflowValueTask>> FStaminaDomain::VerifyOverflowValue(
+        Request::FVerifyStaminaOverflowValueByUserIdRequestPtr Request
+    ) {
+        return Gs2::Core::Util::New<FAsyncTask<FVerifyOverflowValueTask>>(this->AsShared(), Request);
+    }
+
     FString FStaminaDomain::CreateCacheParentKey(
         TOptional<FString> NamespaceName,
         TOptional<FString> UserId,

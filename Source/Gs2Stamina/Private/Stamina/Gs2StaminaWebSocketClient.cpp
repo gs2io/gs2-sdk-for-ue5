@@ -550,6 +550,96 @@ namespace Gs2::Stamina
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::WebSocket::FVerifyStaminaValueTask>> FGs2StaminaWebSocketClient::VerifyStaminaValue(
+        const Request::FVerifyStaminaValueRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FVerifyStaminaValueTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FVerifyStaminaValueByUserIdTask>> FGs2StaminaWebSocketClient::VerifyStaminaValueByUserId(
+        const Request::FVerifyStaminaValueByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FVerifyStaminaValueByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FVerifyStaminaMaxValueTask>> FGs2StaminaWebSocketClient::VerifyStaminaMaxValue(
+        const Request::FVerifyStaminaMaxValueRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FVerifyStaminaMaxValueTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FVerifyStaminaMaxValueByUserIdTask>> FGs2StaminaWebSocketClient::VerifyStaminaMaxValueByUserId(
+        const Request::FVerifyStaminaMaxValueByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FVerifyStaminaMaxValueByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FVerifyStaminaRecoverIntervalMinutesTask>> FGs2StaminaWebSocketClient::VerifyStaminaRecoverIntervalMinutes(
+        const Request::FVerifyStaminaRecoverIntervalMinutesRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FVerifyStaminaRecoverIntervalMinutesTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FVerifyStaminaRecoverIntervalMinutesByUserIdTask>> FGs2StaminaWebSocketClient::VerifyStaminaRecoverIntervalMinutesByUserId(
+        const Request::FVerifyStaminaRecoverIntervalMinutesByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FVerifyStaminaRecoverIntervalMinutesByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FVerifyStaminaRecoverValueTask>> FGs2StaminaWebSocketClient::VerifyStaminaRecoverValue(
+        const Request::FVerifyStaminaRecoverValueRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FVerifyStaminaRecoverValueTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FVerifyStaminaRecoverValueByUserIdTask>> FGs2StaminaWebSocketClient::VerifyStaminaRecoverValueByUserId(
+        const Request::FVerifyStaminaRecoverValueByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FVerifyStaminaRecoverValueByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FVerifyStaminaOverflowValueTask>> FGs2StaminaWebSocketClient::VerifyStaminaOverflowValue(
+        const Request::FVerifyStaminaOverflowValueRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FVerifyStaminaOverflowValueTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FVerifyStaminaOverflowValueByUserIdTask>> FGs2StaminaWebSocketClient::VerifyStaminaOverflowValueByUserId(
+        const Request::FVerifyStaminaOverflowValueByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FVerifyStaminaOverflowValueByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::WebSocket::FRecoverStaminaByStampSheetTask>> FGs2StaminaWebSocketClient::RecoverStaminaByStampSheet(
         const Request::FRecoverStaminaByStampSheetRequestPtr Request) const
     {
@@ -608,6 +698,51 @@ namespace Gs2::Stamina
         const Request::FConsumeStaminaByStampTaskRequestPtr Request) const
     {
         return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FConsumeStaminaByStampTaskTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FVerifyStaminaValueByStampTaskTask>> FGs2StaminaWebSocketClient::VerifyStaminaValueByStampTask(
+        const Request::FVerifyStaminaValueByStampTaskRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FVerifyStaminaValueByStampTaskTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FVerifyStaminaMaxValueByStampTaskTask>> FGs2StaminaWebSocketClient::VerifyStaminaMaxValueByStampTask(
+        const Request::FVerifyStaminaMaxValueByStampTaskRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FVerifyStaminaMaxValueByStampTaskTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FVerifyStaminaRecoverIntervalMinutesByStampTaskTask>> FGs2StaminaWebSocketClient::VerifyStaminaRecoverIntervalMinutesByStampTask(
+        const Request::FVerifyStaminaRecoverIntervalMinutesByStampTaskRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FVerifyStaminaRecoverIntervalMinutesByStampTaskTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FVerifyStaminaRecoverValueByStampTaskTask>> FGs2StaminaWebSocketClient::VerifyStaminaRecoverValueByStampTask(
+        const Request::FVerifyStaminaRecoverValueByStampTaskRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FVerifyStaminaRecoverValueByStampTaskTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FVerifyStaminaOverflowValueByStampTaskTask>> FGs2StaminaWebSocketClient::VerifyStaminaOverflowValueByStampTask(
+        const Request::FVerifyStaminaOverflowValueByStampTaskRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FVerifyStaminaOverflowValueByStampTaskTask>>(
             Session,
             Request
         );

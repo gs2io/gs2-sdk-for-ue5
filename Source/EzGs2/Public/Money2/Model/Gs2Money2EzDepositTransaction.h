@@ -23,16 +23,16 @@ namespace Gs2::UE5::Money2::Model
 {
 	class EZGS2_API FEzDepositTransaction final : public TSharedFromThis<FEzDepositTransaction>
 	{
-        TOptional<float> PriceValue;
+        TOptional<double> PriceValue;
         TOptional<FString> CurrencyValue;
         TOptional<int32> CountValue;
 
 	public:
-        TSharedPtr<FEzDepositTransaction> WithPrice(const TOptional<float> Price);
+        TSharedPtr<FEzDepositTransaction> WithPrice(const TOptional<double> Price);
         TSharedPtr<FEzDepositTransaction> WithCurrency(const TOptional<FString> Currency);
         TSharedPtr<FEzDepositTransaction> WithCount(const TOptional<int32> Count);
 
-        TOptional<float> GetPrice() const;
+        TOptional<double> GetPrice() const;
         FString GetPriceString() const;
 
         TOptional<FString> GetCurrency() const;

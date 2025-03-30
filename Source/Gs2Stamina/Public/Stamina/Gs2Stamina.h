@@ -386,6 +386,66 @@
 #include "Task/Rest/DeleteStaminaByUserIdTask.h"
 #include "Task/WebSocket/DeleteStaminaByUserIdTask.h"
 
+// VerifyStaminaValue
+#include "Request/VerifyStaminaValueRequest.h"
+#include "Result/VerifyStaminaValueResult.h"
+#include "Task/Rest/VerifyStaminaValueTask.h"
+#include "Task/WebSocket/VerifyStaminaValueTask.h"
+
+// VerifyStaminaValueByUserId
+#include "Request/VerifyStaminaValueByUserIdRequest.h"
+#include "Result/VerifyStaminaValueByUserIdResult.h"
+#include "Task/Rest/VerifyStaminaValueByUserIdTask.h"
+#include "Task/WebSocket/VerifyStaminaValueByUserIdTask.h"
+
+// VerifyStaminaMaxValue
+#include "Request/VerifyStaminaMaxValueRequest.h"
+#include "Result/VerifyStaminaMaxValueResult.h"
+#include "Task/Rest/VerifyStaminaMaxValueTask.h"
+#include "Task/WebSocket/VerifyStaminaMaxValueTask.h"
+
+// VerifyStaminaMaxValueByUserId
+#include "Request/VerifyStaminaMaxValueByUserIdRequest.h"
+#include "Result/VerifyStaminaMaxValueByUserIdResult.h"
+#include "Task/Rest/VerifyStaminaMaxValueByUserIdTask.h"
+#include "Task/WebSocket/VerifyStaminaMaxValueByUserIdTask.h"
+
+// VerifyStaminaRecoverIntervalMinutes
+#include "Request/VerifyStaminaRecoverIntervalMinutesRequest.h"
+#include "Result/VerifyStaminaRecoverIntervalMinutesResult.h"
+#include "Task/Rest/VerifyStaminaRecoverIntervalMinutesTask.h"
+#include "Task/WebSocket/VerifyStaminaRecoverIntervalMinutesTask.h"
+
+// VerifyStaminaRecoverIntervalMinutesByUserId
+#include "Request/VerifyStaminaRecoverIntervalMinutesByUserIdRequest.h"
+#include "Result/VerifyStaminaRecoverIntervalMinutesByUserIdResult.h"
+#include "Task/Rest/VerifyStaminaRecoverIntervalMinutesByUserIdTask.h"
+#include "Task/WebSocket/VerifyStaminaRecoverIntervalMinutesByUserIdTask.h"
+
+// VerifyStaminaRecoverValue
+#include "Request/VerifyStaminaRecoverValueRequest.h"
+#include "Result/VerifyStaminaRecoverValueResult.h"
+#include "Task/Rest/VerifyStaminaRecoverValueTask.h"
+#include "Task/WebSocket/VerifyStaminaRecoverValueTask.h"
+
+// VerifyStaminaRecoverValueByUserId
+#include "Request/VerifyStaminaRecoverValueByUserIdRequest.h"
+#include "Result/VerifyStaminaRecoverValueByUserIdResult.h"
+#include "Task/Rest/VerifyStaminaRecoverValueByUserIdTask.h"
+#include "Task/WebSocket/VerifyStaminaRecoverValueByUserIdTask.h"
+
+// VerifyStaminaOverflowValue
+#include "Request/VerifyStaminaOverflowValueRequest.h"
+#include "Result/VerifyStaminaOverflowValueResult.h"
+#include "Task/Rest/VerifyStaminaOverflowValueTask.h"
+#include "Task/WebSocket/VerifyStaminaOverflowValueTask.h"
+
+// VerifyStaminaOverflowValueByUserId
+#include "Request/VerifyStaminaOverflowValueByUserIdRequest.h"
+#include "Result/VerifyStaminaOverflowValueByUserIdResult.h"
+#include "Task/Rest/VerifyStaminaOverflowValueByUserIdTask.h"
+#include "Task/WebSocket/VerifyStaminaOverflowValueByUserIdTask.h"
+
 // RecoverStaminaByStampSheet
 #include "Request/RecoverStaminaByStampSheetRequest.h"
 #include "Result/RecoverStaminaByStampSheetResult.h"
@@ -427,6 +487,36 @@
 #include "Result/ConsumeStaminaByStampTaskResult.h"
 #include "Task/Rest/ConsumeStaminaByStampTaskTask.h"
 #include "Task/WebSocket/ConsumeStaminaByStampTaskTask.h"
+
+// VerifyStaminaValueByStampTask
+#include "Request/VerifyStaminaValueByStampTaskRequest.h"
+#include "Result/VerifyStaminaValueByStampTaskResult.h"
+#include "Task/Rest/VerifyStaminaValueByStampTaskTask.h"
+#include "Task/WebSocket/VerifyStaminaValueByStampTaskTask.h"
+
+// VerifyStaminaMaxValueByStampTask
+#include "Request/VerifyStaminaMaxValueByStampTaskRequest.h"
+#include "Result/VerifyStaminaMaxValueByStampTaskResult.h"
+#include "Task/Rest/VerifyStaminaMaxValueByStampTaskTask.h"
+#include "Task/WebSocket/VerifyStaminaMaxValueByStampTaskTask.h"
+
+// VerifyStaminaRecoverIntervalMinutesByStampTask
+#include "Request/VerifyStaminaRecoverIntervalMinutesByStampTaskRequest.h"
+#include "Result/VerifyStaminaRecoverIntervalMinutesByStampTaskResult.h"
+#include "Task/Rest/VerifyStaminaRecoverIntervalMinutesByStampTaskTask.h"
+#include "Task/WebSocket/VerifyStaminaRecoverIntervalMinutesByStampTaskTask.h"
+
+// VerifyStaminaRecoverValueByStampTask
+#include "Request/VerifyStaminaRecoverValueByStampTaskRequest.h"
+#include "Result/VerifyStaminaRecoverValueByStampTaskResult.h"
+#include "Task/Rest/VerifyStaminaRecoverValueByStampTaskTask.h"
+#include "Task/WebSocket/VerifyStaminaRecoverValueByStampTaskTask.h"
+
+// VerifyStaminaOverflowValueByStampTask
+#include "Request/VerifyStaminaOverflowValueByStampTaskRequest.h"
+#include "Result/VerifyStaminaOverflowValueByStampTaskResult.h"
+#include "Task/Rest/VerifyStaminaOverflowValueByStampTaskTask.h"
+#include "Task/WebSocket/VerifyStaminaOverflowValueByStampTaskTask.h"
 
 // Client
 #include "Gs2StaminaRestClient.h"

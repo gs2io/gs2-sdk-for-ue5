@@ -25,7 +25,7 @@ namespace Gs2::Money2::Model
     {
         TOptional<FString> UnusedBalanceIdValue;
         TOptional<FString> CurrencyValue;
-        TOptional<float> BalanceValue;
+        TOptional<double> BalanceValue;
         TOptional<int64> UpdatedAtValue;
         TOptional<int64> RevisionValue;
 
@@ -38,13 +38,13 @@ namespace Gs2::Money2::Model
 
         TSharedPtr<FUnusedBalance> WithUnusedBalanceId(const TOptional<FString> UnusedBalanceId);
         TSharedPtr<FUnusedBalance> WithCurrency(const TOptional<FString> Currency);
-        TSharedPtr<FUnusedBalance> WithBalance(const TOptional<float> Balance);
+        TSharedPtr<FUnusedBalance> WithBalance(const TOptional<double> Balance);
         TSharedPtr<FUnusedBalance> WithUpdatedAt(const TOptional<int64> UpdatedAt);
         TSharedPtr<FUnusedBalance> WithRevision(const TOptional<int64> Revision);
 
         TOptional<FString> GetUnusedBalanceId() const;
         TOptional<FString> GetCurrency() const;
-        TOptional<float> GetBalance() const;
+        TOptional<double> GetBalance() const;
         FString GetBalanceString() const;
         TOptional<int64> GetUpdatedAt() const;
         FString GetUpdatedAtString() const;

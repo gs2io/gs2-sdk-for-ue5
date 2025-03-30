@@ -28,8 +28,8 @@ namespace Gs2::Money2::Model
         TOptional<int32> MonthValue;
         TOptional<int32> DayValue;
         TOptional<FString> CurrencyValue;
-        TOptional<float> DepositAmountValue;
-        TOptional<float> WithdrawAmountValue;
+        TOptional<double> DepositAmountValue;
+        TOptional<double> WithdrawAmountValue;
         TOptional<int64> UpdatedAtValue;
         TOptional<int64> RevisionValue;
 
@@ -45,8 +45,8 @@ namespace Gs2::Money2::Model
         TSharedPtr<FDailyTransactionHistory> WithMonth(const TOptional<int32> Month);
         TSharedPtr<FDailyTransactionHistory> WithDay(const TOptional<int32> Day);
         TSharedPtr<FDailyTransactionHistory> WithCurrency(const TOptional<FString> Currency);
-        TSharedPtr<FDailyTransactionHistory> WithDepositAmount(const TOptional<float> DepositAmount);
-        TSharedPtr<FDailyTransactionHistory> WithWithdrawAmount(const TOptional<float> WithdrawAmount);
+        TSharedPtr<FDailyTransactionHistory> WithDepositAmount(const TOptional<double> DepositAmount);
+        TSharedPtr<FDailyTransactionHistory> WithWithdrawAmount(const TOptional<double> WithdrawAmount);
         TSharedPtr<FDailyTransactionHistory> WithUpdatedAt(const TOptional<int64> UpdatedAt);
         TSharedPtr<FDailyTransactionHistory> WithRevision(const TOptional<int64> Revision);
 
@@ -58,9 +58,9 @@ namespace Gs2::Money2::Model
         TOptional<int32> GetDay() const;
         FString GetDayString() const;
         TOptional<FString> GetCurrency() const;
-        TOptional<float> GetDepositAmount() const;
+        TOptional<double> GetDepositAmount() const;
         FString GetDepositAmountString() const;
-        TOptional<float> GetWithdrawAmount() const;
+        TOptional<double> GetWithdrawAmount() const;
         FString GetWithdrawAmountString() const;
         TOptional<int64> GetUpdatedAt() const;
         FString GetUpdatedAtString() const;

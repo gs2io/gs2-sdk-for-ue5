@@ -21,7 +21,7 @@ namespace Gs2::Money2::Model
     FUnusedBalance::FUnusedBalance():
         UnusedBalanceIdValue(TOptional<FString>()),
         CurrencyValue(TOptional<FString>()),
-        BalanceValue(TOptional<float>()),
+        BalanceValue(TOptional<double>()),
         UpdatedAtValue(TOptional<int64>()),
         RevisionValue(TOptional<int64>())
     {
@@ -55,7 +55,7 @@ namespace Gs2::Money2::Model
     }
 
     TSharedPtr<FUnusedBalance> FUnusedBalance::WithBalance(
-        const TOptional<float> Balance
+        const TOptional<double> Balance
     )
     {
         this->BalanceValue = Balance;
@@ -85,7 +85,7 @@ namespace Gs2::Money2::Model
     {
         return CurrencyValue;
     }
-    TOptional<float> FUnusedBalance::GetBalance() const
+    TOptional<double> FUnusedBalance::GetBalance() const
     {
         return BalanceValue;
     }
@@ -193,15 +193,15 @@ namespace Gs2::Money2::Model
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithBalance(Data->HasField(ANSI_TO_TCHAR("balance")) ? [Data]() -> TOptional<float>
+            ->WithBalance(Data->HasField(ANSI_TO_TCHAR("balance")) ? [Data]() -> TOptional<double>
                 {
-                    float v;
+                    double v;
                     if (Data->TryGetNumberField(ANSI_TO_TCHAR("balance"), v))
                     {
                         return TOptional(v);
                     }
-                    return TOptional<float>();
-                }() : TOptional<float>())
+                    return TOptional<double>();
+                }() : TOptional<double>())
             ->WithUpdatedAt(Data->HasField(ANSI_TO_TCHAR("updatedAt")) ? [Data]() -> TOptional<int64>
                 {
                     int64 v;

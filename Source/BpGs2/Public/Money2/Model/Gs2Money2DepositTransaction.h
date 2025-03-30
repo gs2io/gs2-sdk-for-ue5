@@ -27,7 +27,7 @@ struct FGs2Money2DepositTransaction
     GENERATED_BODY()
 
     UPROPERTY(Category = Gs2, BlueprintReadWrite)
-    float Price = 0;
+    double Price = 0;
     UPROPERTY(Category = Gs2, BlueprintReadWrite)
     FString Currency = "";
     UPROPERTY(Category = Gs2, BlueprintReadWrite)

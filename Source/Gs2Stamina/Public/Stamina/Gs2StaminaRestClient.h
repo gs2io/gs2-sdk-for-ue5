@@ -136,6 +136,26 @@
 #include "Task/Rest/SetRecoverValueByStatusTask.h"
 #include "Request/DeleteStaminaByUserIdRequest.h"
 #include "Task/Rest/DeleteStaminaByUserIdTask.h"
+#include "Request/VerifyStaminaValueRequest.h"
+#include "Task/Rest/VerifyStaminaValueTask.h"
+#include "Request/VerifyStaminaValueByUserIdRequest.h"
+#include "Task/Rest/VerifyStaminaValueByUserIdTask.h"
+#include "Request/VerifyStaminaMaxValueRequest.h"
+#include "Task/Rest/VerifyStaminaMaxValueTask.h"
+#include "Request/VerifyStaminaMaxValueByUserIdRequest.h"
+#include "Task/Rest/VerifyStaminaMaxValueByUserIdTask.h"
+#include "Request/VerifyStaminaRecoverIntervalMinutesRequest.h"
+#include "Task/Rest/VerifyStaminaRecoverIntervalMinutesTask.h"
+#include "Request/VerifyStaminaRecoverIntervalMinutesByUserIdRequest.h"
+#include "Task/Rest/VerifyStaminaRecoverIntervalMinutesByUserIdTask.h"
+#include "Request/VerifyStaminaRecoverValueRequest.h"
+#include "Task/Rest/VerifyStaminaRecoverValueTask.h"
+#include "Request/VerifyStaminaRecoverValueByUserIdRequest.h"
+#include "Task/Rest/VerifyStaminaRecoverValueByUserIdTask.h"
+#include "Request/VerifyStaminaOverflowValueRequest.h"
+#include "Task/Rest/VerifyStaminaOverflowValueTask.h"
+#include "Request/VerifyStaminaOverflowValueByUserIdRequest.h"
+#include "Task/Rest/VerifyStaminaOverflowValueByUserIdTask.h"
 #include "Request/RecoverStaminaByStampSheetRequest.h"
 #include "Task/Rest/RecoverStaminaByStampSheetTask.h"
 #include "Request/RaiseMaxValueByStampSheetRequest.h"
@@ -150,6 +170,16 @@
 #include "Task/Rest/SetRecoverValueByStampSheetTask.h"
 #include "Request/ConsumeStaminaByStampTaskRequest.h"
 #include "Task/Rest/ConsumeStaminaByStampTaskTask.h"
+#include "Request/VerifyStaminaValueByStampTaskRequest.h"
+#include "Task/Rest/VerifyStaminaValueByStampTaskTask.h"
+#include "Request/VerifyStaminaMaxValueByStampTaskRequest.h"
+#include "Task/Rest/VerifyStaminaMaxValueByStampTaskTask.h"
+#include "Request/VerifyStaminaRecoverIntervalMinutesByStampTaskRequest.h"
+#include "Task/Rest/VerifyStaminaRecoverIntervalMinutesByStampTaskTask.h"
+#include "Request/VerifyStaminaRecoverValueByStampTaskRequest.h"
+#include "Task/Rest/VerifyStaminaRecoverValueByStampTaskTask.h"
+#include "Request/VerifyStaminaOverflowValueByStampTaskRequest.h"
+#include "Task/Rest/VerifyStaminaOverflowValueByStampTaskTask.h"
 
 namespace Gs2::Stamina
 {
@@ -398,6 +428,46 @@ namespace Gs2::Stamina
             const Request::FDeleteStaminaByUserIdRequestPtr Request
         ) const;
 
+        TSharedPtr<FAsyncTask<Task::Rest::FVerifyStaminaValueTask>> VerifyStaminaValue(
+            const Request::FVerifyStaminaValueRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FVerifyStaminaValueByUserIdTask>> VerifyStaminaValueByUserId(
+            const Request::FVerifyStaminaValueByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FVerifyStaminaMaxValueTask>> VerifyStaminaMaxValue(
+            const Request::FVerifyStaminaMaxValueRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FVerifyStaminaMaxValueByUserIdTask>> VerifyStaminaMaxValueByUserId(
+            const Request::FVerifyStaminaMaxValueByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FVerifyStaminaRecoverIntervalMinutesTask>> VerifyStaminaRecoverIntervalMinutes(
+            const Request::FVerifyStaminaRecoverIntervalMinutesRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FVerifyStaminaRecoverIntervalMinutesByUserIdTask>> VerifyStaminaRecoverIntervalMinutesByUserId(
+            const Request::FVerifyStaminaRecoverIntervalMinutesByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FVerifyStaminaRecoverValueTask>> VerifyStaminaRecoverValue(
+            const Request::FVerifyStaminaRecoverValueRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FVerifyStaminaRecoverValueByUserIdTask>> VerifyStaminaRecoverValueByUserId(
+            const Request::FVerifyStaminaRecoverValueByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FVerifyStaminaOverflowValueTask>> VerifyStaminaOverflowValue(
+            const Request::FVerifyStaminaOverflowValueRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FVerifyStaminaOverflowValueByUserIdTask>> VerifyStaminaOverflowValueByUserId(
+            const Request::FVerifyStaminaOverflowValueByUserIdRequestPtr Request
+        ) const;
+
         TSharedPtr<FAsyncTask<Task::Rest::FRecoverStaminaByStampSheetTask>> RecoverStaminaByStampSheet(
             const Request::FRecoverStaminaByStampSheetRequestPtr Request
         ) const;
@@ -424,6 +494,26 @@ namespace Gs2::Stamina
 
         TSharedPtr<FAsyncTask<Task::Rest::FConsumeStaminaByStampTaskTask>> ConsumeStaminaByStampTask(
             const Request::FConsumeStaminaByStampTaskRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FVerifyStaminaValueByStampTaskTask>> VerifyStaminaValueByStampTask(
+            const Request::FVerifyStaminaValueByStampTaskRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FVerifyStaminaMaxValueByStampTaskTask>> VerifyStaminaMaxValueByStampTask(
+            const Request::FVerifyStaminaMaxValueByStampTaskRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FVerifyStaminaRecoverIntervalMinutesByStampTaskTask>> VerifyStaminaRecoverIntervalMinutesByStampTask(
+            const Request::FVerifyStaminaRecoverIntervalMinutesByStampTaskRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FVerifyStaminaRecoverValueByStampTaskTask>> VerifyStaminaRecoverValueByStampTask(
+            const Request::FVerifyStaminaRecoverValueByStampTaskRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FVerifyStaminaOverflowValueByStampTaskTask>> VerifyStaminaOverflowValueByStampTask(
+            const Request::FVerifyStaminaOverflowValueByStampTaskRequestPtr Request
         ) const;
     };
     typedef TSharedPtr<FGs2StaminaRestClient, ESPMode::ThreadSafe> FGs2StaminaRestClientPtr;

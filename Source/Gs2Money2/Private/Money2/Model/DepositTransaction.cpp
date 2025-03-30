@@ -19,7 +19,7 @@
 namespace Gs2::Money2::Model
 {
     FDepositTransaction::FDepositTransaction():
-        PriceValue(TOptional<float>()),
+        PriceValue(TOptional<double>()),
         CurrencyValue(TOptional<FString>()),
         CountValue(TOptional<int32>()),
         DepositedAtValue(TOptional<int64>())
@@ -37,7 +37,7 @@ namespace Gs2::Money2::Model
     }
 
     TSharedPtr<FDepositTransaction> FDepositTransaction::WithPrice(
-        const TOptional<float> Price
+        const TOptional<double> Price
     )
     {
         this->PriceValue = Price;
@@ -67,7 +67,7 @@ namespace Gs2::Money2::Model
         this->DepositedAtValue = DepositedAt;
         return SharedThis(this);
     }
-    TOptional<float> FDepositTransaction::GetPrice() const
+    TOptional<double> FDepositTransaction::GetPrice() const
     {
         return PriceValue;
     }
@@ -117,15 +117,15 @@ namespace Gs2::Money2::Model
             return nullptr;
         }
         return MakeShared<FDepositTransaction>()
-            ->WithPrice(Data->HasField(ANSI_TO_TCHAR("price")) ? [Data]() -> TOptional<float>
+            ->WithPrice(Data->HasField(ANSI_TO_TCHAR("price")) ? [Data]() -> TOptional<double>
                 {
-                    float v;
+                    double v;
                     if (Data->TryGetNumberField(ANSI_TO_TCHAR("price"), v))
                     {
                         return TOptional(v);
                     }
-                    return TOptional<float>();
-                }() : TOptional<float>())
+                    return TOptional<double>();
+                }() : TOptional<double>())
             ->WithCurrency(Data->HasField(ANSI_TO_TCHAR("currency")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");

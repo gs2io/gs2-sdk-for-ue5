@@ -23,7 +23,7 @@ namespace Gs2::Money2::Model
 {
     class GS2MONEY2_API FDepositTransaction final : public FGs2Object, public TSharedFromThis<FDepositTransaction>
     {
-        TOptional<float> PriceValue;
+        TOptional<double> PriceValue;
         TOptional<FString> CurrencyValue;
         TOptional<int32> CountValue;
         TOptional<int64> DepositedAtValue;
@@ -35,12 +35,12 @@ namespace Gs2::Money2::Model
         );
         virtual ~FDepositTransaction() override = default;
 
-        TSharedPtr<FDepositTransaction> WithPrice(const TOptional<float> Price);
+        TSharedPtr<FDepositTransaction> WithPrice(const TOptional<double> Price);
         TSharedPtr<FDepositTransaction> WithCurrency(const TOptional<FString> Currency);
         TSharedPtr<FDepositTransaction> WithCount(const TOptional<int32> Count);
         TSharedPtr<FDepositTransaction> WithDepositedAt(const TOptional<int64> DepositedAt);
 
-        TOptional<float> GetPrice() const;
+        TOptional<double> GetPrice() const;
         FString GetPriceString() const;
         TOptional<FString> GetCurrency() const;
         TOptional<int32> GetCount() const;

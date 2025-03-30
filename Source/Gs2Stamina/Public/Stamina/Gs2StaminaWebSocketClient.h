@@ -136,6 +136,26 @@
 #include "Task/WebSocket/SetRecoverValueByStatusTask.h"
 #include "Request/DeleteStaminaByUserIdRequest.h"
 #include "Task/WebSocket/DeleteStaminaByUserIdTask.h"
+#include "Request/VerifyStaminaValueRequest.h"
+#include "Task/WebSocket/VerifyStaminaValueTask.h"
+#include "Request/VerifyStaminaValueByUserIdRequest.h"
+#include "Task/WebSocket/VerifyStaminaValueByUserIdTask.h"
+#include "Request/VerifyStaminaMaxValueRequest.h"
+#include "Task/WebSocket/VerifyStaminaMaxValueTask.h"
+#include "Request/VerifyStaminaMaxValueByUserIdRequest.h"
+#include "Task/WebSocket/VerifyStaminaMaxValueByUserIdTask.h"
+#include "Request/VerifyStaminaRecoverIntervalMinutesRequest.h"
+#include "Task/WebSocket/VerifyStaminaRecoverIntervalMinutesTask.h"
+#include "Request/VerifyStaminaRecoverIntervalMinutesByUserIdRequest.h"
+#include "Task/WebSocket/VerifyStaminaRecoverIntervalMinutesByUserIdTask.h"
+#include "Request/VerifyStaminaRecoverValueRequest.h"
+#include "Task/WebSocket/VerifyStaminaRecoverValueTask.h"
+#include "Request/VerifyStaminaRecoverValueByUserIdRequest.h"
+#include "Task/WebSocket/VerifyStaminaRecoverValueByUserIdTask.h"
+#include "Request/VerifyStaminaOverflowValueRequest.h"
+#include "Task/WebSocket/VerifyStaminaOverflowValueTask.h"
+#include "Request/VerifyStaminaOverflowValueByUserIdRequest.h"
+#include "Task/WebSocket/VerifyStaminaOverflowValueByUserIdTask.h"
 #include "Request/RecoverStaminaByStampSheetRequest.h"
 #include "Task/WebSocket/RecoverStaminaByStampSheetTask.h"
 #include "Request/RaiseMaxValueByStampSheetRequest.h"
@@ -150,6 +170,16 @@
 #include "Task/WebSocket/SetRecoverValueByStampSheetTask.h"
 #include "Request/ConsumeStaminaByStampTaskRequest.h"
 #include "Task/WebSocket/ConsumeStaminaByStampTaskTask.h"
+#include "Request/VerifyStaminaValueByStampTaskRequest.h"
+#include "Task/WebSocket/VerifyStaminaValueByStampTaskTask.h"
+#include "Request/VerifyStaminaMaxValueByStampTaskRequest.h"
+#include "Task/WebSocket/VerifyStaminaMaxValueByStampTaskTask.h"
+#include "Request/VerifyStaminaRecoverIntervalMinutesByStampTaskRequest.h"
+#include "Task/WebSocket/VerifyStaminaRecoverIntervalMinutesByStampTaskTask.h"
+#include "Request/VerifyStaminaRecoverValueByStampTaskRequest.h"
+#include "Task/WebSocket/VerifyStaminaRecoverValueByStampTaskTask.h"
+#include "Request/VerifyStaminaOverflowValueByStampTaskRequest.h"
+#include "Task/WebSocket/VerifyStaminaOverflowValueByStampTaskTask.h"
 
 namespace Gs2::Stamina
 {
@@ -398,6 +428,46 @@ namespace Gs2::Stamina
             const Request::FDeleteStaminaByUserIdRequestPtr Request
         ) const;
 
+        TSharedPtr<FAsyncTask<Task::WebSocket::FVerifyStaminaValueTask>> VerifyStaminaValue(
+            const Request::FVerifyStaminaValueRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FVerifyStaminaValueByUserIdTask>> VerifyStaminaValueByUserId(
+            const Request::FVerifyStaminaValueByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FVerifyStaminaMaxValueTask>> VerifyStaminaMaxValue(
+            const Request::FVerifyStaminaMaxValueRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FVerifyStaminaMaxValueByUserIdTask>> VerifyStaminaMaxValueByUserId(
+            const Request::FVerifyStaminaMaxValueByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FVerifyStaminaRecoverIntervalMinutesTask>> VerifyStaminaRecoverIntervalMinutes(
+            const Request::FVerifyStaminaRecoverIntervalMinutesRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FVerifyStaminaRecoverIntervalMinutesByUserIdTask>> VerifyStaminaRecoverIntervalMinutesByUserId(
+            const Request::FVerifyStaminaRecoverIntervalMinutesByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FVerifyStaminaRecoverValueTask>> VerifyStaminaRecoverValue(
+            const Request::FVerifyStaminaRecoverValueRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FVerifyStaminaRecoverValueByUserIdTask>> VerifyStaminaRecoverValueByUserId(
+            const Request::FVerifyStaminaRecoverValueByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FVerifyStaminaOverflowValueTask>> VerifyStaminaOverflowValue(
+            const Request::FVerifyStaminaOverflowValueRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FVerifyStaminaOverflowValueByUserIdTask>> VerifyStaminaOverflowValueByUserId(
+            const Request::FVerifyStaminaOverflowValueByUserIdRequestPtr Request
+        ) const;
+
         TSharedPtr<FAsyncTask<Task::WebSocket::FRecoverStaminaByStampSheetTask>> RecoverStaminaByStampSheet(
             const Request::FRecoverStaminaByStampSheetRequestPtr Request
         ) const;
@@ -424,6 +494,26 @@ namespace Gs2::Stamina
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FConsumeStaminaByStampTaskTask>> ConsumeStaminaByStampTask(
             const Request::FConsumeStaminaByStampTaskRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FVerifyStaminaValueByStampTaskTask>> VerifyStaminaValueByStampTask(
+            const Request::FVerifyStaminaValueByStampTaskRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FVerifyStaminaMaxValueByStampTaskTask>> VerifyStaminaMaxValueByStampTask(
+            const Request::FVerifyStaminaMaxValueByStampTaskRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FVerifyStaminaRecoverIntervalMinutesByStampTaskTask>> VerifyStaminaRecoverIntervalMinutesByStampTask(
+            const Request::FVerifyStaminaRecoverIntervalMinutesByStampTaskRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FVerifyStaminaRecoverValueByStampTaskTask>> VerifyStaminaRecoverValueByStampTask(
+            const Request::FVerifyStaminaRecoverValueByStampTaskRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FVerifyStaminaOverflowValueByStampTaskTask>> VerifyStaminaOverflowValueByStampTask(
+            const Request::FVerifyStaminaOverflowValueByStampTaskRequestPtr Request
         ) const;
     };
     typedef TSharedPtr<FGs2StaminaWebSocketClient, ESPMode::ThreadSafe> FGs2StaminaWebSocketClientPtr;

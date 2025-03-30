@@ -274,6 +274,136 @@ namespace Gs2::Stamina::Domain::Model
             Request::FSetRecoverValueByStatusRequestPtr Request
         );
 
+        class GS2STAMINA_API FVerifyValueTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Stamina::Domain::Model::FStaminaAccessTokenDomain>,
+            public TSharedFromThis<FVerifyValueTask>
+        {
+            const TSharedPtr<FStaminaAccessTokenDomain> Self;
+            const Request::FVerifyStaminaValueRequestPtr Request;
+        public:
+            explicit FVerifyValueTask(
+                const TSharedPtr<FStaminaAccessTokenDomain>& Self,
+                const Request::FVerifyStaminaValueRequestPtr Request
+            );
+
+            FVerifyValueTask(
+                const FVerifyValueTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Stamina::Domain::Model::FStaminaAccessTokenDomain>> Result
+            ) override;
+        };
+        friend FVerifyValueTask;
+
+        TSharedPtr<FAsyncTask<FVerifyValueTask>> VerifyValue(
+            Request::FVerifyStaminaValueRequestPtr Request
+        );
+
+        class GS2STAMINA_API FVerifyMaxValueTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Stamina::Domain::Model::FStaminaAccessTokenDomain>,
+            public TSharedFromThis<FVerifyMaxValueTask>
+        {
+            const TSharedPtr<FStaminaAccessTokenDomain> Self;
+            const Request::FVerifyStaminaMaxValueRequestPtr Request;
+        public:
+            explicit FVerifyMaxValueTask(
+                const TSharedPtr<FStaminaAccessTokenDomain>& Self,
+                const Request::FVerifyStaminaMaxValueRequestPtr Request
+            );
+
+            FVerifyMaxValueTask(
+                const FVerifyMaxValueTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Stamina::Domain::Model::FStaminaAccessTokenDomain>> Result
+            ) override;
+        };
+        friend FVerifyMaxValueTask;
+
+        TSharedPtr<FAsyncTask<FVerifyMaxValueTask>> VerifyMaxValue(
+            Request::FVerifyStaminaMaxValueRequestPtr Request
+        );
+
+        class GS2STAMINA_API FVerifyRecoverIntervalMinutesTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Stamina::Domain::Model::FStaminaAccessTokenDomain>,
+            public TSharedFromThis<FVerifyRecoverIntervalMinutesTask>
+        {
+            const TSharedPtr<FStaminaAccessTokenDomain> Self;
+            const Request::FVerifyStaminaRecoverIntervalMinutesRequestPtr Request;
+        public:
+            explicit FVerifyRecoverIntervalMinutesTask(
+                const TSharedPtr<FStaminaAccessTokenDomain>& Self,
+                const Request::FVerifyStaminaRecoverIntervalMinutesRequestPtr Request
+            );
+
+            FVerifyRecoverIntervalMinutesTask(
+                const FVerifyRecoverIntervalMinutesTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Stamina::Domain::Model::FStaminaAccessTokenDomain>> Result
+            ) override;
+        };
+        friend FVerifyRecoverIntervalMinutesTask;
+
+        TSharedPtr<FAsyncTask<FVerifyRecoverIntervalMinutesTask>> VerifyRecoverIntervalMinutes(
+            Request::FVerifyStaminaRecoverIntervalMinutesRequestPtr Request
+        );
+
+        class GS2STAMINA_API FVerifyRecoverValueTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Stamina::Domain::Model::FStaminaAccessTokenDomain>,
+            public TSharedFromThis<FVerifyRecoverValueTask>
+        {
+            const TSharedPtr<FStaminaAccessTokenDomain> Self;
+            const Request::FVerifyStaminaRecoverValueRequestPtr Request;
+        public:
+            explicit FVerifyRecoverValueTask(
+                const TSharedPtr<FStaminaAccessTokenDomain>& Self,
+                const Request::FVerifyStaminaRecoverValueRequestPtr Request
+            );
+
+            FVerifyRecoverValueTask(
+                const FVerifyRecoverValueTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Stamina::Domain::Model::FStaminaAccessTokenDomain>> Result
+            ) override;
+        };
+        friend FVerifyRecoverValueTask;
+
+        TSharedPtr<FAsyncTask<FVerifyRecoverValueTask>> VerifyRecoverValue(
+            Request::FVerifyStaminaRecoverValueRequestPtr Request
+        );
+
+        class GS2STAMINA_API FVerifyOverflowValueTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Stamina::Domain::Model::FStaminaAccessTokenDomain>,
+            public TSharedFromThis<FVerifyOverflowValueTask>
+        {
+            const TSharedPtr<FStaminaAccessTokenDomain> Self;
+            const Request::FVerifyStaminaOverflowValueRequestPtr Request;
+        public:
+            explicit FVerifyOverflowValueTask(
+                const TSharedPtr<FStaminaAccessTokenDomain>& Self,
+                const Request::FVerifyStaminaOverflowValueRequestPtr Request
+            );
+
+            FVerifyOverflowValueTask(
+                const FVerifyOverflowValueTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Stamina::Domain::Model::FStaminaAccessTokenDomain>> Result
+            ) override;
+        };
+        friend FVerifyOverflowValueTask;
+
+        TSharedPtr<FAsyncTask<FVerifyOverflowValueTask>> VerifyOverflowValue(
+            Request::FVerifyStaminaOverflowValueRequestPtr Request
+        );
+
         static FString CreateCacheParentKey(
             TOptional<FString> NamespaceName,
             TOptional<FString> UserId,

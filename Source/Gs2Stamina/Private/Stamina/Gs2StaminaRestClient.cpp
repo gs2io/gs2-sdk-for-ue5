@@ -550,6 +550,96 @@ namespace Gs2::Stamina
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::Rest::FVerifyStaminaValueTask>> FGs2StaminaRestClient::VerifyStaminaValue(
+        const Request::FVerifyStaminaValueRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FVerifyStaminaValueTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FVerifyStaminaValueByUserIdTask>> FGs2StaminaRestClient::VerifyStaminaValueByUserId(
+        const Request::FVerifyStaminaValueByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FVerifyStaminaValueByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FVerifyStaminaMaxValueTask>> FGs2StaminaRestClient::VerifyStaminaMaxValue(
+        const Request::FVerifyStaminaMaxValueRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FVerifyStaminaMaxValueTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FVerifyStaminaMaxValueByUserIdTask>> FGs2StaminaRestClient::VerifyStaminaMaxValueByUserId(
+        const Request::FVerifyStaminaMaxValueByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FVerifyStaminaMaxValueByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FVerifyStaminaRecoverIntervalMinutesTask>> FGs2StaminaRestClient::VerifyStaminaRecoverIntervalMinutes(
+        const Request::FVerifyStaminaRecoverIntervalMinutesRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FVerifyStaminaRecoverIntervalMinutesTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FVerifyStaminaRecoverIntervalMinutesByUserIdTask>> FGs2StaminaRestClient::VerifyStaminaRecoverIntervalMinutesByUserId(
+        const Request::FVerifyStaminaRecoverIntervalMinutesByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FVerifyStaminaRecoverIntervalMinutesByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FVerifyStaminaRecoverValueTask>> FGs2StaminaRestClient::VerifyStaminaRecoverValue(
+        const Request::FVerifyStaminaRecoverValueRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FVerifyStaminaRecoverValueTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FVerifyStaminaRecoverValueByUserIdTask>> FGs2StaminaRestClient::VerifyStaminaRecoverValueByUserId(
+        const Request::FVerifyStaminaRecoverValueByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FVerifyStaminaRecoverValueByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FVerifyStaminaOverflowValueTask>> FGs2StaminaRestClient::VerifyStaminaOverflowValue(
+        const Request::FVerifyStaminaOverflowValueRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FVerifyStaminaOverflowValueTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FVerifyStaminaOverflowValueByUserIdTask>> FGs2StaminaRestClient::VerifyStaminaOverflowValueByUserId(
+        const Request::FVerifyStaminaOverflowValueByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FVerifyStaminaOverflowValueByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::Rest::FRecoverStaminaByStampSheetTask>> FGs2StaminaRestClient::RecoverStaminaByStampSheet(
         const Request::FRecoverStaminaByStampSheetRequestPtr Request) const
     {
@@ -608,6 +698,51 @@ namespace Gs2::Stamina
         const Request::FConsumeStaminaByStampTaskRequestPtr Request) const
     {
         return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FConsumeStaminaByStampTaskTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FVerifyStaminaValueByStampTaskTask>> FGs2StaminaRestClient::VerifyStaminaValueByStampTask(
+        const Request::FVerifyStaminaValueByStampTaskRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FVerifyStaminaValueByStampTaskTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FVerifyStaminaMaxValueByStampTaskTask>> FGs2StaminaRestClient::VerifyStaminaMaxValueByStampTask(
+        const Request::FVerifyStaminaMaxValueByStampTaskRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FVerifyStaminaMaxValueByStampTaskTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FVerifyStaminaRecoverIntervalMinutesByStampTaskTask>> FGs2StaminaRestClient::VerifyStaminaRecoverIntervalMinutesByStampTask(
+        const Request::FVerifyStaminaRecoverIntervalMinutesByStampTaskRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FVerifyStaminaRecoverIntervalMinutesByStampTaskTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FVerifyStaminaRecoverValueByStampTaskTask>> FGs2StaminaRestClient::VerifyStaminaRecoverValueByStampTask(
+        const Request::FVerifyStaminaRecoverValueByStampTaskRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FVerifyStaminaRecoverValueByStampTaskTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FVerifyStaminaOverflowValueByStampTaskTask>> FGs2StaminaRestClient::VerifyStaminaOverflowValueByStampTask(
+        const Request::FVerifyStaminaOverflowValueByStampTaskRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FVerifyStaminaOverflowValueByStampTaskTask>>(
             Session,
             Request
         );

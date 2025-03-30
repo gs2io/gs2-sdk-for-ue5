@@ -20,7 +20,7 @@ namespace Gs2::UE5::Money2::Model
 {
 
     TSharedPtr<FEzDepositTransaction> FEzDepositTransaction::WithPrice(
-        const TOptional<float> Price
+        const TOptional<double> Price
     )
     {
         this->PriceValue = Price;
@@ -42,7 +42,7 @@ namespace Gs2::UE5::Money2::Model
         this->CountValue = Count;
         return SharedThis(this);
     }
-    TOptional<float> FEzDepositTransaction::GetPrice() const
+    TOptional<double> FEzDepositTransaction::GetPrice() const
     {
         return PriceValue;
     }

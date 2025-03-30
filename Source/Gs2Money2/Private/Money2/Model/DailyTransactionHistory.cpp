@@ -24,8 +24,8 @@ namespace Gs2::Money2::Model
         MonthValue(TOptional<int32>()),
         DayValue(TOptional<int32>()),
         CurrencyValue(TOptional<FString>()),
-        DepositAmountValue(TOptional<float>()),
-        WithdrawAmountValue(TOptional<float>()),
+        DepositAmountValue(TOptional<double>()),
+        WithdrawAmountValue(TOptional<double>()),
         UpdatedAtValue(TOptional<int64>()),
         RevisionValue(TOptional<int64>())
     {
@@ -87,7 +87,7 @@ namespace Gs2::Money2::Model
     }
 
     TSharedPtr<FDailyTransactionHistory> FDailyTransactionHistory::WithDepositAmount(
-        const TOptional<float> DepositAmount
+        const TOptional<double> DepositAmount
     )
     {
         this->DepositAmountValue = DepositAmount;
@@ -95,7 +95,7 @@ namespace Gs2::Money2::Model
     }
 
     TSharedPtr<FDailyTransactionHistory> FDailyTransactionHistory::WithWithdrawAmount(
-        const TOptional<float> WithdrawAmount
+        const TOptional<double> WithdrawAmount
     )
     {
         this->WithdrawAmountValue = WithdrawAmount;
@@ -164,7 +164,7 @@ namespace Gs2::Money2::Model
     {
         return CurrencyValue;
     }
-    TOptional<float> FDailyTransactionHistory::GetDepositAmount() const
+    TOptional<double> FDailyTransactionHistory::GetDepositAmount() const
     {
         return DepositAmountValue;
     }
@@ -177,7 +177,7 @@ namespace Gs2::Money2::Model
         }
         return FString::Printf(TEXT("%f"), DepositAmountValue.GetValue());
     }
-    TOptional<float> FDailyTransactionHistory::GetWithdrawAmount() const
+    TOptional<double> FDailyTransactionHistory::GetWithdrawAmount() const
     {
         return WithdrawAmountValue;
     }
@@ -345,24 +345,24 @@ namespace Gs2::Money2::Model
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithDepositAmount(Data->HasField(ANSI_TO_TCHAR("depositAmount")) ? [Data]() -> TOptional<float>
+            ->WithDepositAmount(Data->HasField(ANSI_TO_TCHAR("depositAmount")) ? [Data]() -> TOptional<double>
                 {
-                    float v;
+                    double v;
                     if (Data->TryGetNumberField(ANSI_TO_TCHAR("depositAmount"), v))
                     {
                         return TOptional(v);
                     }
-                    return TOptional<float>();
-                }() : TOptional<float>())
-            ->WithWithdrawAmount(Data->HasField(ANSI_TO_TCHAR("withdrawAmount")) ? [Data]() -> TOptional<float>
+                    return TOptional<double>();
+                }() : TOptional<double>())
+            ->WithWithdrawAmount(Data->HasField(ANSI_TO_TCHAR("withdrawAmount")) ? [Data]() -> TOptional<double>
                 {
-                    float v;
+                    double v;
                     if (Data->TryGetNumberField(ANSI_TO_TCHAR("withdrawAmount"), v))
                     {
                         return TOptional(v);
                     }
-                    return TOptional<float>();
-                }() : TOptional<float>())
+                    return TOptional<double>();
+                }() : TOptional<double>())
             ->WithUpdatedAt(Data->HasField(ANSI_TO_TCHAR("updatedAt")) ? [Data]() -> TOptional<int64>
                 {
                     int64 v;
