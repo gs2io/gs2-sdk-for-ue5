@@ -86,10 +86,6 @@
 #include "Task/WebSocket/BatchUpdateMemberRoleTask.h"
 #include "Request/BatchUpdateMemberRoleByGuildNameRequest.h"
 #include "Task/WebSocket/BatchUpdateMemberRoleByGuildNameTask.h"
-#include "Request/UpdateMemberMetadataRequest.h"
-#include "Task/WebSocket/UpdateMemberMetadataTask.h"
-#include "Request/UpdateMemberMetadataByUserIdRequest.h"
-#include "Task/WebSocket/UpdateMemberMetadataByUserIdTask.h"
 #include "Request/DeleteGuildRequest.h"
 #include "Task/WebSocket/DeleteGuildTask.h"
 #include "Request/DeleteGuildByGuildNameRequest.h"
@@ -132,6 +128,10 @@
 #include "Task/WebSocket/GetJoinedGuildTask.h"
 #include "Request/GetJoinedGuildByUserIdRequest.h"
 #include "Task/WebSocket/GetJoinedGuildByUserIdTask.h"
+#include "Request/UpdateMemberMetadataRequest.h"
+#include "Task/WebSocket/UpdateMemberMetadataTask.h"
+#include "Request/UpdateMemberMetadataByUserIdRequest.h"
+#include "Task/WebSocket/UpdateMemberMetadataByUserIdTask.h"
 #include "Request/WithdrawalRequest.h"
 #include "Task/WebSocket/WithdrawalTask.h"
 #include "Request/WithdrawalByUserIdRequest.h"
@@ -348,14 +348,6 @@ namespace Gs2::Guild
             const Request::FBatchUpdateMemberRoleByGuildNameRequestPtr Request
         ) const;
 
-        TSharedPtr<FAsyncTask<Task::WebSocket::FUpdateMemberMetadataTask>> UpdateMemberMetadata(
-            const Request::FUpdateMemberMetadataRequestPtr Request
-        ) const;
-
-        TSharedPtr<FAsyncTask<Task::WebSocket::FUpdateMemberMetadataByUserIdTask>> UpdateMemberMetadataByUserId(
-            const Request::FUpdateMemberMetadataByUserIdRequestPtr Request
-        ) const;
-
         TSharedPtr<FAsyncTask<Task::WebSocket::FDeleteGuildTask>> DeleteGuild(
             const Request::FDeleteGuildRequestPtr Request
         ) const;
@@ -438,6 +430,14 @@ namespace Gs2::Guild
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FGetJoinedGuildByUserIdTask>> GetJoinedGuildByUserId(
             const Request::FGetJoinedGuildByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FUpdateMemberMetadataTask>> UpdateMemberMetadata(
+            const Request::FUpdateMemberMetadataRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FUpdateMemberMetadataByUserIdTask>> UpdateMemberMetadataByUserId(
+            const Request::FUpdateMemberMetadataByUserIdRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FWithdrawalTask>> Withdrawal(

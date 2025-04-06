@@ -30,6 +30,7 @@ namespace Gs2::Idle::Model
         TOptional<FString> MetadataValue;
         TOptional<int32> RewardIntervalMinutesValue;
         TOptional<int32> DefaultMaximumIdleMinutesValue;
+        TOptional<FString> RewardResetModeValue;
         TSharedPtr<TArray<TSharedPtr<FAcquireActionList>>> AcquireActionsValue;
         TOptional<FString> IdlePeriodScheduleIdValue;
         TOptional<FString> ReceivePeriodScheduleIdValue;
@@ -50,6 +51,7 @@ namespace Gs2::Idle::Model
         TSharedPtr<FCategoryModelMaster> WithMetadata(const TOptional<FString> Metadata);
         TSharedPtr<FCategoryModelMaster> WithRewardIntervalMinutes(const TOptional<int32> RewardIntervalMinutes);
         TSharedPtr<FCategoryModelMaster> WithDefaultMaximumIdleMinutes(const TOptional<int32> DefaultMaximumIdleMinutes);
+        TSharedPtr<FCategoryModelMaster> WithRewardResetMode(const TOptional<FString> RewardResetMode);
         TSharedPtr<FCategoryModelMaster> WithAcquireActions(const TSharedPtr<TArray<TSharedPtr<FAcquireActionList>>> AcquireActions);
         TSharedPtr<FCategoryModelMaster> WithIdlePeriodScheduleId(const TOptional<FString> IdlePeriodScheduleId);
         TSharedPtr<FCategoryModelMaster> WithReceivePeriodScheduleId(const TOptional<FString> ReceivePeriodScheduleId);
@@ -65,6 +67,7 @@ namespace Gs2::Idle::Model
         FString GetRewardIntervalMinutesString() const;
         TOptional<int32> GetDefaultMaximumIdleMinutes() const;
         FString GetDefaultMaximumIdleMinutesString() const;
+        TOptional<FString> GetRewardResetMode() const;
         TSharedPtr<TArray<TSharedPtr<FAcquireActionList>>> GetAcquireActions() const;
         TOptional<FString> GetIdlePeriodScheduleId() const;
         TOptional<FString> GetReceivePeriodScheduleId() const;

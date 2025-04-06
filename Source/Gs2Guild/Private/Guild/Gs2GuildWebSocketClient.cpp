@@ -325,24 +325,6 @@ namespace Gs2::Guild
         );
     }
 
-    TSharedPtr<FAsyncTask<Task::WebSocket::FUpdateMemberMetadataTask>> FGs2GuildWebSocketClient::UpdateMemberMetadata(
-        const Request::FUpdateMemberMetadataRequestPtr Request) const
-    {
-        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FUpdateMemberMetadataTask>>(
-            Session,
-            Request
-        );
-    }
-
-    TSharedPtr<FAsyncTask<Task::WebSocket::FUpdateMemberMetadataByUserIdTask>> FGs2GuildWebSocketClient::UpdateMemberMetadataByUserId(
-        const Request::FUpdateMemberMetadataByUserIdRequestPtr Request) const
-    {
-        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FUpdateMemberMetadataByUserIdTask>>(
-            Session,
-            Request
-        );
-    }
-
     TSharedPtr<FAsyncTask<Task::WebSocket::FDeleteGuildTask>> FGs2GuildWebSocketClient::DeleteGuild(
         const Request::FDeleteGuildRequestPtr Request) const
     {
@@ -527,6 +509,24 @@ namespace Gs2::Guild
         const Request::FGetJoinedGuildByUserIdRequestPtr Request) const
     {
         return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FGetJoinedGuildByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FUpdateMemberMetadataTask>> FGs2GuildWebSocketClient::UpdateMemberMetadata(
+        const Request::FUpdateMemberMetadataRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FUpdateMemberMetadataTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FUpdateMemberMetadataByUserIdTask>> FGs2GuildWebSocketClient::UpdateMemberMetadataByUserId(
+        const Request::FUpdateMemberMetadataByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FUpdateMemberMetadataByUserIdTask>>(
             Session,
             Request
         );

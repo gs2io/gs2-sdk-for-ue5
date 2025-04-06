@@ -86,10 +86,6 @@
 #include "Task/Rest/BatchUpdateMemberRoleTask.h"
 #include "Request/BatchUpdateMemberRoleByGuildNameRequest.h"
 #include "Task/Rest/BatchUpdateMemberRoleByGuildNameTask.h"
-#include "Request/UpdateMemberMetadataRequest.h"
-#include "Task/Rest/UpdateMemberMetadataTask.h"
-#include "Request/UpdateMemberMetadataByUserIdRequest.h"
-#include "Task/Rest/UpdateMemberMetadataByUserIdTask.h"
 #include "Request/DeleteGuildRequest.h"
 #include "Task/Rest/DeleteGuildTask.h"
 #include "Request/DeleteGuildByGuildNameRequest.h"
@@ -132,6 +128,10 @@
 #include "Task/Rest/GetJoinedGuildTask.h"
 #include "Request/GetJoinedGuildByUserIdRequest.h"
 #include "Task/Rest/GetJoinedGuildByUserIdTask.h"
+#include "Request/UpdateMemberMetadataRequest.h"
+#include "Task/Rest/UpdateMemberMetadataTask.h"
+#include "Request/UpdateMemberMetadataByUserIdRequest.h"
+#include "Task/Rest/UpdateMemberMetadataByUserIdTask.h"
 #include "Request/WithdrawalRequest.h"
 #include "Task/Rest/WithdrawalTask.h"
 #include "Request/WithdrawalByUserIdRequest.h"
@@ -348,14 +348,6 @@ namespace Gs2::Guild
             const Request::FBatchUpdateMemberRoleByGuildNameRequestPtr Request
         ) const;
 
-        TSharedPtr<FAsyncTask<Task::Rest::FUpdateMemberMetadataTask>> UpdateMemberMetadata(
-            const Request::FUpdateMemberMetadataRequestPtr Request
-        ) const;
-
-        TSharedPtr<FAsyncTask<Task::Rest::FUpdateMemberMetadataByUserIdTask>> UpdateMemberMetadataByUserId(
-            const Request::FUpdateMemberMetadataByUserIdRequestPtr Request
-        ) const;
-
         TSharedPtr<FAsyncTask<Task::Rest::FDeleteGuildTask>> DeleteGuild(
             const Request::FDeleteGuildRequestPtr Request
         ) const;
@@ -438,6 +430,14 @@ namespace Gs2::Guild
 
         TSharedPtr<FAsyncTask<Task::Rest::FGetJoinedGuildByUserIdTask>> GetJoinedGuildByUserId(
             const Request::FGetJoinedGuildByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FUpdateMemberMetadataTask>> UpdateMemberMetadata(
+            const Request::FUpdateMemberMetadataRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FUpdateMemberMetadataByUserIdTask>> UpdateMemberMetadataByUserId(
+            const Request::FUpdateMemberMetadataByUserIdRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::Rest::FWithdrawalTask>> Withdrawal(

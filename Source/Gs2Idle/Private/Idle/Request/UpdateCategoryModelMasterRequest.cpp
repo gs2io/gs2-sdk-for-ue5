@@ -25,6 +25,7 @@ namespace Gs2::Idle::Request
         MetadataValue(TOptional<FString>()),
         RewardIntervalMinutesValue(TOptional<int32>()),
         DefaultMaximumIdleMinutesValue(TOptional<int32>()),
+        RewardResetModeValue(TOptional<FString>()),
         AcquireActionsValue(nullptr),
         IdlePeriodScheduleIdValue(TOptional<FString>()),
         ReceivePeriodScheduleIdValue(TOptional<FString>())
@@ -40,6 +41,7 @@ namespace Gs2::Idle::Request
         MetadataValue(From.MetadataValue),
         RewardIntervalMinutesValue(From.RewardIntervalMinutesValue),
         DefaultMaximumIdleMinutesValue(From.DefaultMaximumIdleMinutesValue),
+        RewardResetModeValue(From.RewardResetModeValue),
         AcquireActionsValue(From.AcquireActionsValue),
         IdlePeriodScheduleIdValue(From.IdlePeriodScheduleIdValue),
         ReceivePeriodScheduleIdValue(From.ReceivePeriodScheduleIdValue)
@@ -99,6 +101,14 @@ namespace Gs2::Idle::Request
     )
     {
         this->DefaultMaximumIdleMinutesValue = DefaultMaximumIdleMinutes;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FUpdateCategoryModelMasterRequest> FUpdateCategoryModelMasterRequest::WithRewardResetMode(
+        const TOptional<FString> RewardResetMode
+    )
+    {
+        this->RewardResetModeValue = RewardResetMode;
         return SharedThis(this);
     }
 
@@ -177,6 +187,11 @@ namespace Gs2::Idle::Request
             return FString("null");
         }
         return FString::Printf(TEXT("%d"), DefaultMaximumIdleMinutesValue.GetValue());
+    }
+
+    TOptional<FString> FUpdateCategoryModelMasterRequest::GetRewardResetMode() const
+    {
+        return RewardResetModeValue;
     }
 
     TSharedPtr<TArray<TSharedPtr<Model::FAcquireActionList>>> FUpdateCategoryModelMasterRequest::GetAcquireActions() const
@@ -259,6 +274,15 @@ namespace Gs2::Idle::Request
                   }
                   return TOptional<int32>();
               }() : TOptional<int32>())
+            ->WithRewardResetMode(Data->HasField(ANSI_TO_TCHAR("rewardResetMode")) ? [Data]() -> TOptional<FString>
+              {
+                  FString v("");
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("rewardResetMode"), v))
+                  {
+                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                  }
+                  return TOptional<FString>();
+              }() : TOptional<FString>())
           ->WithAcquireActions(Data->HasField(ANSI_TO_TCHAR("acquireActions")) ? [Data]() -> TSharedPtr<TArray<Model::FAcquireActionListPtr>>
               {
                   auto v = MakeShared<TArray<Model::FAcquireActionListPtr>>();
@@ -321,6 +345,10 @@ namespace Gs2::Idle::Request
         if (DefaultMaximumIdleMinutesValue.IsSet())
         {
             JsonRootObject->SetNumberField("defaultMaximumIdleMinutes", DefaultMaximumIdleMinutesValue.GetValue());
+        }
+        if (RewardResetModeValue.IsSet())
+        {
+            JsonRootObject->SetStringField("rewardResetMode", RewardResetModeValue.GetValue());
         }
         if (AcquireActionsValue != nullptr && AcquireActionsValue.IsValid())
         {

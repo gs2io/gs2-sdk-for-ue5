@@ -105,6 +105,10 @@ namespace Gs2::Idle::Task::Rest
             {
                 JsonRootObject->SetNumberField("defaultMaximumIdleMinutes", this->Request->GetDefaultMaximumIdleMinutes().GetValue());
             }
+            if (this->Request->GetRewardResetMode().IsSet())
+            {
+                JsonRootObject->SetStringField("rewardResetMode", this->Request->GetRewardResetMode().GetValue());
+            }
             if (this->Request->GetAcquireActions() != nullptr && this->Request->GetAcquireActions().IsValid())
             {
                 TArray<TSharedPtr<FJsonValue>> v;

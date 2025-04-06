@@ -161,29 +161,6 @@ namespace Gs2::UE5::Guild::Domain::Model
             FString RoleName
         );
 
-        class EZGS2_API FUpdateMemberMetadataTask :
-            public Gs2::Core::Util::TGs2Future<Gs2::UE5::Guild::Domain::Model::FEzGuildGameSessionDomain>,
-            public TSharedFromThis<FUpdateMemberMetadataTask>
-        {
-            TSharedPtr<FEzGuildGameSessionDomain> Self;
-            TOptional<FString> Metadata;
-
-        public:
-            explicit FUpdateMemberMetadataTask(
-                TSharedPtr<FEzGuildGameSessionDomain> Self,
-                TOptional<FString> Metadata = TOptional<FString>()
-            );
-
-            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-                TSharedPtr<TSharedPtr<Gs2::UE5::Guild::Domain::Model::FEzGuildGameSessionDomain>> Result
-            ) override;
-        };
-        friend FUpdateMemberMetadataTask;
-
-        TSharedPtr<FAsyncTask<FUpdateMemberMetadataTask>> UpdateMemberMetadata(
-            TOptional<FString> Metadata = TOptional<FString>()
-        );
-
         class EZGS2_API FDeleteGuildTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::Guild::Domain::Model::FEzGuildGameSessionDomain>,
             public TSharedFromThis<FDeleteGuildTask>

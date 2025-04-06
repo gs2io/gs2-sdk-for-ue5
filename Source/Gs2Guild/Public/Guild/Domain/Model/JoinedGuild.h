@@ -123,6 +123,32 @@ namespace Gs2::Guild::Domain::Model
             Request::FGetJoinedGuildByUserIdRequestPtr Request
         );
 
+        class GS2GUILD_API FUpdateMemberMetadataTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Guild::Domain::Model::FGuildDomain>,
+            public TSharedFromThis<FUpdateMemberMetadataTask>
+        {
+            const TSharedPtr<FJoinedGuildDomain> Self;
+            const Request::FUpdateMemberMetadataByUserIdRequestPtr Request;
+        public:
+            explicit FUpdateMemberMetadataTask(
+                const TSharedPtr<FJoinedGuildDomain>& Self,
+                const Request::FUpdateMemberMetadataByUserIdRequestPtr Request
+            );
+
+            FUpdateMemberMetadataTask(
+                const FUpdateMemberMetadataTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Guild::Domain::Model::FGuildDomain>> Result
+            ) override;
+        };
+        friend FUpdateMemberMetadataTask;
+
+        TSharedPtr<FAsyncTask<FUpdateMemberMetadataTask>> UpdateMemberMetadata(
+            Request::FUpdateMemberMetadataByUserIdRequestPtr Request
+        );
+
         class GS2GUILD_API FWithdrawalTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Guild::Domain::Model::FJoinedGuildDomain>,
             public TSharedFromThis<FWithdrawalTask>

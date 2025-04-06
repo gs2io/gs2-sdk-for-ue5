@@ -51,12 +51,12 @@ namespace Gs2::Guild::Task::WebSocket
             Session->Credential()->ClientId(),
             Session->Credential()->ProjectToken(),
             "guild",
-            "guild",
+            "joinedGuild",
             "updateMemberMetadata"
         );
         Session->Send(RequestPayload);
 
-        UE_LOG(Gs2Log, VeryVerbose, TEXT("[%s:%s:%s] %s"), TEXT("guild"), TEXT("guild"), TEXT("updateMemberMetadata"), ToCStr(RequestPayload->Payload()));
+        UE_LOG(Gs2Log, VeryVerbose, TEXT("[%s:%s:%s] %s"), TEXT("guild"), TEXT("joinedGuild"), TEXT("updateMemberMetadata"), ToCStr(RequestPayload->Payload()));
 
         while (!Session->IsConnected() || !Session->IsComplete(RequestPayload->TaskId()))
         {

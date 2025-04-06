@@ -58,6 +58,29 @@ namespace Gs2::UE5::Guild::Domain::Model
             Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
 
+        class EZGS2_API FUpdateMemberMetadataTask :
+            public Gs2::Core::Util::TGs2Future<Gs2::UE5::Guild::Domain::Model::FEzGuildGameSessionDomain>,
+            public TSharedFromThis<FUpdateMemberMetadataTask>
+        {
+            TSharedPtr<FEzJoinedGuildGameSessionDomain> Self;
+            TOptional<FString> Metadata;
+
+        public:
+            explicit FUpdateMemberMetadataTask(
+                TSharedPtr<FEzJoinedGuildGameSessionDomain> Self,
+                TOptional<FString> Metadata = TOptional<FString>()
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::UE5::Guild::Domain::Model::FEzGuildGameSessionDomain>> Result
+            ) override;
+        };
+        friend FUpdateMemberMetadataTask;
+
+        TSharedPtr<FAsyncTask<FUpdateMemberMetadataTask>> UpdateMemberMetadata(
+            TOptional<FString> Metadata = TOptional<FString>()
+        );
+
         class EZGS2_API FWithdrawGuildTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::Guild::Domain::Model::FEzJoinedGuildGameSessionDomain>,
             public TSharedFromThis<FWithdrawGuildTask>

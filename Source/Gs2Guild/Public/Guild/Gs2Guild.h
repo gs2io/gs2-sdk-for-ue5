@@ -245,18 +245,6 @@
 #include "Task/Rest/BatchUpdateMemberRoleByGuildNameTask.h"
 #include "Task/WebSocket/BatchUpdateMemberRoleByGuildNameTask.h"
 
-// UpdateMemberMetadata
-#include "Request/UpdateMemberMetadataRequest.h"
-#include "Result/UpdateMemberMetadataResult.h"
-#include "Task/Rest/UpdateMemberMetadataTask.h"
-#include "Task/WebSocket/UpdateMemberMetadataTask.h"
-
-// UpdateMemberMetadataByUserId
-#include "Request/UpdateMemberMetadataByUserIdRequest.h"
-#include "Result/UpdateMemberMetadataByUserIdResult.h"
-#include "Task/Rest/UpdateMemberMetadataByUserIdTask.h"
-#include "Task/WebSocket/UpdateMemberMetadataByUserIdTask.h"
-
 // DeleteGuild
 #include "Request/DeleteGuildRequest.h"
 #include "Result/DeleteGuildResult.h"
@@ -382,6 +370,18 @@
 #include "Result/GetJoinedGuildByUserIdResult.h"
 #include "Task/Rest/GetJoinedGuildByUserIdTask.h"
 #include "Task/WebSocket/GetJoinedGuildByUserIdTask.h"
+
+// UpdateMemberMetadata
+#include "Request/UpdateMemberMetadataRequest.h"
+#include "Result/UpdateMemberMetadataResult.h"
+#include "Task/Rest/UpdateMemberMetadataTask.h"
+#include "Task/WebSocket/UpdateMemberMetadataTask.h"
+
+// UpdateMemberMetadataByUserId
+#include "Request/UpdateMemberMetadataByUserIdRequest.h"
+#include "Result/UpdateMemberMetadataByUserIdResult.h"
+#include "Task/Rest/UpdateMemberMetadataByUserIdTask.h"
+#include "Task/WebSocket/UpdateMemberMetadataByUserIdTask.h"
 
 // Withdrawal
 #include "Request/WithdrawalRequest.h"

@@ -31,7 +31,6 @@ namespace Gs2::Script::Request
         TOptional<FString> UserIdValue;
         TOptional<FString> ArgsValue;
         TSharedPtr<Model::FRandomStatus> RandomStatusValue;
-        TOptional<bool> ForceUseDistributorValue;
         TOptional<FString> TimeOffsetTokenValue;
         TOptional<FString> DuplicationAvoiderValue;
         
@@ -48,7 +47,6 @@ namespace Gs2::Script::Request
         TSharedPtr<FInvokeScriptRequest> WithUserId(const TOptional<FString> UserId);
         TSharedPtr<FInvokeScriptRequest> WithArgs(const TOptional<FString> Args);
         TSharedPtr<FInvokeScriptRequest> WithRandomStatus(const TSharedPtr<Model::FRandomStatus> RandomStatus);
-        TSharedPtr<FInvokeScriptRequest> WithForceUseDistributor(const TOptional<bool> ForceUseDistributor);
         TSharedPtr<FInvokeScriptRequest> WithTimeOffsetToken(const TOptional<FString> TimeOffsetToken);
         TSharedPtr<FInvokeScriptRequest> WithDuplicationAvoider(const TOptional<FString> DuplicationAvoider);
 
@@ -57,8 +55,6 @@ namespace Gs2::Script::Request
         TOptional<FString> GetUserId() const;
         TOptional<FString> GetArgs() const;
         TSharedPtr<Model::FRandomStatus> GetRandomStatus() const;
-        TOptional<bool> GetForceUseDistributor() const;
-        FString GetForceUseDistributorString() const;
         TOptional<FString> GetTimeOffsetToken() const;
         TOptional<FString> GetDuplicationAvoider() const;
 

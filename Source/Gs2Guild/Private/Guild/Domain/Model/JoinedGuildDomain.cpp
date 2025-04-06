@@ -119,6 +119,49 @@ namespace Gs2::Guild::Domain::Model
         return Gs2::Core::Util::New<FAsyncTask<FGetTask>>(this->AsShared(), Request);
     }
 
+    FJoinedGuildDomain::FUpdateMemberMetadataTask::FUpdateMemberMetadataTask(
+        const TSharedPtr<FJoinedGuildDomain>& Self,
+        const Request::FUpdateMemberMetadataByUserIdRequestPtr Request
+    ): Self(Self), Request(Request)
+    {
+
+    }
+
+    FJoinedGuildDomain::FUpdateMemberMetadataTask::FUpdateMemberMetadataTask(
+        const FUpdateMemberMetadataTask& From
+    ): TGs2Future(From), Self(From.Self), Request(From.Request)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FJoinedGuildDomain::FUpdateMemberMetadataTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::Guild::Domain::Model::FGuildDomain>> Result
+    )
+    {
+        Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
+            ->WithNamespaceName(Self->NamespaceName)
+            ->WithGuildModelName(Self->GuildModelName)
+            ->WithGuildName(Self->GuildName)
+            ->WithUserId(Self->UserId);
+        auto Domain = MakeShared<Gs2::Guild::Domain::Model::FGuildDomain>(
+            Self->Gs2,
+            Self->Service,
+            Request->GetNamespaceName(),
+            ResultModel->GetItem()->GetGuildModelName(),
+            ResultModel->GetItem()->GetName(),
+            Request->GetUserId()
+        );
+
+        *Result = Domain;
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FJoinedGuildDomain::FUpdateMemberMetadataTask>> FJoinedGuildDomain::UpdateMemberMetadata(
+        Request::FUpdateMemberMetadataByUserIdRequestPtr Request
+    ) {
+        return Gs2::Core::Util::New<FAsyncTask<FUpdateMemberMetadataTask>>(this->AsShared(), Request);
+    }
+
     FJoinedGuildDomain::FWithdrawalTask::FWithdrawalTask(
         const TSharedPtr<FJoinedGuildDomain>& Self,
         const Request::FWithdrawalByUserIdRequestPtr Request

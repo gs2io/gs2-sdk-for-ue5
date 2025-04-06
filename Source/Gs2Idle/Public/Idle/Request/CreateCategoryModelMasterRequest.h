@@ -33,6 +33,7 @@ namespace Gs2::Idle::Request
         TOptional<FString> MetadataValue;
         TOptional<int32> RewardIntervalMinutesValue;
         TOptional<int32> DefaultMaximumIdleMinutesValue;
+        TOptional<FString> RewardResetModeValue;
         TSharedPtr<TArray<TSharedPtr<Model::FAcquireActionList>>> AcquireActionsValue;
         TOptional<FString> IdlePeriodScheduleIdValue;
         TOptional<FString> ReceivePeriodScheduleIdValue;
@@ -52,6 +53,7 @@ namespace Gs2::Idle::Request
         TSharedPtr<FCreateCategoryModelMasterRequest> WithMetadata(const TOptional<FString> Metadata);
         TSharedPtr<FCreateCategoryModelMasterRequest> WithRewardIntervalMinutes(const TOptional<int32> RewardIntervalMinutes);
         TSharedPtr<FCreateCategoryModelMasterRequest> WithDefaultMaximumIdleMinutes(const TOptional<int32> DefaultMaximumIdleMinutes);
+        TSharedPtr<FCreateCategoryModelMasterRequest> WithRewardResetMode(const TOptional<FString> RewardResetMode);
         TSharedPtr<FCreateCategoryModelMasterRequest> WithAcquireActions(const TSharedPtr<TArray<TSharedPtr<Model::FAcquireActionList>>> AcquireActions);
         TSharedPtr<FCreateCategoryModelMasterRequest> WithIdlePeriodScheduleId(const TOptional<FString> IdlePeriodScheduleId);
         TSharedPtr<FCreateCategoryModelMasterRequest> WithReceivePeriodScheduleId(const TOptional<FString> ReceivePeriodScheduleId);
@@ -64,7 +66,8 @@ namespace Gs2::Idle::Request
         TOptional<int32> GetRewardIntervalMinutes() const;
         FString GetRewardIntervalMinutesString() const;
         TOptional<int32> GetDefaultMaximumIdleMinutes() const;
-        FString GetDefaultMaximumIdleMinutesString() const;TSharedPtr<TArray<TSharedPtr<Model::FAcquireActionList>>> GetAcquireActions() const;
+        FString GetDefaultMaximumIdleMinutesString() const;
+        TOptional<FString> GetRewardResetMode() const;TSharedPtr<TArray<TSharedPtr<Model::FAcquireActionList>>> GetAcquireActions() const;
         TOptional<FString> GetIdlePeriodScheduleId() const;
         TOptional<FString> GetReceivePeriodScheduleId() const;
 

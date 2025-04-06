@@ -325,24 +325,6 @@ namespace Gs2::Guild
         );
     }
 
-    TSharedPtr<FAsyncTask<Task::Rest::FUpdateMemberMetadataTask>> FGs2GuildRestClient::UpdateMemberMetadata(
-        const Request::FUpdateMemberMetadataRequestPtr Request) const
-    {
-        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FUpdateMemberMetadataTask>>(
-            Session,
-            Request
-        );
-    }
-
-    TSharedPtr<FAsyncTask<Task::Rest::FUpdateMemberMetadataByUserIdTask>> FGs2GuildRestClient::UpdateMemberMetadataByUserId(
-        const Request::FUpdateMemberMetadataByUserIdRequestPtr Request) const
-    {
-        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FUpdateMemberMetadataByUserIdTask>>(
-            Session,
-            Request
-        );
-    }
-
     TSharedPtr<FAsyncTask<Task::Rest::FDeleteGuildTask>> FGs2GuildRestClient::DeleteGuild(
         const Request::FDeleteGuildRequestPtr Request) const
     {
@@ -527,6 +509,24 @@ namespace Gs2::Guild
         const Request::FGetJoinedGuildByUserIdRequestPtr Request) const
     {
         return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FGetJoinedGuildByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FUpdateMemberMetadataTask>> FGs2GuildRestClient::UpdateMemberMetadata(
+        const Request::FUpdateMemberMetadataRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FUpdateMemberMetadataTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FUpdateMemberMetadataByUserIdTask>> FGs2GuildRestClient::UpdateMemberMetadataByUserId(
+        const Request::FUpdateMemberMetadataByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FUpdateMemberMetadataByUserIdTask>>(
             Session,
             Request
         );

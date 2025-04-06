@@ -51,6 +51,60 @@ namespace Gs2::UE5::Guild::Domain::Model
 
     }
 
+    FEzJoinedGuildGameSessionDomain::FUpdateMemberMetadataTask::FUpdateMemberMetadataTask(
+        TSharedPtr<FEzJoinedGuildGameSessionDomain> Self,
+        TOptional<FString> Metadata
+    ): Self(Self), Metadata(Metadata)
+    {
+
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FEzJoinedGuildGameSessionDomain::FUpdateMemberMetadataTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::UE5::Guild::Domain::Model::FEzGuildGameSessionDomain>> Result
+    )
+    {
+        const auto Future = Self->ConnectionValue->Run(
+            [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
+                const auto Task = Self->Domain->UpdateMemberMetadata(
+                    MakeShared<Gs2::Guild::Request::FUpdateMemberMetadataRequest>()
+                        ->WithMetadata(Metadata)
+                );
+                Task->StartSynchronousTask();
+                if (Task->GetTask().IsError())
+                {
+                    Task->EnsureCompletion();
+                    return Task->GetTask().Error();
+                }
+                *Result = MakeShared<Gs2::UE5::Guild::Domain::Model::FEzGuildGameSessionDomain>(
+                    Task->GetTask().Result(),
+                    Self->GameSession,
+                    Self->ConnectionValue
+                );
+                Task->EnsureCompletion();
+                return nullptr;
+            },
+            nullptr
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            Future->EnsureCompletion();
+            return Future->GetTask().Error();
+        }
+        Future->EnsureCompletion();
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FEzJoinedGuildGameSessionDomain::FUpdateMemberMetadataTask>> FEzJoinedGuildGameSessionDomain::UpdateMemberMetadata(
+        TOptional<FString> Metadata
+    )
+    {
+        return Gs2::Core::Util::New<FAsyncTask<FUpdateMemberMetadataTask>>(
+            this->AsShared(),
+            Metadata
+        );
+    }
+
     FEzJoinedGuildGameSessionDomain::FWithdrawGuildTask::FWithdrawGuildTask(
         TSharedPtr<FEzJoinedGuildGameSessionDomain> Self
     ): Self(Self)
