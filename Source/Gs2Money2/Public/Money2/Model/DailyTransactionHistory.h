@@ -30,6 +30,8 @@ namespace Gs2::Money2::Model
         TOptional<FString> CurrencyValue;
         TOptional<double> DepositAmountValue;
         TOptional<double> WithdrawAmountValue;
+        TOptional<int64> IssueCountValue;
+        TOptional<int64> ConsumeCountValue;
         TOptional<int64> UpdatedAtValue;
         TOptional<int64> RevisionValue;
 
@@ -47,6 +49,8 @@ namespace Gs2::Money2::Model
         TSharedPtr<FDailyTransactionHistory> WithCurrency(const TOptional<FString> Currency);
         TSharedPtr<FDailyTransactionHistory> WithDepositAmount(const TOptional<double> DepositAmount);
         TSharedPtr<FDailyTransactionHistory> WithWithdrawAmount(const TOptional<double> WithdrawAmount);
+        TSharedPtr<FDailyTransactionHistory> WithIssueCount(const TOptional<int64> IssueCount);
+        TSharedPtr<FDailyTransactionHistory> WithConsumeCount(const TOptional<int64> ConsumeCount);
         TSharedPtr<FDailyTransactionHistory> WithUpdatedAt(const TOptional<int64> UpdatedAt);
         TSharedPtr<FDailyTransactionHistory> WithRevision(const TOptional<int64> Revision);
 
@@ -62,6 +66,10 @@ namespace Gs2::Money2::Model
         FString GetDepositAmountString() const;
         TOptional<double> GetWithdrawAmount() const;
         FString GetWithdrawAmountString() const;
+        TOptional<int64> GetIssueCount() const;
+        FString GetIssueCountString() const;
+        TOptional<int64> GetConsumeCount() const;
+        FString GetConsumeCountString() const;
         TOptional<int64> GetUpdatedAt() const;
         FString GetUpdatedAtString() const;
         TOptional<int64> GetRevision() const;

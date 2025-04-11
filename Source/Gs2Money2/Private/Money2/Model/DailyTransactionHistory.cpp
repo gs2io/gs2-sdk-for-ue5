@@ -26,6 +26,8 @@ namespace Gs2::Money2::Model
         CurrencyValue(TOptional<FString>()),
         DepositAmountValue(TOptional<double>()),
         WithdrawAmountValue(TOptional<double>()),
+        IssueCountValue(TOptional<int64>()),
+        ConsumeCountValue(TOptional<int64>()),
         UpdatedAtValue(TOptional<int64>()),
         RevisionValue(TOptional<int64>())
     {
@@ -41,6 +43,8 @@ namespace Gs2::Money2::Model
         CurrencyValue(From.CurrencyValue),
         DepositAmountValue(From.DepositAmountValue),
         WithdrawAmountValue(From.WithdrawAmountValue),
+        IssueCountValue(From.IssueCountValue),
+        ConsumeCountValue(From.ConsumeCountValue),
         UpdatedAtValue(From.UpdatedAtValue),
         RevisionValue(From.RevisionValue)
     {
@@ -99,6 +103,22 @@ namespace Gs2::Money2::Model
     )
     {
         this->WithdrawAmountValue = WithdrawAmount;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FDailyTransactionHistory> FDailyTransactionHistory::WithIssueCount(
+        const TOptional<int64> IssueCount
+    )
+    {
+        this->IssueCountValue = IssueCount;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FDailyTransactionHistory> FDailyTransactionHistory::WithConsumeCount(
+        const TOptional<int64> ConsumeCount
+    )
+    {
+        this->ConsumeCountValue = ConsumeCount;
         return SharedThis(this);
     }
 
@@ -189,6 +209,32 @@ namespace Gs2::Money2::Model
             return FString("null");
         }
         return FString::Printf(TEXT("%f"), WithdrawAmountValue.GetValue());
+    }
+    TOptional<int64> FDailyTransactionHistory::GetIssueCount() const
+    {
+        return IssueCountValue;
+    }
+
+    FString FDailyTransactionHistory::GetIssueCountString() const
+    {
+        if (!IssueCountValue.IsSet())
+        {
+            return FString("null");
+        }
+        return FString::Printf(TEXT("%lld"), IssueCountValue.GetValue());
+    }
+    TOptional<int64> FDailyTransactionHistory::GetConsumeCount() const
+    {
+        return ConsumeCountValue;
+    }
+
+    FString FDailyTransactionHistory::GetConsumeCountString() const
+    {
+        if (!ConsumeCountValue.IsSet())
+        {
+            return FString("null");
+        }
+        return FString::Printf(TEXT("%lld"), ConsumeCountValue.GetValue());
     }
     TOptional<int64> FDailyTransactionHistory::GetUpdatedAt() const
     {
@@ -363,6 +409,24 @@ namespace Gs2::Money2::Model
                     }
                     return TOptional<double>();
                 }() : TOptional<double>())
+            ->WithIssueCount(Data->HasField(ANSI_TO_TCHAR("issueCount")) ? [Data]() -> TOptional<int64>
+                {
+                    int64 v;
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("issueCount"), v))
+                    {
+                        return TOptional(v);
+                    }
+                    return TOptional<int64>();
+                }() : TOptional<int64>())
+            ->WithConsumeCount(Data->HasField(ANSI_TO_TCHAR("consumeCount")) ? [Data]() -> TOptional<int64>
+                {
+                    int64 v;
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("consumeCount"), v))
+                    {
+                        return TOptional(v);
+                    }
+                    return TOptional<int64>();
+                }() : TOptional<int64>())
             ->WithUpdatedAt(Data->HasField(ANSI_TO_TCHAR("updatedAt")) ? [Data]() -> TOptional<int64>
                 {
                     int64 v;
@@ -413,6 +477,14 @@ namespace Gs2::Money2::Model
         if (WithdrawAmountValue.IsSet())
         {
             JsonRootObject->SetNumberField("withdrawAmount", WithdrawAmountValue.GetValue());
+        }
+        if (IssueCountValue.IsSet())
+        {
+            JsonRootObject->SetStringField("issueCount", FString::Printf(TEXT("%lld"), IssueCountValue.GetValue()));
+        }
+        if (ConsumeCountValue.IsSet())
+        {
+            JsonRootObject->SetStringField("consumeCount", FString::Printf(TEXT("%lld"), ConsumeCountValue.GetValue()));
         }
         if (UpdatedAtValue.IsSet())
         {
