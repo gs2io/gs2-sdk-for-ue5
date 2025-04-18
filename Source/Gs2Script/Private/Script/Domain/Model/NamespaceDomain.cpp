@@ -339,6 +339,9 @@ namespace Gs2::Script::Domain::Model
         TSharedPtr<TSharedPtr<Gs2::Script::Domain::Model::FNamespaceDomain>> Result
     )
     {
+        Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
+            ->WithUserId(Self->UserId);
         const auto Domain = Self;
         if (ResultModel != nullptr)
         {

@@ -20,6 +20,7 @@
 
 #include "Core/Domain/Gs2Core.h"
 #include "Auth/Gs2Auth.h"
+#include "Ranking2/Gs2Ranking2.h"
 #include "Ranking2/Domain/Iterator/DescribeNamespacesIterator.h"
 #include "Ranking2/Domain/Iterator/DescribeGlobalRankingModelsIterator.h"
 #include "Ranking2/Domain/Iterator/DescribeGlobalRankingModelMastersIterator.h"
@@ -97,153 +98,124 @@ namespace Gs2::Ranking2::Domain::Model
     class FUserDomain;
     class FUserAccessTokenDomain;
 
-    class GS2RANKING2_API FGlobalRankingModelMasterDomain:
-        public TSharedFromThis<FGlobalRankingModelMasterDomain>
+    class GS2RANKING2_API FGlobalRankingSeasonAccessTokenDomain:
+        public TSharedFromThis<FGlobalRankingSeasonAccessTokenDomain>
     {
         const Core::Domain::FGs2Ptr Gs2;
         const Ranking2::Domain::FGs2Ranking2DomainPtr Service;
         const Gs2::Ranking2::FGs2Ranking2RestClientPtr Client;
 
         public:
+        TOptional<FString> NextPageToken;
+        TOptional<FString> GetNextPageToken() const
+        {
+            return NextPageToken;
+        }
         TOptional<FString> NamespaceName;
         TOptional<FString> RankingName;
+        TOptional<int64> Season;
+        Gs2::Auth::Model::FAccessTokenPtr AccessToken;
+        TOptional<FString> UserId() const { return AccessToken->GetUserId(); }
     private:
 
         FString ParentKey;
 
     public:
 
-        FGlobalRankingModelMasterDomain(
+        FGlobalRankingSeasonAccessTokenDomain(
             const Core::Domain::FGs2Ptr& Gs2,
             const Ranking2::Domain::FGs2Ranking2DomainPtr& Service,
             const TOptional<FString> NamespaceName,
-            const TOptional<FString> RankingName
+            const TOptional<FString> RankingName,
+            const TOptional<int64> Season,
+            const Gs2::Auth::Model::FAccessTokenPtr& AccessToken
             // ReSharper disable once CppMemberInitializersOrder
         );
 
-        FGlobalRankingModelMasterDomain(
-            const FGlobalRankingModelMasterDomain& From
+        FGlobalRankingSeasonAccessTokenDomain(
+            const FGlobalRankingSeasonAccessTokenDomain& From
         );
 
-        class GS2RANKING2_API FGetTask final :
-            public Gs2::Core::Util::TGs2Future<Gs2::Ranking2::Model::FGlobalRankingModelMaster>,
-            public TSharedFromThis<FGetTask>
+        class GS2RANKING2_API FPutGlobalRankingScoreTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Ranking2::Domain::Model::FGlobalRankingScoreAccessTokenDomain>,
+            public TSharedFromThis<FPutGlobalRankingScoreTask>
         {
-            const TSharedPtr<FGlobalRankingModelMasterDomain> Self;
-            const Request::FGetGlobalRankingModelMasterRequestPtr Request;
+            const TSharedPtr<FGlobalRankingSeasonAccessTokenDomain> Self;
+            const Request::FPutGlobalRankingScoreRequestPtr Request;
         public:
-            explicit FGetTask(
-                const TSharedPtr<FGlobalRankingModelMasterDomain>& Self,
-                const Request::FGetGlobalRankingModelMasterRequestPtr Request
+            explicit FPutGlobalRankingScoreTask(
+                const TSharedPtr<FGlobalRankingSeasonAccessTokenDomain>& Self,
+                const Request::FPutGlobalRankingScoreRequestPtr Request
             );
 
-            FGetTask(
-                const FGetTask& From
+            FPutGlobalRankingScoreTask(
+                const FPutGlobalRankingScoreTask& From
             );
 
             virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-                TSharedPtr<TSharedPtr<Gs2::Ranking2::Model::FGlobalRankingModelMaster>> Result
+                TSharedPtr<TSharedPtr<Gs2::Ranking2::Domain::Model::FGlobalRankingScoreAccessTokenDomain>> Result
             ) override;
         };
-        friend FGetTask;
+        friend FPutGlobalRankingScoreTask;
 
-        TSharedPtr<FAsyncTask<FGetTask>> Get(
-            Request::FGetGlobalRankingModelMasterRequestPtr Request
+        TSharedPtr<FAsyncTask<FPutGlobalRankingScoreTask>> PutGlobalRankingScore(
+            Request::FPutGlobalRankingScoreRequestPtr Request
         );
 
-        class GS2RANKING2_API FUpdateTask final :
-            public Gs2::Core::Util::TGs2Future<Gs2::Ranking2::Domain::Model::FGlobalRankingModelMasterDomain>,
-            public TSharedFromThis<FUpdateTask>
-        {
-            const TSharedPtr<FGlobalRankingModelMasterDomain> Self;
-            const Request::FUpdateGlobalRankingModelMasterRequestPtr Request;
-        public:
-            explicit FUpdateTask(
-                const TSharedPtr<FGlobalRankingModelMasterDomain>& Self,
-                const Request::FUpdateGlobalRankingModelMasterRequestPtr Request
-            );
+        Gs2::Ranking2::Domain::Iterator::FDescribeGlobalRankingScoresIteratorPtr GlobalRankingScores(
+        ) const;
 
-            FUpdateTask(
-                const FUpdateTask& From
-            );
-
-            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-                TSharedPtr<TSharedPtr<Gs2::Ranking2::Domain::Model::FGlobalRankingModelMasterDomain>> Result
-            ) override;
-        };
-        friend FUpdateTask;
-
-        TSharedPtr<FAsyncTask<FUpdateTask>> Update(
-            Request::FUpdateGlobalRankingModelMasterRequestPtr Request
+        Gs2::Core::Domain::CallbackID SubscribeGlobalRankingScores(
+            TFunction<void()> Callback
         );
 
-        class GS2RANKING2_API FDeleteTask final :
-            public Gs2::Core::Util::TGs2Future<Gs2::Ranking2::Domain::Model::FGlobalRankingModelMasterDomain>,
-            public TSharedFromThis<FDeleteTask>
-        {
-            const TSharedPtr<FGlobalRankingModelMasterDomain> Self;
-            const Request::FDeleteGlobalRankingModelMasterRequestPtr Request;
-        public:
-            explicit FDeleteTask(
-                const TSharedPtr<FGlobalRankingModelMasterDomain>& Self,
-                const Request::FDeleteGlobalRankingModelMasterRequestPtr Request
-            );
+        void UnsubscribeGlobalRankingScores(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
 
-            FDeleteTask(
-                const FDeleteTask& From
-            );
+        TSharedPtr<Gs2::Ranking2::Domain::Model::FGlobalRankingScoreAccessTokenDomain> GlobalRankingScore(
+        );
 
-            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-                TSharedPtr<TSharedPtr<Gs2::Ranking2::Domain::Model::FGlobalRankingModelMasterDomain>> Result
-            ) override;
-        };
-        friend FDeleteTask;
+        Gs2::Ranking2::Domain::Iterator::FDescribeGlobalRankingsIteratorPtr GlobalRankings(
+        ) const;
 
-        TSharedPtr<FAsyncTask<FDeleteTask>> Delete(
-            Request::FDeleteGlobalRankingModelMasterRequestPtr Request
+        Gs2::Core::Domain::CallbackID SubscribeGlobalRankings(
+            TFunction<void()> Callback
+        );
+
+        void UnsubscribeGlobalRankings(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
+
+        TSharedPtr<Gs2::Ranking2::Domain::Model::FGlobalRankingDataAccessTokenDomain> GlobalRankingData(
+        );
+
+        Gs2::Ranking2::Domain::Iterator::FDescribeGlobalRankingReceivedRewardsIteratorPtr GlobalRankingReceivedRewards(
+        ) const;
+
+        Gs2::Core::Domain::CallbackID SubscribeGlobalRankingReceivedRewards(
+            TFunction<void()> Callback
+        );
+
+        void UnsubscribeGlobalRankingReceivedRewards(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
+
+        TSharedPtr<Gs2::Ranking2::Domain::Model::FGlobalRankingReceivedRewardAccessTokenDomain> GlobalRankingReceivedReward(
         );
 
         static FString CreateCacheParentKey(
             TOptional<FString> NamespaceName,
             TOptional<FString> RankingName,
+            TOptional<FString> Season,
             FString ChildType
         );
 
         static FString CreateCacheKey(
-            TOptional<FString> RankingName
-        );
-
-        class GS2RANKING2_API FModelTask final :
-            public Gs2::Core::Util::TGs2Future<Gs2::Ranking2::Model::FGlobalRankingModelMaster>,
-            public TSharedFromThis<FModelTask>
-        {
-            const TSharedPtr<FGlobalRankingModelMasterDomain> Self;
-        public:
-            explicit FModelTask(
-                const TSharedPtr<FGlobalRankingModelMasterDomain> Self
-            );
-
-            FModelTask(
-                const FModelTask& From
-            );
-
-            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-                TSharedPtr<TSharedPtr<Gs2::Ranking2::Model::FGlobalRankingModelMaster>> Result
-            ) override;
-        };
-        friend FModelTask;
-
-        TSharedPtr<FAsyncTask<FModelTask>> Model();
-
-        Gs2::Core::Domain::CallbackID Subscribe(
-            TFunction<void(Gs2::Ranking2::Model::FGlobalRankingModelMasterPtr)> Callback
-        );
-
-        void Unsubscribe(
-            Gs2::Core::Domain::CallbackID CallbackID
+            TOptional<FString> Season
         );
 
     };
 
-    typedef TSharedPtr<FGlobalRankingModelMasterDomain> FGlobalRankingModelMasterDomainPtr;
+    typedef TSharedPtr<FGlobalRankingSeasonAccessTokenDomain> FGlobalRankingSeasonAccessTokenDomainPtr;
 }

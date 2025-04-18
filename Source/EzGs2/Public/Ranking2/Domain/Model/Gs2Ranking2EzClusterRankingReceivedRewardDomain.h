@@ -53,10 +53,10 @@ namespace Gs2::UE5::Ranking2::Domain::Model
         public:
         TSharedPtr<TArray<TSharedPtr<Gs2::UE5::Ranking2::Model::FEzAcquireAction>>> AcquireActions() const;
         TOptional<FString> NamespaceName() const;
-        TOptional<FString> UserId() const;
         TOptional<FString> RankingName() const;
         TOptional<FString> ClusterName() const;
         TOptional<int64> Season() const;
+        TOptional<FString> UserId() const;
 
         FEzClusterRankingReceivedRewardDomain(
             Gs2::Ranking2::Domain::Model::FClusterRankingReceivedRewardDomainPtr Domain,

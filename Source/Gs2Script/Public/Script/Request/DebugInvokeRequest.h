@@ -29,8 +29,11 @@ namespace Gs2::Script::Request
         TOptional<FString> ContextStackValue;
         TOptional<FString> ScriptValue;
         TOptional<FString> ArgsValue;
+        TOptional<FString> UserIdValue;
         TSharedPtr<Model::FRandomStatus> RandomStatusValue;
         TOptional<bool> DisableStringNumberToNumberValue;
+        TOptional<FString> TimeOffsetTokenValue;
+        TOptional<FString> DuplicationAvoiderValue;
         
     public:
         
@@ -43,15 +46,21 @@ namespace Gs2::Script::Request
         TSharedPtr<FDebugInvokeRequest> WithContextStack(const TOptional<FString> ContextStack);
         TSharedPtr<FDebugInvokeRequest> WithScript(const TOptional<FString> Script);
         TSharedPtr<FDebugInvokeRequest> WithArgs(const TOptional<FString> Args);
+        TSharedPtr<FDebugInvokeRequest> WithUserId(const TOptional<FString> UserId);
         TSharedPtr<FDebugInvokeRequest> WithRandomStatus(const TSharedPtr<Model::FRandomStatus> RandomStatus);
         TSharedPtr<FDebugInvokeRequest> WithDisableStringNumberToNumber(const TOptional<bool> DisableStringNumberToNumber);
+        TSharedPtr<FDebugInvokeRequest> WithTimeOffsetToken(const TOptional<FString> TimeOffsetToken);
+        TSharedPtr<FDebugInvokeRequest> WithDuplicationAvoider(const TOptional<FString> DuplicationAvoider);
 
         TOptional<FString> GetContextStack() const;
         TOptional<FString> GetScript() const;
         TOptional<FString> GetArgs() const;
+        TOptional<FString> GetUserId() const;
         TSharedPtr<Model::FRandomStatus> GetRandomStatus() const;
         TOptional<bool> GetDisableStringNumberToNumber() const;
         FString GetDisableStringNumberToNumberString() const;
+        TOptional<FString> GetTimeOffsetToken() const;
+        TOptional<FString> GetDuplicationAvoider() const;
 
         static TSharedPtr<FDebugInvokeRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;

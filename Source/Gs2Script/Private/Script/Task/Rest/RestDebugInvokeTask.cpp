@@ -86,6 +86,10 @@ namespace Gs2::Script::Task::Rest
             {
                 JsonRootObject->SetStringField("args", this->Request->GetArgs().GetValue());
             }
+            if (this->Request->GetUserId().IsSet())
+            {
+                JsonRootObject->SetStringField("userId", this->Request->GetUserId().GetValue());
+            }
             if (this->Request->GetRandomStatus() != nullptr && this->Request->GetRandomStatus().IsValid())
             {
                 JsonRootObject->SetObjectField("randomStatus", this->Request->GetRandomStatus()->ToJson());
@@ -104,6 +108,14 @@ namespace Gs2::Script::Task::Rest
             request->SetHeader("X-GS2-CLIENT-ID", this->Session->Credential()->ClientId());
             request->SetHeader("Authorization", "Bearer " + this->Session->Credential()->ProjectToken());
             request->SetHeader("Content-Type", "application/json");
+            if (this->Request->GetDuplicationAvoider().IsSet())
+            {
+                request->SetHeader("X-GS2-DUPLICATION-AVOIDER", this->Request->GetDuplicationAvoider().GetValue());
+            }
+            if (this->Request->GetTimeOffsetToken().IsSet())
+            {
+                request->SetHeader("X-GS2-TIME-OFFSET-TOKEN", this->Request->GetTimeOffsetToken().GetValue());
+            }
 
             request->ProcessRequest();
             UE_LOG(Gs2Log, VeryVerbose, TEXT("[%s] %s %s"), TEXT("POST"), ToCStr(Url), ToCStr(Body));

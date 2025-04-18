@@ -26,7 +26,7 @@
 
 #include "Ranking2/Domain/Iterator/DescribeGlobalRankingScoresByUserIdIterator.h"
 #include "Ranking2/Domain/Model/GlobalRankingScore.h"
-#include "Ranking2/Domain/Model/User.h"
+#include "Ranking2/Domain/Model/GlobalRankingSeason.h"
 
 #include "Core/Domain/Gs2.h"
 
@@ -98,9 +98,10 @@ namespace Gs2::Ranking2::Domain::Iterator
 
         if (!RangeIteratorOpt || (!*RangeIteratorOpt && !bLast))
         {
-            const auto ListParentKey = Gs2::Ranking2::Domain::Model::FUserDomain::CreateCacheParentKey(
+            const auto ListParentKey = Gs2::Ranking2::Domain::Model::FGlobalRankingSeasonDomain::CreateCacheParentKey(
                 Self->NamespaceName,
-                Self->UserId,
+                Self->RankingName,
+                Self->Season,
                 "GlobalRankingScore"
             );
 
@@ -110,7 +111,6 @@ namespace Gs2::Ranking2::Domain::Iterator
 
                 if (Range)
                 {
-                    Range->RemoveAll([this](const Gs2::Ranking2::Model::FGlobalRankingScorePtr& Item) { return Self->RankingName && Item->GetRankingName() != Self->RankingName; });
                     bLast = true;
                     RangeIteratorOpt = Range->CreateIterator();
                     PageToken = TOptional<FString>();
@@ -123,6 +123,7 @@ namespace Gs2::Ranking2::Domain::Iterator
                 MakeShared<Gs2::Ranking2::Request::FDescribeGlobalRankingScoresByUserIdRequest>()
                     ->WithNamespaceName(Self->NamespaceName)
                     ->WithUserId(Self->UserId)
+                    ->WithRankingName(Self->RankingName)
                     ->WithPageToken(PageToken)
                     ->WithLimit(FetchSize)
             );
@@ -146,8 +147,8 @@ namespace Gs2::Ranking2::Domain::Iterator
                     Gs2::Ranking2::Model::FGlobalRankingScore::TypeName,
                     ListParentKey,
                     Gs2::Ranking2::Domain::Model::FGlobalRankingScoreDomain::CreateCacheKey(
-                        Item->GetRankingName(),
-                        FString::FromInt(*Item->GetSeason())
+                        FString::FromInt(*Item->GetSeason()),
+                        Item->GetUserId()
                     ),
                     Item,
                     FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
@@ -155,7 +156,6 @@ namespace Gs2::Ranking2::Domain::Iterator
             }
             if (Range)
             {
-                Range->RemoveAll([this](const Gs2::Ranking2::Model::FGlobalRankingScorePtr& Item) { return Self->RankingName && Item->GetRankingName() != Self->RankingName; });
             }
             RangeIteratorOpt = Range->CreateIterator();
             PageToken = R->GetNextPageToken();

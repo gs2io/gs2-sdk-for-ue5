@@ -37,16 +37,7 @@
 #include "Ranking2/Model/Gs2Ranking2EzConsumeActionResult.h"
 #include "Ranking2/Model/Gs2Ranking2EzAcquireActionResult.h"
 #include "Ranking2/Model/Gs2Ranking2EzTransactionResult.h"
-#include "Gs2Ranking2EzGlobalRankingScoreGameSessionDomain.h"
-#include "Ranking2/Domain/Iterator/Gs2Ranking2EzDescribeGlobalRankingScoresIterator.h"
-#include "Gs2Ranking2EzSubscribeRankingSeasonGameSessionDomain.h"
 #include "Gs2Ranking2EzSubscribeGameSessionDomain.h"
-#include "Gs2Ranking2EzGlobalRankingReceivedRewardGameSessionDomain.h"
-#include "Ranking2/Domain/Iterator/Gs2Ranking2EzDescribeGlobalRankingReceivedRewardsIterator.h"
-#include "Gs2Ranking2EzClusterRankingReceivedRewardGameSessionDomain.h"
-#include "Ranking2/Domain/Iterator/Gs2Ranking2EzDescribeClusterRankingReceivedRewardsIterator.h"
-#include "Gs2Ranking2EzClusterRankingScoreGameSessionDomain.h"
-#include "Ranking2/Domain/Iterator/Gs2Ranking2EzDescribeClusterRankingScoresIterator.h"
 #include "Gs2Ranking2EzUserGameSessionDomain.h"
 #include "Util/Net/GameSession.h"
 #include "Util/Net/Gs2Connection.h"
@@ -72,133 +63,8 @@ namespace Gs2::UE5::Ranking2::Domain::Model
             Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
 
-        class EZGS2_API FPutGlobalRankingTask :
-            public Gs2::Core::Util::TGs2Future<Gs2::UE5::Ranking2::Domain::Model::FEzGlobalRankingScoreGameSessionDomain>,
-            public TSharedFromThis<FPutGlobalRankingTask>
-        {
-            TSharedPtr<FEzUserGameSessionDomain> Self;
-            FString RankingName;
-            int64 Score;
-            TOptional<FString> Metadata;
-
-        public:
-            explicit FPutGlobalRankingTask(
-                TSharedPtr<FEzUserGameSessionDomain> Self,
-                FString RankingName,
-                int64 Score,
-                TOptional<FString> Metadata = TOptional<FString>()
-            );
-
-            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-                TSharedPtr<TSharedPtr<Gs2::UE5::Ranking2::Domain::Model::FEzGlobalRankingScoreGameSessionDomain>> Result
-            ) override;
-        };
-        friend FPutGlobalRankingTask;
-
-        TSharedPtr<FAsyncTask<FPutGlobalRankingTask>> PutGlobalRanking(
-            FString RankingName,
-            int64 Score,
-            TOptional<FString> Metadata = TOptional<FString>()
-        );
-
-        class EZGS2_API FPutClusterRankingTask :
-            public Gs2::Core::Util::TGs2Future<Gs2::UE5::Ranking2::Domain::Model::FEzClusterRankingScoreGameSessionDomain>,
-            public TSharedFromThis<FPutClusterRankingTask>
-        {
-            TSharedPtr<FEzUserGameSessionDomain> Self;
-            FString RankingName;
-            FString ClusterName;
-            int64 Score;
-            TOptional<FString> Metadata;
-
-        public:
-            explicit FPutClusterRankingTask(
-                TSharedPtr<FEzUserGameSessionDomain> Self,
-                FString RankingName,
-                FString ClusterName,
-                int64 Score,
-                TOptional<FString> Metadata = TOptional<FString>()
-            );
-
-            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-                TSharedPtr<TSharedPtr<Gs2::UE5::Ranking2::Domain::Model::FEzClusterRankingScoreGameSessionDomain>> Result
-            ) override;
-        };
-        friend FPutClusterRankingTask;
-
-        TSharedPtr<FAsyncTask<FPutClusterRankingTask>> PutClusterRanking(
-            FString RankingName,
-            FString ClusterName,
-            int64 Score,
-            TOptional<FString> Metadata = TOptional<FString>()
-        );
-
-        Gs2::UE5::Ranking2::Domain::Iterator::FEzDescribeGlobalRankingScoresIteratorPtr GlobalRankingScores(
-            const TOptional<FString> RankingName = TOptional<FString>()
-        ) const;
-
-        Gs2::Core::Domain::CallbackID SubscribeGlobalRankingScores(TFunction<void()> Callback);
-
-        void UnsubscribeGlobalRankingScores(Gs2::Core::Domain::CallbackID CallbackId);
-
-        Gs2::UE5::Ranking2::Domain::Model::FEzGlobalRankingScoreGameSessionDomainPtr GlobalRankingScore(
-            const FString RankingName,
-            const int64 Season
-        ) const;
-
-        Gs2::UE5::Ranking2::Domain::Model::FEzSubscribeRankingSeasonGameSessionDomainPtr SubscribeRankingSeason(
-            const FString RankingName,
-            const int64 Season
-        ) const;
-
         Gs2::UE5::Ranking2::Domain::Model::FEzSubscribeGameSessionDomainPtr Subscribe(
             const FString RankingName
-        ) const;
-
-        Gs2::UE5::Ranking2::Domain::Iterator::FEzDescribeGlobalRankingReceivedRewardsIteratorPtr GlobalRankingReceivedRewards(
-            const TOptional<FString> RankingName = TOptional<FString>(),
-            const TOptional<int64> Season = TOptional<int64>()
-        ) const;
-
-        Gs2::Core::Domain::CallbackID SubscribeGlobalRankingReceivedRewards(TFunction<void()> Callback);
-
-        void UnsubscribeGlobalRankingReceivedRewards(Gs2::Core::Domain::CallbackID CallbackId);
-
-        Gs2::UE5::Ranking2::Domain::Model::FEzGlobalRankingReceivedRewardGameSessionDomainPtr GlobalRankingReceivedReward(
-            const FString RankingName,
-            const int64 Season
-        ) const;
-
-        Gs2::UE5::Ranking2::Domain::Iterator::FEzDescribeClusterRankingReceivedRewardsIteratorPtr ClusterRankingReceivedRewards(
-            const TOptional<FString> RankingName = TOptional<FString>(),
-            const TOptional<FString> ClusterName = TOptional<FString>(),
-            const TOptional<int64> Season = TOptional<int64>()
-        ) const;
-
-        Gs2::Core::Domain::CallbackID SubscribeClusterRankingReceivedRewards(TFunction<void()> Callback);
-
-        void UnsubscribeClusterRankingReceivedRewards(Gs2::Core::Domain::CallbackID CallbackId);
-
-        Gs2::UE5::Ranking2::Domain::Model::FEzClusterRankingReceivedRewardGameSessionDomainPtr ClusterRankingReceivedReward(
-            const FString RankingName,
-            const FString ClusterName,
-            const int64 Season
-        ) const;
-
-        Gs2::UE5::Ranking2::Domain::Iterator::FEzDescribeClusterRankingScoresIteratorPtr ClusterRankingScores(
-            const TOptional<FString> RankingName = TOptional<FString>(),
-            const TOptional<FString> ClusterName = TOptional<FString>(),
-            const TOptional<int64> Season = TOptional<int64>()
-        ) const;
-
-        Gs2::Core::Domain::CallbackID SubscribeClusterRankingScores(TFunction<void()> Callback);
-
-        void UnsubscribeClusterRankingScores(Gs2::Core::Domain::CallbackID CallbackId);
-
-        Gs2::UE5::Ranking2::Domain::Model::FEzClusterRankingScoreGameSessionDomainPtr ClusterRankingScore(
-            const FString RankingName,
-            const FString ClusterName,
-            const int64 Season
         ) const;
 
     };

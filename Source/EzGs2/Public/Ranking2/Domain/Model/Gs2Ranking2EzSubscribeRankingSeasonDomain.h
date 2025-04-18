@@ -55,9 +55,9 @@ namespace Gs2::UE5::Ranking2::Domain::Model
         public:
         TOptional<FString> NextPageToken() const;
         TOptional<FString> NamespaceName() const;
-        TOptional<FString> UserId() const;
         TOptional<FString> RankingName() const;
         TOptional<int64> Season() const;
+        TOptional<FString> UserId() const;
 
         FEzSubscribeRankingSeasonDomain(
             Gs2::Ranking2::Domain::Model::FSubscribeRankingSeasonDomainPtr Domain,

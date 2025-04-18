@@ -406,14 +406,15 @@ namespace Gs2::Ranking2::Domain
             
             if (ResultModel->GetItem() != nullptr)
             {
-                const auto ParentKey = Gs2::Ranking2::Domain::Model::FUserDomain::CreateCacheParentKey(
+                const auto ParentKey = Gs2::Ranking2::Domain::Model::FGlobalRankingSeasonDomain::CreateCacheParentKey(
                     RequestModel->GetNamespaceName(),
-                    RequestModel->GetUserId(),
+                    RequestModel->GetRankingName(),
+                    RequestModel->GetSeason(),
                     "GlobalRankingReceivedReward"
                 );
                 const auto Key = Gs2::Ranking2::Domain::Model::FGlobalRankingReceivedRewardDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetRankingName(),
-                    ResultModel->GetItem()->GetSeason().IsSet() ? FString::FromInt(*ResultModel->GetItem()->GetSeason()) : TOptional<FString>()
+                    ResultModel->GetItem()->GetSeason().IsSet() ? FString::FromInt(*ResultModel->GetItem()->GetSeason()) : TOptional<FString>(),
+                    ResultModel->GetItem()->GetUserId()
                 );
                 Gs2->Cache->Put(
                     Gs2::Ranking2::Model::FGlobalRankingReceivedReward::TypeName,
@@ -442,15 +443,17 @@ namespace Gs2::Ranking2::Domain
             
             if (ResultModel->GetItem() != nullptr)
             {
-                const auto ParentKey = Gs2::Ranking2::Domain::Model::FUserDomain::CreateCacheParentKey(
+                const auto ParentKey = Gs2::Ranking2::Domain::Model::FClusterRankingSeasonDomain::CreateCacheParentKey(
                     RequestModel->GetNamespaceName(),
-                    RequestModel->GetUserId(),
+                    RequestModel->GetRankingName(),
+                    RequestModel->GetClusterName(),
+                    RequestModel->GetSeason(),
                     "ClusterRankingReceivedReward"
                 );
                 const auto Key = Gs2::Ranking2::Domain::Model::FClusterRankingReceivedRewardDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetRankingName(),
                     ResultModel->GetItem()->GetClusterName(),
-                    ResultModel->GetItem()->GetSeason().IsSet() ? FString::FromInt(*ResultModel->GetItem()->GetSeason()) : TOptional<FString>()
+                    ResultModel->GetItem()->GetSeason().IsSet() ? FString::FromInt(*ResultModel->GetItem()->GetSeason()) : TOptional<FString>(),
+                    ResultModel->GetItem()->GetUserId()
                 );
                 Gs2->Cache->Put(
                     Gs2::Ranking2::Model::FClusterRankingReceivedReward::TypeName,

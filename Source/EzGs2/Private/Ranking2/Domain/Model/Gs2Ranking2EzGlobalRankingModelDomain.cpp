@@ -40,12 +40,14 @@ namespace Gs2::UE5::Ranking2::Domain::Model
     }
 
     Gs2::UE5::Ranking2::Domain::Model::FEzGlobalRankingSeasonDomainPtr FEzGlobalRankingModelDomain::GlobalRankingSeason(
-        const int64 Season
+        const int64 Season,
+        const FString UserId
     ) const
     {
         return MakeShared<Gs2::UE5::Ranking2::Domain::Model::FEzGlobalRankingSeasonDomain>(
             Domain->GlobalRankingSeason(
-                Season
+                Season,
+                UserId
             ),
             ConnectionValue
         );

@@ -68,6 +68,7 @@ namespace Gs2::Ranking2::Domain::Model
     class FGlobalRankingReceivedRewardDomain;
     class FGlobalRankingReceivedRewardAccessTokenDomain;
     class FGlobalRankingSeasonDomain;
+    class FGlobalRankingSeasonAccessTokenDomain;
     class FGlobalRankingDataDomain;
     class FGlobalRankingDataAccessTokenDomain;
     class FClusterRankingModelDomain;
@@ -77,6 +78,7 @@ namespace Gs2::Ranking2::Domain::Model
     class FClusterRankingReceivedRewardDomain;
     class FClusterRankingReceivedRewardAccessTokenDomain;
     class FClusterRankingSeasonDomain;
+    class FClusterRankingSeasonAccessTokenDomain;
     class FClusterRankingDataDomain;
     class FClusterRankingDataAccessTokenDomain;
     class FSubscribeRankingModelDomain;
@@ -104,10 +106,10 @@ namespace Gs2::Ranking2::Domain::Model
 
         public:
         TOptional<FString> NamespaceName;
-        TOptional<FString> UserId;
         TOptional<FString> RankingName;
         TOptional<FString> ClusterName;
         TOptional<int64> Season;
+        TOptional<FString> UserId;
     private:
 
         FString ParentKey;
@@ -118,10 +120,10 @@ namespace Gs2::Ranking2::Domain::Model
             const Core::Domain::FGs2Ptr& Gs2,
             const Ranking2::Domain::FGs2Ranking2DomainPtr& Service,
             const TOptional<FString> NamespaceName,
-            const TOptional<FString> UserId,
             const TOptional<FString> RankingName,
             const TOptional<FString> ClusterName,
-            const TOptional<int64> Season
+            const TOptional<int64> Season,
+            const TOptional<FString> UserId
             // ReSharper disable once CppMemberInitializersOrder
         );
 
@@ -209,17 +211,17 @@ namespace Gs2::Ranking2::Domain::Model
 
         static FString CreateCacheParentKey(
             TOptional<FString> NamespaceName,
-            TOptional<FString> UserId,
             TOptional<FString> RankingName,
             TOptional<FString> ClusterName,
             TOptional<FString> Season,
+            TOptional<FString> UserId,
             FString ChildType
         );
 
         static FString CreateCacheKey(
-            TOptional<FString> RankingName,
             TOptional<FString> ClusterName,
-            TOptional<FString> Season
+            TOptional<FString> Season,
+            TOptional<FString> UserId
         );
 
         class GS2RANKING2_API FModelTask final :

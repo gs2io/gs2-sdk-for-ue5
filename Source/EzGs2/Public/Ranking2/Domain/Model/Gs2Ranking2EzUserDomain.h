@@ -37,12 +37,7 @@
 #include "Ranking2/Model/Gs2Ranking2EzConsumeActionResult.h"
 #include "Ranking2/Model/Gs2Ranking2EzAcquireActionResult.h"
 #include "Ranking2/Model/Gs2Ranking2EzTransactionResult.h"
-#include "Gs2Ranking2EzGlobalRankingScoreDomain.h"
-#include "Gs2Ranking2EzSubscribeRankingSeasonDomain.h"
 #include "Gs2Ranking2EzSubscribeDomain.h"
-#include "Gs2Ranking2EzGlobalRankingReceivedRewardDomain.h"
-#include "Gs2Ranking2EzClusterRankingReceivedRewardDomain.h"
-#include "Gs2Ranking2EzClusterRankingScoreDomain.h"
 #include "Gs2Ranking2EzUserDomain.h"
 #include "Gs2Ranking2EzUserDomain.h"
 #include "Gs2Ranking2EzUserGameSessionDomain.h"
@@ -68,35 +63,8 @@ namespace Gs2::UE5::Ranking2::Domain::Model
             Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
 
-        Gs2::UE5::Ranking2::Domain::Model::FEzGlobalRankingScoreDomainPtr GlobalRankingScore(
-            const FString RankingName,
-            const int64 Season
-        ) const;
-
-        Gs2::UE5::Ranking2::Domain::Model::FEzSubscribeRankingSeasonDomainPtr SubscribeRankingSeason(
-            const FString RankingName,
-            const int64 Season
-        ) const;
-
         Gs2::UE5::Ranking2::Domain::Model::FEzSubscribeDomainPtr Subscribe(
             const FString RankingName
-        ) const;
-
-        Gs2::UE5::Ranking2::Domain::Model::FEzGlobalRankingReceivedRewardDomainPtr GlobalRankingReceivedReward(
-            const FString RankingName,
-            const int64 Season
-        ) const;
-
-        Gs2::UE5::Ranking2::Domain::Model::FEzClusterRankingReceivedRewardDomainPtr ClusterRankingReceivedReward(
-            const FString RankingName,
-            const FString ClusterName,
-            const int64 Season
-        ) const;
-
-        Gs2::UE5::Ranking2::Domain::Model::FEzClusterRankingScoreDomainPtr ClusterRankingScore(
-            const FString RankingName,
-            const FString ClusterName,
-            const int64 Season
         ) const;
 
     };

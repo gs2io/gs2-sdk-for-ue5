@@ -68,6 +68,7 @@ namespace Gs2::Ranking2::Domain::Model
     class FGlobalRankingReceivedRewardDomain;
     class FGlobalRankingReceivedRewardAccessTokenDomain;
     class FGlobalRankingSeasonDomain;
+    class FGlobalRankingSeasonAccessTokenDomain;
     class FGlobalRankingDataDomain;
     class FGlobalRankingDataAccessTokenDomain;
     class FClusterRankingModelDomain;
@@ -77,6 +78,7 @@ namespace Gs2::Ranking2::Domain::Model
     class FClusterRankingReceivedRewardDomain;
     class FClusterRankingReceivedRewardAccessTokenDomain;
     class FClusterRankingSeasonDomain;
+    class FClusterRankingSeasonAccessTokenDomain;
     class FClusterRankingDataDomain;
     class FClusterRankingDataAccessTokenDomain;
     class FSubscribeRankingModelDomain;

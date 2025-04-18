@@ -37,6 +37,7 @@
 #include "Ranking2/Model/Gs2Ranking2EzConsumeActionResult.h"
 #include "Ranking2/Model/Gs2Ranking2EzAcquireActionResult.h"
 #include "Ranking2/Model/Gs2Ranking2EzTransactionResult.h"
+#include "Gs2Ranking2EzSubscribeRankingSeasonDomain.h"
 #include "Gs2Ranking2EzSubscribeRankingModelDomain.h"
 #include "Ranking2/Domain/Iterator/Gs2Ranking2EzDescribeSubscribeRankingModelsIterator.h"
 #include "Util/Net/GameSession.h"
@@ -59,6 +60,11 @@ namespace Gs2::UE5::Ranking2::Domain::Model
             Gs2::Ranking2::Domain::Model::FSubscribeRankingModelDomainPtr Domain,
             Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
+
+        Gs2::UE5::Ranking2::Domain::Model::FEzSubscribeRankingSeasonDomainPtr SubscribeRankingSeason(
+            const int64 Season,
+            const FString UserId
+        ) const;
 
         class EZGS2_API FModelTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::Ranking2::Model::FEzSubscribeRankingModel>,

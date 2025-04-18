@@ -17,7 +17,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Ranking2/Domain/Model/UserAccessToken.h"
+#include "Ranking2/Domain/Model/GlobalRankingSeasonAccessToken.h"
 #include "Ranking2/Model/Gs2Ranking2EzGlobalRankingReceivedReward.h"
 #include "Util/Net/GameSession.h"
 
@@ -28,32 +28,24 @@ namespace Gs2::UE5::Ranking2::Domain::Iterator
         public TSharedFromThis<FEzDescribeGlobalRankingReceivedRewardsIterator>
     {
         Gs2::Ranking2::Domain::Iterator::FDescribeGlobalRankingReceivedRewardsIteratorPtr It;
-        Gs2::Ranking2::Domain::Model::FUserAccessTokenDomainPtr Domain;
+        Gs2::Ranking2::Domain::Model::FGlobalRankingSeasonAccessTokenDomainPtr Domain;
         Gs2::UE5::Util::IGameSessionPtr GameSession;
         Gs2::UE5::Util::FGs2ConnectionPtr Connection;
-        TOptional<FString> RankingName;
-        TOptional<int64> Season;
 
 	public:
 
         explicit FEzDescribeGlobalRankingReceivedRewardsIterator(
-            Gs2::Ranking2::Domain::Model::FUserAccessTokenDomainPtr Domain,
+            Gs2::Ranking2::Domain::Model::FGlobalRankingSeasonAccessTokenDomainPtr Domain,
             Gs2::UE5::Util::IGameSessionPtr GameSession,
-            Gs2::UE5::Util::FGs2ConnectionPtr Connection,
-            TOptional<FString> RankingName = TOptional<FString>(),
-            TOptional<int64> Season = TOptional<int64>()
+            Gs2::UE5::Util::FGs2ConnectionPtr Connection
         ) :
             It(
                 Domain->GlobalRankingReceivedRewards(
-                    RankingName,
-                    Season
                 )
             ),
             Domain(Domain),
             GameSession(GameSession),
-            Connection(Connection),
-            RankingName(RankingName),
-            Season(Season)
+            Connection(Connection)
         {
         }
 
@@ -63,9 +55,7 @@ namespace Gs2::UE5::Ranking2::Domain::Iterator
 			It(From.It),
 			Domain(From.Domain),
 			GameSession(From.GameSession),
-			Connection(From.Connection),
-            RankingName(From.RankingName),
-            Season(From.Season)
+			Connection(From.Connection)
 		{
 		}
 

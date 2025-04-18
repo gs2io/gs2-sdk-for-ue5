@@ -41,13 +41,15 @@ namespace Gs2::UE5::Ranking2::Domain::Model
 
     Gs2::UE5::Ranking2::Domain::Model::FEzClusterRankingSeasonDomainPtr FEzClusterRankingModelDomain::ClusterRankingSeason(
         const FString ClusterName,
-        const int64 Season
+        const int64 Season,
+        const FString UserId
     ) const
     {
         return MakeShared<Gs2::UE5::Ranking2::Domain::Model::FEzClusterRankingSeasonDomain>(
             Domain->ClusterRankingSeason(
                 ClusterName,
-                Season
+                Season,
+                UserId
             ),
             ConnectionValue
         );

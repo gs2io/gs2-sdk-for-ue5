@@ -38,6 +38,9 @@
 #include "Ranking2/Model/Gs2Ranking2EzAcquireActionResult.h"
 #include "Ranking2/Model/Gs2Ranking2EzTransactionResult.h"
 #include "Gs2Ranking2EzClusterRankingDataDomain.h"
+#include "Gs2Ranking2EzClusterRankingReceivedRewardDomain.h"
+#include "Gs2Ranking2EzClusterRankingScoreDomain.h"
+#include "Gs2Ranking2EzClusterRankingSeasonDomain.h"
 #include "Util/Net/GameSession.h"
 #include "Util/Net/Gs2Connection.h"
 
@@ -56,6 +59,7 @@ namespace Gs2::UE5::Ranking2::Domain::Model
         TOptional<FString> RankingName() const;
         TOptional<FString> ClusterName() const;
         TOptional<int64> Season() const;
+        TOptional<FString> UserId() const;
 
         FEzClusterRankingSeasonDomain(
             Gs2::Ranking2::Domain::Model::FClusterRankingSeasonDomainPtr Domain,
@@ -63,7 +67,12 @@ namespace Gs2::UE5::Ranking2::Domain::Model
         );
 
         Gs2::UE5::Ranking2::Domain::Model::FEzClusterRankingDataDomainPtr ClusterRankingData(
-            const FString UserId
+        ) const;
+
+        Gs2::UE5::Ranking2::Domain::Model::FEzClusterRankingReceivedRewardDomainPtr ClusterRankingReceivedReward(
+        ) const;
+
+        Gs2::UE5::Ranking2::Domain::Model::FEzClusterRankingScoreDomainPtr ClusterRankingScore(
         ) const;
 
     };

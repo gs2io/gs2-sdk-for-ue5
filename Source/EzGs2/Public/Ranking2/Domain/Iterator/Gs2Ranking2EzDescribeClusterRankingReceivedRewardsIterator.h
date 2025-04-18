@@ -17,7 +17,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Ranking2/Domain/Model/UserAccessToken.h"
+#include "Ranking2/Domain/Model/ClusterRankingSeasonAccessToken.h"
 #include "Ranking2/Model/Gs2Ranking2EzClusterRankingReceivedReward.h"
 #include "Util/Net/GameSession.h"
 
@@ -28,36 +28,24 @@ namespace Gs2::UE5::Ranking2::Domain::Iterator
         public TSharedFromThis<FEzDescribeClusterRankingReceivedRewardsIterator>
     {
         Gs2::Ranking2::Domain::Iterator::FDescribeClusterRankingReceivedRewardsIteratorPtr It;
-        Gs2::Ranking2::Domain::Model::FUserAccessTokenDomainPtr Domain;
+        Gs2::Ranking2::Domain::Model::FClusterRankingSeasonAccessTokenDomainPtr Domain;
         Gs2::UE5::Util::IGameSessionPtr GameSession;
         Gs2::UE5::Util::FGs2ConnectionPtr Connection;
-        TOptional<FString> RankingName;
-        TOptional<FString> ClusterName;
-        TOptional<int64> Season;
 
 	public:
 
         explicit FEzDescribeClusterRankingReceivedRewardsIterator(
-            Gs2::Ranking2::Domain::Model::FUserAccessTokenDomainPtr Domain,
+            Gs2::Ranking2::Domain::Model::FClusterRankingSeasonAccessTokenDomainPtr Domain,
             Gs2::UE5::Util::IGameSessionPtr GameSession,
-            Gs2::UE5::Util::FGs2ConnectionPtr Connection,
-            TOptional<FString> RankingName = TOptional<FString>(),
-            TOptional<FString> ClusterName = TOptional<FString>(),
-            TOptional<int64> Season = TOptional<int64>()
+            Gs2::UE5::Util::FGs2ConnectionPtr Connection
         ) :
             It(
                 Domain->ClusterRankingReceivedRewards(
-                    RankingName,
-                    ClusterName,
-                    Season
                 )
             ),
             Domain(Domain),
             GameSession(GameSession),
-            Connection(Connection),
-            RankingName(RankingName),
-            ClusterName(ClusterName),
-            Season(Season)
+            Connection(Connection)
         {
         }
 
@@ -67,10 +55,7 @@ namespace Gs2::UE5::Ranking2::Domain::Iterator
 			It(From.It),
 			Domain(From.Domain),
 			GameSession(From.GameSession),
-			Connection(From.Connection),
-            RankingName(From.RankingName),
-            ClusterName(From.ClusterName),
-            Season(From.Season)
+			Connection(From.Connection)
 		{
 		}
 

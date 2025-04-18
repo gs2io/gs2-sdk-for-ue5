@@ -31,6 +31,7 @@
 #include "Ranking2/Domain/Model/GlobalRankingReceivedReward.h"
 #include "Ranking2/Domain/Model/GlobalRankingReceivedRewardAccessToken.h"
 #include "Ranking2/Domain/Model/GlobalRankingSeason.h"
+#include "Ranking2/Domain/Model/GlobalRankingSeasonAccessToken.h"
 #include "Ranking2/Domain/Model/GlobalRankingData.h"
 #include "Ranking2/Domain/Model/GlobalRankingDataAccessToken.h"
 #include "Ranking2/Domain/Model/ClusterRankingModel.h"
@@ -40,6 +41,7 @@
 #include "Ranking2/Domain/Model/ClusterRankingReceivedReward.h"
 #include "Ranking2/Domain/Model/ClusterRankingReceivedRewardAccessToken.h"
 #include "Ranking2/Domain/Model/ClusterRankingSeason.h"
+#include "Ranking2/Domain/Model/ClusterRankingSeasonAccessToken.h"
 #include "Ranking2/Domain/Model/ClusterRankingData.h"
 #include "Ranking2/Domain/Model/ClusterRankingDataAccessToken.h"
 #include "Ranking2/Domain/Model/SubscribeRankingModel.h"
@@ -128,6 +130,21 @@ namespace Gs2::Ranking2::Domain::Model
         Request::FGetSubscribeRankingModelRequestPtr Request
     ) {
         return Gs2::Core::Util::New<FAsyncTask<FGetTask>>(this->AsShared(), Request);
+    }
+
+    TSharedPtr<Gs2::Ranking2::Domain::Model::FSubscribeRankingSeasonDomain> FSubscribeRankingModelDomain::SubscribeRankingSeason(
+        const int64 Season,
+        const FString UserId
+    )
+    {
+        return MakeShared<Gs2::Ranking2::Domain::Model::FSubscribeRankingSeasonDomain>(
+            Gs2,
+            Service,
+            NamespaceName,
+            RankingName,
+            Season,
+            UserId == TEXT("") ? TOptional<FString>() : TOptional<FString>(UserId)
+        );
     }
 
     FString FSubscribeRankingModelDomain::CreateCacheParentKey(

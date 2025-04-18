@@ -55,15 +55,38 @@ namespace Gs2::UE5::Ranking2::Domain::Model
         public:
         TSharedPtr<TArray<TSharedPtr<Gs2::UE5::Ranking2::Model::FEzAcquireAction>>> AcquireActions() const;
         TOptional<FString> NamespaceName() const;
-        TOptional<FString> UserId() const;
         TOptional<FString> RankingName() const;
         TOptional<FString> ClusterName() const;
         TOptional<int64> Season() const;
+        TOptional<FString> UserId() const;
 
         FEzClusterRankingReceivedRewardGameSessionDomain(
             Gs2::Ranking2::Domain::Model::FClusterRankingReceivedRewardAccessTokenDomainPtr Domain,
             Gs2::UE5::Util::IGameSessionPtr GameSession,
             Gs2::UE5::Util::FGs2ConnectionPtr Connection
+        );
+
+        class EZGS2_API FReceiveTask :
+            public Gs2::Core::Util::TGs2Future<Gs2::UE5::Ranking2::Domain::Model::FEzClusterRankingReceivedRewardGameSessionDomain>,
+            public TSharedFromThis<FReceiveTask>
+        {
+            TSharedPtr<FEzClusterRankingReceivedRewardGameSessionDomain> Self;
+            TOptional<TArray<TSharedPtr<Gs2::UE5::Ranking2::Model::FEzConfig>>> Config;
+
+        public:
+            explicit FReceiveTask(
+                TSharedPtr<FEzClusterRankingReceivedRewardGameSessionDomain> Self,
+                TOptional<TArray<TSharedPtr<Gs2::UE5::Ranking2::Model::FEzConfig>>> Config = TOptional<TArray<TSharedPtr<Gs2::UE5::Ranking2::Model::FEzConfig>>>()
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::UE5::Ranking2::Domain::Model::FEzClusterRankingReceivedRewardGameSessionDomain>> Result
+            ) override;
+        };
+        friend FReceiveTask;
+
+        TSharedPtr<FAsyncTask<FReceiveTask>> Receive(
+            TOptional<TArray<TSharedPtr<Gs2::UE5::Ranking2::Model::FEzConfig>>> Config = TOptional<TArray<TSharedPtr<Gs2::UE5::Ranking2::Model::FEzConfig>>>()
         );
 
         class EZGS2_API FModelTask :

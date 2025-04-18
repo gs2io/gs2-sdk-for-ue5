@@ -17,7 +17,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Ranking2/Domain/Model/UserAccessToken.h"
+#include "Ranking2/Domain/Model/GlobalRankingSeasonAccessToken.h"
 #include "Ranking2/Model/Gs2Ranking2EzGlobalRankingScore.h"
 #include "Util/Net/GameSession.h"
 
@@ -28,28 +28,24 @@ namespace Gs2::UE5::Ranking2::Domain::Iterator
         public TSharedFromThis<FEzDescribeGlobalRankingScoresIterator>
     {
         Gs2::Ranking2::Domain::Iterator::FDescribeGlobalRankingScoresIteratorPtr It;
-        Gs2::Ranking2::Domain::Model::FUserAccessTokenDomainPtr Domain;
+        Gs2::Ranking2::Domain::Model::FGlobalRankingSeasonAccessTokenDomainPtr Domain;
         Gs2::UE5::Util::IGameSessionPtr GameSession;
         Gs2::UE5::Util::FGs2ConnectionPtr Connection;
-        TOptional<FString> RankingName;
 
 	public:
 
         explicit FEzDescribeGlobalRankingScoresIterator(
-            Gs2::Ranking2::Domain::Model::FUserAccessTokenDomainPtr Domain,
+            Gs2::Ranking2::Domain::Model::FGlobalRankingSeasonAccessTokenDomainPtr Domain,
             Gs2::UE5::Util::IGameSessionPtr GameSession,
-            Gs2::UE5::Util::FGs2ConnectionPtr Connection,
-            TOptional<FString> RankingName = TOptional<FString>()
+            Gs2::UE5::Util::FGs2ConnectionPtr Connection
         ) :
             It(
                 Domain->GlobalRankingScores(
-                    RankingName
                 )
             ),
             Domain(Domain),
             GameSession(GameSession),
-            Connection(Connection),
-            RankingName(RankingName)
+            Connection(Connection)
         {
         }
 
@@ -59,8 +55,7 @@ namespace Gs2::UE5::Ranking2::Domain::Iterator
 			It(From.It),
 			Domain(From.Domain),
 			GameSession(From.GameSession),
-			Connection(From.Connection),
-            RankingName(From.RankingName)
+			Connection(From.Connection)
 		{
 		}
 

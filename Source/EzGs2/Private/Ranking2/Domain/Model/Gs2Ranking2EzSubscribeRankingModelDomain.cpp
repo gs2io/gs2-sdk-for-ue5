@@ -39,6 +39,20 @@ namespace Gs2::UE5::Ranking2::Domain::Model
 
     }
 
+    Gs2::UE5::Ranking2::Domain::Model::FEzSubscribeRankingSeasonDomainPtr FEzSubscribeRankingModelDomain::SubscribeRankingSeason(
+        const int64 Season,
+        const FString UserId
+    ) const
+    {
+        return MakeShared<Gs2::UE5::Ranking2::Domain::Model::FEzSubscribeRankingSeasonDomain>(
+            Domain->SubscribeRankingSeason(
+                Season,
+                UserId
+            ),
+            ConnectionValue
+        );
+    }
+
     FEzSubscribeRankingModelDomain::FModelTask::FModelTask(
         TSharedPtr<FEzSubscribeRankingModelDomain> Self
     ): Self(Self)

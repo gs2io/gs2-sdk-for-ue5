@@ -53,9 +53,9 @@ namespace Gs2::UE5::Ranking2::Domain::Model
         public:
         TSharedPtr<TArray<TSharedPtr<Gs2::UE5::Ranking2::Model::FEzAcquireAction>>> AcquireActions() const;
         TOptional<FString> NamespaceName() const;
-        TOptional<FString> UserId() const;
         TOptional<FString> RankingName() const;
         TOptional<int64> Season() const;
+        TOptional<FString> UserId() const;
 
         FEzGlobalRankingReceivedRewardDomain(
             Gs2::Ranking2::Domain::Model::FGlobalRankingReceivedRewardDomainPtr Domain,

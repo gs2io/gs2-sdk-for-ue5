@@ -21,8 +21,10 @@ namespace Gs2::Script::Request
     FDebugInvokeRequest::FDebugInvokeRequest():
         ScriptValue(TOptional<FString>()),
         ArgsValue(TOptional<FString>()),
+        UserIdValue(TOptional<FString>()),
         RandomStatusValue(nullptr),
-        DisableStringNumberToNumberValue(TOptional<bool>())
+        DisableStringNumberToNumberValue(TOptional<bool>()),
+        TimeOffsetTokenValue(TOptional<FString>())
     {
     }
 
@@ -31,8 +33,10 @@ namespace Gs2::Script::Request
     ):
         ScriptValue(From.ScriptValue),
         ArgsValue(From.ArgsValue),
+        UserIdValue(From.UserIdValue),
         RandomStatusValue(From.RandomStatusValue),
-        DisableStringNumberToNumberValue(From.DisableStringNumberToNumberValue)
+        DisableStringNumberToNumberValue(From.DisableStringNumberToNumberValue),
+        TimeOffsetTokenValue(From.TimeOffsetTokenValue)
     {
     }
 
@@ -60,6 +64,14 @@ namespace Gs2::Script::Request
         return SharedThis(this);
     }
 
+    TSharedPtr<FDebugInvokeRequest> FDebugInvokeRequest::WithUserId(
+        const TOptional<FString> UserId
+    )
+    {
+        this->UserIdValue = UserId;
+        return SharedThis(this);
+    }
+
     TSharedPtr<FDebugInvokeRequest> FDebugInvokeRequest::WithRandomStatus(
         const TSharedPtr<Model::FRandomStatus> RandomStatus
     )
@@ -76,6 +88,22 @@ namespace Gs2::Script::Request
         return SharedThis(this);
     }
 
+    TSharedPtr<FDebugInvokeRequest> FDebugInvokeRequest::WithTimeOffsetToken(
+        const TOptional<FString> TimeOffsetToken
+    )
+    {
+        this->TimeOffsetTokenValue = TimeOffsetToken;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FDebugInvokeRequest> FDebugInvokeRequest::WithDuplicationAvoider(
+        const TOptional<FString> DuplicationAvoider
+    )
+    {
+        this->DuplicationAvoiderValue = DuplicationAvoider;
+        return SharedThis(this);
+    }
+
     TOptional<FString> FDebugInvokeRequest::GetContextStack() const
     {
         return ContextStackValue;
@@ -89,6 +117,11 @@ namespace Gs2::Script::Request
     TOptional<FString> FDebugInvokeRequest::GetArgs() const
     {
         return ArgsValue;
+    }
+
+    TOptional<FString> FDebugInvokeRequest::GetUserId() const
+    {
+        return UserIdValue;
     }
 
     TSharedPtr<Model::FRandomStatus> FDebugInvokeRequest::GetRandomStatus() const
@@ -112,6 +145,16 @@ namespace Gs2::Script::Request
             return FString("null");
         }
         return FString(DisableStringNumberToNumberValue.GetValue() ? "true" : "false");
+    }
+
+    TOptional<FString> FDebugInvokeRequest::GetTimeOffsetToken() const
+    {
+        return TimeOffsetTokenValue;
+    }
+
+    TOptional<FString> FDebugInvokeRequest::GetDuplicationAvoider() const
+    {
+        return DuplicationAvoiderValue;
     }
 
     TSharedPtr<FDebugInvokeRequest> FDebugInvokeRequest::FromJson(const TSharedPtr<FJsonObject> Data)
@@ -139,6 +182,15 @@ namespace Gs2::Script::Request
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
+            ->WithUserId(Data->HasField(ANSI_TO_TCHAR("userId")) ? [Data]() -> TOptional<FString>
+              {
+                  FString v("");
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("userId"), v))
+                  {
+                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                  }
+                  return TOptional<FString>();
+              }() : TOptional<FString>())
           ->WithRandomStatus(Data->HasField(ANSI_TO_TCHAR("randomStatus")) ? [Data]() -> Model::FRandomStatusPtr
               {
                   if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("randomStatus")))
@@ -155,7 +207,17 @@ namespace Gs2::Script::Request
                         return TOptional(v);
                   }
                   return TOptional<bool>();
-              }() : TOptional<bool>());
+              }() : TOptional<bool>())
+            ->WithTimeOffsetToken(Data->HasField(ANSI_TO_TCHAR("timeOffsetToken")) ? [Data]() -> TOptional<FString>
+              {
+                  FString v("");
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("timeOffsetToken"), v))
+                  {
+                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                  }
+                  return TOptional<FString>();
+              }() : TOptional<FString>())
+          ->WithDuplicationAvoider(Data->HasField(ANSI_TO_TCHAR("duplicationAvoider")) ? TOptional<FString>(Data->GetStringField(ANSI_TO_TCHAR("duplicationAvoider"))) : TOptional<FString>());
     }
 
     TSharedPtr<FJsonObject> FDebugInvokeRequest::ToJson() const
@@ -173,6 +235,10 @@ namespace Gs2::Script::Request
         {
             JsonRootObject->SetStringField("args", ArgsValue.GetValue());
         }
+        if (UserIdValue.IsSet())
+        {
+            JsonRootObject->SetStringField("userId", UserIdValue.GetValue());
+        }
         if (RandomStatusValue != nullptr && RandomStatusValue.IsValid())
         {
             JsonRootObject->SetObjectField("randomStatus", RandomStatusValue->ToJson());
@@ -180,6 +246,14 @@ namespace Gs2::Script::Request
         if (DisableStringNumberToNumberValue.IsSet())
         {
             JsonRootObject->SetBoolField("disableStringNumberToNumber", DisableStringNumberToNumberValue.GetValue());
+        }
+        if (TimeOffsetTokenValue.IsSet())
+        {
+            JsonRootObject->SetStringField("timeOffsetToken", TimeOffsetTokenValue.GetValue());
+        }
+        if (DuplicationAvoiderValue.IsSet())
+        {
+            JsonRootObject->SetStringField("duplicationAvoider", DuplicationAvoiderValue.GetValue());
         }
         return JsonRootObject;
     }

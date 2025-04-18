@@ -100,12 +100,13 @@ namespace Gs2::Ranking2::Domain::SpeculativeExecutor
     {
         const auto Future = Domain->Ranking2->Namespace(
                 Request->GetNamespaceName().IsSet() ? *Request->GetNamespaceName() : FString("")
-            )->AccessToken(
-                AccessToken
-            )->ClusterRankingScore(
-                Request->GetRankingName().IsSet() ? *Request->GetRankingName() : FString(""),
+            )->ClusterRankingModel(
+                Request->GetRankingName().IsSet() ? *Request->GetRankingName() : FString("")
+            )->ClusterRankingSeason(
                 Request->GetClusterName().IsSet() ? *Request->GetClusterName() : FString(""),
-                Request->GetSeason().IsSet() ? *Request->GetSeason() : FString("")
+                Request->GetSeason().IsSet() ? *Request->GetSeason() : FString(""),
+                Request->GetUserId().IsSet() ? *Request->GetUserId() : FString("")
+            )->ClusterRankingScore(
             )->Model();
         Future->StartSynchronousTask();
         if (Future->GetTask().IsError())

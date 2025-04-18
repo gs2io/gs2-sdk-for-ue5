@@ -39,11 +39,6 @@ namespace Gs2::UE5::Ranking2::Domain::Model
         return Domain->NamespaceName;
     }
 
-    TOptional<FString> FEzClusterRankingReceivedRewardGameSessionDomain::UserId() const
-    {
-        return Domain->UserId();
-    }
-
     TOptional<FString> FEzClusterRankingReceivedRewardGameSessionDomain::RankingName() const
     {
         return Domain->RankingName;
@@ -59,6 +54,11 @@ namespace Gs2::UE5::Ranking2::Domain::Model
         return Domain->Season;
     }
 
+    TOptional<FString> FEzClusterRankingReceivedRewardGameSessionDomain::UserId() const
+    {
+        return Domain->UserId();
+    }
+
     FEzClusterRankingReceivedRewardGameSessionDomain::FEzClusterRankingReceivedRewardGameSessionDomain(
         Gs2::Ranking2::Domain::Model::FClusterRankingReceivedRewardAccessTokenDomainPtr Domain,
         Gs2::UE5::Util::IGameSessionPtr GameSession,
@@ -69,6 +69,69 @@ namespace Gs2::UE5::Ranking2::Domain::Model
         ConnectionValue(Connection)
     {
 
+    }
+
+    FEzClusterRankingReceivedRewardGameSessionDomain::FReceiveTask::FReceiveTask(
+        TSharedPtr<FEzClusterRankingReceivedRewardGameSessionDomain> Self,
+        TOptional<TArray<TSharedPtr<Gs2::UE5::Ranking2::Model::FEzConfig>>> Config
+    ): Self(Self), Config(Config)
+    {
+
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FEzClusterRankingReceivedRewardGameSessionDomain::FReceiveTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::UE5::Ranking2::Domain::Model::FEzClusterRankingReceivedRewardGameSessionDomain>> Result
+    )
+    {
+        const auto Future = Self->ConnectionValue->Run(
+            [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
+                const auto Task = Self->Domain->Receive(
+                    MakeShared<Gs2::Ranking2::Request::FReceiveClusterRankingReceivedRewardRequest>()
+                        ->WithConfig([&]{
+                            auto Arr = MakeShared<TArray<TSharedPtr<Gs2::Ranking2::Model::FConfig>>>();
+                            if (!Config.IsSet()) {
+                                return Arr;
+                            }
+                            for (auto Value : *Config) {
+                                Arr->Add(Value->ToModel());
+                            }
+                            return Arr;
+                        }())
+                );
+                Task->StartSynchronousTask();
+                if (Task->GetTask().IsError())
+                {
+                    Task->EnsureCompletion();
+                    return Task->GetTask().Error();
+                }
+                *Result = MakeShared<Gs2::UE5::Ranking2::Domain::Model::FEzClusterRankingReceivedRewardGameSessionDomain>(
+                    Task->GetTask().Result(),
+                    Self->GameSession,
+                    Self->ConnectionValue
+                );
+                Task->EnsureCompletion();
+                return nullptr;
+            },
+            nullptr
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            Future->EnsureCompletion();
+            return Future->GetTask().Error();
+        }
+        Future->EnsureCompletion();
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FEzClusterRankingReceivedRewardGameSessionDomain::FReceiveTask>> FEzClusterRankingReceivedRewardGameSessionDomain::Receive(
+        TOptional<TArray<TSharedPtr<Gs2::UE5::Ranking2::Model::FEzConfig>>> Config
+    )
+    {
+        return Gs2::Core::Util::New<FAsyncTask<FReceiveTask>>(
+            this->AsShared(),
+            Config
+        );
     }
 
     FEzClusterRankingReceivedRewardGameSessionDomain::FModelTask::FModelTask(

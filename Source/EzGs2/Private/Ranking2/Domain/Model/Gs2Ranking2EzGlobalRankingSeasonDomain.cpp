@@ -39,6 +39,11 @@ namespace Gs2::UE5::Ranking2::Domain::Model
         return Domain->Season;
     }
 
+    TOptional<FString> FEzGlobalRankingSeasonDomain::UserId() const
+    {
+        return Domain->UserId;
+    }
+
     FEzGlobalRankingSeasonDomain::FEzGlobalRankingSeasonDomain(
         Gs2::Ranking2::Domain::Model::FGlobalRankingSeasonDomainPtr Domain,
         Gs2::UE5::Util::FGs2ConnectionPtr Connection
@@ -49,13 +54,31 @@ namespace Gs2::UE5::Ranking2::Domain::Model
 
     }
 
+    Gs2::UE5::Ranking2::Domain::Model::FEzGlobalRankingScoreDomainPtr FEzGlobalRankingSeasonDomain::GlobalRankingScore(
+    ) const
+    {
+        return MakeShared<Gs2::UE5::Ranking2::Domain::Model::FEzGlobalRankingScoreDomain>(
+            Domain->GlobalRankingScore(
+            ),
+            ConnectionValue
+        );
+    }
+
     Gs2::UE5::Ranking2::Domain::Model::FEzGlobalRankingDataDomainPtr FEzGlobalRankingSeasonDomain::GlobalRankingData(
-        const FString UserId
     ) const
     {
         return MakeShared<Gs2::UE5::Ranking2::Domain::Model::FEzGlobalRankingDataDomain>(
             Domain->GlobalRankingData(
-                UserId
+            ),
+            ConnectionValue
+        );
+    }
+
+    Gs2::UE5::Ranking2::Domain::Model::FEzGlobalRankingReceivedRewardDomainPtr FEzGlobalRankingSeasonDomain::GlobalRankingReceivedReward(
+    ) const
+    {
+        return MakeShared<Gs2::UE5::Ranking2::Domain::Model::FEzGlobalRankingReceivedRewardDomain>(
+            Domain->GlobalRankingReceivedReward(
             ),
             ConnectionValue
         );

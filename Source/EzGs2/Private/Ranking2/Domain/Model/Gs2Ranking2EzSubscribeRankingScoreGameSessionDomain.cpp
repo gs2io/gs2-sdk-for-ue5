@@ -24,11 +24,6 @@ namespace Gs2::UE5::Ranking2::Domain::Model
         return Domain->NamespaceName;
     }
 
-    TOptional<FString> FEzSubscribeRankingScoreGameSessionDomain::UserId() const
-    {
-        return Domain->UserId();
-    }
-
     TOptional<FString> FEzSubscribeRankingScoreGameSessionDomain::RankingName() const
     {
         return Domain->RankingName;
@@ -37,6 +32,11 @@ namespace Gs2::UE5::Ranking2::Domain::Model
     TOptional<int64> FEzSubscribeRankingScoreGameSessionDomain::Season() const
     {
         return Domain->Season;
+    }
+
+    TOptional<FString> FEzSubscribeRankingScoreGameSessionDomain::UserId() const
+    {
+        return Domain->UserId();
     }
 
     FEzSubscribeRankingScoreGameSessionDomain::FEzSubscribeRankingScoreGameSessionDomain(

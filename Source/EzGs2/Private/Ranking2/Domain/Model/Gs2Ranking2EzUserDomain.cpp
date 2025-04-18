@@ -44,34 +44,6 @@ namespace Gs2::UE5::Ranking2::Domain::Model
 
     }
 
-    Gs2::UE5::Ranking2::Domain::Model::FEzGlobalRankingScoreDomainPtr FEzUserDomain::GlobalRankingScore(
-        const FString RankingName,
-        const int64 Season
-    ) const
-    {
-        return MakeShared<Gs2::UE5::Ranking2::Domain::Model::FEzGlobalRankingScoreDomain>(
-            Domain->GlobalRankingScore(
-                RankingName,
-                Season
-            ),
-            ConnectionValue
-        );
-    }
-
-    Gs2::UE5::Ranking2::Domain::Model::FEzSubscribeRankingSeasonDomainPtr FEzUserDomain::SubscribeRankingSeason(
-        const FString RankingName,
-        const int64 Season
-    ) const
-    {
-        return MakeShared<Gs2::UE5::Ranking2::Domain::Model::FEzSubscribeRankingSeasonDomain>(
-            Domain->SubscribeRankingSeason(
-                RankingName,
-                Season
-            ),
-            ConnectionValue
-        );
-    }
-
     Gs2::UE5::Ranking2::Domain::Model::FEzSubscribeDomainPtr FEzUserDomain::Subscribe(
         const FString RankingName
     ) const
@@ -79,52 +51,6 @@ namespace Gs2::UE5::Ranking2::Domain::Model
         return MakeShared<Gs2::UE5::Ranking2::Domain::Model::FEzSubscribeDomain>(
             Domain->Subscribe(
                 RankingName
-            ),
-            ConnectionValue
-        );
-    }
-
-    Gs2::UE5::Ranking2::Domain::Model::FEzGlobalRankingReceivedRewardDomainPtr FEzUserDomain::GlobalRankingReceivedReward(
-        const FString RankingName,
-        const int64 Season
-    ) const
-    {
-        return MakeShared<Gs2::UE5::Ranking2::Domain::Model::FEzGlobalRankingReceivedRewardDomain>(
-            Domain->GlobalRankingReceivedReward(
-                RankingName,
-                Season
-            ),
-            ConnectionValue
-        );
-    }
-
-    Gs2::UE5::Ranking2::Domain::Model::FEzClusterRankingReceivedRewardDomainPtr FEzUserDomain::ClusterRankingReceivedReward(
-        const FString RankingName,
-        const FString ClusterName,
-        const int64 Season
-    ) const
-    {
-        return MakeShared<Gs2::UE5::Ranking2::Domain::Model::FEzClusterRankingReceivedRewardDomain>(
-            Domain->ClusterRankingReceivedReward(
-                RankingName,
-                ClusterName,
-                Season
-            ),
-            ConnectionValue
-        );
-    }
-
-    Gs2::UE5::Ranking2::Domain::Model::FEzClusterRankingScoreDomainPtr FEzUserDomain::ClusterRankingScore(
-        const FString RankingName,
-        const FString ClusterName,
-        const int64 Season
-    ) const
-    {
-        return MakeShared<Gs2::UE5::Ranking2::Domain::Model::FEzClusterRankingScoreDomain>(
-            Domain->ClusterRankingScore(
-                RankingName,
-                ClusterName,
-                Season
             ),
             ConnectionValue
         );

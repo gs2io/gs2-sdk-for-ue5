@@ -52,10 +52,10 @@ namespace Gs2::UE5::Ranking2::Domain::Model
 
         public:
         TOptional<FString> NamespaceName() const;
-        TOptional<FString> UserId() const;
         TOptional<FString> RankingName() const;
         TOptional<FString> ClusterName() const;
         TOptional<int64> Season() const;
+        TOptional<FString> UserId() const;
 
         FEzClusterRankingScoreDomain(
             Gs2::Ranking2::Domain::Model::FClusterRankingScoreDomainPtr Domain,
