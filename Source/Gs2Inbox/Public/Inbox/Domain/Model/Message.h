@@ -133,6 +133,32 @@ namespace Gs2::Inbox::Domain::Model
             Request::FOpenMessageByUserIdRequestPtr Request
         );
 
+        class GS2INBOX_API FCloseTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Inbox::Domain::Model::FMessageDomain>,
+            public TSharedFromThis<FCloseTask>
+        {
+            const TSharedPtr<FMessageDomain> Self;
+            const Request::FCloseMessageByUserIdRequestPtr Request;
+        public:
+            explicit FCloseTask(
+                const TSharedPtr<FMessageDomain>& Self,
+                const Request::FCloseMessageByUserIdRequestPtr Request
+            );
+
+            FCloseTask(
+                const FCloseTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Inbox::Domain::Model::FMessageDomain>> Result
+            ) override;
+        };
+        friend FCloseTask;
+
+        TSharedPtr<FAsyncTask<FCloseTask>> Close(
+            Request::FCloseMessageByUserIdRequestPtr Request
+        );
+
         class GS2INBOX_API FReadTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Inbox::Domain::Model::FMessageDomain>,
             public TSharedFromThis<FReadTask>

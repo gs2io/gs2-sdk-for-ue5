@@ -62,6 +62,8 @@
 #include "Task/WebSocket/OpenMessageTask.h"
 #include "Request/OpenMessageByUserIdRequest.h"
 #include "Task/WebSocket/OpenMessageByUserIdTask.h"
+#include "Request/CloseMessageByUserIdRequest.h"
+#include "Task/WebSocket/CloseMessageByUserIdTask.h"
 #include "Request/ReadMessageRequest.h"
 #include "Task/WebSocket/ReadMessageTask.h"
 #include "Request/ReadMessageByUserIdRequest.h"
@@ -206,6 +208,10 @@ namespace Gs2::Inbox
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FOpenMessageByUserIdTask>> OpenMessageByUserId(
             const Request::FOpenMessageByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FCloseMessageByUserIdTask>> CloseMessageByUserId(
+            const Request::FCloseMessageByUserIdRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FReadMessageTask>> ReadMessage(

@@ -65,15 +65,15 @@ namespace Gs2::UE5::Ranking2::Domain::Model
             Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
 
-        class EZGS2_API FReceiveTask :
+        class EZGS2_API FReceiveGlobalRankingRewardTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::Ranking2::Domain::Model::FEzGlobalRankingReceivedRewardGameSessionDomain>,
-            public TSharedFromThis<FReceiveTask>
+            public TSharedFromThis<FReceiveGlobalRankingRewardTask>
         {
             TSharedPtr<FEzGlobalRankingReceivedRewardGameSessionDomain> Self;
             TOptional<TArray<TSharedPtr<Gs2::UE5::Ranking2::Model::FEzConfig>>> Config;
 
         public:
-            explicit FReceiveTask(
+            explicit FReceiveGlobalRankingRewardTask(
                 TSharedPtr<FEzGlobalRankingReceivedRewardGameSessionDomain> Self,
                 TOptional<TArray<TSharedPtr<Gs2::UE5::Ranking2::Model::FEzConfig>>> Config = TOptional<TArray<TSharedPtr<Gs2::UE5::Ranking2::Model::FEzConfig>>>()
             );
@@ -82,9 +82,9 @@ namespace Gs2::UE5::Ranking2::Domain::Model
                 TSharedPtr<TSharedPtr<Gs2::UE5::Ranking2::Domain::Model::FEzGlobalRankingReceivedRewardGameSessionDomain>> Result
             ) override;
         };
-        friend FReceiveTask;
+        friend FReceiveGlobalRankingRewardTask;
 
-        TSharedPtr<FAsyncTask<FReceiveTask>> Receive(
+        TSharedPtr<FAsyncTask<FReceiveGlobalRankingRewardTask>> ReceiveGlobalRankingReward(
             TOptional<TArray<TSharedPtr<Gs2::UE5::Ranking2::Model::FEzConfig>>> Config = TOptional<TArray<TSharedPtr<Gs2::UE5::Ranking2::Model::FEzConfig>>>()
         );
 

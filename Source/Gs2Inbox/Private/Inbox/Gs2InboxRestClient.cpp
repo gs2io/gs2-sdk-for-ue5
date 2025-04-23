@@ -217,6 +217,15 @@ namespace Gs2::Inbox
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::Rest::FCloseMessageByUserIdTask>> FGs2InboxRestClient::CloseMessageByUserId(
+        const Request::FCloseMessageByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FCloseMessageByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::Rest::FReadMessageTask>> FGs2InboxRestClient::ReadMessage(
         const Request::FReadMessageRequestPtr Request) const
     {

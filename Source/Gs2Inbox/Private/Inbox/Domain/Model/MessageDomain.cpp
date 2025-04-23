@@ -146,6 +146,41 @@ namespace Gs2::Inbox::Domain::Model
         return Gs2::Core::Util::New<FAsyncTask<FOpenTask>>(this->AsShared(), Request);
     }
 
+    FMessageDomain::FCloseTask::FCloseTask(
+        const TSharedPtr<FMessageDomain>& Self,
+        const Request::FCloseMessageByUserIdRequestPtr Request
+    ): Self(Self), Request(Request)
+    {
+
+    }
+
+    FMessageDomain::FCloseTask::FCloseTask(
+        const FCloseTask& From
+    ): TGs2Future(From), Self(From.Self), Request(From.Request)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FMessageDomain::FCloseTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::Inbox::Domain::Model::FMessageDomain>> Result
+    )
+    {
+        Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
+            ->WithNamespaceName(Self->NamespaceName)
+            ->WithUserId(Self->UserId)
+            ->WithMessageName(Self->MessageName);
+        auto Domain = Self;
+
+        *Result = Domain;
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FMessageDomain::FCloseTask>> FMessageDomain::Close(
+        Request::FCloseMessageByUserIdRequestPtr Request
+    ) {
+        return Gs2::Core::Util::New<FAsyncTask<FCloseTask>>(this->AsShared(), Request);
+    }
+
     FMessageDomain::FReadTask::FReadTask(
         const TSharedPtr<FMessageDomain>& Self,
         const Request::FReadMessageByUserIdRequestPtr Request

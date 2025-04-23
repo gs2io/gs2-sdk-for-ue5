@@ -66,7 +66,7 @@ namespace Gs2::UE5::Ranking2::Domain::Model
 
     }
 
-    FEzGlobalRankingReceivedRewardGameSessionDomain::FReceiveTask::FReceiveTask(
+    FEzGlobalRankingReceivedRewardGameSessionDomain::FReceiveGlobalRankingRewardTask::FReceiveGlobalRankingRewardTask(
         TSharedPtr<FEzGlobalRankingReceivedRewardGameSessionDomain> Self,
         TOptional<TArray<TSharedPtr<Gs2::UE5::Ranking2::Model::FEzConfig>>> Config
     ): Self(Self), Config(Config)
@@ -74,7 +74,7 @@ namespace Gs2::UE5::Ranking2::Domain::Model
 
     }
 
-    Gs2::Core::Model::FGs2ErrorPtr FEzGlobalRankingReceivedRewardGameSessionDomain::FReceiveTask::Action(
+    Gs2::Core::Model::FGs2ErrorPtr FEzGlobalRankingReceivedRewardGameSessionDomain::FReceiveGlobalRankingRewardTask::Action(
         TSharedPtr<TSharedPtr<Gs2::UE5::Ranking2::Domain::Model::FEzGlobalRankingReceivedRewardGameSessionDomain>> Result
     )
     {
@@ -119,11 +119,11 @@ namespace Gs2::UE5::Ranking2::Domain::Model
         return nullptr;
     }
 
-    TSharedPtr<FAsyncTask<FEzGlobalRankingReceivedRewardGameSessionDomain::FReceiveTask>> FEzGlobalRankingReceivedRewardGameSessionDomain::Receive(
+    TSharedPtr<FAsyncTask<FEzGlobalRankingReceivedRewardGameSessionDomain::FReceiveGlobalRankingRewardTask>> FEzGlobalRankingReceivedRewardGameSessionDomain::ReceiveGlobalRankingReward(
         TOptional<TArray<TSharedPtr<Gs2::UE5::Ranking2::Model::FEzConfig>>> Config
     )
     {
-        return Gs2::Core::Util::New<FAsyncTask<FReceiveTask>>(
+        return Gs2::Core::Util::New<FAsyncTask<FReceiveGlobalRankingRewardTask>>(
             this->AsShared(),
             Config
         );

@@ -217,6 +217,15 @@ namespace Gs2::Inbox
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::WebSocket::FCloseMessageByUserIdTask>> FGs2InboxWebSocketClient::CloseMessageByUserId(
+        const Request::FCloseMessageByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FCloseMessageByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::WebSocket::FReadMessageTask>> FGs2InboxWebSocketClient::ReadMessage(
         const Request::FReadMessageRequestPtr Request) const
     {

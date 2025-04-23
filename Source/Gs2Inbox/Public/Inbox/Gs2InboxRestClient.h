@@ -62,6 +62,8 @@
 #include "Task/Rest/OpenMessageTask.h"
 #include "Request/OpenMessageByUserIdRequest.h"
 #include "Task/Rest/OpenMessageByUserIdTask.h"
+#include "Request/CloseMessageByUserIdRequest.h"
+#include "Task/Rest/CloseMessageByUserIdTask.h"
 #include "Request/ReadMessageRequest.h"
 #include "Task/Rest/ReadMessageTask.h"
 #include "Request/ReadMessageByUserIdRequest.h"
@@ -206,6 +208,10 @@ namespace Gs2::Inbox
 
         TSharedPtr<FAsyncTask<Task::Rest::FOpenMessageByUserIdTask>> OpenMessageByUserId(
             const Request::FOpenMessageByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FCloseMessageByUserIdTask>> CloseMessageByUserId(
+            const Request::FCloseMessageByUserIdRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::Rest::FReadMessageTask>> ReadMessage(

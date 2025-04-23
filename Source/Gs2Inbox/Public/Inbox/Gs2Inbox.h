@@ -168,6 +168,12 @@
 #include "Task/Rest/OpenMessageByUserIdTask.h"
 #include "Task/WebSocket/OpenMessageByUserIdTask.h"
 
+// CloseMessageByUserId
+#include "Request/CloseMessageByUserIdRequest.h"
+#include "Result/CloseMessageByUserIdResult.h"
+#include "Task/Rest/CloseMessageByUserIdTask.h"
+#include "Task/WebSocket/CloseMessageByUserIdTask.h"
+
 // ReadMessage
 #include "Request/ReadMessageRequest.h"
 #include "Result/ReadMessageResult.h"
