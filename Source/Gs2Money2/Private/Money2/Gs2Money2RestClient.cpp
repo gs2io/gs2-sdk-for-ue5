@@ -505,6 +505,15 @@ namespace Gs2::Money2
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::Rest::FPreUpdateCurrentModelMasterTask>> FGs2Money2RestClient::PreUpdateCurrentModelMaster(
+        const Request::FPreUpdateCurrentModelMasterRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FPreUpdateCurrentModelMasterTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::Rest::FUpdateCurrentModelMasterTask>> FGs2Money2RestClient::UpdateCurrentModelMaster(
         const Request::FUpdateCurrentModelMasterRequestPtr Request) const
     {

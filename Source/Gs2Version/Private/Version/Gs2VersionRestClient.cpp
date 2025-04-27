@@ -334,6 +334,15 @@ namespace Gs2::Version
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::Rest::FPreUpdateCurrentVersionMasterTask>> FGs2VersionRestClient::PreUpdateCurrentVersionMaster(
+        const Request::FPreUpdateCurrentVersionMasterRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FPreUpdateCurrentVersionMasterTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::Rest::FUpdateCurrentVersionMasterTask>> FGs2VersionRestClient::UpdateCurrentVersionMaster(
         const Request::FUpdateCurrentVersionMasterRequestPtr Request) const
     {

@@ -88,6 +88,8 @@
 #include "Task/WebSocket/ExportMasterTask.h"
 #include "Request/GetCurrentStaminaMasterRequest.h"
 #include "Task/WebSocket/GetCurrentStaminaMasterTask.h"
+#include "Request/PreUpdateCurrentStaminaMasterRequest.h"
+#include "Task/WebSocket/PreUpdateCurrentStaminaMasterTask.h"
 #include "Request/UpdateCurrentStaminaMasterRequest.h"
 #include "Task/WebSocket/UpdateCurrentStaminaMasterTask.h"
 #include "Request/UpdateCurrentStaminaMasterFromGitHubRequest.h"
@@ -330,6 +332,10 @@ namespace Gs2::Stamina
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FGetCurrentStaminaMasterTask>> GetCurrentStaminaMaster(
             const Request::FGetCurrentStaminaMasterRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FPreUpdateCurrentStaminaMasterTask>> PreUpdateCurrentStaminaMaster(
+            const Request::FPreUpdateCurrentStaminaMasterRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FUpdateCurrentStaminaMasterTask>> UpdateCurrentStaminaMaster(

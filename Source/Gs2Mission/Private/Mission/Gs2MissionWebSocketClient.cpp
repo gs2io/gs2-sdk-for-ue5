@@ -595,6 +595,15 @@ namespace Gs2::Mission
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::WebSocket::FPreUpdateCurrentMissionMasterTask>> FGs2MissionWebSocketClient::PreUpdateCurrentMissionMaster(
+        const Request::FPreUpdateCurrentMissionMasterRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FPreUpdateCurrentMissionMasterTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::WebSocket::FUpdateCurrentMissionMasterTask>> FGs2MissionWebSocketClient::UpdateCurrentMissionMaster(
         const Request::FUpdateCurrentMissionMasterRequestPtr Request) const
     {

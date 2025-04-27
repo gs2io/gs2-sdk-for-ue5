@@ -133,6 +133,49 @@ namespace Gs2::Buff::Domain::Model
         return Gs2::Core::Util::New<FAsyncTask<FGetTask>>(this->AsShared(), Request);
     }
 
+    FCurrentBuffMasterDomain::FPreUpdateTask::FPreUpdateTask(
+        const TSharedPtr<FCurrentBuffMasterDomain>& Self,
+        const Request::FPreUpdateCurrentBuffMasterRequestPtr Request
+    ): Self(Self), Request(Request)
+    {
+
+    }
+
+    FCurrentBuffMasterDomain::FPreUpdateTask::FPreUpdateTask(
+        const FPreUpdateTask& From
+    ): TGs2Future(From), Self(From.Self), Request(From.Request)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FCurrentBuffMasterDomain::FPreUpdateTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::Buff::Domain::Model::FCurrentBuffMasterDomain>> Result
+    )
+    {
+        Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
+            ->WithNamespaceName(Self->NamespaceName);
+        const auto Domain = Self;
+        if (ResultModel != nullptr)
+        {
+            if (ResultModel->GetUploadToken().IsSet())
+            {
+                Self->UploadToken = Domain->UploadToken = ResultModel->GetUploadToken();
+            }
+            if (ResultModel->GetUploadUrl().IsSet())
+            {
+                Self->UploadUrl = Domain->UploadUrl = ResultModel->GetUploadUrl();
+            }
+        }
+        *Result = Domain;
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FCurrentBuffMasterDomain::FPreUpdateTask>> FCurrentBuffMasterDomain::PreUpdate(
+        Request::FPreUpdateCurrentBuffMasterRequestPtr Request
+    ) {
+        return Gs2::Core::Util::New<FAsyncTask<FPreUpdateTask>>(this->AsShared(), Request);
+    }
+
     FCurrentBuffMasterDomain::FUpdateTask::FUpdateTask(
         const TSharedPtr<FCurrentBuffMasterDomain>& Self,
         const Request::FUpdateCurrentBuffMasterRequestPtr Request

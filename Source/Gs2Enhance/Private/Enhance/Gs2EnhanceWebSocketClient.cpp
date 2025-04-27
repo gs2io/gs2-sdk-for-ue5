@@ -433,6 +433,15 @@ namespace Gs2::Enhance
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::WebSocket::FPreUpdateCurrentRateMasterTask>> FGs2EnhanceWebSocketClient::PreUpdateCurrentRateMaster(
+        const Request::FPreUpdateCurrentRateMasterRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FPreUpdateCurrentRateMasterTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::WebSocket::FUpdateCurrentRateMasterTask>> FGs2EnhanceWebSocketClient::UpdateCurrentRateMaster(
         const Request::FUpdateCurrentRateMasterRequestPtr Request) const
     {

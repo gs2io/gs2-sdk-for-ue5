@@ -244,6 +244,15 @@ namespace Gs2::Quest
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::WebSocket::FPreUpdateCurrentQuestMasterTask>> FGs2QuestWebSocketClient::PreUpdateCurrentQuestMaster(
+        const Request::FPreUpdateCurrentQuestMasterRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FPreUpdateCurrentQuestMasterTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::WebSocket::FUpdateCurrentQuestMasterTask>> FGs2QuestWebSocketClient::UpdateCurrentQuestMaster(
         const Request::FUpdateCurrentQuestMasterRequestPtr Request) const
     {

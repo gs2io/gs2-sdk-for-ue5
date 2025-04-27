@@ -280,6 +280,15 @@ namespace Gs2::Enchant
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::Rest::FPreUpdateCurrentParameterMasterTask>> FGs2EnchantRestClient::PreUpdateCurrentParameterMaster(
+        const Request::FPreUpdateCurrentParameterMasterRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FPreUpdateCurrentParameterMasterTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::Rest::FUpdateCurrentParameterMasterTask>> FGs2EnchantRestClient::UpdateCurrentParameterMaster(
         const Request::FUpdateCurrentParameterMasterRequestPtr Request) const
     {

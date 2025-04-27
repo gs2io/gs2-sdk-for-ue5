@@ -133,6 +133,49 @@ namespace Gs2::Grade::Domain::Model
         return Gs2::Core::Util::New<FAsyncTask<FGetTask>>(this->AsShared(), Request);
     }
 
+    FCurrentGradeMasterDomain::FPreUpdateTask::FPreUpdateTask(
+        const TSharedPtr<FCurrentGradeMasterDomain>& Self,
+        const Request::FPreUpdateCurrentGradeMasterRequestPtr Request
+    ): Self(Self), Request(Request)
+    {
+
+    }
+
+    FCurrentGradeMasterDomain::FPreUpdateTask::FPreUpdateTask(
+        const FPreUpdateTask& From
+    ): TGs2Future(From), Self(From.Self), Request(From.Request)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FCurrentGradeMasterDomain::FPreUpdateTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::Grade::Domain::Model::FCurrentGradeMasterDomain>> Result
+    )
+    {
+        Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
+            ->WithNamespaceName(Self->NamespaceName);
+        const auto Domain = Self;
+        if (ResultModel != nullptr)
+        {
+            if (ResultModel->GetUploadToken().IsSet())
+            {
+                Self->UploadToken = Domain->UploadToken = ResultModel->GetUploadToken();
+            }
+            if (ResultModel->GetUploadUrl().IsSet())
+            {
+                Self->UploadUrl = Domain->UploadUrl = ResultModel->GetUploadUrl();
+            }
+        }
+        *Result = Domain;
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FCurrentGradeMasterDomain::FPreUpdateTask>> FCurrentGradeMasterDomain::PreUpdate(
+        Request::FPreUpdateCurrentGradeMasterRequestPtr Request
+    ) {
+        return Gs2::Core::Util::New<FAsyncTask<FPreUpdateTask>>(this->AsShared(), Request);
+    }
+
     FCurrentGradeMasterDomain::FUpdateTask::FUpdateTask(
         const TSharedPtr<FCurrentGradeMasterDomain>& Self,
         const Request::FUpdateCurrentGradeMasterRequestPtr Request

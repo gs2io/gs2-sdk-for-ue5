@@ -241,6 +241,12 @@
 #include "Task/Rest/GetCurrentVersionMasterTask.h"
 #include "Task/WebSocket/GetCurrentVersionMasterTask.h"
 
+// PreUpdateCurrentVersionMaster
+#include "Request/PreUpdateCurrentVersionMasterRequest.h"
+#include "Result/PreUpdateCurrentVersionMasterResult.h"
+#include "Task/Rest/PreUpdateCurrentVersionMasterTask.h"
+#include "Task/WebSocket/PreUpdateCurrentVersionMasterTask.h"
+
 // UpdateCurrentVersionMaster
 #include "Request/UpdateCurrentVersionMasterRequest.h"
 #include "Result/UpdateCurrentVersionMasterResult.h"

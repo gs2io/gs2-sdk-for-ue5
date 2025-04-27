@@ -53,6 +53,16 @@ namespace Gs2::Deploy::Domain
         const Gs2::Deploy::FGs2DeployRestClientPtr Client;
 
         public:
+        TOptional<FString> UploadToken;
+        TOptional<FString> UploadUrl;
+        TOptional<FString> GetUploadToken() const
+        {
+            return UploadToken;
+        }
+        TOptional<FString> GetUploadUrl() const
+        {
+            return UploadUrl;
+        }
     private:
 
         FString ParentKey;
@@ -66,6 +76,32 @@ namespace Gs2::Deploy::Domain
 
         FGs2DeployDomain(
             const FGs2DeployDomain& From
+        );
+
+        class GS2DEPLOY_API FPreCreateStackTask final :
+            public Gs2::Core::Util::TGs2Future<FGs2DeployDomain>,
+            public TSharedFromThis<FPreCreateStackTask>
+        {
+            const TSharedPtr<FGs2DeployDomain> Self;
+            const Request::FPreCreateStackRequestPtr Request;
+        public:
+            explicit FPreCreateStackTask(
+                const TSharedPtr<FGs2DeployDomain>& Self,
+                const Request::FPreCreateStackRequestPtr Request
+            );
+
+            FPreCreateStackTask(
+                const FPreCreateStackTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<FGs2DeployDomain>> Result
+            ) override;
+        };
+        friend FPreCreateStackTask;
+
+        TSharedPtr<FAsyncTask<FPreCreateStackTask>> PreCreateStack(
+            Request::FPreCreateStackRequestPtr Request
         );
 
         class GS2DEPLOY_API FCreateStackTask final :
@@ -118,6 +154,32 @@ namespace Gs2::Deploy::Domain
 
         TSharedPtr<FAsyncTask<FCreateStackFromGitHubTask>> CreateStackFromGitHub(
             Request::FCreateStackFromGitHubRequestPtr Request
+        );
+
+        class GS2DEPLOY_API FPreValidateTask final :
+            public Gs2::Core::Util::TGs2Future<FGs2DeployDomain>,
+            public TSharedFromThis<FPreValidateTask>
+        {
+            const TSharedPtr<FGs2DeployDomain> Self;
+            const Request::FPreValidateRequestPtr Request;
+        public:
+            explicit FPreValidateTask(
+                const TSharedPtr<FGs2DeployDomain>& Self,
+                const Request::FPreValidateRequestPtr Request
+            );
+
+            FPreValidateTask(
+                const FPreValidateTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<FGs2DeployDomain>> Result
+            ) override;
+        };
+        friend FPreValidateTask;
+
+        TSharedPtr<FAsyncTask<FPreValidateTask>> PreValidate(
+            Request::FPreValidateRequestPtr Request
         );
 
         class GS2DEPLOY_API FValidateTask final :

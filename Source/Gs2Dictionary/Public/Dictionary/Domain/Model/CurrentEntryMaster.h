@@ -61,6 +61,16 @@ namespace Gs2::Dictionary::Domain::Model
         const Gs2::Dictionary::FGs2DictionaryRestClientPtr Client;
 
         public:
+        TOptional<FString> UploadToken;
+        TOptional<FString> UploadUrl;
+        TOptional<FString> GetUploadToken() const
+        {
+            return UploadToken;
+        }
+        TOptional<FString> GetUploadUrl() const
+        {
+            return UploadUrl;
+        }
         TOptional<FString> NamespaceName;
     private:
 
@@ -129,6 +139,32 @@ namespace Gs2::Dictionary::Domain::Model
 
         TSharedPtr<FAsyncTask<FGetTask>> Get(
             Request::FGetCurrentEntryMasterRequestPtr Request
+        );
+
+        class GS2DICTIONARY_API FPreUpdateTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Dictionary::Domain::Model::FCurrentEntryMasterDomain>,
+            public TSharedFromThis<FPreUpdateTask>
+        {
+            const TSharedPtr<FCurrentEntryMasterDomain> Self;
+            const Request::FPreUpdateCurrentEntryMasterRequestPtr Request;
+        public:
+            explicit FPreUpdateTask(
+                const TSharedPtr<FCurrentEntryMasterDomain>& Self,
+                const Request::FPreUpdateCurrentEntryMasterRequestPtr Request
+            );
+
+            FPreUpdateTask(
+                const FPreUpdateTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Dictionary::Domain::Model::FCurrentEntryMasterDomain>> Result
+            ) override;
+        };
+        friend FPreUpdateTask;
+
+        TSharedPtr<FAsyncTask<FPreUpdateTask>> PreUpdate(
+            Request::FPreUpdateCurrentEntryMasterRequestPtr Request
         );
 
         class GS2DICTIONARY_API FUpdateTask final :

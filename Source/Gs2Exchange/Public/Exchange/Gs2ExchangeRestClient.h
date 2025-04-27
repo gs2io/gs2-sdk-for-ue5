@@ -88,6 +88,8 @@
 #include "Task/Rest/ExportMasterTask.h"
 #include "Request/GetCurrentRateMasterRequest.h"
 #include "Task/Rest/GetCurrentRateMasterTask.h"
+#include "Request/PreUpdateCurrentRateMasterRequest.h"
+#include "Task/Rest/PreUpdateCurrentRateMasterTask.h"
 #include "Request/UpdateCurrentRateMasterRequest.h"
 #include "Task/Rest/UpdateCurrentRateMasterTask.h"
 #include "Request/UpdateCurrentRateMasterFromGitHubRequest.h"
@@ -272,6 +274,10 @@ namespace Gs2::Exchange
 
         TSharedPtr<FAsyncTask<Task::Rest::FGetCurrentRateMasterTask>> GetCurrentRateMaster(
             const Request::FGetCurrentRateMasterRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FPreUpdateCurrentRateMasterTask>> PreUpdateCurrentRateMaster(
+            const Request::FPreUpdateCurrentRateMasterRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::Rest::FUpdateCurrentRateMasterTask>> UpdateCurrentRateMaster(

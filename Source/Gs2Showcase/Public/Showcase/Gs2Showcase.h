@@ -225,6 +225,12 @@
 #include "Task/Rest/GetCurrentShowcaseMasterTask.h"
 #include "Task/WebSocket/GetCurrentShowcaseMasterTask.h"
 
+// PreUpdateCurrentShowcaseMaster
+#include "Request/PreUpdateCurrentShowcaseMasterRequest.h"
+#include "Result/PreUpdateCurrentShowcaseMasterResult.h"
+#include "Task/Rest/PreUpdateCurrentShowcaseMasterTask.h"
+#include "Task/WebSocket/PreUpdateCurrentShowcaseMasterTask.h"
+
 // UpdateCurrentShowcaseMaster
 #include "Request/UpdateCurrentShowcaseMasterRequest.h"
 #include "Result/UpdateCurrentShowcaseMasterResult.h"

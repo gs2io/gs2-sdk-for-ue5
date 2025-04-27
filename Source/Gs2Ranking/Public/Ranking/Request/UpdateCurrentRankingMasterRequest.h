@@ -27,7 +27,9 @@ namespace Gs2::Ranking::Request
     {
         TOptional<FString> ContextStackValue;
         TOptional<FString> NamespaceNameValue;
+        TOptional<FString> ModeValue;
         TOptional<FString> SettingsValue;
+        TOptional<FString> UploadTokenValue;
         
     public:
         
@@ -39,11 +41,15 @@ namespace Gs2::Ranking::Request
 
         TSharedPtr<FUpdateCurrentRankingMasterRequest> WithContextStack(const TOptional<FString> ContextStack);
         TSharedPtr<FUpdateCurrentRankingMasterRequest> WithNamespaceName(const TOptional<FString> NamespaceName);
+        TSharedPtr<FUpdateCurrentRankingMasterRequest> WithMode(const TOptional<FString> Mode);
         TSharedPtr<FUpdateCurrentRankingMasterRequest> WithSettings(const TOptional<FString> Settings);
+        TSharedPtr<FUpdateCurrentRankingMasterRequest> WithUploadToken(const TOptional<FString> UploadToken);
 
         TOptional<FString> GetContextStack() const;
         TOptional<FString> GetNamespaceName() const;
+        TOptional<FString> GetMode() const;
         TOptional<FString> GetSettings() const;
+        TOptional<FString> GetUploadToken() const;
 
         static TSharedPtr<FUpdateCurrentRankingMasterRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;

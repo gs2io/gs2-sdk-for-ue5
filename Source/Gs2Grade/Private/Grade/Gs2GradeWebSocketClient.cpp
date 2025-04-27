@@ -415,6 +415,15 @@ namespace Gs2::Grade
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::WebSocket::FPreUpdateCurrentGradeMasterTask>> FGs2GradeWebSocketClient::PreUpdateCurrentGradeMaster(
+        const Request::FPreUpdateCurrentGradeMasterRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FPreUpdateCurrentGradeMasterTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::WebSocket::FUpdateCurrentGradeMasterTask>> FGs2GradeWebSocketClient::UpdateCurrentGradeMaster(
         const Request::FUpdateCurrentGradeMasterRequestPtr Request) const
     {

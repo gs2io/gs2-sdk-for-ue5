@@ -54,6 +54,46 @@ namespace Gs2::Deploy::Domain
 
     }
 
+    FGs2DeployDomain::FPreCreateStackTask::FPreCreateStackTask(
+        const TSharedPtr<FGs2DeployDomain>& Self,
+        const Request::FPreCreateStackRequestPtr Request
+    ): Self(Self), Request(Request)
+    {
+
+    }
+
+    FGs2DeployDomain::FPreCreateStackTask::FPreCreateStackTask(
+        const FPreCreateStackTask& From
+    ): TGs2Future(From), Self(From.Self), Request(From.Request)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FGs2DeployDomain::FPreCreateStackTask::Action(
+        TSharedPtr<TSharedPtr<FGs2DeployDomain>> Result
+    )
+    {
+        const auto Domain = Self;
+        if (ResultModel != nullptr)
+        {
+            if (ResultModel->GetUploadToken().IsSet())
+            {
+                Self->UploadToken = Domain->UploadToken = ResultModel->GetUploadToken();
+            }
+            if (ResultModel->GetUploadUrl().IsSet())
+            {
+                Self->UploadUrl = Domain->UploadUrl = ResultModel->GetUploadUrl();
+            }
+        }
+        *Result = Domain;
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FGs2DeployDomain::FPreCreateStackTask>> FGs2DeployDomain::PreCreateStack(
+        Request::FPreCreateStackRequestPtr Request
+    ) {
+        return Gs2::Core::Util::New<FAsyncTask<FPreCreateStackTask>>(this->AsShared(), Request);
+    }
+
     FGs2DeployDomain::FCreateStackTask::FCreateStackTask(
         const TSharedPtr<FGs2DeployDomain>& Self,
         const Request::FCreateStackRequestPtr Request
@@ -118,6 +158,46 @@ namespace Gs2::Deploy::Domain
         Request::FCreateStackFromGitHubRequestPtr Request
     ) {
         return Gs2::Core::Util::New<FAsyncTask<FCreateStackFromGitHubTask>>(this->AsShared(), Request);
+    }
+
+    FGs2DeployDomain::FPreValidateTask::FPreValidateTask(
+        const TSharedPtr<FGs2DeployDomain>& Self,
+        const Request::FPreValidateRequestPtr Request
+    ): Self(Self), Request(Request)
+    {
+
+    }
+
+    FGs2DeployDomain::FPreValidateTask::FPreValidateTask(
+        const FPreValidateTask& From
+    ): TGs2Future(From), Self(From.Self), Request(From.Request)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FGs2DeployDomain::FPreValidateTask::Action(
+        TSharedPtr<TSharedPtr<FGs2DeployDomain>> Result
+    )
+    {
+        const auto Domain = Self;
+        if (ResultModel != nullptr)
+        {
+            if (ResultModel->GetUploadToken().IsSet())
+            {
+                Self->UploadToken = Domain->UploadToken = ResultModel->GetUploadToken();
+            }
+            if (ResultModel->GetUploadUrl().IsSet())
+            {
+                Self->UploadUrl = Domain->UploadUrl = ResultModel->GetUploadUrl();
+            }
+        }
+        *Result = Domain;
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FGs2DeployDomain::FPreValidateTask>> FGs2DeployDomain::PreValidate(
+        Request::FPreValidateRequestPtr Request
+    ) {
+        return Gs2::Core::Util::New<FAsyncTask<FPreValidateTask>>(this->AsShared(), Request);
     }
 
     FGs2DeployDomain::FValidateTask::FValidateTask(

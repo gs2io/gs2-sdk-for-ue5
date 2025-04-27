@@ -361,6 +361,15 @@ namespace Gs2::Idle
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::Rest::FPreUpdateCurrentCategoryMasterTask>> FGs2IdleRestClient::PreUpdateCurrentCategoryMaster(
+        const Request::FPreUpdateCurrentCategoryMasterRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FPreUpdateCurrentCategoryMasterTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::Rest::FUpdateCurrentCategoryMasterTask>> FGs2IdleRestClient::UpdateCurrentCategoryMaster(
         const Request::FUpdateCurrentCategoryMasterRequestPtr Request) const
     {

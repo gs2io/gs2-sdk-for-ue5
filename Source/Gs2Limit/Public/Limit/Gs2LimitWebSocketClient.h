@@ -86,6 +86,8 @@
 #include "Task/WebSocket/ExportMasterTask.h"
 #include "Request/GetCurrentLimitMasterRequest.h"
 #include "Task/WebSocket/GetCurrentLimitMasterTask.h"
+#include "Request/PreUpdateCurrentLimitMasterRequest.h"
+#include "Task/WebSocket/PreUpdateCurrentLimitMasterTask.h"
 #include "Request/UpdateCurrentLimitMasterRequest.h"
 #include "Task/WebSocket/UpdateCurrentLimitMasterTask.h"
 #include "Request/UpdateCurrentLimitMasterFromGitHubRequest.h"
@@ -240,6 +242,10 @@ namespace Gs2::Limit
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FGetCurrentLimitMasterTask>> GetCurrentLimitMaster(
             const Request::FGetCurrentLimitMasterRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FPreUpdateCurrentLimitMasterTask>> PreUpdateCurrentLimitMaster(
+            const Request::FPreUpdateCurrentLimitMasterRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FUpdateCurrentLimitMasterTask>> UpdateCurrentLimitMaster(

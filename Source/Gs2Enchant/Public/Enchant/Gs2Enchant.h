@@ -214,6 +214,12 @@
 #include "Task/Rest/GetCurrentParameterMasterTask.h"
 #include "Task/WebSocket/GetCurrentParameterMasterTask.h"
 
+// PreUpdateCurrentParameterMaster
+#include "Request/PreUpdateCurrentParameterMasterRequest.h"
+#include "Result/PreUpdateCurrentParameterMasterResult.h"
+#include "Task/Rest/PreUpdateCurrentParameterMasterTask.h"
+#include "Task/WebSocket/PreUpdateCurrentParameterMasterTask.h"
+
 // UpdateCurrentParameterMaster
 #include "Request/UpdateCurrentParameterMasterRequest.h"
 #include "Result/UpdateCurrentParameterMasterResult.h"

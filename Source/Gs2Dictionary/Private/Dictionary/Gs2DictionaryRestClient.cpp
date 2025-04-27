@@ -442,6 +442,15 @@ namespace Gs2::Dictionary
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::Rest::FPreUpdateCurrentEntryMasterTask>> FGs2DictionaryRestClient::PreUpdateCurrentEntryMaster(
+        const Request::FPreUpdateCurrentEntryMasterRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FPreUpdateCurrentEntryMasterTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::Rest::FUpdateCurrentEntryMasterTask>> FGs2DictionaryRestClient::UpdateCurrentEntryMaster(
         const Request::FUpdateCurrentEntryMasterRequestPtr Request) const
     {

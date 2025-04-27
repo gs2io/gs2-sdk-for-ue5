@@ -26,7 +26,9 @@ namespace Gs2::Deploy::Request
     class GS2DEPLOY_API FValidateRequest final : public TSharedFromThis<FValidateRequest>
     {
         TOptional<FString> ContextStackValue;
+        TOptional<FString> ModeValue;
         TOptional<FString> TemplateValue;
+        TOptional<FString> UploadTokenValue;
         
     public:
         
@@ -37,10 +39,14 @@ namespace Gs2::Deploy::Request
         ~FValidateRequest() = default;
 
         TSharedPtr<FValidateRequest> WithContextStack(const TOptional<FString> ContextStack);
+        TSharedPtr<FValidateRequest> WithMode(const TOptional<FString> Mode);
         TSharedPtr<FValidateRequest> WithTemplate(const TOptional<FString> Template);
+        TSharedPtr<FValidateRequest> WithUploadToken(const TOptional<FString> UploadToken);
 
         TOptional<FString> GetContextStack() const;
+        TOptional<FString> GetMode() const;
         TOptional<FString> GetTemplate() const;
+        TOptional<FString> GetUploadToken() const;
 
         static TSharedPtr<FValidateRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;

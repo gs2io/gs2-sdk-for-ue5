@@ -273,6 +273,12 @@
 #include "Task/Rest/GetCurrentEventMasterTask.h"
 #include "Task/WebSocket/GetCurrentEventMasterTask.h"
 
+// PreUpdateCurrentEventMaster
+#include "Request/PreUpdateCurrentEventMasterRequest.h"
+#include "Result/PreUpdateCurrentEventMasterResult.h"
+#include "Task/Rest/PreUpdateCurrentEventMasterTask.h"
+#include "Task/WebSocket/PreUpdateCurrentEventMasterTask.h"
+
 // UpdateCurrentEventMaster
 #include "Request/UpdateCurrentEventMasterRequest.h"
 #include "Result/UpdateCurrentEventMasterResult.h"

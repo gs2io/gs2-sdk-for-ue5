@@ -27,7 +27,9 @@ namespace Gs2::Enhance::Request
     {
         TOptional<FString> ContextStackValue;
         TOptional<FString> NamespaceNameValue;
+        TOptional<FString> ModeValue;
         TOptional<FString> SettingsValue;
+        TOptional<FString> UploadTokenValue;
         
     public:
         
@@ -39,11 +41,15 @@ namespace Gs2::Enhance::Request
 
         TSharedPtr<FUpdateCurrentRateMasterRequest> WithContextStack(const TOptional<FString> ContextStack);
         TSharedPtr<FUpdateCurrentRateMasterRequest> WithNamespaceName(const TOptional<FString> NamespaceName);
+        TSharedPtr<FUpdateCurrentRateMasterRequest> WithMode(const TOptional<FString> Mode);
         TSharedPtr<FUpdateCurrentRateMasterRequest> WithSettings(const TOptional<FString> Settings);
+        TSharedPtr<FUpdateCurrentRateMasterRequest> WithUploadToken(const TOptional<FString> UploadToken);
 
         TOptional<FString> GetContextStack() const;
         TOptional<FString> GetNamespaceName() const;
+        TOptional<FString> GetMode() const;
         TOptional<FString> GetSettings() const;
+        TOptional<FString> GetUploadToken() const;
 
         static TSharedPtr<FUpdateCurrentRateMasterRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;

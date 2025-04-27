@@ -66,6 +66,8 @@
 #include "Task/Rest/ExportMasterTask.h"
 #include "Request/GetCurrentBuffMasterRequest.h"
 #include "Task/Rest/GetCurrentBuffMasterTask.h"
+#include "Request/PreUpdateCurrentBuffMasterRequest.h"
+#include "Task/Rest/PreUpdateCurrentBuffMasterTask.h"
 #include "Request/UpdateCurrentBuffMasterRequest.h"
 #include "Task/Rest/UpdateCurrentBuffMasterTask.h"
 #include "Request/UpdateCurrentBuffMasterFromGitHubRequest.h"
@@ -176,6 +178,10 @@ namespace Gs2::Buff
 
         TSharedPtr<FAsyncTask<Task::Rest::FGetCurrentBuffMasterTask>> GetCurrentBuffMaster(
             const Request::FGetCurrentBuffMasterRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FPreUpdateCurrentBuffMasterTask>> PreUpdateCurrentBuffMaster(
+            const Request::FPreUpdateCurrentBuffMasterRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::Rest::FUpdateCurrentBuffMasterTask>> UpdateCurrentBuffMaster(

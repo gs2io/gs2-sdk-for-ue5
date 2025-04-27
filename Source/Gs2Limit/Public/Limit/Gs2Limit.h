@@ -229,6 +229,12 @@
 #include "Task/Rest/GetCurrentLimitMasterTask.h"
 #include "Task/WebSocket/GetCurrentLimitMasterTask.h"
 
+// PreUpdateCurrentLimitMaster
+#include "Request/PreUpdateCurrentLimitMasterRequest.h"
+#include "Result/PreUpdateCurrentLimitMasterResult.h"
+#include "Task/Rest/PreUpdateCurrentLimitMasterTask.h"
+#include "Task/WebSocket/PreUpdateCurrentLimitMasterTask.h"
+
 // UpdateCurrentLimitMaster
 #include "Request/UpdateCurrentLimitMasterRequest.h"
 #include "Result/UpdateCurrentLimitMasterResult.h"

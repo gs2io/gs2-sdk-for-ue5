@@ -57,6 +57,16 @@ namespace Gs2::Limit::Domain::Model
         const Gs2::Limit::FGs2LimitRestClientPtr Client;
 
         public:
+        TOptional<FString> UploadToken;
+        TOptional<FString> UploadUrl;
+        TOptional<FString> GetUploadToken() const
+        {
+            return UploadToken;
+        }
+        TOptional<FString> GetUploadUrl() const
+        {
+            return UploadUrl;
+        }
         TOptional<FString> NamespaceName;
     private:
 
@@ -125,6 +135,32 @@ namespace Gs2::Limit::Domain::Model
 
         TSharedPtr<FAsyncTask<FGetTask>> Get(
             Request::FGetCurrentLimitMasterRequestPtr Request
+        );
+
+        class GS2LIMIT_API FPreUpdateTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Limit::Domain::Model::FCurrentLimitMasterDomain>,
+            public TSharedFromThis<FPreUpdateTask>
+        {
+            const TSharedPtr<FCurrentLimitMasterDomain> Self;
+            const Request::FPreUpdateCurrentLimitMasterRequestPtr Request;
+        public:
+            explicit FPreUpdateTask(
+                const TSharedPtr<FCurrentLimitMasterDomain>& Self,
+                const Request::FPreUpdateCurrentLimitMasterRequestPtr Request
+            );
+
+            FPreUpdateTask(
+                const FPreUpdateTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Limit::Domain::Model::FCurrentLimitMasterDomain>> Result
+            ) override;
+        };
+        friend FPreUpdateTask;
+
+        TSharedPtr<FAsyncTask<FPreUpdateTask>> PreUpdate(
+            Request::FPreUpdateCurrentLimitMasterRequestPtr Request
         );
 
         class GS2LIMIT_API FUpdateTask final :

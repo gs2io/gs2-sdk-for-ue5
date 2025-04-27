@@ -334,6 +334,15 @@ namespace Gs2::Formation
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::WebSocket::FPreUpdateCurrentFormMasterTask>> FGs2FormationWebSocketClient::PreUpdateCurrentFormMaster(
+        const Request::FPreUpdateCurrentFormMasterRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FPreUpdateCurrentFormMasterTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::WebSocket::FUpdateCurrentFormMasterTask>> FGs2FormationWebSocketClient::UpdateCurrentFormMaster(
         const Request::FUpdateCurrentFormMasterRequestPtr Request) const
     {

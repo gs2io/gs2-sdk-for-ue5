@@ -289,6 +289,15 @@ namespace Gs2::Showcase
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::WebSocket::FPreUpdateCurrentShowcaseMasterTask>> FGs2ShowcaseWebSocketClient::PreUpdateCurrentShowcaseMaster(
+        const Request::FPreUpdateCurrentShowcaseMasterRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FPreUpdateCurrentShowcaseMasterTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::WebSocket::FUpdateCurrentShowcaseMasterTask>> FGs2ShowcaseWebSocketClient::UpdateCurrentShowcaseMaster(
         const Request::FUpdateCurrentShowcaseMasterRequestPtr Request) const
     {

@@ -27,7 +27,9 @@ namespace Gs2::Lottery::Request
     {
         TOptional<FString> ContextStackValue;
         TOptional<FString> NamespaceNameValue;
+        TOptional<FString> ModeValue;
         TOptional<FString> SettingsValue;
+        TOptional<FString> UploadTokenValue;
         
     public:
         
@@ -39,11 +41,15 @@ namespace Gs2::Lottery::Request
 
         TSharedPtr<FUpdateCurrentLotteryMasterRequest> WithContextStack(const TOptional<FString> ContextStack);
         TSharedPtr<FUpdateCurrentLotteryMasterRequest> WithNamespaceName(const TOptional<FString> NamespaceName);
+        TSharedPtr<FUpdateCurrentLotteryMasterRequest> WithMode(const TOptional<FString> Mode);
         TSharedPtr<FUpdateCurrentLotteryMasterRequest> WithSettings(const TOptional<FString> Settings);
+        TSharedPtr<FUpdateCurrentLotteryMasterRequest> WithUploadToken(const TOptional<FString> UploadToken);
 
         TOptional<FString> GetContextStack() const;
         TOptional<FString> GetNamespaceName() const;
+        TOptional<FString> GetMode() const;
         TOptional<FString> GetSettings() const;
+        TOptional<FString> GetUploadToken() const;
 
         static TSharedPtr<FUpdateCurrentLotteryMasterRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;

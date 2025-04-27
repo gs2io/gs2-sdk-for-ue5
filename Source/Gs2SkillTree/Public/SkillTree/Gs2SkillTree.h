@@ -257,6 +257,12 @@
 #include "Task/Rest/GetCurrentTreeMasterTask.h"
 #include "Task/WebSocket/GetCurrentTreeMasterTask.h"
 
+// PreUpdateCurrentTreeMaster
+#include "Request/PreUpdateCurrentTreeMasterRequest.h"
+#include "Result/PreUpdateCurrentTreeMasterResult.h"
+#include "Task/Rest/PreUpdateCurrentTreeMasterTask.h"
+#include "Task/WebSocket/PreUpdateCurrentTreeMasterTask.h"
+
 // UpdateCurrentTreeMaster
 #include "Request/UpdateCurrentTreeMasterRequest.h"
 #include "Result/UpdateCurrentTreeMasterResult.h"

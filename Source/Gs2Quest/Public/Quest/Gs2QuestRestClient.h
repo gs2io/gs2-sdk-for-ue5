@@ -68,6 +68,8 @@
 #include "Task/Rest/ExportMasterTask.h"
 #include "Request/GetCurrentQuestMasterRequest.h"
 #include "Task/Rest/GetCurrentQuestMasterTask.h"
+#include "Request/PreUpdateCurrentQuestMasterRequest.h"
+#include "Task/Rest/PreUpdateCurrentQuestMasterTask.h"
 #include "Request/UpdateCurrentQuestMasterRequest.h"
 #include "Task/Rest/UpdateCurrentQuestMasterTask.h"
 #include "Request/UpdateCurrentQuestMasterFromGitHubRequest.h"
@@ -224,6 +226,10 @@ namespace Gs2::Quest
 
         TSharedPtr<FAsyncTask<Task::Rest::FGetCurrentQuestMasterTask>> GetCurrentQuestMaster(
             const Request::FGetCurrentQuestMasterRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FPreUpdateCurrentQuestMasterTask>> PreUpdateCurrentQuestMaster(
+            const Request::FPreUpdateCurrentQuestMasterRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::Rest::FUpdateCurrentQuestMasterTask>> UpdateCurrentQuestMaster(

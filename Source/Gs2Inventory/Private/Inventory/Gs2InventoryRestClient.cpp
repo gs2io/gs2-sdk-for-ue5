@@ -532,6 +532,15 @@ namespace Gs2::Inventory
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::Rest::FPreUpdateCurrentItemModelMasterTask>> FGs2InventoryRestClient::PreUpdateCurrentItemModelMaster(
+        const Request::FPreUpdateCurrentItemModelMasterRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FPreUpdateCurrentItemModelMasterTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::Rest::FUpdateCurrentItemModelMasterTask>> FGs2InventoryRestClient::UpdateCurrentItemModelMaster(
         const Request::FUpdateCurrentItemModelMasterRequestPtr Request) const
     {

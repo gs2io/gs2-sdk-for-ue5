@@ -133,6 +133,49 @@ namespace Gs2::Limit::Domain::Model
         return Gs2::Core::Util::New<FAsyncTask<FGetTask>>(this->AsShared(), Request);
     }
 
+    FCurrentLimitMasterDomain::FPreUpdateTask::FPreUpdateTask(
+        const TSharedPtr<FCurrentLimitMasterDomain>& Self,
+        const Request::FPreUpdateCurrentLimitMasterRequestPtr Request
+    ): Self(Self), Request(Request)
+    {
+
+    }
+
+    FCurrentLimitMasterDomain::FPreUpdateTask::FPreUpdateTask(
+        const FPreUpdateTask& From
+    ): TGs2Future(From), Self(From.Self), Request(From.Request)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FCurrentLimitMasterDomain::FPreUpdateTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::Limit::Domain::Model::FCurrentLimitMasterDomain>> Result
+    )
+    {
+        Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
+            ->WithNamespaceName(Self->NamespaceName);
+        const auto Domain = Self;
+        if (ResultModel != nullptr)
+        {
+            if (ResultModel->GetUploadToken().IsSet())
+            {
+                Self->UploadToken = Domain->UploadToken = ResultModel->GetUploadToken();
+            }
+            if (ResultModel->GetUploadUrl().IsSet())
+            {
+                Self->UploadUrl = Domain->UploadUrl = ResultModel->GetUploadUrl();
+            }
+        }
+        *Result = Domain;
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FCurrentLimitMasterDomain::FPreUpdateTask>> FCurrentLimitMasterDomain::PreUpdate(
+        Request::FPreUpdateCurrentLimitMasterRequestPtr Request
+    ) {
+        return Gs2::Core::Util::New<FAsyncTask<FPreUpdateTask>>(this->AsShared(), Request);
+    }
+
     FCurrentLimitMasterDomain::FUpdateTask::FUpdateTask(
         const TSharedPtr<FCurrentLimitMasterDomain>& Self,
         const Request::FUpdateCurrentLimitMasterRequestPtr Request

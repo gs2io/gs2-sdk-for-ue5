@@ -88,6 +88,8 @@
 #include "Task/WebSocket/ExportMasterTask.h"
 #include "Request/GetCurrentFormMasterRequest.h"
 #include "Task/WebSocket/GetCurrentFormMasterTask.h"
+#include "Request/PreUpdateCurrentFormMasterRequest.h"
+#include "Task/WebSocket/PreUpdateCurrentFormMasterTask.h"
 #include "Request/UpdateCurrentFormMasterRequest.h"
 #include "Task/WebSocket/UpdateCurrentFormMasterTask.h"
 #include "Request/UpdateCurrentFormMasterFromGitHubRequest.h"
@@ -322,6 +324,10 @@ namespace Gs2::Formation
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FGetCurrentFormMasterTask>> GetCurrentFormMaster(
             const Request::FGetCurrentFormMasterRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FPreUpdateCurrentFormMasterTask>> PreUpdateCurrentFormMaster(
+            const Request::FPreUpdateCurrentFormMasterRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FUpdateCurrentFormMasterTask>> UpdateCurrentFormMaster(

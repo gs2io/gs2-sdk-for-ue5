@@ -146,6 +146,8 @@
 #include "Task/Rest/ExportMasterTask.h"
 #include "Request/GetCurrentMissionMasterRequest.h"
 #include "Task/Rest/GetCurrentMissionMasterTask.h"
+#include "Request/PreUpdateCurrentMissionMasterRequest.h"
+#include "Task/Rest/PreUpdateCurrentMissionMasterTask.h"
 #include "Request/UpdateCurrentMissionMasterRequest.h"
 #include "Task/Rest/UpdateCurrentMissionMasterTask.h"
 #include "Request/UpdateCurrentMissionMasterFromGitHubRequest.h"
@@ -438,6 +440,10 @@ namespace Gs2::Mission
 
         TSharedPtr<FAsyncTask<Task::Rest::FGetCurrentMissionMasterTask>> GetCurrentMissionMaster(
             const Request::FGetCurrentMissionMasterRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FPreUpdateCurrentMissionMasterTask>> PreUpdateCurrentMissionMaster(
+            const Request::FPreUpdateCurrentMissionMasterRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::Rest::FUpdateCurrentMissionMasterTask>> UpdateCurrentMissionMaster(

@@ -58,6 +58,8 @@
 #include "Task/Rest/ExportMasterTask.h"
 #include "Request/GetCurrentBonusMasterRequest.h"
 #include "Task/Rest/GetCurrentBonusMasterTask.h"
+#include "Request/PreUpdateCurrentBonusMasterRequest.h"
+#include "Task/Rest/PreUpdateCurrentBonusMasterTask.h"
 #include "Request/UpdateCurrentBonusMasterRequest.h"
 #include "Task/Rest/UpdateCurrentBonusMasterTask.h"
 #include "Request/UpdateCurrentBonusMasterFromGitHubRequest.h"
@@ -186,6 +188,10 @@ namespace Gs2::LoginReward
 
         TSharedPtr<FAsyncTask<Task::Rest::FGetCurrentBonusMasterTask>> GetCurrentBonusMaster(
             const Request::FGetCurrentBonusMasterRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FPreUpdateCurrentBonusMasterTask>> PreUpdateCurrentBonusMaster(
+            const Request::FPreUpdateCurrentBonusMasterRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::Rest::FUpdateCurrentBonusMasterTask>> UpdateCurrentBonusMaster(

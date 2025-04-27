@@ -156,6 +156,49 @@ namespace Gs2::Inventory::Domain::Model
         return Gs2::Core::Util::New<FAsyncTask<FGetTask>>(this->AsShared(), Request);
     }
 
+    FCurrentItemModelMasterDomain::FPreUpdateTask::FPreUpdateTask(
+        const TSharedPtr<FCurrentItemModelMasterDomain>& Self,
+        const Request::FPreUpdateCurrentItemModelMasterRequestPtr Request
+    ): Self(Self), Request(Request)
+    {
+
+    }
+
+    FCurrentItemModelMasterDomain::FPreUpdateTask::FPreUpdateTask(
+        const FPreUpdateTask& From
+    ): TGs2Future(From), Self(From.Self), Request(From.Request)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FCurrentItemModelMasterDomain::FPreUpdateTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::Inventory::Domain::Model::FCurrentItemModelMasterDomain>> Result
+    )
+    {
+        Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
+            ->WithNamespaceName(Self->NamespaceName);
+        const auto Domain = Self;
+        if (ResultModel != nullptr)
+        {
+            if (ResultModel->GetUploadToken().IsSet())
+            {
+                Self->UploadToken = Domain->UploadToken = ResultModel->GetUploadToken();
+            }
+            if (ResultModel->GetUploadUrl().IsSet())
+            {
+                Self->UploadUrl = Domain->UploadUrl = ResultModel->GetUploadUrl();
+            }
+        }
+        *Result = Domain;
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FCurrentItemModelMasterDomain::FPreUpdateTask>> FCurrentItemModelMasterDomain::PreUpdate(
+        Request::FPreUpdateCurrentItemModelMasterRequestPtr Request
+    ) {
+        return Gs2::Core::Util::New<FAsyncTask<FPreUpdateTask>>(this->AsShared(), Request);
+    }
+
     FCurrentItemModelMasterDomain::FUpdateTask::FUpdateTask(
         const TSharedPtr<FCurrentItemModelMasterDomain>& Self,
         const Request::FUpdateCurrentItemModelMasterRequestPtr Request

@@ -595,6 +595,15 @@ namespace Gs2::Mission
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::Rest::FPreUpdateCurrentMissionMasterTask>> FGs2MissionRestClient::PreUpdateCurrentMissionMaster(
+        const Request::FPreUpdateCurrentMissionMasterRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FPreUpdateCurrentMissionMasterTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::Rest::FUpdateCurrentMissionMasterTask>> FGs2MissionRestClient::UpdateCurrentMissionMaster(
         const Request::FUpdateCurrentMissionMasterRequestPtr Request) const
     {

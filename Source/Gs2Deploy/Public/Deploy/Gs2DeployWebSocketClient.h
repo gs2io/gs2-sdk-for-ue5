@@ -20,18 +20,26 @@
 #include "Core/Net/AbstractWebSocketGs2Client.h"
 #include "Request/DescribeStacksRequest.h"
 #include "Task/WebSocket/DescribeStacksTask.h"
+#include "Request/PreCreateStackRequest.h"
+#include "Task/WebSocket/PreCreateStackTask.h"
 #include "Request/CreateStackRequest.h"
 #include "Task/WebSocket/CreateStackTask.h"
 #include "Request/CreateStackFromGitHubRequest.h"
 #include "Task/WebSocket/CreateStackFromGitHubTask.h"
+#include "Request/PreValidateRequest.h"
+#include "Task/WebSocket/PreValidateTask.h"
 #include "Request/ValidateRequest.h"
 #include "Task/WebSocket/ValidateTask.h"
 #include "Request/GetStackStatusRequest.h"
 #include "Task/WebSocket/GetStackStatusTask.h"
 #include "Request/GetStackRequest.h"
 #include "Task/WebSocket/GetStackTask.h"
+#include "Request/PreUpdateStackRequest.h"
+#include "Task/WebSocket/PreUpdateStackTask.h"
 #include "Request/UpdateStackRequest.h"
 #include "Task/WebSocket/UpdateStackTask.h"
+#include "Request/PreChangeSetRequest.h"
+#include "Task/WebSocket/PreChangeSetTask.h"
 #include "Request/ChangeSetRequest.h"
 #include "Task/WebSocket/ChangeSetTask.h"
 #include "Request/UpdateStackFromGitHubRequest.h"
@@ -72,12 +80,20 @@ namespace Gs2::Deploy
             const Request::FDescribeStacksRequestPtr Request
         ) const;
 
+        TSharedPtr<FAsyncTask<Task::WebSocket::FPreCreateStackTask>> PreCreateStack(
+            const Request::FPreCreateStackRequestPtr Request
+        ) const;
+
         TSharedPtr<FAsyncTask<Task::WebSocket::FCreateStackTask>> CreateStack(
             const Request::FCreateStackRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FCreateStackFromGitHubTask>> CreateStackFromGitHub(
             const Request::FCreateStackFromGitHubRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FPreValidateTask>> PreValidate(
+            const Request::FPreValidateRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FValidateTask>> Validate(
@@ -92,8 +108,16 @@ namespace Gs2::Deploy
             const Request::FGetStackRequestPtr Request
         ) const;
 
+        TSharedPtr<FAsyncTask<Task::WebSocket::FPreUpdateStackTask>> PreUpdateStack(
+            const Request::FPreUpdateStackRequestPtr Request
+        ) const;
+
         TSharedPtr<FAsyncTask<Task::WebSocket::FUpdateStackTask>> UpdateStack(
             const Request::FUpdateStackRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FPreChangeSetTask>> PreChangeSet(
+            const Request::FPreChangeSetRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FChangeSetTask>> ChangeSet(

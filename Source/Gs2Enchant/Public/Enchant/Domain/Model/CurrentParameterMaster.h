@@ -65,6 +65,16 @@ namespace Gs2::Enchant::Domain::Model
         const Gs2::Enchant::FGs2EnchantRestClientPtr Client;
 
         public:
+        TOptional<FString> UploadToken;
+        TOptional<FString> UploadUrl;
+        TOptional<FString> GetUploadToken() const
+        {
+            return UploadToken;
+        }
+        TOptional<FString> GetUploadUrl() const
+        {
+            return UploadUrl;
+        }
         TOptional<FString> NamespaceName;
     private:
 
@@ -133,6 +143,32 @@ namespace Gs2::Enchant::Domain::Model
 
         TSharedPtr<FAsyncTask<FGetTask>> Get(
             Request::FGetCurrentParameterMasterRequestPtr Request
+        );
+
+        class GS2ENCHANT_API FPreUpdateTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Enchant::Domain::Model::FCurrentParameterMasterDomain>,
+            public TSharedFromThis<FPreUpdateTask>
+        {
+            const TSharedPtr<FCurrentParameterMasterDomain> Self;
+            const Request::FPreUpdateCurrentParameterMasterRequestPtr Request;
+        public:
+            explicit FPreUpdateTask(
+                const TSharedPtr<FCurrentParameterMasterDomain>& Self,
+                const Request::FPreUpdateCurrentParameterMasterRequestPtr Request
+            );
+
+            FPreUpdateTask(
+                const FPreUpdateTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Enchant::Domain::Model::FCurrentParameterMasterDomain>> Result
+            ) override;
+        };
+        friend FPreUpdateTask;
+
+        TSharedPtr<FAsyncTask<FPreUpdateTask>> PreUpdate(
+            Request::FPreUpdateCurrentParameterMasterRequestPtr Request
         );
 
         class GS2ENCHANT_API FUpdateTask final :

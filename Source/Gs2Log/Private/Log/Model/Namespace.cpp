@@ -30,6 +30,7 @@ namespace Gs2::Log::Model
         AwsAccessKeyIdValue(TOptional<FString>()),
         AwsSecretAccessKeyValue(TOptional<FString>()),
         FirehoseStreamNameValue(TOptional<FString>()),
+        FirehoseCompressDataValue(TOptional<FString>()),
         StatusValue(TOptional<FString>()),
         CreatedAtValue(TOptional<int64>()),
         UpdatedAtValue(TOptional<int64>()),
@@ -51,6 +52,7 @@ namespace Gs2::Log::Model
         AwsAccessKeyIdValue(From.AwsAccessKeyIdValue),
         AwsSecretAccessKeyValue(From.AwsSecretAccessKeyValue),
         FirehoseStreamNameValue(From.FirehoseStreamNameValue),
+        FirehoseCompressDataValue(From.FirehoseCompressDataValue),
         StatusValue(From.StatusValue),
         CreatedAtValue(From.CreatedAtValue),
         UpdatedAtValue(From.UpdatedAtValue),
@@ -146,6 +148,14 @@ namespace Gs2::Log::Model
         return SharedThis(this);
     }
 
+    TSharedPtr<FNamespace> FNamespace::WithFirehoseCompressData(
+        const TOptional<FString> FirehoseCompressData
+    )
+    {
+        this->FirehoseCompressDataValue = FirehoseCompressData;
+        return SharedThis(this);
+    }
+
     TSharedPtr<FNamespace> FNamespace::WithStatus(
         const TOptional<FString> Status
     )
@@ -229,6 +239,10 @@ namespace Gs2::Log::Model
     TOptional<FString> FNamespace::GetFirehoseStreamName() const
     {
         return FirehoseStreamNameValue;
+    }
+    TOptional<FString> FNamespace::GetFirehoseCompressData() const
+    {
+        return FirehoseCompressDataValue;
     }
     TOptional<FString> FNamespace::GetStatus() const
     {
@@ -412,6 +426,15 @@ namespace Gs2::Log::Model
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
+            ->WithFirehoseCompressData(Data->HasField(ANSI_TO_TCHAR("firehoseCompressData")) ? [Data]() -> TOptional<FString>
+                {
+                    FString v("");
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("firehoseCompressData"), v))
+                    {
+                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                    }
+                    return TOptional<FString>();
+                }() : TOptional<FString>())
             ->WithStatus(Data->HasField(ANSI_TO_TCHAR("status")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
@@ -496,6 +519,10 @@ namespace Gs2::Log::Model
         if (FirehoseStreamNameValue.IsSet())
         {
             JsonRootObject->SetStringField("firehoseStreamName", FirehoseStreamNameValue.GetValue());
+        }
+        if (FirehoseCompressDataValue.IsSet())
+        {
+            JsonRootObject->SetStringField("firehoseCompressData", FirehoseCompressDataValue.GetValue());
         }
         if (StatusValue.IsSet())
         {

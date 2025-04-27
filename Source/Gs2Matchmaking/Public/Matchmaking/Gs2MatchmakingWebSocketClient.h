@@ -94,6 +94,8 @@
 #include "Task/WebSocket/ExportMasterTask.h"
 #include "Request/GetCurrentModelMasterRequest.h"
 #include "Task/WebSocket/GetCurrentModelMasterTask.h"
+#include "Request/PreUpdateCurrentModelMasterRequest.h"
+#include "Task/WebSocket/PreUpdateCurrentModelMasterTask.h"
 #include "Request/UpdateCurrentModelMasterRequest.h"
 #include "Task/WebSocket/UpdateCurrentModelMasterTask.h"
 #include "Request/UpdateCurrentModelMasterFromGitHubRequest.h"
@@ -322,6 +324,10 @@ namespace Gs2::Matchmaking
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FGetCurrentModelMasterTask>> GetCurrentModelMaster(
             const Request::FGetCurrentModelMasterRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FPreUpdateCurrentModelMasterTask>> PreUpdateCurrentModelMaster(
+            const Request::FPreUpdateCurrentModelMasterRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FUpdateCurrentModelMasterTask>> UpdateCurrentModelMaster(

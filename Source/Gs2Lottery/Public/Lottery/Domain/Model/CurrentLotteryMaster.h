@@ -69,6 +69,16 @@ namespace Gs2::Lottery::Domain::Model
         const Gs2::Lottery::FGs2LotteryRestClientPtr Client;
 
         public:
+        TOptional<FString> UploadToken;
+        TOptional<FString> UploadUrl;
+        TOptional<FString> GetUploadToken() const
+        {
+            return UploadToken;
+        }
+        TOptional<FString> GetUploadUrl() const
+        {
+            return UploadUrl;
+        }
         TOptional<FString> NamespaceName;
     private:
 
@@ -137,6 +147,32 @@ namespace Gs2::Lottery::Domain::Model
 
         TSharedPtr<FAsyncTask<FGetTask>> Get(
             Request::FGetCurrentLotteryMasterRequestPtr Request
+        );
+
+        class GS2LOTTERY_API FPreUpdateTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Lottery::Domain::Model::FCurrentLotteryMasterDomain>,
+            public TSharedFromThis<FPreUpdateTask>
+        {
+            const TSharedPtr<FCurrentLotteryMasterDomain> Self;
+            const Request::FPreUpdateCurrentLotteryMasterRequestPtr Request;
+        public:
+            explicit FPreUpdateTask(
+                const TSharedPtr<FCurrentLotteryMasterDomain>& Self,
+                const Request::FPreUpdateCurrentLotteryMasterRequestPtr Request
+            );
+
+            FPreUpdateTask(
+                const FPreUpdateTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Lottery::Domain::Model::FCurrentLotteryMasterDomain>> Result
+            ) override;
+        };
+        friend FPreUpdateTask;
+
+        TSharedPtr<FAsyncTask<FPreUpdateTask>> PreUpdate(
+            Request::FPreUpdateCurrentLotteryMasterRequestPtr Request
         );
 
         class GS2LOTTERY_API FUpdateTask final :

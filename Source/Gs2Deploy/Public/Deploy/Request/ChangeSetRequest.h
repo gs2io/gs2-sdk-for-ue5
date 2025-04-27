@@ -27,7 +27,9 @@ namespace Gs2::Deploy::Request
     {
         TOptional<FString> ContextStackValue;
         TOptional<FString> StackNameValue;
+        TOptional<FString> ModeValue;
         TOptional<FString> TemplateValue;
+        TOptional<FString> UploadTokenValue;
         
     public:
         
@@ -39,11 +41,15 @@ namespace Gs2::Deploy::Request
 
         TSharedPtr<FChangeSetRequest> WithContextStack(const TOptional<FString> ContextStack);
         TSharedPtr<FChangeSetRequest> WithStackName(const TOptional<FString> StackName);
+        TSharedPtr<FChangeSetRequest> WithMode(const TOptional<FString> Mode);
         TSharedPtr<FChangeSetRequest> WithTemplate(const TOptional<FString> Template);
+        TSharedPtr<FChangeSetRequest> WithUploadToken(const TOptional<FString> UploadToken);
 
         TOptional<FString> GetContextStack() const;
         TOptional<FString> GetStackName() const;
+        TOptional<FString> GetMode() const;
         TOptional<FString> GetTemplate() const;
+        TOptional<FString> GetUploadToken() const;
 
         static TSharedPtr<FChangeSetRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;

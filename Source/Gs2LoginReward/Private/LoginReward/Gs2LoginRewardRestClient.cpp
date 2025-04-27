@@ -199,6 +199,15 @@ namespace Gs2::LoginReward
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::Rest::FPreUpdateCurrentBonusMasterTask>> FGs2LoginRewardRestClient::PreUpdateCurrentBonusMaster(
+        const Request::FPreUpdateCurrentBonusMasterRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FPreUpdateCurrentBonusMasterTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::Rest::FUpdateCurrentBonusMasterTask>> FGs2LoginRewardRestClient::UpdateCurrentBonusMaster(
         const Request::FUpdateCurrentBonusMasterRequestPtr Request) const
     {

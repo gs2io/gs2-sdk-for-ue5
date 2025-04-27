@@ -361,6 +361,15 @@ namespace Gs2::SerialKey
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::WebSocket::FPreUpdateCurrentCampaignMasterTask>> FGs2SerialKeyWebSocketClient::PreUpdateCurrentCampaignMaster(
+        const Request::FPreUpdateCurrentCampaignMasterRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FPreUpdateCurrentCampaignMasterTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::WebSocket::FUpdateCurrentCampaignMasterTask>> FGs2SerialKeyWebSocketClient::UpdateCurrentCampaignMaster(
         const Request::FUpdateCurrentCampaignMasterRequestPtr Request) const
     {

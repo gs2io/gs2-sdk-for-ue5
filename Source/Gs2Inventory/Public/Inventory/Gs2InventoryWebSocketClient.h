@@ -132,6 +132,8 @@
 #include "Task/WebSocket/ExportMasterTask.h"
 #include "Request/GetCurrentItemModelMasterRequest.h"
 #include "Task/WebSocket/GetCurrentItemModelMasterTask.h"
+#include "Request/PreUpdateCurrentItemModelMasterRequest.h"
+#include "Task/WebSocket/PreUpdateCurrentItemModelMasterTask.h"
 #include "Request/UpdateCurrentItemModelMasterRequest.h"
 #include "Task/WebSocket/UpdateCurrentItemModelMasterTask.h"
 #include "Request/UpdateCurrentItemModelMasterFromGitHubRequest.h"
@@ -522,6 +524,10 @@ namespace Gs2::Inventory
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FGetCurrentItemModelMasterTask>> GetCurrentItemModelMaster(
             const Request::FGetCurrentItemModelMasterRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FPreUpdateCurrentItemModelMasterTask>> PreUpdateCurrentItemModelMaster(
+            const Request::FPreUpdateCurrentItemModelMasterRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FUpdateCurrentItemModelMasterTask>> UpdateCurrentItemModelMaster(

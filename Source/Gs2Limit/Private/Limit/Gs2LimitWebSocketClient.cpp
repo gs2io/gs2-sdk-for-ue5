@@ -325,6 +325,15 @@ namespace Gs2::Limit
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::WebSocket::FPreUpdateCurrentLimitMasterTask>> FGs2LimitWebSocketClient::PreUpdateCurrentLimitMaster(
+        const Request::FPreUpdateCurrentLimitMasterRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FPreUpdateCurrentLimitMasterTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::WebSocket::FUpdateCurrentLimitMasterTask>> FGs2LimitWebSocketClient::UpdateCurrentLimitMaster(
         const Request::FUpdateCurrentLimitMasterRequestPtr Request) const
     {

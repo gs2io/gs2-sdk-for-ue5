@@ -248,6 +248,12 @@
 #include "Task/Rest/GetCurrentRankingMasterTask.h"
 #include "Task/WebSocket/GetCurrentRankingMasterTask.h"
 
+// PreUpdateCurrentRankingMaster
+#include "Request/PreUpdateCurrentRankingMasterRequest.h"
+#include "Result/PreUpdateCurrentRankingMasterResult.h"
+#include "Task/Rest/PreUpdateCurrentRankingMasterTask.h"
+#include "Task/WebSocket/PreUpdateCurrentRankingMasterTask.h"
+
 // UpdateCurrentRankingMaster
 #include "Request/UpdateCurrentRankingMasterRequest.h"
 #include "Result/UpdateCurrentRankingMasterResult.h"

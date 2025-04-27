@@ -27,7 +27,9 @@ namespace Gs2::Mission::Request
     {
         TOptional<FString> ContextStackValue;
         TOptional<FString> NamespaceNameValue;
+        TOptional<FString> ModeValue;
         TOptional<FString> SettingsValue;
+        TOptional<FString> UploadTokenValue;
         
     public:
         
@@ -39,11 +41,15 @@ namespace Gs2::Mission::Request
 
         TSharedPtr<FUpdateCurrentMissionMasterRequest> WithContextStack(const TOptional<FString> ContextStack);
         TSharedPtr<FUpdateCurrentMissionMasterRequest> WithNamespaceName(const TOptional<FString> NamespaceName);
+        TSharedPtr<FUpdateCurrentMissionMasterRequest> WithMode(const TOptional<FString> Mode);
         TSharedPtr<FUpdateCurrentMissionMasterRequest> WithSettings(const TOptional<FString> Settings);
+        TSharedPtr<FUpdateCurrentMissionMasterRequest> WithUploadToken(const TOptional<FString> UploadToken);
 
         TOptional<FString> GetContextStack() const;
         TOptional<FString> GetNamespaceName() const;
+        TOptional<FString> GetMode() const;
         TOptional<FString> GetSettings() const;
+        TOptional<FString> GetUploadToken() const;
 
         static TSharedPtr<FUpdateCurrentMissionMasterRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;

@@ -262,6 +262,15 @@ namespace Gs2::Experience
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::Rest::FPreUpdateCurrentExperienceMasterTask>> FGs2ExperienceRestClient::PreUpdateCurrentExperienceMaster(
+        const Request::FPreUpdateCurrentExperienceMasterRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FPreUpdateCurrentExperienceMasterTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::Rest::FUpdateCurrentExperienceMasterTask>> FGs2ExperienceRestClient::UpdateCurrentExperienceMaster(
         const Request::FUpdateCurrentExperienceMasterRequestPtr Request) const
     {

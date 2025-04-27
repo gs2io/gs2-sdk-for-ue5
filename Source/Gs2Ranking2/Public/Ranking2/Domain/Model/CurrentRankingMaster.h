@@ -105,6 +105,16 @@ namespace Gs2::Ranking2::Domain::Model
         const Gs2::Ranking2::FGs2Ranking2RestClientPtr Client;
 
         public:
+        TOptional<FString> UploadToken;
+        TOptional<FString> UploadUrl;
+        TOptional<FString> GetUploadToken() const
+        {
+            return UploadToken;
+        }
+        TOptional<FString> GetUploadUrl() const
+        {
+            return UploadUrl;
+        }
         TOptional<FString> NamespaceName;
     private:
 
@@ -173,6 +183,32 @@ namespace Gs2::Ranking2::Domain::Model
 
         TSharedPtr<FAsyncTask<FGetTask>> Get(
             Request::FGetCurrentRankingMasterRequestPtr Request
+        );
+
+        class GS2RANKING2_API FPreUpdateTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Ranking2::Domain::Model::FCurrentRankingMasterDomain>,
+            public TSharedFromThis<FPreUpdateTask>
+        {
+            const TSharedPtr<FCurrentRankingMasterDomain> Self;
+            const Request::FPreUpdateCurrentRankingMasterRequestPtr Request;
+        public:
+            explicit FPreUpdateTask(
+                const TSharedPtr<FCurrentRankingMasterDomain>& Self,
+                const Request::FPreUpdateCurrentRankingMasterRequestPtr Request
+            );
+
+            FPreUpdateTask(
+                const FPreUpdateTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Ranking2::Domain::Model::FCurrentRankingMasterDomain>> Result
+            ) override;
+        };
+        friend FPreUpdateTask;
+
+        TSharedPtr<FAsyncTask<FPreUpdateTask>> PreUpdate(
+            Request::FPreUpdateCurrentRankingMasterRequestPtr Request
         );
 
         class GS2RANKING2_API FUpdateTask final :

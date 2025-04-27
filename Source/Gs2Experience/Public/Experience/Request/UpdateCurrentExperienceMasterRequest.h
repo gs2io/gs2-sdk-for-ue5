@@ -27,7 +27,9 @@ namespace Gs2::Experience::Request
     {
         TOptional<FString> ContextStackValue;
         TOptional<FString> NamespaceNameValue;
+        TOptional<FString> ModeValue;
         TOptional<FString> SettingsValue;
+        TOptional<FString> UploadTokenValue;
         
     public:
         
@@ -39,11 +41,15 @@ namespace Gs2::Experience::Request
 
         TSharedPtr<FUpdateCurrentExperienceMasterRequest> WithContextStack(const TOptional<FString> ContextStack);
         TSharedPtr<FUpdateCurrentExperienceMasterRequest> WithNamespaceName(const TOptional<FString> NamespaceName);
+        TSharedPtr<FUpdateCurrentExperienceMasterRequest> WithMode(const TOptional<FString> Mode);
         TSharedPtr<FUpdateCurrentExperienceMasterRequest> WithSettings(const TOptional<FString> Settings);
+        TSharedPtr<FUpdateCurrentExperienceMasterRequest> WithUploadToken(const TOptional<FString> UploadToken);
 
         TOptional<FString> GetContextStack() const;
         TOptional<FString> GetNamespaceName() const;
+        TOptional<FString> GetMode() const;
         TOptional<FString> GetSettings() const;
+        TOptional<FString> GetUploadToken() const;
 
         static TSharedPtr<FUpdateCurrentExperienceMasterRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;

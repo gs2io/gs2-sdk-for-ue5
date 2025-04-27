@@ -387,6 +387,12 @@
 #include "Task/Rest/GetCurrentItemModelMasterTask.h"
 #include "Task/WebSocket/GetCurrentItemModelMasterTask.h"
 
+// PreUpdateCurrentItemModelMaster
+#include "Request/PreUpdateCurrentItemModelMasterRequest.h"
+#include "Result/PreUpdateCurrentItemModelMasterResult.h"
+#include "Task/Rest/PreUpdateCurrentItemModelMasterTask.h"
+#include "Task/WebSocket/PreUpdateCurrentItemModelMasterTask.h"
+
 // UpdateCurrentItemModelMaster
 #include "Request/UpdateCurrentItemModelMasterRequest.h"
 #include "Result/UpdateCurrentItemModelMasterResult.h"

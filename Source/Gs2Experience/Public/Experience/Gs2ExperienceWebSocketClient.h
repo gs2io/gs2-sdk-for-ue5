@@ -72,6 +72,8 @@
 #include "Task/WebSocket/ExportMasterTask.h"
 #include "Request/GetCurrentExperienceMasterRequest.h"
 #include "Task/WebSocket/GetCurrentExperienceMasterTask.h"
+#include "Request/PreUpdateCurrentExperienceMasterRequest.h"
+#include "Task/WebSocket/PreUpdateCurrentExperienceMasterTask.h"
 #include "Request/UpdateCurrentExperienceMasterRequest.h"
 #include "Task/WebSocket/UpdateCurrentExperienceMasterTask.h"
 #include "Request/UpdateCurrentExperienceMasterFromGitHubRequest.h"
@@ -252,6 +254,10 @@ namespace Gs2::Experience
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FGetCurrentExperienceMasterTask>> GetCurrentExperienceMaster(
             const Request::FGetCurrentExperienceMasterRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FPreUpdateCurrentExperienceMasterTask>> PreUpdateCurrentExperienceMaster(
+            const Request::FPreUpdateCurrentExperienceMasterRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FUpdateCurrentExperienceMasterTask>> UpdateCurrentExperienceMaster(

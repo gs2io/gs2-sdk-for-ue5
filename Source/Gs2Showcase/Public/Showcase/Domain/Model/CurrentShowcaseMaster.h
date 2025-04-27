@@ -71,6 +71,16 @@ namespace Gs2::Showcase::Domain::Model
         const Gs2::Showcase::FGs2ShowcaseRestClientPtr Client;
 
         public:
+        TOptional<FString> UploadToken;
+        TOptional<FString> UploadUrl;
+        TOptional<FString> GetUploadToken() const
+        {
+            return UploadToken;
+        }
+        TOptional<FString> GetUploadUrl() const
+        {
+            return UploadUrl;
+        }
         TOptional<FString> NamespaceName;
     private:
 
@@ -139,6 +149,32 @@ namespace Gs2::Showcase::Domain::Model
 
         TSharedPtr<FAsyncTask<FGetTask>> Get(
             Request::FGetCurrentShowcaseMasterRequestPtr Request
+        );
+
+        class GS2SHOWCASE_API FPreUpdateTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Showcase::Domain::Model::FCurrentShowcaseMasterDomain>,
+            public TSharedFromThis<FPreUpdateTask>
+        {
+            const TSharedPtr<FCurrentShowcaseMasterDomain> Self;
+            const Request::FPreUpdateCurrentShowcaseMasterRequestPtr Request;
+        public:
+            explicit FPreUpdateTask(
+                const TSharedPtr<FCurrentShowcaseMasterDomain>& Self,
+                const Request::FPreUpdateCurrentShowcaseMasterRequestPtr Request
+            );
+
+            FPreUpdateTask(
+                const FPreUpdateTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Showcase::Domain::Model::FCurrentShowcaseMasterDomain>> Result
+            ) override;
+        };
+        friend FPreUpdateTask;
+
+        TSharedPtr<FAsyncTask<FPreUpdateTask>> PreUpdate(
+            Request::FPreUpdateCurrentShowcaseMasterRequestPtr Request
         );
 
         class GS2SHOWCASE_API FUpdateTask final :

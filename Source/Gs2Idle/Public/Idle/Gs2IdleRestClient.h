@@ -94,6 +94,8 @@
 #include "Task/Rest/ExportMasterTask.h"
 #include "Request/GetCurrentCategoryMasterRequest.h"
 #include "Task/Rest/GetCurrentCategoryMasterTask.h"
+#include "Request/PreUpdateCurrentCategoryMasterRequest.h"
+#include "Task/Rest/PreUpdateCurrentCategoryMasterTask.h"
 #include "Request/UpdateCurrentCategoryMasterRequest.h"
 #include "Task/Rest/UpdateCurrentCategoryMasterTask.h"
 #include "Request/UpdateCurrentCategoryMasterFromGitHubRequest.h"
@@ -260,6 +262,10 @@ namespace Gs2::Idle
 
         TSharedPtr<FAsyncTask<Task::Rest::FGetCurrentCategoryMasterTask>> GetCurrentCategoryMaster(
             const Request::FGetCurrentCategoryMasterRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FPreUpdateCurrentCategoryMasterTask>> PreUpdateCurrentCategoryMaster(
+            const Request::FPreUpdateCurrentCategoryMasterRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::Rest::FUpdateCurrentCategoryMasterTask>> UpdateCurrentCategoryMaster(

@@ -325,6 +325,15 @@ namespace Gs2::Limit
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::Rest::FPreUpdateCurrentLimitMasterTask>> FGs2LimitRestClient::PreUpdateCurrentLimitMaster(
+        const Request::FPreUpdateCurrentLimitMasterRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FPreUpdateCurrentLimitMasterTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::Rest::FUpdateCurrentLimitMasterTask>> FGs2LimitRestClient::UpdateCurrentLimitMaster(
         const Request::FUpdateCurrentLimitMasterRequestPtr Request) const
     {

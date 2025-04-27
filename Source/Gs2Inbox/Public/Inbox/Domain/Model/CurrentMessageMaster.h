@@ -59,6 +59,16 @@ namespace Gs2::Inbox::Domain::Model
         const Gs2::Inbox::FGs2InboxRestClientPtr Client;
 
         public:
+        TOptional<FString> UploadToken;
+        TOptional<FString> UploadUrl;
+        TOptional<FString> GetUploadToken() const
+        {
+            return UploadToken;
+        }
+        TOptional<FString> GetUploadUrl() const
+        {
+            return UploadUrl;
+        }
         TOptional<FString> NamespaceName;
     private:
 
@@ -127,6 +137,32 @@ namespace Gs2::Inbox::Domain::Model
 
         TSharedPtr<FAsyncTask<FGetTask>> Get(
             Request::FGetCurrentMessageMasterRequestPtr Request
+        );
+
+        class GS2INBOX_API FPreUpdateTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Inbox::Domain::Model::FCurrentMessageMasterDomain>,
+            public TSharedFromThis<FPreUpdateTask>
+        {
+            const TSharedPtr<FCurrentMessageMasterDomain> Self;
+            const Request::FPreUpdateCurrentMessageMasterRequestPtr Request;
+        public:
+            explicit FPreUpdateTask(
+                const TSharedPtr<FCurrentMessageMasterDomain>& Self,
+                const Request::FPreUpdateCurrentMessageMasterRequestPtr Request
+            );
+
+            FPreUpdateTask(
+                const FPreUpdateTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Inbox::Domain::Model::FCurrentMessageMasterDomain>> Result
+            ) override;
+        };
+        friend FPreUpdateTask;
+
+        TSharedPtr<FAsyncTask<FPreUpdateTask>> PreUpdate(
+            Request::FPreUpdateCurrentMessageMasterRequestPtr Request
         );
 
         class GS2INBOX_API FUpdateTask final :

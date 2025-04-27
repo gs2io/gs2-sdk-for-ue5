@@ -262,6 +262,15 @@ namespace Gs2::Experience
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::WebSocket::FPreUpdateCurrentExperienceMasterTask>> FGs2ExperienceWebSocketClient::PreUpdateCurrentExperienceMaster(
+        const Request::FPreUpdateCurrentExperienceMasterRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FPreUpdateCurrentExperienceMasterTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::WebSocket::FUpdateCurrentExperienceMasterTask>> FGs2ExperienceWebSocketClient::UpdateCurrentExperienceMaster(
         const Request::FUpdateCurrentExperienceMasterRequestPtr Request) const
     {

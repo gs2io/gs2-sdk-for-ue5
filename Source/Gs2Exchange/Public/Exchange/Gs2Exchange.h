@@ -249,6 +249,12 @@
 #include "Task/Rest/GetCurrentRateMasterTask.h"
 #include "Task/WebSocket/GetCurrentRateMasterTask.h"
 
+// PreUpdateCurrentRateMaster
+#include "Request/PreUpdateCurrentRateMasterRequest.h"
+#include "Result/PreUpdateCurrentRateMasterResult.h"
+#include "Task/Rest/PreUpdateCurrentRateMasterTask.h"
+#include "Task/WebSocket/PreUpdateCurrentRateMasterTask.h"
+
 // UpdateCurrentRateMaster
 #include "Request/UpdateCurrentRateMasterRequest.h"
 #include "Result/UpdateCurrentRateMasterResult.h"

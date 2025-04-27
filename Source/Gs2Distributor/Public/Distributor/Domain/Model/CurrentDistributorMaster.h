@@ -59,6 +59,16 @@ namespace Gs2::Distributor::Domain::Model
         const Gs2::Distributor::FGs2DistributorRestClientPtr Client;
 
         public:
+        TOptional<FString> UploadToken;
+        TOptional<FString> UploadUrl;
+        TOptional<FString> GetUploadToken() const
+        {
+            return UploadToken;
+        }
+        TOptional<FString> GetUploadUrl() const
+        {
+            return UploadUrl;
+        }
         TOptional<FString> NamespaceName;
     private:
 
@@ -127,6 +137,32 @@ namespace Gs2::Distributor::Domain::Model
 
         TSharedPtr<FAsyncTask<FGetTask>> Get(
             Request::FGetCurrentDistributorMasterRequestPtr Request
+        );
+
+        class GS2DISTRIBUTOR_API FPreUpdateTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Distributor::Domain::Model::FCurrentDistributorMasterDomain>,
+            public TSharedFromThis<FPreUpdateTask>
+        {
+            const TSharedPtr<FCurrentDistributorMasterDomain> Self;
+            const Request::FPreUpdateCurrentDistributorMasterRequestPtr Request;
+        public:
+            explicit FPreUpdateTask(
+                const TSharedPtr<FCurrentDistributorMasterDomain>& Self,
+                const Request::FPreUpdateCurrentDistributorMasterRequestPtr Request
+            );
+
+            FPreUpdateTask(
+                const FPreUpdateTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Distributor::Domain::Model::FCurrentDistributorMasterDomain>> Result
+            ) override;
+        };
+        friend FPreUpdateTask;
+
+        TSharedPtr<FAsyncTask<FPreUpdateTask>> PreUpdate(
+            Request::FPreUpdateCurrentDistributorMasterRequestPtr Request
         );
 
         class GS2DISTRIBUTOR_API FUpdateTask final :

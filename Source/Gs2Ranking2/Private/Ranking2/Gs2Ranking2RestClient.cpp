@@ -937,6 +937,15 @@ namespace Gs2::Ranking2
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::Rest::FPreUpdateCurrentRankingMasterTask>> FGs2Ranking2RestClient::PreUpdateCurrentRankingMaster(
+        const Request::FPreUpdateCurrentRankingMasterRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FPreUpdateCurrentRankingMasterTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::Rest::FUpdateCurrentRankingMasterTask>> FGs2Ranking2RestClient::UpdateCurrentRankingMaster(
         const Request::FUpdateCurrentRankingMasterRequestPtr Request) const
     {

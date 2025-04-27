@@ -352,6 +352,15 @@ namespace Gs2::SkillTree
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::WebSocket::FPreUpdateCurrentTreeMasterTask>> FGs2SkillTreeWebSocketClient::PreUpdateCurrentTreeMaster(
+        const Request::FPreUpdateCurrentTreeMasterRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FPreUpdateCurrentTreeMasterTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::WebSocket::FUpdateCurrentTreeMasterTask>> FGs2SkillTreeWebSocketClient::UpdateCurrentTreeMaster(
         const Request::FUpdateCurrentTreeMasterRequestPtr Request) const
     {

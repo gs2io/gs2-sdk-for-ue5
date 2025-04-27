@@ -146,6 +146,8 @@
 #include "Task/WebSocket/ExportMasterTask.h"
 #include "Request/GetCurrentMissionMasterRequest.h"
 #include "Task/WebSocket/GetCurrentMissionMasterTask.h"
+#include "Request/PreUpdateCurrentMissionMasterRequest.h"
+#include "Task/WebSocket/PreUpdateCurrentMissionMasterTask.h"
 #include "Request/UpdateCurrentMissionMasterRequest.h"
 #include "Task/WebSocket/UpdateCurrentMissionMasterTask.h"
 #include "Request/UpdateCurrentMissionMasterFromGitHubRequest.h"
@@ -438,6 +440,10 @@ namespace Gs2::Mission
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FGetCurrentMissionMasterTask>> GetCurrentMissionMaster(
             const Request::FGetCurrentMissionMasterRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FPreUpdateCurrentMissionMasterTask>> PreUpdateCurrentMissionMaster(
+            const Request::FPreUpdateCurrentMissionMasterRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FUpdateCurrentMissionMasterTask>> UpdateCurrentMissionMaster(

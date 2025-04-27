@@ -88,6 +88,8 @@
 #include "Task/WebSocket/ExportMasterTask.h"
 #include "Request/GetCurrentVersionMasterRequest.h"
 #include "Task/WebSocket/GetCurrentVersionMasterTask.h"
+#include "Request/PreUpdateCurrentVersionMasterRequest.h"
+#include "Task/WebSocket/PreUpdateCurrentVersionMasterTask.h"
 #include "Request/UpdateCurrentVersionMasterRequest.h"
 #include "Task/WebSocket/UpdateCurrentVersionMasterTask.h"
 #include "Request/UpdateCurrentVersionMasterFromGitHubRequest.h"
@@ -242,6 +244,10 @@ namespace Gs2::Version
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FGetCurrentVersionMasterTask>> GetCurrentVersionMaster(
             const Request::FGetCurrentVersionMasterRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FPreUpdateCurrentVersionMasterTask>> PreUpdateCurrentVersionMaster(
+            const Request::FPreUpdateCurrentVersionMasterRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FUpdateCurrentVersionMasterTask>> UpdateCurrentVersionMaster(

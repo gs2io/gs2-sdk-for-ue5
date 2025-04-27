@@ -937,6 +937,15 @@ namespace Gs2::Ranking2
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::WebSocket::FPreUpdateCurrentRankingMasterTask>> FGs2Ranking2WebSocketClient::PreUpdateCurrentRankingMaster(
+        const Request::FPreUpdateCurrentRankingMasterRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FPreUpdateCurrentRankingMasterTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::WebSocket::FUpdateCurrentRankingMasterTask>> FGs2Ranking2WebSocketClient::UpdateCurrentRankingMaster(
         const Request::FUpdateCurrentRankingMasterRequestPtr Request) const
     {

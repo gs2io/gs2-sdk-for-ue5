@@ -388,6 +388,15 @@ namespace Gs2::Schedule
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::WebSocket::FPreUpdateCurrentEventMasterTask>> FGs2ScheduleWebSocketClient::PreUpdateCurrentEventMaster(
+        const Request::FPreUpdateCurrentEventMasterRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FPreUpdateCurrentEventMasterTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::WebSocket::FUpdateCurrentEventMasterTask>> FGs2ScheduleWebSocketClient::UpdateCurrentEventMaster(
         const Request::FUpdateCurrentEventMasterRequestPtr Request) const
     {

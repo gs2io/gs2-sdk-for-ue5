@@ -31,6 +31,12 @@
 #include "Task/Rest/DescribeStacksTask.h"
 #include "Task/WebSocket/DescribeStacksTask.h"
 
+// PreCreateStack
+#include "Request/PreCreateStackRequest.h"
+#include "Result/PreCreateStackResult.h"
+#include "Task/Rest/PreCreateStackTask.h"
+#include "Task/WebSocket/PreCreateStackTask.h"
+
 // CreateStack
 #include "Request/CreateStackRequest.h"
 #include "Result/CreateStackResult.h"
@@ -42,6 +48,12 @@
 #include "Result/CreateStackFromGitHubResult.h"
 #include "Task/Rest/CreateStackFromGitHubTask.h"
 #include "Task/WebSocket/CreateStackFromGitHubTask.h"
+
+// PreValidate
+#include "Request/PreValidateRequest.h"
+#include "Result/PreValidateResult.h"
+#include "Task/Rest/PreValidateTask.h"
+#include "Task/WebSocket/PreValidateTask.h"
 
 // Validate
 #include "Request/ValidateRequest.h"
@@ -61,11 +73,23 @@
 #include "Task/Rest/GetStackTask.h"
 #include "Task/WebSocket/GetStackTask.h"
 
+// PreUpdateStack
+#include "Request/PreUpdateStackRequest.h"
+#include "Result/PreUpdateStackResult.h"
+#include "Task/Rest/PreUpdateStackTask.h"
+#include "Task/WebSocket/PreUpdateStackTask.h"
+
 // UpdateStack
 #include "Request/UpdateStackRequest.h"
 #include "Result/UpdateStackResult.h"
 #include "Task/Rest/UpdateStackTask.h"
 #include "Task/WebSocket/UpdateStackTask.h"
+
+// PreChangeSet
+#include "Request/PreChangeSetRequest.h"
+#include "Result/PreChangeSetResult.h"
+#include "Task/Rest/PreChangeSetTask.h"
+#include "Task/WebSocket/PreChangeSetTask.h"
 
 // ChangeSet
 #include "Request/ChangeSetRequest.h"

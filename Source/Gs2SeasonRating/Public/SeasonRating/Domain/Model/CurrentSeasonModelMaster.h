@@ -58,6 +58,16 @@ namespace Gs2::SeasonRating::Domain::Model
         const Gs2::SeasonRating::FGs2SeasonRatingRestClientPtr Client;
 
         public:
+        TOptional<FString> UploadToken;
+        TOptional<FString> UploadUrl;
+        TOptional<FString> GetUploadToken() const
+        {
+            return UploadToken;
+        }
+        TOptional<FString> GetUploadUrl() const
+        {
+            return UploadUrl;
+        }
         TOptional<FString> NamespaceName;
     private:
 
@@ -126,6 +136,32 @@ namespace Gs2::SeasonRating::Domain::Model
 
         TSharedPtr<FAsyncTask<FGetTask>> Get(
             Request::FGetCurrentSeasonModelMasterRequestPtr Request
+        );
+
+        class GS2SEASONRATING_API FPreUpdateTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::SeasonRating::Domain::Model::FCurrentSeasonModelMasterDomain>,
+            public TSharedFromThis<FPreUpdateTask>
+        {
+            const TSharedPtr<FCurrentSeasonModelMasterDomain> Self;
+            const Request::FPreUpdateCurrentSeasonModelMasterRequestPtr Request;
+        public:
+            explicit FPreUpdateTask(
+                const TSharedPtr<FCurrentSeasonModelMasterDomain>& Self,
+                const Request::FPreUpdateCurrentSeasonModelMasterRequestPtr Request
+            );
+
+            FPreUpdateTask(
+                const FPreUpdateTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::SeasonRating::Domain::Model::FCurrentSeasonModelMasterDomain>> Result
+            ) override;
+        };
+        friend FPreUpdateTask;
+
+        TSharedPtr<FAsyncTask<FPreUpdateTask>> PreUpdate(
+            Request::FPreUpdateCurrentSeasonModelMasterRequestPtr Request
         );
 
         class GS2SEASONRATING_API FUpdateTask final :

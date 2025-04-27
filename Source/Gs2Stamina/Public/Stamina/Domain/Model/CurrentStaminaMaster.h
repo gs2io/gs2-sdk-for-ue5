@@ -63,6 +63,16 @@ namespace Gs2::Stamina::Domain::Model
         const Gs2::Stamina::FGs2StaminaRestClientPtr Client;
 
         public:
+        TOptional<FString> UploadToken;
+        TOptional<FString> UploadUrl;
+        TOptional<FString> GetUploadToken() const
+        {
+            return UploadToken;
+        }
+        TOptional<FString> GetUploadUrl() const
+        {
+            return UploadUrl;
+        }
         TOptional<FString> NamespaceName;
     private:
 
@@ -131,6 +141,32 @@ namespace Gs2::Stamina::Domain::Model
 
         TSharedPtr<FAsyncTask<FGetTask>> Get(
             Request::FGetCurrentStaminaMasterRequestPtr Request
+        );
+
+        class GS2STAMINA_API FPreUpdateTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Stamina::Domain::Model::FCurrentStaminaMasterDomain>,
+            public TSharedFromThis<FPreUpdateTask>
+        {
+            const TSharedPtr<FCurrentStaminaMasterDomain> Self;
+            const Request::FPreUpdateCurrentStaminaMasterRequestPtr Request;
+        public:
+            explicit FPreUpdateTask(
+                const TSharedPtr<FCurrentStaminaMasterDomain>& Self,
+                const Request::FPreUpdateCurrentStaminaMasterRequestPtr Request
+            );
+
+            FPreUpdateTask(
+                const FPreUpdateTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Stamina::Domain::Model::FCurrentStaminaMasterDomain>> Result
+            ) override;
+        };
+        friend FPreUpdateTask;
+
+        TSharedPtr<FAsyncTask<FPreUpdateTask>> PreUpdate(
+            Request::FPreUpdateCurrentStaminaMasterRequestPtr Request
         );
 
         class GS2STAMINA_API FUpdateTask final :

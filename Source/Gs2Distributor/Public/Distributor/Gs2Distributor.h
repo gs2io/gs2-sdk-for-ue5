@@ -127,6 +127,12 @@
 #include "Task/Rest/GetCurrentDistributorMasterTask.h"
 #include "Task/WebSocket/GetCurrentDistributorMasterTask.h"
 
+// PreUpdateCurrentDistributorMaster
+#include "Request/PreUpdateCurrentDistributorMasterRequest.h"
+#include "Result/PreUpdateCurrentDistributorMasterResult.h"
+#include "Task/Rest/PreUpdateCurrentDistributorMasterTask.h"
+#include "Task/WebSocket/PreUpdateCurrentDistributorMasterTask.h"
+
 // UpdateCurrentDistributorMaster
 #include "Request/UpdateCurrentDistributorMasterRequest.h"
 #include "Result/UpdateCurrentDistributorMasterResult.h"

@@ -361,6 +361,15 @@ namespace Gs2::Matchmaking
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::WebSocket::FPreUpdateCurrentModelMasterTask>> FGs2MatchmakingWebSocketClient::PreUpdateCurrentModelMaster(
+        const Request::FPreUpdateCurrentModelMasterRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FPreUpdateCurrentModelMasterTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::WebSocket::FUpdateCurrentModelMasterTask>> FGs2MatchmakingWebSocketClient::UpdateCurrentModelMaster(
         const Request::FUpdateCurrentModelMasterRequestPtr Request) const
     {

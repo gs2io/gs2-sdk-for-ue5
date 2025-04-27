@@ -532,6 +532,15 @@ namespace Gs2::Inventory
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::WebSocket::FPreUpdateCurrentItemModelMasterTask>> FGs2InventoryWebSocketClient::PreUpdateCurrentItemModelMaster(
+        const Request::FPreUpdateCurrentItemModelMasterRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FPreUpdateCurrentItemModelMasterTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::WebSocket::FUpdateCurrentItemModelMasterTask>> FGs2InventoryWebSocketClient::UpdateCurrentItemModelMaster(
         const Request::FUpdateCurrentItemModelMasterRequestPtr Request) const
     {

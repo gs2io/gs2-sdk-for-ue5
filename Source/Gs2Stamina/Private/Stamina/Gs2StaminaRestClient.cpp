@@ -334,6 +334,15 @@ namespace Gs2::Stamina
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::Rest::FPreUpdateCurrentStaminaMasterTask>> FGs2StaminaRestClient::PreUpdateCurrentStaminaMaster(
+        const Request::FPreUpdateCurrentStaminaMasterRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FPreUpdateCurrentStaminaMasterTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::Rest::FUpdateCurrentStaminaMasterTask>> FGs2StaminaRestClient::UpdateCurrentStaminaMaster(
         const Request::FUpdateCurrentStaminaMasterRequestPtr Request) const
     {

@@ -20,18 +20,26 @@
 #include "Core/Net/AbstractGs2Client.h"
 #include "Request/DescribeStacksRequest.h"
 #include "Task/Rest/DescribeStacksTask.h"
+#include "Request/PreCreateStackRequest.h"
+#include "Task/Rest/PreCreateStackTask.h"
 #include "Request/CreateStackRequest.h"
 #include "Task/Rest/CreateStackTask.h"
 #include "Request/CreateStackFromGitHubRequest.h"
 #include "Task/Rest/CreateStackFromGitHubTask.h"
+#include "Request/PreValidateRequest.h"
+#include "Task/Rest/PreValidateTask.h"
 #include "Request/ValidateRequest.h"
 #include "Task/Rest/ValidateTask.h"
 #include "Request/GetStackStatusRequest.h"
 #include "Task/Rest/GetStackStatusTask.h"
 #include "Request/GetStackRequest.h"
 #include "Task/Rest/GetStackTask.h"
+#include "Request/PreUpdateStackRequest.h"
+#include "Task/Rest/PreUpdateStackTask.h"
 #include "Request/UpdateStackRequest.h"
 #include "Task/Rest/UpdateStackTask.h"
+#include "Request/PreChangeSetRequest.h"
+#include "Task/Rest/PreChangeSetTask.h"
 #include "Request/ChangeSetRequest.h"
 #include "Task/Rest/ChangeSetTask.h"
 #include "Request/UpdateStackFromGitHubRequest.h"
@@ -72,12 +80,20 @@ namespace Gs2::Deploy
             const Request::FDescribeStacksRequestPtr Request
         ) const;
 
+        TSharedPtr<FAsyncTask<Task::Rest::FPreCreateStackTask>> PreCreateStack(
+            const Request::FPreCreateStackRequestPtr Request
+        ) const;
+
         TSharedPtr<FAsyncTask<Task::Rest::FCreateStackTask>> CreateStack(
             const Request::FCreateStackRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::Rest::FCreateStackFromGitHubTask>> CreateStackFromGitHub(
             const Request::FCreateStackFromGitHubRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FPreValidateTask>> PreValidate(
+            const Request::FPreValidateRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::Rest::FValidateTask>> Validate(
@@ -92,8 +108,16 @@ namespace Gs2::Deploy
             const Request::FGetStackRequestPtr Request
         ) const;
 
+        TSharedPtr<FAsyncTask<Task::Rest::FPreUpdateStackTask>> PreUpdateStack(
+            const Request::FPreUpdateStackRequestPtr Request
+        ) const;
+
         TSharedPtr<FAsyncTask<Task::Rest::FUpdateStackTask>> UpdateStack(
             const Request::FUpdateStackRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FPreChangeSetTask>> PreChangeSet(
+            const Request::FPreChangeSetRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::Rest::FChangeSetTask>> ChangeSet(

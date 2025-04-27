@@ -148,6 +148,8 @@
 #include "Task/Rest/ExportMasterTask.h"
 #include "Request/GetCurrentGuildMasterRequest.h"
 #include "Task/Rest/GetCurrentGuildMasterTask.h"
+#include "Request/PreUpdateCurrentGuildMasterRequest.h"
+#include "Task/Rest/PreUpdateCurrentGuildMasterTask.h"
 #include "Request/UpdateCurrentGuildMasterRequest.h"
 #include "Task/Rest/UpdateCurrentGuildMasterTask.h"
 #include "Request/UpdateCurrentGuildMasterFromGitHubRequest.h"
@@ -470,6 +472,10 @@ namespace Gs2::Guild
 
         TSharedPtr<FAsyncTask<Task::Rest::FGetCurrentGuildMasterTask>> GetCurrentGuildMaster(
             const Request::FGetCurrentGuildMasterRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FPreUpdateCurrentGuildMasterTask>> PreUpdateCurrentGuildMaster(
+            const Request::FPreUpdateCurrentGuildMasterRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::Rest::FUpdateCurrentGuildMasterTask>> UpdateCurrentGuildMaster(

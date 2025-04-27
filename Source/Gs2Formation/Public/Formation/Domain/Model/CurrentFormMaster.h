@@ -72,6 +72,16 @@ namespace Gs2::Formation::Domain::Model
         const Gs2::Formation::FGs2FormationRestClientPtr Client;
 
         public:
+        TOptional<FString> UploadToken;
+        TOptional<FString> UploadUrl;
+        TOptional<FString> GetUploadToken() const
+        {
+            return UploadToken;
+        }
+        TOptional<FString> GetUploadUrl() const
+        {
+            return UploadUrl;
+        }
         TOptional<FString> NamespaceName;
     private:
 
@@ -140,6 +150,32 @@ namespace Gs2::Formation::Domain::Model
 
         TSharedPtr<FAsyncTask<FGetTask>> Get(
             Request::FGetCurrentFormMasterRequestPtr Request
+        );
+
+        class GS2FORMATION_API FPreUpdateTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Formation::Domain::Model::FCurrentFormMasterDomain>,
+            public TSharedFromThis<FPreUpdateTask>
+        {
+            const TSharedPtr<FCurrentFormMasterDomain> Self;
+            const Request::FPreUpdateCurrentFormMasterRequestPtr Request;
+        public:
+            explicit FPreUpdateTask(
+                const TSharedPtr<FCurrentFormMasterDomain>& Self,
+                const Request::FPreUpdateCurrentFormMasterRequestPtr Request
+            );
+
+            FPreUpdateTask(
+                const FPreUpdateTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Formation::Domain::Model::FCurrentFormMasterDomain>> Result
+            ) override;
+        };
+        friend FPreUpdateTask;
+
+        TSharedPtr<FAsyncTask<FPreUpdateTask>> PreUpdate(
+            Request::FPreUpdateCurrentFormMasterRequestPtr Request
         );
 
         class GS2FORMATION_API FUpdateTask final :

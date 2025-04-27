@@ -72,6 +72,8 @@
 #include "Task/Rest/ExportMasterTask.h"
 #include "Request/GetCurrentExperienceMasterRequest.h"
 #include "Task/Rest/GetCurrentExperienceMasterTask.h"
+#include "Request/PreUpdateCurrentExperienceMasterRequest.h"
+#include "Task/Rest/PreUpdateCurrentExperienceMasterTask.h"
 #include "Request/UpdateCurrentExperienceMasterRequest.h"
 #include "Task/Rest/UpdateCurrentExperienceMasterTask.h"
 #include "Request/UpdateCurrentExperienceMasterFromGitHubRequest.h"
@@ -252,6 +254,10 @@ namespace Gs2::Experience
 
         TSharedPtr<FAsyncTask<Task::Rest::FGetCurrentExperienceMasterTask>> GetCurrentExperienceMaster(
             const Request::FGetCurrentExperienceMasterRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FPreUpdateCurrentExperienceMasterTask>> PreUpdateCurrentExperienceMaster(
+            const Request::FPreUpdateCurrentExperienceMasterRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::Rest::FUpdateCurrentExperienceMasterTask>> UpdateCurrentExperienceMaster(

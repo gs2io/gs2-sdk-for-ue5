@@ -59,6 +59,16 @@ namespace Gs2::Version::Domain::Model
         const Gs2::Version::FGs2VersionRestClientPtr Client;
 
         public:
+        TOptional<FString> UploadToken;
+        TOptional<FString> UploadUrl;
+        TOptional<FString> GetUploadToken() const
+        {
+            return UploadToken;
+        }
+        TOptional<FString> GetUploadUrl() const
+        {
+            return UploadUrl;
+        }
         TOptional<FString> NamespaceName;
     private:
 
@@ -127,6 +137,32 @@ namespace Gs2::Version::Domain::Model
 
         TSharedPtr<FAsyncTask<FGetTask>> Get(
             Request::FGetCurrentVersionMasterRequestPtr Request
+        );
+
+        class GS2VERSION_API FPreUpdateTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Version::Domain::Model::FCurrentVersionMasterDomain>,
+            public TSharedFromThis<FPreUpdateTask>
+        {
+            const TSharedPtr<FCurrentVersionMasterDomain> Self;
+            const Request::FPreUpdateCurrentVersionMasterRequestPtr Request;
+        public:
+            explicit FPreUpdateTask(
+                const TSharedPtr<FCurrentVersionMasterDomain>& Self,
+                const Request::FPreUpdateCurrentVersionMasterRequestPtr Request
+            );
+
+            FPreUpdateTask(
+                const FPreUpdateTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Version::Domain::Model::FCurrentVersionMasterDomain>> Result
+            ) override;
+        };
+        friend FPreUpdateTask;
+
+        TSharedPtr<FAsyncTask<FPreUpdateTask>> PreUpdate(
+            Request::FPreUpdateCurrentVersionMasterRequestPtr Request
         );
 
         class GS2VERSION_API FUpdateTask final :

@@ -325,6 +325,15 @@ namespace Gs2::Inbox
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::Rest::FPreUpdateCurrentMessageMasterTask>> FGs2InboxRestClient::PreUpdateCurrentMessageMaster(
+        const Request::FPreUpdateCurrentMessageMasterRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FPreUpdateCurrentMessageMasterTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::Rest::FUpdateCurrentMessageMasterTask>> FGs2InboxRestClient::UpdateCurrentMessageMaster(
         const Request::FUpdateCurrentMessageMasterRequestPtr Request) const
     {

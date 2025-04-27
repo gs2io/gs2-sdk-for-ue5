@@ -559,6 +559,15 @@ namespace Gs2::Account
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::Rest::FPreUpdateCurrentModelMasterTask>> FGs2AccountRestClient::PreUpdateCurrentModelMaster(
+        const Request::FPreUpdateCurrentModelMasterRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FPreUpdateCurrentModelMasterTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::Rest::FUpdateCurrentModelMasterTask>> FGs2AccountRestClient::UpdateCurrentModelMaster(
         const Request::FUpdateCurrentModelMasterRequestPtr Request) const
     {

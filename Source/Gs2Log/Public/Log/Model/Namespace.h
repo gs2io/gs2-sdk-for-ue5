@@ -34,6 +34,7 @@ namespace Gs2::Log::Model
         TOptional<FString> AwsAccessKeyIdValue;
         TOptional<FString> AwsSecretAccessKeyValue;
         TOptional<FString> FirehoseStreamNameValue;
+        TOptional<FString> FirehoseCompressDataValue;
         TOptional<FString> StatusValue;
         TOptional<int64> CreatedAtValue;
         TOptional<int64> UpdatedAtValue;
@@ -57,6 +58,7 @@ namespace Gs2::Log::Model
         TSharedPtr<FNamespace> WithAwsAccessKeyId(const TOptional<FString> AwsAccessKeyId);
         TSharedPtr<FNamespace> WithAwsSecretAccessKey(const TOptional<FString> AwsSecretAccessKey);
         TSharedPtr<FNamespace> WithFirehoseStreamName(const TOptional<FString> FirehoseStreamName);
+        TSharedPtr<FNamespace> WithFirehoseCompressData(const TOptional<FString> FirehoseCompressData);
         TSharedPtr<FNamespace> WithStatus(const TOptional<FString> Status);
         TSharedPtr<FNamespace> WithCreatedAt(const TOptional<int64> CreatedAt);
         TSharedPtr<FNamespace> WithUpdatedAt(const TOptional<int64> UpdatedAt);
@@ -74,6 +76,7 @@ namespace Gs2::Log::Model
         TOptional<FString> GetAwsAccessKeyId() const;
         TOptional<FString> GetAwsSecretAccessKey() const;
         TOptional<FString> GetFirehoseStreamName() const;
+        TOptional<FString> GetFirehoseCompressData() const;
         TOptional<FString> GetStatus() const;
         TOptional<int64> GetCreatedAt() const;
         FString GetCreatedAtString() const;

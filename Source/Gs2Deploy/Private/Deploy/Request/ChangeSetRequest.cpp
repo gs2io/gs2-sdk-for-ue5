@@ -20,7 +20,9 @@ namespace Gs2::Deploy::Request
 {
     FChangeSetRequest::FChangeSetRequest():
         StackNameValue(TOptional<FString>()),
-        TemplateValue(TOptional<FString>())
+        ModeValue(TOptional<FString>()),
+        TemplateValue(TOptional<FString>()),
+        UploadTokenValue(TOptional<FString>())
     {
     }
 
@@ -28,7 +30,9 @@ namespace Gs2::Deploy::Request
         const FChangeSetRequest& From
     ):
         StackNameValue(From.StackNameValue),
-        TemplateValue(From.TemplateValue)
+        ModeValue(From.ModeValue),
+        TemplateValue(From.TemplateValue),
+        UploadTokenValue(From.UploadTokenValue)
     {
     }
 
@@ -48,11 +52,27 @@ namespace Gs2::Deploy::Request
         return SharedThis(this);
     }
 
+    TSharedPtr<FChangeSetRequest> FChangeSetRequest::WithMode(
+        const TOptional<FString> Mode
+    )
+    {
+        this->ModeValue = Mode;
+        return SharedThis(this);
+    }
+
     TSharedPtr<FChangeSetRequest> FChangeSetRequest::WithTemplate(
         const TOptional<FString> Template
     )
     {
         this->TemplateValue = Template;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FChangeSetRequest> FChangeSetRequest::WithUploadToken(
+        const TOptional<FString> UploadToken
+    )
+    {
+        this->UploadTokenValue = UploadToken;
         return SharedThis(this);
     }
 
@@ -66,9 +86,19 @@ namespace Gs2::Deploy::Request
         return StackNameValue;
     }
 
+    TOptional<FString> FChangeSetRequest::GetMode() const
+    {
+        return ModeValue;
+    }
+
     TOptional<FString> FChangeSetRequest::GetTemplate() const
     {
         return TemplateValue;
+    }
+
+    TOptional<FString> FChangeSetRequest::GetUploadToken() const
+    {
+        return UploadTokenValue;
     }
 
     TSharedPtr<FChangeSetRequest> FChangeSetRequest::FromJson(const TSharedPtr<FJsonObject> Data)
@@ -87,10 +117,28 @@ namespace Gs2::Deploy::Request
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
+            ->WithMode(Data->HasField(ANSI_TO_TCHAR("mode")) ? [Data]() -> TOptional<FString>
+              {
+                  FString v("");
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("mode"), v))
+                  {
+                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                  }
+                  return TOptional<FString>();
+              }() : TOptional<FString>())
             ->WithTemplate(Data->HasField(ANSI_TO_TCHAR("template")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
                     if (Data->TryGetStringField(ANSI_TO_TCHAR("template"), v))
+                  {
+                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                  }
+                  return TOptional<FString>();
+              }() : TOptional<FString>())
+            ->WithUploadToken(Data->HasField(ANSI_TO_TCHAR("uploadToken")) ? [Data]() -> TOptional<FString>
+              {
+                  FString v("");
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("uploadToken"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
@@ -109,9 +157,17 @@ namespace Gs2::Deploy::Request
         {
             JsonRootObject->SetStringField("stackName", StackNameValue.GetValue());
         }
+        if (ModeValue.IsSet())
+        {
+            JsonRootObject->SetStringField("mode", ModeValue.GetValue());
+        }
         if (TemplateValue.IsSet())
         {
             JsonRootObject->SetStringField("template", TemplateValue.GetValue());
+        }
+        if (UploadTokenValue.IsSet())
+        {
+            JsonRootObject->SetStringField("uploadToken", UploadTokenValue.GetValue());
         }
         return JsonRootObject;
     }

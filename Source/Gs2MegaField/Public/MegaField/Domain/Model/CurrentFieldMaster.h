@@ -59,6 +59,16 @@ namespace Gs2::MegaField::Domain::Model
         const Gs2::MegaField::FGs2MegaFieldRestClientPtr Client;
 
         public:
+        TOptional<FString> UploadToken;
+        TOptional<FString> UploadUrl;
+        TOptional<FString> GetUploadToken() const
+        {
+            return UploadToken;
+        }
+        TOptional<FString> GetUploadUrl() const
+        {
+            return UploadUrl;
+        }
         TOptional<FString> NamespaceName;
     private:
 
@@ -127,6 +137,32 @@ namespace Gs2::MegaField::Domain::Model
 
         TSharedPtr<FAsyncTask<FGetTask>> Get(
             Request::FGetCurrentFieldMasterRequestPtr Request
+        );
+
+        class GS2MEGAFIELD_API FPreUpdateTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::MegaField::Domain::Model::FCurrentFieldMasterDomain>,
+            public TSharedFromThis<FPreUpdateTask>
+        {
+            const TSharedPtr<FCurrentFieldMasterDomain> Self;
+            const Request::FPreUpdateCurrentFieldMasterRequestPtr Request;
+        public:
+            explicit FPreUpdateTask(
+                const TSharedPtr<FCurrentFieldMasterDomain>& Self,
+                const Request::FPreUpdateCurrentFieldMasterRequestPtr Request
+            );
+
+            FPreUpdateTask(
+                const FPreUpdateTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::MegaField::Domain::Model::FCurrentFieldMasterDomain>> Result
+            ) override;
+        };
+        friend FPreUpdateTask;
+
+        TSharedPtr<FAsyncTask<FPreUpdateTask>> PreUpdate(
+            Request::FPreUpdateCurrentFieldMasterRequestPtr Request
         );
 
         class GS2MEGAFIELD_API FUpdateTask final :

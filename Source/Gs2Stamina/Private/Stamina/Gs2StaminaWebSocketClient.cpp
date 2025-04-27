@@ -334,6 +334,15 @@ namespace Gs2::Stamina
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::WebSocket::FPreUpdateCurrentStaminaMasterTask>> FGs2StaminaWebSocketClient::PreUpdateCurrentStaminaMaster(
+        const Request::FPreUpdateCurrentStaminaMasterRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FPreUpdateCurrentStaminaMasterTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::WebSocket::FUpdateCurrentStaminaMasterTask>> FGs2StaminaWebSocketClient::UpdateCurrentStaminaMaster(
         const Request::FUpdateCurrentStaminaMasterRequestPtr Request) const
     {

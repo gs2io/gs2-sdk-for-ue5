@@ -343,6 +343,15 @@ namespace Gs2::Lottery
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::Rest::FPreUpdateCurrentLotteryMasterTask>> FGs2LotteryRestClient::PreUpdateCurrentLotteryMaster(
+        const Request::FPreUpdateCurrentLotteryMasterRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FPreUpdateCurrentLotteryMasterTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::Rest::FUpdateCurrentLotteryMasterTask>> FGs2LotteryRestClient::UpdateCurrentLotteryMaster(
         const Request::FUpdateCurrentLotteryMasterRequestPtr Request) const
     {

@@ -235,6 +235,15 @@ namespace Gs2::Buff
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::Rest::FPreUpdateCurrentBuffMasterTask>> FGs2BuffRestClient::PreUpdateCurrentBuffMaster(
+        const Request::FPreUpdateCurrentBuffMasterRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FPreUpdateCurrentBuffMasterTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::Rest::FUpdateCurrentBuffMasterTask>> FGs2BuffRestClient::UpdateCurrentBuffMaster(
         const Request::FUpdateCurrentBuffMasterRequestPtr Request) const
     {

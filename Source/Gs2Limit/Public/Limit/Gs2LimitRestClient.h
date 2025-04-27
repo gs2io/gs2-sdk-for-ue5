@@ -86,6 +86,8 @@
 #include "Task/Rest/ExportMasterTask.h"
 #include "Request/GetCurrentLimitMasterRequest.h"
 #include "Task/Rest/GetCurrentLimitMasterTask.h"
+#include "Request/PreUpdateCurrentLimitMasterRequest.h"
+#include "Task/Rest/PreUpdateCurrentLimitMasterTask.h"
 #include "Request/UpdateCurrentLimitMasterRequest.h"
 #include "Task/Rest/UpdateCurrentLimitMasterTask.h"
 #include "Request/UpdateCurrentLimitMasterFromGitHubRequest.h"
@@ -240,6 +242,10 @@ namespace Gs2::Limit
 
         TSharedPtr<FAsyncTask<Task::Rest::FGetCurrentLimitMasterTask>> GetCurrentLimitMaster(
             const Request::FGetCurrentLimitMasterRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FPreUpdateCurrentLimitMasterTask>> PreUpdateCurrentLimitMaster(
+            const Request::FPreUpdateCurrentLimitMasterRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::Rest::FUpdateCurrentLimitMasterTask>> UpdateCurrentLimitMaster(

@@ -343,6 +343,15 @@ namespace Gs2::Lottery
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::WebSocket::FPreUpdateCurrentLotteryMasterTask>> FGs2LotteryWebSocketClient::PreUpdateCurrentLotteryMaster(
+        const Request::FPreUpdateCurrentLotteryMasterRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FPreUpdateCurrentLotteryMasterTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::WebSocket::FUpdateCurrentLotteryMasterTask>> FGs2LotteryWebSocketClient::UpdateCurrentLotteryMaster(
         const Request::FUpdateCurrentLotteryMasterRequestPtr Request) const
     {

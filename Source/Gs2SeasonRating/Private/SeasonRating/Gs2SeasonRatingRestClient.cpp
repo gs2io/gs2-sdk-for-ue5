@@ -253,6 +253,15 @@ namespace Gs2::SeasonRating
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::Rest::FPreUpdateCurrentSeasonModelMasterTask>> FGs2SeasonRatingRestClient::PreUpdateCurrentSeasonModelMaster(
+        const Request::FPreUpdateCurrentSeasonModelMasterRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FPreUpdateCurrentSeasonModelMasterTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::Rest::FUpdateCurrentSeasonModelMasterTask>> FGs2SeasonRatingRestClient::UpdateCurrentSeasonModelMaster(
         const Request::FUpdateCurrentSeasonModelMasterRequestPtr Request) const
     {

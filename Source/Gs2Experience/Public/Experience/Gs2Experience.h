@@ -197,6 +197,12 @@
 #include "Task/Rest/GetCurrentExperienceMasterTask.h"
 #include "Task/WebSocket/GetCurrentExperienceMasterTask.h"
 
+// PreUpdateCurrentExperienceMaster
+#include "Request/PreUpdateCurrentExperienceMasterRequest.h"
+#include "Result/PreUpdateCurrentExperienceMasterResult.h"
+#include "Task/Rest/PreUpdateCurrentExperienceMasterTask.h"
+#include "Task/WebSocket/PreUpdateCurrentExperienceMasterTask.h"
+
 // UpdateCurrentExperienceMaster
 #include "Request/UpdateCurrentExperienceMasterRequest.h"
 #include "Result/UpdateCurrentExperienceMasterResult.h"

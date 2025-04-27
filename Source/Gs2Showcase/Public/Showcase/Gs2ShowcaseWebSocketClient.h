@@ -78,6 +78,8 @@
 #include "Task/WebSocket/ExportMasterTask.h"
 #include "Request/GetCurrentShowcaseMasterRequest.h"
 #include "Task/WebSocket/GetCurrentShowcaseMasterTask.h"
+#include "Request/PreUpdateCurrentShowcaseMasterRequest.h"
+#include "Task/WebSocket/PreUpdateCurrentShowcaseMasterTask.h"
 #include "Request/UpdateCurrentShowcaseMasterRequest.h"
 #include "Task/WebSocket/UpdateCurrentShowcaseMasterTask.h"
 #include "Request/UpdateCurrentShowcaseMasterFromGitHubRequest.h"
@@ -260,6 +262,10 @@ namespace Gs2::Showcase
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FGetCurrentShowcaseMasterTask>> GetCurrentShowcaseMaster(
             const Request::FGetCurrentShowcaseMasterRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FPreUpdateCurrentShowcaseMasterTask>> PreUpdateCurrentShowcaseMaster(
+            const Request::FPreUpdateCurrentShowcaseMasterRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FUpdateCurrentShowcaseMasterTask>> UpdateCurrentShowcaseMaster(

@@ -134,6 +134,49 @@ namespace Gs2::Experience::Domain::Model
         return Gs2::Core::Util::New<FAsyncTask<FGetTask>>(this->AsShared(), Request);
     }
 
+    FCurrentExperienceMasterDomain::FPreUpdateTask::FPreUpdateTask(
+        const TSharedPtr<FCurrentExperienceMasterDomain>& Self,
+        const Request::FPreUpdateCurrentExperienceMasterRequestPtr Request
+    ): Self(Self), Request(Request)
+    {
+
+    }
+
+    FCurrentExperienceMasterDomain::FPreUpdateTask::FPreUpdateTask(
+        const FPreUpdateTask& From
+    ): TGs2Future(From), Self(From.Self), Request(From.Request)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FCurrentExperienceMasterDomain::FPreUpdateTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::Experience::Domain::Model::FCurrentExperienceMasterDomain>> Result
+    )
+    {
+        Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
+            ->WithNamespaceName(Self->NamespaceName);
+        const auto Domain = Self;
+        if (ResultModel != nullptr)
+        {
+            if (ResultModel->GetUploadToken().IsSet())
+            {
+                Self->UploadToken = Domain->UploadToken = ResultModel->GetUploadToken();
+            }
+            if (ResultModel->GetUploadUrl().IsSet())
+            {
+                Self->UploadUrl = Domain->UploadUrl = ResultModel->GetUploadUrl();
+            }
+        }
+        *Result = Domain;
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FCurrentExperienceMasterDomain::FPreUpdateTask>> FCurrentExperienceMasterDomain::PreUpdate(
+        Request::FPreUpdateCurrentExperienceMasterRequestPtr Request
+    ) {
+        return Gs2::Core::Util::New<FAsyncTask<FPreUpdateTask>>(this->AsShared(), Request);
+    }
+
     FCurrentExperienceMasterDomain::FUpdateTask::FUpdateTask(
         const TSharedPtr<FCurrentExperienceMasterDomain>& Self,
         const Request::FUpdateCurrentExperienceMasterRequestPtr Request

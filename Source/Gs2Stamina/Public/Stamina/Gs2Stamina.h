@@ -242,6 +242,12 @@
 #include "Task/Rest/GetCurrentStaminaMasterTask.h"
 #include "Task/WebSocket/GetCurrentStaminaMasterTask.h"
 
+// PreUpdateCurrentStaminaMaster
+#include "Request/PreUpdateCurrentStaminaMasterRequest.h"
+#include "Result/PreUpdateCurrentStaminaMasterResult.h"
+#include "Task/Rest/PreUpdateCurrentStaminaMasterTask.h"
+#include "Task/WebSocket/PreUpdateCurrentStaminaMasterTask.h"
+
 // UpdateCurrentStaminaMaster
 #include "Request/UpdateCurrentStaminaMasterRequest.h"
 #include "Result/UpdateCurrentStaminaMasterResult.h"

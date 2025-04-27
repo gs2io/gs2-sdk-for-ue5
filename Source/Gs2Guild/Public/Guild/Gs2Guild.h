@@ -431,6 +431,12 @@
 #include "Task/Rest/GetCurrentGuildMasterTask.h"
 #include "Task/WebSocket/GetCurrentGuildMasterTask.h"
 
+// PreUpdateCurrentGuildMaster
+#include "Request/PreUpdateCurrentGuildMasterRequest.h"
+#include "Result/PreUpdateCurrentGuildMasterResult.h"
+#include "Task/Rest/PreUpdateCurrentGuildMasterTask.h"
+#include "Task/WebSocket/PreUpdateCurrentGuildMasterTask.h"
+
 // UpdateCurrentGuildMaster
 #include "Request/UpdateCurrentGuildMasterRequest.h"
 #include "Result/UpdateCurrentGuildMasterResult.h"

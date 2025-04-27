@@ -193,6 +193,12 @@
 #include "Task/Rest/GetCurrentSeasonModelMasterTask.h"
 #include "Task/WebSocket/GetCurrentSeasonModelMasterTask.h"
 
+// PreUpdateCurrentSeasonModelMaster
+#include "Request/PreUpdateCurrentSeasonModelMasterRequest.h"
+#include "Result/PreUpdateCurrentSeasonModelMasterResult.h"
+#include "Task/Rest/PreUpdateCurrentSeasonModelMasterTask.h"
+#include "Task/WebSocket/PreUpdateCurrentSeasonModelMasterTask.h"
+
 // UpdateCurrentSeasonModelMaster
 #include "Request/UpdateCurrentSeasonModelMasterRequest.h"
 #include "Result/UpdateCurrentSeasonModelMasterResult.h"

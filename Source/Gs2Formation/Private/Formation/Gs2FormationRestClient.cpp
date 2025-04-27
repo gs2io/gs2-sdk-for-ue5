@@ -334,6 +334,15 @@ namespace Gs2::Formation
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::Rest::FPreUpdateCurrentFormMasterTask>> FGs2FormationRestClient::PreUpdateCurrentFormMaster(
+        const Request::FPreUpdateCurrentFormMasterRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FPreUpdateCurrentFormMasterTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::Rest::FUpdateCurrentFormMasterTask>> FGs2FormationRestClient::UpdateCurrentFormMaster(
         const Request::FUpdateCurrentFormMasterRequestPtr Request) const
     {

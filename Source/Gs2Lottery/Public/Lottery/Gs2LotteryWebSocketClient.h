@@ -90,6 +90,8 @@
 #include "Task/WebSocket/ExportMasterTask.h"
 #include "Request/GetCurrentLotteryMasterRequest.h"
 #include "Task/WebSocket/GetCurrentLotteryMasterTask.h"
+#include "Request/PreUpdateCurrentLotteryMasterRequest.h"
+#include "Task/WebSocket/PreUpdateCurrentLotteryMasterTask.h"
 #include "Request/UpdateCurrentLotteryMasterRequest.h"
 #include "Task/WebSocket/UpdateCurrentLotteryMasterTask.h"
 #include "Request/UpdateCurrentLotteryMasterFromGitHubRequest.h"
@@ -268,6 +270,10 @@ namespace Gs2::Lottery
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FGetCurrentLotteryMasterTask>> GetCurrentLotteryMaster(
             const Request::FGetCurrentLotteryMasterRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FPreUpdateCurrentLotteryMasterTask>> PreUpdateCurrentLotteryMaster(
+            const Request::FPreUpdateCurrentLotteryMasterRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FUpdateCurrentLotteryMasterTask>> UpdateCurrentLotteryMaster(

@@ -62,6 +62,8 @@
 #include "Task/Rest/ExportMasterTask.h"
 #include "Request/GetCurrentFieldMasterRequest.h"
 #include "Task/Rest/GetCurrentFieldMasterTask.h"
+#include "Request/PreUpdateCurrentFieldMasterRequest.h"
+#include "Task/Rest/PreUpdateCurrentFieldMasterTask.h"
 #include "Request/UpdateCurrentFieldMasterRequest.h"
 #include "Task/Rest/UpdateCurrentFieldMasterTask.h"
 #include "Request/UpdateCurrentFieldMasterFromGitHubRequest.h"
@@ -180,6 +182,10 @@ namespace Gs2::MegaField
 
         TSharedPtr<FAsyncTask<Task::Rest::FGetCurrentFieldMasterTask>> GetCurrentFieldMaster(
             const Request::FGetCurrentFieldMasterRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FPreUpdateCurrentFieldMasterTask>> PreUpdateCurrentFieldMaster(
+            const Request::FPreUpdateCurrentFieldMasterRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::Rest::FUpdateCurrentFieldMasterTask>> UpdateCurrentFieldMaster(

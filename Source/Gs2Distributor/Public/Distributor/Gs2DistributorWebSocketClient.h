@@ -48,6 +48,8 @@
 #include "Task/WebSocket/ExportMasterTask.h"
 #include "Request/GetCurrentDistributorMasterRequest.h"
 #include "Task/WebSocket/GetCurrentDistributorMasterTask.h"
+#include "Request/PreUpdateCurrentDistributorMasterRequest.h"
+#include "Task/WebSocket/PreUpdateCurrentDistributorMasterTask.h"
 #include "Request/UpdateCurrentDistributorMasterRequest.h"
 #include "Task/WebSocket/UpdateCurrentDistributorMasterTask.h"
 #include "Request/UpdateCurrentDistributorMasterFromGitHubRequest.h"
@@ -180,6 +182,10 @@ namespace Gs2::Distributor
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FGetCurrentDistributorMasterTask>> GetCurrentDistributorMaster(
             const Request::FGetCurrentDistributorMasterRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FPreUpdateCurrentDistributorMasterTask>> PreUpdateCurrentDistributorMaster(
+            const Request::FPreUpdateCurrentDistributorMasterRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FUpdateCurrentDistributorMasterTask>> UpdateCurrentDistributorMaster(

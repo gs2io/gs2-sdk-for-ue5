@@ -86,6 +86,8 @@
 #include "Task/WebSocket/ExportMasterTask.h"
 #include "Request/GetCurrentMessageMasterRequest.h"
 #include "Task/WebSocket/GetCurrentMessageMasterTask.h"
+#include "Request/PreUpdateCurrentMessageMasterRequest.h"
+#include "Task/WebSocket/PreUpdateCurrentMessageMasterTask.h"
 #include "Request/UpdateCurrentMessageMasterRequest.h"
 #include "Task/WebSocket/UpdateCurrentMessageMasterTask.h"
 #include "Request/UpdateCurrentMessageMasterFromGitHubRequest.h"
@@ -256,6 +258,10 @@ namespace Gs2::Inbox
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FGetCurrentMessageMasterTask>> GetCurrentMessageMaster(
             const Request::FGetCurrentMessageMasterRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FPreUpdateCurrentMessageMasterTask>> PreUpdateCurrentMessageMaster(
+            const Request::FPreUpdateCurrentMessageMasterRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FUpdateCurrentMessageMasterTask>> UpdateCurrentMessageMaster(

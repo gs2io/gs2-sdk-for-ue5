@@ -94,6 +94,8 @@
 #include "Task/WebSocket/ExportMasterTask.h"
 #include "Request/GetCurrentCampaignMasterRequest.h"
 #include "Task/WebSocket/GetCurrentCampaignMasterTask.h"
+#include "Request/PreUpdateCurrentCampaignMasterRequest.h"
+#include "Task/WebSocket/PreUpdateCurrentCampaignMasterTask.h"
 #include "Request/UpdateCurrentCampaignMasterRequest.h"
 #include "Task/WebSocket/UpdateCurrentCampaignMasterTask.h"
 #include "Request/UpdateCurrentCampaignMasterFromGitHubRequest.h"
@@ -260,6 +262,10 @@ namespace Gs2::SerialKey
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FGetCurrentCampaignMasterTask>> GetCurrentCampaignMaster(
             const Request::FGetCurrentCampaignMasterRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FPreUpdateCurrentCampaignMasterTask>> PreUpdateCurrentCampaignMaster(
+            const Request::FPreUpdateCurrentCampaignMasterRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FUpdateCurrentCampaignMasterTask>> UpdateCurrentCampaignMaster(

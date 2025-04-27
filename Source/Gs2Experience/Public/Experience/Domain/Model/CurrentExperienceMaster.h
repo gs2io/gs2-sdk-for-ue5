@@ -59,6 +59,16 @@ namespace Gs2::Experience::Domain::Model
         const Gs2::Experience::FGs2ExperienceRestClientPtr Client;
 
         public:
+        TOptional<FString> UploadToken;
+        TOptional<FString> UploadUrl;
+        TOptional<FString> GetUploadToken() const
+        {
+            return UploadToken;
+        }
+        TOptional<FString> GetUploadUrl() const
+        {
+            return UploadUrl;
+        }
         TOptional<FString> NamespaceName;
     private:
 
@@ -127,6 +137,32 @@ namespace Gs2::Experience::Domain::Model
 
         TSharedPtr<FAsyncTask<FGetTask>> Get(
             Request::FGetCurrentExperienceMasterRequestPtr Request
+        );
+
+        class GS2EXPERIENCE_API FPreUpdateTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Experience::Domain::Model::FCurrentExperienceMasterDomain>,
+            public TSharedFromThis<FPreUpdateTask>
+        {
+            const TSharedPtr<FCurrentExperienceMasterDomain> Self;
+            const Request::FPreUpdateCurrentExperienceMasterRequestPtr Request;
+        public:
+            explicit FPreUpdateTask(
+                const TSharedPtr<FCurrentExperienceMasterDomain>& Self,
+                const Request::FPreUpdateCurrentExperienceMasterRequestPtr Request
+            );
+
+            FPreUpdateTask(
+                const FPreUpdateTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Experience::Domain::Model::FCurrentExperienceMasterDomain>> Result
+            ) override;
+        };
+        friend FPreUpdateTask;
+
+        TSharedPtr<FAsyncTask<FPreUpdateTask>> PreUpdate(
+            Request::FPreUpdateCurrentExperienceMasterRequestPtr Request
         );
 
         class GS2EXPERIENCE_API FUpdateTask final :

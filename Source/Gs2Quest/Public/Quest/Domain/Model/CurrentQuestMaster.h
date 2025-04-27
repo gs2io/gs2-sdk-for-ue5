@@ -64,6 +64,16 @@ namespace Gs2::Quest::Domain::Model
         const Gs2::Quest::FGs2QuestRestClientPtr Client;
 
         public:
+        TOptional<FString> UploadToken;
+        TOptional<FString> UploadUrl;
+        TOptional<FString> GetUploadToken() const
+        {
+            return UploadToken;
+        }
+        TOptional<FString> GetUploadUrl() const
+        {
+            return UploadUrl;
+        }
         TOptional<FString> NamespaceName;
     private:
 
@@ -132,6 +142,32 @@ namespace Gs2::Quest::Domain::Model
 
         TSharedPtr<FAsyncTask<FGetTask>> Get(
             Request::FGetCurrentQuestMasterRequestPtr Request
+        );
+
+        class GS2QUEST_API FPreUpdateTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Quest::Domain::Model::FCurrentQuestMasterDomain>,
+            public TSharedFromThis<FPreUpdateTask>
+        {
+            const TSharedPtr<FCurrentQuestMasterDomain> Self;
+            const Request::FPreUpdateCurrentQuestMasterRequestPtr Request;
+        public:
+            explicit FPreUpdateTask(
+                const TSharedPtr<FCurrentQuestMasterDomain>& Self,
+                const Request::FPreUpdateCurrentQuestMasterRequestPtr Request
+            );
+
+            FPreUpdateTask(
+                const FPreUpdateTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Quest::Domain::Model::FCurrentQuestMasterDomain>> Result
+            ) override;
+        };
+        friend FPreUpdateTask;
+
+        TSharedPtr<FAsyncTask<FPreUpdateTask>> PreUpdate(
+            Request::FPreUpdateCurrentQuestMasterRequestPtr Request
         );
 
         class GS2QUEST_API FUpdateTask final :

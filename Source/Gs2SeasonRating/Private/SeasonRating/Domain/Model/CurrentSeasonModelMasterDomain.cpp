@@ -135,6 +135,49 @@ namespace Gs2::SeasonRating::Domain::Model
         return Gs2::Core::Util::New<FAsyncTask<FGetTask>>(this->AsShared(), Request);
     }
 
+    FCurrentSeasonModelMasterDomain::FPreUpdateTask::FPreUpdateTask(
+        const TSharedPtr<FCurrentSeasonModelMasterDomain>& Self,
+        const Request::FPreUpdateCurrentSeasonModelMasterRequestPtr Request
+    ): Self(Self), Request(Request)
+    {
+
+    }
+
+    FCurrentSeasonModelMasterDomain::FPreUpdateTask::FPreUpdateTask(
+        const FPreUpdateTask& From
+    ): TGs2Future(From), Self(From.Self), Request(From.Request)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FCurrentSeasonModelMasterDomain::FPreUpdateTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::SeasonRating::Domain::Model::FCurrentSeasonModelMasterDomain>> Result
+    )
+    {
+        Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
+            ->WithNamespaceName(Self->NamespaceName);
+        const auto Domain = Self;
+        if (ResultModel != nullptr)
+        {
+            if (ResultModel->GetUploadToken().IsSet())
+            {
+                Self->UploadToken = Domain->UploadToken = ResultModel->GetUploadToken();
+            }
+            if (ResultModel->GetUploadUrl().IsSet())
+            {
+                Self->UploadUrl = Domain->UploadUrl = ResultModel->GetUploadUrl();
+            }
+        }
+        *Result = Domain;
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FCurrentSeasonModelMasterDomain::FPreUpdateTask>> FCurrentSeasonModelMasterDomain::PreUpdate(
+        Request::FPreUpdateCurrentSeasonModelMasterRequestPtr Request
+    ) {
+        return Gs2::Core::Util::New<FAsyncTask<FPreUpdateTask>>(this->AsShared(), Request);
+    }
+
     FCurrentSeasonModelMasterDomain::FUpdateTask::FUpdateTask(
         const TSharedPtr<FCurrentSeasonModelMasterDomain>& Self,
         const Request::FUpdateCurrentSeasonModelMasterRequestPtr Request

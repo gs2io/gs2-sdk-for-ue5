@@ -76,6 +76,8 @@
 #include "Task/Rest/ExportMasterTask.h"
 #include "Request/GetCurrentParameterMasterRequest.h"
 #include "Task/Rest/GetCurrentParameterMasterTask.h"
+#include "Request/PreUpdateCurrentParameterMasterRequest.h"
+#include "Task/Rest/PreUpdateCurrentParameterMasterTask.h"
 #include "Request/UpdateCurrentParameterMasterRequest.h"
 #include "Task/Rest/UpdateCurrentParameterMasterTask.h"
 #include "Request/UpdateCurrentParameterMasterFromGitHubRequest.h"
@@ -252,6 +254,10 @@ namespace Gs2::Enchant
 
         TSharedPtr<FAsyncTask<Task::Rest::FGetCurrentParameterMasterTask>> GetCurrentParameterMaster(
             const Request::FGetCurrentParameterMasterRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FPreUpdateCurrentParameterMasterTask>> PreUpdateCurrentParameterMaster(
+            const Request::FPreUpdateCurrentParameterMasterRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::Rest::FUpdateCurrentParameterMasterTask>> UpdateCurrentParameterMaster(

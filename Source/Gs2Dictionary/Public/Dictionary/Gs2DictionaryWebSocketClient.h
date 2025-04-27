@@ -112,6 +112,8 @@
 #include "Task/WebSocket/ExportMasterTask.h"
 #include "Request/GetCurrentEntryMasterRequest.h"
 #include "Task/WebSocket/GetCurrentEntryMasterTask.h"
+#include "Request/PreUpdateCurrentEntryMasterRequest.h"
+#include "Task/WebSocket/PreUpdateCurrentEntryMasterTask.h"
 #include "Request/UpdateCurrentEntryMasterRequest.h"
 #include "Task/WebSocket/UpdateCurrentEntryMasterTask.h"
 #include "Request/UpdateCurrentEntryMasterFromGitHubRequest.h"
@@ -314,6 +316,10 @@ namespace Gs2::Dictionary
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FGetCurrentEntryMasterTask>> GetCurrentEntryMaster(
             const Request::FGetCurrentEntryMasterRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FPreUpdateCurrentEntryMasterTask>> PreUpdateCurrentEntryMaster(
+            const Request::FPreUpdateCurrentEntryMasterRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FUpdateCurrentEntryMasterTask>> UpdateCurrentEntryMaster(

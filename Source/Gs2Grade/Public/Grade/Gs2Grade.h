@@ -299,6 +299,12 @@
 #include "Task/Rest/GetCurrentGradeMasterTask.h"
 #include "Task/WebSocket/GetCurrentGradeMasterTask.h"
 
+// PreUpdateCurrentGradeMaster
+#include "Request/PreUpdateCurrentGradeMasterRequest.h"
+#include "Result/PreUpdateCurrentGradeMasterResult.h"
+#include "Task/Rest/PreUpdateCurrentGradeMasterTask.h"
+#include "Task/WebSocket/PreUpdateCurrentGradeMasterTask.h"
+
 // UpdateCurrentGradeMaster
 #include "Request/UpdateCurrentGradeMasterRequest.h"
 #include "Result/UpdateCurrentGradeMasterResult.h"

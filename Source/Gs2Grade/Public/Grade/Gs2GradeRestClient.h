@@ -106,6 +106,8 @@
 #include "Task/Rest/ExportMasterTask.h"
 #include "Request/GetCurrentGradeMasterRequest.h"
 #include "Task/Rest/GetCurrentGradeMasterTask.h"
+#include "Request/PreUpdateCurrentGradeMasterRequest.h"
+#include "Task/Rest/PreUpdateCurrentGradeMasterTask.h"
 #include "Request/UpdateCurrentGradeMasterRequest.h"
 #include "Task/Rest/UpdateCurrentGradeMasterTask.h"
 #include "Request/UpdateCurrentGradeMasterFromGitHubRequest.h"
@@ -296,6 +298,10 @@ namespace Gs2::Grade
 
         TSharedPtr<FAsyncTask<Task::Rest::FGetCurrentGradeMasterTask>> GetCurrentGradeMaster(
             const Request::FGetCurrentGradeMasterRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FPreUpdateCurrentGradeMasterTask>> PreUpdateCurrentGradeMaster(
+            const Request::FPreUpdateCurrentGradeMasterRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::Rest::FUpdateCurrentGradeMasterTask>> UpdateCurrentGradeMaster(

@@ -148,6 +148,8 @@
 #include "Task/WebSocket/ExportMasterTask.h"
 #include "Request/GetCurrentGuildMasterRequest.h"
 #include "Task/WebSocket/GetCurrentGuildMasterTask.h"
+#include "Request/PreUpdateCurrentGuildMasterRequest.h"
+#include "Task/WebSocket/PreUpdateCurrentGuildMasterTask.h"
 #include "Request/UpdateCurrentGuildMasterRequest.h"
 #include "Task/WebSocket/UpdateCurrentGuildMasterTask.h"
 #include "Request/UpdateCurrentGuildMasterFromGitHubRequest.h"
@@ -470,6 +472,10 @@ namespace Gs2::Guild
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FGetCurrentGuildMasterTask>> GetCurrentGuildMaster(
             const Request::FGetCurrentGuildMasterRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FPreUpdateCurrentGuildMasterTask>> PreUpdateCurrentGuildMaster(
+            const Request::FPreUpdateCurrentGuildMasterRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FUpdateCurrentGuildMasterTask>> UpdateCurrentGuildMaster(

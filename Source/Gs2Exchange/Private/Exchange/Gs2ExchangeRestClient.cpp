@@ -334,6 +334,15 @@ namespace Gs2::Exchange
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::Rest::FPreUpdateCurrentRateMasterTask>> FGs2ExchangeRestClient::PreUpdateCurrentRateMaster(
+        const Request::FPreUpdateCurrentRateMasterRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FPreUpdateCurrentRateMasterTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::Rest::FUpdateCurrentRateMasterTask>> FGs2ExchangeRestClient::UpdateCurrentRateMaster(
         const Request::FUpdateCurrentRateMasterRequestPtr Request) const
     {

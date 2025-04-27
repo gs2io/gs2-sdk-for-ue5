@@ -88,6 +88,8 @@
 #include "Task/Rest/ExportMasterTask.h"
 #include "Request/GetCurrentStaminaMasterRequest.h"
 #include "Task/Rest/GetCurrentStaminaMasterTask.h"
+#include "Request/PreUpdateCurrentStaminaMasterRequest.h"
+#include "Task/Rest/PreUpdateCurrentStaminaMasterTask.h"
 #include "Request/UpdateCurrentStaminaMasterRequest.h"
 #include "Task/Rest/UpdateCurrentStaminaMasterTask.h"
 #include "Request/UpdateCurrentStaminaMasterFromGitHubRequest.h"
@@ -330,6 +332,10 @@ namespace Gs2::Stamina
 
         TSharedPtr<FAsyncTask<Task::Rest::FGetCurrentStaminaMasterTask>> GetCurrentStaminaMaster(
             const Request::FGetCurrentStaminaMasterRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FPreUpdateCurrentStaminaMasterTask>> PreUpdateCurrentStaminaMaster(
+            const Request::FPreUpdateCurrentStaminaMasterRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::Rest::FUpdateCurrentStaminaMasterTask>> UpdateCurrentStaminaMaster(

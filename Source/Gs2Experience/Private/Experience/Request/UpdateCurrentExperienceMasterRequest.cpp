@@ -20,7 +20,9 @@ namespace Gs2::Experience::Request
 {
     FUpdateCurrentExperienceMasterRequest::FUpdateCurrentExperienceMasterRequest():
         NamespaceNameValue(TOptional<FString>()),
-        SettingsValue(TOptional<FString>())
+        ModeValue(TOptional<FString>()),
+        SettingsValue(TOptional<FString>()),
+        UploadTokenValue(TOptional<FString>())
     {
     }
 
@@ -28,7 +30,9 @@ namespace Gs2::Experience::Request
         const FUpdateCurrentExperienceMasterRequest& From
     ):
         NamespaceNameValue(From.NamespaceNameValue),
-        SettingsValue(From.SettingsValue)
+        ModeValue(From.ModeValue),
+        SettingsValue(From.SettingsValue),
+        UploadTokenValue(From.UploadTokenValue)
     {
     }
 
@@ -48,11 +52,27 @@ namespace Gs2::Experience::Request
         return SharedThis(this);
     }
 
+    TSharedPtr<FUpdateCurrentExperienceMasterRequest> FUpdateCurrentExperienceMasterRequest::WithMode(
+        const TOptional<FString> Mode
+    )
+    {
+        this->ModeValue = Mode;
+        return SharedThis(this);
+    }
+
     TSharedPtr<FUpdateCurrentExperienceMasterRequest> FUpdateCurrentExperienceMasterRequest::WithSettings(
         const TOptional<FString> Settings
     )
     {
         this->SettingsValue = Settings;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FUpdateCurrentExperienceMasterRequest> FUpdateCurrentExperienceMasterRequest::WithUploadToken(
+        const TOptional<FString> UploadToken
+    )
+    {
+        this->UploadTokenValue = UploadToken;
         return SharedThis(this);
     }
 
@@ -66,9 +86,19 @@ namespace Gs2::Experience::Request
         return NamespaceNameValue;
     }
 
+    TOptional<FString> FUpdateCurrentExperienceMasterRequest::GetMode() const
+    {
+        return ModeValue;
+    }
+
     TOptional<FString> FUpdateCurrentExperienceMasterRequest::GetSettings() const
     {
         return SettingsValue;
+    }
+
+    TOptional<FString> FUpdateCurrentExperienceMasterRequest::GetUploadToken() const
+    {
+        return UploadTokenValue;
     }
 
     TSharedPtr<FUpdateCurrentExperienceMasterRequest> FUpdateCurrentExperienceMasterRequest::FromJson(const TSharedPtr<FJsonObject> Data)
@@ -87,10 +117,28 @@ namespace Gs2::Experience::Request
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
+            ->WithMode(Data->HasField(ANSI_TO_TCHAR("mode")) ? [Data]() -> TOptional<FString>
+              {
+                  FString v("");
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("mode"), v))
+                  {
+                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                  }
+                  return TOptional<FString>();
+              }() : TOptional<FString>())
             ->WithSettings(Data->HasField(ANSI_TO_TCHAR("settings")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
                     if (Data->TryGetStringField(ANSI_TO_TCHAR("settings"), v))
+                  {
+                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                  }
+                  return TOptional<FString>();
+              }() : TOptional<FString>())
+            ->WithUploadToken(Data->HasField(ANSI_TO_TCHAR("uploadToken")) ? [Data]() -> TOptional<FString>
+              {
+                  FString v("");
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("uploadToken"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
@@ -109,9 +157,17 @@ namespace Gs2::Experience::Request
         {
             JsonRootObject->SetStringField("namespaceName", NamespaceNameValue.GetValue());
         }
+        if (ModeValue.IsSet())
+        {
+            JsonRootObject->SetStringField("mode", ModeValue.GetValue());
+        }
         if (SettingsValue.IsSet())
         {
             JsonRootObject->SetStringField("settings", SettingsValue.GetValue());
+        }
+        if (UploadTokenValue.IsSet())
+        {
+            JsonRootObject->SetStringField("uploadToken", UploadTokenValue.GetValue());
         }
         return JsonRootObject;
     }

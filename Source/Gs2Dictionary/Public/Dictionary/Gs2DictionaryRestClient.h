@@ -112,6 +112,8 @@
 #include "Task/Rest/ExportMasterTask.h"
 #include "Request/GetCurrentEntryMasterRequest.h"
 #include "Task/Rest/GetCurrentEntryMasterTask.h"
+#include "Request/PreUpdateCurrentEntryMasterRequest.h"
+#include "Task/Rest/PreUpdateCurrentEntryMasterTask.h"
 #include "Request/UpdateCurrentEntryMasterRequest.h"
 #include "Task/Rest/UpdateCurrentEntryMasterTask.h"
 #include "Request/UpdateCurrentEntryMasterFromGitHubRequest.h"
@@ -314,6 +316,10 @@ namespace Gs2::Dictionary
 
         TSharedPtr<FAsyncTask<Task::Rest::FGetCurrentEntryMasterTask>> GetCurrentEntryMaster(
             const Request::FGetCurrentEntryMasterRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FPreUpdateCurrentEntryMasterTask>> PreUpdateCurrentEntryMaster(
+            const Request::FPreUpdateCurrentEntryMasterRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::Rest::FUpdateCurrentEntryMasterTask>> UpdateCurrentEntryMaster(

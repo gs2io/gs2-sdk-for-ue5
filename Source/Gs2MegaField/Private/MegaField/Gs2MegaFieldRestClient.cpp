@@ -217,6 +217,15 @@ namespace Gs2::MegaField
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::Rest::FPreUpdateCurrentFieldMasterTask>> FGs2MegaFieldRestClient::PreUpdateCurrentFieldMaster(
+        const Request::FPreUpdateCurrentFieldMasterRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FPreUpdateCurrentFieldMasterTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::Rest::FUpdateCurrentFieldMasterTask>> FGs2MegaFieldRestClient::UpdateCurrentFieldMaster(
         const Request::FUpdateCurrentFieldMasterRequestPtr Request) const
     {

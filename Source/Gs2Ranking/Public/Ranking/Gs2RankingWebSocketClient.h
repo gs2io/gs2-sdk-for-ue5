@@ -90,6 +90,8 @@
 #include "Task/WebSocket/ExportMasterTask.h"
 #include "Request/GetCurrentRankingMasterRequest.h"
 #include "Task/WebSocket/GetCurrentRankingMasterTask.h"
+#include "Request/PreUpdateCurrentRankingMasterRequest.h"
+#include "Task/WebSocket/PreUpdateCurrentRankingMasterTask.h"
 #include "Request/UpdateCurrentRankingMasterRequest.h"
 #include "Task/WebSocket/UpdateCurrentRankingMasterTask.h"
 #include "Request/UpdateCurrentRankingMasterFromGitHubRequest.h"
@@ -260,6 +262,10 @@ namespace Gs2::Ranking
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FGetCurrentRankingMasterTask>> GetCurrentRankingMaster(
             const Request::FGetCurrentRankingMasterRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FPreUpdateCurrentRankingMasterTask>> PreUpdateCurrentRankingMaster(
+            const Request::FPreUpdateCurrentRankingMasterRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FUpdateCurrentRankingMasterTask>> UpdateCurrentRankingMaster(

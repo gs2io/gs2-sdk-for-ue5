@@ -262,6 +262,12 @@
 #include "Task/Rest/GetCurrentCategoryMasterTask.h"
 #include "Task/WebSocket/GetCurrentCategoryMasterTask.h"
 
+// PreUpdateCurrentCategoryMaster
+#include "Request/PreUpdateCurrentCategoryMasterRequest.h"
+#include "Result/PreUpdateCurrentCategoryMasterResult.h"
+#include "Task/Rest/PreUpdateCurrentCategoryMasterTask.h"
+#include "Task/WebSocket/PreUpdateCurrentCategoryMasterTask.h"
+
 // UpdateCurrentCategoryMaster
 #include "Request/UpdateCurrentCategoryMasterRequest.h"
 #include "Result/UpdateCurrentCategoryMasterResult.h"

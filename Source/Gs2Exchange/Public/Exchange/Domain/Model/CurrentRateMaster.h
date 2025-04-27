@@ -63,6 +63,16 @@ namespace Gs2::Exchange::Domain::Model
         const Gs2::Exchange::FGs2ExchangeRestClientPtr Client;
 
         public:
+        TOptional<FString> UploadToken;
+        TOptional<FString> UploadUrl;
+        TOptional<FString> GetUploadToken() const
+        {
+            return UploadToken;
+        }
+        TOptional<FString> GetUploadUrl() const
+        {
+            return UploadUrl;
+        }
         TOptional<FString> NamespaceName;
     private:
 
@@ -131,6 +141,32 @@ namespace Gs2::Exchange::Domain::Model
 
         TSharedPtr<FAsyncTask<FGetTask>> Get(
             Request::FGetCurrentRateMasterRequestPtr Request
+        );
+
+        class GS2EXCHANGE_API FPreUpdateTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Exchange::Domain::Model::FCurrentRateMasterDomain>,
+            public TSharedFromThis<FPreUpdateTask>
+        {
+            const TSharedPtr<FCurrentRateMasterDomain> Self;
+            const Request::FPreUpdateCurrentRateMasterRequestPtr Request;
+        public:
+            explicit FPreUpdateTask(
+                const TSharedPtr<FCurrentRateMasterDomain>& Self,
+                const Request::FPreUpdateCurrentRateMasterRequestPtr Request
+            );
+
+            FPreUpdateTask(
+                const FPreUpdateTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Exchange::Domain::Model::FCurrentRateMasterDomain>> Result
+            ) override;
+        };
+        friend FPreUpdateTask;
+
+        TSharedPtr<FAsyncTask<FPreUpdateTask>> PreUpdate(
+            Request::FPreUpdateCurrentRateMasterRequestPtr Request
         );
 
         class GS2EXCHANGE_API FUpdateTask final :

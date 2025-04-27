@@ -85,14 +85,14 @@ namespace Gs2::UE5::LoginReward::Domain::Model
         {
             TSharedPtr<FEzBonusGameSessionDomain> Self;
             FString BonusModelName;
-            int32 StepNumber;
+            TOptional<int32> StepNumber;
             TOptional<TArray<TSharedPtr<Gs2::UE5::LoginReward::Model::FEzConfig>>> Config;
 
         public:
             explicit FMissedReceiveTask(
                 TSharedPtr<FEzBonusGameSessionDomain> Self,
                 FString BonusModelName,
-                int32 StepNumber,
+                TOptional<int32> StepNumber = TOptional<int32>(),
                 TOptional<TArray<TSharedPtr<Gs2::UE5::LoginReward::Model::FEzConfig>>> Config = TOptional<TArray<TSharedPtr<Gs2::UE5::LoginReward::Model::FEzConfig>>>()
             );
 
@@ -104,7 +104,7 @@ namespace Gs2::UE5::LoginReward::Domain::Model
 
         TSharedPtr<FAsyncTask<FMissedReceiveTask>> MissedReceive(
             FString BonusModelName,
-            int32 StepNumber,
+            TOptional<int32> StepNumber = TOptional<int32>(),
             TOptional<TArray<TSharedPtr<Gs2::UE5::LoginReward::Model::FEzConfig>>> Config = TOptional<TArray<TSharedPtr<Gs2::UE5::LoginReward::Model::FEzConfig>>>()
         );
 

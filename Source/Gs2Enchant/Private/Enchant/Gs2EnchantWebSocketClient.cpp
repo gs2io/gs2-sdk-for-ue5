@@ -280,6 +280,15 @@ namespace Gs2::Enchant
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::WebSocket::FPreUpdateCurrentParameterMasterTask>> FGs2EnchantWebSocketClient::PreUpdateCurrentParameterMaster(
+        const Request::FPreUpdateCurrentParameterMasterRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FPreUpdateCurrentParameterMasterTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::WebSocket::FUpdateCurrentParameterMasterTask>> FGs2EnchantWebSocketClient::UpdateCurrentParameterMaster(
         const Request::FUpdateCurrentParameterMasterRequestPtr Request) const
     {

@@ -58,6 +58,16 @@ namespace Gs2::SerialKey::Domain::Model
         const Gs2::SerialKey::FGs2SerialKeyRestClientPtr Client;
 
         public:
+        TOptional<FString> UploadToken;
+        TOptional<FString> UploadUrl;
+        TOptional<FString> GetUploadToken() const
+        {
+            return UploadToken;
+        }
+        TOptional<FString> GetUploadUrl() const
+        {
+            return UploadUrl;
+        }
         TOptional<FString> NamespaceName;
     private:
 
@@ -126,6 +136,32 @@ namespace Gs2::SerialKey::Domain::Model
 
         TSharedPtr<FAsyncTask<FGetTask>> Get(
             Request::FGetCurrentCampaignMasterRequestPtr Request
+        );
+
+        class GS2SERIALKEY_API FPreUpdateTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::SerialKey::Domain::Model::FCurrentCampaignMasterDomain>,
+            public TSharedFromThis<FPreUpdateTask>
+        {
+            const TSharedPtr<FCurrentCampaignMasterDomain> Self;
+            const Request::FPreUpdateCurrentCampaignMasterRequestPtr Request;
+        public:
+            explicit FPreUpdateTask(
+                const TSharedPtr<FCurrentCampaignMasterDomain>& Self,
+                const Request::FPreUpdateCurrentCampaignMasterRequestPtr Request
+            );
+
+            FPreUpdateTask(
+                const FPreUpdateTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::SerialKey::Domain::Model::FCurrentCampaignMasterDomain>> Result
+            ) override;
+        };
+        friend FPreUpdateTask;
+
+        TSharedPtr<FAsyncTask<FPreUpdateTask>> PreUpdate(
+            Request::FPreUpdateCurrentCampaignMasterRequestPtr Request
         );
 
         class GS2SERIALKEY_API FUpdateTask final :

@@ -88,6 +88,8 @@
 #include "Task/Rest/ExportMasterTask.h"
 #include "Request/GetCurrentFormMasterRequest.h"
 #include "Task/Rest/GetCurrentFormMasterTask.h"
+#include "Request/PreUpdateCurrentFormMasterRequest.h"
+#include "Task/Rest/PreUpdateCurrentFormMasterTask.h"
 #include "Request/UpdateCurrentFormMasterRequest.h"
 #include "Task/Rest/UpdateCurrentFormMasterTask.h"
 #include "Request/UpdateCurrentFormMasterFromGitHubRequest.h"
@@ -322,6 +324,10 @@ namespace Gs2::Formation
 
         TSharedPtr<FAsyncTask<Task::Rest::FGetCurrentFormMasterTask>> GetCurrentFormMaster(
             const Request::FGetCurrentFormMasterRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FPreUpdateCurrentFormMasterTask>> PreUpdateCurrentFormMaster(
+            const Request::FPreUpdateCurrentFormMasterRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::Rest::FUpdateCurrentFormMasterTask>> UpdateCurrentFormMaster(

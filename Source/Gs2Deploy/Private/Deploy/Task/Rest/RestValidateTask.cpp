@@ -78,9 +78,17 @@ namespace Gs2::Deploy::Task::Rest
             FString Body;
             const TSharedRef<TJsonWriter<TCHAR>> Writer = TJsonWriterFactory<TCHAR>::Create(&Body);
             const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
+            if (this->Request->GetMode().IsSet())
+            {
+                JsonRootObject->SetStringField("mode", this->Request->GetMode().GetValue());
+            }
             if (this->Request->GetTemplate().IsSet())
             {
                 JsonRootObject->SetStringField("template", this->Request->GetTemplate().GetValue());
+            }
+            if (this->Request->GetUploadToken().IsSet())
+            {
+                JsonRootObject->SetStringField("uploadToken", this->Request->GetUploadToken().GetValue());
             }
             if (this->Request->GetContextStack().IsSet())
             {

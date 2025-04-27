@@ -156,6 +156,12 @@
 #include "Task/Rest/GetCurrentBonusMasterTask.h"
 #include "Task/WebSocket/GetCurrentBonusMasterTask.h"
 
+// PreUpdateCurrentBonusMaster
+#include "Request/PreUpdateCurrentBonusMasterRequest.h"
+#include "Result/PreUpdateCurrentBonusMasterResult.h"
+#include "Task/Rest/PreUpdateCurrentBonusMasterTask.h"
+#include "Task/WebSocket/PreUpdateCurrentBonusMasterTask.h"
+
 // UpdateCurrentBonusMaster
 #include "Request/UpdateCurrentBonusMasterRequest.h"
 #include "Result/UpdateCurrentBonusMasterResult.h"

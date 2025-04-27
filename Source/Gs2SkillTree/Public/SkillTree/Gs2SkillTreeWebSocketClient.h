@@ -92,6 +92,8 @@
 #include "Task/WebSocket/ExportMasterTask.h"
 #include "Request/GetCurrentTreeMasterRequest.h"
 #include "Task/WebSocket/GetCurrentTreeMasterTask.h"
+#include "Request/PreUpdateCurrentTreeMasterRequest.h"
+#include "Task/WebSocket/PreUpdateCurrentTreeMasterTask.h"
 #include "Request/UpdateCurrentTreeMasterRequest.h"
 #include "Task/WebSocket/UpdateCurrentTreeMasterTask.h"
 #include "Request/UpdateCurrentTreeMasterFromGitHubRequest.h"
@@ -254,6 +256,10 @@ namespace Gs2::SkillTree
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FGetCurrentTreeMasterTask>> GetCurrentTreeMaster(
             const Request::FGetCurrentTreeMasterRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FPreUpdateCurrentTreeMasterTask>> PreUpdateCurrentTreeMaster(
+            const Request::FPreUpdateCurrentTreeMasterRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FUpdateCurrentTreeMasterTask>> UpdateCurrentTreeMaster(

@@ -90,6 +90,8 @@
 #include "Task/Rest/ExportMasterTask.h"
 #include "Request/GetCurrentRankingMasterRequest.h"
 #include "Task/Rest/GetCurrentRankingMasterTask.h"
+#include "Request/PreUpdateCurrentRankingMasterRequest.h"
+#include "Task/Rest/PreUpdateCurrentRankingMasterTask.h"
 #include "Request/UpdateCurrentRankingMasterRequest.h"
 #include "Task/Rest/UpdateCurrentRankingMasterTask.h"
 #include "Request/UpdateCurrentRankingMasterFromGitHubRequest.h"
@@ -260,6 +262,10 @@ namespace Gs2::Ranking
 
         TSharedPtr<FAsyncTask<Task::Rest::FGetCurrentRankingMasterTask>> GetCurrentRankingMaster(
             const Request::FGetCurrentRankingMasterRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FPreUpdateCurrentRankingMasterTask>> PreUpdateCurrentRankingMaster(
+            const Request::FPreUpdateCurrentRankingMasterRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::Rest::FUpdateCurrentRankingMasterTask>> UpdateCurrentRankingMaster(

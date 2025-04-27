@@ -88,6 +88,8 @@
 #include "Task/Rest/ExportMasterTask.h"
 #include "Request/GetCurrentVersionMasterRequest.h"
 #include "Task/Rest/GetCurrentVersionMasterTask.h"
+#include "Request/PreUpdateCurrentVersionMasterRequest.h"
+#include "Task/Rest/PreUpdateCurrentVersionMasterTask.h"
 #include "Request/UpdateCurrentVersionMasterRequest.h"
 #include "Task/Rest/UpdateCurrentVersionMasterTask.h"
 #include "Request/UpdateCurrentVersionMasterFromGitHubRequest.h"
@@ -242,6 +244,10 @@ namespace Gs2::Version
 
         TSharedPtr<FAsyncTask<Task::Rest::FGetCurrentVersionMasterTask>> GetCurrentVersionMaster(
             const Request::FGetCurrentVersionMasterRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FPreUpdateCurrentVersionMasterTask>> PreUpdateCurrentVersionMaster(
+            const Request::FPreUpdateCurrentVersionMasterRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::Rest::FUpdateCurrentVersionMasterTask>> UpdateCurrentVersionMaster(

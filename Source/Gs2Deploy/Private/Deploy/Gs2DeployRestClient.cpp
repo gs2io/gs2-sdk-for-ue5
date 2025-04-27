@@ -28,6 +28,15 @@ namespace Gs2::Deploy
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::Rest::FPreCreateStackTask>> FGs2DeployRestClient::PreCreateStack(
+        const Request::FPreCreateStackRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FPreCreateStackTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::Rest::FCreateStackTask>> FGs2DeployRestClient::CreateStack(
         const Request::FCreateStackRequestPtr Request) const
     {
@@ -41,6 +50,15 @@ namespace Gs2::Deploy
         const Request::FCreateStackFromGitHubRequestPtr Request) const
     {
         return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FCreateStackFromGitHubTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FPreValidateTask>> FGs2DeployRestClient::PreValidate(
+        const Request::FPreValidateRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FPreValidateTask>>(
             Session,
             Request
         );
@@ -73,10 +91,28 @@ namespace Gs2::Deploy
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::Rest::FPreUpdateStackTask>> FGs2DeployRestClient::PreUpdateStack(
+        const Request::FPreUpdateStackRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FPreUpdateStackTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::Rest::FUpdateStackTask>> FGs2DeployRestClient::UpdateStack(
         const Request::FUpdateStackRequestPtr Request) const
     {
         return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FUpdateStackTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FPreChangeSetTask>> FGs2DeployRestClient::PreChangeSet(
+        const Request::FPreChangeSetRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FPreChangeSetTask>>(
             Session,
             Request
         );

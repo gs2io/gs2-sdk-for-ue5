@@ -76,6 +76,8 @@
 #include "Task/WebSocket/ExportMasterTask.h"
 #include "Request/GetCurrentParameterMasterRequest.h"
 #include "Task/WebSocket/GetCurrentParameterMasterTask.h"
+#include "Request/PreUpdateCurrentParameterMasterRequest.h"
+#include "Task/WebSocket/PreUpdateCurrentParameterMasterTask.h"
 #include "Request/UpdateCurrentParameterMasterRequest.h"
 #include "Task/WebSocket/UpdateCurrentParameterMasterTask.h"
 #include "Request/UpdateCurrentParameterMasterFromGitHubRequest.h"
@@ -252,6 +254,10 @@ namespace Gs2::Enchant
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FGetCurrentParameterMasterTask>> GetCurrentParameterMaster(
             const Request::FGetCurrentParameterMasterRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FPreUpdateCurrentParameterMasterTask>> PreUpdateCurrentParameterMaster(
+            const Request::FPreUpdateCurrentParameterMasterRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FUpdateCurrentParameterMasterTask>> UpdateCurrentParameterMaster(

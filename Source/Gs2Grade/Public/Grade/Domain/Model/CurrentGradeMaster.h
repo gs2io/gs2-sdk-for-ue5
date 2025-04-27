@@ -57,6 +57,16 @@ namespace Gs2::Grade::Domain::Model
         const Gs2::Grade::FGs2GradeRestClientPtr Client;
 
         public:
+        TOptional<FString> UploadToken;
+        TOptional<FString> UploadUrl;
+        TOptional<FString> GetUploadToken() const
+        {
+            return UploadToken;
+        }
+        TOptional<FString> GetUploadUrl() const
+        {
+            return UploadUrl;
+        }
         TOptional<FString> NamespaceName;
     private:
 
@@ -125,6 +135,32 @@ namespace Gs2::Grade::Domain::Model
 
         TSharedPtr<FAsyncTask<FGetTask>> Get(
             Request::FGetCurrentGradeMasterRequestPtr Request
+        );
+
+        class GS2GRADE_API FPreUpdateTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Grade::Domain::Model::FCurrentGradeMasterDomain>,
+            public TSharedFromThis<FPreUpdateTask>
+        {
+            const TSharedPtr<FCurrentGradeMasterDomain> Self;
+            const Request::FPreUpdateCurrentGradeMasterRequestPtr Request;
+        public:
+            explicit FPreUpdateTask(
+                const TSharedPtr<FCurrentGradeMasterDomain>& Self,
+                const Request::FPreUpdateCurrentGradeMasterRequestPtr Request
+            );
+
+            FPreUpdateTask(
+                const FPreUpdateTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Grade::Domain::Model::FCurrentGradeMasterDomain>> Result
+            ) override;
+        };
+        friend FPreUpdateTask;
+
+        TSharedPtr<FAsyncTask<FPreUpdateTask>> PreUpdate(
+            Request::FPreUpdateCurrentGradeMasterRequestPtr Request
         );
 
         class GS2GRADE_API FUpdateTask final :

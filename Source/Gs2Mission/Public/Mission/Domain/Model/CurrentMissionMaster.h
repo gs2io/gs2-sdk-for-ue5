@@ -69,6 +69,16 @@ namespace Gs2::Mission::Domain::Model
         const Gs2::Mission::FGs2MissionRestClientPtr Client;
 
         public:
+        TOptional<FString> UploadToken;
+        TOptional<FString> UploadUrl;
+        TOptional<FString> GetUploadToken() const
+        {
+            return UploadToken;
+        }
+        TOptional<FString> GetUploadUrl() const
+        {
+            return UploadUrl;
+        }
         TOptional<FString> NamespaceName;
     private:
 
@@ -137,6 +147,32 @@ namespace Gs2::Mission::Domain::Model
 
         TSharedPtr<FAsyncTask<FGetTask>> Get(
             Request::FGetCurrentMissionMasterRequestPtr Request
+        );
+
+        class GS2MISSION_API FPreUpdateTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Mission::Domain::Model::FCurrentMissionMasterDomain>,
+            public TSharedFromThis<FPreUpdateTask>
+        {
+            const TSharedPtr<FCurrentMissionMasterDomain> Self;
+            const Request::FPreUpdateCurrentMissionMasterRequestPtr Request;
+        public:
+            explicit FPreUpdateTask(
+                const TSharedPtr<FCurrentMissionMasterDomain>& Self,
+                const Request::FPreUpdateCurrentMissionMasterRequestPtr Request
+            );
+
+            FPreUpdateTask(
+                const FPreUpdateTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Mission::Domain::Model::FCurrentMissionMasterDomain>> Result
+            ) override;
+        };
+        friend FPreUpdateTask;
+
+        TSharedPtr<FAsyncTask<FPreUpdateTask>> PreUpdate(
+            Request::FPreUpdateCurrentMissionMasterRequestPtr Request
         );
 
         class GS2MISSION_API FUpdateTask final :

@@ -235,6 +235,15 @@ namespace Gs2::Buff
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::WebSocket::FPreUpdateCurrentBuffMasterTask>> FGs2BuffWebSocketClient::PreUpdateCurrentBuffMaster(
+        const Request::FPreUpdateCurrentBuffMasterRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FPreUpdateCurrentBuffMasterTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::WebSocket::FUpdateCurrentBuffMasterTask>> FGs2BuffWebSocketClient::UpdateCurrentBuffMaster(
         const Request::FUpdateCurrentBuffMasterRequestPtr Request) const
     {

@@ -240,6 +240,12 @@
 #include "Task/Rest/GetCurrentMessageMasterTask.h"
 #include "Task/WebSocket/GetCurrentMessageMasterTask.h"
 
+// PreUpdateCurrentMessageMaster
+#include "Request/PreUpdateCurrentMessageMasterRequest.h"
+#include "Result/PreUpdateCurrentMessageMasterResult.h"
+#include "Task/Rest/PreUpdateCurrentMessageMasterTask.h"
+#include "Task/WebSocket/PreUpdateCurrentMessageMasterTask.h"
+
 // UpdateCurrentMessageMaster
 #include "Request/UpdateCurrentMessageMasterRequest.h"
 #include "Result/UpdateCurrentMessageMasterResult.h"

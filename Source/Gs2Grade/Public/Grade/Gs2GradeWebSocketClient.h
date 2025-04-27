@@ -106,6 +106,8 @@
 #include "Task/WebSocket/ExportMasterTask.h"
 #include "Request/GetCurrentGradeMasterRequest.h"
 #include "Task/WebSocket/GetCurrentGradeMasterTask.h"
+#include "Request/PreUpdateCurrentGradeMasterRequest.h"
+#include "Task/WebSocket/PreUpdateCurrentGradeMasterTask.h"
 #include "Request/UpdateCurrentGradeMasterRequest.h"
 #include "Task/WebSocket/UpdateCurrentGradeMasterTask.h"
 #include "Request/UpdateCurrentGradeMasterFromGitHubRequest.h"
@@ -296,6 +298,10 @@ namespace Gs2::Grade
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FGetCurrentGradeMasterTask>> GetCurrentGradeMaster(
             const Request::FGetCurrentGradeMasterRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FPreUpdateCurrentGradeMasterTask>> PreUpdateCurrentGradeMaster(
+            const Request::FPreUpdateCurrentGradeMasterRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FUpdateCurrentGradeMasterTask>> UpdateCurrentGradeMaster(

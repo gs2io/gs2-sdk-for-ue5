@@ -604,6 +604,15 @@ namespace Gs2::Guild
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::WebSocket::FPreUpdateCurrentGuildMasterTask>> FGs2GuildWebSocketClient::PreUpdateCurrentGuildMaster(
+        const Request::FPreUpdateCurrentGuildMasterRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FPreUpdateCurrentGuildMasterTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::WebSocket::FUpdateCurrentGuildMasterTask>> FGs2GuildWebSocketClient::UpdateCurrentGuildMaster(
         const Request::FUpdateCurrentGuildMasterRequestPtr Request) const
     {

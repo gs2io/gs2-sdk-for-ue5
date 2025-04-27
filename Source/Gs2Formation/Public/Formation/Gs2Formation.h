@@ -252,6 +252,12 @@
 #include "Task/Rest/GetCurrentFormMasterTask.h"
 #include "Task/WebSocket/GetCurrentFormMasterTask.h"
 
+// PreUpdateCurrentFormMaster
+#include "Request/PreUpdateCurrentFormMasterRequest.h"
+#include "Result/PreUpdateCurrentFormMasterResult.h"
+#include "Task/Rest/PreUpdateCurrentFormMasterTask.h"
+#include "Task/WebSocket/PreUpdateCurrentFormMasterTask.h"
+
 // UpdateCurrentFormMaster
 #include "Request/UpdateCurrentFormMasterRequest.h"
 #include "Result/UpdateCurrentFormMasterResult.h"

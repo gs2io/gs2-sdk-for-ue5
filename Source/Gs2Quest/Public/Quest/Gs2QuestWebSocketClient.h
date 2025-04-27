@@ -68,6 +68,8 @@
 #include "Task/WebSocket/ExportMasterTask.h"
 #include "Request/GetCurrentQuestMasterRequest.h"
 #include "Task/WebSocket/GetCurrentQuestMasterTask.h"
+#include "Request/PreUpdateCurrentQuestMasterRequest.h"
+#include "Task/WebSocket/PreUpdateCurrentQuestMasterTask.h"
 #include "Request/UpdateCurrentQuestMasterRequest.h"
 #include "Task/WebSocket/UpdateCurrentQuestMasterTask.h"
 #include "Request/UpdateCurrentQuestMasterFromGitHubRequest.h"
@@ -224,6 +226,10 @@ namespace Gs2::Quest
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FGetCurrentQuestMasterTask>> GetCurrentQuestMaster(
             const Request::FGetCurrentQuestMasterRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FPreUpdateCurrentQuestMasterTask>> PreUpdateCurrentQuestMaster(
+            const Request::FPreUpdateCurrentQuestMasterRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FUpdateCurrentQuestMasterTask>> UpdateCurrentQuestMaster(

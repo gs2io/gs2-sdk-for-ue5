@@ -62,6 +62,8 @@
 #include "Task/WebSocket/ExportMasterTask.h"
 #include "Request/GetCurrentFieldMasterRequest.h"
 #include "Task/WebSocket/GetCurrentFieldMasterTask.h"
+#include "Request/PreUpdateCurrentFieldMasterRequest.h"
+#include "Task/WebSocket/PreUpdateCurrentFieldMasterTask.h"
 #include "Request/UpdateCurrentFieldMasterRequest.h"
 #include "Task/WebSocket/UpdateCurrentFieldMasterTask.h"
 #include "Request/UpdateCurrentFieldMasterFromGitHubRequest.h"
@@ -180,6 +182,10 @@ namespace Gs2::MegaField
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FGetCurrentFieldMasterTask>> GetCurrentFieldMaster(
             const Request::FGetCurrentFieldMasterRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FPreUpdateCurrentFieldMasterTask>> PreUpdateCurrentFieldMaster(
+            const Request::FPreUpdateCurrentFieldMasterRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FUpdateCurrentFieldMasterTask>> UpdateCurrentFieldMaster(

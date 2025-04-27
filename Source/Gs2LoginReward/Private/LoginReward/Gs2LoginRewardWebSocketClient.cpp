@@ -199,6 +199,15 @@ namespace Gs2::LoginReward
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::WebSocket::FPreUpdateCurrentBonusMasterTask>> FGs2LoginRewardWebSocketClient::PreUpdateCurrentBonusMaster(
+        const Request::FPreUpdateCurrentBonusMasterRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FPreUpdateCurrentBonusMasterTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::WebSocket::FUpdateCurrentBonusMasterTask>> FGs2LoginRewardWebSocketClient::UpdateCurrentBonusMaster(
         const Request::FUpdateCurrentBonusMasterRequestPtr Request) const
     {

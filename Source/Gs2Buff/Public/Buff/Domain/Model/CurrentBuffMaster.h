@@ -55,6 +55,16 @@ namespace Gs2::Buff::Domain::Model
         const Gs2::Buff::FGs2BuffRestClientPtr Client;
 
         public:
+        TOptional<FString> UploadToken;
+        TOptional<FString> UploadUrl;
+        TOptional<FString> GetUploadToken() const
+        {
+            return UploadToken;
+        }
+        TOptional<FString> GetUploadUrl() const
+        {
+            return UploadUrl;
+        }
         TOptional<FString> NamespaceName;
     private:
 
@@ -123,6 +133,32 @@ namespace Gs2::Buff::Domain::Model
 
         TSharedPtr<FAsyncTask<FGetTask>> Get(
             Request::FGetCurrentBuffMasterRequestPtr Request
+        );
+
+        class GS2BUFF_API FPreUpdateTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Buff::Domain::Model::FCurrentBuffMasterDomain>,
+            public TSharedFromThis<FPreUpdateTask>
+        {
+            const TSharedPtr<FCurrentBuffMasterDomain> Self;
+            const Request::FPreUpdateCurrentBuffMasterRequestPtr Request;
+        public:
+            explicit FPreUpdateTask(
+                const TSharedPtr<FCurrentBuffMasterDomain>& Self,
+                const Request::FPreUpdateCurrentBuffMasterRequestPtr Request
+            );
+
+            FPreUpdateTask(
+                const FPreUpdateTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Buff::Domain::Model::FCurrentBuffMasterDomain>> Result
+            ) override;
+        };
+        friend FPreUpdateTask;
+
+        TSharedPtr<FAsyncTask<FPreUpdateTask>> PreUpdate(
+            Request::FPreUpdateCurrentBuffMasterRequestPtr Request
         );
 
         class GS2BUFF_API FUpdateTask final :

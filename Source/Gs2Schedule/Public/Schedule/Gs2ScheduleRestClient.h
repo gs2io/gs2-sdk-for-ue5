@@ -100,6 +100,8 @@
 #include "Task/Rest/ExportMasterTask.h"
 #include "Request/GetCurrentEventMasterRequest.h"
 #include "Task/Rest/GetCurrentEventMasterTask.h"
+#include "Request/PreUpdateCurrentEventMasterRequest.h"
+#include "Task/Rest/PreUpdateCurrentEventMasterTask.h"
 #include "Request/UpdateCurrentEventMasterRequest.h"
 #include "Task/Rest/UpdateCurrentEventMasterTask.h"
 #include "Request/UpdateCurrentEventMasterFromGitHubRequest.h"
@@ -278,6 +280,10 @@ namespace Gs2::Schedule
 
         TSharedPtr<FAsyncTask<Task::Rest::FGetCurrentEventMasterTask>> GetCurrentEventMaster(
             const Request::FGetCurrentEventMasterRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FPreUpdateCurrentEventMasterTask>> PreUpdateCurrentEventMaster(
+            const Request::FPreUpdateCurrentEventMasterRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::Rest::FUpdateCurrentEventMasterTask>> UpdateCurrentEventMaster(

@@ -388,6 +388,15 @@ namespace Gs2::Schedule
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::Rest::FPreUpdateCurrentEventMasterTask>> FGs2ScheduleRestClient::PreUpdateCurrentEventMaster(
+        const Request::FPreUpdateCurrentEventMasterRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FPreUpdateCurrentEventMasterTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::Rest::FUpdateCurrentEventMasterTask>> FGs2ScheduleRestClient::UpdateCurrentEventMaster(
         const Request::FUpdateCurrentEventMasterRequestPtr Request) const
     {

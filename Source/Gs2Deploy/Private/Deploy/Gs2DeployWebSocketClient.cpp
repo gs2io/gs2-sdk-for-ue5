@@ -28,6 +28,15 @@ namespace Gs2::Deploy
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::WebSocket::FPreCreateStackTask>> FGs2DeployWebSocketClient::PreCreateStack(
+        const Request::FPreCreateStackRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FPreCreateStackTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::WebSocket::FCreateStackTask>> FGs2DeployWebSocketClient::CreateStack(
         const Request::FCreateStackRequestPtr Request) const
     {
@@ -41,6 +50,15 @@ namespace Gs2::Deploy
         const Request::FCreateStackFromGitHubRequestPtr Request) const
     {
         return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FCreateStackFromGitHubTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FPreValidateTask>> FGs2DeployWebSocketClient::PreValidate(
+        const Request::FPreValidateRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FPreValidateTask>>(
             Session,
             Request
         );
@@ -73,10 +91,28 @@ namespace Gs2::Deploy
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::WebSocket::FPreUpdateStackTask>> FGs2DeployWebSocketClient::PreUpdateStack(
+        const Request::FPreUpdateStackRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FPreUpdateStackTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::WebSocket::FUpdateStackTask>> FGs2DeployWebSocketClient::UpdateStack(
         const Request::FUpdateStackRequestPtr Request) const
     {
         return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FUpdateStackTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FPreChangeSetTask>> FGs2DeployWebSocketClient::PreChangeSet(
+        const Request::FPreChangeSetRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FPreChangeSetTask>>(
             Session,
             Request
         );

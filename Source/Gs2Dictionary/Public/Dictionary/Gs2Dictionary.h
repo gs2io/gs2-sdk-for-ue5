@@ -310,6 +310,12 @@
 #include "Task/Rest/GetCurrentEntryMasterTask.h"
 #include "Task/WebSocket/GetCurrentEntryMasterTask.h"
 
+// PreUpdateCurrentEntryMaster
+#include "Request/PreUpdateCurrentEntryMasterRequest.h"
+#include "Result/PreUpdateCurrentEntryMasterResult.h"
+#include "Task/Rest/PreUpdateCurrentEntryMasterTask.h"
+#include "Task/WebSocket/PreUpdateCurrentEntryMasterTask.h"
+
 // UpdateCurrentEntryMaster
 #include "Request/UpdateCurrentEntryMasterRequest.h"
 #include "Result/UpdateCurrentEntryMasterResult.h"

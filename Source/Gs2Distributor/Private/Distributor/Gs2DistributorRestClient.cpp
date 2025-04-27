@@ -154,6 +154,15 @@ namespace Gs2::Distributor
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::Rest::FPreUpdateCurrentDistributorMasterTask>> FGs2DistributorRestClient::PreUpdateCurrentDistributorMaster(
+        const Request::FPreUpdateCurrentDistributorMasterRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FPreUpdateCurrentDistributorMasterTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::Rest::FUpdateCurrentDistributorMasterTask>> FGs2DistributorRestClient::UpdateCurrentDistributorMaster(
         const Request::FUpdateCurrentDistributorMasterRequestPtr Request) const
     {

@@ -59,6 +59,16 @@ namespace Gs2::LoginReward::Domain::Model
         const Gs2::LoginReward::FGs2LoginRewardRestClientPtr Client;
 
         public:
+        TOptional<FString> UploadToken;
+        TOptional<FString> UploadUrl;
+        TOptional<FString> GetUploadToken() const
+        {
+            return UploadToken;
+        }
+        TOptional<FString> GetUploadUrl() const
+        {
+            return UploadUrl;
+        }
         TOptional<FString> NamespaceName;
     private:
 
@@ -127,6 +137,32 @@ namespace Gs2::LoginReward::Domain::Model
 
         TSharedPtr<FAsyncTask<FGetTask>> Get(
             Request::FGetCurrentBonusMasterRequestPtr Request
+        );
+
+        class GS2LOGINREWARD_API FPreUpdateTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::LoginReward::Domain::Model::FCurrentBonusMasterDomain>,
+            public TSharedFromThis<FPreUpdateTask>
+        {
+            const TSharedPtr<FCurrentBonusMasterDomain> Self;
+            const Request::FPreUpdateCurrentBonusMasterRequestPtr Request;
+        public:
+            explicit FPreUpdateTask(
+                const TSharedPtr<FCurrentBonusMasterDomain>& Self,
+                const Request::FPreUpdateCurrentBonusMasterRequestPtr Request
+            );
+
+            FPreUpdateTask(
+                const FPreUpdateTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::LoginReward::Domain::Model::FCurrentBonusMasterDomain>> Result
+            ) override;
+        };
+        friend FPreUpdateTask;
+
+        TSharedPtr<FAsyncTask<FPreUpdateTask>> PreUpdate(
+            Request::FPreUpdateCurrentBonusMasterRequestPtr Request
         );
 
         class GS2LOGINREWARD_API FUpdateTask final :

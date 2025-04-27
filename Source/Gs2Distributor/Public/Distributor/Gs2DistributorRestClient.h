@@ -48,6 +48,8 @@
 #include "Task/Rest/ExportMasterTask.h"
 #include "Request/GetCurrentDistributorMasterRequest.h"
 #include "Task/Rest/GetCurrentDistributorMasterTask.h"
+#include "Request/PreUpdateCurrentDistributorMasterRequest.h"
+#include "Task/Rest/PreUpdateCurrentDistributorMasterTask.h"
 #include "Request/UpdateCurrentDistributorMasterRequest.h"
 #include "Task/Rest/UpdateCurrentDistributorMasterTask.h"
 #include "Request/UpdateCurrentDistributorMasterFromGitHubRequest.h"
@@ -180,6 +182,10 @@ namespace Gs2::Distributor
 
         TSharedPtr<FAsyncTask<Task::Rest::FGetCurrentDistributorMasterTask>> GetCurrentDistributorMaster(
             const Request::FGetCurrentDistributorMasterRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FPreUpdateCurrentDistributorMasterTask>> PreUpdateCurrentDistributorMaster(
+            const Request::FPreUpdateCurrentDistributorMasterRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::Rest::FUpdateCurrentDistributorMasterTask>> UpdateCurrentDistributorMaster(

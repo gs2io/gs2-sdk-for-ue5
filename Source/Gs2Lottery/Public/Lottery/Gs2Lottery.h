@@ -255,6 +255,12 @@
 #include "Task/Rest/GetCurrentLotteryMasterTask.h"
 #include "Task/WebSocket/GetCurrentLotteryMasterTask.h"
 
+// PreUpdateCurrentLotteryMaster
+#include "Request/PreUpdateCurrentLotteryMasterRequest.h"
+#include "Result/PreUpdateCurrentLotteryMasterResult.h"
+#include "Task/Rest/PreUpdateCurrentLotteryMasterTask.h"
+#include "Task/WebSocket/PreUpdateCurrentLotteryMasterTask.h"
+
 // UpdateCurrentLotteryMaster
 #include "Request/UpdateCurrentLotteryMasterRequest.h"
 #include "Result/UpdateCurrentLotteryMasterResult.h"

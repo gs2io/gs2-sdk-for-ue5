@@ -164,6 +164,12 @@
 #include "Task/Rest/GetCurrentFieldMasterTask.h"
 #include "Task/WebSocket/GetCurrentFieldMasterTask.h"
 
+// PreUpdateCurrentFieldMaster
+#include "Request/PreUpdateCurrentFieldMasterRequest.h"
+#include "Result/PreUpdateCurrentFieldMasterResult.h"
+#include "Task/Rest/PreUpdateCurrentFieldMasterTask.h"
+#include "Task/WebSocket/PreUpdateCurrentFieldMasterTask.h"
+
 // UpdateCurrentFieldMaster
 #include "Request/UpdateCurrentFieldMasterRequest.h"
 #include "Result/UpdateCurrentFieldMasterResult.h"

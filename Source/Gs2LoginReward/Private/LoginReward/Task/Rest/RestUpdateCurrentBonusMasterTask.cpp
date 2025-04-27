@@ -84,9 +84,17 @@ namespace Gs2::LoginReward::Task::Rest
             FString Body;
             const TSharedRef<TJsonWriter<TCHAR>> Writer = TJsonWriterFactory<TCHAR>::Create(&Body);
             const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
+            if (this->Request->GetMode().IsSet())
+            {
+                JsonRootObject->SetStringField("mode", this->Request->GetMode().GetValue());
+            }
             if (this->Request->GetSettings().IsSet())
             {
                 JsonRootObject->SetStringField("settings", this->Request->GetSettings().GetValue());
+            }
+            if (this->Request->GetUploadToken().IsSet())
+            {
+                JsonRootObject->SetStringField("uploadToken", this->Request->GetUploadToken().GetValue());
             }
             if (this->Request->GetContextStack().IsSet())
             {

@@ -190,6 +190,12 @@
 #include "Task/Rest/GetCurrentQuestMasterTask.h"
 #include "Task/WebSocket/GetCurrentQuestMasterTask.h"
 
+// PreUpdateCurrentQuestMaster
+#include "Request/PreUpdateCurrentQuestMasterRequest.h"
+#include "Result/PreUpdateCurrentQuestMasterResult.h"
+#include "Task/Rest/PreUpdateCurrentQuestMasterTask.h"
+#include "Task/WebSocket/PreUpdateCurrentQuestMasterTask.h"
+
 // UpdateCurrentQuestMaster
 #include "Request/UpdateCurrentQuestMasterRequest.h"
 #include "Result/UpdateCurrentQuestMasterResult.h"

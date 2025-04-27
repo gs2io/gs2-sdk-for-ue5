@@ -173,6 +173,12 @@
 #include "Task/Rest/GetCurrentBuffMasterTask.h"
 #include "Task/WebSocket/GetCurrentBuffMasterTask.h"
 
+// PreUpdateCurrentBuffMaster
+#include "Request/PreUpdateCurrentBuffMasterRequest.h"
+#include "Result/PreUpdateCurrentBuffMasterResult.h"
+#include "Task/Rest/PreUpdateCurrentBuffMasterTask.h"
+#include "Task/WebSocket/PreUpdateCurrentBuffMasterTask.h"
+
 // UpdateCurrentBuffMaster
 #include "Request/UpdateCurrentBuffMasterRequest.h"
 #include "Result/UpdateCurrentBuffMasterResult.h"

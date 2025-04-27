@@ -21,7 +21,7 @@
 
 namespace Gs2::Key::Model
 {
-    class GS2KEY_API FGitHubApiKey final : public Gs2Object, public TSharedFromThis<FGitHubApiKey>
+    class GS2KEY_API FGitHubApiKey final : public FGs2Object, public TSharedFromThis<FGitHubApiKey>
     {
         TOptional<FString> ApiKeyIdValue;
         TOptional<FString> NameValue;

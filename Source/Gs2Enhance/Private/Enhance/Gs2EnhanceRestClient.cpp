@@ -433,6 +433,15 @@ namespace Gs2::Enhance
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::Rest::FPreUpdateCurrentRateMasterTask>> FGs2EnhanceRestClient::PreUpdateCurrentRateMaster(
+        const Request::FPreUpdateCurrentRateMasterRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FPreUpdateCurrentRateMasterTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::Rest::FUpdateCurrentRateMasterTask>> FGs2EnhanceRestClient::UpdateCurrentRateMaster(
         const Request::FUpdateCurrentRateMasterRequestPtr Request) const
     {

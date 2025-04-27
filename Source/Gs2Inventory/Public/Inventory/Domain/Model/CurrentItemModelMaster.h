@@ -98,6 +98,16 @@ namespace Gs2::Inventory::Domain::Model
         const Gs2::Inventory::FGs2InventoryRestClientPtr Client;
 
         public:
+        TOptional<FString> UploadToken;
+        TOptional<FString> UploadUrl;
+        TOptional<FString> GetUploadToken() const
+        {
+            return UploadToken;
+        }
+        TOptional<FString> GetUploadUrl() const
+        {
+            return UploadUrl;
+        }
         TOptional<FString> NamespaceName;
     private:
 
@@ -166,6 +176,32 @@ namespace Gs2::Inventory::Domain::Model
 
         TSharedPtr<FAsyncTask<FGetTask>> Get(
             Request::FGetCurrentItemModelMasterRequestPtr Request
+        );
+
+        class GS2INVENTORY_API FPreUpdateTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Inventory::Domain::Model::FCurrentItemModelMasterDomain>,
+            public TSharedFromThis<FPreUpdateTask>
+        {
+            const TSharedPtr<FCurrentItemModelMasterDomain> Self;
+            const Request::FPreUpdateCurrentItemModelMasterRequestPtr Request;
+        public:
+            explicit FPreUpdateTask(
+                const TSharedPtr<FCurrentItemModelMasterDomain>& Self,
+                const Request::FPreUpdateCurrentItemModelMasterRequestPtr Request
+            );
+
+            FPreUpdateTask(
+                const FPreUpdateTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Inventory::Domain::Model::FCurrentItemModelMasterDomain>> Result
+            ) override;
+        };
+        friend FPreUpdateTask;
+
+        TSharedPtr<FAsyncTask<FPreUpdateTask>> PreUpdate(
+            Request::FPreUpdateCurrentItemModelMasterRequestPtr Request
         );
 
         class GS2INVENTORY_API FUpdateTask final :

@@ -334,6 +334,15 @@ namespace Gs2::Version
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::WebSocket::FPreUpdateCurrentVersionMasterTask>> FGs2VersionWebSocketClient::PreUpdateCurrentVersionMaster(
+        const Request::FPreUpdateCurrentVersionMasterRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FPreUpdateCurrentVersionMasterTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::WebSocket::FUpdateCurrentVersionMasterTask>> FGs2VersionWebSocketClient::UpdateCurrentVersionMaster(
         const Request::FUpdateCurrentVersionMasterRequestPtr Request) const
     {

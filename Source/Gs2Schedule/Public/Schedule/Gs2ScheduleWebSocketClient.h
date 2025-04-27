@@ -100,6 +100,8 @@
 #include "Task/WebSocket/ExportMasterTask.h"
 #include "Request/GetCurrentEventMasterRequest.h"
 #include "Task/WebSocket/GetCurrentEventMasterTask.h"
+#include "Request/PreUpdateCurrentEventMasterRequest.h"
+#include "Task/WebSocket/PreUpdateCurrentEventMasterTask.h"
 #include "Request/UpdateCurrentEventMasterRequest.h"
 #include "Task/WebSocket/UpdateCurrentEventMasterTask.h"
 #include "Request/UpdateCurrentEventMasterFromGitHubRequest.h"
@@ -278,6 +280,10 @@ namespace Gs2::Schedule
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FGetCurrentEventMasterTask>> GetCurrentEventMaster(
             const Request::FGetCurrentEventMasterRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FPreUpdateCurrentEventMasterTask>> PreUpdateCurrentEventMaster(
+            const Request::FPreUpdateCurrentEventMasterRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FUpdateCurrentEventMasterTask>> UpdateCurrentEventMaster(

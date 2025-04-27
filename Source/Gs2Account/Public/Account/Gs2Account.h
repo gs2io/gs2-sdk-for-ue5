@@ -393,6 +393,12 @@
 #include "Task/Rest/GetCurrentModelMasterTask.h"
 #include "Task/WebSocket/GetCurrentModelMasterTask.h"
 
+// PreUpdateCurrentModelMaster
+#include "Request/PreUpdateCurrentModelMasterRequest.h"
+#include "Result/PreUpdateCurrentModelMasterResult.h"
+#include "Task/Rest/PreUpdateCurrentModelMasterTask.h"
+#include "Task/WebSocket/PreUpdateCurrentModelMasterTask.h"
+
 // UpdateCurrentModelMaster
 #include "Request/UpdateCurrentModelMasterRequest.h"
 #include "Result/UpdateCurrentModelMasterResult.h"

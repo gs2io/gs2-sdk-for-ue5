@@ -59,6 +59,16 @@ namespace Gs2::Schedule::Domain::Model
         const Gs2::Schedule::FGs2ScheduleRestClientPtr Client;
 
         public:
+        TOptional<FString> UploadToken;
+        TOptional<FString> UploadUrl;
+        TOptional<FString> GetUploadToken() const
+        {
+            return UploadToken;
+        }
+        TOptional<FString> GetUploadUrl() const
+        {
+            return UploadUrl;
+        }
         TOptional<FString> NamespaceName;
     private:
 
@@ -127,6 +137,32 @@ namespace Gs2::Schedule::Domain::Model
 
         TSharedPtr<FAsyncTask<FGetTask>> Get(
             Request::FGetCurrentEventMasterRequestPtr Request
+        );
+
+        class GS2SCHEDULE_API FPreUpdateTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Schedule::Domain::Model::FCurrentEventMasterDomain>,
+            public TSharedFromThis<FPreUpdateTask>
+        {
+            const TSharedPtr<FCurrentEventMasterDomain> Self;
+            const Request::FPreUpdateCurrentEventMasterRequestPtr Request;
+        public:
+            explicit FPreUpdateTask(
+                const TSharedPtr<FCurrentEventMasterDomain>& Self,
+                const Request::FPreUpdateCurrentEventMasterRequestPtr Request
+            );
+
+            FPreUpdateTask(
+                const FPreUpdateTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Schedule::Domain::Model::FCurrentEventMasterDomain>> Result
+            ) override;
+        };
+        friend FPreUpdateTask;
+
+        TSharedPtr<FAsyncTask<FPreUpdateTask>> PreUpdate(
+            Request::FPreUpdateCurrentEventMasterRequestPtr Request
         );
 
         class GS2SCHEDULE_API FUpdateTask final :

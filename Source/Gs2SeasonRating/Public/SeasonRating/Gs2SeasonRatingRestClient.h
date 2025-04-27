@@ -70,6 +70,8 @@
 #include "Task/Rest/ExportMasterTask.h"
 #include "Request/GetCurrentSeasonModelMasterRequest.h"
 #include "Task/Rest/GetCurrentSeasonModelMasterTask.h"
+#include "Request/PreUpdateCurrentSeasonModelMasterRequest.h"
+#include "Task/Rest/PreUpdateCurrentSeasonModelMasterTask.h"
 #include "Request/UpdateCurrentSeasonModelMasterRequest.h"
 #include "Task/Rest/UpdateCurrentSeasonModelMasterTask.h"
 #include "Request/UpdateCurrentSeasonModelMasterFromGitHubRequest.h"
@@ -198,6 +200,10 @@ namespace Gs2::SeasonRating
 
         TSharedPtr<FAsyncTask<Task::Rest::FGetCurrentSeasonModelMasterTask>> GetCurrentSeasonModelMaster(
             const Request::FGetCurrentSeasonModelMasterRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FPreUpdateCurrentSeasonModelMasterTask>> PreUpdateCurrentSeasonModelMaster(
+            const Request::FPreUpdateCurrentSeasonModelMasterRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::Rest::FUpdateCurrentSeasonModelMasterTask>> UpdateCurrentSeasonModelMaster(

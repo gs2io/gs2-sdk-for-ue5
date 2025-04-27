@@ -36,6 +36,7 @@ namespace Gs2::Log::Request
         TOptional<FString> AwsAccessKeyIdValue;
         TOptional<FString> AwsSecretAccessKeyValue;
         TOptional<FString> FirehoseStreamNameValue;
+        TOptional<FString> FirehoseCompressDataValue;
         
     public:
         
@@ -56,6 +57,7 @@ namespace Gs2::Log::Request
         TSharedPtr<FUpdateNamespaceRequest> WithAwsAccessKeyId(const TOptional<FString> AwsAccessKeyId);
         TSharedPtr<FUpdateNamespaceRequest> WithAwsSecretAccessKey(const TOptional<FString> AwsSecretAccessKey);
         TSharedPtr<FUpdateNamespaceRequest> WithFirehoseStreamName(const TOptional<FString> FirehoseStreamName);
+        TSharedPtr<FUpdateNamespaceRequest> WithFirehoseCompressData(const TOptional<FString> FirehoseCompressData);
 
         TOptional<FString> GetContextStack() const;
         TOptional<FString> GetNamespaceName() const;
@@ -69,6 +71,7 @@ namespace Gs2::Log::Request
         TOptional<FString> GetAwsAccessKeyId() const;
         TOptional<FString> GetAwsSecretAccessKey() const;
         TOptional<FString> GetFirehoseStreamName() const;
+        TOptional<FString> GetFirehoseCompressData() const;
 
         static TSharedPtr<FUpdateNamespaceRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;

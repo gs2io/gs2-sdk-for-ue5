@@ -118,6 +118,10 @@ namespace Gs2::Log::Task::Rest
             {
                 JsonRootObject->SetStringField("firehoseStreamName", this->Request->GetFirehoseStreamName().GetValue());
             }
+            if (this->Request->GetFirehoseCompressData().IsSet())
+            {
+                JsonRootObject->SetStringField("firehoseCompressData", this->Request->GetFirehoseCompressData().GetValue());
+            }
             if (this->Request->GetContextStack().IsSet())
             {
                 JsonRootObject->SetStringField("contextStack", this->Request->GetContextStack().GetValue());

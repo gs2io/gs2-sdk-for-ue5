@@ -86,6 +86,8 @@
 #include "Task/Rest/ExportMasterTask.h"
 #include "Request/GetCurrentMessageMasterRequest.h"
 #include "Task/Rest/GetCurrentMessageMasterTask.h"
+#include "Request/PreUpdateCurrentMessageMasterRequest.h"
+#include "Task/Rest/PreUpdateCurrentMessageMasterTask.h"
 #include "Request/UpdateCurrentMessageMasterRequest.h"
 #include "Task/Rest/UpdateCurrentMessageMasterTask.h"
 #include "Request/UpdateCurrentMessageMasterFromGitHubRequest.h"
@@ -256,6 +258,10 @@ namespace Gs2::Inbox
 
         TSharedPtr<FAsyncTask<Task::Rest::FGetCurrentMessageMasterTask>> GetCurrentMessageMaster(
             const Request::FGetCurrentMessageMasterRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FPreUpdateCurrentMessageMasterTask>> PreUpdateCurrentMessageMaster(
+            const Request::FPreUpdateCurrentMessageMasterRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::Rest::FUpdateCurrentMessageMasterTask>> UpdateCurrentMessageMaster(

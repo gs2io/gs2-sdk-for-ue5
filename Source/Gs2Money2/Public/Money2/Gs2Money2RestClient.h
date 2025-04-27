@@ -126,6 +126,8 @@
 #include "Task/Rest/ExportMasterTask.h"
 #include "Request/GetCurrentModelMasterRequest.h"
 #include "Task/Rest/GetCurrentModelMasterTask.h"
+#include "Request/PreUpdateCurrentModelMasterRequest.h"
+#include "Task/Rest/PreUpdateCurrentModelMasterTask.h"
 #include "Request/UpdateCurrentModelMasterRequest.h"
 #include "Task/Rest/UpdateCurrentModelMasterTask.h"
 #include "Request/UpdateCurrentModelMasterFromGitHubRequest.h"
@@ -366,6 +368,10 @@ namespace Gs2::Money2
 
         TSharedPtr<FAsyncTask<Task::Rest::FGetCurrentModelMasterTask>> GetCurrentModelMaster(
             const Request::FGetCurrentModelMasterRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FPreUpdateCurrentModelMasterTask>> PreUpdateCurrentModelMaster(
+            const Request::FPreUpdateCurrentModelMasterRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::Rest::FUpdateCurrentModelMasterTask>> UpdateCurrentModelMaster(

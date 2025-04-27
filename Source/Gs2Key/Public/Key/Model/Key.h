@@ -21,7 +21,7 @@
 
 namespace Gs2::Key::Model
 {
-    class GS2KEY_API FKey final : public Gs2Object, public TSharedFromThis<FKey>
+    class GS2KEY_API FKey final : public FGs2Object, public TSharedFromThis<FKey>
     {
         TOptional<FString> KeyIdValue;
         TOptional<FString> NameValue;

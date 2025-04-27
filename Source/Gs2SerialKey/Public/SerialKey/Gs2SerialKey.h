@@ -254,6 +254,12 @@
 #include "Task/Rest/GetCurrentCampaignMasterTask.h"
 #include "Task/WebSocket/GetCurrentCampaignMasterTask.h"
 
+// PreUpdateCurrentCampaignMaster
+#include "Request/PreUpdateCurrentCampaignMasterRequest.h"
+#include "Result/PreUpdateCurrentCampaignMasterResult.h"
+#include "Task/Rest/PreUpdateCurrentCampaignMasterTask.h"
+#include "Task/WebSocket/PreUpdateCurrentCampaignMasterTask.h"
+
 // UpdateCurrentCampaignMaster
 #include "Request/UpdateCurrentCampaignMasterRequest.h"
 #include "Result/UpdateCurrentCampaignMasterResult.h"

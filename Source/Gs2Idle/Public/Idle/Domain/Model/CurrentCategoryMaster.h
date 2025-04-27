@@ -57,6 +57,16 @@ namespace Gs2::Idle::Domain::Model
         const Gs2::Idle::FGs2IdleRestClientPtr Client;
 
         public:
+        TOptional<FString> UploadToken;
+        TOptional<FString> UploadUrl;
+        TOptional<FString> GetUploadToken() const
+        {
+            return UploadToken;
+        }
+        TOptional<FString> GetUploadUrl() const
+        {
+            return UploadUrl;
+        }
         TOptional<FString> NamespaceName;
     private:
 
@@ -125,6 +135,32 @@ namespace Gs2::Idle::Domain::Model
 
         TSharedPtr<FAsyncTask<FGetTask>> Get(
             Request::FGetCurrentCategoryMasterRequestPtr Request
+        );
+
+        class GS2IDLE_API FPreUpdateTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Idle::Domain::Model::FCurrentCategoryMasterDomain>,
+            public TSharedFromThis<FPreUpdateTask>
+        {
+            const TSharedPtr<FCurrentCategoryMasterDomain> Self;
+            const Request::FPreUpdateCurrentCategoryMasterRequestPtr Request;
+        public:
+            explicit FPreUpdateTask(
+                const TSharedPtr<FCurrentCategoryMasterDomain>& Self,
+                const Request::FPreUpdateCurrentCategoryMasterRequestPtr Request
+            );
+
+            FPreUpdateTask(
+                const FPreUpdateTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Idle::Domain::Model::FCurrentCategoryMasterDomain>> Result
+            ) override;
+        };
+        friend FPreUpdateTask;
+
+        TSharedPtr<FAsyncTask<FPreUpdateTask>> PreUpdate(
+            Request::FPreUpdateCurrentCategoryMasterRequestPtr Request
         );
 
         class GS2IDLE_API FUpdateTask final :

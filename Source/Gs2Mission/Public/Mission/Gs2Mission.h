@@ -428,6 +428,12 @@
 #include "Task/Rest/GetCurrentMissionMasterTask.h"
 #include "Task/WebSocket/GetCurrentMissionMasterTask.h"
 
+// PreUpdateCurrentMissionMaster
+#include "Request/PreUpdateCurrentMissionMasterRequest.h"
+#include "Result/PreUpdateCurrentMissionMasterResult.h"
+#include "Task/Rest/PreUpdateCurrentMissionMasterTask.h"
+#include "Task/WebSocket/PreUpdateCurrentMissionMasterTask.h"
+
 // UpdateCurrentMissionMaster
 #include "Request/UpdateCurrentMissionMasterRequest.h"
 #include "Result/UpdateCurrentMissionMasterResult.h"
