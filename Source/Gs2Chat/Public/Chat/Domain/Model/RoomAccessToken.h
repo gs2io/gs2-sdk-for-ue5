@@ -193,6 +193,7 @@ namespace Gs2::Chat::Domain::Model
         );
 
         Gs2::Chat::Domain::Iterator::FDescribeMessagesIteratorPtr Messages(
+            const TOptional<int32> Category = TOptional<int32>()
         ) const;
 
         Gs2::Core::Domain::CallbackID SubscribeMessages(
@@ -204,6 +205,7 @@ namespace Gs2::Chat::Domain::Model
         );
 
         Gs2::Chat::Domain::Iterator::FDescribeLatestMessagesIteratorPtr LatestMessages(
+            const TOptional<int32> Category = TOptional<int32>()
         ) const;
 
         Gs2::Core::Domain::CallbackID SubscribeLatestMessages(

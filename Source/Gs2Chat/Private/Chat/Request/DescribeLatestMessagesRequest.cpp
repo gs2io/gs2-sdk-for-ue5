@@ -22,6 +22,7 @@ namespace Gs2::Chat::Request
         NamespaceNameValue(TOptional<FString>()),
         RoomNameValue(TOptional<FString>()),
         PasswordValue(TOptional<FString>()),
+        CategoryValue(TOptional<int32>()),
         AccessTokenValue(TOptional<FString>()),
         LimitValue(TOptional<int32>())
     {
@@ -33,6 +34,7 @@ namespace Gs2::Chat::Request
         NamespaceNameValue(From.NamespaceNameValue),
         RoomNameValue(From.RoomNameValue),
         PasswordValue(From.PasswordValue),
+        CategoryValue(From.CategoryValue),
         AccessTokenValue(From.AccessTokenValue),
         LimitValue(From.LimitValue)
     {
@@ -70,6 +72,14 @@ namespace Gs2::Chat::Request
         return SharedThis(this);
     }
 
+    TSharedPtr<FDescribeLatestMessagesRequest> FDescribeLatestMessagesRequest::WithCategory(
+        const TOptional<int32> Category
+    )
+    {
+        this->CategoryValue = Category;
+        return SharedThis(this);
+    }
+
     TSharedPtr<FDescribeLatestMessagesRequest> FDescribeLatestMessagesRequest::WithAccessToken(
         const TOptional<FString> AccessToken
     )
@@ -104,6 +114,20 @@ namespace Gs2::Chat::Request
     TOptional<FString> FDescribeLatestMessagesRequest::GetPassword() const
     {
         return PasswordValue;
+    }
+
+    TOptional<int32> FDescribeLatestMessagesRequest::GetCategory() const
+    {
+        return CategoryValue;
+    }
+
+    FString FDescribeLatestMessagesRequest::GetCategoryString() const
+    {
+        if (!CategoryValue.IsSet())
+        {
+            return FString("null");
+        }
+        return FString::Printf(TEXT("%d"), CategoryValue.GetValue());
     }
 
     TOptional<FString> FDescribeLatestMessagesRequest::GetAccessToken() const
@@ -159,6 +183,15 @@ namespace Gs2::Chat::Request
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
+            ->WithCategory(Data->HasField(ANSI_TO_TCHAR("category")) ? [Data]() -> TOptional<int32>
+              {
+                  int32 v;
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("category"), v))
+                  {
+                        return TOptional(v);
+                  }
+                  return TOptional<int32>();
+              }() : TOptional<int32>())
             ->WithAccessToken(Data->HasField(ANSI_TO_TCHAR("xGs2AccessToken")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
@@ -197,6 +230,10 @@ namespace Gs2::Chat::Request
         if (PasswordValue.IsSet())
         {
             JsonRootObject->SetStringField("password", PasswordValue.GetValue());
+        }
+        if (CategoryValue.IsSet())
+        {
+            JsonRootObject->SetNumberField("category", CategoryValue.GetValue());
         }
         if (AccessTokenValue.IsSet())
         {

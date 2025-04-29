@@ -22,6 +22,7 @@ namespace Gs2::Chat::Request
         NamespaceNameValue(TOptional<FString>()),
         RoomNameValue(TOptional<FString>()),
         PasswordValue(TOptional<FString>()),
+        CategoryValue(TOptional<int32>()),
         UserIdValue(TOptional<FString>()),
         StartAtValue(TOptional<int64>()),
         LimitValue(TOptional<int32>()),
@@ -35,6 +36,7 @@ namespace Gs2::Chat::Request
         NamespaceNameValue(From.NamespaceNameValue),
         RoomNameValue(From.RoomNameValue),
         PasswordValue(From.PasswordValue),
+        CategoryValue(From.CategoryValue),
         UserIdValue(From.UserIdValue),
         StartAtValue(From.StartAtValue),
         LimitValue(From.LimitValue),
@@ -71,6 +73,14 @@ namespace Gs2::Chat::Request
     )
     {
         this->PasswordValue = Password;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FDescribeMessagesByUserIdRequest> FDescribeMessagesByUserIdRequest::WithCategory(
+        const TOptional<int32> Category
+    )
+    {
+        this->CategoryValue = Category;
         return SharedThis(this);
     }
 
@@ -124,6 +134,20 @@ namespace Gs2::Chat::Request
     TOptional<FString> FDescribeMessagesByUserIdRequest::GetPassword() const
     {
         return PasswordValue;
+    }
+
+    TOptional<int32> FDescribeMessagesByUserIdRequest::GetCategory() const
+    {
+        return CategoryValue;
+    }
+
+    FString FDescribeMessagesByUserIdRequest::GetCategoryString() const
+    {
+        if (!CategoryValue.IsSet())
+        {
+            return FString("null");
+        }
+        return FString::Printf(TEXT("%d"), CategoryValue.GetValue());
     }
 
     TOptional<FString> FDescribeMessagesByUserIdRequest::GetUserId() const
@@ -198,6 +222,15 @@ namespace Gs2::Chat::Request
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
+            ->WithCategory(Data->HasField(ANSI_TO_TCHAR("category")) ? [Data]() -> TOptional<int32>
+              {
+                  int32 v;
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("category"), v))
+                  {
+                        return TOptional(v);
+                  }
+                  return TOptional<int32>();
+              }() : TOptional<int32>())
             ->WithUserId(Data->HasField(ANSI_TO_TCHAR("userId")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
@@ -254,6 +287,10 @@ namespace Gs2::Chat::Request
         if (PasswordValue.IsSet())
         {
             JsonRootObject->SetStringField("password", PasswordValue.GetValue());
+        }
+        if (CategoryValue.IsSet())
+        {
+            JsonRootObject->SetNumberField("category", CategoryValue.GetValue());
         }
         if (UserIdValue.IsSet())
         {

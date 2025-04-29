@@ -228,6 +228,7 @@ namespace Gs2::Chat::Domain::Model
     }
 
     Gs2::Chat::Domain::Iterator::FDescribeMessagesByUserIdIteratorPtr FRoomDomain::Messages(
+        const TOptional<int32> Category,
         const TOptional<FString> TimeOffsetToken
     ) const
     {
@@ -235,9 +236,10 @@ namespace Gs2::Chat::Domain::Model
             Gs2,
             Client,
             NamespaceName,
-            RoomName,
             UserId,
+            RoomName,
             Password,
+            Category,
             TimeOffsetToken
         );
     }
@@ -275,6 +277,7 @@ namespace Gs2::Chat::Domain::Model
     }
 
     Gs2::Chat::Domain::Iterator::FDescribeLatestMessagesByUserIdIteratorPtr FRoomDomain::LatestMessages(
+        const TOptional<int32> Category,
         const TOptional<FString> TimeOffsetToken
     ) const
     {
@@ -282,9 +285,10 @@ namespace Gs2::Chat::Domain::Model
             Gs2,
             Client,
             NamespaceName,
-            RoomName,
             UserId,
+            RoomName,
             Password,
+            Category,
             TimeOffsetToken
         );
     }

@@ -32,6 +32,7 @@ namespace Gs2::UE5::Chat::Domain::Iterator
         Gs2::UE5::Util::IGameSessionPtr GameSession;
         Gs2::UE5::Util::FGs2ConnectionPtr Connection;
         TOptional<FString> Password;
+        TOptional<int32> Category;
 
 	public:
 
@@ -39,17 +40,20 @@ namespace Gs2::UE5::Chat::Domain::Iterator
             Gs2::Chat::Domain::Model::FRoomAccessTokenDomainPtr Domain,
             Gs2::UE5::Util::IGameSessionPtr GameSession,
             Gs2::UE5::Util::FGs2ConnectionPtr Connection,
-            TOptional<FString> Password = TOptional<FString>()
+            TOptional<FString> Password = TOptional<FString>(),
+            TOptional<int32> Category = TOptional<int32>()
         ) :
             It(
                 Domain->LatestMessages(
-                    Password
+                    Password,
+                    Category
                 )
             ),
             Domain(Domain),
             GameSession(GameSession),
             Connection(Connection),
-            Password(Password)
+            Password(Password),
+            Category(Category)
         {
         }
 
@@ -60,7 +64,8 @@ namespace Gs2::UE5::Chat::Domain::Iterator
 			Domain(From.Domain),
 			GameSession(From.GameSession),
 			Connection(From.Connection),
-            Password(From.Password)
+            Password(From.Password),
+            Category(From.Category)
 		{
 		}
 

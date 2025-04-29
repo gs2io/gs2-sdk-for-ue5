@@ -160,12 +160,14 @@ namespace Gs2::UE5::Chat::Domain::Model
     }
 
     Gs2::UE5::Chat::Domain::Iterator::FEzDescribeMessagesIteratorPtr FEzRoomGameSessionDomain::Messages(
+          const TOptional<int32> Category
     ) const
     {
         return MakeShared<Gs2::UE5::Chat::Domain::Iterator::FEzDescribeMessagesIterator>(
             Domain,
             GameSession,
-            ConnectionValue
+            ConnectionValue,
+            Category
         );
     }
 
@@ -184,12 +186,14 @@ namespace Gs2::UE5::Chat::Domain::Model
     }
 
     Gs2::UE5::Chat::Domain::Iterator::FEzDescribeLatestMessagesIteratorPtr FEzRoomGameSessionDomain::LatestMessages(
+          const TOptional<int32> Category
     ) const
     {
         return MakeShared<Gs2::UE5::Chat::Domain::Iterator::FEzDescribeLatestMessagesIterator>(
             Domain,
             GameSession,
-            ConnectionValue
+            ConnectionValue,
+            Category
         );
     }
 

@@ -229,15 +229,17 @@ namespace Gs2::Chat::Domain::Model
     }
 
     Gs2::Chat::Domain::Iterator::FDescribeMessagesIteratorPtr FRoomAccessTokenDomain::Messages(
+        const TOptional<int32> Category
     ) const
     {
         return MakeShared<Gs2::Chat::Domain::Iterator::FDescribeMessagesIterator>(
             Gs2,
             Client,
             NamespaceName,
-            RoomName,
             AccessToken,
-            Password
+            RoomName,
+            Password,
+            Category
         );
     }
 
@@ -274,15 +276,17 @@ namespace Gs2::Chat::Domain::Model
     }
 
     Gs2::Chat::Domain::Iterator::FDescribeLatestMessagesIteratorPtr FRoomAccessTokenDomain::LatestMessages(
+        const TOptional<int32> Category
     ) const
     {
         return MakeShared<Gs2::Chat::Domain::Iterator::FDescribeLatestMessagesIterator>(
             Gs2,
             Client,
             NamespaceName,
-            RoomName,
             AccessToken,
-            Password
+            RoomName,
+            Password,
+            Category
         );
     }
 

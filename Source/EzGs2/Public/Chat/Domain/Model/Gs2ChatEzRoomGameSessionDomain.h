@@ -98,6 +98,7 @@ namespace Gs2::UE5::Chat::Domain::Model
         );
 
         Gs2::UE5::Chat::Domain::Iterator::FEzDescribeMessagesIteratorPtr Messages(
+            const TOptional<int32> Category = TOptional<int32>()
         ) const;
 
         Gs2::Core::Domain::CallbackID SubscribeMessages(TFunction<void()> Callback);
@@ -105,6 +106,7 @@ namespace Gs2::UE5::Chat::Domain::Model
         void UnsubscribeMessages(Gs2::Core::Domain::CallbackID CallbackId);
 
         Gs2::UE5::Chat::Domain::Iterator::FEzDescribeLatestMessagesIteratorPtr LatestMessages(
+            const TOptional<int32> Category = TOptional<int32>()
         ) const;
 
         Gs2::Core::Domain::CallbackID SubscribeLatestMessages(TFunction<void()> Callback);

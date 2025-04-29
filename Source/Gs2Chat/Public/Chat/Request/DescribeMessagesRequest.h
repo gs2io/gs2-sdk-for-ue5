@@ -29,6 +29,7 @@ namespace Gs2::Chat::Request
         TOptional<FString> NamespaceNameValue;
         TOptional<FString> RoomNameValue;
         TOptional<FString> PasswordValue;
+        TOptional<int32> CategoryValue;
         TOptional<FString> AccessTokenValue;
         TOptional<int64> StartAtValue;
         TOptional<int32> LimitValue;
@@ -45,6 +46,7 @@ namespace Gs2::Chat::Request
         TSharedPtr<FDescribeMessagesRequest> WithNamespaceName(const TOptional<FString> NamespaceName);
         TSharedPtr<FDescribeMessagesRequest> WithRoomName(const TOptional<FString> RoomName);
         TSharedPtr<FDescribeMessagesRequest> WithPassword(const TOptional<FString> Password);
+        TSharedPtr<FDescribeMessagesRequest> WithCategory(const TOptional<int32> Category);
         TSharedPtr<FDescribeMessagesRequest> WithAccessToken(const TOptional<FString> AccessToken);
         TSharedPtr<FDescribeMessagesRequest> WithStartAt(const TOptional<int64> StartAt);
         TSharedPtr<FDescribeMessagesRequest> WithLimit(const TOptional<int32> Limit);
@@ -53,6 +55,8 @@ namespace Gs2::Chat::Request
         TOptional<FString> GetNamespaceName() const;
         TOptional<FString> GetRoomName() const;
         TOptional<FString> GetPassword() const;
+        TOptional<int32> GetCategory() const;
+        FString GetCategoryString() const;
         TOptional<FString> GetAccessToken() const;
         TOptional<int64> GetStartAt() const;
         FString GetStartAtString() const;

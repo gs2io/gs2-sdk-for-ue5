@@ -191,6 +191,7 @@ namespace Gs2::Chat::Domain::Model
         );
 
         Gs2::Chat::Domain::Iterator::FDescribeMessagesByUserIdIteratorPtr Messages(
+            const TOptional<int32> Category = TOptional<int32>(),
             const TOptional<FString> TimeOffsetToken = TOptional<FString>()
         ) const;
 
@@ -203,6 +204,7 @@ namespace Gs2::Chat::Domain::Model
         );
 
         Gs2::Chat::Domain::Iterator::FDescribeLatestMessagesByUserIdIteratorPtr LatestMessages(
+            const TOptional<int32> Category = TOptional<int32>(),
             const TOptional<FString> TimeOffsetToken = TOptional<FString>()
         ) const;
 

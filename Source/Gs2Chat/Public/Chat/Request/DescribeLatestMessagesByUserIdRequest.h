@@ -29,6 +29,7 @@ namespace Gs2::Chat::Request
         TOptional<FString> NamespaceNameValue;
         TOptional<FString> RoomNameValue;
         TOptional<FString> PasswordValue;
+        TOptional<int32> CategoryValue;
         TOptional<FString> UserIdValue;
         TOptional<int32> LimitValue;
         TOptional<FString> TimeOffsetTokenValue;
@@ -45,6 +46,7 @@ namespace Gs2::Chat::Request
         TSharedPtr<FDescribeLatestMessagesByUserIdRequest> WithNamespaceName(const TOptional<FString> NamespaceName);
         TSharedPtr<FDescribeLatestMessagesByUserIdRequest> WithRoomName(const TOptional<FString> RoomName);
         TSharedPtr<FDescribeLatestMessagesByUserIdRequest> WithPassword(const TOptional<FString> Password);
+        TSharedPtr<FDescribeLatestMessagesByUserIdRequest> WithCategory(const TOptional<int32> Category);
         TSharedPtr<FDescribeLatestMessagesByUserIdRequest> WithUserId(const TOptional<FString> UserId);
         TSharedPtr<FDescribeLatestMessagesByUserIdRequest> WithLimit(const TOptional<int32> Limit);
         TSharedPtr<FDescribeLatestMessagesByUserIdRequest> WithTimeOffsetToken(const TOptional<FString> TimeOffsetToken);
@@ -53,6 +55,8 @@ namespace Gs2::Chat::Request
         TOptional<FString> GetNamespaceName() const;
         TOptional<FString> GetRoomName() const;
         TOptional<FString> GetPassword() const;
+        TOptional<int32> GetCategory() const;
+        FString GetCategoryString() const;
         TOptional<FString> GetUserId() const;
         TOptional<int32> GetLimit() const;
         FString GetLimitString() const;

@@ -92,6 +92,9 @@ namespace Gs2::Chat::Task::Rest
             if (this->Request->GetPassword().IsSet()) {
                 queryStrings.Add("password=" + FGenericPlatformHttp::UrlEncode(this->Request->GetPassword().GetValue()));
             }
+            if (this->Request->GetCategory().IsSet()) {
+                queryStrings.Add("category=" + this->Request->GetCategoryString());
+            }
             if (this->Request->GetStartAt().IsSet()) {
                 queryStrings.Add("startAt=" + this->Request->GetStartAtString());
             }
