@@ -109,6 +109,53 @@ namespace Gs2::Account::Domain::Model
         return Gs2::Core::Util::New<FAsyncTask<FGetTask>>(this->AsShared(), Request);
     }
 
+    FDataOwnerDomain::FUpdateTask::FUpdateTask(
+        const TSharedPtr<FDataOwnerDomain>& Self,
+        const Request::FUpdateDataOwnerByUserIdRequestPtr Request
+    ): Self(Self), Request(Request)
+    {
+
+    }
+
+    FDataOwnerDomain::FUpdateTask::FUpdateTask(
+        const FUpdateTask& From
+    ): TGs2Future(From), Self(From.Self), Request(From.Request)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FDataOwnerDomain::FUpdateTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::Account::Domain::Model::FDataOwnerDomain>> Result
+    )
+    {
+        const auto Future2 = Self->Model();
+        Future2->StartSynchronousTask();
+        if (Future2->GetTask().IsError())
+        {
+            return Future2->GetTask().Error();
+        }
+        const auto Model = Future2->GetTask().Result();
+        Future2->EnsureCompletion();
+        if (!Model.IsValid())
+        {
+            return nullptr;
+        }
+        Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
+            ->WithNamespaceName(Self->NamespaceName)
+            ->WithUserId(Self->UserId)
+            ->WithDataOwnerName(Model->GetDataOwnerName());
+        auto Domain = Self;
+
+        *Result = Domain;
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FDataOwnerDomain::FUpdateTask>> FDataOwnerDomain::Update(
+        Request::FUpdateDataOwnerByUserIdRequestPtr Request
+    ) {
+        return Gs2::Core::Util::New<FAsyncTask<FUpdateTask>>(this->AsShared(), Request);
+    }
+
     FString FDataOwnerDomain::CreateCacheParentKey(
         TOptional<FString> NamespaceName,
         TOptional<FString> UserId,

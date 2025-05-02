@@ -118,6 +118,8 @@
 #include "Task/WebSocket/DeletePlatformIdByUserIdTask.h"
 #include "Request/GetDataOwnerByUserIdRequest.h"
 #include "Task/WebSocket/GetDataOwnerByUserIdTask.h"
+#include "Request/UpdateDataOwnerByUserIdRequest.h"
+#include "Task/WebSocket/UpdateDataOwnerByUserIdTask.h"
 #include "Request/DeleteDataOwnerByUserIdRequest.h"
 #include "Task/WebSocket/DeleteDataOwnerByUserIdTask.h"
 #include "Request/DescribeTakeOverTypeModelsRequest.h"
@@ -354,6 +356,10 @@ namespace Gs2::Account
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FGetDataOwnerByUserIdTask>> GetDataOwnerByUserId(
             const Request::FGetDataOwnerByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FUpdateDataOwnerByUserIdTask>> UpdateDataOwnerByUserId(
+            const Request::FUpdateDataOwnerByUserIdRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FDeleteDataOwnerByUserIdTask>> DeleteDataOwnerByUserId(

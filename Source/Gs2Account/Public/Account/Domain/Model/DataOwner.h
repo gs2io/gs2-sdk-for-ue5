@@ -111,6 +111,32 @@ namespace Gs2::Account::Domain::Model
             Request::FGetDataOwnerByUserIdRequestPtr Request
         );
 
+        class GS2ACCOUNT_API FUpdateTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Account::Domain::Model::FDataOwnerDomain>,
+            public TSharedFromThis<FUpdateTask>
+        {
+            const TSharedPtr<FDataOwnerDomain> Self;
+            const Request::FUpdateDataOwnerByUserIdRequestPtr Request;
+        public:
+            explicit FUpdateTask(
+                const TSharedPtr<FDataOwnerDomain>& Self,
+                const Request::FUpdateDataOwnerByUserIdRequestPtr Request
+            );
+
+            FUpdateTask(
+                const FUpdateTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Account::Domain::Model::FDataOwnerDomain>> Result
+            ) override;
+        };
+        friend FUpdateTask;
+
+        TSharedPtr<FAsyncTask<FUpdateTask>> Update(
+            Request::FUpdateDataOwnerByUserIdRequestPtr Request
+        );
+
         static FString CreateCacheParentKey(
             TOptional<FString> NamespaceName,
             TOptional<FString> UserId,

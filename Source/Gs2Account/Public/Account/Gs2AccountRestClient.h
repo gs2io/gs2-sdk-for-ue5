@@ -118,6 +118,8 @@
 #include "Task/Rest/DeletePlatformIdByUserIdTask.h"
 #include "Request/GetDataOwnerByUserIdRequest.h"
 #include "Task/Rest/GetDataOwnerByUserIdTask.h"
+#include "Request/UpdateDataOwnerByUserIdRequest.h"
+#include "Task/Rest/UpdateDataOwnerByUserIdTask.h"
 #include "Request/DeleteDataOwnerByUserIdRequest.h"
 #include "Task/Rest/DeleteDataOwnerByUserIdTask.h"
 #include "Request/DescribeTakeOverTypeModelsRequest.h"
@@ -354,6 +356,10 @@ namespace Gs2::Account
 
         TSharedPtr<FAsyncTask<Task::Rest::FGetDataOwnerByUserIdTask>> GetDataOwnerByUserId(
             const Request::FGetDataOwnerByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FUpdateDataOwnerByUserIdTask>> UpdateDataOwnerByUserId(
+            const Request::FUpdateDataOwnerByUserIdRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::Rest::FDeleteDataOwnerByUserIdTask>> DeleteDataOwnerByUserId(

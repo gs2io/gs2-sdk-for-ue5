@@ -47,6 +47,8 @@ struct FGs2ChatRoomValue
     FString Name = "";
     UPROPERTY(Category = Gs2, BlueprintReadOnly)
     FString Metadata = "";
+    UPROPERTY(Category = Gs2, BlueprintReadOnly)
+    TArray<FString> WhiteListUserIds = TArray<FString>();
 };
 
 inline FGs2ChatRoomValue EzRoomToFGs2ChatRoomValue(
@@ -60,6 +62,15 @@ inline FGs2ChatRoomValue EzRoomToFGs2ChatRoomValue(
     }
     Value.Name = Model->GetName() ? *Model->GetName() : "";
     Value.Metadata = Model->GetMetadata() ? *Model->GetMetadata() : "";
+    Value.WhiteListUserIds = Model->GetWhiteListUserIds() ? [&]
+    {
+        TArray<FString> r;
+        for (auto v : *Model->GetWhiteListUserIds())
+        {
+            r.Add(v);
+        }
+        return r;
+    }() : TArray<FString>();
     return Value;
 }
 
@@ -69,7 +80,14 @@ inline Gs2::UE5::Chat::Model::FEzRoomPtr FGs2ChatRoomValueToEzRoom(
 {
     return MakeShared<Gs2::UE5::Chat::Model::FEzRoom>()
         ->WithName(Model.Name)
-        ->WithMetadata(Model.Metadata);
+        ->WithMetadata(Model.Metadata)
+        ->WithWhiteListUserIds([&]{
+            auto r = MakeShared<TArray<FString>>();
+            for (auto v : Model.WhiteListUserIds) {
+                r->Add(v);
+            }
+            return r;
+        }());
 }
 
 UCLASS()

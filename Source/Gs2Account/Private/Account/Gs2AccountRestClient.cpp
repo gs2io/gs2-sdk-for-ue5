@@ -469,6 +469,15 @@ namespace Gs2::Account
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::Rest::FUpdateDataOwnerByUserIdTask>> FGs2AccountRestClient::UpdateDataOwnerByUserId(
+        const Request::FUpdateDataOwnerByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FUpdateDataOwnerByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::Rest::FDeleteDataOwnerByUserIdTask>> FGs2AccountRestClient::DeleteDataOwnerByUserId(
         const Request::FDeleteDataOwnerByUserIdRequestPtr Request) const
     {

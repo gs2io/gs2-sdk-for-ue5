@@ -34,6 +34,14 @@ namespace Gs2::UE5::Chat::Model
         this->MetadataValue = Metadata;
         return SharedThis(this);
     }
+
+    TSharedPtr<FEzRoom> FEzRoom::WithWhiteListUserIds(
+        const TSharedPtr<TArray<FString>> WhiteListUserIds
+    )
+    {
+        this->WhiteListUserIdsValue = WhiteListUserIds;
+        return SharedThis(this);
+    }
     TOptional<FString> FEzRoom::GetName() const
     {
         return NameValue;
@@ -42,12 +50,17 @@ namespace Gs2::UE5::Chat::Model
     {
         return MetadataValue;
     }
+    TSharedPtr<TArray<FString>> FEzRoom::GetWhiteListUserIds() const
+    {
+        return WhiteListUserIdsValue;
+    }
 
     Gs2::Chat::Model::FRoomPtr FEzRoom::ToModel() const
     {
         return MakeShared<Gs2::Chat::Model::FRoom>()
             ->WithName(NameValue)
-            ->WithMetadata(MetadataValue);
+            ->WithMetadata(MetadataValue)
+            ->WithWhiteListUserIds(WhiteListUserIdsValue);
     }
 
     TSharedPtr<FEzRoom> FEzRoom::FromModel(const Gs2::Chat::Model::FRoomPtr Model)
@@ -58,6 +71,7 @@ namespace Gs2::UE5::Chat::Model
         }
         return MakeShared<FEzRoom>()
             ->WithName(Model->GetName())
-            ->WithMetadata(Model->GetMetadata());
+            ->WithMetadata(Model->GetMetadata())
+            ->WithWhiteListUserIds(Model->GetWhiteListUserIds());
     }
 }

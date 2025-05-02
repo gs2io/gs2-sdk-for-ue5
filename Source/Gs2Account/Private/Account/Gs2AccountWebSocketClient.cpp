@@ -469,6 +469,15 @@ namespace Gs2::Account
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::WebSocket::FUpdateDataOwnerByUserIdTask>> FGs2AccountWebSocketClient::UpdateDataOwnerByUserId(
+        const Request::FUpdateDataOwnerByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FUpdateDataOwnerByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::WebSocket::FDeleteDataOwnerByUserIdTask>> FGs2AccountWebSocketClient::DeleteDataOwnerByUserId(
         const Request::FDeleteDataOwnerByUserIdRequestPtr Request) const
     {

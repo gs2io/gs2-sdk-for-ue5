@@ -25,14 +25,18 @@ namespace Gs2::UE5::Chat::Model
 	{
         TOptional<FString> NameValue;
         TOptional<FString> MetadataValue;
+        TSharedPtr<TArray<FString>> WhiteListUserIdsValue;
 
 	public:
         TSharedPtr<FEzRoom> WithName(const TOptional<FString> Name);
         TSharedPtr<FEzRoom> WithMetadata(const TOptional<FString> Metadata);
+        TSharedPtr<FEzRoom> WithWhiteListUserIds(const TSharedPtr<TArray<FString>> WhiteListUserIds);
 
         TOptional<FString> GetName() const;
 
         TOptional<FString> GetMetadata() const;
+
+        TSharedPtr<TArray<FString>> GetWhiteListUserIds() const;
 
         Gs2::Chat::Model::FRoomPtr ToModel() const;
         static TSharedPtr<FEzRoom> FromModel(Gs2::Chat::Model::FRoomPtr Model);

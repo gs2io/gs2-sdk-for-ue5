@@ -333,6 +333,12 @@
 #include "Task/Rest/GetDataOwnerByUserIdTask.h"
 #include "Task/WebSocket/GetDataOwnerByUserIdTask.h"
 
+// UpdateDataOwnerByUserId
+#include "Request/UpdateDataOwnerByUserIdRequest.h"
+#include "Result/UpdateDataOwnerByUserIdResult.h"
+#include "Task/Rest/UpdateDataOwnerByUserIdTask.h"
+#include "Task/WebSocket/UpdateDataOwnerByUserIdTask.h"
+
 // DeleteDataOwnerByUserId
 #include "Request/DeleteDataOwnerByUserIdRequest.h"
 #include "Result/DeleteDataOwnerByUserIdResult.h"
