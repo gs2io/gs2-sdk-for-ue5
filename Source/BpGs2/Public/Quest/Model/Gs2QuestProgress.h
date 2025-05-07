@@ -45,6 +45,8 @@ struct FGs2QuestProgressValue
     UPROPERTY(Category = Gs2, BlueprintReadOnly)
     int64 RandomSeed = 0;
     UPROPERTY(Category = Gs2, BlueprintReadOnly)
+    FString Metadata = "";
+    UPROPERTY(Category = Gs2, BlueprintReadOnly)
     TArray<FGs2QuestReward> Rewards = TArray<FGs2QuestReward>();
     UPROPERTY(Category = Gs2, BlueprintReadOnly)
     TArray<FGs2QuestReward> FailedRewards = TArray<FGs2QuestReward>();
@@ -63,6 +65,7 @@ inline FGs2QuestProgressValue EzProgressToFGs2QuestProgressValue(
     Value.TransactionId = Model->GetTransactionId() ? *Model->GetTransactionId() : "";
     Value.QuestModelId = Model->GetQuestModelId() ? *Model->GetQuestModelId() : "";
     Value.RandomSeed = Model->GetRandomSeed() ? *Model->GetRandomSeed() : 0;
+    Value.Metadata = Model->GetMetadata() ? *Model->GetMetadata() : "";
     Value.Rewards = Model->GetRewards() ? [&]
     {
         TArray<FGs2QuestReward> r;
@@ -93,6 +96,7 @@ inline Gs2::UE5::Quest::Model::FEzProgressPtr FGs2QuestProgressValueToEzProgress
         ->WithTransactionId(Model.TransactionId)
         ->WithQuestModelId(Model.QuestModelId)
         ->WithRandomSeed(Model.RandomSeed)
+        ->WithMetadata(Model.Metadata)
         ->WithRewards([&]{
             auto r = MakeShared<TArray<Gs2::UE5::Quest::Model::FEzRewardPtr>>();
             for (auto v : Model.Rewards) {

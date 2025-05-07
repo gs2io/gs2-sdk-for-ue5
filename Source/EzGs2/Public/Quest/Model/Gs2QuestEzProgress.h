@@ -29,6 +29,7 @@ namespace Gs2::UE5::Quest::Model
         TOptional<FString> TransactionIdValue;
         TOptional<FString> QuestModelIdValue;
         TOptional<int64> RandomSeedValue;
+        TOptional<FString> MetadataValue;
         TSharedPtr<TArray<TSharedPtr<Gs2::UE5::Quest::Model::FEzReward>>> RewardsValue;
         TSharedPtr<TArray<TSharedPtr<Gs2::UE5::Quest::Model::FEzReward>>> FailedRewardsValue;
 
@@ -37,6 +38,7 @@ namespace Gs2::UE5::Quest::Model
         TSharedPtr<FEzProgress> WithTransactionId(const TOptional<FString> TransactionId);
         TSharedPtr<FEzProgress> WithQuestModelId(const TOptional<FString> QuestModelId);
         TSharedPtr<FEzProgress> WithRandomSeed(const TOptional<int64> RandomSeed);
+        TSharedPtr<FEzProgress> WithMetadata(const TOptional<FString> Metadata);
         TSharedPtr<FEzProgress> WithRewards(const TSharedPtr<TArray<TSharedPtr<Gs2::UE5::Quest::Model::FEzReward>>> Rewards);
         TSharedPtr<FEzProgress> WithFailedRewards(const TSharedPtr<TArray<TSharedPtr<Gs2::UE5::Quest::Model::FEzReward>>> FailedRewards);
 
@@ -48,6 +50,8 @@ namespace Gs2::UE5::Quest::Model
 
         TOptional<int64> GetRandomSeed() const;
         FString GetRandomSeedString() const;
+
+        TOptional<FString> GetMetadata() const;
 
         TSharedPtr<TArray<TSharedPtr<Gs2::UE5::Quest::Model::FEzReward>>> GetRewards() const;
 

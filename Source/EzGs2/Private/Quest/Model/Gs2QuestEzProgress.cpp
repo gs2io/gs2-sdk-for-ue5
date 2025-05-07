@@ -51,6 +51,14 @@ namespace Gs2::UE5::Quest::Model
         return SharedThis(this);
     }
 
+    TSharedPtr<FEzProgress> FEzProgress::WithMetadata(
+        const TOptional<FString> Metadata
+    )
+    {
+        this->MetadataValue = Metadata;
+        return SharedThis(this);
+    }
+
     TSharedPtr<FEzProgress> FEzProgress::WithRewards(
         const TSharedPtr<TArray<TSharedPtr<Gs2::UE5::Quest::Model::FEzReward>>> Rewards
     )
@@ -91,6 +99,10 @@ namespace Gs2::UE5::Quest::Model
         }
         return FString::Printf(TEXT("%lld"), RandomSeedValue.GetValue());
     }
+    TOptional<FString> FEzProgress::GetMetadata() const
+    {
+        return MetadataValue;
+    }
     TSharedPtr<TArray<TSharedPtr<Gs2::UE5::Quest::Model::FEzReward>>> FEzProgress::GetRewards() const
     {
         return RewardsValue;
@@ -107,6 +119,7 @@ namespace Gs2::UE5::Quest::Model
             ->WithTransactionId(TransactionIdValue)
             ->WithQuestModelId(QuestModelIdValue)
             ->WithRandomSeed(RandomSeedValue)
+            ->WithMetadata(MetadataValue)
             ->WithRewards([&]
                 {
                     auto v = MakeShared<TArray<TSharedPtr<Gs2::Quest::Model::FReward>>>();
@@ -148,6 +161,7 @@ namespace Gs2::UE5::Quest::Model
             ->WithTransactionId(Model->GetTransactionId())
             ->WithQuestModelId(Model->GetQuestModelId())
             ->WithRandomSeed(Model->GetRandomSeed())
+            ->WithMetadata(Model->GetMetadata())
             ->WithRewards([&]
                 {
                     auto v = MakeShared<TArray<TSharedPtr<FEzReward>>>();
