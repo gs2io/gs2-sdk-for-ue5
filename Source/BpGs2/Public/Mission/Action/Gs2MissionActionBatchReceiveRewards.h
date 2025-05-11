@@ -17,6 +17,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Mission/Model/Gs2MissionConfig.h"
 #include "Mission/Model/Gs2MissionComplete.h"
 #include "../../Core/Model/Gs2Error.h"
 #include "Kismet/BlueprintAsyncActionBase.h"
@@ -33,6 +34,7 @@ class BPGS2_API UGs2MissionBatchReceiveRewardsAsyncFunction : public UBlueprintA
 
     FGs2MissionOwnComplete Complete;
     TArray<FString> MissionTaskNames;
+    TArray<FGs2MissionConfig> Config;
 
 public:
 
@@ -48,7 +50,8 @@ public:
     static UGs2MissionBatchReceiveRewardsAsyncFunction* BatchReceiveRewards(
         UObject* WorldContextObject,
         FGs2MissionOwnComplete Complete,
-        TArray<FString> MissionTaskNames
+        TArray<FString> MissionTaskNames,
+        TArray<FGs2MissionConfig> Config
     );
 
     virtual void Activate() override;

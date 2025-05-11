@@ -48,8 +48,9 @@ namespace Gs2::UE5::Mission::Domain::Model
 
     FEzCompleteGameSessionDomain::FReceiveRewardsTask::FReceiveRewardsTask(
         TSharedPtr<FEzCompleteGameSessionDomain> Self,
-        FString MissionTaskName
-    ): Self(Self), MissionTaskName(MissionTaskName)
+        FString MissionTaskName,
+        TOptional<TArray<TSharedPtr<Gs2::UE5::Mission::Model::FEzConfig>>> Config
+    ): Self(Self), MissionTaskName(MissionTaskName), Config(Config)
     {
 
     }
@@ -63,6 +64,16 @@ namespace Gs2::UE5::Mission::Domain::Model
                 const auto Task = Self->Domain->Complete(
                     MakeShared<Gs2::Mission::Request::FCompleteRequest>()
                         ->WithMissionTaskName(MissionTaskName)
+                        ->WithConfig([&]{
+                            auto Arr = MakeShared<TArray<TSharedPtr<Gs2::Mission::Model::FConfig>>>();
+                            if (!Config.IsSet()) {
+                                return Arr;
+                            }
+                            for (auto Value : *Config) {
+                                Arr->Add(Value->ToModel());
+                            }
+                            return Arr;
+                        }())
                 );
                 Task->StartSynchronousTask();
                 if (Task->GetTask().IsError())
@@ -91,19 +102,22 @@ namespace Gs2::UE5::Mission::Domain::Model
     }
 
     TSharedPtr<FAsyncTask<FEzCompleteGameSessionDomain::FReceiveRewardsTask>> FEzCompleteGameSessionDomain::ReceiveRewards(
-        FString MissionTaskName
+        FString MissionTaskName,
+        TOptional<TArray<TSharedPtr<Gs2::UE5::Mission::Model::FEzConfig>>> Config
     )
     {
         return Gs2::Core::Util::New<FAsyncTask<FReceiveRewardsTask>>(
             this->AsShared(),
-            MissionTaskName
+            MissionTaskName,
+            Config
         );
     }
 
     FEzCompleteGameSessionDomain::FBatchReceiveRewardsTask::FBatchReceiveRewardsTask(
         TSharedPtr<FEzCompleteGameSessionDomain> Self,
-        TArray<FString> MissionTaskNames
-    ): Self(Self), MissionTaskNames(MissionTaskNames)
+        TArray<FString> MissionTaskNames,
+        TOptional<TArray<TSharedPtr<Gs2::UE5::Mission::Model::FEzConfig>>> Config
+    ): Self(Self), MissionTaskNames(MissionTaskNames), Config(Config)
     {
 
     }
@@ -120,6 +134,16 @@ namespace Gs2::UE5::Mission::Domain::Model
                             auto Arr = MakeShared<TArray<FString>>();
                             for (auto Value : MissionTaskNames) {
                                 Arr->Add(Value);
+                            }
+                            return Arr;
+                        }())
+                        ->WithConfig([&]{
+                            auto Arr = MakeShared<TArray<TSharedPtr<Gs2::Mission::Model::FConfig>>>();
+                            if (!Config.IsSet()) {
+                                return Arr;
+                            }
+                            for (auto Value : *Config) {
+                                Arr->Add(Value->ToModel());
                             }
                             return Arr;
                         }())
@@ -151,12 +175,14 @@ namespace Gs2::UE5::Mission::Domain::Model
     }
 
     TSharedPtr<FAsyncTask<FEzCompleteGameSessionDomain::FBatchReceiveRewardsTask>> FEzCompleteGameSessionDomain::BatchReceiveRewards(
-        TArray<FString> MissionTaskNames
+        TArray<FString> MissionTaskNames,
+        TOptional<TArray<TSharedPtr<Gs2::UE5::Mission::Model::FEzConfig>>> Config
     )
     {
         return Gs2::Core::Util::New<FAsyncTask<FBatchReceiveRewardsTask>>(
             this->AsShared(),
-            MissionTaskNames
+            MissionTaskNames,
+            Config
         );
     }
 

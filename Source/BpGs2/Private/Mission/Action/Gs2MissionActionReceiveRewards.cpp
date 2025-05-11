@@ -27,7 +27,8 @@ UGs2MissionReceiveRewardsAsyncFunction::UGs2MissionReceiveRewardsAsyncFunction(
 UGs2MissionReceiveRewardsAsyncFunction* UGs2MissionReceiveRewardsAsyncFunction::ReceiveRewards(
     UObject* WorldContextObject,
     FGs2MissionOwnComplete Complete,
-    FString MissionTaskName
+    FString MissionTaskName,
+    TArray<FGs2MissionConfig> Config
 )
 {
     UGs2MissionReceiveRewardsAsyncFunction* Action = NewObject<UGs2MissionReceiveRewardsAsyncFunction>();
@@ -38,6 +39,7 @@ UGs2MissionReceiveRewardsAsyncFunction* UGs2MissionReceiveRewardsAsyncFunction::
     }
     Action->Complete = Complete;
     Action->MissionTaskName = MissionTaskName;
+    Action->Config = Config;
     return Action;
 }
 
@@ -49,7 +51,16 @@ void UGs2MissionReceiveRewardsAsyncFunction::Activate()
     }
 
     auto Future = Complete.Value->ReceiveRewards(
-        MissionTaskName
+        MissionTaskName,
+        [&]
+        {
+            TArray<Gs2::UE5::Mission::Model::FEzConfigPtr> r;
+            for (auto v : Config)
+            {
+                r.Add(FGs2MissionConfigToEzConfig(v));
+            }
+            return r;
+        }()
     );
     Future->GetTask().OnSuccessDelegate().BindLambda([&](auto Result)
     {

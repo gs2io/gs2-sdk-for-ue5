@@ -32,7 +32,7 @@ namespace Gs2::Ranking2::Model
         TOptional<FString> ScorerUserIdValue;
         TOptional<int64> ScoreValue;
         TOptional<FString> MetadataValue;
-        TOptional<int64> InvertCreatedAtValue;
+        TOptional<int64> InvertUpdatedAtValue;
         TOptional<int64> CreatedAtValue;
         TOptional<int64> UpdatedAtValue;
         TOptional<int64> RevisionValue;
@@ -53,7 +53,7 @@ namespace Gs2::Ranking2::Model
         TSharedPtr<FSubscribeRankingData> WithScorerUserId(const TOptional<FString> ScorerUserId);
         TSharedPtr<FSubscribeRankingData> WithScore(const TOptional<int64> Score);
         TSharedPtr<FSubscribeRankingData> WithMetadata(const TOptional<FString> Metadata);
-        TSharedPtr<FSubscribeRankingData> WithInvertCreatedAt(const TOptional<int64> InvertCreatedAt);
+        TSharedPtr<FSubscribeRankingData> WithInvertUpdatedAt(const TOptional<int64> InvertUpdatedAt);
         TSharedPtr<FSubscribeRankingData> WithCreatedAt(const TOptional<int64> CreatedAt);
         TSharedPtr<FSubscribeRankingData> WithUpdatedAt(const TOptional<int64> UpdatedAt);
         TSharedPtr<FSubscribeRankingData> WithRevision(const TOptional<int64> Revision);
@@ -71,8 +71,8 @@ namespace Gs2::Ranking2::Model
         TOptional<int64> GetScore() const;
         FString GetScoreString() const;
         TOptional<FString> GetMetadata() const;
-        TOptional<int64> GetInvertCreatedAt() const;
-        FString GetInvertCreatedAtString() const;
+        TOptional<int64> GetInvertUpdatedAt() const;
+        FString GetInvertUpdatedAtString() const;
         TOptional<int64> GetCreatedAt() const;
         FString GetCreatedAtString() const;
         TOptional<int64> GetUpdatedAt() const;

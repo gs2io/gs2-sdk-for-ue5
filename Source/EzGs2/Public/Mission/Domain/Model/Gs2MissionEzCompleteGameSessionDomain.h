@@ -66,11 +66,13 @@ namespace Gs2::UE5::Mission::Domain::Model
         {
             TSharedPtr<FEzCompleteGameSessionDomain> Self;
             FString MissionTaskName;
+            TOptional<TArray<TSharedPtr<Gs2::UE5::Mission::Model::FEzConfig>>> Config;
 
         public:
             explicit FReceiveRewardsTask(
                 TSharedPtr<FEzCompleteGameSessionDomain> Self,
-                FString MissionTaskName
+                FString MissionTaskName,
+                TOptional<TArray<TSharedPtr<Gs2::UE5::Mission::Model::FEzConfig>>> Config = TOptional<TArray<TSharedPtr<Gs2::UE5::Mission::Model::FEzConfig>>>()
             );
 
             virtual Gs2::Core::Model::FGs2ErrorPtr Action(
@@ -80,7 +82,8 @@ namespace Gs2::UE5::Mission::Domain::Model
         friend FReceiveRewardsTask;
 
         TSharedPtr<FAsyncTask<FReceiveRewardsTask>> ReceiveRewards(
-            FString MissionTaskName
+            FString MissionTaskName,
+            TOptional<TArray<TSharedPtr<Gs2::UE5::Mission::Model::FEzConfig>>> Config = TOptional<TArray<TSharedPtr<Gs2::UE5::Mission::Model::FEzConfig>>>()
         );
 
         class EZGS2_API FBatchReceiveRewardsTask :
@@ -89,11 +92,13 @@ namespace Gs2::UE5::Mission::Domain::Model
         {
             TSharedPtr<FEzCompleteGameSessionDomain> Self;
             TArray<FString> MissionTaskNames;
+            TOptional<TArray<TSharedPtr<Gs2::UE5::Mission::Model::FEzConfig>>> Config;
 
         public:
             explicit FBatchReceiveRewardsTask(
                 TSharedPtr<FEzCompleteGameSessionDomain> Self,
-                TArray<FString> MissionTaskNames
+                TArray<FString> MissionTaskNames,
+                TOptional<TArray<TSharedPtr<Gs2::UE5::Mission::Model::FEzConfig>>> Config = TOptional<TArray<TSharedPtr<Gs2::UE5::Mission::Model::FEzConfig>>>()
             );
 
             virtual Gs2::Core::Model::FGs2ErrorPtr Action(
@@ -103,7 +108,8 @@ namespace Gs2::UE5::Mission::Domain::Model
         friend FBatchReceiveRewardsTask;
 
         TSharedPtr<FAsyncTask<FBatchReceiveRewardsTask>> BatchReceiveRewards(
-            TArray<FString> MissionTaskNames
+            TArray<FString> MissionTaskNames,
+            TOptional<TArray<TSharedPtr<Gs2::UE5::Mission::Model::FEzConfig>>> Config = TOptional<TArray<TSharedPtr<Gs2::UE5::Mission::Model::FEzConfig>>>()
         );
 
         class EZGS2_API FEvaluateCompleteTask :

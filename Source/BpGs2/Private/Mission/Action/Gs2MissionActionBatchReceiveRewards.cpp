@@ -27,7 +27,8 @@ UGs2MissionBatchReceiveRewardsAsyncFunction::UGs2MissionBatchReceiveRewardsAsync
 UGs2MissionBatchReceiveRewardsAsyncFunction* UGs2MissionBatchReceiveRewardsAsyncFunction::BatchReceiveRewards(
     UObject* WorldContextObject,
     FGs2MissionOwnComplete Complete,
-    TArray<FString> MissionTaskNames
+    TArray<FString> MissionTaskNames,
+    TArray<FGs2MissionConfig> Config
 )
 {
     UGs2MissionBatchReceiveRewardsAsyncFunction* Action = NewObject<UGs2MissionBatchReceiveRewardsAsyncFunction>();
@@ -38,6 +39,7 @@ UGs2MissionBatchReceiveRewardsAsyncFunction* UGs2MissionBatchReceiveRewardsAsync
     }
     Action->Complete = Complete;
     Action->MissionTaskNames = MissionTaskNames;
+    Action->Config = Config;
     return Action;
 }
 
@@ -49,7 +51,16 @@ void UGs2MissionBatchReceiveRewardsAsyncFunction::Activate()
     }
 
     auto Future = Complete.Value->BatchReceiveRewards(
-        MissionTaskNames
+        MissionTaskNames,
+        [&]
+        {
+            TArray<Gs2::UE5::Mission::Model::FEzConfigPtr> r;
+            for (auto v : Config)
+            {
+                r.Add(FGs2MissionConfigToEzConfig(v));
+            }
+            return r;
+        }()
     );
     Future->GetTask().OnSuccessDelegate().BindLambda([&](auto Result)
     {
