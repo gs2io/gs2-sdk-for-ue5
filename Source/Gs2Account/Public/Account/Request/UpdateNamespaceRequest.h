@@ -36,6 +36,7 @@ namespace Gs2::Account::Request
         TSharedPtr<Model::FScriptSetting> CreateTakeOverScriptValue;
         TSharedPtr<Model::FScriptSetting> DoTakeOverScriptValue;
         TSharedPtr<Model::FScriptSetting> BanScriptValue;
+        TSharedPtr<Model::FScriptSetting> UnBanScriptValue;
         TSharedPtr<Model::FLogSetting> LogSettingValue;
         
     public:
@@ -55,6 +56,7 @@ namespace Gs2::Account::Request
         TSharedPtr<FUpdateNamespaceRequest> WithCreateTakeOverScript(const TSharedPtr<Model::FScriptSetting> CreateTakeOverScript);
         TSharedPtr<FUpdateNamespaceRequest> WithDoTakeOverScript(const TSharedPtr<Model::FScriptSetting> DoTakeOverScript);
         TSharedPtr<FUpdateNamespaceRequest> WithBanScript(const TSharedPtr<Model::FScriptSetting> BanScript);
+        TSharedPtr<FUpdateNamespaceRequest> WithUnBanScript(const TSharedPtr<Model::FScriptSetting> UnBanScript);
         TSharedPtr<FUpdateNamespaceRequest> WithLogSetting(const TSharedPtr<Model::FLogSetting> LogSetting);
 
         TOptional<FString> GetContextStack() const;
@@ -67,6 +69,7 @@ namespace Gs2::Account::Request
         TSharedPtr<Model::FScriptSetting> GetCreateTakeOverScript() const;
         TSharedPtr<Model::FScriptSetting> GetDoTakeOverScript() const;
         TSharedPtr<Model::FScriptSetting> GetBanScript() const;
+        TSharedPtr<Model::FScriptSetting> GetUnBanScript() const;
         TSharedPtr<Model::FLogSetting> GetLogSetting() const;
 
         static TSharedPtr<FUpdateNamespaceRequest> FromJson(const TSharedPtr<FJsonObject> Data);

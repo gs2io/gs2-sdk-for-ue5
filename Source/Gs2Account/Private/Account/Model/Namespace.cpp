@@ -29,6 +29,7 @@ namespace Gs2::Account::Model
         CreateTakeOverScriptValue(nullptr),
         DoTakeOverScriptValue(nullptr),
         BanScriptValue(nullptr),
+        UnBanScriptValue(nullptr),
         LogSettingValue(nullptr),
         CreatedAtValue(TOptional<int64>()),
         UpdatedAtValue(TOptional<int64>()),
@@ -49,6 +50,7 @@ namespace Gs2::Account::Model
         CreateTakeOverScriptValue(From.CreateTakeOverScriptValue),
         DoTakeOverScriptValue(From.DoTakeOverScriptValue),
         BanScriptValue(From.BanScriptValue),
+        UnBanScriptValue(From.UnBanScriptValue),
         LogSettingValue(From.LogSettingValue),
         CreatedAtValue(From.CreatedAtValue),
         UpdatedAtValue(From.UpdatedAtValue),
@@ -133,6 +135,14 @@ namespace Gs2::Account::Model
     )
     {
         this->BanScriptValue = BanScript;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FNamespace> FNamespace::WithUnBanScript(
+        const TSharedPtr<FScriptSetting> UnBanScript
+    )
+    {
+        this->UnBanScriptValue = UnBanScript;
         return SharedThis(this);
     }
 
@@ -224,6 +234,10 @@ namespace Gs2::Account::Model
     TSharedPtr<FScriptSetting> FNamespace::GetBanScript() const
     {
         return BanScriptValue;
+    }
+    TSharedPtr<FScriptSetting> FNamespace::GetUnBanScript() const
+    {
+        return UnBanScriptValue;
     }
     TSharedPtr<FLogSetting> FNamespace::GetLogSetting() const
     {
@@ -393,6 +407,14 @@ namespace Gs2::Account::Model
                     }
                     return Model::FScriptSetting::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("banScript")));
                  }() : nullptr)
+            ->WithUnBanScript(Data->HasField(ANSI_TO_TCHAR("unBanScript")) ? [Data]() -> Model::FScriptSettingPtr
+                {
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("unBanScript")))
+                    {
+                        return nullptr;
+                    }
+                    return Model::FScriptSetting::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("unBanScript")));
+                 }() : nullptr)
             ->WithLogSetting(Data->HasField(ANSI_TO_TCHAR("logSetting")) ? [Data]() -> Model::FLogSettingPtr
                 {
                     if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("logSetting")))
@@ -472,6 +494,10 @@ namespace Gs2::Account::Model
         if (BanScriptValue != nullptr && BanScriptValue.IsValid())
         {
             JsonRootObject->SetObjectField("banScript", BanScriptValue->ToJson());
+        }
+        if (UnBanScriptValue != nullptr && UnBanScriptValue.IsValid())
+        {
+            JsonRootObject->SetObjectField("unBanScript", UnBanScriptValue->ToJson());
         }
         if (LogSettingValue != nullptr && LogSettingValue.IsValid())
         {

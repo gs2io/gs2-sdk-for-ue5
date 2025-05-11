@@ -112,6 +112,10 @@ namespace Gs2::Account::Task::Rest
             {
                 JsonRootObject->SetObjectField("banScript", this->Request->GetBanScript()->ToJson());
             }
+            if (this->Request->GetUnBanScript() != nullptr && this->Request->GetUnBanScript().IsValid())
+            {
+                JsonRootObject->SetObjectField("unBanScript", this->Request->GetUnBanScript()->ToJson());
+            }
             if (this->Request->GetLogSetting() != nullptr && this->Request->GetLogSetting().IsValid())
             {
                 JsonRootObject->SetObjectField("logSetting", this->Request->GetLogSetting()->ToJson());
