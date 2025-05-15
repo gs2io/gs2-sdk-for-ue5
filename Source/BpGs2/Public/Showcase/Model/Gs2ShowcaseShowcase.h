@@ -41,6 +41,8 @@ struct FGs2ShowcaseShowcaseValue
     FString Metadata = "";
     UPROPERTY(Category = Gs2, BlueprintReadOnly)
     TArray<FGs2ShowcaseDisplayItemValue> DisplayItems = TArray<FGs2ShowcaseDisplayItemValue>();
+    UPROPERTY(Category = Gs2, BlueprintReadOnly)
+    FString SalesPeriodEventId = "";
 };
 
 inline FGs2ShowcaseShowcaseValue EzShowcaseToFGs2ShowcaseShowcaseValue(
@@ -63,6 +65,7 @@ inline FGs2ShowcaseShowcaseValue EzShowcaseToFGs2ShowcaseShowcaseValue(
         }
         return r;
     }() : TArray<FGs2ShowcaseDisplayItemValue>();
+    Value.SalesPeriodEventId = Model->GetSalesPeriodEventId() ? *Model->GetSalesPeriodEventId() : "";
     return Value;
 }
 
@@ -79,7 +82,8 @@ inline Gs2::UE5::Showcase::Model::FEzShowcasePtr FGs2ShowcaseShowcaseValueToEzSh
                 r->Add(FGs2ShowcaseDisplayItemValueToEzDisplayItem(v));
             }
             return r;
-        }());
+        }())
+        ->WithSalesPeriodEventId(Model.SalesPeriodEventId);
 }
 
 UCLASS()

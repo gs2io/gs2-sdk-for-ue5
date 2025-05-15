@@ -42,6 +42,14 @@ namespace Gs2::UE5::Showcase::Model
         this->DisplayItemsValue = DisplayItems;
         return SharedThis(this);
     }
+
+    TSharedPtr<FEzShowcase> FEzShowcase::WithSalesPeriodEventId(
+        const TOptional<FString> SalesPeriodEventId
+    )
+    {
+        this->SalesPeriodEventIdValue = SalesPeriodEventId;
+        return SharedThis(this);
+    }
     TOptional<FString> FEzShowcase::GetName() const
     {
         return NameValue;
@@ -53,6 +61,10 @@ namespace Gs2::UE5::Showcase::Model
     TSharedPtr<TArray<TSharedPtr<Gs2::UE5::Showcase::Model::FEzDisplayItem>>> FEzShowcase::GetDisplayItems() const
     {
         return DisplayItemsValue;
+    }
+    TOptional<FString> FEzShowcase::GetSalesPeriodEventId() const
+    {
+        return SalesPeriodEventIdValue;
     }
 
     Gs2::Showcase::Model::FShowcasePtr FEzShowcase::ToModel() const
@@ -73,7 +85,8 @@ namespace Gs2::UE5::Showcase::Model
                     }
                     return v;
                 }()
-            );
+            )
+            ->WithSalesPeriodEventId(SalesPeriodEventIdValue);
     }
 
     TSharedPtr<FEzShowcase> FEzShowcase::FromModel(const Gs2::Showcase::Model::FShowcasePtr Model)
@@ -98,6 +111,7 @@ namespace Gs2::UE5::Showcase::Model
                     }
                     return v;
                 }()
-            );
+            )
+            ->WithSalesPeriodEventId(Model->GetSalesPeriodEventId());
     }
 }

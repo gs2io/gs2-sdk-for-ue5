@@ -27,17 +27,21 @@ namespace Gs2::UE5::Showcase::Model
         TOptional<FString> NameValue;
         TOptional<FString> MetadataValue;
         TSharedPtr<TArray<TSharedPtr<Gs2::UE5::Showcase::Model::FEzDisplayItem>>> DisplayItemsValue;
+        TOptional<FString> SalesPeriodEventIdValue;
 
 	public:
         TSharedPtr<FEzShowcase> WithName(const TOptional<FString> Name);
         TSharedPtr<FEzShowcase> WithMetadata(const TOptional<FString> Metadata);
         TSharedPtr<FEzShowcase> WithDisplayItems(const TSharedPtr<TArray<TSharedPtr<Gs2::UE5::Showcase::Model::FEzDisplayItem>>> DisplayItems);
+        TSharedPtr<FEzShowcase> WithSalesPeriodEventId(const TOptional<FString> SalesPeriodEventId);
 
         TOptional<FString> GetName() const;
 
         TOptional<FString> GetMetadata() const;
 
         TSharedPtr<TArray<TSharedPtr<Gs2::UE5::Showcase::Model::FEzDisplayItem>>> GetDisplayItems() const;
+
+        TOptional<FString> GetSalesPeriodEventId() const;
 
         Gs2::Showcase::Model::FShowcasePtr ToModel() const;
         static TSharedPtr<FEzShowcase> FromModel(Gs2::Showcase::Model::FShowcasePtr Model);
