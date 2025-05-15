@@ -46,6 +46,138 @@ namespace Gs2::UE5::Dictionary::Domain::Model
 
     }
 
+    FEzUserGameSessionDomain::FAddLikesTask::FAddLikesTask(
+        TSharedPtr<FEzUserGameSessionDomain> Self,
+        TOptional<TArray<FString>> EntryModelNames
+    ): Self(Self), EntryModelNames(EntryModelNames)
+    {
+
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FEzUserGameSessionDomain::FAddLikesTask::Action(
+        TSharedPtr<TSharedPtr<TArray<TSharedPtr<Gs2::UE5::Dictionary::Domain::Model::FEzLikeGameSessionDomain>>>> Result
+    )
+    {
+        const auto Future = Self->ConnectionValue->Run(
+            [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
+                const auto Task = Self->Domain->AddLikes(
+                    MakeShared<Gs2::Dictionary::Request::FAddLikesRequest>()
+                        ->WithEntryModelNames([&]{
+                            auto Arr = MakeShared<TArray<FString>>();
+                            if (!EntryModelNames.IsSet()) {
+                                return Arr;
+                            }
+                            for (auto Value : *EntryModelNames) {
+                                Arr->Add(Value);
+                            }
+                            return Arr;
+                        }())
+                );
+                Task->StartSynchronousTask();
+                if (Task->GetTask().IsError())
+                {
+                    Task->EnsureCompletion();
+                    return Task->GetTask().Error();
+                }
+                *Result = MakeShared<TArray<TSharedPtr<Gs2::UE5::Dictionary::Domain::Model::FEzLikeGameSessionDomain>>>();
+                for (auto Value : *Task->GetTask().Result()) {
+                    (**Result).Add(MakeShared<Gs2::UE5::Dictionary::Domain::Model::FEzLikeGameSessionDomain>(
+                        Value,
+                        Self->GameSession,
+                        Self->ConnectionValue
+                    ));
+                }
+                Task->EnsureCompletion();
+                return nullptr;
+            },
+            nullptr
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            Future->EnsureCompletion();
+            return Future->GetTask().Error();
+        }
+        Future->EnsureCompletion();
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FEzUserGameSessionDomain::FAddLikesTask>> FEzUserGameSessionDomain::AddLikes(
+        TOptional<TArray<FString>> EntryModelNames
+    )
+    {
+        return Gs2::Core::Util::New<FAsyncTask<FAddLikesTask>>(
+            this->AsShared(),
+            EntryModelNames
+        );
+    }
+
+    FEzUserGameSessionDomain::FDeleteLikesTask::FDeleteLikesTask(
+        TSharedPtr<FEzUserGameSessionDomain> Self,
+        TOptional<TArray<FString>> EntryModelNames
+    ): Self(Self), EntryModelNames(EntryModelNames)
+    {
+
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FEzUserGameSessionDomain::FDeleteLikesTask::Action(
+        TSharedPtr<TSharedPtr<TArray<TSharedPtr<Gs2::UE5::Dictionary::Domain::Model::FEzLikeGameSessionDomain>>>> Result
+    )
+    {
+        const auto Future = Self->ConnectionValue->Run(
+            [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
+                const auto Task = Self->Domain->DeleteLikes(
+                    MakeShared<Gs2::Dictionary::Request::FDeleteLikesRequest>()
+                        ->WithEntryModelNames([&]{
+                            auto Arr = MakeShared<TArray<FString>>();
+                            if (!EntryModelNames.IsSet()) {
+                                return Arr;
+                            }
+                            for (auto Value : *EntryModelNames) {
+                                Arr->Add(Value);
+                            }
+                            return Arr;
+                        }())
+                );
+                Task->StartSynchronousTask();
+                if (Task->GetTask().IsError())
+                {
+                    Task->EnsureCompletion();
+                    return Task->GetTask().Error();
+                }
+                *Result = MakeShared<TArray<TSharedPtr<Gs2::UE5::Dictionary::Domain::Model::FEzLikeGameSessionDomain>>>();
+                for (auto Value : *Task->GetTask().Result()) {
+                    (**Result).Add(MakeShared<Gs2::UE5::Dictionary::Domain::Model::FEzLikeGameSessionDomain>(
+                        Value,
+                        Self->GameSession,
+                        Self->ConnectionValue
+                    ));
+                }
+                Task->EnsureCompletion();
+                return nullptr;
+            },
+            nullptr
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            Future->EnsureCompletion();
+            return Future->GetTask().Error();
+        }
+        Future->EnsureCompletion();
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FEzUserGameSessionDomain::FDeleteLikesTask>> FEzUserGameSessionDomain::DeleteLikes(
+        TOptional<TArray<FString>> EntryModelNames
+    )
+    {
+        return Gs2::Core::Util::New<FAsyncTask<FDeleteLikesTask>>(
+            this->AsShared(),
+            EntryModelNames
+        );
+    }
+
     Gs2::UE5::Dictionary::Domain::Iterator::FEzDescribeEntriesIteratorPtr FEzUserGameSessionDomain::Entries(
     ) const
     {

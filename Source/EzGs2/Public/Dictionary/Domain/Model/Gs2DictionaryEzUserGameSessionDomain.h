@@ -51,6 +51,52 @@ namespace Gs2::UE5::Dictionary::Domain::Model
             Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
 
+        class EZGS2_API FAddLikesTask :
+            public Gs2::Core::Util::TGs2Future<TArray<TSharedPtr<Gs2::UE5::Dictionary::Domain::Model::FEzLikeGameSessionDomain>>>,
+            public TSharedFromThis<FAddLikesTask>
+        {
+            TSharedPtr<FEzUserGameSessionDomain> Self;
+            TOptional<TArray<FString>> EntryModelNames;
+
+        public:
+            explicit FAddLikesTask(
+                TSharedPtr<FEzUserGameSessionDomain> Self,
+                TOptional<TArray<FString>> EntryModelNames = TOptional<TArray<FString>>()
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<TArray<TSharedPtr<Gs2::UE5::Dictionary::Domain::Model::FEzLikeGameSessionDomain>>>> Result
+            ) override;
+        };
+        friend FAddLikesTask;
+
+        TSharedPtr<FAsyncTask<FAddLikesTask>> AddLikes(
+            TOptional<TArray<FString>> EntryModelNames = TOptional<TArray<FString>>()
+        );
+
+        class EZGS2_API FDeleteLikesTask :
+            public Gs2::Core::Util::TGs2Future<TArray<TSharedPtr<Gs2::UE5::Dictionary::Domain::Model::FEzLikeGameSessionDomain>>>,
+            public TSharedFromThis<FDeleteLikesTask>
+        {
+            TSharedPtr<FEzUserGameSessionDomain> Self;
+            TOptional<TArray<FString>> EntryModelNames;
+
+        public:
+            explicit FDeleteLikesTask(
+                TSharedPtr<FEzUserGameSessionDomain> Self,
+                TOptional<TArray<FString>> EntryModelNames = TOptional<TArray<FString>>()
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<TArray<TSharedPtr<Gs2::UE5::Dictionary::Domain::Model::FEzLikeGameSessionDomain>>>> Result
+            ) override;
+        };
+        friend FDeleteLikesTask;
+
+        TSharedPtr<FAsyncTask<FDeleteLikesTask>> DeleteLikes(
+            TOptional<TArray<FString>> EntryModelNames = TOptional<TArray<FString>>()
+        );
+
         Gs2::UE5::Dictionary::Domain::Iterator::FEzDescribeEntriesIteratorPtr Entries(
         ) const;
 
