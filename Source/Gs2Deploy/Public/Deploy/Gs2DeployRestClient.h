@@ -52,6 +52,8 @@
 #include "Task/Rest/DeleteStackResourcesTask.h"
 #include "Request/DeleteStackEntityRequest.h"
 #include "Task/Rest/DeleteStackEntityTask.h"
+#include "Request/GetServiceVersionRequest.h"
+#include "Task/Rest/GetServiceVersionTask.h"
 #include "Request/DescribeResourcesRequest.h"
 #include "Task/Rest/DescribeResourcesTask.h"
 #include "Request/GetResourceRequest.h"
@@ -142,6 +144,10 @@ namespace Gs2::Deploy
 
         TSharedPtr<FAsyncTask<Task::Rest::FDeleteStackEntityTask>> DeleteStackEntity(
             const Request::FDeleteStackEntityRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FGetServiceVersionTask>> GetServiceVersion(
+            const Request::FGetServiceVersionRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::Rest::FDescribeResourcesTask>> DescribeResources(

@@ -72,4 +72,13 @@ namespace Gs2::Guard
             Request
         );
     }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FGetServiceVersionTask>> FGs2GuardRestClient::GetServiceVersion(
+        const Request::FGetServiceVersionRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FGetServiceVersionTask>>(
+            Session,
+            Request
+        );
+    }
 }

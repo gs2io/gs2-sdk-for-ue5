@@ -73,6 +73,15 @@ namespace Gs2::Quest
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::WebSocket::FGetServiceVersionTask>> FGs2QuestWebSocketClient::GetServiceVersion(
+        const Request::FGetServiceVersionRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FGetServiceVersionTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::WebSocket::FDumpUserDataByUserIdTask>> FGs2QuestWebSocketClient::DumpUserDataByUserId(
         const Request::FDumpUserDataByUserIdRequestPtr Request) const
     {

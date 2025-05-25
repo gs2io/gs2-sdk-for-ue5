@@ -73,6 +73,15 @@ namespace Gs2::Distributor
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::WebSocket::FGetServiceVersionTask>> FGs2DistributorWebSocketClient::GetServiceVersion(
+        const Request::FGetServiceVersionRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FGetServiceVersionTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::WebSocket::FDescribeDistributorModelMastersTask>> FGs2DistributorWebSocketClient::DescribeDistributorModelMasters(
         const Request::FDescribeDistributorModelMastersRequestPtr Request) const
     {

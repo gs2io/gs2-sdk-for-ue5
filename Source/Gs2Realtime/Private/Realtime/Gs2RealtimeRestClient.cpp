@@ -82,6 +82,15 @@ namespace Gs2::Realtime
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::Rest::FGetServiceVersionTask>> FGs2RealtimeRestClient::GetServiceVersion(
+        const Request::FGetServiceVersionRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FGetServiceVersionTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::Rest::FDescribeRoomsTask>> FGs2RealtimeRestClient::DescribeRooms(
         const Request::FDescribeRoomsRequestPtr Request) const
     {

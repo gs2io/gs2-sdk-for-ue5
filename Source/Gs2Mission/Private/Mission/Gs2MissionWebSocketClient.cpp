@@ -343,6 +343,15 @@ namespace Gs2::Mission
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::WebSocket::FGetServiceVersionTask>> FGs2MissionWebSocketClient::GetServiceVersion(
+        const Request::FGetServiceVersionRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FGetServiceVersionTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::WebSocket::FDumpUserDataByUserIdTask>> FGs2MissionWebSocketClient::DumpUserDataByUserId(
         const Request::FDumpUserDataByUserIdRequestPtr Request) const
     {

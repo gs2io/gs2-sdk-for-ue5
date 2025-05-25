@@ -73,6 +73,15 @@ namespace Gs2::LoginReward
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::Rest::FGetServiceVersionTask>> FGs2LoginRewardRestClient::GetServiceVersion(
+        const Request::FGetServiceVersionRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FGetServiceVersionTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::Rest::FDumpUserDataByUserIdTask>> FGs2LoginRewardRestClient::DumpUserDataByUserId(
         const Request::FDumpUserDataByUserIdRequestPtr Request) const
     {

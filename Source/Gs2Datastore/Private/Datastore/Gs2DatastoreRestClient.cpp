@@ -73,6 +73,15 @@ namespace Gs2::Datastore
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::Rest::FGetServiceVersionTask>> FGs2DatastoreRestClient::GetServiceVersion(
+        const Request::FGetServiceVersionRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FGetServiceVersionTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::Rest::FDumpUserDataByUserIdTask>> FGs2DatastoreRestClient::DumpUserDataByUserId(
         const Request::FDumpUserDataByUserIdRequestPtr Request) const
     {

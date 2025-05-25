@@ -73,6 +73,15 @@ namespace Gs2::Datastore
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::WebSocket::FGetServiceVersionTask>> FGs2DatastoreWebSocketClient::GetServiceVersion(
+        const Request::FGetServiceVersionRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FGetServiceVersionTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::WebSocket::FDumpUserDataByUserIdTask>> FGs2DatastoreWebSocketClient::DumpUserDataByUserId(
         const Request::FDumpUserDataByUserIdRequestPtr Request) const
     {

@@ -54,6 +54,8 @@
 #include "Task/WebSocket/AttachGuardTask.h"
 #include "Request/DetachGuardRequest.h"
 #include "Task/WebSocket/DetachGuardTask.h"
+#include "Request/GetServiceVersionRequest.h"
+#include "Task/WebSocket/GetServiceVersionTask.h"
 #include "Request/CreatePasswordRequest.h"
 #include "Task/WebSocket/CreatePasswordTask.h"
 #include "Request/GetPasswordRequest.h"
@@ -158,6 +160,10 @@ namespace Gs2::Identifier
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FDetachGuardTask>> DetachGuard(
             const Request::FDetachGuardRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FGetServiceVersionTask>> GetServiceVersion(
+            const Request::FGetServiceVersionRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FCreatePasswordTask>> CreatePassword(

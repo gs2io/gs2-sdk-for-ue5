@@ -30,6 +30,8 @@
 #include "Task/Rest/UpdateNamespaceTask.h"
 #include "Request/DeleteNamespaceRequest.h"
 #include "Task/Rest/DeleteNamespaceTask.h"
+#include "Request/GetServiceVersionRequest.h"
+#include "Task/Rest/GetServiceVersionTask.h"
 #include "Request/DescribeKeysRequest.h"
 #include "Task/Rest/DescribeKeysTask.h"
 #include "Request/CreateKeyRequest.h"
@@ -88,6 +90,10 @@ namespace Gs2::Key
 
         TSharedPtr<FAsyncTask<Task::Rest::FDeleteNamespaceTask>> DeleteNamespace(
             const Request::FDeleteNamespaceRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FGetServiceVersionTask>> GetServiceVersion(
+            const Request::FGetServiceVersionRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::Rest::FDescribeKeysTask>> DescribeKeys(

@@ -32,6 +32,8 @@
 #include "Task/WebSocket/DeleteNamespaceTask.h"
 #include "Request/NowRequest.h"
 #include "Task/WebSocket/NowTask.h"
+#include "Request/GetServiceVersionRequest.h"
+#include "Task/WebSocket/GetServiceVersionTask.h"
 #include "Request/DescribeRoomsRequest.h"
 #include "Task/WebSocket/DescribeRoomsTask.h"
 #include "Request/WantRoomRequest.h"
@@ -78,6 +80,10 @@ namespace Gs2::Realtime
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FNowTask>> Now(
             const Request::FNowRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FGetServiceVersionTask>> GetServiceVersion(
+            const Request::FGetServiceVersionRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FDescribeRoomsTask>> DescribeRooms(

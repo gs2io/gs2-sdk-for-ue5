@@ -73,6 +73,15 @@ namespace Gs2::Distributor
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::Rest::FGetServiceVersionTask>> FGs2DistributorRestClient::GetServiceVersion(
+        const Request::FGetServiceVersionRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FGetServiceVersionTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::Rest::FDescribeDistributorModelMastersTask>> FGs2DistributorRestClient::DescribeDistributorModelMasters(
         const Request::FDescribeDistributorModelMastersRequestPtr Request) const
     {

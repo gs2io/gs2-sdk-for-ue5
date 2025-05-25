@@ -73,6 +73,15 @@ namespace Gs2::Friend
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::WebSocket::FGetServiceVersionTask>> FGs2FriendWebSocketClient::GetServiceVersion(
+        const Request::FGetServiceVersionRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FGetServiceVersionTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::WebSocket::FDumpUserDataByUserIdTask>> FGs2FriendWebSocketClient::DumpUserDataByUserId(
         const Request::FDumpUserDataByUserIdRequestPtr Request) const
     {

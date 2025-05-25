@@ -26,6 +26,8 @@
 #include "Task/Rest/FederationTask.h"
 #include "Request/IssueTimeOffsetTokenByUserIdRequest.h"
 #include "Task/Rest/IssueTimeOffsetTokenByUserIdTask.h"
+#include "Request/GetServiceVersionRequest.h"
+#include "Task/Rest/GetServiceVersionTask.h"
 
 namespace Gs2::Auth
 {
@@ -52,6 +54,10 @@ namespace Gs2::Auth
 
         TSharedPtr<FAsyncTask<Task::Rest::FIssueTimeOffsetTokenByUserIdTask>> IssueTimeOffsetTokenByUserId(
             const Request::FIssueTimeOffsetTokenByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FGetServiceVersionTask>> GetServiceVersion(
+            const Request::FGetServiceVersionRequestPtr Request
         ) const;
     };
     typedef TSharedPtr<FGs2AuthRestClient, ESPMode::ThreadSafe> FGs2AuthRestClientPtr;

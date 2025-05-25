@@ -30,6 +30,8 @@
 #include "Task/WebSocket/UpdateNamespaceTask.h"
 #include "Request/DeleteNamespaceRequest.h"
 #include "Task/WebSocket/DeleteNamespaceTask.h"
+#include "Request/GetServiceVersionRequest.h"
+#include "Task/WebSocket/GetServiceVersionTask.h"
 #include "Request/DescribeDistributorModelMastersRequest.h"
 #include "Task/WebSocket/DescribeDistributorModelMastersTask.h"
 #include "Request/CreateDistributorModelMasterRequest.h"
@@ -146,6 +148,10 @@ namespace Gs2::Distributor
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FDeleteNamespaceTask>> DeleteNamespace(
             const Request::FDeleteNamespaceRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FGetServiceVersionTask>> GetServiceVersion(
+            const Request::FGetServiceVersionRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FDescribeDistributorModelMastersTask>> DescribeDistributorModelMasters(

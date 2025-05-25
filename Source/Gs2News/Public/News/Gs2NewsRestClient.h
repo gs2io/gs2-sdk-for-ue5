@@ -30,6 +30,8 @@
 #include "Task/Rest/UpdateNamespaceTask.h"
 #include "Request/DeleteNamespaceRequest.h"
 #include "Task/Rest/DeleteNamespaceTask.h"
+#include "Request/GetServiceVersionRequest.h"
+#include "Task/Rest/GetServiceVersionTask.h"
 #include "Request/DescribeProgressesRequest.h"
 #include "Task/Rest/DescribeProgressesTask.h"
 #include "Request/GetProgressRequest.h"
@@ -86,6 +88,10 @@ namespace Gs2::News
 
         TSharedPtr<FAsyncTask<Task::Rest::FDeleteNamespaceTask>> DeleteNamespace(
             const Request::FDeleteNamespaceRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FGetServiceVersionTask>> GetServiceVersion(
+            const Request::FGetServiceVersionRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::Rest::FDescribeProgressesTask>> DescribeProgresses(

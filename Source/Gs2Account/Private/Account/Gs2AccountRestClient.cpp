@@ -73,6 +73,15 @@ namespace Gs2::Account
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::Rest::FGetServiceVersionTask>> FGs2AccountRestClient::GetServiceVersion(
+        const Request::FGetServiceVersionRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FGetServiceVersionTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::Rest::FDumpUserDataByUserIdTask>> FGs2AccountRestClient::DumpUserDataByUserId(
         const Request::FDumpUserDataByUserIdRequestPtr Request) const
     {

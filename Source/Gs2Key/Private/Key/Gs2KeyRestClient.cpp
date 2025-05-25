@@ -73,6 +73,15 @@ namespace Gs2::Key
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::Rest::FGetServiceVersionTask>> FGs2KeyRestClient::GetServiceVersion(
+        const Request::FGetServiceVersionRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FGetServiceVersionTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::Rest::FDescribeKeysTask>> FGs2KeyRestClient::DescribeKeys(
         const Request::FDescribeKeysRequestPtr Request) const
     {

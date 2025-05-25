@@ -172,6 +172,15 @@ namespace Gs2::Deploy
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::WebSocket::FGetServiceVersionTask>> FGs2DeployWebSocketClient::GetServiceVersion(
+        const Request::FGetServiceVersionRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FGetServiceVersionTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::WebSocket::FDescribeResourcesTask>> FGs2DeployWebSocketClient::DescribeResources(
         const Request::FDescribeResourcesRequestPtr Request) const
     {

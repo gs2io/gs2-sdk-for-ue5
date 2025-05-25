@@ -30,6 +30,8 @@
 #include "Task/WebSocket/UpdateNamespaceTask.h"
 #include "Request/DeleteNamespaceRequest.h"
 #include "Task/WebSocket/DeleteNamespaceTask.h"
+#include "Request/GetServiceVersionRequest.h"
+#include "Task/WebSocket/GetServiceVersionTask.h"
 #include "Request/DescribeKeysRequest.h"
 #include "Task/WebSocket/DescribeKeysTask.h"
 #include "Request/CreateKeyRequest.h"
@@ -88,6 +90,10 @@ namespace Gs2::Key
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FDeleteNamespaceTask>> DeleteNamespace(
             const Request::FDeleteNamespaceRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FGetServiceVersionTask>> GetServiceVersion(
+            const Request::FGetServiceVersionRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FDescribeKeysTask>> DescribeKeys(

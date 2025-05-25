@@ -73,6 +73,15 @@ namespace Gs2::MegaField
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::Rest::FGetServiceVersionTask>> FGs2MegaFieldRestClient::GetServiceVersion(
+        const Request::FGetServiceVersionRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FGetServiceVersionTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::Rest::FDescribeAreaModelsTask>> FGs2MegaFieldRestClient::DescribeAreaModels(
         const Request::FDescribeAreaModelsRequestPtr Request) const
     {

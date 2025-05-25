@@ -64,6 +64,12 @@
 #include "Task/Rest/NowTask.h"
 #include "Task/WebSocket/NowTask.h"
 
+// GetServiceVersion
+#include "Request/GetServiceVersionRequest.h"
+#include "Result/GetServiceVersionResult.h"
+#include "Task/Rest/GetServiceVersionTask.h"
+#include "Task/WebSocket/GetServiceVersionTask.h"
+
 // DescribeRooms
 #include "Request/DescribeRoomsRequest.h"
 #include "Result/DescribeRoomsResult.h"

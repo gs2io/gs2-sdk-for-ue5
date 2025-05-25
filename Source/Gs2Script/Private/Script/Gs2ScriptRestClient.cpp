@@ -73,6 +73,15 @@ namespace Gs2::Script
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::Rest::FGetServiceVersionTask>> FGs2ScriptRestClient::GetServiceVersion(
+        const Request::FGetServiceVersionRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FGetServiceVersionTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::Rest::FDescribeScriptsTask>> FGs2ScriptRestClient::DescribeScripts(
         const Request::FDescribeScriptsRequestPtr Request) const
     {

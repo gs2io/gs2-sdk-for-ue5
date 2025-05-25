@@ -30,6 +30,8 @@
 #include "Task/Rest/UpdateNamespaceTask.h"
 #include "Request/DeleteNamespaceRequest.h"
 #include "Task/Rest/DeleteNamespaceTask.h"
+#include "Request/GetServiceVersionRequest.h"
+#include "Task/Rest/GetServiceVersionTask.h"
 #include "Request/DumpUserDataByUserIdRequest.h"
 #include "Task/Rest/DumpUserDataByUserIdTask.h"
 #include "Request/CheckDumpUserDataByUserIdRequest.h"
@@ -216,6 +218,10 @@ namespace Gs2::Stamina
 
         TSharedPtr<FAsyncTask<Task::Rest::FDeleteNamespaceTask>> DeleteNamespace(
             const Request::FDeleteNamespaceRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FGetServiceVersionTask>> GetServiceVersion(
+            const Request::FGetServiceVersionRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::Rest::FDumpUserDataByUserIdTask>> DumpUserDataByUserId(

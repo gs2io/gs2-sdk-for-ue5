@@ -68,6 +68,12 @@
 #include "Task/Rest/DeleteNamespaceTask.h"
 #include "Task/WebSocket/DeleteNamespaceTask.h"
 
+// GetServiceVersion
+#include "Request/GetServiceVersionRequest.h"
+#include "Result/GetServiceVersionResult.h"
+#include "Task/Rest/GetServiceVersionTask.h"
+#include "Task/WebSocket/GetServiceVersionTask.h"
+
 // DescribeAreaModels
 #include "Request/DescribeAreaModelsRequest.h"
 #include "Result/DescribeAreaModelsResult.h"

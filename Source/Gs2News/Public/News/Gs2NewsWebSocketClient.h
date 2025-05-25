@@ -30,6 +30,8 @@
 #include "Task/WebSocket/UpdateNamespaceTask.h"
 #include "Request/DeleteNamespaceRequest.h"
 #include "Task/WebSocket/DeleteNamespaceTask.h"
+#include "Request/GetServiceVersionRequest.h"
+#include "Task/WebSocket/GetServiceVersionTask.h"
 #include "Request/DescribeProgressesRequest.h"
 #include "Task/WebSocket/DescribeProgressesTask.h"
 #include "Request/GetProgressRequest.h"
@@ -86,6 +88,10 @@ namespace Gs2::News
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FDeleteNamespaceTask>> DeleteNamespace(
             const Request::FDeleteNamespaceRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FGetServiceVersionTask>> GetServiceVersion(
+            const Request::FGetServiceVersionRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FDescribeProgressesTask>> DescribeProgresses(

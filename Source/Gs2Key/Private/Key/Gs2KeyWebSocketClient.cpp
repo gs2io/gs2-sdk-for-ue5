@@ -73,6 +73,15 @@ namespace Gs2::Key
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::WebSocket::FGetServiceVersionTask>> FGs2KeyWebSocketClient::GetServiceVersion(
+        const Request::FGetServiceVersionRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FGetServiceVersionTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::WebSocket::FDescribeKeysTask>> FGs2KeyWebSocketClient::DescribeKeys(
         const Request::FDescribeKeysRequestPtr Request) const
     {

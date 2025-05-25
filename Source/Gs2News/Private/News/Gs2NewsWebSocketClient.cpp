@@ -73,6 +73,15 @@ namespace Gs2::News
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::WebSocket::FGetServiceVersionTask>> FGs2NewsWebSocketClient::GetServiceVersion(
+        const Request::FGetServiceVersionRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FGetServiceVersionTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::WebSocket::FDescribeProgressesTask>> FGs2NewsWebSocketClient::DescribeProgresses(
         const Request::FDescribeProgressesRequestPtr Request) const
     {

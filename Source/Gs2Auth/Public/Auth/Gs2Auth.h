@@ -43,6 +43,12 @@
 #include "Task/Rest/IssueTimeOffsetTokenByUserIdTask.h"
 #include "Task/WebSocket/IssueTimeOffsetTokenByUserIdTask.h"
 
+// GetServiceVersion
+#include "Request/GetServiceVersionRequest.h"
+#include "Result/GetServiceVersionResult.h"
+#include "Task/Rest/GetServiceVersionTask.h"
+#include "Task/WebSocket/GetServiceVersionTask.h"
+
 // Client
 #include "Gs2AuthRestClient.h"
 #include "Gs2AuthWebSocketClient.h"

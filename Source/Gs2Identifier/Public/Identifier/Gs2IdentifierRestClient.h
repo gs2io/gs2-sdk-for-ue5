@@ -54,6 +54,8 @@
 #include "Task/Rest/AttachGuardTask.h"
 #include "Request/DetachGuardRequest.h"
 #include "Task/Rest/DetachGuardTask.h"
+#include "Request/GetServiceVersionRequest.h"
+#include "Task/Rest/GetServiceVersionTask.h"
 #include "Request/CreatePasswordRequest.h"
 #include "Task/Rest/CreatePasswordTask.h"
 #include "Request/GetPasswordRequest.h"
@@ -158,6 +160,10 @@ namespace Gs2::Identifier
 
         TSharedPtr<FAsyncTask<Task::Rest::FDetachGuardTask>> DetachGuard(
             const Request::FDetachGuardRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FGetServiceVersionTask>> GetServiceVersion(
+            const Request::FGetServiceVersionRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::Rest::FCreatePasswordTask>> CreatePassword(

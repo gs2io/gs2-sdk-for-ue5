@@ -73,6 +73,15 @@ namespace Gs2::Log
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::Rest::FGetServiceVersionTask>> FGs2LogRestClient::GetServiceVersion(
+        const Request::FGetServiceVersionRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FGetServiceVersionTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::Rest::FQueryAccessLogTask>> FGs2LogRestClient::QueryAccessLog(
         const Request::FQueryAccessLogRequestPtr Request) const
     {

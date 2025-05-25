@@ -172,6 +172,15 @@ namespace Gs2::Deploy
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::Rest::FGetServiceVersionTask>> FGs2DeployRestClient::GetServiceVersion(
+        const Request::FGetServiceVersionRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FGetServiceVersionTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::Rest::FDescribeResourcesTask>> FGs2DeployRestClient::DescribeResources(
         const Request::FDescribeResourcesRequestPtr Request) const
     {

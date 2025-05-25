@@ -26,6 +26,8 @@
 #include "Task/WebSocket/FederationTask.h"
 #include "Request/IssueTimeOffsetTokenByUserIdRequest.h"
 #include "Task/WebSocket/IssueTimeOffsetTokenByUserIdTask.h"
+#include "Request/GetServiceVersionRequest.h"
+#include "Task/WebSocket/GetServiceVersionTask.h"
 
 namespace Gs2::Auth
 {
@@ -52,6 +54,10 @@ namespace Gs2::Auth
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FIssueTimeOffsetTokenByUserIdTask>> IssueTimeOffsetTokenByUserId(
             const Request::FIssueTimeOffsetTokenByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FGetServiceVersionTask>> GetServiceVersion(
+            const Request::FGetServiceVersionRequestPtr Request
         ) const;
     };
     typedef TSharedPtr<FGs2AuthWebSocketClient, ESPMode::ThreadSafe> FGs2AuthWebSocketClientPtr;

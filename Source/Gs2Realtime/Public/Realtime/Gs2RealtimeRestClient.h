@@ -32,6 +32,8 @@
 #include "Task/Rest/DeleteNamespaceTask.h"
 #include "Request/NowRequest.h"
 #include "Task/Rest/NowTask.h"
+#include "Request/GetServiceVersionRequest.h"
+#include "Task/Rest/GetServiceVersionTask.h"
 #include "Request/DescribeRoomsRequest.h"
 #include "Task/Rest/DescribeRoomsTask.h"
 #include "Request/WantRoomRequest.h"
@@ -78,6 +80,10 @@ namespace Gs2::Realtime
 
         TSharedPtr<FAsyncTask<Task::Rest::FNowTask>> Now(
             const Request::FNowRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FGetServiceVersionTask>> GetServiceVersion(
+            const Request::FGetServiceVersionRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::Rest::FDescribeRoomsTask>> DescribeRooms(

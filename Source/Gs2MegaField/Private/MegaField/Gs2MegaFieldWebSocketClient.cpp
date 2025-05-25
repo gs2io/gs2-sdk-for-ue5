@@ -73,6 +73,15 @@ namespace Gs2::MegaField
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::WebSocket::FGetServiceVersionTask>> FGs2MegaFieldWebSocketClient::GetServiceVersion(
+        const Request::FGetServiceVersionRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FGetServiceVersionTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::WebSocket::FDescribeAreaModelsTask>> FGs2MegaFieldWebSocketClient::DescribeAreaModels(
         const Request::FDescribeAreaModelsRequestPtr Request) const
     {

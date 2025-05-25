@@ -127,6 +127,12 @@
 #include "Task/Rest/DeleteStackEntityTask.h"
 #include "Task/WebSocket/DeleteStackEntityTask.h"
 
+// GetServiceVersion
+#include "Request/GetServiceVersionRequest.h"
+#include "Result/GetServiceVersionResult.h"
+#include "Task/Rest/GetServiceVersionTask.h"
+#include "Task/WebSocket/GetServiceVersionTask.h"
+
 // DescribeResources
 #include "Request/DescribeResourcesRequest.h"
 #include "Result/DescribeResourcesResult.h"

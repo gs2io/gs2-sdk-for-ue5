@@ -133,6 +133,12 @@
 #include "Task/Rest/DetachGuardTask.h"
 #include "Task/WebSocket/DetachGuardTask.h"
 
+// GetServiceVersion
+#include "Request/GetServiceVersionRequest.h"
+#include "Result/GetServiceVersionResult.h"
+#include "Task/Rest/GetServiceVersionTask.h"
+#include "Task/WebSocket/GetServiceVersionTask.h"
+
 // CreatePassword
 #include "Request/CreatePasswordRequest.h"
 #include "Result/CreatePasswordResult.h"
