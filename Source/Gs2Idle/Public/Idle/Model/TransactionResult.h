@@ -30,6 +30,7 @@ namespace Gs2::Idle::Model
         TSharedPtr<TArray<TSharedPtr<FVerifyActionResult>>> VerifyResultsValue;
         TSharedPtr<TArray<TSharedPtr<FConsumeActionResult>>> ConsumeResultsValue;
         TSharedPtr<TArray<TSharedPtr<FAcquireActionResult>>> AcquireResultsValue;
+        TOptional<bool> HasErrorValue;
 
     public:
         FTransactionResult();
@@ -42,11 +43,14 @@ namespace Gs2::Idle::Model
         TSharedPtr<FTransactionResult> WithVerifyResults(const TSharedPtr<TArray<TSharedPtr<FVerifyActionResult>>> VerifyResults);
         TSharedPtr<FTransactionResult> WithConsumeResults(const TSharedPtr<TArray<TSharedPtr<FConsumeActionResult>>> ConsumeResults);
         TSharedPtr<FTransactionResult> WithAcquireResults(const TSharedPtr<TArray<TSharedPtr<FAcquireActionResult>>> AcquireResults);
+        TSharedPtr<FTransactionResult> WithHasError(const TOptional<bool> HasError);
 
         TOptional<FString> GetTransactionId() const;
         TSharedPtr<TArray<TSharedPtr<FVerifyActionResult>>> GetVerifyResults() const;
         TSharedPtr<TArray<TSharedPtr<FConsumeActionResult>>> GetConsumeResults() const;
         TSharedPtr<TArray<TSharedPtr<FAcquireActionResult>>> GetAcquireResults() const;
+        TOptional<bool> GetHasError() const;
+        FString GetHasErrorString() const;
 
 
         static TSharedPtr<FTransactionResult> FromJson(const TSharedPtr<FJsonObject> Data);

@@ -22,7 +22,8 @@ namespace Gs2::StateMachine::Model
         TransactionIdValue(TOptional<FString>()),
         VerifyResultsValue(nullptr),
         ConsumeResultsValue(nullptr),
-        AcquireResultsValue(nullptr)
+        AcquireResultsValue(nullptr),
+        HasErrorValue(TOptional<bool>())
     {
     }
 
@@ -32,7 +33,8 @@ namespace Gs2::StateMachine::Model
         TransactionIdValue(From.TransactionIdValue),
         VerifyResultsValue(From.VerifyResultsValue),
         ConsumeResultsValue(From.ConsumeResultsValue),
-        AcquireResultsValue(From.AcquireResultsValue)
+        AcquireResultsValue(From.AcquireResultsValue),
+        HasErrorValue(From.HasErrorValue)
     {
     }
 
@@ -67,6 +69,14 @@ namespace Gs2::StateMachine::Model
         this->AcquireResultsValue = AcquireResults;
         return SharedThis(this);
     }
+
+    TSharedPtr<FTransactionResult> FTransactionResult::WithHasError(
+        const TOptional<bool> HasError
+    )
+    {
+        this->HasErrorValue = HasError;
+        return SharedThis(this);
+    }
     TOptional<FString> FTransactionResult::GetTransactionId() const
     {
         return TransactionIdValue;
@@ -82,6 +92,19 @@ namespace Gs2::StateMachine::Model
     TSharedPtr<TArray<TSharedPtr<Model::FAcquireActionResult>>> FTransactionResult::GetAcquireResults() const
     {
         return AcquireResultsValue;
+    }
+    TOptional<bool> FTransactionResult::GetHasError() const
+    {
+        return HasErrorValue;
+    }
+
+    FString FTransactionResult::GetHasErrorString() const
+    {
+        if (!HasErrorValue.IsSet())
+        {
+            return FString("null");
+        }
+        return FString(HasErrorValue.GetValue() ? "true" : "false");
     }
 
     TSharedPtr<FTransactionResult> FTransactionResult::FromJson(const TSharedPtr<FJsonObject> Data)
@@ -134,7 +157,16 @@ namespace Gs2::StateMachine::Model
                         }
                     }
                     return v;
-                 }() : MakeShared<TArray<Model::FAcquireActionResultPtr>>());
+                 }() : MakeShared<TArray<Model::FAcquireActionResultPtr>>())
+            ->WithHasError(Data->HasField(ANSI_TO_TCHAR("hasError")) ? [Data]() -> TOptional<bool>
+                {
+                    bool v;
+                    if (Data->TryGetBoolField(ANSI_TO_TCHAR("hasError"), v))
+                    {
+                        return TOptional(v);
+                    }
+                    return TOptional<bool>();
+                }() : TOptional<bool>());
     }
 
     TSharedPtr<FJsonObject> FTransactionResult::ToJson() const
@@ -170,6 +202,10 @@ namespace Gs2::StateMachine::Model
                 v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
             }
             JsonRootObject->SetArrayField("acquireResults", v);
+        }
+        if (HasErrorValue.IsSet())
+        {
+            JsonRootObject->SetBoolField("hasError", HasErrorValue.GetValue());
         }
         return JsonRootObject;
     }

@@ -148,6 +148,10 @@ namespace Gs2::Mission::Domain::SpeculativeExecutor
         const double Rate
     )
     {
+        if (Request->GetValue().IsSet())
+        {
+            Request->WithValue(*Request->GetValue() * Rate);
+        }
         return Request;
     }
 
@@ -156,6 +160,11 @@ namespace Gs2::Mission::Domain::SpeculativeExecutor
         TBigInt<1024, false> Rate
     )
     {
+        if (Request->GetValue().IsSet())
+        {
+            Rate.Multiply(*Request->GetValue());
+            Request->WithValue(Rate.ToInt());
+        }
         return Request;
     }
 }
