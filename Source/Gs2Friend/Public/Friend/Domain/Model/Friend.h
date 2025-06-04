@@ -99,6 +99,32 @@ namespace Gs2::Friend::Domain::Model
             const FFriendDomain& From
         );
 
+        class GS2FRIEND_API FAddFriendTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Friend::Domain::Model::FFriendUserDomain>,
+            public TSharedFromThis<FAddFriendTask>
+        {
+            const TSharedPtr<FFriendDomain> Self;
+            const Request::FAddFriendByUserIdRequestPtr Request;
+        public:
+            explicit FAddFriendTask(
+                const TSharedPtr<FFriendDomain>& Self,
+                const Request::FAddFriendByUserIdRequestPtr Request
+            );
+
+            FAddFriendTask(
+                const FAddFriendTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Friend::Domain::Model::FFriendUserDomain>> Result
+            ) override;
+        };
+        friend FAddFriendTask;
+
+        TSharedPtr<FAsyncTask<FAddFriendTask>> AddFriend(
+            Request::FAddFriendByUserIdRequestPtr Request
+        );
+
         class GS2FRIEND_API FDeleteFriendTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Friend::Domain::Model::FFriendUserDomain>,
             public TSharedFromThis<FDeleteFriendTask>

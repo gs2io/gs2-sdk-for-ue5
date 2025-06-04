@@ -262,6 +262,18 @@
 #include "Task/Rest/GetFriendByUserIdTask.h"
 #include "Task/WebSocket/GetFriendByUserIdTask.h"
 
+// AddFriend
+#include "Request/AddFriendRequest.h"
+#include "Result/AddFriendResult.h"
+#include "Task/Rest/AddFriendTask.h"
+#include "Task/WebSocket/AddFriendTask.h"
+
+// AddFriendByUserId
+#include "Request/AddFriendByUserIdRequest.h"
+#include "Result/AddFriendByUserIdResult.h"
+#include "Task/Rest/AddFriendByUserIdTask.h"
+#include "Task/WebSocket/AddFriendByUserIdTask.h"
+
 // DeleteFriend
 #include "Request/DeleteFriendRequest.h"
 #include "Result/DeleteFriendResult.h"

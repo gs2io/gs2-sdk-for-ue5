@@ -94,6 +94,10 @@
 #include "Task/WebSocket/GetFriendTask.h"
 #include "Request/GetFriendByUserIdRequest.h"
 #include "Task/WebSocket/GetFriendByUserIdTask.h"
+#include "Request/AddFriendRequest.h"
+#include "Task/WebSocket/AddFriendTask.h"
+#include "Request/AddFriendByUserIdRequest.h"
+#include "Task/WebSocket/AddFriendByUserIdTask.h"
 #include "Request/DeleteFriendRequest.h"
 #include "Task/WebSocket/DeleteFriendTask.h"
 #include "Request/DeleteFriendByUserIdRequest.h"
@@ -294,6 +298,14 @@ namespace Gs2::Friend
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FGetFriendByUserIdTask>> GetFriendByUserId(
             const Request::FGetFriendByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FAddFriendTask>> AddFriend(
+            const Request::FAddFriendRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FAddFriendByUserIdTask>> AddFriendByUserId(
+            const Request::FAddFriendByUserIdRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FDeleteFriendTask>> DeleteFriend(

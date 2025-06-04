@@ -94,6 +94,10 @@
 #include "Task/Rest/GetFriendTask.h"
 #include "Request/GetFriendByUserIdRequest.h"
 #include "Task/Rest/GetFriendByUserIdTask.h"
+#include "Request/AddFriendRequest.h"
+#include "Task/Rest/AddFriendTask.h"
+#include "Request/AddFriendByUserIdRequest.h"
+#include "Task/Rest/AddFriendByUserIdTask.h"
 #include "Request/DeleteFriendRequest.h"
 #include "Task/Rest/DeleteFriendTask.h"
 #include "Request/DeleteFriendByUserIdRequest.h"
@@ -294,6 +298,14 @@ namespace Gs2::Friend
 
         TSharedPtr<FAsyncTask<Task::Rest::FGetFriendByUserIdTask>> GetFriendByUserId(
             const Request::FGetFriendByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FAddFriendTask>> AddFriend(
+            const Request::FAddFriendRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FAddFriendByUserIdTask>> AddFriendByUserId(
+            const Request::FAddFriendByUserIdRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::Rest::FDeleteFriendTask>> DeleteFriend(

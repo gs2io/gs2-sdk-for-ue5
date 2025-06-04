@@ -91,6 +91,47 @@ namespace Gs2::Friend::Domain::Model
 
     }
 
+    FFriendAccessTokenDomain::FAddFriendTask::FAddFriendTask(
+        const TSharedPtr<FFriendAccessTokenDomain>& Self,
+        const Request::FAddFriendRequestPtr Request
+    ): Self(Self), Request(Request)
+    {
+
+    }
+
+    FFriendAccessTokenDomain::FAddFriendTask::FAddFriendTask(
+        const FAddFriendTask& From
+    ): TGs2Future(From), Self(From.Self), Request(From.Request)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FFriendAccessTokenDomain::FAddFriendTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::Friend::Domain::Model::FFriendUserAccessTokenDomain>> Result
+    )
+    {
+        Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
+            ->WithNamespaceName(Self->NamespaceName)
+            ->WithAccessToken(Self->AccessToken->GetToken());
+        auto Domain = MakeShared<Gs2::Friend::Domain::Model::FFriendUserAccessTokenDomain>(
+            Self->Gs2,
+            Self->Service,
+            Request->GetNamespaceName(),
+            Self->AccessToken,
+            false,
+            Request->GetTargetUserId()
+        );
+
+        *Result = Domain;
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FFriendAccessTokenDomain::FAddFriendTask>> FFriendAccessTokenDomain::AddFriend(
+        Request::FAddFriendRequestPtr Request
+    ) {
+        return Gs2::Core::Util::New<FAsyncTask<FAddFriendTask>>(this->AsShared(), Request);
+    }
+
     FFriendAccessTokenDomain::FDeleteFriendTask::FDeleteFriendTask(
         const TSharedPtr<FFriendAccessTokenDomain>& Self,
         const Request::FDeleteFriendRequestPtr Request

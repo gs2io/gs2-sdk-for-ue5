@@ -101,6 +101,32 @@ namespace Gs2::Friend::Domain::Model
             const FFriendAccessTokenDomain& From
         );
 
+        class GS2FRIEND_API FAddFriendTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Friend::Domain::Model::FFriendUserAccessTokenDomain>,
+            public TSharedFromThis<FAddFriendTask>
+        {
+            const TSharedPtr<FFriendAccessTokenDomain> Self;
+            const Request::FAddFriendRequestPtr Request;
+        public:
+            explicit FAddFriendTask(
+                const TSharedPtr<FFriendAccessTokenDomain>& Self,
+                const Request::FAddFriendRequestPtr Request
+            );
+
+            FAddFriendTask(
+                const FAddFriendTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Friend::Domain::Model::FFriendUserAccessTokenDomain>> Result
+            ) override;
+        };
+        friend FAddFriendTask;
+
+        TSharedPtr<FAsyncTask<FAddFriendTask>> AddFriend(
+            Request::FAddFriendRequestPtr Request
+        );
+
         class GS2FRIEND_API FDeleteFriendTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Friend::Domain::Model::FFriendUserAccessTokenDomain>,
             public TSharedFromThis<FDeleteFriendTask>

@@ -361,6 +361,24 @@ namespace Gs2::Friend
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::WebSocket::FAddFriendTask>> FGs2FriendWebSocketClient::AddFriend(
+        const Request::FAddFriendRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FAddFriendTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FAddFriendByUserIdTask>> FGs2FriendWebSocketClient::AddFriendByUserId(
+        const Request::FAddFriendByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FAddFriendByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::WebSocket::FDeleteFriendTask>> FGs2FriendWebSocketClient::DeleteFriend(
         const Request::FDeleteFriendRequestPtr Request) const
     {
