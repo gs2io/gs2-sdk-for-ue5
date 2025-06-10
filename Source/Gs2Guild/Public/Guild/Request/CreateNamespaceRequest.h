@@ -42,6 +42,7 @@ namespace Gs2::Guild::Request
         TSharedPtr<Model::FScriptSetting> JoinGuildScriptValue;
         TSharedPtr<Model::FScriptSetting> LeaveGuildScriptValue;
         TSharedPtr<Model::FScriptSetting> ChangeRoleScriptValue;
+        TSharedPtr<Model::FScriptSetting> DeleteGuildScriptValue;
         TSharedPtr<Model::FLogSetting> LogSettingValue;
         
     public:
@@ -66,6 +67,7 @@ namespace Gs2::Guild::Request
         TSharedPtr<FCreateNamespaceRequest> WithJoinGuildScript(const TSharedPtr<Model::FScriptSetting> JoinGuildScript);
         TSharedPtr<FCreateNamespaceRequest> WithLeaveGuildScript(const TSharedPtr<Model::FScriptSetting> LeaveGuildScript);
         TSharedPtr<FCreateNamespaceRequest> WithChangeRoleScript(const TSharedPtr<Model::FScriptSetting> ChangeRoleScript);
+        TSharedPtr<FCreateNamespaceRequest> WithDeleteGuildScript(const TSharedPtr<Model::FScriptSetting> DeleteGuildScript);
         TSharedPtr<FCreateNamespaceRequest> WithLogSetting(const TSharedPtr<Model::FLogSetting> LogSetting);
 
         TOptional<FString> GetContextStack() const;
@@ -82,6 +84,7 @@ namespace Gs2::Guild::Request
         TSharedPtr<Model::FScriptSetting> GetJoinGuildScript() const;
         TSharedPtr<Model::FScriptSetting> GetLeaveGuildScript() const;
         TSharedPtr<Model::FScriptSetting> GetChangeRoleScript() const;
+        TSharedPtr<Model::FScriptSetting> GetDeleteGuildScript() const;
         TSharedPtr<Model::FLogSetting> GetLogSetting() const;
 
         static TSharedPtr<FCreateNamespaceRequest> FromJson(const TSharedPtr<FJsonObject> Data);

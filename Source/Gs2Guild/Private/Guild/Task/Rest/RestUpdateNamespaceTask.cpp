@@ -132,6 +132,10 @@ namespace Gs2::Guild::Task::Rest
             {
                 JsonRootObject->SetObjectField("changeRoleScript", this->Request->GetChangeRoleScript()->ToJson());
             }
+            if (this->Request->GetDeleteGuildScript() != nullptr && this->Request->GetDeleteGuildScript().IsValid())
+            {
+                JsonRootObject->SetObjectField("deleteGuildScript", this->Request->GetDeleteGuildScript()->ToJson());
+            }
             if (this->Request->GetLogSetting() != nullptr && this->Request->GetLogSetting().IsValid())
             {
                 JsonRootObject->SetObjectField("logSetting", this->Request->GetLogSetting()->ToJson());

@@ -41,7 +41,7 @@ namespace Gs2::Matchmaking::Domain::Iterator
             const Gs2::Matchmaking::FGs2MatchmakingRestClientPtr Client,
             const TOptional<FString> NamespaceName,
             const TOptional<FString> UserId,
-            const TOptional<FString> SeasonName,
+            const TOptional<FString> SeasonName = TOptional<FString>(),
             const TOptional<FString> TimeOffsetToken = TOptional<FString>()
         );
 

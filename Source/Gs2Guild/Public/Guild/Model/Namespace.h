@@ -40,6 +40,7 @@ namespace Gs2::Guild::Model
         TSharedPtr<FScriptSetting> JoinGuildScriptValue;
         TSharedPtr<FScriptSetting> LeaveGuildScriptValue;
         TSharedPtr<FScriptSetting> ChangeRoleScriptValue;
+        TSharedPtr<FScriptSetting> DeleteGuildScriptValue;
         TSharedPtr<FLogSetting> LogSettingValue;
         TOptional<int64> CreatedAtValue;
         TOptional<int64> UpdatedAtValue;
@@ -66,6 +67,7 @@ namespace Gs2::Guild::Model
         TSharedPtr<FNamespace> WithJoinGuildScript(const TSharedPtr<FScriptSetting> JoinGuildScript);
         TSharedPtr<FNamespace> WithLeaveGuildScript(const TSharedPtr<FScriptSetting> LeaveGuildScript);
         TSharedPtr<FNamespace> WithChangeRoleScript(const TSharedPtr<FScriptSetting> ChangeRoleScript);
+        TSharedPtr<FNamespace> WithDeleteGuildScript(const TSharedPtr<FScriptSetting> DeleteGuildScript);
         TSharedPtr<FNamespace> WithLogSetting(const TSharedPtr<FLogSetting> LogSetting);
         TSharedPtr<FNamespace> WithCreatedAt(const TOptional<int64> CreatedAt);
         TSharedPtr<FNamespace> WithUpdatedAt(const TOptional<int64> UpdatedAt);
@@ -85,6 +87,7 @@ namespace Gs2::Guild::Model
         TSharedPtr<FScriptSetting> GetJoinGuildScript() const;
         TSharedPtr<FScriptSetting> GetLeaveGuildScript() const;
         TSharedPtr<FScriptSetting> GetChangeRoleScript() const;
+        TSharedPtr<FScriptSetting> GetDeleteGuildScript() const;
         TSharedPtr<FLogSetting> GetLogSetting() const;
         TOptional<int64> GetCreatedAt() const;
         FString GetCreatedAtString() const;

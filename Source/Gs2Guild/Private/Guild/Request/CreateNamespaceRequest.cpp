@@ -32,6 +32,7 @@ namespace Gs2::Guild::Request
         JoinGuildScriptValue(nullptr),
         LeaveGuildScriptValue(nullptr),
         ChangeRoleScriptValue(nullptr),
+        DeleteGuildScriptValue(nullptr),
         LogSettingValue(nullptr)
     {
     }
@@ -52,6 +53,7 @@ namespace Gs2::Guild::Request
         JoinGuildScriptValue(From.JoinGuildScriptValue),
         LeaveGuildScriptValue(From.LeaveGuildScriptValue),
         ChangeRoleScriptValue(From.ChangeRoleScriptValue),
+        DeleteGuildScriptValue(From.DeleteGuildScriptValue),
         LogSettingValue(From.LogSettingValue)
     {
     }
@@ -165,6 +167,14 @@ namespace Gs2::Guild::Request
     )
     {
         this->ChangeRoleScriptValue = ChangeRoleScript;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FCreateNamespaceRequest> FCreateNamespaceRequest::WithDeleteGuildScript(
+        const TSharedPtr<Model::FScriptSetting> DeleteGuildScript
+    )
+    {
+        this->DeleteGuildScriptValue = DeleteGuildScript;
         return SharedThis(this);
     }
 
@@ -290,6 +300,15 @@ namespace Gs2::Guild::Request
         return ChangeRoleScriptValue;
     }
 
+    TSharedPtr<Model::FScriptSetting> FCreateNamespaceRequest::GetDeleteGuildScript() const
+    {
+        if (!DeleteGuildScriptValue.IsValid())
+        {
+            return nullptr;
+        }
+        return DeleteGuildScriptValue;
+    }
+
     TSharedPtr<Model::FLogSetting> FCreateNamespaceRequest::GetLogSetting() const
     {
         if (!LogSettingValue.IsValid())
@@ -412,6 +431,14 @@ namespace Gs2::Guild::Request
                   }
                   return Model::FScriptSetting::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("changeRoleScript")));
               }() : nullptr)
+          ->WithDeleteGuildScript(Data->HasField(ANSI_TO_TCHAR("deleteGuildScript")) ? [Data]() -> Model::FScriptSettingPtr
+              {
+                  if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("deleteGuildScript")))
+                  {
+                      return nullptr;
+                  }
+                  return Model::FScriptSetting::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("deleteGuildScript")));
+              }() : nullptr)
           ->WithLogSetting(Data->HasField(ANSI_TO_TCHAR("logSetting")) ? [Data]() -> Model::FLogSettingPtr
               {
                   if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("logSetting")))
@@ -480,6 +507,10 @@ namespace Gs2::Guild::Request
         if (ChangeRoleScriptValue != nullptr && ChangeRoleScriptValue.IsValid())
         {
             JsonRootObject->SetObjectField("changeRoleScript", ChangeRoleScriptValue->ToJson());
+        }
+        if (DeleteGuildScriptValue != nullptr && DeleteGuildScriptValue.IsValid())
+        {
+            JsonRootObject->SetObjectField("deleteGuildScript", DeleteGuildScriptValue->ToJson());
         }
         if (LogSettingValue != nullptr && LogSettingValue.IsValid())
         {

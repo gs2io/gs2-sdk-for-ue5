@@ -41,7 +41,7 @@ namespace Gs2::Matchmaking::Domain::Iterator
             const Gs2::Matchmaking::FGs2MatchmakingRestClientPtr Client,
             const TOptional<FString> NamespaceName,
             const Gs2::Auth::Model::FAccessTokenPtr AccessToken,
-            const TOptional<FString> SeasonName
+            const TOptional<FString> SeasonName = TOptional<FString>()
         );
 
         FDescribeJoinedSeasonGatheringsIterator(
