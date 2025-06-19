@@ -27,6 +27,7 @@
 #include "Enhance/Model/Gs2EnhanceEzAcquireActionResult.h"
 #include "Enhance/Model/Gs2EnhanceEzTransactionResult.h"
 #include "Gs2EnhanceEzEnhanceGameSessionDomain.h"
+#include "Core/EzTransactionGameSessionDomain.h"
 #include "Util/Net/GameSession.h"
 #include "Util/Net/Gs2Connection.h"
 
@@ -53,7 +54,7 @@ namespace Gs2::UE5::Enhance::Domain::Model
         );
 
         class EZGS2_API FEnhanceTask :
-            public Gs2::Core::Util::TGs2Future<Gs2::UE5::Enhance::Domain::Model::FEzEnhanceGameSessionDomain>,
+            public Gs2::Core::Util::TGs2Future<Gs2::UE5::Core::Domain::FEzTransactionGameSessionDomain>,
             public TSharedFromThis<FEnhanceTask>
         {
             TSharedPtr<FEzEnhanceGameSessionDomain> Self;
@@ -72,7 +73,7 @@ namespace Gs2::UE5::Enhance::Domain::Model
             );
 
             virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-                TSharedPtr<TSharedPtr<Gs2::UE5::Enhance::Domain::Model::FEzEnhanceGameSessionDomain>> Result
+                TSharedPtr<TSharedPtr<Gs2::UE5::Core::Domain::FEzTransactionGameSessionDomain>> Result
             ) override;
         };
         friend FEnhanceTask;

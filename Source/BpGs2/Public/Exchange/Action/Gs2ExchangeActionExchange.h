@@ -23,10 +23,14 @@
 #include "Exchange/Model/Gs2ExchangeConfig.h"
 #include "Exchange/Model/Gs2ExchangeExchange.h"
 #include "../../Core/Model/Gs2Error.h"
+#include "Core/Model/Gs2CoreTransaction.h"
 #include "Kismet/BlueprintAsyncActionBase.h"
 #include "Gs2ExchangeActionExchange.generated.h"
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FGs2ExchangeExchangeSuccessDelegate, FGs2ExchangeOwnExchange, Exchange, const FGs2Error, Error);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FGs2ExchangeExchangeErrorDelegate, FGs2ExchangeOwnExchange, Exchange, const FGs2Error, Error);
+
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FGs2ExchangeExchangeSuccessDelegate, FGs2CoreOwnTransaction, Transaction, const FGs2Error, Error);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FGs2ExchangeExchangeErrorDelegate, FGs2CoreOwnTransaction, Transaction, const FGs2Error, Error);
+
 
 UCLASS()
 class BPGS2_API UGs2ExchangeExchangeAsyncFunction : public UBlueprintAsyncActionBase

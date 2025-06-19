@@ -12,6 +12,8 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
+ *
+ * deny overwrite
  */
 
 #if defined(_MSC_VER)
@@ -91,6 +93,15 @@ namespace Gs2::Identifier::Domain::Model
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithUserName(Self->UserName)
             ->WithClientId(Self->ClientId);
+        const auto Future = Self->Client->GetIdentifier(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
         *Result = ResultModel->GetItem();
         return nullptr;
     }
@@ -123,6 +134,15 @@ namespace Gs2::Identifier::Domain::Model
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithUserName(Self->UserName)
             ->WithClientId(Self->ClientId);
+        const auto Future = Self->Client->DeleteIdentifier(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
         auto Domain = Self;
 
         *Result = Domain;
@@ -133,94 +153,6 @@ namespace Gs2::Identifier::Domain::Model
         Request::FDeleteIdentifierRequestPtr Request
     ) {
         return Gs2::Core::Util::New<FAsyncTask<FDeleteTask>>(this->AsShared(), Request);
-    }
-
-    FIdentifierDomain::FAttachGuardTask::FAttachGuardTask(
-        const TSharedPtr<FIdentifierDomain>& Self,
-        const Request::FAttachGuardRequestPtr Request
-    ): Self(Self), Request(Request)
-    {
-
-    }
-
-    FIdentifierDomain::FAttachGuardTask::FAttachGuardTask(
-        const FAttachGuardTask& From
-    ): TGs2Future(From), Self(From.Self), Request(From.Request)
-    {
-    }
-
-    Gs2::Core::Model::FGs2ErrorPtr FIdentifierDomain::FAttachGuardTask::Action(
-        TSharedPtr<TSharedPtr<TArray<TSharedPtr<Gs2::Identifier::Domain::Model::FIdentifierDomain>>>> Result
-    )
-    {
-        Request
-            ->WithContextStack(Self->Gs2->DefaultContextStack)
-            ->WithUserName(Self->UserName)
-            ->WithClientId(Self->ClientId);
-        auto Domain = MakeShared<TArray<TSharedPtr<Gs2::Identifier::Domain::Model::FIdentifierDomain>>>();
-        for (auto i=0; i<ResultModel->GetItems()->Num(); i++)
-        {
-            Domain->Add(
-                MakeShared<Gs2::Identifier::Domain::Model::FIdentifierDomain>(
-                    Self->Gs2,
-                    Self->Service,
-                    (*ResultModel->GetItems())[i]->GetUserName(),
-                    (*ResultModel->GetItems())[i]->GetClientId()
-                )
-            );
-        }
-        *Result = Domain;
-        return nullptr;
-    }
-
-    TSharedPtr<FAsyncTask<FIdentifierDomain::FAttachGuardTask>> FIdentifierDomain::AttachGuard(
-        Request::FAttachGuardRequestPtr Request
-    ) {
-        return Gs2::Core::Util::New<FAsyncTask<FAttachGuardTask>>(this->AsShared(), Request);
-    }
-
-    FIdentifierDomain::FDetachGuardTask::FDetachGuardTask(
-        const TSharedPtr<FIdentifierDomain>& Self,
-        const Request::FDetachGuardRequestPtr Request
-    ): Self(Self), Request(Request)
-    {
-
-    }
-
-    FIdentifierDomain::FDetachGuardTask::FDetachGuardTask(
-        const FDetachGuardTask& From
-    ): TGs2Future(From), Self(From.Self), Request(From.Request)
-    {
-    }
-
-    Gs2::Core::Model::FGs2ErrorPtr FIdentifierDomain::FDetachGuardTask::Action(
-        TSharedPtr<TSharedPtr<TArray<TSharedPtr<Gs2::Identifier::Domain::Model::FIdentifierDomain>>>> Result
-    )
-    {
-        Request
-            ->WithContextStack(Self->Gs2->DefaultContextStack)
-            ->WithUserName(Self->UserName)
-            ->WithClientId(Self->ClientId);
-        auto Domain = MakeShared<TArray<TSharedPtr<Gs2::Identifier::Domain::Model::FIdentifierDomain>>>();
-        for (auto i=0; i<ResultModel->GetItems()->Num(); i++)
-        {
-            Domain->Add(
-                MakeShared<Gs2::Identifier::Domain::Model::FIdentifierDomain>(
-                    Self->Gs2,
-                    Self->Service,
-                    (*ResultModel->GetItems())[i]->GetUserName(),
-                    (*ResultModel->GetItems())[i]->GetClientId()
-                )
-            );
-        }
-        *Result = Domain;
-        return nullptr;
-    }
-
-    TSharedPtr<FAsyncTask<FIdentifierDomain::FDetachGuardTask>> FIdentifierDomain::DetachGuard(
-        Request::FDetachGuardRequestPtr Request
-    ) {
-        return Gs2::Core::Util::New<FAsyncTask<FDetachGuardTask>>(this->AsShared(), Request);
     }
 
     FString FIdentifierDomain::CreateCacheParentKey(

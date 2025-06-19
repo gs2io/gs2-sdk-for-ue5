@@ -20,6 +20,7 @@
 #include "Enchant/Model/Gs2EnchantRarityParameterStatus.h"
 #include "Enchant/Model/Gs2EnchantRarityParameterStatus.h"
 #include "../../Core/Model/Gs2Error.h"
+#include "Core/Model/Gs2CoreTransaction.h"
 #include "Kismet/BlueprintAsyncActionBase.h"
 #include "Gs2EnchantActionVerifyRarityParameterStatus.generated.h"
 

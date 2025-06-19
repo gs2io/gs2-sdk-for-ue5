@@ -12,6 +12,8 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
+ *
+ * deny overwrite
  */
 
 // ReSharper disable CppUnusedIncludeDirective
@@ -210,7 +212,7 @@ namespace Gs2::Ranking2::Domain::Model
             TOptional<FString> NamespaceName,
             TOptional<FString> RankingName,
             TOptional<FString> ClusterName,
-            TOptional<FString> Season,
+            TOptional<int64> Season,
             FString ChildType
         );
 

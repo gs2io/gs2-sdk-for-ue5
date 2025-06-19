@@ -21,7 +21,7 @@
 
 namespace Gs2::Friend::Model
 {
-    class GS2FRIEND_API FBlackListEntry : public Gs2Object
+    class GS2FRIEND_API FBlackListEntry : public FGs2Object
     {
     public:
         FString Value;

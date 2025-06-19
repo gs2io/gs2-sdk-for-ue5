@@ -12,6 +12,8 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
+ *
+ * deny overwrite
  */
 
 #if defined(_MSC_VER)
@@ -81,6 +83,15 @@ namespace Gs2::Script::Domain::Model
         Request
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName);
+        const auto Future = Self->Client->GetNamespaceStatus(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
         const auto Domain = Self;
         if (ResultModel != nullptr)
         {
@@ -120,6 +131,15 @@ namespace Gs2::Script::Domain::Model
         Request
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName);
+        const auto Future = Self->Client->GetNamespace(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
         *Result = ResultModel->GetItem();
         return nullptr;
     }
@@ -151,6 +171,15 @@ namespace Gs2::Script::Domain::Model
         Request
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName);
+        const auto Future = Self->Client->UpdateNamespace(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
         auto Domain = Self;
 
         *Result = Domain;
@@ -184,6 +213,15 @@ namespace Gs2::Script::Domain::Model
         Request
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName);
+        const auto Future = Self->Client->DeleteNamespace(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
         auto Domain = Self;
 
         *Result = Domain;
@@ -217,6 +255,15 @@ namespace Gs2::Script::Domain::Model
         Request
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName);
+        const auto Future = Self->Client->CreateScript(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
         auto Domain = MakeShared<Gs2::Script::Domain::Model::FScriptDomain>(
             Self->Gs2,
             Self->Service,
@@ -255,6 +302,15 @@ namespace Gs2::Script::Domain::Model
         Request
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName);
+        const auto Future = Self->Client->CreateScriptFromGitHub(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
         auto Domain = MakeShared<Gs2::Script::Domain::Model::FScriptDomain>(
             Self->Gs2,
             Self->Service,
@@ -290,6 +346,15 @@ namespace Gs2::Script::Domain::Model
         TSharedPtr<TSharedPtr<Gs2::Script::Domain::Model::FNamespaceDomain>> Result
     )
     {
+        const auto Future = Self->Client->InvokeScript(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
         const auto Domain = Self;
         if (ResultModel != nullptr)
         {
@@ -340,8 +405,16 @@ namespace Gs2::Script::Domain::Model
     )
     {
         Request
-            ->WithContextStack(Self->Gs2->DefaultContextStack)
-            ->WithUserId(Self->UserId);
+            ->WithContextStack(Self->Gs2->DefaultContextStack);
+        const auto Future = Self->Client->DebugInvoke(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
         const auto Domain = Self;
         if (ResultModel != nullptr)
         {

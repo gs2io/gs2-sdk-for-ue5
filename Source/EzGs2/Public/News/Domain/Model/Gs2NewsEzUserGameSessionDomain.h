@@ -24,6 +24,7 @@
 #include "Gs2NewsEzNewsGameSessionDomain.h"
 #include "News/Domain/Iterator/Gs2NewsEzDescribeNewsIterator.h"
 #include "Gs2NewsEzUserGameSessionDomain.h"
+#include "Core/EzTransactionGameSessionDomain.h"
 #include "Util/Net/GameSession.h"
 #include "Util/Net/Gs2Connection.h"
 

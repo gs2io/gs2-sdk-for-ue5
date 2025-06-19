@@ -84,7 +84,7 @@ namespace Gs2::Exchange::Domain::Model
         );
 
         class GS2EXCHANGE_API FExchangeTask final :
-            public Gs2::Core::Util::TGs2Future<Gs2::Exchange::Domain::Model::FExchangeDomain>,
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::FTransactionDomain>,
             public TSharedFromThis<FExchangeTask>
         {
             const TSharedPtr<FExchangeDomain> Self;
@@ -100,7 +100,7 @@ namespace Gs2::Exchange::Domain::Model
             );
 
             virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-                TSharedPtr<TSharedPtr<Gs2::Exchange::Domain::Model::FExchangeDomain>> Result
+                TSharedPtr<TSharedPtr<Gs2::Core::Domain::FTransactionDomain>> Result
             ) override;
         };
         friend FExchangeTask;
@@ -110,7 +110,7 @@ namespace Gs2::Exchange::Domain::Model
         );
 
         class GS2EXCHANGE_API FIncrementalTask final :
-            public Gs2::Core::Util::TGs2Future<Gs2::Exchange::Domain::Model::FExchangeDomain>,
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::FTransactionDomain>,
             public TSharedFromThis<FIncrementalTask>
         {
             const TSharedPtr<FExchangeDomain> Self;
@@ -126,7 +126,7 @@ namespace Gs2::Exchange::Domain::Model
             );
 
             virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-                TSharedPtr<TSharedPtr<Gs2::Exchange::Domain::Model::FExchangeDomain>> Result
+                TSharedPtr<TSharedPtr<Gs2::Core::Domain::FTransactionDomain>> Result
             ) override;
         };
         friend FIncrementalTask;

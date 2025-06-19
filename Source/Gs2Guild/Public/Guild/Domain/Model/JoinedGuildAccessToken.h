@@ -12,8 +12,6 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
- *
- * deny overwrite
  */
 
 // ReSharper disable CppUnusedIncludeDirective
@@ -57,15 +55,19 @@ namespace Gs2::Guild::Domain::Model
     class FGuildModelMasterDomain;
     class FGuildModelDomain;
     class FUserDomain;
-    class FUserAccessTokenDomain;
     class FGuildDomain;
+    class FGuildAccessTokenDomain;
     class FJoinedGuildDomain;
     class FJoinedGuildAccessTokenDomain;
+    class FLastGuildMasterActivityDomain;
+    class FLastGuildMasterActivityAccessTokenDomain;
     class FCurrentGuildMasterDomain;
     class FReceiveMemberRequestDomain;
+    class FReceiveMemberRequestAccessTokenDomain;
     class FSendMemberRequestDomain;
     class FSendMemberRequestAccessTokenDomain;
     class FIgnoreUserDomain;
+    class FIgnoreUserAccessTokenDomain;
 
     class GS2GUILD_API FJoinedGuildAccessTokenDomain:
         public TSharedFromThis<FJoinedGuildAccessTokenDomain>
@@ -124,6 +126,32 @@ namespace Gs2::Guild::Domain::Model
 
         TSharedPtr<FAsyncTask<FGetTask>> Get(
             Request::FGetJoinedGuildRequestPtr Request
+        );
+
+        class GS2GUILD_API FUpdateMemberMetadataTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Guild::Domain::Model::FGuildAccessTokenDomain>,
+            public TSharedFromThis<FUpdateMemberMetadataTask>
+        {
+            const TSharedPtr<FJoinedGuildAccessTokenDomain> Self;
+            const Request::FUpdateMemberMetadataRequestPtr Request;
+        public:
+            explicit FUpdateMemberMetadataTask(
+                const TSharedPtr<FJoinedGuildAccessTokenDomain>& Self,
+                const Request::FUpdateMemberMetadataRequestPtr Request
+            );
+
+            FUpdateMemberMetadataTask(
+                const FUpdateMemberMetadataTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Guild::Domain::Model::FGuildAccessTokenDomain>> Result
+            ) override;
+        };
+        friend FUpdateMemberMetadataTask;
+
+        TSharedPtr<FAsyncTask<FUpdateMemberMetadataTask>> UpdateMemberMetadata(
+            Request::FUpdateMemberMetadataRequestPtr Request
         );
 
         class GS2GUILD_API FWithdrawalTask final :

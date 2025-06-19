@@ -56,7 +56,7 @@ namespace Gs2::UE5::Mission::Domain::Model
     }
 
     Gs2::Core::Model::FGs2ErrorPtr FEzCompleteGameSessionDomain::FReceiveRewardsTask::Action(
-        TSharedPtr<TSharedPtr<Gs2::UE5::Mission::Domain::Model::FEzCompleteGameSessionDomain>> Result
+        TSharedPtr<TSharedPtr<Gs2::UE5::Core::Domain::FEzTransactionGameSessionDomain>> Result
     )
     {
         const auto Future = Self->ConnectionValue->Run(
@@ -81,9 +81,8 @@ namespace Gs2::UE5::Mission::Domain::Model
                     Task->EnsureCompletion();
                     return Task->GetTask().Error();
                 }
-                *Result = MakeShared<Gs2::UE5::Mission::Domain::Model::FEzCompleteGameSessionDomain>(
+                *Result = MakeShared<Gs2::UE5::Core::Domain::FEzTransactionGameSessionDomain>(
                     Task->GetTask().Result(),
-                    Self->GameSession,
                     Self->ConnectionValue
                 );
                 Task->EnsureCompletion();
@@ -123,7 +122,7 @@ namespace Gs2::UE5::Mission::Domain::Model
     }
 
     Gs2::Core::Model::FGs2ErrorPtr FEzCompleteGameSessionDomain::FBatchReceiveRewardsTask::Action(
-        TSharedPtr<TSharedPtr<Gs2::UE5::Mission::Domain::Model::FEzCompleteGameSessionDomain>> Result
+        TSharedPtr<TSharedPtr<Gs2::UE5::Core::Domain::FEzTransactionGameSessionDomain>> Result
     )
     {
         const auto Future = Self->ConnectionValue->Run(
@@ -154,9 +153,8 @@ namespace Gs2::UE5::Mission::Domain::Model
                     Task->EnsureCompletion();
                     return Task->GetTask().Error();
                 }
-                *Result = MakeShared<Gs2::UE5::Mission::Domain::Model::FEzCompleteGameSessionDomain>(
+                *Result = MakeShared<Gs2::UE5::Core::Domain::FEzTransactionGameSessionDomain>(
                     Task->GetTask().Result(),
-                    Self->GameSession,
                     Self->ConnectionValue
                 );
                 Task->EnsureCompletion();

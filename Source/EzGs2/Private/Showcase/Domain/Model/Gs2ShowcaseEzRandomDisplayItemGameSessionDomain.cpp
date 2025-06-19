@@ -61,7 +61,7 @@ namespace Gs2::UE5::Showcase::Domain::Model
     }
 
     Gs2::Core::Model::FGs2ErrorPtr FEzRandomDisplayItemGameSessionDomain::FRandomShowcaseBuyTask::Action(
-        TSharedPtr<TSharedPtr<Gs2::UE5::Showcase::Domain::Model::FEzRandomDisplayItemGameSessionDomain>> Result
+        TSharedPtr<TSharedPtr<Gs2::UE5::Core::Domain::FEzTransactionGameSessionDomain>> Result
     )
     {
         const auto Future = Self->ConnectionValue->Run(
@@ -86,9 +86,8 @@ namespace Gs2::UE5::Showcase::Domain::Model
                     Task->EnsureCompletion();
                     return Task->GetTask().Error();
                 }
-                *Result = MakeShared<Gs2::UE5::Showcase::Domain::Model::FEzRandomDisplayItemGameSessionDomain>(
+                *Result = MakeShared<Gs2::UE5::Core::Domain::FEzTransactionGameSessionDomain>(
                     Task->GetTask().Result(),
-                    Self->GameSession,
                     Self->ConnectionValue
                 );
                 Task->EnsureCompletion();

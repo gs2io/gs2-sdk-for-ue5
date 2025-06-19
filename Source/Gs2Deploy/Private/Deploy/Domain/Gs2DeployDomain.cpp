@@ -72,6 +72,16 @@ namespace Gs2::Deploy::Domain
         TSharedPtr<TSharedPtr<FGs2DeployDomain>> Result
     )
     {
+        const auto Future = Self->Client->PreCreateStack(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         const auto Domain = Self;
         if (ResultModel != nullptr)
         {
@@ -112,6 +122,16 @@ namespace Gs2::Deploy::Domain
         TSharedPtr<TSharedPtr<Gs2::Deploy::Domain::Model::FStackDomain>> Result
     )
     {
+        const auto Future = Self->Client->CreateStack(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         auto Domain = MakeShared<Gs2::Deploy::Domain::Model::FStackDomain>(
             Self->Gs2,
             Self,
@@ -145,6 +165,16 @@ namespace Gs2::Deploy::Domain
         TSharedPtr<TSharedPtr<Gs2::Deploy::Domain::Model::FStackDomain>> Result
     )
     {
+        const auto Future = Self->Client->CreateStackFromGitHub(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         auto Domain = MakeShared<Gs2::Deploy::Domain::Model::FStackDomain>(
             Self->Gs2,
             Self,
@@ -178,6 +208,16 @@ namespace Gs2::Deploy::Domain
         TSharedPtr<TSharedPtr<FGs2DeployDomain>> Result
     )
     {
+        const auto Future = Self->Client->PreValidate(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         const auto Domain = Self;
         if (ResultModel != nullptr)
         {
@@ -218,6 +258,16 @@ namespace Gs2::Deploy::Domain
         TSharedPtr<TSharedPtr<FGs2DeployDomain>> Result
     )
     {
+        const auto Future = Self->Client->Validate(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         const auto Domain = Self;
         *Result = Domain;
         return nullptr;

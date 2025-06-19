@@ -110,6 +110,16 @@ namespace Gs2::Guild::Domain::Model
             ->WithNamespaceName(Self->NamespaceName)
             ->WithGuildModelName(Self->GuildModelName)
             ->WithAccessToken(Self->AccessToken->GetToken());
+        const auto Future = Self->Client->GetLastGuildMasterActivity(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         *Result = ResultModel->GetItem();
         return nullptr;
     }

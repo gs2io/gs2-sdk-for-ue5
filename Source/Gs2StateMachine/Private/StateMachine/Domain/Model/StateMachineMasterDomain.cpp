@@ -92,6 +92,16 @@ namespace Gs2::StateMachine::Domain::Model
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithVersion(Self->Version);
+        const auto Future = Self->Client->GetStateMachineMaster(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         *Result = ResultModel->GetItem();
         return nullptr;
     }
@@ -124,6 +134,16 @@ namespace Gs2::StateMachine::Domain::Model
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithVersion(Self->Version);
+        const auto Future = Self->Client->DeleteStateMachineMaster(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         auto Domain = Self;
 
         *Result = Domain;
@@ -138,22 +158,22 @@ namespace Gs2::StateMachine::Domain::Model
 
     FString FStateMachineMasterDomain::CreateCacheParentKey(
         TOptional<FString> NamespaceName,
-        TOptional<FString> Version,
+        TOptional<int64> Version,
         FString ChildType
     )
     {
         return FString("") +
             (NamespaceName.IsSet() ? *NamespaceName : "null") + ":" +
-            (Version.IsSet() ? *Version : "null") + ":" +
+            (Version.IsSet() ? FString::FromInt(*Version) : "null") + ":" +
             ChildType;
     }
 
     FString FStateMachineMasterDomain::CreateCacheKey(
-        TOptional<FString> Version
+        TOptional<int64> Version
     )
     {
         return FString("") +
-            (Version.IsSet() ? *Version : "null");
+            (Version.IsSet() ? FString::FromInt(*Version) : "null");
     }
 
     FStateMachineMasterDomain::FModelTask::FModelTask(
@@ -179,7 +199,7 @@ namespace Gs2::StateMachine::Domain::Model
         auto bCacheHit = Self->Gs2->Cache->TryGet<Gs2::StateMachine::Model::FStateMachineMaster>(
             Self->ParentKey,
             Gs2::StateMachine::Domain::Model::FStateMachineMasterDomain::CreateCacheKey(
-                Self->Version.IsSet() ? FString::FromInt(*Self->Version) : TOptional<FString>()
+                Self->Version
             ),
             &Value
         );
@@ -196,7 +216,7 @@ namespace Gs2::StateMachine::Domain::Model
                 }
 
                 const auto Key = Gs2::StateMachine::Domain::Model::FStateMachineMasterDomain::CreateCacheKey(
-                    Self->Version.IsSet() ? FString::FromInt(*Self->Version) : TOptional<FString>()
+                    Self->Version
                 );
                 Self->Gs2->Cache->Put(
                     Gs2::StateMachine::Model::FStateMachineMaster::TypeName,
@@ -214,7 +234,7 @@ namespace Gs2::StateMachine::Domain::Model
             Self->Gs2->Cache->TryGet<Gs2::StateMachine::Model::FStateMachineMaster>(
                 Self->ParentKey,
                 Gs2::StateMachine::Domain::Model::FStateMachineMasterDomain::CreateCacheKey(
-                    Self->Version.IsSet() ? FString::FromInt(*Self->Version) : TOptional<FString>()
+                    Self->Version
                 ),
                 &Value
             );
@@ -237,7 +257,7 @@ namespace Gs2::StateMachine::Domain::Model
             Gs2::StateMachine::Model::FStateMachineMaster::TypeName,
             ParentKey,
             Gs2::StateMachine::Domain::Model::FStateMachineMasterDomain::CreateCacheKey(
-                Version.IsSet() ? FString::FromInt(*Version) : TOptional<FString>()
+                Version
             ),
             [Callback](TSharedPtr<FGs2Object> obj)
             {
@@ -254,7 +274,7 @@ namespace Gs2::StateMachine::Domain::Model
             Gs2::StateMachine::Model::FStateMachineMaster::TypeName,
             ParentKey,
             Gs2::StateMachine::Domain::Model::FStateMachineMasterDomain::CreateCacheKey(
-                Version.IsSet() ? FString::FromInt(*Version) : TOptional<FString>()
+                Version
             ),
             CallbackID
         );

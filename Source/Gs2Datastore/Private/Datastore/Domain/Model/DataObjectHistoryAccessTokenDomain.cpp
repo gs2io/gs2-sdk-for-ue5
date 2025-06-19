@@ -104,6 +104,16 @@ namespace Gs2::Datastore::Domain::Model
             ->WithAccessToken(Self->AccessToken->GetToken())
             ->WithDataObjectName(Self->DataObjectName)
             ->WithGeneration(Self->Generation);
+        const auto Future = Self->Client->GetDataObjectHistory(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         *Result = ResultModel->GetItem();
         return nullptr;
     }

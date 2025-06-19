@@ -33,21 +33,28 @@ namespace Gs2::UE5::Chat::Domain::Iterator
         Gs2::Chat::Domain::Model::FRoomAccessTokenDomainPtr Domain;
         Gs2::UE5::Util::IGameSessionPtr GameSession;
         Gs2::UE5::Util::FGs2ConnectionPtr Connection;
+        TOptional<FString> Password;
+        TOptional<int32> Category;
 
 	public:
 
         explicit FEzDescribeMessagesIterator(
             Gs2::Chat::Domain::Model::FRoomAccessTokenDomainPtr Domain,
             Gs2::UE5::Util::IGameSessionPtr GameSession,
-            Gs2::UE5::Util::FGs2ConnectionPtr Connection
+            Gs2::UE5::Util::FGs2ConnectionPtr Connection,
+            TOptional<FString> Password = TOptional<FString>(),
+            TOptional<int32> Category = TOptional<int32>()
         ) :
             It(
                 Domain->Messages(
+                    Category
                 )
             ),
             Domain(Domain),
             GameSession(GameSession),
-            Connection(Connection)
+            Connection(Connection),
+            Password(Password),
+            Category(Category)
         {
         }
 
@@ -57,7 +64,9 @@ namespace Gs2::UE5::Chat::Domain::Iterator
 			It(From.It),
 			Domain(From.Domain),
 			GameSession(From.GameSession),
-			Connection(From.Connection)
+			Connection(From.Connection),
+            Password(From.Password),
+            Category(From.Category)
 		{
 		}
 

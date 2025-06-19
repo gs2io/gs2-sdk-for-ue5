@@ -23,6 +23,7 @@
 #include "Gs2AdRewardEzUserDomain.h"
 #include "Gs2AdRewardEzUserGameSessionDomain.h"
 #include "Gs2AdRewardEzNamespaceDomain.h"
+#include "Core/EzTransactionDomain.h"
 #include "Util/Net/GameSession.h"
 #include "Util/Net/Gs2Connection.h"
 

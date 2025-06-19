@@ -12,6 +12,8 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
+ *
+ * deny overwrite
  */
 
 #if defined(_MSC_VER)
@@ -133,6 +135,15 @@ namespace Gs2::Ranking2::Domain::Model
             ->WithRankingName(Self->RankingName)
             ->WithAccessToken(Self->AccessToken->GetToken())
             ->WithSeason(Self->Season);
+        const auto Future = Self->Client->GetGlobalRankingScore(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
         *Result = ResultModel->GetItem();
         return nullptr;
     }
@@ -167,6 +178,15 @@ namespace Gs2::Ranking2::Domain::Model
             ->WithAccessToken(Self->AccessToken->GetToken())
             ->WithRankingName(Self->RankingName)
             ->WithSeason(Self->Season);
+        const auto Future = Self->Client->VerifyGlobalRankingScore(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
         auto Domain = Self;
 
         *Result = Domain;
@@ -182,7 +202,7 @@ namespace Gs2::Ranking2::Domain::Model
     FString FGlobalRankingScoreAccessTokenDomain::CreateCacheParentKey(
         TOptional<FString> NamespaceName,
         TOptional<FString> RankingName,
-        TOptional<FString> Season,
+        TOptional<int64> Season,
         TOptional<FString> UserId,
         FString ChildType
     )
@@ -190,18 +210,18 @@ namespace Gs2::Ranking2::Domain::Model
         return FString("") +
             (NamespaceName.IsSet() ? *NamespaceName : "null") + ":" +
             (RankingName.IsSet() ? *RankingName : "null") + ":" +
-            (Season.IsSet() ? *Season : "null") + ":" +
+            (Season.IsSet() ? FString::FromInt(*Season) : "null") + ":" +
             (UserId.IsSet() ? *UserId : "null") + ":" +
             ChildType;
     }
 
     FString FGlobalRankingScoreAccessTokenDomain::CreateCacheKey(
-        TOptional<FString> Season,
+        TOptional<int64> Season,
         TOptional<FString> UserId
     )
     {
         return FString("") +
-            (Season.IsSet() ? *Season : "null") + ":" + 
+            (Season.IsSet() ? FString::FromInt(*Season) : "null") + ":" + 
             (UserId.IsSet() ? *UserId : "null");
     }
 
@@ -228,7 +248,7 @@ namespace Gs2::Ranking2::Domain::Model
         auto bCacheHit = Self->Gs2->Cache->TryGet<Gs2::Ranking2::Model::FGlobalRankingScore>(
             Self->ParentKey,
             Gs2::Ranking2::Domain::Model::FGlobalRankingScoreDomain::CreateCacheKey(
-                Self->Season.IsSet() ? FString::FromInt(*Self->Season) : TOptional<FString>(),
+                Self->Season,
                 Self->UserId()
             ),
             &Value
@@ -246,8 +266,8 @@ namespace Gs2::Ranking2::Domain::Model
                 }
 
                 const auto Key = Gs2::Ranking2::Domain::Model::FGlobalRankingScoreDomain::CreateCacheKey(
-                    Self->Season.IsSet() ? FString::FromInt(*Self->Season) : TOptional<FString>(),
-                    Self->UserId
+                    Self->Season,
+                    Self->UserId()
                 );
                 Self->Gs2->Cache->Put(
                     Gs2::Ranking2::Model::FGlobalRankingScore::TypeName,
@@ -265,7 +285,7 @@ namespace Gs2::Ranking2::Domain::Model
             Self->Gs2->Cache->TryGet<Gs2::Ranking2::Model::FGlobalRankingScore>(
                 Self->ParentKey,
                 Gs2::Ranking2::Domain::Model::FGlobalRankingScoreDomain::CreateCacheKey(
-                    Self->Season.IsSet() ? FString::FromInt(*Self->Season) : TOptional<FString>(),
+                    Self->Season,
                     Self->UserId()
                 ),
                 &Value
@@ -289,8 +309,8 @@ namespace Gs2::Ranking2::Domain::Model
             Gs2::Ranking2::Model::FGlobalRankingScore::TypeName,
             ParentKey,
             Gs2::Ranking2::Domain::Model::FGlobalRankingScoreDomain::CreateCacheKey(
-                Season.IsSet() ? FString::FromInt(*Season) : TOptional<FString>(),
-                UserId
+                Season,
+                UserId()
             ),
             [Callback](TSharedPtr<FGs2Object> obj)
             {
@@ -307,8 +327,8 @@ namespace Gs2::Ranking2::Domain::Model
             Gs2::Ranking2::Model::FGlobalRankingScore::TypeName,
             ParentKey,
             Gs2::Ranking2::Domain::Model::FGlobalRankingScoreDomain::CreateCacheKey(
-                Season.IsSet() ? FString::FromInt(*Season) : TOptional<FString>(),
-                UserId
+                Season,
+                UserId()
             ),
             CallbackID
         );

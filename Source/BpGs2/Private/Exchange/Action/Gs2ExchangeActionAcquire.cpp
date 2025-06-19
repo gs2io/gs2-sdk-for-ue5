@@ -50,18 +50,17 @@ void UGs2ExchangeAcquireAsyncFunction::Activate()
     );
     Future->GetTask().OnSuccessDelegate().BindLambda([&](auto Result)
     {
-        FGs2ExchangeOwnAwait ReturnAwait;
-        ReturnAwait.Value = Result;
+        FGs2CoreOwnTransaction ReturnTransaction;
         const FGs2Error ReturnError;
-        OnError.Broadcast(ReturnAwait, ReturnError);
+        OnError.Broadcast(ReturnTransaction, ReturnError);
         SetReadyToDestroy();
     });
     Future->GetTask().OnErrorDelegate().BindLambda([&](auto Error)
     {
-        FGs2ExchangeOwnAwait ReturnAwait;
+        FGs2CoreOwnTransaction ReturnTransaction;
         FGs2Error ReturnError;
         ReturnError.Value = Error;
-        OnError.Broadcast(ReturnAwait, ReturnError);
+        OnError.Broadcast(ReturnTransaction, ReturnError);
         SetReadyToDestroy();
     });
     Future->StartBackgroundTask();

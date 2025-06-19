@@ -27,6 +27,7 @@
 #include "Gs2DictionaryEzLikeGameSessionDomain.h"
 #include "Dictionary/Domain/Iterator/Gs2DictionaryEzDescribeLikesIterator.h"
 #include "Gs2DictionaryEzUserGameSessionDomain.h"
+#include "Core/EzTransactionGameSessionDomain.h"
 #include "Util/Net/GameSession.h"
 #include "Util/Net/Gs2Connection.h"
 

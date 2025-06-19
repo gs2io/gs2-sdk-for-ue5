@@ -98,6 +98,16 @@ namespace Gs2::Distributor::Domain::Model
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithDistributorName(Self->DistributorName);
+        const auto Future = Self->Client->GetDistributorModel(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         *Result = ResultModel->GetItem();
         return nullptr;
     }

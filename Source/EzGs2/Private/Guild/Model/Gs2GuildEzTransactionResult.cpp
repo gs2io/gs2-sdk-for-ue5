@@ -28,7 +28,7 @@ namespace Gs2::UE5::Guild::Model
     }
 
     TSharedPtr<FEzTransactionResult> FEzTransactionResult::WithVerifyResults(
-        const TSharedPtr<TArray<TSharedPtr<Gs2::UE5::Core::Model::FEzVerifyActionResult>>> VerifyResults
+        const TSharedPtr<TArray<TSharedPtr<Gs2::UE5::Guild::Model::FEzVerifyActionResult>>> VerifyResults
     )
     {
         this->VerifyResultsValue = VerifyResults;
@@ -36,7 +36,7 @@ namespace Gs2::UE5::Guild::Model
     }
 
     TSharedPtr<FEzTransactionResult> FEzTransactionResult::WithConsumeResults(
-        const TSharedPtr<TArray<TSharedPtr<Gs2::UE5::Core::Model::FEzConsumeActionResult>>> ConsumeResults
+        const TSharedPtr<TArray<TSharedPtr<Gs2::UE5::Guild::Model::FEzConsumeActionResult>>> ConsumeResults
     )
     {
         this->ConsumeResultsValue = ConsumeResults;
@@ -44,7 +44,7 @@ namespace Gs2::UE5::Guild::Model
     }
 
     TSharedPtr<FEzTransactionResult> FEzTransactionResult::WithAcquireResults(
-        const TSharedPtr<TArray<TSharedPtr<Gs2::UE5::Core::Model::FEzAcquireActionResult>>> AcquireResults
+        const TSharedPtr<TArray<TSharedPtr<Gs2::UE5::Guild::Model::FEzAcquireActionResult>>> AcquireResults
     )
     {
         this->AcquireResultsValue = AcquireResults;
@@ -54,15 +54,15 @@ namespace Gs2::UE5::Guild::Model
     {
         return TransactionIdValue;
     }
-    TSharedPtr<TArray<TSharedPtr<Gs2::UE5::Core::Model::FEzVerifyActionResult>>> FEzTransactionResult::GetVerifyResults() const
+    TSharedPtr<TArray<TSharedPtr<Gs2::UE5::Guild::Model::FEzVerifyActionResult>>> FEzTransactionResult::GetVerifyResults() const
     {
         return VerifyResultsValue;
     }
-    TSharedPtr<TArray<TSharedPtr<Gs2::UE5::Core::Model::FEzConsumeActionResult>>> FEzTransactionResult::GetConsumeResults() const
+    TSharedPtr<TArray<TSharedPtr<Gs2::UE5::Guild::Model::FEzConsumeActionResult>>> FEzTransactionResult::GetConsumeResults() const
     {
         return ConsumeResultsValue;
     }
-    TSharedPtr<TArray<TSharedPtr<Gs2::UE5::Core::Model::FEzAcquireActionResult>>> FEzTransactionResult::GetAcquireResults() const
+    TSharedPtr<TArray<TSharedPtr<Gs2::UE5::Guild::Model::FEzAcquireActionResult>>> FEzTransactionResult::GetAcquireResults() const
     {
         return AcquireResultsValue;
     }

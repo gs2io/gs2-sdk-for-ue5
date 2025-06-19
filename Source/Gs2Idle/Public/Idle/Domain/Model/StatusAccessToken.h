@@ -60,16 +60,6 @@ namespace Gs2::Idle::Domain::Model
         const Gs2::Idle::FGs2IdleRestClientPtr Client;
 
         public:
-        TOptional<FString> TransactionId;
-        TOptional<bool> AutoRunStampSheet;
-        TOptional<FString> GetTransactionId() const
-        {
-            return TransactionId;
-        }
-        TOptional<bool> GetAutoRunStampSheet() const
-        {
-            return AutoRunStampSheet;
-        }
         TOptional<FString> NamespaceName;
         Gs2::Auth::Model::FAccessTokenPtr AccessToken;
         TOptional<FString> UserId() const { return AccessToken->GetUserId(); }
@@ -146,7 +136,7 @@ namespace Gs2::Idle::Domain::Model
         );
 
         class GS2IDLE_API FReceiveTask final :
-            public Gs2::Core::Util::TGs2Future<Gs2::Idle::Domain::Model::FStatusAccessTokenDomain>,
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::FTransactionAccessTokenDomain>,
             public TSharedFromThis<FReceiveTask>
         {
             const TSharedPtr<FStatusAccessTokenDomain> Self;
@@ -164,7 +154,7 @@ namespace Gs2::Idle::Domain::Model
             );
 
             virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-                TSharedPtr<TSharedPtr<Gs2::Idle::Domain::Model::FStatusAccessTokenDomain>> Result
+                TSharedPtr<TSharedPtr<Gs2::Core::Domain::FTransactionAccessTokenDomain>> Result
             ) override;
         };
         friend FReceiveTask;

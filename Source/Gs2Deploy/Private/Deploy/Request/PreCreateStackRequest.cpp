@@ -18,13 +18,13 @@
 
 namespace Gs2::Deploy::Request
 {
-    FPreCreateStackRequest::FPreCreateStackRequest():
+    FPreCreateStackRequest::FPreCreateStackRequest()
     {
     }
 
     FPreCreateStackRequest::FPreCreateStackRequest(
         const FPreCreateStackRequest& From
-    ):
+    )
     {
     }
 

@@ -34,6 +34,7 @@
 #include "Gs2DistributorEzStampSheetResultGameSessionDomain.h"
 #include "Gs2DistributorEzTransactionResultGameSessionDomain.h"
 #include "Gs2DistributorEzUserGameSessionDomain.h"
+#include "Core/EzTransactionGameSessionDomain.h"
 #include "Util/Net/GameSession.h"
 #include "Util/Net/Gs2Connection.h"
 

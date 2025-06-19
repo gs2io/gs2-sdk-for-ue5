@@ -21,6 +21,7 @@
 #include "Limit/Model/Gs2LimitEzCounter.h"
 #include "Limit/Model/Gs2LimitEzLimitModel.h"
 #include "Gs2LimitEzCounterDomain.h"
+#include "Core/EzTransactionDomain.h"
 #include "Util/Net/GameSession.h"
 #include "Util/Net/Gs2Connection.h"
 

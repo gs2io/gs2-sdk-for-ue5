@@ -125,6 +125,16 @@ namespace Gs2::Matchmaking::Domain::Model
             ->WithAccessToken(Self->AccessToken->GetToken())
             ->WithNumberOfPlayer(Self->NumberOfPlayer)
             ->WithKeyId(Self->KeyId);
+        const auto Future = Self->Client->GetBallot(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         *Result = ResultModel->GetItem();
         return nullptr;
     }
@@ -140,7 +150,7 @@ namespace Gs2::Matchmaking::Domain::Model
         TOptional<FString> UserId,
         TOptional<FString> RatingName,
         TOptional<FString> GatheringName,
-        TOptional<FString> NumberOfPlayer,
+        TOptional<int32> NumberOfPlayer,
         TOptional<FString> KeyId,
         FString ChildType
     )
@@ -150,7 +160,7 @@ namespace Gs2::Matchmaking::Domain::Model
             (UserId.IsSet() ? *UserId : "null") + ":" +
             (RatingName.IsSet() ? *RatingName : "null") + ":" +
             (GatheringName.IsSet() ? *GatheringName : "null") + ":" +
-            (NumberOfPlayer.IsSet() ? *NumberOfPlayer : "null") + ":" +
+            (NumberOfPlayer.IsSet() ? FString::FromInt(*NumberOfPlayer) : "null") + ":" +
             (KeyId.IsSet() ? *KeyId : "null") + ":" +
             ChildType;
     }
@@ -158,14 +168,14 @@ namespace Gs2::Matchmaking::Domain::Model
     FString FBallotAccessTokenDomain::CreateCacheKey(
         TOptional<FString> RatingName,
         TOptional<FString> GatheringName,
-        TOptional<FString> NumberOfPlayer,
+        TOptional<int32> NumberOfPlayer,
         TOptional<FString> KeyId
     )
     {
         return FString("") +
             (RatingName.IsSet() ? *RatingName : "null") + ":" + 
             (GatheringName.IsSet() ? *GatheringName : "null") + ":" + 
-            (NumberOfPlayer.IsSet() ? *NumberOfPlayer : "null") + ":" + 
+            (NumberOfPlayer.IsSet() ? FString::FromInt(*NumberOfPlayer) : "null") + ":" + 
             (KeyId.IsSet() ? *KeyId : "null");
     }
 
@@ -194,7 +204,7 @@ namespace Gs2::Matchmaking::Domain::Model
             Gs2::Matchmaking::Domain::Model::FBallotDomain::CreateCacheKey(
                 Self->RatingName,
                 Self->GatheringName,
-                Self->NumberOfPlayer.IsSet() ? FString::FromInt(*Self->NumberOfPlayer) : TOptional<FString>(),
+                Self->NumberOfPlayer,
                 Self->KeyId
             ),
             &Value
@@ -214,7 +224,7 @@ namespace Gs2::Matchmaking::Domain::Model
                 const auto Key = Gs2::Matchmaking::Domain::Model::FBallotDomain::CreateCacheKey(
                     Self->RatingName,
                     Self->GatheringName,
-                    Self->NumberOfPlayer.IsSet() ? FString::FromInt(*Self->NumberOfPlayer) : TOptional<FString>(),
+                    Self->NumberOfPlayer,
                     Self->KeyId
                 );
                 Self->Gs2->Cache->Put(
@@ -235,7 +245,7 @@ namespace Gs2::Matchmaking::Domain::Model
                 Gs2::Matchmaking::Domain::Model::FBallotDomain::CreateCacheKey(
                     Self->RatingName,
                     Self->GatheringName,
-                    Self->NumberOfPlayer.IsSet() ? FString::FromInt(*Self->NumberOfPlayer) : TOptional<FString>(),
+                    Self->NumberOfPlayer,
                     Self->KeyId
                 ),
                 &Value
@@ -261,7 +271,7 @@ namespace Gs2::Matchmaking::Domain::Model
             Gs2::Matchmaking::Domain::Model::FBallotDomain::CreateCacheKey(
                 RatingName,
                 GatheringName,
-                NumberOfPlayer.IsSet() ? FString::FromInt(*NumberOfPlayer) : TOptional<FString>(),
+                NumberOfPlayer,
                 KeyId
             ),
             [Callback](TSharedPtr<FGs2Object> obj)
@@ -281,7 +291,7 @@ namespace Gs2::Matchmaking::Domain::Model
             Gs2::Matchmaking::Domain::Model::FBallotDomain::CreateCacheKey(
                 RatingName,
                 GatheringName,
-                NumberOfPlayer.IsSet() ? FString::FromInt(*NumberOfPlayer) : TOptional<FString>(),
+                NumberOfPlayer,
                 KeyId
             ),
             CallbackID

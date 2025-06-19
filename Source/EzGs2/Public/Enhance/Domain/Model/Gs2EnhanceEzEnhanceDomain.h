@@ -27,6 +27,7 @@
 #include "Enhance/Model/Gs2EnhanceEzAcquireActionResult.h"
 #include "Enhance/Model/Gs2EnhanceEzTransactionResult.h"
 #include "Gs2EnhanceEzEnhanceDomain.h"
+#include "Core/EzTransactionDomain.h"
 #include "Util/Net/GameSession.h"
 #include "Util/Net/Gs2Connection.h"
 

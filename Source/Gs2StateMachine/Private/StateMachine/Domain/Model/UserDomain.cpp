@@ -92,6 +92,16 @@ namespace Gs2::StateMachine::Domain::Model
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithUserId(Self->UserId);
+        const auto Future = Self->Client->StartStateMachineByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         auto Domain = MakeShared<Gs2::StateMachine::Domain::Model::FStatusDomain>(
             Self->Gs2,
             Self->Service,

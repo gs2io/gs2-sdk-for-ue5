@@ -12,6 +12,8 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
+ *
+ * deny overwrite
  */
 
 #pragma once
@@ -39,7 +41,9 @@
 #include "Ranking2/Model/Gs2Ranking2EzTransactionResult.h"
 #include "Gs2Ranking2EzSubscribeRankingSeasonDomain.h"
 #include "Gs2Ranking2EzSubscribeRankingModelDomain.h"
+#include "Gs2Ranking2EzSubscribeRankingSeasonGameSessionDomain.h"
 #include "Ranking2/Domain/Iterator/Gs2Ranking2EzDescribeSubscribeRankingModelsIterator.h"
+#include "Core/EzTransactionDomain.h"
 #include "Util/Net/GameSession.h"
 #include "Util/Net/Gs2Connection.h"
 
@@ -61,9 +65,9 @@ namespace Gs2::UE5::Ranking2::Domain::Model
             Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
 
-        Gs2::UE5::Ranking2::Domain::Model::FEzSubscribeRankingSeasonDomainPtr SubscribeRankingSeason(
-            const int64 Season,
-            const FString UserId
+        Gs2::UE5::Ranking2::Domain::Model::FEzSubscribeRankingSeasonGameSessionDomainPtr SubscribeRankingSeason(
+            const Util::FGameSessionPtr GameSession,
+            const TOptional<int64> Season
         ) const;
 
         class EZGS2_API FModelTask :

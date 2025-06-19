@@ -12,6 +12,8 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
+ *
+ * deny overwrite
  */
 
 #if defined(_MSC_VER)
@@ -91,6 +93,15 @@ namespace Gs2::Ranking2::Domain
         TSharedPtr<TSharedPtr<Gs2::Ranking2::Domain::Model::FNamespaceDomain>> Result
     )
     {
+        const auto Future = Self->Client->CreateNamespace(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
         auto Domain = MakeShared<Gs2::Ranking2::Domain::Model::FNamespaceDomain>(
             Self->Gs2,
             Self,
@@ -124,6 +135,15 @@ namespace Gs2::Ranking2::Domain
         TSharedPtr<TSharedPtr<FGs2Ranking2Domain>> Result
     )
     {
+        const auto Future = Self->Client->DumpUserDataByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
         const auto Domain = Self;
         *Result = Domain;
         return nullptr;
@@ -153,6 +173,15 @@ namespace Gs2::Ranking2::Domain
         TSharedPtr<TSharedPtr<FGs2Ranking2Domain>> Result
     )
     {
+        const auto Future = Self->Client->CheckDumpUserDataByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
         const auto Domain = Self;
         if (ResultModel != nullptr)
         {
@@ -189,6 +218,15 @@ namespace Gs2::Ranking2::Domain
         TSharedPtr<TSharedPtr<FGs2Ranking2Domain>> Result
     )
     {
+        const auto Future = Self->Client->CleanUserDataByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
         const auto Domain = Self;
         *Result = Domain;
         return nullptr;
@@ -218,6 +256,15 @@ namespace Gs2::Ranking2::Domain
         TSharedPtr<TSharedPtr<FGs2Ranking2Domain>> Result
     )
     {
+        const auto Future = Self->Client->CheckCleanUserDataByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
         const auto Domain = Self;
         *Result = Domain;
         return nullptr;
@@ -247,6 +294,15 @@ namespace Gs2::Ranking2::Domain
         TSharedPtr<TSharedPtr<FGs2Ranking2Domain>> Result
     )
     {
+        const auto Future = Self->Client->PrepareImportUserDataByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
         const auto Domain = Self;
         if (ResultModel != nullptr)
         {
@@ -287,6 +343,15 @@ namespace Gs2::Ranking2::Domain
         TSharedPtr<TSharedPtr<FGs2Ranking2Domain>> Result
     )
     {
+        const auto Future = Self->Client->ImportUserDataByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
         const auto Domain = Self;
         *Result = Domain;
         return nullptr;
@@ -316,6 +381,15 @@ namespace Gs2::Ranking2::Domain
         TSharedPtr<TSharedPtr<FGs2Ranking2Domain>> Result
     )
     {
+        const auto Future = Self->Client->CheckImportUserDataByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
         const auto Domain = Self;
         if (ResultModel != nullptr)
         {
@@ -413,7 +487,7 @@ namespace Gs2::Ranking2::Domain
                     "GlobalRankingReceivedReward"
                 );
                 const auto Key = Gs2::Ranking2::Domain::Model::FGlobalRankingReceivedRewardDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetSeason().IsSet() ? FString::FromInt(*ResultModel->GetItem()->GetSeason()) : TOptional<FString>(),
+                    ResultModel->GetItem()->GetSeason(),
                     ResultModel->GetItem()->GetUserId()
                 );
                 Gs2->Cache->Put(
@@ -452,7 +526,7 @@ namespace Gs2::Ranking2::Domain
                 );
                 const auto Key = Gs2::Ranking2::Domain::Model::FClusterRankingReceivedRewardDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetClusterName(),
-                    ResultModel->GetItem()->GetSeason().IsSet() ? FString::FromInt(*ResultModel->GetItem()->GetSeason()) : TOptional<FString>(),
+                    ResultModel->GetItem()->GetSeason(),
                     ResultModel->GetItem()->GetUserId()
                 );
                 Gs2->Cache->Put(

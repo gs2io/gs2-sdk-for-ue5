@@ -28,6 +28,7 @@
 #include "Gs2RankingEzScoreGameSessionDomain.h"
 #include "Ranking/Domain/Iterator/Gs2RankingEzDescribeScoresIterator.h"
 #include "Gs2RankingEzUserGameSessionDomain.h"
+#include "Core/EzTransactionGameSessionDomain.h"
 #include "Util/Net/GameSession.h"
 #include "Util/Net/Gs2Connection.h"
 

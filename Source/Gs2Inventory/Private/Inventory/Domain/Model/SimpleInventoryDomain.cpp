@@ -122,6 +122,16 @@ namespace Gs2::Inventory::Domain::Model
             ->WithNamespaceName(Self->NamespaceName)
             ->WithInventoryName(Self->InventoryName)
             ->WithUserId(Self->UserId);
+        const auto Future = Self->Client->AcquireSimpleItemsByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         auto Domain = MakeShared<TArray<TSharedPtr<Gs2::Inventory::Domain::Model::FSimpleItemDomain>>>();
         for (auto i=0; i<ResultModel->GetItems()->Num(); i++)
         {
@@ -185,6 +195,16 @@ namespace Gs2::Inventory::Domain::Model
             ->WithNamespaceName(Self->NamespaceName)
             ->WithInventoryName(Self->InventoryName)
             ->WithUserId(Self->UserId);
+        const auto Future = Self->Client->ConsumeSimpleItemsByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         auto Domain = MakeShared<TArray<TSharedPtr<Gs2::Inventory::Domain::Model::FSimpleItemDomain>>>();
         for (auto i=0; i<ResultModel->GetItems()->Num(); i++)
         {
@@ -248,6 +268,16 @@ namespace Gs2::Inventory::Domain::Model
             ->WithNamespaceName(Self->NamespaceName)
             ->WithInventoryName(Self->InventoryName)
             ->WithUserId(Self->UserId);
+        const auto Future = Self->Client->SetSimpleItemsByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         auto Domain = MakeShared<TArray<TSharedPtr<Gs2::Inventory::Domain::Model::FSimpleItemDomain>>>();
         for (auto i=0; i<ResultModel->GetItems()->Num(); i++)
         {
@@ -311,6 +341,16 @@ namespace Gs2::Inventory::Domain::Model
             ->WithNamespaceName(Self->NamespaceName)
             ->WithInventoryName(Self->InventoryName)
             ->WithUserId(Self->UserId);
+        const auto Future = Self->Client->DeleteSimpleItemsByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         const auto Domain = Self;
         *Result = Domain;
         return nullptr;

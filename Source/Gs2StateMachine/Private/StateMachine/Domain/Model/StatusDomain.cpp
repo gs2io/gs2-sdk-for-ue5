@@ -97,6 +97,16 @@ namespace Gs2::StateMachine::Domain::Model
             ->WithNamespaceName(Self->NamespaceName)
             ->WithUserId(Self->UserId)
             ->WithStatusName(Self->StatusName);
+        const auto Future = Self->Client->GetStatusByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         *Result = ResultModel->GetItem();
         return nullptr;
     }
@@ -130,6 +140,16 @@ namespace Gs2::StateMachine::Domain::Model
             ->WithNamespaceName(Self->NamespaceName)
             ->WithUserId(Self->UserId)
             ->WithStatusName(Self->StatusName);
+        const auto Future = Self->Client->EmitByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         auto Domain = Self;
 
         *Result = Domain;
@@ -165,6 +185,16 @@ namespace Gs2::StateMachine::Domain::Model
             ->WithNamespaceName(Self->NamespaceName)
             ->WithUserId(Self->UserId)
             ->WithStatusName(Self->StatusName);
+        const auto Future = Self->Client->ReportByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         auto Domain = Self;
 
         *Result = Domain;
@@ -200,6 +230,16 @@ namespace Gs2::StateMachine::Domain::Model
             ->WithNamespaceName(Self->NamespaceName)
             ->WithUserId(Self->UserId)
             ->WithStatusName(Self->StatusName);
+        const auto Future = Self->Client->DeleteStatusByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         auto Domain = Self;
 
         *Result = Domain;
@@ -235,6 +275,16 @@ namespace Gs2::StateMachine::Domain::Model
             ->WithNamespaceName(Self->NamespaceName)
             ->WithUserId(Self->UserId)
             ->WithStatusName(Self->StatusName);
+        const auto Future = Self->Client->ExitStateMachineByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         auto Domain = Self;
 
         *Result = Domain;

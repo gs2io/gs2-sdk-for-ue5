@@ -103,6 +103,16 @@ namespace Gs2::Money2::Domain::Model
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithUserId(Self->UserId);
+        const auto Future = Self->Client->VerifyReceiptByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         auto Domain = MakeShared<Gs2::Money2::Domain::Model::FEventDomain>(
             Self->Gs2,
             Self->Service,
@@ -143,6 +153,16 @@ namespace Gs2::Money2::Domain::Model
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithUserId(Self->UserId);
+        const auto Future = Self->Client->AllocateSubscriptionStatusByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         auto Domain = MakeShared<Gs2::Money2::Domain::Model::FSubscriptionStatusDomain>(
             Self->Gs2,
             Self->Service,
@@ -183,6 +203,16 @@ namespace Gs2::Money2::Domain::Model
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithUserId(Self->UserId);
+        const auto Future = Self->Client->TakeoverSubscriptionStatusByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         auto Domain = MakeShared<Gs2::Money2::Domain::Model::FSubscriptionStatusDomain>(
             Self->Gs2,
             Self->Service,

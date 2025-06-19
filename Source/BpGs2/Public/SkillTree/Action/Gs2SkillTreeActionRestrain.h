@@ -20,12 +20,14 @@
 #include "SkillTree/Model/Gs2SkillTreeStatus.h"
 #include "SkillTree/Model/Gs2SkillTreeStatus.h"
 #include "../../Core/Model/Gs2Error.h"
+#include "Core/Model/Gs2CoreTransaction.h"
 #include "Kismet/BlueprintAsyncActionBase.h"
 #include "Gs2SkillTreeActionRestrain.generated.h"
 
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FGs2SkillTreeRestrainSuccessDelegate, FGs2SkillTreeOwnStatus, Status, const FGs2Error, Error);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FGs2SkillTreeRestrainErrorDelegate, FGs2SkillTreeOwnStatus, Status, const FGs2Error, Error);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FGs2SkillTreeRestrainSuccessDelegate, FGs2CoreOwnTransaction, Transaction, const FGs2Error, Error);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FGs2SkillTreeRestrainErrorDelegate, FGs2CoreOwnTransaction, Transaction, const FGs2Error, Error);
+
 
 UCLASS()
 class BPGS2_API UGs2SkillTreeRestrainAsyncFunction : public UBlueprintAsyncActionBase

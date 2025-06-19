@@ -20,6 +20,7 @@
 #include "Core/Domain/Transaction/TransactionDomain.h"
 #include "Core/Domain/Transaction/TransactionDomainFactory.h"
 #include "Core/Domain/Transaction/JobQueueJobDomainFactory.h"
+#include "Core/Model/TransactionResult.h"
 
 namespace Gs2::Core::Domain::Internal
 {
@@ -32,7 +33,9 @@ namespace Gs2::Core::Domain::Internal
 			bool bAutoRun,
 			FString TransactionId,
 			FString StampSheet,
-			FString StampSheetEncryptionKeyId
+			FString StampSheetEncryptionKeyId,
+			bool bAtomicCommit,
+			Core::Model::FTransactionResultPtr TransactionResult
 		)
 		{
 			return Gs2::Core::Domain::FTransactionDomainFactory::ToTransaction(
@@ -51,7 +54,9 @@ namespace Gs2::Core::Domain::Internal
 				bAutoRun,
 				TransactionId,
 				StampSheet,
-				StampSheetEncryptionKeyId
+				StampSheetEncryptionKeyId,
+				bAtomicCommit,
+				TransactionResult
 			);
 		}
 
@@ -61,7 +66,9 @@ namespace Gs2::Core::Domain::Internal
 			bool bAutoRun,
 			FString TransactionId,
 			FString StampSheet,
-			FString StampSheetEncryptionKeyId
+			FString StampSheetEncryptionKeyId,
+			bool bAtomicCommit,
+			Core::Model::FTransactionResultPtr TransactionResult
 		)
 		{
 			return Gs2::Core::Domain::FTransactionDomainFactory::ToTransaction(
@@ -80,7 +87,9 @@ namespace Gs2::Core::Domain::Internal
 				bAutoRun,
 				TransactionId,
 				StampSheet,
-				StampSheetEncryptionKeyId
+				StampSheetEncryptionKeyId,
+				bAtomicCommit,
+				TransactionResult
 			);
 		}
 		
@@ -96,7 +105,9 @@ namespace Gs2::Core::Domain::Internal
 					bool bAutoRun,
 					FString TransactionId,
 					FString StampSheet,
-					FString StampSheetEncryptionKeyId
+					FString StampSheetEncryptionKeyId,
+					bool bAtomicCommit,
+					Core::Model::FTransactionResultPtr TransactionResult
 				)
 				{
 					return ToTransaction(
@@ -105,7 +116,9 @@ namespace Gs2::Core::Domain::Internal
 						bAutoRun,
 						TransactionId,
 						StampSheet,
-						StampSheetEncryptionKeyId
+						StampSheetEncryptionKeyId,
+						bAtomicCommit,
+						TransactionResult
 					);
 				},
 				AccessToken,
@@ -125,7 +138,9 @@ namespace Gs2::Core::Domain::Internal
 					bool bAutoRun,
 					FString TransactionId,
 					FString StampSheet,
-					FString StampSheetEncryptionKeyId
+					FString StampSheetEncryptionKeyId,
+					bool bAtomicCommit,
+					Core::Model::FTransactionResultPtr TransactionResult
 				)
 				{
 					return ToTransaction(
@@ -134,7 +149,9 @@ namespace Gs2::Core::Domain::Internal
 						bAutoRun,
 						TransactionId,
 						StampSheet,
-						StampSheetEncryptionKeyId
+						StampSheetEncryptionKeyId,
+						bAtomicCommit,
+						TransactionResult
 					);
 				},
 				UserId,
@@ -156,7 +173,9 @@ namespace Gs2::Core::Domain::Internal
 					bool bAutoRun,
 					FString TransactionId,
 					FString StampSheet,
-					FString StampSheetEncryptionKeyId
+					FString StampSheetEncryptionKeyId,
+					bool bAtomicCommit,
+					Core::Model::FTransactionResultPtr TransactionResult
 				)
 				{
 					return ToTransaction(
@@ -165,7 +184,9 @@ namespace Gs2::Core::Domain::Internal
 						bAutoRun,
 						TransactionId,
 						StampSheet,
-						StampSheetEncryptionKeyId
+						StampSheetEncryptionKeyId,
+						bAtomicCommit,
+						TransactionResult
 					);
 				},
 				AccessToken,
@@ -189,7 +210,9 @@ namespace Gs2::Core::Domain::Internal
 					bool bAutoRun,
 					FString TransactionId,
 					FString StampSheet,
-					FString StampSheetEncryptionKeyId
+					FString StampSheetEncryptionKeyId,
+					bool bAtomicCommit,
+					Core::Model::FTransactionResultPtr TransactionResult
 				)
 				{
 					return ToTransaction(
@@ -198,7 +221,9 @@ namespace Gs2::Core::Domain::Internal
 						bAutoRun,
 						TransactionId,
 						StampSheet,
-						StampSheetEncryptionKeyId
+						StampSheetEncryptionKeyId,
+						bAtomicCommit,
+						TransactionResult
 					);
 				},
 				UserId,

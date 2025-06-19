@@ -107,6 +107,16 @@ namespace Gs2::Enchant::Domain::Model
             ->WithUserId(Self->UserId)
             ->WithParameterName(Self->ParameterName)
             ->WithPropertyId(Self->PropertyId);
+        const auto Future = Self->Client->GetRarityParameterStatusByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         *Result = ResultModel->GetItem();
         return nullptr;
     }
@@ -141,6 +151,16 @@ namespace Gs2::Enchant::Domain::Model
             ->WithUserId(Self->UserId)
             ->WithParameterName(Self->ParameterName)
             ->WithPropertyId(Self->PropertyId);
+        const auto Future = Self->Client->DeleteRarityParameterStatusByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         auto Domain = Self;
 
         *Result = Domain;
@@ -177,6 +197,16 @@ namespace Gs2::Enchant::Domain::Model
             ->WithUserId(Self->UserId)
             ->WithParameterName(Self->ParameterName)
             ->WithPropertyId(Self->PropertyId);
+        const auto Future = Self->Client->ReDrawRarityParameterStatusByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         auto Domain = Self;
 
         *Result = Domain;
@@ -213,6 +243,16 @@ namespace Gs2::Enchant::Domain::Model
             ->WithUserId(Self->UserId)
             ->WithParameterName(Self->ParameterName)
             ->WithPropertyId(Self->PropertyId);
+        const auto Future = Self->Client->AddRarityParameterStatusByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         auto Domain = Self;
 
         *Result = Domain;
@@ -249,6 +289,16 @@ namespace Gs2::Enchant::Domain::Model
             ->WithParameterName(Self->ParameterName)
             ->WithUserId(Self->UserId)
             ->WithPropertyId(Self->PropertyId);
+        const auto Future = Self->Client->VerifyRarityParameterStatusByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         auto Domain = Self;
 
         *Result = Domain;
@@ -285,6 +335,16 @@ namespace Gs2::Enchant::Domain::Model
             ->WithUserId(Self->UserId)
             ->WithParameterName(Self->ParameterName)
             ->WithPropertyId(Self->PropertyId);
+        const auto Future = Self->Client->SetRarityParameterStatusByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         auto Domain = Self;
 
         *Result = Domain;

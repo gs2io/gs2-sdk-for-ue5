@@ -55,16 +55,7 @@ namespace Gs2::Core::Domain
 				Gs2::JobQueue::Result::FPushByUserIdResult::FromJson(ResultModelJson)
 			));
 		}
-            
-		if (ResultModelJson->HasField(ANSI_TO_TCHAR("autoRunStampSheet"))) {
-			NextTransactions->Add(NewTransactionDomain(
-				ResultModelJson->HasField(ANSI_TO_TCHAR("autoRunStampSheet")) && ResultModelJson->GetBoolField(ANSI_TO_TCHAR("autoRunStampSheet")),
-				ResultModelJson->HasField(ANSI_TO_TCHAR("transactionId")) ? ResultModelJson->GetStringField(ANSI_TO_TCHAR("transactionId")) : FString(""),
-				ResultModelJson->HasField(ANSI_TO_TCHAR("stampSheet")) ? ResultModelJson->GetStringField(ANSI_TO_TCHAR("stampSheet")) : FString(""),
-				ResultModelJson->HasField(ANSI_TO_TCHAR("stampSheetEncryptionKeyId")) ? ResultModelJson->GetStringField(ANSI_TO_TCHAR("stampSheetEncryptionKeyId")) : FString("")
-			));
-		}
-
+		
 		if (NextTransactions->Num() > 0) {
 			return MakeShared<FTransactionAccessTokenDomain>(
 				Gs2,
@@ -87,7 +78,9 @@ namespace Gs2::Core::Domain
 			bool bAutoRun,
 			FString TransactionId,
 			FString StampSheet,
-			FString StampSheetEncryptionKeyId
+			FString StampSheetEncryptionKeyId,
+			bool bAtomicCommit,
+			Gs2::Core::Model::FTransactionResultPtr TransactionResult
 		)>& NewTransactionDomain,
 		const Gs2::Auth::Model::FAccessTokenPtr& AccessToken,
 		const FString NamespaceName,

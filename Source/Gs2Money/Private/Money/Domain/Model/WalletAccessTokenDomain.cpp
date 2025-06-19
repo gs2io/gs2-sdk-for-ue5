@@ -99,6 +99,16 @@ namespace Gs2::Money::Domain::Model
             ->WithNamespaceName(Self->NamespaceName)
             ->WithAccessToken(Self->AccessToken->GetToken())
             ->WithSlot(Self->Slot);
+        const auto Future = Self->Client->GetWallet(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         *Result = ResultModel->GetItem();
         return nullptr;
     }
@@ -132,10 +142,23 @@ namespace Gs2::Money::Domain::Model
             ->WithNamespaceName(Self->NamespaceName)
             ->WithAccessToken(Self->AccessToken->GetToken())
             ->WithSlot(Self->Slot);
+        const auto Future = Self->Client->Withdraw(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         auto Domain = Self;
         if (ResultModel != nullptr)
         {
-            Domain->Price = *ResultModel->GetPrice();
+            if (ResultModel->GetPrice().IsSet())
+            {
+                Domain->Price = *ResultModel->GetPrice();
+            }
         }
 
         *Result = Domain;
@@ -151,23 +174,23 @@ namespace Gs2::Money::Domain::Model
     FString FWalletAccessTokenDomain::CreateCacheParentKey(
         TOptional<FString> NamespaceName,
         TOptional<FString> UserId,
-        TOptional<FString> Slot,
+        TOptional<int32> Slot,
         FString ChildType
     )
     {
         return FString("") +
             (NamespaceName.IsSet() ? *NamespaceName : "null") + ":" +
             (UserId.IsSet() ? *UserId : "null") + ":" +
-            (Slot.IsSet() ? *Slot : "null") + ":" +
+            (Slot.IsSet() ? FString::FromInt(*Slot) : "null") + ":" +
             ChildType;
     }
 
     FString FWalletAccessTokenDomain::CreateCacheKey(
-        TOptional<FString> Slot
+        TOptional<int32> Slot
     )
     {
         return FString("") +
-            (Slot.IsSet() ? *Slot : "null");
+            (Slot.IsSet() ? FString::FromInt(*Slot) : "null");
     }
 
     FWalletAccessTokenDomain::FModelTask::FModelTask(
@@ -193,7 +216,7 @@ namespace Gs2::Money::Domain::Model
         auto bCacheHit = Self->Gs2->Cache->TryGet<Gs2::Money::Model::FWallet>(
             Self->ParentKey,
             Gs2::Money::Domain::Model::FWalletDomain::CreateCacheKey(
-                TOptional<FString>()
+                TOptional<int32>()
             ),
             &Value
         );
@@ -210,7 +233,7 @@ namespace Gs2::Money::Domain::Model
                 }
 
                 const auto Key = Gs2::Money::Domain::Model::FWalletDomain::CreateCacheKey(
-                    TOptional<FString>()
+                    TOptional<int32>()
                 );
                 Self->Gs2->Cache->Put(
                     Gs2::Money::Model::FWallet::TypeName,
@@ -228,7 +251,7 @@ namespace Gs2::Money::Domain::Model
             Self->Gs2->Cache->TryGet<Gs2::Money::Model::FWallet>(
                 Self->ParentKey,
                 Gs2::Money::Domain::Model::FWalletDomain::CreateCacheKey(
-                    TOptional<FString>()
+                    TOptional<int32>()
                 ),
                 &Value
             );
@@ -251,7 +274,7 @@ namespace Gs2::Money::Domain::Model
             Gs2::Money::Model::FWallet::TypeName,
             ParentKey,
             Gs2::Money::Domain::Model::FWalletDomain::CreateCacheKey(
-                TOptional<FString>()
+                TOptional<int32>()
             ),
             [Callback](TSharedPtr<FGs2Object> obj)
             {
@@ -268,7 +291,7 @@ namespace Gs2::Money::Domain::Model
             Gs2::Money::Model::FWallet::TypeName,
             ParentKey,
             Gs2::Money::Domain::Model::FWalletDomain::CreateCacheKey(
-                TOptional<FString>()
+                TOptional<int32>()
             ),
             CallbackID
         );

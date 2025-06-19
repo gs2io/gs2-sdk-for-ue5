@@ -36,6 +36,7 @@
 #include "Mission/Model/Gs2MissionEzTransactionResult.h"
 #include "Gs2MissionEzCompleteGameSessionDomain.h"
 #include "Mission/Domain/Iterator/Gs2MissionEzDescribeCompletesIterator.h"
+#include "Core/EzTransactionGameSessionDomain.h"
 #include "Util/Net/GameSession.h"
 #include "Util/Net/Gs2Connection.h"
 
@@ -61,7 +62,7 @@ namespace Gs2::UE5::Mission::Domain::Model
         );
 
         class EZGS2_API FReceiveRewardsTask :
-            public Gs2::Core::Util::TGs2Future<Gs2::UE5::Mission::Domain::Model::FEzCompleteGameSessionDomain>,
+            public Gs2::Core::Util::TGs2Future<Gs2::UE5::Core::Domain::FEzTransactionGameSessionDomain>,
             public TSharedFromThis<FReceiveRewardsTask>
         {
             TSharedPtr<FEzCompleteGameSessionDomain> Self;
@@ -76,7 +77,7 @@ namespace Gs2::UE5::Mission::Domain::Model
             );
 
             virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-                TSharedPtr<TSharedPtr<Gs2::UE5::Mission::Domain::Model::FEzCompleteGameSessionDomain>> Result
+                TSharedPtr<TSharedPtr<Gs2::UE5::Core::Domain::FEzTransactionGameSessionDomain>> Result
             ) override;
         };
         friend FReceiveRewardsTask;
@@ -87,7 +88,7 @@ namespace Gs2::UE5::Mission::Domain::Model
         );
 
         class EZGS2_API FBatchReceiveRewardsTask :
-            public Gs2::Core::Util::TGs2Future<Gs2::UE5::Mission::Domain::Model::FEzCompleteGameSessionDomain>,
+            public Gs2::Core::Util::TGs2Future<Gs2::UE5::Core::Domain::FEzTransactionGameSessionDomain>,
             public TSharedFromThis<FBatchReceiveRewardsTask>
         {
             TSharedPtr<FEzCompleteGameSessionDomain> Self;
@@ -102,7 +103,7 @@ namespace Gs2::UE5::Mission::Domain::Model
             );
 
             virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-                TSharedPtr<TSharedPtr<Gs2::UE5::Mission::Domain::Model::FEzCompleteGameSessionDomain>> Result
+                TSharedPtr<TSharedPtr<Gs2::UE5::Core::Domain::FEzTransactionGameSessionDomain>> Result
             ) override;
         };
         friend FBatchReceiveRewardsTask;

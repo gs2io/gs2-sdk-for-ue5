@@ -75,6 +75,16 @@ namespace Gs2::News::Domain
         TSharedPtr<TSharedPtr<Gs2::News::Domain::Model::FNamespaceDomain>> Result
     )
     {
+        const auto Future = Self->Client->CreateNamespace(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         auto Domain = MakeShared<Gs2::News::Domain::Model::FNamespaceDomain>(
             Self->Gs2,
             Self,

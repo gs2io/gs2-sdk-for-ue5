@@ -80,7 +80,7 @@ namespace Gs2::UE5::Ranking2::Domain::Model
     }
 
     Gs2::Core::Model::FGs2ErrorPtr FEzClusterRankingReceivedRewardGameSessionDomain::FReceiveClusterRankingRewardTask::Action(
-        TSharedPtr<TSharedPtr<Gs2::UE5::Ranking2::Domain::Model::FEzClusterRankingReceivedRewardGameSessionDomain>> Result
+        TSharedPtr<TSharedPtr<Gs2::UE5::Core::Domain::FEzTransactionGameSessionDomain>> Result
     )
     {
         const auto Future = Self->ConnectionValue->Run(
@@ -104,9 +104,8 @@ namespace Gs2::UE5::Ranking2::Domain::Model
                     Task->EnsureCompletion();
                     return Task->GetTask().Error();
                 }
-                *Result = MakeShared<Gs2::UE5::Ranking2::Domain::Model::FEzClusterRankingReceivedRewardGameSessionDomain>(
+                *Result = MakeShared<Gs2::UE5::Core::Domain::FEzTransactionGameSessionDomain>(
                     Task->GetTask().Result(),
-                    Self->GameSession,
                     Self->ConnectionValue
                 );
                 Task->EnsureCompletion();

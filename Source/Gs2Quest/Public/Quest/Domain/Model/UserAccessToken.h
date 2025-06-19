@@ -92,7 +92,7 @@ namespace Gs2::Quest::Domain::Model
         );
 
         class GS2QUEST_API FStartTask final :
-            public Gs2::Core::Util::TGs2Future<Gs2::Quest::Domain::Model::FUserAccessTokenDomain>,
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::FTransactionAccessTokenDomain>,
             public TSharedFromThis<FStartTask>
         {
             const TSharedPtr<FUserAccessTokenDomain> Self;
@@ -110,7 +110,7 @@ namespace Gs2::Quest::Domain::Model
             );
 
             virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-                TSharedPtr<TSharedPtr<Gs2::Quest::Domain::Model::FUserAccessTokenDomain>> Result
+                TSharedPtr<TSharedPtr<Gs2::Core::Domain::FTransactionAccessTokenDomain>> Result
             ) override;
         };
         friend FStartTask;

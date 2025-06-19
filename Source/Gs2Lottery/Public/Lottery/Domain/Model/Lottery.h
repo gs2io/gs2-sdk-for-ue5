@@ -71,16 +71,6 @@ namespace Gs2::Lottery::Domain::Model
         const Gs2::Lottery::FGs2LotteryRestClientPtr Client;
 
         public:
-        TOptional<FString> TransactionId;
-        TOptional<bool> AutoRunStampSheet;
-        TOptional<FString> GetTransactionId() const
-        {
-            return TransactionId;
-        }
-        TOptional<bool> GetAutoRunStampSheet() const
-        {
-            return AutoRunStampSheet;
-        }
         TOptional<FString> NamespaceName;
         TOptional<FString> UserId;
         TOptional<FString> LotteryName;
@@ -104,7 +94,7 @@ namespace Gs2::Lottery::Domain::Model
         );
 
         class GS2LOTTERY_API FDrawTask final :
-            public Gs2::Core::Util::TGs2Future<Gs2::Lottery::Domain::Model::FLotteryDomain>,
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::FTransactionDomain>,
             public TSharedFromThis<FDrawTask>
         {
             const TSharedPtr<FLotteryDomain> Self;
@@ -120,7 +110,7 @@ namespace Gs2::Lottery::Domain::Model
             );
 
             virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-                TSharedPtr<TSharedPtr<Gs2::Lottery::Domain::Model::FLotteryDomain>> Result
+                TSharedPtr<TSharedPtr<Gs2::Core::Domain::FTransactionDomain>> Result
             ) override;
         };
         friend FDrawTask;
@@ -156,7 +146,7 @@ namespace Gs2::Lottery::Domain::Model
         );
 
         class GS2LOTTERY_API FDrawWithRandomSeedTask final :
-            public Gs2::Core::Util::TGs2Future<Gs2::Lottery::Domain::Model::FLotteryDomain>,
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::FTransactionDomain>,
             public TSharedFromThis<FDrawWithRandomSeedTask>
         {
             const TSharedPtr<FLotteryDomain> Self;
@@ -172,7 +162,7 @@ namespace Gs2::Lottery::Domain::Model
             );
 
             virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-                TSharedPtr<TSharedPtr<Gs2::Lottery::Domain::Model::FLotteryDomain>> Result
+                TSharedPtr<TSharedPtr<Gs2::Core::Domain::FTransactionDomain>> Result
             ) override;
         };
         friend FDrawWithRandomSeedTask;
@@ -182,6 +172,7 @@ namespace Gs2::Lottery::Domain::Model
         );
 
         Gs2::Lottery::Domain::Iterator::FDescribeProbabilitiesByUserIdIteratorPtr Probabilities(
+            const TOptional<FString> TimeOffsetToken = TOptional<FString>()
         ) const;
 
         Gs2::Core::Domain::CallbackID SubscribeProbabilities(

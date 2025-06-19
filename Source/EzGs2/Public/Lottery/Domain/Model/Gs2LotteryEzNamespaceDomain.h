@@ -35,6 +35,7 @@
 #include "Gs2LotteryEzUserDomain.h"
 #include "Gs2LotteryEzUserGameSessionDomain.h"
 #include "Gs2LotteryEzNamespaceDomain.h"
+#include "Core/EzTransactionDomain.h"
 #include "Util/Net/GameSession.h"
 #include "Util/Net/Gs2Connection.h"
 

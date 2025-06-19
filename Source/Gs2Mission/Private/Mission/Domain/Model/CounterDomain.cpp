@@ -105,6 +105,16 @@ namespace Gs2::Mission::Domain::Model
             ->WithNamespaceName(Self->NamespaceName)
             ->WithCounterName(Self->CounterName)
             ->WithUserId(Self->UserId);
+        const auto Future = Self->Client->IncreaseCounterByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         auto Domain = Self;
 
         *Result = Domain;
@@ -140,6 +150,16 @@ namespace Gs2::Mission::Domain::Model
             ->WithNamespaceName(Self->NamespaceName)
             ->WithCounterName(Self->CounterName)
             ->WithUserId(Self->UserId);
+        const auto Future = Self->Client->SetCounterByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         auto Domain = Self;
 
         *Result = Domain;
@@ -175,6 +195,16 @@ namespace Gs2::Mission::Domain::Model
             ->WithNamespaceName(Self->NamespaceName)
             ->WithCounterName(Self->CounterName)
             ->WithUserId(Self->UserId);
+        const auto Future = Self->Client->DecreaseCounterByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         auto Domain = Self;
 
         *Result = Domain;
@@ -210,6 +240,16 @@ namespace Gs2::Mission::Domain::Model
             ->WithNamespaceName(Self->NamespaceName)
             ->WithCounterName(Self->CounterName)
             ->WithUserId(Self->UserId);
+        const auto Future = Self->Client->GetCounterByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         *Result = ResultModel->GetItem();
         return nullptr;
     }
@@ -243,6 +283,16 @@ namespace Gs2::Mission::Domain::Model
             ->WithNamespaceName(Self->NamespaceName)
             ->WithUserId(Self->UserId)
             ->WithCounterName(Self->CounterName);
+        const auto Future = Self->Client->VerifyCounterValueByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         const auto Domain = Self;
         *Result = Domain;
         return nullptr;
@@ -277,6 +327,16 @@ namespace Gs2::Mission::Domain::Model
             ->WithNamespaceName(Self->NamespaceName)
             ->WithUserId(Self->UserId)
             ->WithCounterName(Self->CounterName);
+        const auto Future = Self->Client->ResetCounterByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         auto Domain = Self;
 
         *Result = Domain;
@@ -312,6 +372,16 @@ namespace Gs2::Mission::Domain::Model
             ->WithNamespaceName(Self->NamespaceName)
             ->WithUserId(Self->UserId)
             ->WithCounterName(Self->CounterName);
+        const auto Future = Self->Client->DeleteCounterByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         auto Domain = Self;
 
         *Result = Domain;

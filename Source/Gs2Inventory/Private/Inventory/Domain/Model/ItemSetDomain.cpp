@@ -1424,7 +1424,7 @@ namespace Gs2::Inventory::Domain::Model
                 ItemName,
                 ItemSetName
             ),
-            [Callback](TSharedPtr<Gs2Object> obj)
+            [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Inventory::Model::FItemSetEntry>(obj));
             }

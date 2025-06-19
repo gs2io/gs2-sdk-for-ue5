@@ -35,6 +35,7 @@
 #include "Formation/Model/Gs2FormationEzTransactionResult.h"
 #include "Gs2FormationEzFormGameSessionDomain.h"
 #include "Formation/Domain/Iterator/Gs2FormationEzDescribeFormsIterator.h"
+#include "Core/EzTransactionGameSessionDomain.h"
 #include "Util/Net/GameSession.h"
 #include "Util/Net/Gs2Connection.h"
 

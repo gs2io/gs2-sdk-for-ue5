@@ -29,6 +29,7 @@
 #include "Gs2EnhanceEzProgressGameSessionDomain.h"
 #include "Gs2EnhanceEzEnhanceGameSessionDomain.h"
 #include "Gs2EnhanceEzUserGameSessionDomain.h"
+#include "Core/EzTransactionGameSessionDomain.h"
 #include "Util/Net/GameSession.h"
 #include "Util/Net/Gs2Connection.h"
 

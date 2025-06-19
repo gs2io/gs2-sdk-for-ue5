@@ -31,8 +31,6 @@
 #include "JobQueue/Domain/Model/JobAccessToken.h"
 #include "JobQueue/Domain/Model/JobResult.h"
 #include "JobQueue/Domain/Model/JobResultAccessToken.h"
-#include "JobQueue/Domain/Model/DeadLetterJob.h"
-#include "JobQueue/Domain/Model/DeadLetterJobAccessToken.h"
 #include "JobQueue/Domain/Model/User.h"
 #include "JobQueue/Domain/Model/UserAccessToken.h"
 
@@ -167,7 +165,7 @@ namespace Gs2::JobQueue::Domain::Model
             Gs2::JobQueue::Domain::Model::FJobDomain::CreateCacheKey(
                 JobName
             ),
-            [Callback](TSharedPtr<Gs2Object> obj)
+            [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::JobQueue::Model::FJob>(obj));
             }

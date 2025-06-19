@@ -26,6 +26,7 @@
 #include "Inbox/Model/Gs2InboxEzAcquireActionResult.h"
 #include "Inbox/Model/Gs2InboxEzTransactionResult.h"
 #include "Gs2InboxEzMessageDomain.h"
+#include "Core/EzTransactionDomain.h"
 #include "Util/Net/GameSession.h"
 #include "Util/Net/Gs2Connection.h"
 

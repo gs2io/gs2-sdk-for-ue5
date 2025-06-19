@@ -21,6 +21,7 @@
 #include "AdReward/Model/Gs2AdRewardEzPoint.h"
 #include "Gs2AdRewardEzPointGameSessionDomain.h"
 #include "Gs2AdRewardEzUserGameSessionDomain.h"
+#include "Core/EzTransactionGameSessionDomain.h"
 #include "Util/Net/GameSession.h"
 #include "Util/Net/Gs2Connection.h"
 

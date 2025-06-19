@@ -128,7 +128,7 @@ namespace Gs2::Lottery::Domain::Model
             ParentKey,
             Gs2::Lottery::Domain::Model::FBoxItemDomain::CreateCacheKey(
             ),
-            [Callback](TSharedPtr<Gs2Object> obj)
+            [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::Lottery::Model::FBoxItem>(obj));
             }

@@ -22,6 +22,7 @@
 #include "News/Model/Gs2NewsEzSetCookieRequestEntry.h"
 #include "Gs2NewsEzSetCookieRequestEntryDomain.h"
 #include "Gs2NewsEzNewsDomain.h"
+#include "Core/EzTransactionDomain.h"
 #include "Util/Net/GameSession.h"
 #include "Util/Net/Gs2Connection.h"
 

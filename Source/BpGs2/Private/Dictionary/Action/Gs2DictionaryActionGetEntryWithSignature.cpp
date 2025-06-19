@@ -12,8 +12,6 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
- *
- * deny overwrite
  */
 
 #include "Dictionary/Action/Gs2DictionaryActionGetEntryWithSignature.h"
@@ -29,7 +27,6 @@ UGs2DictionaryGetEntryWithSignatureAsyncFunction::UGs2DictionaryGetEntryWithSign
 UGs2DictionaryGetEntryWithSignatureAsyncFunction* UGs2DictionaryGetEntryWithSignatureAsyncFunction::GetEntryWithSignature(
     UObject* WorldContextObject,
     FGs2DictionaryOwnEntry Entry,
-    FString EntryModelName,
     FString KeyId
 )
 {
@@ -40,7 +37,6 @@ UGs2DictionaryGetEntryWithSignatureAsyncFunction* UGs2DictionaryGetEntryWithSign
         return Action;
     }
     Action->Entry = Entry;
-    Action->EntryModelName = EntryModelName;
     Action->KeyId = KeyId;
     return Action;
 }

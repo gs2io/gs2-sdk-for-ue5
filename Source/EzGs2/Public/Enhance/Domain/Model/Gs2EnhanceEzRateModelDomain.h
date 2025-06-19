@@ -28,6 +28,7 @@
 #include "Enhance/Model/Gs2EnhanceEzTransactionResult.h"
 #include "Gs2EnhanceEzRateModelDomain.h"
 #include "Enhance/Domain/Iterator/Gs2EnhanceEzDescribeRateModelsIterator.h"
+#include "Core/EzTransactionDomain.h"
 #include "Util/Net/GameSession.h"
 #include "Util/Net/Gs2Connection.h"
 

@@ -32,11 +32,11 @@ struct FGs2SeasonRatingTransactionResult
     UPROPERTY(Category = Gs2, BlueprintReadWrite)
     FString TransactionId = "";
     UPROPERTY(Category = Gs2, BlueprintReadWrite)
-    TArray<FGs2CoreVerifyActionResult> VerifyResults = TArray<FGs2CoreVerifyActionResult>();
+    TArray<FGs2SeasonRatingVerifyActionResult> VerifyResults = TArray<FGs2SeasonRatingVerifyActionResult>();
     UPROPERTY(Category = Gs2, BlueprintReadWrite)
-    TArray<FGs2CoreConsumeActionResult> ConsumeResults = TArray<FGs2CoreConsumeActionResult>();
+    TArray<FGs2SeasonRatingConsumeActionResult> ConsumeResults = TArray<FGs2SeasonRatingConsumeActionResult>();
     UPROPERTY(Category = Gs2, BlueprintReadWrite)
-    TArray<FGs2CoreAcquireActionResult> AcquireResults = TArray<FGs2CoreAcquireActionResult>();
+    TArray<FGs2SeasonRatingAcquireActionResult> AcquireResults = TArray<FGs2SeasonRatingAcquireActionResult>();
 };
 
 inline FGs2SeasonRatingTransactionResult EzTransactionResultToFGs2SeasonRatingTransactionResult(
@@ -47,28 +47,28 @@ inline FGs2SeasonRatingTransactionResult EzTransactionResultToFGs2SeasonRatingTr
     Value.TransactionId = Model->GetTransactionId() ? *Model->GetTransactionId() : "";
     Value.VerifyResults = Model->GetVerifyResults() ? [&]
     {
-        TArray<FGs2CoreVerifyActionResult> r;
+        TArray<FGs2SeasonRatingVerifyActionResult> r;
         for (auto v : *Model->GetVerifyResults())
         {r.Add(EzVerifyActionResultToFGs2SeasonRatingVerifyActionResult(v));
         }
         return r;
-    }() : TArray<FGs2CoreVerifyActionResult>();
+    }() : TArray<FGs2SeasonRatingVerifyActionResult>();
     Value.ConsumeResults = Model->GetConsumeResults() ? [&]
     {
-        TArray<FGs2CoreConsumeActionResult> r;
+        TArray<FGs2SeasonRatingConsumeActionResult> r;
         for (auto v : *Model->GetConsumeResults())
         {r.Add(EzConsumeActionResultToFGs2SeasonRatingConsumeActionResult(v));
         }
         return r;
-    }() : TArray<FGs2CoreConsumeActionResult>();
+    }() : TArray<FGs2SeasonRatingConsumeActionResult>();
     Value.AcquireResults = Model->GetAcquireResults() ? [&]
     {
-        TArray<FGs2CoreAcquireActionResult> r;
+        TArray<FGs2SeasonRatingAcquireActionResult> r;
         for (auto v : *Model->GetAcquireResults())
         {r.Add(EzAcquireActionResultToFGs2SeasonRatingAcquireActionResult(v));
         }
         return r;
-    }() : TArray<FGs2CoreAcquireActionResult>();
+    }() : TArray<FGs2SeasonRatingAcquireActionResult>();
     return Value;
 }
 

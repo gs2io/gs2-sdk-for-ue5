@@ -29,6 +29,7 @@
 #include "Grade/Model/Gs2GradeEzTransactionResult.h"
 #include "Gs2GradeEzStatusGameSessionDomain.h"
 #include "Grade/Domain/Iterator/Gs2GradeEzDescribeStatusesIterator.h"
+#include "Core/EzTransactionGameSessionDomain.h"
 #include "Util/Net/GameSession.h"
 #include "Util/Net/Gs2Connection.h"
 

@@ -38,6 +38,7 @@
 #include "Gs2GuildEzLastGuildMasterActivityGameSessionDomain.h"
 #include "Gs2GuildEzGuildGameSessionDomain.h"
 #include "Guild/Domain/Iterator/Gs2GuildEzSearchGuildsIterator.h"
+#include "Core/EzTransactionGameSessionDomain.h"
 #include "Util/Net/GameSession.h"
 #include "Util/Net/Gs2Connection.h"
 

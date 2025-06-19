@@ -250,7 +250,9 @@ namespace Gs2::Idle::Domain::Model
                 false,
                 *ResultModel->GetTransactionId(),
                 *ResultModel->GetStampSheet(),
-                *ResultModel->GetStampSheetEncryptionKeyId()
+                *ResultModel->GetStampSheetEncryptionKeyId(),
+                *ResultModel->GetAtomicCommit(),
+                ResultModel->GetTransactionResult()
             );
             const auto Future3 = Transaction->Wait(true);
             Future3->StartSynchronousTask();
@@ -577,7 +579,7 @@ namespace Gs2::Idle::Domain::Model
             Gs2::Idle::Domain::Model::FStatusDomain::CreateCacheKey(
                 CategoryName
             ),
-            [Callback](TSharedPtr<Gs2Object> obj)
+            [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::Idle::Model::FStatus>(obj));
             }

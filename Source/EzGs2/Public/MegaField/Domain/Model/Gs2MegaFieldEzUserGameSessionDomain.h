@@ -27,6 +27,7 @@
 #include "MegaField/Model/Gs2MegaFieldEzVector.h"
 #include "Gs2MegaFieldEzSpatialGameSessionDomain.h"
 #include "Gs2MegaFieldEzUserGameSessionDomain.h"
+#include "Core/EzTransactionGameSessionDomain.h"
 #include "Util/Net/GameSession.h"
 #include "Util/Net/Gs2Connection.h"
 

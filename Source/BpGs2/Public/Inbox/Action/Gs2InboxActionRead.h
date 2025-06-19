@@ -20,12 +20,14 @@
 #include "Inbox/Model/Gs2InboxMessage.h"
 #include "Inbox/Model/Gs2InboxMessage.h"
 #include "../../Core/Model/Gs2Error.h"
+#include "Core/Model/Gs2CoreTransaction.h"
 #include "Kismet/BlueprintAsyncActionBase.h"
 #include "Gs2InboxActionRead.generated.h"
 
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FGs2InboxReadSuccessDelegate, FGs2InboxOwnMessage, Message, const FGs2Error, Error);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FGs2InboxReadErrorDelegate, FGs2InboxOwnMessage, Message, const FGs2Error, Error);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FGs2InboxReadSuccessDelegate, FGs2CoreOwnTransaction, Transaction, const FGs2Error, Error);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FGs2InboxReadErrorDelegate, FGs2CoreOwnTransaction, Transaction, const FGs2Error, Error);
+
 
 UCLASS()
 class BPGS2_API UGs2InboxReadAsyncFunction : public UBlueprintAsyncActionBase

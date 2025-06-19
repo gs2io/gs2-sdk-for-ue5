@@ -20,6 +20,7 @@
 #include "Exchange/Model/Gs2ExchangeAwait.h"
 #include "Exchange/Model/Gs2ExchangeAwait.h"
 #include "../../Core/Model/Gs2Error.h"
+#include "Core/Model/Gs2CoreTransaction.h"
 #include "Kismet/BlueprintAsyncActionBase.h"
 #include "Gs2ExchangeActionDeleteAwait.generated.h"
 

@@ -75,18 +75,17 @@ void UGs2QuestEndAsyncFunction::Activate()
     );
     Future->GetTask().OnSuccessDelegate().BindLambda([&](auto Result)
     {
-        FGs2QuestOwnProgress ReturnProgress;
-        ReturnProgress.Value = Result;
+        FGs2CoreOwnTransaction ReturnTransaction;
         const FGs2Error ReturnError;
-        OnError.Broadcast(ReturnProgress, ReturnError);
+        OnError.Broadcast(ReturnTransaction, ReturnError);
         SetReadyToDestroy();
     });
     Future->GetTask().OnErrorDelegate().BindLambda([&](auto Error)
     {
-        FGs2QuestOwnProgress ReturnProgress;
+        FGs2CoreOwnTransaction ReturnTransaction;
         FGs2Error ReturnError;
         ReturnError.Value = Error;
-        OnError.Broadcast(ReturnProgress, ReturnError);
+        OnError.Broadcast(ReturnTransaction, ReturnError);
         SetReadyToDestroy();
     });
     Future->StartBackgroundTask();

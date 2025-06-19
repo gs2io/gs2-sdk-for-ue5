@@ -23,6 +23,7 @@
 #include "Gs2GatewayEzUserDomain.h"
 #include "Gs2GatewayEzUserDomain.h"
 #include "Gs2GatewayEzUserGameSessionDomain.h"
+#include "Core/EzTransactionDomain.h"
 #include "Util/Net/GameSession.h"
 #include "Util/Net/Gs2Connection.h"
 

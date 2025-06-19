@@ -36,6 +36,7 @@
 #include "Gs2InventoryEzBigItemGameSessionDomain.h"
 #include "Inventory/Domain/Iterator/Gs2InventoryEzDescribeBigItemsIterator.h"
 #include "Gs2InventoryEzBigInventoryGameSessionDomain.h"
+#include "Core/EzTransactionGameSessionDomain.h"
 #include "Util/Net/GameSession.h"
 #include "Util/Net/Gs2Connection.h"
 

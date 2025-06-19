@@ -20,6 +20,7 @@
 #include "Money2/Model/Gs2Money2SubscriptionStatus.h"
 #include "Money2/Model/Gs2Money2User.h"
 #include "../../Core/Model/Gs2Error.h"
+#include "Core/Model/Gs2CoreTransaction.h"
 #include "Kismet/BlueprintAsyncActionBase.h"
 #include "Gs2Money2ActionAllocateSubscriptionStatus.generated.h"
 

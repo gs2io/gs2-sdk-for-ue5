@@ -108,7 +108,7 @@ namespace Gs2::UE5::Inbox::Domain::Model
     }
 
     Gs2::Core::Model::FGs2ErrorPtr FEzUserGameSessionDomain::FBatchReadTask::Action(
-        TSharedPtr<TSharedPtr<Gs2::UE5::Inbox::Domain::Model::FEzUserGameSessionDomain>> Result
+        TSharedPtr<TSharedPtr<Gs2::UE5::Core::Domain::FEzTransactionGameSessionDomain>> Result
     )
     {
         const auto Future = Self->ConnectionValue->Run(
@@ -129,9 +129,8 @@ namespace Gs2::UE5::Inbox::Domain::Model
                     Task->EnsureCompletion();
                     return Task->GetTask().Error();
                 }
-                *Result = MakeShared<Gs2::UE5::Inbox::Domain::Model::FEzUserGameSessionDomain>(
+                *Result = MakeShared<Gs2::UE5::Core::Domain::FEzTransactionGameSessionDomain>(
                     Task->GetTask().Result(),
-                    Self->GameSession,
                     Self->ConnectionValue
                 );
                 Task->EnsureCompletion();

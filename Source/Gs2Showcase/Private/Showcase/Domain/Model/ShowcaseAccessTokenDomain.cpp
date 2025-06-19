@@ -111,6 +111,16 @@ namespace Gs2::Showcase::Domain::Model
             ->WithNamespaceName(Self->NamespaceName)
             ->WithShowcaseName(Self->ShowcaseName)
             ->WithAccessToken(Self->AccessToken->GetToken());
+        const auto Future = Self->Client->GetShowcase(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         *Result = ResultModel->GetItem();
         return nullptr;
     }

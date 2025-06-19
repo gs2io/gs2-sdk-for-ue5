@@ -20,6 +20,7 @@
 #include "Datastore/Model/Gs2DatastoreDataObject.h"
 #include "Datastore/Model/Gs2DatastoreNamespace.h"
 #include "../../Core/Model/Gs2Error.h"
+#include "Core/Model/Gs2CoreTransaction.h"
 #include "Kismet/BlueprintAsyncActionBase.h"
 #include "Gs2DatastoreActionRestoreDataObject.generated.h"
 

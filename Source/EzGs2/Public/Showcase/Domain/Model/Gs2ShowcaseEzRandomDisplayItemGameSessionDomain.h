@@ -33,6 +33,7 @@
 #include "Showcase/Model/Gs2ShowcaseEzTransactionResult.h"
 #include "Gs2ShowcaseEzRandomDisplayItemGameSessionDomain.h"
 #include "Showcase/Domain/Iterator/Gs2ShowcaseEzDescribeRandomDisplayItemsIterator.h"
+#include "Core/EzTransactionGameSessionDomain.h"
 #include "Util/Net/GameSession.h"
 #include "Util/Net/Gs2Connection.h"
 
@@ -59,7 +60,7 @@ namespace Gs2::UE5::Showcase::Domain::Model
         );
 
         class EZGS2_API FRandomShowcaseBuyTask :
-            public Gs2::Core::Util::TGs2Future<Gs2::UE5::Showcase::Domain::Model::FEzRandomDisplayItemGameSessionDomain>,
+            public Gs2::Core::Util::TGs2Future<Gs2::UE5::Core::Domain::FEzTransactionGameSessionDomain>,
             public TSharedFromThis<FRandomShowcaseBuyTask>
         {
             TSharedPtr<FEzRandomDisplayItemGameSessionDomain> Self;
@@ -74,7 +75,7 @@ namespace Gs2::UE5::Showcase::Domain::Model
             );
 
             virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-                TSharedPtr<TSharedPtr<Gs2::UE5::Showcase::Domain::Model::FEzRandomDisplayItemGameSessionDomain>> Result
+                TSharedPtr<TSharedPtr<Gs2::UE5::Core::Domain::FEzTransactionGameSessionDomain>> Result
             ) override;
         };
         friend FRandomShowcaseBuyTask;

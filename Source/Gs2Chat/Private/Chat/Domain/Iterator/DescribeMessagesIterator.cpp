@@ -40,9 +40,10 @@ namespace Gs2::Chat::Domain::Iterator
         const TSharedPtr<Core::Domain::FGs2> Gs2,
         const Gs2::Chat::FGs2ChatRestClientPtr Client,
         const TOptional<FString> NamespaceName,
+        const Gs2::Auth::Model::FAccessTokenPtr AccessToken,
         const TOptional<FString> RoomName,
         const TOptional<FString> Password,
-        const Gs2::Auth::Model::FAccessTokenPtr AccessToken
+        const TOptional<int32> Category
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
@@ -50,7 +51,21 @@ namespace Gs2::Chat::Domain::Iterator
         NamespaceName(NamespaceName),
         RoomName(RoomName),
         Password(Password),
+        Category(Category),
         AccessToken(AccessToken)
+    {
+    }
+
+    FDescribeMessagesIterator::FDescribeMessagesIterator(
+        const FDescribeMessagesIterator& From
+    ):
+        Gs2(From.Gs2),
+        Client(From.Client),
+        NamespaceName(From.NamespaceName),
+        RoomName(From.RoomName),
+        Password(From.Password),
+        Category(From.Category),
+        AccessToken(From.AccessToken)
     {
     }
 
@@ -98,7 +113,7 @@ namespace Gs2::Chat::Domain::Iterator
 
             if (!RangeIteratorOpt)
             {
-                TSharedPtr<Gs2Object> UpdateContext;
+                TSharedPtr<FGs2Object> UpdateContext;
                 Range = Self->Gs2->Cache->TryGetList<Gs2::Chat::Model::FMessage>(ListParentKey, &UpdateContext);
 
                 if (Range)
@@ -167,7 +182,7 @@ namespace Gs2::Chat::Domain::Iterator
                     ListParentKey,
                     StartAt
                         // ReSharper disable once CppSmartPointerVsMakeFunction
-                        ? TSharedPtr<Gs2Object>(new FDescribeMessagesStartAt(*StartAt))
+                        ? TSharedPtr<FGs2Object>(new FDescribeMessagesStartAt(*StartAt))
                         : nullptr
                 );
             }

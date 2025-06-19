@@ -12,6 +12,8 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
+ *
+ * deny overwrite
  */
 
 #if defined(_MSC_VER)
@@ -122,6 +124,16 @@ namespace Gs2::Ranking2::Domain::Model
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithRankingName(Self->RankingName);
+        const auto Future = Self->Client->GetSubscribeRankingModel(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         *Result = ResultModel->GetItem();
         return nullptr;
     }
@@ -133,8 +145,8 @@ namespace Gs2::Ranking2::Domain::Model
     }
 
     TSharedPtr<Gs2::Ranking2::Domain::Model::FSubscribeRankingSeasonDomain> FSubscribeRankingModelDomain::SubscribeRankingSeason(
-        const int64 Season,
-        const FString UserId
+        const FString UserId,
+        const TOptional<int64> Season
     )
     {
         return MakeShared<Gs2::Ranking2::Domain::Model::FSubscribeRankingSeasonDomain>(
@@ -144,6 +156,21 @@ namespace Gs2::Ranking2::Domain::Model
             RankingName,
             Season,
             UserId == TEXT("") ? TOptional<FString>() : TOptional<FString>(UserId)
+        );
+    }
+
+    TSharedPtr<Gs2::Ranking2::Domain::Model::FSubscribeRankingSeasonAccessTokenDomain> FSubscribeRankingModelDomain::SubscribeRankingSeason(
+        const Auth::Model::FAccessTokenPtr AccessToken,
+        const TOptional<int64> Season
+    )
+    {
+        return MakeShared<Gs2::Ranking2::Domain::Model::FSubscribeRankingSeasonAccessTokenDomain>(
+            Gs2,
+            Service,
+            NamespaceName,
+            RankingName,
+            Season,
+            AccessToken
         );
     }
 

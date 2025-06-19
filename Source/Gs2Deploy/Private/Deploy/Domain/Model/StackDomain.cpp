@@ -802,7 +802,7 @@ namespace Gs2::Deploy::Domain::Model
             Gs2::Deploy::Domain::Model::FStackDomain::CreateCacheKey(
                 StackName
             ),
-            [Callback](TSharedPtr<Gs2Object> obj)
+            [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::Deploy::Model::FStack>(obj));
             }

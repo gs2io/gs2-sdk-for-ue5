@@ -33,6 +33,7 @@
 #include "Gs2SeasonRatingEzUserDomain.h"
 #include "Gs2SeasonRatingEzUserGameSessionDomain.h"
 #include "Gs2SeasonRatingEzNamespaceDomain.h"
+#include "Core/EzTransactionDomain.h"
 #include "Util/Net/GameSession.h"
 #include "Util/Net/Gs2Connection.h"
 

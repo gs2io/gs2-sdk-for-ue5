@@ -20,12 +20,14 @@
 #include "Exchange/Model/Gs2ExchangeAwait.h"
 #include "Exchange/Model/Gs2ExchangeAwait.h"
 #include "../../Core/Model/Gs2Error.h"
+#include "Core/Model/Gs2CoreTransaction.h"
 #include "Kismet/BlueprintAsyncActionBase.h"
 #include "Gs2ExchangeActionAcquire.generated.h"
 
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FGs2ExchangeAcquireSuccessDelegate, FGs2ExchangeOwnAwait, Await, const FGs2Error, Error);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FGs2ExchangeAcquireErrorDelegate, FGs2ExchangeOwnAwait, Await, const FGs2Error, Error);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FGs2ExchangeAcquireSuccessDelegate, FGs2CoreOwnTransaction, Transaction, const FGs2Error, Error);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FGs2ExchangeAcquireErrorDelegate, FGs2CoreOwnTransaction, Transaction, const FGs2Error, Error);
+
 
 UCLASS()
 class BPGS2_API UGs2ExchangeAcquireAsyncFunction : public UBlueprintAsyncActionBase

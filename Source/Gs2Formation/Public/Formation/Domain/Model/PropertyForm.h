@@ -185,7 +185,7 @@ namespace Gs2::Formation::Domain::Model
         );
 
         class GS2FORMATION_API FAcquireActionsToPropertiesTask final :
-            public Gs2::Core::Util::TGs2Future<Gs2::Formation::Domain::Model::FPropertyFormDomain>,
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::FTransactionDomain>,
             public TSharedFromThis<FAcquireActionsToPropertiesTask>
         {
             const TSharedPtr<FPropertyFormDomain> Self;
@@ -201,7 +201,7 @@ namespace Gs2::Formation::Domain::Model
             );
 
             virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-                TSharedPtr<TSharedPtr<Gs2::Formation::Domain::Model::FPropertyFormDomain>> Result
+                TSharedPtr<TSharedPtr<Gs2::Core::Domain::FTransactionDomain>> Result
             ) override;
         };
         friend FAcquireActionsToPropertiesTask;

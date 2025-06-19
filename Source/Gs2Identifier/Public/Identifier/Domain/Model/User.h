@@ -12,6 +12,8 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
+ *
+ * deny overwrite
  */
 
 // ReSharper disable CppUnusedIncludeDirective
@@ -194,18 +196,6 @@ namespace Gs2::Identifier::Domain::Model
         );
 
         void UnsubscribeIdentifiers(
-            Gs2::Core::Domain::CallbackID CallbackID
-        );
-
-        Gs2::Identifier::Domain::Iterator::FDescribeAttachedGuardsIteratorPtr AttachedGuards(
-            const TOptional<FString> ClientId = TOptional<FString>()
-        ) const;
-
-        Gs2::Core::Domain::CallbackID SubscribeAttachedGuards(
-            TFunction<void()> Callback
-        );
-
-        void UnsubscribeAttachedGuards(
             Gs2::Core::Domain::CallbackID CallbackID
         );
 

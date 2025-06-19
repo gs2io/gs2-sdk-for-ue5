@@ -29,6 +29,7 @@
 #include "Gs2VersionEzUserDomain.h"
 #include "Gs2VersionEzUserGameSessionDomain.h"
 #include "Gs2VersionEzNamespaceDomain.h"
+#include "Core/EzTransactionDomain.h"
 #include "Util/Net/GameSession.h"
 #include "Util/Net/Gs2Connection.h"
 

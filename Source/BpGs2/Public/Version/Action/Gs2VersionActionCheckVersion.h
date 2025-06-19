@@ -20,6 +20,7 @@
 #include "Version/Model/Gs2VersionTargetVersion.h"
 #include "Version/Model/Gs2VersionChecker.h"
 #include "../../Core/Model/Gs2Error.h"
+#include "Core/Model/Gs2CoreTransaction.h"
 #include "Kismet/BlueprintAsyncActionBase.h"
 #include "Gs2VersionActionCheckVersion.generated.h"
 

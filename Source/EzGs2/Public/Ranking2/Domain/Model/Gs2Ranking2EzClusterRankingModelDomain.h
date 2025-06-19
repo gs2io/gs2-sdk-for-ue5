@@ -35,9 +35,15 @@
 #include "Ranking2/Model/Gs2Ranking2EzAcquireAction.h"
 #include "Ranking2/Model/Gs2Ranking2EzConfig.h"
 #include "Ranking2/Model/Gs2Ranking2EzSubscribeUser.h"
-#include "Gs2Ranking2EzClusterRankingModelDomain.h"
+#include "Ranking2/Model/Gs2Ranking2EzVerifyActionResult.h"
+#include "Ranking2/Model/Gs2Ranking2EzConsumeActionResult.h"
+#include "Ranking2/Model/Gs2Ranking2EzAcquireActionResult.h"
+#include "Ranking2/Model/Gs2Ranking2EzTransactionResult.h"
 #include "Gs2Ranking2EzClusterRankingSeasonDomain.h"
+#include "Gs2Ranking2EzClusterRankingModelDomain.h"
+#include "Gs2Ranking2EzClusterRankingSeasonGameSessionDomain.h"
 #include "Ranking2/Domain/Iterator/Gs2Ranking2EzDescribeClusterRankingModelsIterator.h"
+#include "Core/EzTransactionDomain.h"
 #include "Util/Net/GameSession.h"
 #include "Util/Net/Gs2Connection.h"
 
@@ -61,10 +67,17 @@ namespace Gs2::UE5::Ranking2::Domain::Model
 
         Gs2::UE5::Ranking2::Domain::Model::FEzClusterRankingSeasonDomainPtr ClusterRankingSeason(
             const FString ClusterName,
-            const int64 Season
+            const FString UserId,
+            const TOptional<int64> Season = TOptional<int64>()
         ) const;
 
-        class FModelTask :
+        Gs2::UE5::Ranking2::Domain::Model::FEzClusterRankingSeasonGameSessionDomainPtr ClusterRankingSeason(
+            const FString ClusterName,
+            const Util::FGameSessionPtr GameSession,
+            const TOptional<int64> Season = TOptional<int64>()
+        ) const;
+
+        class EZGS2_API FModelTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::Ranking2::Model::FEzClusterRankingModel>,
             public TSharedFromThis<FModelTask>
         {

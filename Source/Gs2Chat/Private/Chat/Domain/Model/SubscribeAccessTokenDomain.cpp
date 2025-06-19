@@ -101,6 +101,16 @@ namespace Gs2::Chat::Domain::Model
             ->WithNamespaceName(Self->NamespaceName)
             ->WithRoomName(Self->RoomName)
             ->WithAccessToken(Self->AccessToken->GetToken());
+        const auto Future = Self->Client->Subscribe(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         auto Domain = Self;
 
         *Result = Domain;
@@ -136,6 +146,16 @@ namespace Gs2::Chat::Domain::Model
             ->WithNamespaceName(Self->NamespaceName)
             ->WithRoomName(Self->RoomName)
             ->WithAccessToken(Self->AccessToken->GetToken());
+        const auto Future = Self->Client->GetSubscribe(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         *Result = ResultModel->GetItem();
         return nullptr;
     }
@@ -169,6 +189,16 @@ namespace Gs2::Chat::Domain::Model
             ->WithNamespaceName(Self->NamespaceName)
             ->WithRoomName(Self->RoomName)
             ->WithAccessToken(Self->AccessToken->GetToken());
+        const auto Future = Self->Client->UpdateNotificationType(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         auto Domain = Self;
 
         *Result = Domain;
@@ -204,6 +234,16 @@ namespace Gs2::Chat::Domain::Model
             ->WithNamespaceName(Self->NamespaceName)
             ->WithRoomName(Self->RoomName)
             ->WithAccessToken(Self->AccessToken->GetToken());
+        const auto Future = Self->Client->Unsubscribe(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         auto Domain = Self;
 
         *Result = Domain;

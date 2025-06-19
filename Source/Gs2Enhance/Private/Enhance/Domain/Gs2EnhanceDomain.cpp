@@ -78,6 +78,16 @@ namespace Gs2::Enhance::Domain
         TSharedPtr<TSharedPtr<Gs2::Enhance::Domain::Model::FNamespaceDomain>> Result
     )
     {
+        const auto Future = Self->Client->CreateNamespace(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         auto Domain = MakeShared<Gs2::Enhance::Domain::Model::FNamespaceDomain>(
             Self->Gs2,
             Self,
@@ -111,6 +121,16 @@ namespace Gs2::Enhance::Domain
         TSharedPtr<TSharedPtr<FGs2EnhanceDomain>> Result
     )
     {
+        const auto Future = Self->Client->DumpUserDataByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         const auto Domain = Self;
         *Result = Domain;
         return nullptr;
@@ -140,6 +160,16 @@ namespace Gs2::Enhance::Domain
         TSharedPtr<TSharedPtr<FGs2EnhanceDomain>> Result
     )
     {
+        const auto Future = Self->Client->CheckDumpUserDataByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         const auto Domain = Self;
         if (ResultModel != nullptr)
         {
@@ -176,6 +206,16 @@ namespace Gs2::Enhance::Domain
         TSharedPtr<TSharedPtr<FGs2EnhanceDomain>> Result
     )
     {
+        const auto Future = Self->Client->CleanUserDataByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         const auto Domain = Self;
         *Result = Domain;
         return nullptr;
@@ -205,6 +245,16 @@ namespace Gs2::Enhance::Domain
         TSharedPtr<TSharedPtr<FGs2EnhanceDomain>> Result
     )
     {
+        const auto Future = Self->Client->CheckCleanUserDataByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         const auto Domain = Self;
         *Result = Domain;
         return nullptr;
@@ -234,6 +284,16 @@ namespace Gs2::Enhance::Domain
         TSharedPtr<TSharedPtr<FGs2EnhanceDomain>> Result
     )
     {
+        const auto Future = Self->Client->PrepareImportUserDataByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         const auto Domain = Self;
         if (ResultModel != nullptr)
         {
@@ -274,6 +334,16 @@ namespace Gs2::Enhance::Domain
         TSharedPtr<TSharedPtr<FGs2EnhanceDomain>> Result
     )
     {
+        const auto Future = Self->Client->ImportUserDataByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         const auto Domain = Self;
         *Result = Domain;
         return nullptr;
@@ -303,6 +373,16 @@ namespace Gs2::Enhance::Domain
         TSharedPtr<TSharedPtr<FGs2EnhanceDomain>> Result
     )
     {
+        const auto Future = Self->Client->CheckImportUserDataByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         const auto Domain = Self;
         if (ResultModel != nullptr)
         {

@@ -39,6 +39,7 @@
 #include "Ranking2/Model/Gs2Ranking2EzTransactionResult.h"
 #include "Gs2Ranking2EzSubscribeRankingScoreGameSessionDomain.h"
 #include "Ranking2/Domain/Iterator/Gs2Ranking2EzDescribeSubscribeRankingScoresIterator.h"
+#include "Core/EzTransactionGameSessionDomain.h"
 #include "Util/Net/GameSession.h"
 #include "Util/Net/Gs2Connection.h"
 

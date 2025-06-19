@@ -22,6 +22,7 @@
 #include "SerialKey/Model/Gs2SerialKeyEzSerialKey.h"
 #include "Gs2SerialKeyEzSerialKeyGameSessionDomain.h"
 #include "Gs2SerialKeyEzUserGameSessionDomain.h"
+#include "Core/EzTransactionGameSessionDomain.h"
 #include "Util/Net/GameSession.h"
 #include "Util/Net/Gs2Connection.h"
 

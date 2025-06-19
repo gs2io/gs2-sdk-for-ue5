@@ -12,9 +12,13 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
+ *
+ * deny overwrite
  */
 
 #include "Ranking2/Domain/Model/Gs2Ranking2EzSubscribeRankingModelDomain.h"
+
+#include "Ranking2/Domain/Model/Gs2Ranking2EzSubscribeRankingSeasonGameSessionDomain.h"
 
 namespace Gs2::UE5::Ranking2::Domain::Model
 {
@@ -39,16 +43,17 @@ namespace Gs2::UE5::Ranking2::Domain::Model
 
     }
 
-    Gs2::UE5::Ranking2::Domain::Model::FEzSubscribeRankingSeasonDomainPtr FEzSubscribeRankingModelDomain::SubscribeRankingSeason(
-        const int64 Season,
-        const FString UserId
+    Gs2::UE5::Ranking2::Domain::Model::FEzSubscribeRankingSeasonGameSessionDomainPtr FEzSubscribeRankingModelDomain::SubscribeRankingSeason(
+        const Util::FGameSessionPtr GameSession,
+        const TOptional<int64> Season
     ) const
     {
-        return MakeShared<Gs2::UE5::Ranking2::Domain::Model::FEzSubscribeRankingSeasonDomain>(
+        return MakeShared<Gs2::UE5::Ranking2::Domain::Model::FEzSubscribeRankingSeasonGameSessionDomain>(
             Domain->SubscribeRankingSeason(
-                Season,
-                UserId
+                GameSession->AccessToken(),
+                Season
             ),
+            GameSession,
             ConnectionValue
         );
     }

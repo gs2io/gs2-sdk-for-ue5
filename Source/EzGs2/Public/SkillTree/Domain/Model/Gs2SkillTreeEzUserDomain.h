@@ -32,6 +32,7 @@
 #include "Gs2SkillTreeEzUserDomain.h"
 #include "Gs2SkillTreeEzUserDomain.h"
 #include "Gs2SkillTreeEzUserGameSessionDomain.h"
+#include "Core/EzTransactionDomain.h"
 #include "Util/Net/GameSession.h"
 #include "Util/Net/Gs2Connection.h"
 

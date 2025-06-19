@@ -12,6 +12,8 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
+ *
+ * deny overwrite
  */
 
 #if defined(_MSC_VER)
@@ -84,6 +86,15 @@ namespace Gs2::Identifier::Domain::Model
         Request
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithUserName(Self->UserName);
+        const auto Future = Self->Client->UpdateUser(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
         auto Domain = Self;
 
         *Result = Domain;
@@ -117,6 +128,15 @@ namespace Gs2::Identifier::Domain::Model
         Request
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithUserName(Self->UserName);
+        const auto Future = Self->Client->GetUser(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
         *Result = ResultModel->GetItem();
         return nullptr;
     }
@@ -148,6 +168,15 @@ namespace Gs2::Identifier::Domain::Model
         Request
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithUserName(Self->UserName);
+        const auto Future = Self->Client->DeleteUser(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
         auto Domain = Self;
 
         *Result = Domain;
@@ -181,6 +210,15 @@ namespace Gs2::Identifier::Domain::Model
         Request
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithUserName(Self->UserName);
+        const auto Future = Self->Client->CreateIdentifier(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
         auto Domain = MakeShared<Gs2::Identifier::Domain::Model::FIdentifierDomain>(
             Self->Gs2,
             Self->Service,
@@ -235,44 +273,6 @@ namespace Gs2::Identifier::Domain::Model
             Gs2::Identifier::Domain::Model::FUserDomain::CreateCacheParentKey(
                 UserName,
                 "Identifier"
-            ),
-            CallbackID
-        );
-    }
-
-    Gs2::Identifier::Domain::Iterator::FDescribeAttachedGuardsIteratorPtr FUserDomain::AttachedGuards(
-        const TOptional<FString> ClientId
-    ) const
-    {
-        return MakeShared<Gs2::Identifier::Domain::Iterator::FDescribeAttachedGuardsIterator>(
-            Gs2,
-            Client,
-            UserName,
-            ClientId
-        );
-    }
-
-    Gs2::Core::Domain::CallbackID FUserDomain::SubscribeAttachedGuards(
-    TFunction<void()> Callback
-    )
-    {
-        return Gs2->Cache->ListSubscribe(
-            FString::TypeName,
-            FStringDomain::CreateCacheParentKey(
-                "NamespaceGrn"
-            ),
-            Callback
-        );
-    }
-
-    void FUserDomain::UnsubscribeAttachedGuards(
-        Gs2::Core::Domain::CallbackID CallbackID
-    )
-    {
-        Gs2->Cache->ListUnsubscribe(
-            FString::TypeName,
-            FStringDomain::CreateCacheParentKey(
-                "NamespaceGrn"
             ),
             CallbackID
         );

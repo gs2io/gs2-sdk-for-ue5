@@ -118,6 +118,16 @@ namespace Gs2::Friend::Domain::Model
             ->WithUserId(Self->UserId)
             ->WithTargetUserId(Self->TargetUserId)
             ->WithWithProfile(Self->WithProfile);
+        const auto Future = Self->Client->GetFollowByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         *Result = ResultModel->GetItem();
         return nullptr;
     }
@@ -151,6 +161,16 @@ namespace Gs2::Friend::Domain::Model
             ->WithNamespaceName(Self->NamespaceName)
             ->WithUserId(Self->UserId)
             ->WithTargetUserId(Self->TargetUserId);
+        const auto Future = Self->Client->UnfollowByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         auto Domain = Self;
 
         *Result = Domain;

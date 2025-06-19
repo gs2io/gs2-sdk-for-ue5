@@ -25,9 +25,9 @@
 #endif
 
 #include "Money/Domain/SpeculativeExecutor/Acquire/DepositByUserIdSpeculativeExecutor.h"
+#include "Money/Domain/Gs2Money.h"
 
 #include "Core/Domain/Gs2.h"
-#include "Money/Domain/Gs2Money.h"
 
 namespace Gs2::Money::Domain::SpeculativeExecutor
 {
@@ -44,13 +44,8 @@ namespace Gs2::Money::Domain::SpeculativeExecutor
         Gs2::Money::Model::FWalletPtr Item
     )
     {
-        if (*Request->GetPrice() > 0)
-        {
-            Item->WithPaid(*Item->GetPaid() + *Request->GetCount());
-        } else
-        {
-            Item->WithFree(*Item->GetFree() + *Request->GetCount());
-        }
+        // TODO: Speculative execution not supported
+        UE_LOG(Gs2Log, Warning, TEXT("Speculative execution not supported on this action: %s"), ToCStr(Action()))
         return nullptr;
     }
 
@@ -117,7 +112,7 @@ namespace Gs2::Money::Domain::SpeculativeExecutor
             FString("Wallet")
         );
         const auto Key = Model::FWalletDomain::CreateCacheKey(
-            FString::FromInt(*Request->GetSlot())
+            Request->GetSlot()
         );
 
         *Result = MakeShared<TFunction<void()>>([&]()

@@ -98,6 +98,16 @@ namespace Gs2::Inbox::Domain::Model
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithAccessToken(Self->AccessToken->GetToken());
+        const auto Future = Self->Client->ReceiveGlobalMessage(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         auto Domain = MakeShared<TArray<TSharedPtr<Gs2::Inbox::Domain::Model::FMessageAccessTokenDomain>>>();
         for (auto i=0; i<ResultModel->GetItem()->Num(); i++)
         {
@@ -152,22 +162,32 @@ namespace Gs2::Inbox::Domain::Model
     }
 
     Gs2::Core::Model::FGs2ErrorPtr FUserAccessTokenDomain::FBatchReadMessagesTask::Action(
-        TSharedPtr<TSharedPtr<Gs2::Inbox::Domain::Model::FUserAccessTokenDomain>> Result
+        TSharedPtr<TSharedPtr<Gs2::Core::Domain::FTransactionAccessTokenDomain>> Result
     )
     {
         Request
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithAccessToken(Self->AccessToken->GetToken());
+        const auto Future = Self->Client->BatchReadMessages(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         const auto Transaction = Gs2::Core::Domain::Internal::FTransactionDomainFactory::ToTransaction(
             Self->Gs2,
             Self->AccessToken,
-            ResultModel->AutoRunStampSheet() == nullptr ? false : *ResultModel->AutoRunStampSheet(),
+            ResultModel->GetAutoRunStampSheet().IsSet() ? *ResultModel->GetAutoRunStampSheet() : false,
             *ResultModel->GetTransactionId(),
             *ResultModel->GetStampSheet(),
             *ResultModel->GetStampSheetEncryptionKeyId(),
             *ResultModel->GetAtomicCommit(),
-            *ResultModel->GetTransactionResult()
+            ResultModel->GetTransactionResult()
         );
         const auto Future3 = Transaction->Wait(true);
         Future3->StartSynchronousTask();

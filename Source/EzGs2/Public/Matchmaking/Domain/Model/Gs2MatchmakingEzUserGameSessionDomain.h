@@ -39,6 +39,7 @@
 #include "Gs2MatchmakingEzBallotGameSessionDomain.h"
 #include "Gs2MatchmakingEzSeasonGameSessionDomain.h"
 #include "Gs2MatchmakingEzUserGameSessionDomain.h"
+#include "Core/EzTransactionGameSessionDomain.h"
 #include "Util/Net/GameSession.h"
 #include "Util/Net/Gs2Connection.h"
 

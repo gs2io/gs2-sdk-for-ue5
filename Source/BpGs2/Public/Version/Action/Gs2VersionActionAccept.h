@@ -21,6 +21,7 @@
 #include "Version/Model/Gs2VersionVersion.h"
 #include "Version/Model/Gs2VersionAcceptVersion.h"
 #include "../../Core/Model/Gs2Error.h"
+#include "Core/Model/Gs2CoreTransaction.h"
 #include "Kismet/BlueprintAsyncActionBase.h"
 #include "Gs2VersionActionAccept.generated.h"
 

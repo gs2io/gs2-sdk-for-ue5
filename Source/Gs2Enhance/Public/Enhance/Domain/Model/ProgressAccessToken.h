@@ -12,6 +12,8 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
+ *
+ * deny overwrite
  */
 
 // ReSharper disable CppUnusedIncludeDirective
@@ -120,7 +122,7 @@ namespace Gs2::Enhance::Domain::Model
         );
 
         class GS2ENHANCE_API FStartTask final :
-            public Gs2::Core::Util::TGs2Future<Gs2::Enhance::Domain::Model::FProgressAccessTokenDomain>,
+            public Gs2::Core::Util::TGs2Future<Core::Domain::FTransactionAccessTokenDomain>,
             public TSharedFromThis<FStartTask>
         {
             const TSharedPtr<FProgressAccessTokenDomain> Self;
@@ -138,7 +140,7 @@ namespace Gs2::Enhance::Domain::Model
             );
 
             virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-                TSharedPtr<TSharedPtr<Gs2::Enhance::Domain::Model::FProgressAccessTokenDomain>> Result
+                TSharedPtr<TSharedPtr<Core::Domain::FTransactionAccessTokenDomain>> Result
             ) override;
         };
         friend FStartTask;
@@ -149,7 +151,7 @@ namespace Gs2::Enhance::Domain::Model
         );
 
         class GS2ENHANCE_API FEndTask final :
-            public Gs2::Core::Util::TGs2Future<Gs2::Enhance::Domain::Model::FProgressAccessTokenDomain>,
+            public Gs2::Core::Util::TGs2Future<Core::Domain::FTransactionAccessTokenDomain>,
             public TSharedFromThis<FEndTask>
         {
             const TSharedPtr<FProgressAccessTokenDomain> Self;
@@ -167,7 +169,7 @@ namespace Gs2::Enhance::Domain::Model
             );
 
             virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-                TSharedPtr<TSharedPtr<Gs2::Enhance::Domain::Model::FProgressAccessTokenDomain>> Result
+                TSharedPtr<TSharedPtr<Core::Domain::FTransactionAccessTokenDomain>> Result
             ) override;
         };
         friend FEndTask;

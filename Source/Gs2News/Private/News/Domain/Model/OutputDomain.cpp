@@ -101,6 +101,16 @@ namespace Gs2::News::Domain::Model
             ->WithNamespaceName(Self->NamespaceName)
             ->WithUploadToken(Self->UploadToken)
             ->WithOutputName(Self->OutputName);
+        const auto Future = Self->Client->GetOutput(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         *Result = ResultModel->GetItem();
         return nullptr;
     }

@@ -21,7 +21,7 @@
 
 namespace Gs2::StateMachine::Model
 {
-    class GS2STATEMACHINE_API FAutoRunTransactionSetting final : public Gs2Object, public TSharedFromThis<FAutoRunTransactionSetting>
+    class GS2STATEMACHINE_API FAutoRunTransactionSetting final : public FGs2Object, public TSharedFromThis<FAutoRunTransactionSetting>
     {
         TOptional<FString> DistributorNamespaceIdValue;
         TOptional<FString> QueueNamespaceIdValue;

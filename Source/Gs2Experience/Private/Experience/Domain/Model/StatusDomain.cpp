@@ -104,6 +104,16 @@ namespace Gs2::Experience::Domain::Model
             ->WithUserId(Self->UserId)
             ->WithExperienceName(Self->ExperienceName)
             ->WithPropertyId(Self->PropertyId);
+        const auto Future = Self->Client->GetStatusByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         *Result = ResultModel->GetItem();
         return nullptr;
     }
@@ -138,11 +148,27 @@ namespace Gs2::Experience::Domain::Model
             ->WithUserId(Self->UserId)
             ->WithExperienceName(Self->ExperienceName)
             ->WithPropertyId(Self->PropertyId);
+        const auto Future = Self->Client->GetStatusWithSignatureByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         auto Domain = Self;
         if (ResultModel != nullptr)
         {
-            Domain->Body = *ResultModel->GetBody();
-            Domain->Signature = *ResultModel->GetSignature();
+            if (ResultModel->GetBody().IsSet())
+            {
+                Domain->Body = *ResultModel->GetBody();
+            }
+            if (ResultModel->GetSignature().IsSet())
+            {
+                Domain->Signature = *ResultModel->GetSignature();
+            }
         }
 
         *Result = Domain;
@@ -179,6 +205,16 @@ namespace Gs2::Experience::Domain::Model
             ->WithUserId(Self->UserId)
             ->WithExperienceName(Self->ExperienceName)
             ->WithPropertyId(Self->PropertyId);
+        const auto Future = Self->Client->AddExperienceByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         auto Domain = Self;
 
         *Result = Domain;
@@ -215,6 +251,16 @@ namespace Gs2::Experience::Domain::Model
             ->WithUserId(Self->UserId)
             ->WithExperienceName(Self->ExperienceName)
             ->WithPropertyId(Self->PropertyId);
+        const auto Future = Self->Client->SubExperienceByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         auto Domain = Self;
 
         *Result = Domain;
@@ -251,6 +297,16 @@ namespace Gs2::Experience::Domain::Model
             ->WithUserId(Self->UserId)
             ->WithExperienceName(Self->ExperienceName)
             ->WithPropertyId(Self->PropertyId);
+        const auto Future = Self->Client->SetExperienceByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         auto Domain = Self;
 
         *Result = Domain;
@@ -287,6 +343,16 @@ namespace Gs2::Experience::Domain::Model
             ->WithUserId(Self->UserId)
             ->WithExperienceName(Self->ExperienceName)
             ->WithPropertyId(Self->PropertyId);
+        const auto Future = Self->Client->AddRankCapByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         auto Domain = Self;
 
         *Result = Domain;
@@ -323,6 +389,16 @@ namespace Gs2::Experience::Domain::Model
             ->WithUserId(Self->UserId)
             ->WithExperienceName(Self->ExperienceName)
             ->WithPropertyId(Self->PropertyId);
+        const auto Future = Self->Client->SubRankCapByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         auto Domain = Self;
 
         *Result = Domain;
@@ -359,6 +435,16 @@ namespace Gs2::Experience::Domain::Model
             ->WithUserId(Self->UserId)
             ->WithExperienceName(Self->ExperienceName)
             ->WithPropertyId(Self->PropertyId);
+        const auto Future = Self->Client->SetRankCapByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         auto Domain = Self;
 
         *Result = Domain;
@@ -395,6 +481,16 @@ namespace Gs2::Experience::Domain::Model
             ->WithUserId(Self->UserId)
             ->WithExperienceName(Self->ExperienceName)
             ->WithPropertyId(Self->PropertyId);
+        const auto Future = Self->Client->DeleteStatusByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         auto Domain = Self;
 
         *Result = Domain;
@@ -431,6 +527,16 @@ namespace Gs2::Experience::Domain::Model
             ->WithUserId(Self->UserId)
             ->WithExperienceName(Self->ExperienceName)
             ->WithPropertyId(Self->PropertyId);
+        const auto Future = Self->Client->VerifyRankByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         const auto Domain = Self;
         *Result = Domain;
         return nullptr;
@@ -466,6 +572,16 @@ namespace Gs2::Experience::Domain::Model
             ->WithUserId(Self->UserId)
             ->WithExperienceName(Self->ExperienceName)
             ->WithPropertyId(Self->PropertyId);
+        const auto Future = Self->Client->VerifyRankCapByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         const auto Domain = Self;
         *Result = Domain;
         return nullptr;
@@ -492,7 +608,7 @@ namespace Gs2::Experience::Domain::Model
     }
 
     Gs2::Core::Model::FGs2ErrorPtr FStatusDomain::FMultiplyAcquireActionsTask::Action(
-        TSharedPtr<TSharedPtr<Gs2::Experience::Domain::Model::FStatusDomain>> Result
+        TSharedPtr<TSharedPtr<Gs2::Core::Domain::FTransactionDomain>> Result
     )
     {
         Request
@@ -501,15 +617,25 @@ namespace Gs2::Experience::Domain::Model
             ->WithUserId(Self->UserId)
             ->WithExperienceName(Self->ExperienceName)
             ->WithPropertyId(Self->PropertyId);
+        const auto Future = Self->Client->MultiplyAcquireActionsByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         const auto Transaction = Gs2::Core::Domain::Internal::FTransactionDomainFactory::ToTransaction(
             Self->Gs2,
             *Self->UserId,
-            ResultModel->AutoRunStampSheet() == nullptr ? false : *ResultModel->AutoRunStampSheet(),
+            ResultModel->GetAutoRunStampSheet().IsSet() ? *ResultModel->GetAutoRunStampSheet() : false,
             *ResultModel->GetTransactionId(),
             *ResultModel->GetStampSheet(),
             *ResultModel->GetStampSheetEncryptionKeyId(),
             *ResultModel->GetAtomicCommit(),
-            *ResultModel->GetTransactionResult()
+            ResultModel->GetTransactionResult()
         );
         const auto Future3 = Transaction->Wait(true);
         Future3->StartSynchronousTask();

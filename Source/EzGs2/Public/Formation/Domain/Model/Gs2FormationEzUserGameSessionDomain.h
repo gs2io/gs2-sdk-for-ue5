@@ -38,6 +38,7 @@
 #include "Gs2FormationEzPropertyFormGameSessionDomain.h"
 #include "Formation/Domain/Iterator/Gs2FormationEzDescribePropertyFormsIterator.h"
 #include "Gs2FormationEzUserGameSessionDomain.h"
+#include "Core/EzTransactionGameSessionDomain.h"
 #include "Util/Net/GameSession.h"
 #include "Util/Net/Gs2Connection.h"
 

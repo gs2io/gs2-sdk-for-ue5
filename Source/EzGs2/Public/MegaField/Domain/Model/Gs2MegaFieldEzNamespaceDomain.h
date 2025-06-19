@@ -31,6 +31,7 @@
 #include "Gs2MegaFieldEzUserDomain.h"
 #include "Gs2MegaFieldEzUserGameSessionDomain.h"
 #include "Gs2MegaFieldEzNamespaceDomain.h"
+#include "Core/EzTransactionDomain.h"
 #include "Util/Net/GameSession.h"
 #include "Util/Net/Gs2Connection.h"
 

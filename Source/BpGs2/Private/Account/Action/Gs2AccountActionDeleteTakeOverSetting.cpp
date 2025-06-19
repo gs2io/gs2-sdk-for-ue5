@@ -12,6 +12,8 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
+ *
+ * deny overwrite
  */
 
 #include "Account/Action/Gs2AccountActionDeleteTakeOverSetting.h"
@@ -47,6 +49,7 @@ void UGs2AccountDeleteTakeOverSettingAsyncFunction::Activate()
     }
 
     auto Future = Account.Value->DeleteTakeOverSetting(
+        Type
     );
     Future->GetTask().OnSuccessDelegate().BindLambda([&](auto Result)
     {

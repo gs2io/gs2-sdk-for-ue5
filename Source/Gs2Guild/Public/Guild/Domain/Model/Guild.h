@@ -60,6 +60,7 @@ namespace Gs2::Guild::Domain::Model
     class FGuildDomain;
     class FJoinedGuildDomain;
     class FJoinedGuildAccessTokenDomain;
+    class FLastGuildMasterActivityDomain;
     class FCurrentGuildMasterDomain;
     class FReceiveMemberRequestDomain;
     class FSendMemberRequestDomain;
@@ -198,6 +199,32 @@ namespace Gs2::Guild::Domain::Model
 
         TSharedPtr<FAsyncTask<FUpdateMemberRoleTask>> UpdateMemberRole(
             Request::FUpdateMemberRoleByGuildNameRequestPtr Request
+        );
+
+        class GS2GUILD_API FBatchUpdateMemberRoleTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Guild::Domain::Model::FGuildDomain>,
+            public TSharedFromThis<FBatchUpdateMemberRoleTask>
+        {
+            const TSharedPtr<FGuildDomain> Self;
+            const Request::FBatchUpdateMemberRoleByGuildNameRequestPtr Request;
+        public:
+            explicit FBatchUpdateMemberRoleTask(
+                const TSharedPtr<FGuildDomain>& Self,
+                const Request::FBatchUpdateMemberRoleByGuildNameRequestPtr Request
+            );
+
+            FBatchUpdateMemberRoleTask(
+                const FBatchUpdateMemberRoleTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Guild::Domain::Model::FGuildDomain>> Result
+            ) override;
+        };
+        friend FBatchUpdateMemberRoleTask;
+
+        TSharedPtr<FAsyncTask<FBatchUpdateMemberRoleTask>> BatchUpdateMemberRole(
+            Request::FBatchUpdateMemberRoleByGuildNameRequestPtr Request
         );
 
         class GS2GUILD_API FDeleteTask final :

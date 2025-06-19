@@ -20,6 +20,7 @@
 #include "Friend/Model/Gs2FriendBlackList.h"
 #include "Friend/Model/Gs2FriendBlackList.h"
 #include "../../Core/Model/Gs2Error.h"
+#include "Core/Model/Gs2CoreTransaction.h"
 #include "Kismet/BlueprintAsyncActionBase.h"
 #include "Gs2FriendActionUnregisterBlackList.generated.h"
 

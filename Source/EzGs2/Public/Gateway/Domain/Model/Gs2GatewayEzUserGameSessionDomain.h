@@ -22,6 +22,7 @@
 #include "Gs2GatewayEzWebSocketSessionGameSessionDomain.h"
 #include "Gs2GatewayEzFirebaseTokenGameSessionDomain.h"
 #include "Gs2GatewayEzUserGameSessionDomain.h"
+#include "Core/EzTransactionGameSessionDomain.h"
 #include "Util/Net/GameSession.h"
 #include "Util/Net/Gs2Connection.h"
 

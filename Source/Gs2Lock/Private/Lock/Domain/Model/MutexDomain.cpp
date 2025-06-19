@@ -96,6 +96,16 @@ namespace Gs2::Lock::Domain::Model
             ->WithNamespaceName(Self->NamespaceName)
             ->WithPropertyId(Self->PropertyId)
             ->WithUserId(Self->UserId);
+        const auto Future = Self->Client->LockByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         auto Domain = Self;
 
         *Result = Domain;
@@ -131,6 +141,16 @@ namespace Gs2::Lock::Domain::Model
             ->WithNamespaceName(Self->NamespaceName)
             ->WithPropertyId(Self->PropertyId)
             ->WithUserId(Self->UserId);
+        const auto Future = Self->Client->UnlockByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         auto Domain = Self;
 
         *Result = Domain;
@@ -166,6 +186,16 @@ namespace Gs2::Lock::Domain::Model
             ->WithNamespaceName(Self->NamespaceName)
             ->WithUserId(Self->UserId)
             ->WithPropertyId(Self->PropertyId);
+        const auto Future = Self->Client->GetMutexByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         *Result = ResultModel->GetItem();
         return nullptr;
     }
@@ -199,6 +229,16 @@ namespace Gs2::Lock::Domain::Model
             ->WithNamespaceName(Self->NamespaceName)
             ->WithUserId(Self->UserId)
             ->WithPropertyId(Self->PropertyId);
+        const auto Future = Self->Client->DeleteMutexByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         auto Domain = Self;
 
         *Result = Domain;

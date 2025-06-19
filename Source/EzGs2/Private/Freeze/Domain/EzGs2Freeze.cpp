@@ -12,32 +12,6 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
+ *
+ * deny overwrite
  */
-
-#include "Freeze/Domain/EzGs2Freeze.h"
-
-namespace Gs2::UE5::Freeze::Domain
-{
-
-    FEzGs2Freeze::FEzGs2Freeze(
-        Gs2::Freeze::Domain::FGs2FreezeDomainPtr Domain,
-        Gs2::UE5::Util::FGs2ConnectionPtr Connection
-    ):
-        Domain(Domain),
-        ConnectionValue(Connection)
-    {
-
-    }
-
-    Gs2::UE5::Freeze::Domain::Model::FEzStageDomainPtr FEzGs2Freeze::Stage(
-        const FString StageName
-    ) const
-    {
-        return MakeShared<Gs2::UE5::Freeze::Domain::Model::FEzStageDomain>(
-            Domain->Stage(
-                StageName
-            ),
-            ConnectionValue
-        );
-    }
-}

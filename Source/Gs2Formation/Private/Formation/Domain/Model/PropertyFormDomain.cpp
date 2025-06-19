@@ -111,6 +111,16 @@ namespace Gs2::Formation::Domain::Model
             ->WithUserId(Self->UserId)
             ->WithPropertyFormModelName(Self->PropertyFormModelName)
             ->WithPropertyId(Self->PropertyId);
+        const auto Future = Self->Client->GetPropertyFormByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         *Result = ResultModel->GetItem();
         return nullptr;
     }
@@ -145,11 +155,27 @@ namespace Gs2::Formation::Domain::Model
             ->WithUserId(Self->UserId)
             ->WithPropertyFormModelName(Self->PropertyFormModelName)
             ->WithPropertyId(Self->PropertyId);
+        const auto Future = Self->Client->GetPropertyFormWithSignatureByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         auto Domain = Self;
         if (ResultModel != nullptr)
         {
-            Domain->Body = *ResultModel->GetBody();
-            Domain->Signature = *ResultModel->GetSignature();
+            if (ResultModel->GetBody().IsSet())
+            {
+                Domain->Body = *ResultModel->GetBody();
+            }
+            if (ResultModel->GetSignature().IsSet())
+            {
+                Domain->Signature = *ResultModel->GetSignature();
+            }
         }
 
         *Result = Domain;
@@ -186,6 +212,16 @@ namespace Gs2::Formation::Domain::Model
             ->WithUserId(Self->UserId)
             ->WithPropertyFormModelName(Self->PropertyFormModelName)
             ->WithPropertyId(Self->PropertyId);
+        const auto Future = Self->Client->SetPropertyFormByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         auto Domain = Self;
 
         *Result = Domain;
@@ -213,7 +249,7 @@ namespace Gs2::Formation::Domain::Model
     }
 
     Gs2::Core::Model::FGs2ErrorPtr FPropertyFormDomain::FAcquireActionsToPropertiesTask::Action(
-        TSharedPtr<TSharedPtr<Gs2::Formation::Domain::Model::FPropertyFormDomain>> Result
+        TSharedPtr<TSharedPtr<Gs2::Core::Domain::FTransactionDomain>> Result
     )
     {
         Request
@@ -222,15 +258,25 @@ namespace Gs2::Formation::Domain::Model
             ->WithUserId(Self->UserId)
             ->WithPropertyFormModelName(Self->PropertyFormModelName)
             ->WithPropertyId(Self->PropertyId);
+        const auto Future = Self->Client->AcquireActionsToPropertyFormProperties(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         const auto Transaction = Gs2::Core::Domain::Internal::FTransactionDomainFactory::ToTransaction(
             Self->Gs2,
             *Self->UserId,
-            ResultModel->AutoRunStampSheet() == nullptr ? false : *ResultModel->AutoRunStampSheet(),
+            ResultModel->GetAutoRunStampSheet().IsSet() ? *ResultModel->GetAutoRunStampSheet() : false,
             *ResultModel->GetTransactionId(),
             *ResultModel->GetStampSheet(),
             *ResultModel->GetStampSheetEncryptionKeyId(),
             *ResultModel->GetAtomicCommit(),
-            *ResultModel->GetTransactionResult()
+            ResultModel->GetTransactionResult()
         );
         const auto Future3 = Transaction->Wait(true);
         Future3->StartSynchronousTask();
@@ -272,6 +318,16 @@ namespace Gs2::Formation::Domain::Model
             ->WithUserId(Self->UserId)
             ->WithPropertyFormModelName(Self->PropertyFormModelName)
             ->WithPropertyId(Self->PropertyId);
+        const auto Future = Self->Client->DeletePropertyFormByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         auto Domain = Self;
 
         *Result = Domain;

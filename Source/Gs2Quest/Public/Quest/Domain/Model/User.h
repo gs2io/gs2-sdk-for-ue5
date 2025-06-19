@@ -116,7 +116,7 @@ namespace Gs2::Quest::Domain::Model
         );
 
         class GS2QUEST_API FStartTask final :
-            public Gs2::Core::Util::TGs2Future<Gs2::Quest::Domain::Model::FUserDomain>,
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::FTransactionDomain>,
             public TSharedFromThis<FStartTask>
         {
             const TSharedPtr<FUserDomain> Self;
@@ -132,7 +132,7 @@ namespace Gs2::Quest::Domain::Model
             );
 
             virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-                TSharedPtr<TSharedPtr<Gs2::Quest::Domain::Model::FUserDomain>> Result
+                TSharedPtr<TSharedPtr<Gs2::Core::Domain::FTransactionDomain>> Result
             ) override;
         };
         friend FStartTask;

@@ -30,6 +30,7 @@
 #include "SkillTree/Model/Gs2SkillTreeEzTransactionResult.h"
 #include "Gs2SkillTreeEzNodeModelDomain.h"
 #include "SkillTree/Domain/Iterator/Gs2SkillTreeEzDescribeNodeModelsIterator.h"
+#include "Core/EzTransactionDomain.h"
 #include "Util/Net/GameSession.h"
 #include "Util/Net/Gs2Connection.h"
 

@@ -27,6 +27,7 @@
 #include "Gs2FriendEzFollowUserGameSessionDomain.h"
 #include "Friend/Domain/Iterator/Gs2FriendEzDescribeFollowsIterator.h"
 #include "Gs2FriendEzFollowGameSessionDomain.h"
+#include "Core/EzTransactionGameSessionDomain.h"
 #include "Util/Net/GameSession.h"
 #include "Util/Net/Gs2Connection.h"
 

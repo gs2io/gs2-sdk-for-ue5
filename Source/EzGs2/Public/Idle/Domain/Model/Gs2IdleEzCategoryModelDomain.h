@@ -29,6 +29,7 @@
 #include "Idle/Model/Gs2IdleEzTransactionResult.h"
 #include "Gs2IdleEzCategoryModelDomain.h"
 #include "Idle/Domain/Iterator/Gs2IdleEzDescribeCategoryModelsIterator.h"
+#include "Core/EzTransactionDomain.h"
 #include "Util/Net/GameSession.h"
 #include "Util/Net/Gs2Connection.h"
 

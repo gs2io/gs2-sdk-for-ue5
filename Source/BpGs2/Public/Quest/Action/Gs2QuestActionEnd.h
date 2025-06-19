@@ -22,12 +22,14 @@
 #include "Quest/Model/Gs2QuestConfig.h"
 #include "Quest/Model/Gs2QuestProgress.h"
 #include "../../Core/Model/Gs2Error.h"
+#include "Core/Model/Gs2CoreTransaction.h"
 #include "Kismet/BlueprintAsyncActionBase.h"
 #include "Gs2QuestActionEnd.generated.h"
 
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FGs2QuestEndSuccessDelegate, FGs2QuestOwnProgress, Progress, const FGs2Error, Error);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FGs2QuestEndErrorDelegate, FGs2QuestOwnProgress, Progress, const FGs2Error, Error);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FGs2QuestEndSuccessDelegate, FGs2CoreOwnTransaction, Transaction, const FGs2Error, Error);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FGs2QuestEndErrorDelegate, FGs2CoreOwnTransaction, Transaction, const FGs2Error, Error);
+
 
 UCLASS()
 class BPGS2_API UGs2QuestEndAsyncFunction : public UBlueprintAsyncActionBase

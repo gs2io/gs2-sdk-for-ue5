@@ -123,6 +123,16 @@ namespace Gs2::Inventory::Domain::Model
             ->WithNamespaceName(Self->NamespaceName)
             ->WithInventoryName(Self->InventoryName)
             ->WithAccessToken(Self->AccessToken->GetToken());
+        const auto Future = Self->Client->GetInventory(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         *Result = ResultModel->GetItem();
         return nullptr;
     }
@@ -156,6 +166,16 @@ namespace Gs2::Inventory::Domain::Model
             ->WithNamespaceName(Self->NamespaceName)
             ->WithAccessToken(Self->AccessToken->GetToken())
             ->WithInventoryName(Self->InventoryName);
+        const auto Future = Self->Client->VerifyInventoryCurrentMaxCapacity(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         const auto Domain = Self;
         *Result = Domain;
         return nullptr;

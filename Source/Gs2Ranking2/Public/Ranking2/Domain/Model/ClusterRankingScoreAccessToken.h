@@ -189,14 +189,14 @@ namespace Gs2::Ranking2::Domain::Model
             TOptional<FString> NamespaceName,
             TOptional<FString> RankingName,
             TOptional<FString> ClusterName,
-            TOptional<FString> Season,
+            TOptional<int64> Season,
             TOptional<FString> UserId,
             FString ChildType
         );
 
         static FString CreateCacheKey(
             TOptional<FString> ClusterName,
-            TOptional<FString> Season,
+            TOptional<int64> Season,
             TOptional<FString> UserId
         );
 

@@ -107,6 +107,16 @@ namespace Gs2::Enchant::Domain::Model
             ->WithUserId(Self->UserId)
             ->WithParameterName(Self->ParameterName)
             ->WithPropertyId(Self->PropertyId);
+        const auto Future = Self->Client->GetBalanceParameterStatusByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         *Result = ResultModel->GetItem();
         return nullptr;
     }
@@ -141,6 +151,16 @@ namespace Gs2::Enchant::Domain::Model
             ->WithUserId(Self->UserId)
             ->WithParameterName(Self->ParameterName)
             ->WithPropertyId(Self->PropertyId);
+        const auto Future = Self->Client->DeleteBalanceParameterStatusByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         auto Domain = Self;
 
         *Result = Domain;
@@ -177,6 +197,16 @@ namespace Gs2::Enchant::Domain::Model
             ->WithUserId(Self->UserId)
             ->WithParameterName(Self->ParameterName)
             ->WithPropertyId(Self->PropertyId);
+        const auto Future = Self->Client->ReDrawBalanceParameterStatusByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         auto Domain = Self;
 
         *Result = Domain;
@@ -213,6 +243,16 @@ namespace Gs2::Enchant::Domain::Model
             ->WithUserId(Self->UserId)
             ->WithParameterName(Self->ParameterName)
             ->WithPropertyId(Self->PropertyId);
+        const auto Future = Self->Client->SetBalanceParameterStatusByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         auto Domain = Self;
 
         *Result = Domain;

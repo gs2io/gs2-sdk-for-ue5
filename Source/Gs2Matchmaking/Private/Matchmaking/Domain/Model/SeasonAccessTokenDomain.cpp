@@ -187,7 +187,7 @@ namespace Gs2::Matchmaking::Domain::Model
         TOptional<FString> NamespaceName,
         TOptional<FString> UserId,
         TOptional<FString> SeasonName,
-        TOptional<FString> Season,
+        TOptional<int64> Season,
         FString ChildType
     )
     {
@@ -195,18 +195,18 @@ namespace Gs2::Matchmaking::Domain::Model
             (NamespaceName.IsSet() ? *NamespaceName : "null") + ":" +
             (UserId.IsSet() ? *UserId : "null") + ":" +
             (SeasonName.IsSet() ? *SeasonName : "null") + ":" +
-            (Season.IsSet() ? *Season : "null") + ":" +
+            (Season.IsSet() ? FString::FromInt(*Season) : "null") + ":" +
             ChildType;
     }
 
     FString FSeasonAccessTokenDomain::CreateCacheKey(
         TOptional<FString> SeasonName,
-        TOptional<FString> Season
+        TOptional<int64> Season
     )
     {
         return FString("") +
             (SeasonName.IsSet() ? *SeasonName : "null") + ":" + 
-            (Season.IsSet() ? *Season : "null");
+            (Season.IsSet() ? FString::FromInt(*Season) : "null");
     }
 }
 

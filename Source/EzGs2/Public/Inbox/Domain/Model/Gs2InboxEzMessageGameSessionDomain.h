@@ -27,6 +27,7 @@
 #include "Inbox/Model/Gs2InboxEzTransactionResult.h"
 #include "Gs2InboxEzMessageGameSessionDomain.h"
 #include "Inbox/Domain/Iterator/Gs2InboxEzDescribeMessagesIterator.h"
+#include "Core/EzTransactionGameSessionDomain.h"
 #include "Util/Net/GameSession.h"
 #include "Util/Net/Gs2Connection.h"
 
@@ -52,7 +53,7 @@ namespace Gs2::UE5::Inbox::Domain::Model
         );
 
         class EZGS2_API FReadTask :
-            public Gs2::Core::Util::TGs2Future<Gs2::UE5::Inbox::Domain::Model::FEzMessageGameSessionDomain>,
+            public Gs2::Core::Util::TGs2Future<Gs2::UE5::Core::Domain::FEzTransactionGameSessionDomain>,
             public TSharedFromThis<FReadTask>
         {
             TSharedPtr<FEzMessageGameSessionDomain> Self;
@@ -63,7 +64,7 @@ namespace Gs2::UE5::Inbox::Domain::Model
             );
 
             virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-                TSharedPtr<TSharedPtr<Gs2::UE5::Inbox::Domain::Model::FEzMessageGameSessionDomain>> Result
+                TSharedPtr<TSharedPtr<Gs2::UE5::Core::Domain::FEzTransactionGameSessionDomain>> Result
             ) override;
         };
         friend FReadTask;

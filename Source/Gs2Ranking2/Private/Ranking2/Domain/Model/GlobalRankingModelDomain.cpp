@@ -33,6 +33,7 @@
 #include "Ranking2/Domain/Model/GlobalRankingReceivedReward.h"
 #include "Ranking2/Domain/Model/GlobalRankingReceivedRewardAccessToken.h"
 #include "Ranking2/Domain/Model/GlobalRankingSeason.h"
+#include "Ranking2/Domain/Model/GlobalRankingSeasonAccessToken.h"
 #include "Ranking2/Domain/Model/GlobalRankingData.h"
 #include "Ranking2/Domain/Model/GlobalRankingDataAccessToken.h"
 #include "Ranking2/Domain/Model/ClusterRankingModel.h"
@@ -42,6 +43,7 @@
 #include "Ranking2/Domain/Model/ClusterRankingReceivedReward.h"
 #include "Ranking2/Domain/Model/ClusterRankingReceivedRewardAccessToken.h"
 #include "Ranking2/Domain/Model/ClusterRankingSeason.h"
+#include "Ranking2/Domain/Model/ClusterRankingSeasonAccessToken.h"
 #include "Ranking2/Domain/Model/ClusterRankingData.h"
 #include "Ranking2/Domain/Model/ClusterRankingDataAccessToken.h"
 #include "Ranking2/Domain/Model/SubscribeRankingModel.h"
@@ -130,29 +132,8 @@ namespace Gs2::Ranking2::Domain::Model
         {
             return Future->GetTask().Error();
         }
-        const auto RequestModel = Request;
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::Ranking2::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
-                    Self->NamespaceName,
-                    "GlobalRankingModel"
-                );
-                const auto Key = Gs2::Ranking2::Domain::Model::FGlobalRankingModelDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetName()
-                );
-                Self->Gs2->Cache->Put(
-                    Gs2::Ranking2::Model::FGlobalRankingModel::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
-        }
         *Result = ResultModel->GetItem();
         return nullptr;
     }
@@ -164,6 +145,7 @@ namespace Gs2::Ranking2::Domain::Model
     }
 
     TSharedPtr<Gs2::Ranking2::Domain::Model::FGlobalRankingSeasonDomain> FGlobalRankingModelDomain::GlobalRankingSeason(
+        const FString UserId,
         const TOptional<int64> Season
     )
     {
@@ -172,7 +154,23 @@ namespace Gs2::Ranking2::Domain::Model
             Service,
             NamespaceName,
             RankingName,
-            Season
+            Season,
+            UserId
+        );
+    }
+
+    TSharedPtr<Gs2::Ranking2::Domain::Model::FGlobalRankingSeasonAccessTokenDomain> FGlobalRankingModelDomain::GlobalRankingSeason(
+        const Auth::Model::FAccessTokenPtr AccessToken,
+        const TOptional<int64> Season
+    )
+    {
+        return MakeShared<Gs2::Ranking2::Domain::Model::FGlobalRankingSeasonAccessTokenDomain>(
+            Gs2,
+            Service,
+            NamespaceName,
+            RankingName,
+            Season,
+            AccessToken
         );
     }
 
@@ -279,7 +277,7 @@ namespace Gs2::Ranking2::Domain::Model
             Gs2::Ranking2::Domain::Model::FGlobalRankingModelDomain::CreateCacheKey(
                 RankingName
             ),
-            [Callback](TSharedPtr<Gs2Object> obj)
+            [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::Ranking2::Model::FGlobalRankingModel>(obj));
             }

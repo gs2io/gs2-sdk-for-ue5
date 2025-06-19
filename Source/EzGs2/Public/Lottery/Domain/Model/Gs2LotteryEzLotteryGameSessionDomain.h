@@ -31,6 +31,7 @@
 #include "Lottery/Model/Gs2LotteryEzTransactionResult.h"
 #include "Lottery/Domain/Iterator/Gs2LotteryEzDescribeProbabilitiesIterator.h"
 #include "Gs2LotteryEzLotteryGameSessionDomain.h"
+#include "Core/EzTransactionGameSessionDomain.h"
 #include "Util/Net/GameSession.h"
 #include "Util/Net/Gs2Connection.h"
 

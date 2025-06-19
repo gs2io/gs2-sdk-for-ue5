@@ -92,22 +92,32 @@ namespace Gs2::Exchange::Domain::Model
     }
 
     Gs2::Core::Model::FGs2ErrorPtr FExchangeDomain::FExchangeTask::Action(
-        TSharedPtr<TSharedPtr<Gs2::Exchange::Domain::Model::FExchangeDomain>> Result
+        TSharedPtr<TSharedPtr<Gs2::Core::Domain::FTransactionDomain>> Result
     )
     {
         Request
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithUserId(Self->UserId);
+        const auto Future = Self->Client->ExchangeByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         const auto Transaction = Gs2::Core::Domain::Internal::FTransactionDomainFactory::ToTransaction(
             Self->Gs2,
             *Self->UserId,
-            ResultModel->AutoRunStampSheet() == nullptr ? false : *ResultModel->AutoRunStampSheet(),
+            ResultModel->GetAutoRunStampSheet().IsSet() ? *ResultModel->GetAutoRunStampSheet() : false,
             *ResultModel->GetTransactionId(),
             *ResultModel->GetStampSheet(),
             *ResultModel->GetStampSheetEncryptionKeyId(),
             *ResultModel->GetAtomicCommit(),
-            *ResultModel->GetTransactionResult()
+            ResultModel->GetTransactionResult()
         );
         const auto Future3 = Transaction->Wait(true);
         Future3->StartSynchronousTask();
@@ -140,22 +150,32 @@ namespace Gs2::Exchange::Domain::Model
     }
 
     Gs2::Core::Model::FGs2ErrorPtr FExchangeDomain::FIncrementalTask::Action(
-        TSharedPtr<TSharedPtr<Gs2::Exchange::Domain::Model::FExchangeDomain>> Result
+        TSharedPtr<TSharedPtr<Gs2::Core::Domain::FTransactionDomain>> Result
     )
     {
         Request
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithUserId(Self->UserId);
+        const auto Future = Self->Client->IncrementalExchangeByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         const auto Transaction = Gs2::Core::Domain::Internal::FTransactionDomainFactory::ToTransaction(
             Self->Gs2,
             *Self->UserId,
-            ResultModel->AutoRunStampSheet() == nullptr ? false : *ResultModel->AutoRunStampSheet(),
+            ResultModel->GetAutoRunStampSheet().IsSet() ? *ResultModel->GetAutoRunStampSheet() : false,
             *ResultModel->GetTransactionId(),
             *ResultModel->GetStampSheet(),
             *ResultModel->GetStampSheetEncryptionKeyId(),
             *ResultModel->GetAtomicCommit(),
-            *ResultModel->GetTransactionResult()
+            ResultModel->GetTransactionResult()
         );
         const auto Future3 = Transaction->Wait(true);
         Future3->StartSynchronousTask();

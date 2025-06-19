@@ -21,6 +21,7 @@
 #include "Money/Model/Gs2MoneyEzWallet.h"
 #include "Gs2MoneyEzWalletGameSessionDomain.h"
 #include "Gs2MoneyEzUserGameSessionDomain.h"
+#include "Core/EzTransactionGameSessionDomain.h"
 #include "Util/Net/GameSession.h"
 #include "Util/Net/Gs2Connection.h"
 

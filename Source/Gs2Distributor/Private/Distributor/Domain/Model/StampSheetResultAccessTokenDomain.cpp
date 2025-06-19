@@ -309,7 +309,7 @@ namespace Gs2::Distributor::Domain::Model
             Gs2::Distributor::Domain::Model::FStampSheetResultDomain::CreateCacheKey(
                 TransactionId
             ),
-            [Callback](TSharedPtr<Gs2Object> obj)
+            [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::Distributor::Model::FStampSheetResult>(obj));
             }

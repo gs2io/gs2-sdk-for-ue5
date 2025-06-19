@@ -87,6 +87,16 @@ namespace Gs2::Identifier::Domain::Model
         Request
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithUserName(Self->UserName);
+        const auto Future = Self->Client->CreatePassword(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         auto Domain = Self;
 
         *Result = Domain;
@@ -120,6 +130,16 @@ namespace Gs2::Identifier::Domain::Model
         Request
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithUserName(Self->UserName);
+        const auto Future = Self->Client->GetPassword(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         *Result = ResultModel->GetItem();
         return nullptr;
     }
@@ -151,10 +171,23 @@ namespace Gs2::Identifier::Domain::Model
         Request
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithUserName(Self->UserName);
+        const auto Future = Self->Client->EnableMfa(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         auto Domain = Self;
         if (ResultModel != nullptr)
         {
-            Domain->ChallengeToken = *ResultModel->GetChallengeToken();
+            if (ResultModel->GetChallengeToken().IsSet())
+            {
+                Domain->ChallengeToken = *ResultModel->GetChallengeToken();
+            }
         }
 
         *Result = Domain;
@@ -188,6 +221,16 @@ namespace Gs2::Identifier::Domain::Model
         Request
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithUserName(Self->UserName);
+        const auto Future = Self->Client->ChallengeMfa(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         auto Domain = Self;
 
         *Result = Domain;
@@ -221,6 +264,16 @@ namespace Gs2::Identifier::Domain::Model
         Request
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithUserName(Self->UserName);
+        const auto Future = Self->Client->DisableMfa(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         auto Domain = Self;
 
         *Result = Domain;
@@ -254,6 +307,16 @@ namespace Gs2::Identifier::Domain::Model
         Request
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithUserName(Self->UserName);
+        const auto Future = Self->Client->DeletePassword(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         auto Domain = Self;
 
         *Result = Domain;

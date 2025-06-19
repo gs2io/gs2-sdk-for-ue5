@@ -32,11 +32,11 @@ struct FGs2EnhanceTransactionResult
     UPROPERTY(Category = Gs2, BlueprintReadWrite)
     FString TransactionId = "";
     UPROPERTY(Category = Gs2, BlueprintReadWrite)
-    TArray<FGs2CoreVerifyActionResult> VerifyResults = TArray<FGs2CoreVerifyActionResult>();
+    TArray<FGs2EnhanceVerifyActionResult> VerifyResults = TArray<FGs2EnhanceVerifyActionResult>();
     UPROPERTY(Category = Gs2, BlueprintReadWrite)
-    TArray<FGs2CoreConsumeActionResult> ConsumeResults = TArray<FGs2CoreConsumeActionResult>();
+    TArray<FGs2EnhanceConsumeActionResult> ConsumeResults = TArray<FGs2EnhanceConsumeActionResult>();
     UPROPERTY(Category = Gs2, BlueprintReadWrite)
-    TArray<FGs2CoreAcquireActionResult> AcquireResults = TArray<FGs2CoreAcquireActionResult>();
+    TArray<FGs2EnhanceAcquireActionResult> AcquireResults = TArray<FGs2EnhanceAcquireActionResult>();
 };
 
 inline FGs2EnhanceTransactionResult EzTransactionResultToFGs2EnhanceTransactionResult(
@@ -47,28 +47,28 @@ inline FGs2EnhanceTransactionResult EzTransactionResultToFGs2EnhanceTransactionR
     Value.TransactionId = Model->GetTransactionId() ? *Model->GetTransactionId() : "";
     Value.VerifyResults = Model->GetVerifyResults() ? [&]
     {
-        TArray<FGs2CoreVerifyActionResult> r;
+        TArray<FGs2EnhanceVerifyActionResult> r;
         for (auto v : *Model->GetVerifyResults())
         {r.Add(EzVerifyActionResultToFGs2EnhanceVerifyActionResult(v));
         }
         return r;
-    }() : TArray<FGs2CoreVerifyActionResult>();
+    }() : TArray<FGs2EnhanceVerifyActionResult>();
     Value.ConsumeResults = Model->GetConsumeResults() ? [&]
     {
-        TArray<FGs2CoreConsumeActionResult> r;
+        TArray<FGs2EnhanceConsumeActionResult> r;
         for (auto v : *Model->GetConsumeResults())
         {r.Add(EzConsumeActionResultToFGs2EnhanceConsumeActionResult(v));
         }
         return r;
-    }() : TArray<FGs2CoreConsumeActionResult>();
+    }() : TArray<FGs2EnhanceConsumeActionResult>();
     Value.AcquireResults = Model->GetAcquireResults() ? [&]
     {
-        TArray<FGs2CoreAcquireActionResult> r;
+        TArray<FGs2EnhanceAcquireActionResult> r;
         for (auto v : *Model->GetAcquireResults())
         {r.Add(EzAcquireActionResultToFGs2EnhanceAcquireActionResult(v));
         }
         return r;
-    }() : TArray<FGs2CoreAcquireActionResult>();
+    }() : TArray<FGs2EnhanceAcquireActionResult>();
     return Value;
 }
 

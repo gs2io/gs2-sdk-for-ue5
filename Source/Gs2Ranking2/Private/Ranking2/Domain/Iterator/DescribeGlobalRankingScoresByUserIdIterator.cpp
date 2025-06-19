@@ -12,6 +12,8 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
+ *
+ * deny overwrite
  */
 
 #if defined(_MSC_VER)
@@ -101,7 +103,7 @@ namespace Gs2::Ranking2::Domain::Iterator
             const auto ListParentKey = Gs2::Ranking2::Domain::Model::FGlobalRankingSeasonDomain::CreateCacheParentKey(
                 Self->NamespaceName,
                 Self->RankingName,
-                Self->Season,
+                TOptional<int64>(),
                 "GlobalRankingScore"
             );
 
@@ -147,7 +149,7 @@ namespace Gs2::Ranking2::Domain::Iterator
                     Gs2::Ranking2::Model::FGlobalRankingScore::TypeName,
                     ListParentKey,
                     Gs2::Ranking2::Domain::Model::FGlobalRankingScoreDomain::CreateCacheKey(
-                        FString::FromInt(*Item->GetSeason()),
+                        Item->GetSeason(),
                         Item->GetUserId()
                     ),
                     Item,

@@ -100,6 +100,16 @@ namespace Gs2::Schedule::Domain::Model
             ->WithNamespaceName(Self->NamespaceName)
             ->WithEventName(Self->EventName)
             ->WithUserId(Self->UserId);
+        const auto Future = Self->Client->GetEventByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         *Result = ResultModel->GetItem();
         return nullptr;
     }
@@ -133,6 +143,16 @@ namespace Gs2::Schedule::Domain::Model
             ->WithNamespaceName(Self->NamespaceName)
             ->WithUserId(Self->UserId)
             ->WithEventName(Self->EventName);
+        const auto Future = Self->Client->VerifyEventByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         const auto Domain = Self;
         *Result = Domain;
         return nullptr;

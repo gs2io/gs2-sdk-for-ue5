@@ -202,7 +202,7 @@ namespace Gs2::Gateway::Domain::Model
             ParentKey,
             Gs2::Gateway::Domain::Model::FWebSocketSessionDomain::CreateCacheKey(
             ),
-            [Callback](TSharedPtr<Gs2Object> obj)
+            [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::Gateway::Model::FWebSocketSession>(obj));
             }

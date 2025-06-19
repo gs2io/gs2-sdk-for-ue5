@@ -12,6 +12,8 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
+ *
+ * deny overwrite
  */
 
 #if defined(_MSC_VER)
@@ -139,6 +141,15 @@ namespace Gs2::Ranking2::Domain::Model
             ->WithClusterName(Self->ClusterName)
             ->WithAccessToken(Self->AccessToken->GetToken())
             ->WithSeason(Self->Season);
+        const auto Future = Self->Client->CreateClusterRankingReceivedReward(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
         auto Domain = Self;
 
         *Result = Domain;
@@ -167,7 +178,7 @@ namespace Gs2::Ranking2::Domain::Model
     }
 
     Gs2::Core::Model::FGs2ErrorPtr FClusterRankingReceivedRewardAccessTokenDomain::FReceiveTask::Action(
-        TSharedPtr<TSharedPtr<Gs2::Ranking2::Domain::Model::FClusterRankingReceivedRewardAccessTokenDomain>> Result
+        TSharedPtr<TSharedPtr<Gs2::Core::Domain::FTransactionAccessTokenDomain>> Result
     )
     {
         Request
@@ -177,15 +188,24 @@ namespace Gs2::Ranking2::Domain::Model
             ->WithRankingName(Self->RankingName)
             ->WithClusterName(Self->ClusterName)
             ->WithSeason(Self->Season);
+        const auto Future = Self->Client->ReceiveClusterRankingReceivedReward(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
         const auto Transaction = Gs2::Core::Domain::Internal::FTransactionDomainFactory::ToTransaction(
             Self->Gs2,
             Self->AccessToken,
-            ResultModel->AutoRunStampSheet() == nullptr ? false : *ResultModel->AutoRunStampSheet(),
+            ResultModel->GetAutoRunStampSheet().IsSet() ? *ResultModel->GetAutoRunStampSheet() : false,
             *ResultModel->GetTransactionId(),
             *ResultModel->GetStampSheet(),
             *ResultModel->GetStampSheetEncryptionKeyId(),
             *ResultModel->GetAtomicCommit(),
-            *ResultModel->GetTransactionResult()
+            ResultModel->GetTransactionResult()
         );
         const auto Future3 = Transaction->Wait(true);
         Future3->StartSynchronousTask();
@@ -229,6 +249,15 @@ namespace Gs2::Ranking2::Domain::Model
             ->WithClusterName(Self->ClusterName)
             ->WithAccessToken(Self->AccessToken->GetToken())
             ->WithSeason(Self->Season);
+        const auto Future = Self->Client->GetClusterRankingReceivedReward(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
         *Result = ResultModel->GetItem();
         return nullptr;
     }
@@ -243,7 +272,7 @@ namespace Gs2::Ranking2::Domain::Model
         TOptional<FString> NamespaceName,
         TOptional<FString> RankingName,
         TOptional<FString> ClusterName,
-        TOptional<FString> Season,
+        TOptional<int64> Season,
         TOptional<FString> UserId,
         FString ChildType
     )
@@ -252,20 +281,20 @@ namespace Gs2::Ranking2::Domain::Model
             (NamespaceName.IsSet() ? *NamespaceName : "null") + ":" +
             (RankingName.IsSet() ? *RankingName : "null") + ":" +
             (ClusterName.IsSet() ? *ClusterName : "null") + ":" +
-            (Season.IsSet() ? *Season : "null") + ":" +
+            (Season.IsSet() ? FString::FromInt(*Season) : "null") + ":" +
             (UserId.IsSet() ? *UserId : "null") + ":" +
             ChildType;
     }
 
     FString FClusterRankingReceivedRewardAccessTokenDomain::CreateCacheKey(
         TOptional<FString> ClusterName,
-        TOptional<FString> Season,
+        TOptional<int64> Season,
         TOptional<FString> UserId
     )
     {
         return FString("") +
             (ClusterName.IsSet() ? *ClusterName : "null") + ":" + 
-            (Season.IsSet() ? *Season : "null") + ":" + 
+            (Season.IsSet() ? FString::FromInt(*Season) : "null") + ":" + 
             (UserId.IsSet() ? *UserId : "null");
     }
 
@@ -293,7 +322,7 @@ namespace Gs2::Ranking2::Domain::Model
             Self->ParentKey,
             Gs2::Ranking2::Domain::Model::FClusterRankingReceivedRewardDomain::CreateCacheKey(
                 Self->ClusterName,
-                Self->Season.IsSet() ? FString::FromInt(*Self->Season) : TOptional<FString>(),
+                Self->Season,
                 Self->UserId()
             ),
             &Value
@@ -312,8 +341,8 @@ namespace Gs2::Ranking2::Domain::Model
 
                 const auto Key = Gs2::Ranking2::Domain::Model::FClusterRankingReceivedRewardDomain::CreateCacheKey(
                     Self->ClusterName,
-                    Self->Season.IsSet() ? FString::FromInt(*Self->Season) : TOptional<FString>(),
-                    Self->UserId
+                    Self->Season,
+                    Self->UserId()
                 );
                 Self->Gs2->Cache->Put(
                     Gs2::Ranking2::Model::FClusterRankingReceivedReward::TypeName,
@@ -332,7 +361,7 @@ namespace Gs2::Ranking2::Domain::Model
                 Self->ParentKey,
                 Gs2::Ranking2::Domain::Model::FClusterRankingReceivedRewardDomain::CreateCacheKey(
                     Self->ClusterName,
-                    Self->Season.IsSet() ? FString::FromInt(*Self->Season) : TOptional<FString>(),
+                    Self->Season,
                     Self->UserId()
                 ),
                 &Value
@@ -357,8 +386,8 @@ namespace Gs2::Ranking2::Domain::Model
             ParentKey,
             Gs2::Ranking2::Domain::Model::FClusterRankingReceivedRewardDomain::CreateCacheKey(
                 ClusterName,
-                Season.IsSet() ? FString::FromInt(*Season) : TOptional<FString>(),
-                UserId
+                Season,
+                UserId()
             ),
             [Callback](TSharedPtr<FGs2Object> obj)
             {
@@ -376,8 +405,8 @@ namespace Gs2::Ranking2::Domain::Model
             ParentKey,
             Gs2::Ranking2::Domain::Model::FClusterRankingReceivedRewardDomain::CreateCacheKey(
                 ClusterName,
-                Season.IsSet() ? FString::FromInt(*Season) : TOptional<FString>(),
-                UserId
+                Season,
+                UserId()
             ),
             CallbackID
         );

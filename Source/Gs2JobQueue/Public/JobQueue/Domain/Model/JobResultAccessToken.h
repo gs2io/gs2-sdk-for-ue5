@@ -25,7 +25,6 @@
 #include "JobQueue/Gs2JobQueue.h"
 #include "JobQueue/Domain/Iterator/DescribeNamespacesIterator.h"
 #include "JobQueue/Domain/Iterator/DescribeJobsByUserIdIterator.h"
-#include "JobQueue/Domain/Iterator/DescribeDeadLetterJobsByUserIdIterator.h"
 
 namespace Gs2::Core::Domain
 {
@@ -46,8 +45,6 @@ namespace Gs2::JobQueue::Domain::Model
     class FJobAccessTokenDomain;
     class FJobResultDomain;
     class FJobResultAccessTokenDomain;
-    class FDeadLetterJobDomain;
-    class FDeadLetterJobAccessTokenDomain;
     class FUserDomain;
     class FUserAccessTokenDomain;
 

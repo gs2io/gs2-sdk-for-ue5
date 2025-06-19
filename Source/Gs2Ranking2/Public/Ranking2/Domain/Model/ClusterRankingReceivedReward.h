@@ -12,6 +12,8 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
+ *
+ * deny overwrite
  */
 
 // ReSharper disable CppUnusedIncludeDirective
@@ -163,7 +165,7 @@ namespace Gs2::Ranking2::Domain::Model
         );
 
         class GS2RANKING2_API FReceiveTask final :
-            public Gs2::Core::Util::TGs2Future<Gs2::Ranking2::Domain::Model::FClusterRankingReceivedRewardDomain>,
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::FTransactionDomain>,
             public TSharedFromThis<FReceiveTask>
         {
             const TSharedPtr<FClusterRankingReceivedRewardDomain> Self;
@@ -179,7 +181,7 @@ namespace Gs2::Ranking2::Domain::Model
             );
 
             virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-                TSharedPtr<TSharedPtr<Gs2::Ranking2::Domain::Model::FClusterRankingReceivedRewardDomain>> Result
+                TSharedPtr<TSharedPtr<Gs2::Core::Domain::FTransactionDomain>> Result
             ) override;
         };
         friend FReceiveTask;
@@ -244,14 +246,14 @@ namespace Gs2::Ranking2::Domain::Model
             TOptional<FString> NamespaceName,
             TOptional<FString> RankingName,
             TOptional<FString> ClusterName,
-            TOptional<FString> Season,
+            TOptional<int64> Season,
             TOptional<FString> UserId,
             FString ChildType
         );
 
         static FString CreateCacheKey(
             TOptional<FString> ClusterName,
-            TOptional<FString> Season,
+            TOptional<int64> Season,
             TOptional<FString> UserId
         );
 

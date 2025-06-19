@@ -97,7 +97,7 @@ namespace Gs2::Mission::Domain::Model
     }
 
     Gs2::Core::Model::FGs2ErrorPtr FCompleteDomain::FCompleteTask::Action(
-        TSharedPtr<TSharedPtr<Gs2::Mission::Domain::Model::FCompleteDomain>> Result
+        TSharedPtr<TSharedPtr<Gs2::Core::Domain::FTransactionDomain>> Result
     )
     {
         Request
@@ -105,15 +105,25 @@ namespace Gs2::Mission::Domain::Model
             ->WithNamespaceName(Self->NamespaceName)
             ->WithMissionGroupName(Self->MissionGroupName)
             ->WithUserId(Self->UserId);
+        const auto Future = Self->Client->CompleteByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         const auto Transaction = Gs2::Core::Domain::Internal::FTransactionDomainFactory::ToTransaction(
             Self->Gs2,
             *Self->UserId,
-            ResultModel->AutoRunStampSheet() == nullptr ? false : *ResultModel->AutoRunStampSheet(),
+            ResultModel->GetAutoRunStampSheet().IsSet() ? *ResultModel->GetAutoRunStampSheet() : false,
             *ResultModel->GetTransactionId(),
             *ResultModel->GetStampSheet(),
             *ResultModel->GetStampSheetEncryptionKeyId(),
             *ResultModel->GetAtomicCommit(),
-            *ResultModel->GetTransactionResult()
+            ResultModel->GetTransactionResult()
         );
         const auto Future3 = Transaction->Wait(true);
         Future3->StartSynchronousTask();
@@ -146,7 +156,7 @@ namespace Gs2::Mission::Domain::Model
     }
 
     Gs2::Core::Model::FGs2ErrorPtr FCompleteDomain::FBatchTask::Action(
-        TSharedPtr<TSharedPtr<Gs2::Mission::Domain::Model::FCompleteDomain>> Result
+        TSharedPtr<TSharedPtr<Gs2::Core::Domain::FTransactionDomain>> Result
     )
     {
         Request
@@ -154,15 +164,25 @@ namespace Gs2::Mission::Domain::Model
             ->WithNamespaceName(Self->NamespaceName)
             ->WithMissionGroupName(Self->MissionGroupName)
             ->WithUserId(Self->UserId);
+        const auto Future = Self->Client->BatchCompleteByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         const auto Transaction = Gs2::Core::Domain::Internal::FTransactionDomainFactory::ToTransaction(
             Self->Gs2,
             *Self->UserId,
-            ResultModel->AutoRunStampSheet() == nullptr ? false : *ResultModel->AutoRunStampSheet(),
+            ResultModel->GetAutoRunStampSheet().IsSet() ? *ResultModel->GetAutoRunStampSheet() : false,
             *ResultModel->GetTransactionId(),
             *ResultModel->GetStampSheet(),
             *ResultModel->GetStampSheetEncryptionKeyId(),
             *ResultModel->GetAtomicCommit(),
-            *ResultModel->GetTransactionResult()
+            ResultModel->GetTransactionResult()
         );
         const auto Future3 = Transaction->Wait(true);
         Future3->StartSynchronousTask();
@@ -203,6 +223,16 @@ namespace Gs2::Mission::Domain::Model
             ->WithNamespaceName(Self->NamespaceName)
             ->WithMissionGroupName(Self->MissionGroupName)
             ->WithUserId(Self->UserId);
+        const auto Future = Self->Client->ReceiveByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         auto Domain = Self;
 
         *Result = Domain;
@@ -238,6 +268,16 @@ namespace Gs2::Mission::Domain::Model
             ->WithNamespaceName(Self->NamespaceName)
             ->WithMissionGroupName(Self->MissionGroupName)
             ->WithUserId(Self->UserId);
+        const auto Future = Self->Client->BatchReceiveByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         auto Domain = Self;
 
         *Result = Domain;
@@ -273,6 +313,16 @@ namespace Gs2::Mission::Domain::Model
             ->WithNamespaceName(Self->NamespaceName)
             ->WithMissionGroupName(Self->MissionGroupName)
             ->WithUserId(Self->UserId);
+        const auto Future = Self->Client->RevertReceiveByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         auto Domain = Self;
 
         *Result = Domain;
@@ -308,6 +358,16 @@ namespace Gs2::Mission::Domain::Model
             ->WithNamespaceName(Self->NamespaceName)
             ->WithMissionGroupName(Self->MissionGroupName)
             ->WithUserId(Self->UserId);
+        const auto Future = Self->Client->GetCompleteByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         *Result = ResultModel->GetItem();
         return nullptr;
     }
@@ -341,6 +401,16 @@ namespace Gs2::Mission::Domain::Model
             ->WithNamespaceName(Self->NamespaceName)
             ->WithUserId(Self->UserId)
             ->WithMissionGroupName(Self->MissionGroupName);
+        const auto Future = Self->Client->EvaluateCompleteByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         auto Domain = Self;
 
         *Result = Domain;
@@ -376,6 +446,16 @@ namespace Gs2::Mission::Domain::Model
             ->WithNamespaceName(Self->NamespaceName)
             ->WithUserId(Self->UserId)
             ->WithMissionGroupName(Self->MissionGroupName);
+        const auto Future = Self->Client->DeleteCompleteByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         auto Domain = Self;
 
         *Result = Domain;
@@ -411,6 +491,16 @@ namespace Gs2::Mission::Domain::Model
             ->WithNamespaceName(Self->NamespaceName)
             ->WithMissionGroupName(Self->MissionGroupName)
             ->WithUserId(Self->UserId);
+        const auto Future = Self->Client->VerifyCompleteByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         const auto Domain = Self;
         *Result = Domain;
         return nullptr;

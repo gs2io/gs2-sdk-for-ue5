@@ -94,6 +94,16 @@ namespace Gs2::Datastore::Domain::Model
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithAccessToken(Self->AccessToken->GetToken());
+        const auto Future = Self->Client->PrepareUpload(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         auto Domain = MakeShared<Gs2::Datastore::Domain::Model::FDataObjectAccessTokenDomain>(
             Self->Gs2,
             Self->Service,
@@ -103,7 +113,10 @@ namespace Gs2::Datastore::Domain::Model
         );
         if (ResultModel != nullptr)
         {
-            Domain->UploadUrl = *ResultModel->GetUploadUrl();
+            if (ResultModel->GetUploadUrl().IsSet())
+            {
+                Domain->UploadUrl = *ResultModel->GetUploadUrl();
+            }
         }
 
         *Result = Domain;
@@ -138,6 +151,16 @@ namespace Gs2::Datastore::Domain::Model
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithAccessToken(Self->AccessToken->GetToken());
+        const auto Future = Self->Client->PrepareDownload(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         auto Domain = MakeShared<Gs2::Datastore::Domain::Model::FDataObjectAccessTokenDomain>(
             Self->Gs2,
             Self->Service,
@@ -147,8 +170,14 @@ namespace Gs2::Datastore::Domain::Model
         );
         if (ResultModel != nullptr)
         {
-            Domain->FileUrl = *ResultModel->GetFileUrl();
-            Domain->ContentLength = *ResultModel->GetContentLength();
+            if (ResultModel->GetFileUrl().IsSet())
+            {
+                Domain->FileUrl = *ResultModel->GetFileUrl();
+            }
+            if (ResultModel->GetContentLength().IsSet())
+            {
+                Domain->ContentLength = *ResultModel->GetContentLength();
+            }
         }
 
         *Result = Domain;
@@ -183,6 +212,16 @@ namespace Gs2::Datastore::Domain::Model
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithAccessToken(Self->AccessToken->GetToken());
+        const auto Future = Self->Client->PrepareDownloadByGeneration(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         auto Domain = MakeShared<Gs2::Datastore::Domain::Model::FDataObjectAccessTokenDomain>(
             Self->Gs2,
             Self->Service,
@@ -192,8 +231,14 @@ namespace Gs2::Datastore::Domain::Model
         );
         if (ResultModel != nullptr)
         {
-            Domain->FileUrl = *ResultModel->GetFileUrl();
-            Domain->ContentLength = *ResultModel->GetContentLength();
+            if (ResultModel->GetFileUrl().IsSet())
+            {
+                Domain->FileUrl = *ResultModel->GetFileUrl();
+            }
+            if (ResultModel->GetContentLength().IsSet())
+            {
+                Domain->ContentLength = *ResultModel->GetContentLength();
+            }
         }
 
         *Result = Domain;

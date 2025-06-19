@@ -12,6 +12,8 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
+ *
+ * deny overwrite
  */
 
 #if defined(_MSC_VER)
@@ -104,6 +106,16 @@ namespace Gs2::Account::Domain::Model
             ->WithNamespaceName(Self->NamespaceName)
             ->WithAccessToken(Self->AccessToken->GetToken())
             ->WithType(Self->Type);
+        const auto Future = Self->Client->CreateTakeOver(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         auto Domain = Self;
 
         *Result = Domain;
@@ -139,6 +151,16 @@ namespace Gs2::Account::Domain::Model
             ->WithNamespaceName(Self->NamespaceName)
             ->WithAccessToken(Self->AccessToken->GetToken())
             ->WithType(Self->Type);
+        const auto Future = Self->Client->CreateTakeOverOpenIdConnect(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         auto Domain = Self;
 
         *Result = Domain;
@@ -174,6 +196,16 @@ namespace Gs2::Account::Domain::Model
             ->WithNamespaceName(Self->NamespaceName)
             ->WithAccessToken(Self->AccessToken->GetToken())
             ->WithType(Self->Type);
+        const auto Future = Self->Client->GetTakeOver(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         *Result = ResultModel->GetItem();
         return nullptr;
     }
@@ -207,6 +239,16 @@ namespace Gs2::Account::Domain::Model
             ->WithNamespaceName(Self->NamespaceName)
             ->WithAccessToken(Self->AccessToken->GetToken())
             ->WithType(Self->Type);
+        const auto Future = Self->Client->UpdateTakeOver(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         auto Domain = Self;
 
         *Result = Domain;
@@ -219,26 +261,87 @@ namespace Gs2::Account::Domain::Model
         return Gs2::Core::Util::New<FAsyncTask<FUpdateTask>>(this->AsShared(), Request);
     }
 
+    FTakeOverAccessTokenDomain::FDeleteTask::FDeleteTask(
+        const TSharedPtr<FTakeOverAccessTokenDomain>& Self,
+        const Request::FDeleteTakeOverRequestPtr Request
+    ): Self(Self), Request(Request)
+    {
+
+    }
+
+    FTakeOverAccessTokenDomain::FDeleteTask::FDeleteTask(
+        const FDeleteTask& From
+    ): TGs2Future(From), Self(From.Self), Request(From.Request)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FTakeOverAccessTokenDomain::FDeleteTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::Account::Domain::Model::FTakeOverAccessTokenDomain>> Result
+    )
+    {
+        Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
+            ->WithNamespaceName(Self->NamespaceName)
+            ->WithAccessToken(Self->AccessToken->GetToken())
+            ->WithType(Self->Type);
+        const auto Future = Self->Client->DeleteTakeOver(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto RequestModel = Request;
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
+        if (ResultModel != nullptr) {
+            
+            if (ResultModel->GetItem() != nullptr)
+            {
+                const auto ParentKey = Gs2::Account::Domain::Model::FAccountDomain::CreateCacheParentKey(
+                    Self->NamespaceName,
+                    Self->UserId(),
+                    "TakeOver"
+                );
+                const auto Key = Gs2::Account::Domain::Model::FTakeOverDomain::CreateCacheKey(
+                    ResultModel->GetItem()->GetType().IsSet() ? *ResultModel->GetItem()->GetType() : TOptional<int32>()
+                );
+                Self->Gs2->Cache->Delete(Gs2::Account::Model::FTakeOver::TypeName, ParentKey, Key);
+            }
+        }
+        auto Domain = Self;
+
+        *Result = Domain;
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FTakeOverAccessTokenDomain::FDeleteTask>> FTakeOverAccessTokenDomain::Delete(
+        Request::FDeleteTakeOverRequestPtr Request
+    ) {
+        return Gs2::Core::Util::New<FAsyncTask<FDeleteTask>>(this->AsShared(), Request);
+    }
+
     FString FTakeOverAccessTokenDomain::CreateCacheParentKey(
         TOptional<FString> NamespaceName,
         TOptional<FString> UserId,
-        TOptional<FString> Type,
+        TOptional<int32> Type,
         FString ChildType
     )
     {
         return FString("") +
             (NamespaceName.IsSet() ? *NamespaceName : "null") + ":" +
             (UserId.IsSet() ? *UserId : "null") + ":" +
-            (Type.IsSet() ? *Type : "null") + ":" +
+            (Type.IsSet() ? FString::FromInt(*Type) : "null") + ":" +
             ChildType;
     }
 
     FString FTakeOverAccessTokenDomain::CreateCacheKey(
-        TOptional<FString> Type
+        TOptional<int32> Type
     )
     {
         return FString("") +
-            (Type.IsSet() ? *Type : "null");
+            (Type.IsSet() ? FString::FromInt(*Type) : "null");
     }
 
     FTakeOverAccessTokenDomain::FModelTask::FModelTask(
@@ -264,7 +367,7 @@ namespace Gs2::Account::Domain::Model
         auto bCacheHit = Self->Gs2->Cache->TryGet<Gs2::Account::Model::FTakeOver>(
             Self->ParentKey,
             Gs2::Account::Domain::Model::FTakeOverDomain::CreateCacheKey(
-                Self->Type.IsSet() ? FString::FromInt(*Self->Type) : TOptional<FString>()
+                Self->Type
             ),
             &Value
         );
@@ -281,7 +384,7 @@ namespace Gs2::Account::Domain::Model
                 }
 
                 const auto Key = Gs2::Account::Domain::Model::FTakeOverDomain::CreateCacheKey(
-                    Self->Type.IsSet() ? FString::FromInt(*Self->Type) : TOptional<FString>()
+                    Self->Type
                 );
                 Self->Gs2->Cache->Put(
                     Gs2::Account::Model::FTakeOver::TypeName,
@@ -299,7 +402,7 @@ namespace Gs2::Account::Domain::Model
             Self->Gs2->Cache->TryGet<Gs2::Account::Model::FTakeOver>(
                 Self->ParentKey,
                 Gs2::Account::Domain::Model::FTakeOverDomain::CreateCacheKey(
-                    Self->Type.IsSet() ? FString::FromInt(*Self->Type) : TOptional<FString>()
+                    Self->Type
                 ),
                 &Value
             );
@@ -322,7 +425,7 @@ namespace Gs2::Account::Domain::Model
             Gs2::Account::Model::FTakeOver::TypeName,
             ParentKey,
             Gs2::Account::Domain::Model::FTakeOverDomain::CreateCacheKey(
-                Type.IsSet() ? FString::FromInt(*Type) : TOptional<FString>()
+                Type
             ),
             [Callback](TSharedPtr<FGs2Object> obj)
             {
@@ -339,7 +442,7 @@ namespace Gs2::Account::Domain::Model
             Gs2::Account::Model::FTakeOver::TypeName,
             ParentKey,
             Gs2::Account::Domain::Model::FTakeOverDomain::CreateCacheKey(
-                Type.IsSet() ? FString::FromInt(*Type) : TOptional<FString>()
+                Type
             ),
             CallbackID
         );

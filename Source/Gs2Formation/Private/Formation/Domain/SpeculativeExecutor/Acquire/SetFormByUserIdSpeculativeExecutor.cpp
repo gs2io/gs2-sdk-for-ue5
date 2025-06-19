@@ -115,7 +115,7 @@ namespace Gs2::Formation::Domain::SpeculativeExecutor
             FString("Form")
         );
         const auto Key = Model::FFormDomain::CreateCacheKey(
-            FString::FromInt(*Request->GetIndex())
+            Request->GetIndex()
         );
 
         *Result = MakeShared<TFunction<void()>>([&]()

@@ -235,10 +235,28 @@ namespace Gs2::Schedule
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::Rest::FExtendTriggerByUserIdTask>> FGs2ScheduleRestClient::ExtendTriggerByUserId(
+        const Request::FExtendTriggerByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FExtendTriggerByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::Rest::FTriggerByStampSheetTask>> FGs2ScheduleRestClient::TriggerByStampSheet(
         const Request::FTriggerByStampSheetRequestPtr Request) const
     {
         return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FTriggerByStampSheetTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FExtendTriggerByStampSheetTask>> FGs2ScheduleRestClient::ExtendTriggerByStampSheet(
+        const Request::FExtendTriggerByStampSheetRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FExtendTriggerByStampSheetTask>>(
             Session,
             Request
         );

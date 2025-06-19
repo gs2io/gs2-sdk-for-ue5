@@ -21,6 +21,7 @@
 #include "Inventory/Model/Gs2InventoryConsumeCount.h"
 #include "Inventory/Model/Gs2InventorySimpleInventory.h"
 #include "../../Core/Model/Gs2Error.h"
+#include "Core/Model/Gs2CoreTransaction.h"
 #include "Kismet/BlueprintAsyncActionBase.h"
 #include "Gs2InventoryActionConsumeSimpleItems.generated.h"
 

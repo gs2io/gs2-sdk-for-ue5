@@ -114,6 +114,16 @@ namespace Gs2::SeasonRating::Domain::Model
             ->WithAccessToken(Self->AccessToken->GetToken())
             ->WithNumberOfPlayer(Self->NumberOfPlayer)
             ->WithKeyId(Self->KeyId);
+        const auto Future = Self->Client->GetBallot(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         *Result = ResultModel->GetItem();
         return nullptr;
     }
@@ -129,7 +139,7 @@ namespace Gs2::SeasonRating::Domain::Model
         TOptional<FString> UserId,
         TOptional<FString> SeasonName,
         TOptional<FString> SessionName,
-        TOptional<FString> NumberOfPlayer,
+        TOptional<int32> NumberOfPlayer,
         TOptional<FString> KeyId,
         FString ChildType
     )
@@ -139,7 +149,7 @@ namespace Gs2::SeasonRating::Domain::Model
             (UserId.IsSet() ? *UserId : "null") + ":" +
             (SeasonName.IsSet() ? *SeasonName : "null") + ":" +
             (SessionName.IsSet() ? *SessionName : "null") + ":" +
-            (NumberOfPlayer.IsSet() ? *NumberOfPlayer : "null") + ":" +
+            (NumberOfPlayer.IsSet() ? FString::FromInt(*NumberOfPlayer) : "null") + ":" +
             (KeyId.IsSet() ? *KeyId : "null") + ":" +
             ChildType;
     }
@@ -147,14 +157,14 @@ namespace Gs2::SeasonRating::Domain::Model
     FString FBallotAccessTokenDomain::CreateCacheKey(
         TOptional<FString> SeasonName,
         TOptional<FString> SessionName,
-        TOptional<FString> NumberOfPlayer,
+        TOptional<int32> NumberOfPlayer,
         TOptional<FString> KeyId
     )
     {
         return FString("") +
             (SeasonName.IsSet() ? *SeasonName : "null") + ":" + 
             (SessionName.IsSet() ? *SessionName : "null") + ":" + 
-            (NumberOfPlayer.IsSet() ? *NumberOfPlayer : "null") + ":" + 
+            (NumberOfPlayer.IsSet() ? FString::FromInt(*NumberOfPlayer) : "null") + ":" + 
             (KeyId.IsSet() ? *KeyId : "null");
     }
 
@@ -183,7 +193,7 @@ namespace Gs2::SeasonRating::Domain::Model
             Gs2::SeasonRating::Domain::Model::FBallotDomain::CreateCacheKey(
                 Self->SeasonName,
                 Self->SessionName,
-                Self->NumberOfPlayer.IsSet() ? FString::FromInt(*Self->NumberOfPlayer) : TOptional<FString>(),
+                Self->NumberOfPlayer,
                 Self->KeyId
             ),
             &Value
@@ -203,7 +213,7 @@ namespace Gs2::SeasonRating::Domain::Model
                 const auto Key = Gs2::SeasonRating::Domain::Model::FBallotDomain::CreateCacheKey(
                     Self->SeasonName,
                     Self->SessionName,
-                    Self->NumberOfPlayer.IsSet() ? FString::FromInt(*Self->NumberOfPlayer) : TOptional<FString>(),
+                    Self->NumberOfPlayer,
                     Self->KeyId
                 );
                 Self->Gs2->Cache->Put(
@@ -224,7 +234,7 @@ namespace Gs2::SeasonRating::Domain::Model
                 Gs2::SeasonRating::Domain::Model::FBallotDomain::CreateCacheKey(
                     Self->SeasonName,
                     Self->SessionName,
-                    Self->NumberOfPlayer.IsSet() ? FString::FromInt(*Self->NumberOfPlayer) : TOptional<FString>(),
+                    Self->NumberOfPlayer,
                     Self->KeyId
                 ),
                 &Value
@@ -250,7 +260,7 @@ namespace Gs2::SeasonRating::Domain::Model
             Gs2::SeasonRating::Domain::Model::FBallotDomain::CreateCacheKey(
                 SeasonName,
                 SessionName,
-                NumberOfPlayer.IsSet() ? FString::FromInt(*NumberOfPlayer) : TOptional<FString>(),
+                NumberOfPlayer,
                 KeyId
             ),
             [Callback](TSharedPtr<FGs2Object> obj)
@@ -270,7 +280,7 @@ namespace Gs2::SeasonRating::Domain::Model
             Gs2::SeasonRating::Domain::Model::FBallotDomain::CreateCacheKey(
                 SeasonName,
                 SessionName,
-                NumberOfPlayer.IsSet() ? FString::FromInt(*NumberOfPlayer) : TOptional<FString>(),
+                NumberOfPlayer,
                 KeyId
             ),
             CallbackID

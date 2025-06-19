@@ -103,6 +103,16 @@ namespace Gs2::Quest::Domain::Model
             ->WithNamespaceName(Self->NamespaceName)
             ->WithQuestGroupName(Self->QuestGroupName)
             ->WithUserId(Self->UserId);
+        const auto Future = Self->Client->GetCompletedQuestListByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         *Result = ResultModel->GetItem();
         return nullptr;
     }
@@ -136,6 +146,16 @@ namespace Gs2::Quest::Domain::Model
             ->WithNamespaceName(Self->NamespaceName)
             ->WithQuestGroupName(Self->QuestGroupName)
             ->WithUserId(Self->UserId);
+        const auto Future = Self->Client->DeleteCompletedQuestListByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         auto Domain = Self;
 
         *Result = Domain;

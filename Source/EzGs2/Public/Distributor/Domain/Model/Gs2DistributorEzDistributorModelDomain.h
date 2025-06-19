@@ -33,6 +33,7 @@
 #include "Distributor/Model/Gs2DistributorEzVerifyActionResult.h"
 #include "Gs2DistributorEzDistributorModelDomain.h"
 #include "Distributor/Domain/Iterator/Gs2DistributorEzDescribeDistributorModelsIterator.h"
+#include "Core/EzTransactionDomain.h"
 #include "Util/Net/GameSession.h"
 #include "Util/Net/Gs2Connection.h"
 

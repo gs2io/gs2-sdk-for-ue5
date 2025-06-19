@@ -12,41 +12,6 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
+ *
+ * deny overwrite
  */
-
-#include "Guard/Model/Gs2Guard.h"
-#include "Guard/Domain/EzGs2Guard.h"
-#include "Guard/Model/Gs2GuardNamespace.h"
-#include "Core/BpGs2Constant.h"
-
-FGs2Guard UGs2GuardFunctionLibrary::Service(
-    FGs2Client Client
-)
-{
-    FGs2Guard Return;
-    if (Client.Value == nullptr) {
-        UE_LOG(BpGs2Log, Error, TEXT("[UGs2GuardFunctionLibrary::Service] Client parameter specification is missing."))
-        return Return;
-    }
-    Return.Value = Client.Value->Guard;
-    return Return;
-}
-FGs2GuardNamespace UGs2GuardFunctionLibrary::Namespace(
-    FGs2Guard Service,
-    FString NamespaceName
-)
-{
-    FGs2GuardNamespace Return;
-    if (Service.Value == nullptr) {
-        UE_LOG(BpGs2Log, Error, TEXT("[UGs2GuardFunctionLibrary::Namespace] Service parameter specification is missing."))
-        return Return;
-    }
-    if (NamespaceName == "") {
-        UE_LOG(BpGs2Log, Error, TEXT("[UGs2GuardFunctionLibrary::Namespace] NamespaceName parameter specification is missing."))
-        return Return;
-    }
-    Return.Value = Service.Value->Namespace(
-        NamespaceName
-    );
-    return Return;
-}

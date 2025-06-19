@@ -20,6 +20,7 @@
 #include "Quest/Model/Gs2QuestProgress.h"
 #include "Quest/Model/Gs2QuestProgress.h"
 #include "../../Core/Model/Gs2Error.h"
+#include "Core/Model/Gs2CoreTransaction.h"
 #include "Kismet/BlueprintAsyncActionBase.h"
 #include "Gs2QuestActionDeleteProgress.generated.h"
 

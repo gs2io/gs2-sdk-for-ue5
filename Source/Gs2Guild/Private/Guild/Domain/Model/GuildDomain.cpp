@@ -33,6 +33,7 @@
 #include "Guild/Domain/Model/Guild.h"
 #include "Guild/Domain/Model/JoinedGuild.h"
 #include "Guild/Domain/Model/JoinedGuildAccessToken.h"
+#include "Guild/Domain/Model/LastGuildMasterActivity.h"
 #include "Guild/Domain/Model/CurrentGuildMaster.h"
 #include "Guild/Domain/Model/ReceiveMemberRequest.h"
 #include "Guild/Domain/Model/SendMemberRequest.h"
@@ -113,30 +114,7 @@ namespace Gs2::Guild::Domain::Model
         {
             return Future->GetTask().Error();
         }
-        const auto RequestModel = Request;
         const auto ResultModel = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::Guild::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
-                    Self->NamespaceName,
-                    "Guild"
-                );
-                const auto Key = Gs2::Guild::Domain::Model::FGuildDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetGuildModelName(),
-                    ResultModel->GetItem()->GetName()
-                );
-                Self->Gs2->Cache->Put(
-                    Gs2::Guild::Model::FGuild::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
-        }
         *Result = ResultModel->GetItem();
         return nullptr;
     }
@@ -168,8 +146,8 @@ namespace Gs2::Guild::Domain::Model
         Request
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
-            ->WithGuildModelName(Self->GuildModelName)
-            ->WithGuildName(Self->GuildName);
+            ->WithGuildName(Self->GuildName)
+            ->WithGuildModelName(Self->GuildModelName);
         const auto Future = Self->Client->UpdateGuildByGuildName(
             Request
         );
@@ -178,30 +156,7 @@ namespace Gs2::Guild::Domain::Model
         {
             return Future->GetTask().Error();
         }
-        const auto RequestModel = Request;
         const auto ResultModel = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::Guild::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
-                    Self->NamespaceName,
-                    "Guild"
-                );
-                const auto Key = Gs2::Guild::Domain::Model::FGuildDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetGuildModelName(),
-                    ResultModel->GetItem()->GetName()
-                );
-                Self->Gs2->Cache->Put(
-                    Gs2::Guild::Model::FGuild::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
-        }
         auto Domain = Self;
 
         *Result = Domain;
@@ -245,24 +200,7 @@ namespace Gs2::Guild::Domain::Model
         {
             return Future->GetTask().Error();
         }
-        const auto RequestModel = Request;
         const auto ResultModel = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::Guild::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
-                    Self->NamespaceName,
-                    "Guild"
-                );
-                const auto Key = Gs2::Guild::Domain::Model::FGuildDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetGuildModelName(),
-                    ResultModel->GetItem()->GetName()
-                );
-                Self->Gs2->Cache->Delete(Gs2::Guild::Model::FGuild::TypeName, ParentKey, Key);
-            }
-        }
         auto Domain = Self;
 
         *Result = Domain;
@@ -306,30 +244,7 @@ namespace Gs2::Guild::Domain::Model
         {
             return Future->GetTask().Error();
         }
-        const auto RequestModel = Request;
         const auto ResultModel = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::Guild::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
-                    Self->NamespaceName,
-                    "Guild"
-                );
-                const auto Key = Gs2::Guild::Domain::Model::FGuildDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetGuildModelName(),
-                    ResultModel->GetItem()->GetName()
-                );
-                Self->Gs2->Cache->Put(
-                    Gs2::Guild::Model::FGuild::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
-        }
         auto Domain = Self;
 
         *Result = Domain;
@@ -340,6 +255,50 @@ namespace Gs2::Guild::Domain::Model
         Request::FUpdateMemberRoleByGuildNameRequestPtr Request
     ) {
         return Gs2::Core::Util::New<FAsyncTask<FUpdateMemberRoleTask>>(this->AsShared(), Request);
+    }
+
+    FGuildDomain::FBatchUpdateMemberRoleTask::FBatchUpdateMemberRoleTask(
+        const TSharedPtr<FGuildDomain>& Self,
+        const Request::FBatchUpdateMemberRoleByGuildNameRequestPtr Request
+    ): Self(Self), Request(Request)
+    {
+
+    }
+
+    FGuildDomain::FBatchUpdateMemberRoleTask::FBatchUpdateMemberRoleTask(
+        const FBatchUpdateMemberRoleTask& From
+    ): TGs2Future(From), Self(From.Self), Request(From.Request)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FGuildDomain::FBatchUpdateMemberRoleTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::Guild::Domain::Model::FGuildDomain>> Result
+    )
+    {
+        Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
+            ->WithNamespaceName(Self->NamespaceName)
+            ->WithGuildModelName(Self->GuildModelName)
+            ->WithGuildName(Self->GuildName);
+        const auto Future = Self->Client->BatchUpdateMemberRoleByGuildName(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        auto Domain = Self;
+
+        *Result = Domain;
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FGuildDomain::FBatchUpdateMemberRoleTask>> FGuildDomain::BatchUpdateMemberRole(
+        Request::FBatchUpdateMemberRoleByGuildNameRequestPtr Request
+    ) {
+        return Gs2::Core::Util::New<FAsyncTask<FBatchUpdateMemberRoleTask>>(this->AsShared(), Request);
     }
 
     FGuildDomain::FDeleteTask::FDeleteTask(
@@ -373,24 +332,7 @@ namespace Gs2::Guild::Domain::Model
         {
             return Future->GetTask().Error();
         }
-        const auto RequestModel = Request;
         const auto ResultModel = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::Guild::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
-                    Self->NamespaceName,
-                    "Guild"
-                );
-                const auto Key = Gs2::Guild::Domain::Model::FGuildDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetGuildModelName(),
-                    ResultModel->GetItem()->GetName()
-                );
-                Self->Gs2->Cache->Delete(Gs2::Guild::Model::FGuild::TypeName, ParentKey, Key);
-            }
-        }
         auto Domain = Self;
 
         *Result = Domain;
@@ -434,30 +376,7 @@ namespace Gs2::Guild::Domain::Model
         {
             return Future->GetTask().Error();
         }
-        const auto RequestModel = Request;
         const auto ResultModel = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::Guild::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
-                    Self->NamespaceName,
-                    "Guild"
-                );
-                const auto Key = Gs2::Guild::Domain::Model::FGuildDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetGuildModelName(),
-                    ResultModel->GetItem()->GetName()
-                );
-                Self->Gs2->Cache->Put(
-                    Gs2::Guild::Model::FGuild::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
-        }
         auto Domain = Self;
 
         *Result = Domain;
@@ -501,30 +420,7 @@ namespace Gs2::Guild::Domain::Model
         {
             return Future->GetTask().Error();
         }
-        const auto RequestModel = Request;
         const auto ResultModel = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::Guild::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
-                    Self->NamespaceName,
-                    "Guild"
-                );
-                const auto Key = Gs2::Guild::Domain::Model::FGuildDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetGuildModelName(),
-                    ResultModel->GetItem()->GetName()
-                );
-                Self->Gs2->Cache->Put(
-                    Gs2::Guild::Model::FGuild::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
-        }
         auto Domain = Self;
 
         *Result = Domain;
@@ -568,12 +464,7 @@ namespace Gs2::Guild::Domain::Model
         {
             return Future->GetTask().Error();
         }
-        const auto RequestModel = Request;
         const auto ResultModel = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-        }
         const auto Domain = Self;
         *Result = Domain;
         return nullptr;
@@ -616,12 +507,7 @@ namespace Gs2::Guild::Domain::Model
         {
             return Future->GetTask().Error();
         }
-        const auto RequestModel = Request;
         const auto ResultModel = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-        }
         const auto Domain = Self;
         *Result = Domain;
         return nullptr;
@@ -654,8 +540,8 @@ namespace Gs2::Guild::Domain::Model
         Request
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
-            ->WithGuildModelName(Self->GuildModelName)
-            ->WithGuildName(Self->GuildName);
+            ->WithGuildName(Self->GuildName)
+            ->WithGuildModelName(Self->GuildModelName);
         const auto Future = Self->Client->SetMaximumCurrentMaximumMemberCountByGuildName(
             Request
         );
@@ -664,30 +550,7 @@ namespace Gs2::Guild::Domain::Model
         {
             return Future->GetTask().Error();
         }
-        const auto RequestModel = Request;
         const auto ResultModel = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::Guild::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
-                    Self->NamespaceName,
-                    "Guild"
-                );
-                const auto Key = Gs2::Guild::Domain::Model::FGuildDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetGuildModelName(),
-                    ResultModel->GetItem()->GetName()
-                );
-                Self->Gs2->Cache->Put(
-                    Gs2::Guild::Model::FGuild::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
-        }
         auto Domain = Self;
 
         *Result = Domain;
@@ -932,7 +795,7 @@ namespace Gs2::Guild::Domain::Model
                 GuildModelName,
                 GuildName
             ),
-            [Callback](TSharedPtr<Gs2Object> obj)
+            [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::Guild::Model::FGuild>(obj));
             }

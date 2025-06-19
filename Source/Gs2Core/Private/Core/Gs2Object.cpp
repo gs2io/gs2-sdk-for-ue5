@@ -16,7 +16,7 @@
 
 #include "Core/Gs2Object.h"
 
-TOptional<FString> Gs2Object::AsText(TSharedPtr<FJsonValue> Data)
+TOptional<FString> FGs2Object::AsText(TSharedPtr<FJsonValue> Data)
 {
     if (!Data || Data->IsNull())
     {
@@ -30,7 +30,7 @@ TOptional<FString> Gs2Object::AsText(TSharedPtr<FJsonValue> Data)
     return V;
 }
 
-TOptional<int32> Gs2Object::IntValue(TSharedPtr<FJsonValue> Data)
+TOptional<int32> FGs2Object::IntValue(TSharedPtr<FJsonValue> Data)
 {
     if (!Data || Data->IsNull())
     {
@@ -39,7 +39,7 @@ TOptional<int32> Gs2Object::IntValue(TSharedPtr<FJsonValue> Data)
     return Data->AsNumber();
 }
 
-TOptional<int64> Gs2Object::LongValue(TSharedPtr<FJsonValue> Data)
+TOptional<int64> FGs2Object::LongValue(TSharedPtr<FJsonValue> Data)
 {
     if (!Data || Data->IsNull())
     {
@@ -48,7 +48,7 @@ TOptional<int64> Gs2Object::LongValue(TSharedPtr<FJsonValue> Data)
     return Data->AsNumber();
 }
 
-TOptional<float> Gs2Object::FloatValue(TSharedPtr<FJsonValue> Data)
+TOptional<float> FGs2Object::FloatValue(TSharedPtr<FJsonValue> Data)
 {
     if (!Data || Data->IsNull())
     {
@@ -57,7 +57,7 @@ TOptional<float> Gs2Object::FloatValue(TSharedPtr<FJsonValue> Data)
     return Data->AsNumber();
 }
 
-TOptional<double> Gs2Object::DoubleValue(TSharedPtr<FJsonValue> Data)
+TOptional<double> FGs2Object::DoubleValue(TSharedPtr<FJsonValue> Data)
 {
     if (!Data || Data->IsNull())
     {
@@ -66,7 +66,7 @@ TOptional<double> Gs2Object::DoubleValue(TSharedPtr<FJsonValue> Data)
     return Data->AsNumber();
 }
 
-TOptional<bool> Gs2Object::BoolValue(TSharedPtr<FJsonValue> Data)
+TOptional<bool> FGs2Object::BoolValue(TSharedPtr<FJsonValue> Data)
 {
     if (!Data || Data->IsNull())
     {

@@ -144,7 +144,7 @@ namespace Gs2::Enhance::Domain::Model
         );
 
         class GS2ENHANCE_API FStartTask final :
-            public Gs2::Core::Util::TGs2Future<Gs2::Enhance::Domain::Model::FProgressDomain>,
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::FTransactionDomain>,
             public TSharedFromThis<FStartTask>
         {
             const TSharedPtr<FProgressDomain> Self;
@@ -160,7 +160,7 @@ namespace Gs2::Enhance::Domain::Model
             );
 
             virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-                TSharedPtr<TSharedPtr<Gs2::Enhance::Domain::Model::FProgressDomain>> Result
+                TSharedPtr<TSharedPtr<Gs2::Core::Domain::FTransactionDomain>> Result
             ) override;
         };
         friend FStartTask;
@@ -170,7 +170,7 @@ namespace Gs2::Enhance::Domain::Model
         );
 
         class GS2ENHANCE_API FEndTask final :
-            public Gs2::Core::Util::TGs2Future<Gs2::Enhance::Domain::Model::FProgressDomain>,
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::FTransactionDomain>,
             public TSharedFromThis<FEndTask>
         {
             const TSharedPtr<FProgressDomain> Self;
@@ -186,7 +186,7 @@ namespace Gs2::Enhance::Domain::Model
             );
 
             virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-                TSharedPtr<TSharedPtr<Gs2::Enhance::Domain::Model::FProgressDomain>> Result
+                TSharedPtr<TSharedPtr<Gs2::Core::Domain::FTransactionDomain>> Result
             ) override;
         };
         friend FEndTask;

@@ -34,6 +34,7 @@
 #include "Formation/Model/Gs2FormationEzAcquireActionResult.h"
 #include "Formation/Model/Gs2FormationEzTransactionResult.h"
 #include "Gs2FormationEzPropertyFormDomain.h"
+#include "Core/EzTransactionDomain.h"
 #include "Util/Net/GameSession.h"
 #include "Util/Net/Gs2Connection.h"
 

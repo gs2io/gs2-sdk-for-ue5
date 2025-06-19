@@ -295,7 +295,7 @@ namespace Gs2::Grade::Domain::Model
         );
 
         class GS2GRADE_API FMultiplyAcquireActionsTask final :
-            public Gs2::Core::Util::TGs2Future<Gs2::Grade::Domain::Model::FStatusDomain>,
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::FTransactionDomain>,
             public TSharedFromThis<FMultiplyAcquireActionsTask>
         {
             const TSharedPtr<FStatusDomain> Self;
@@ -311,7 +311,7 @@ namespace Gs2::Grade::Domain::Model
             );
 
             virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-                TSharedPtr<TSharedPtr<Gs2::Grade::Domain::Model::FStatusDomain>> Result
+                TSharedPtr<TSharedPtr<Gs2::Core::Domain::FTransactionDomain>> Result
             ) override;
         };
         friend FMultiplyAcquireActionsTask;

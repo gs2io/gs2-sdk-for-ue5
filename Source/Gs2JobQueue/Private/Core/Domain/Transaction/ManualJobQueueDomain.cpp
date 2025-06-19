@@ -62,7 +62,9 @@ namespace Gs2::Core::Domain
 				ResultModelJson->HasField(ANSI_TO_TCHAR("autoRunStampSheet")) && ResultModelJson->GetBoolField(ANSI_TO_TCHAR("autoRunStampSheet")),
 				ResultModelJson->HasField(ANSI_TO_TCHAR("transactionId")) ? ResultModelJson->GetStringField(ANSI_TO_TCHAR("transactionId")) : FString(""),
 				ResultModelJson->HasField(ANSI_TO_TCHAR("stampSheet")) ? ResultModelJson->GetStringField(ANSI_TO_TCHAR("stampSheet")) : FString(""),
-				ResultModelJson->HasField(ANSI_TO_TCHAR("stampSheetEncryptionKeyId")) ? ResultModelJson->GetStringField(ANSI_TO_TCHAR("stampSheetEncryptionKeyId")) : FString("")
+				ResultModelJson->HasField(ANSI_TO_TCHAR("stampSheetEncryptionKeyId")) ? ResultModelJson->GetStringField(ANSI_TO_TCHAR("stampSheetEncryptionKeyId")) : FString(""),
+				ResultModelJson->HasField(ANSI_TO_TCHAR("atomicCommit")) && ResultModelJson->GetBoolField(ANSI_TO_TCHAR("atomicCommit")),
+				ResultModelJson->HasField(ANSI_TO_TCHAR("transactionResult")) ? Gs2::Core::Model::FTransactionResult::FromJson(ResultModelJson->GetObjectField("transactionResult")) : nullptr
 			));
 		}
 
@@ -88,7 +90,9 @@ namespace Gs2::Core::Domain
 			bool bAutoRun,
 			FString TransactionId,
 			FString StampSheet,
-			FString StampSheetEncryptionKeyId
+			FString StampSheetEncryptionKeyId,
+			bool bAtomicCommit,
+			Gs2::Core::Model::FTransactionResultPtr TransactionResult
 		)>& NewTransactionDomain,
 		const FString UserId,
 		const FString NamespaceName,

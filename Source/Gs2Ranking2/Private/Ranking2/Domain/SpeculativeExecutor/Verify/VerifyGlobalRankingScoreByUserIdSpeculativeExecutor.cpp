@@ -12,6 +12,8 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
+ *
+ * deny overwrite
  */
 
 #if defined(_MSC_VER)
@@ -100,12 +102,11 @@ namespace Gs2::Ranking2::Domain::SpeculativeExecutor
     {
         const auto Future = Domain->Ranking2->Namespace(
                 Request->GetNamespaceName().IsSet() ? *Request->GetNamespaceName() : FString("")
-            )->GlobalRankingModel(
-                Request->GetRankingName().IsSet() ? *Request->GetRankingName() : FString("")
-            )->GlobalRankingSeason(
-                Request->GetSeason().IsSet() ? *Request->GetSeason() : FString(""),
-                Request->GetUserId().IsSet() ? *Request->GetUserId() : FString("")
+            )->User(
+                AccessToken->GetUserId().IsSet() ? *AccessToken->GetUserId() : FString("")
             )->GlobalRankingScore(
+                Request->GetRankingName().IsSet() ? *Request->GetRankingName() : FString(""),
+                Request->GetSeason().IsSet() ? *Request->GetSeason() : 0
             )->Model();
         Future->StartSynchronousTask();
         if (Future->GetTask().IsError())

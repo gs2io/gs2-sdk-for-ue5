@@ -20,6 +20,7 @@
 #include "Account/Model/Gs2AccountTakeOver.h"
 #include "Account/Model/Gs2AccountTakeOver.h"
 #include "../../Core/Model/Gs2Error.h"
+#include "Core/Model/Gs2CoreTransaction.h"
 #include "Kismet/BlueprintAsyncActionBase.h"
 #include "Gs2AccountActionUpdateTakeOverSetting.generated.h"
 

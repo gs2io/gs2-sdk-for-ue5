@@ -29,6 +29,7 @@
 #include "SkillTree/Model/Gs2SkillTreeEzAcquireActionResult.h"
 #include "SkillTree/Model/Gs2SkillTreeEzTransactionResult.h"
 #include "Gs2SkillTreeEzStatusDomain.h"
+#include "Core/EzTransactionDomain.h"
 #include "Util/Net/GameSession.h"
 #include "Util/Net/Gs2Connection.h"
 

@@ -235,10 +235,28 @@ namespace Gs2::Schedule
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::WebSocket::FExtendTriggerByUserIdTask>> FGs2ScheduleWebSocketClient::ExtendTriggerByUserId(
+        const Request::FExtendTriggerByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FExtendTriggerByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::WebSocket::FTriggerByStampSheetTask>> FGs2ScheduleWebSocketClient::TriggerByStampSheet(
         const Request::FTriggerByStampSheetRequestPtr Request) const
     {
         return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FTriggerByStampSheetTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FExtendTriggerByStampSheetTask>> FGs2ScheduleWebSocketClient::ExtendTriggerByStampSheet(
+        const Request::FExtendTriggerByStampSheetRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FExtendTriggerByStampSheetTask>>(
             Session,
             Request
         );

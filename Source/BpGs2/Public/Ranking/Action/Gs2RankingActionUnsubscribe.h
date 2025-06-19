@@ -20,6 +20,7 @@
 #include "Ranking/Model/Gs2RankingSubscribeUser.h"
 #include "Ranking/Model/Gs2RankingSubscribeUser.h"
 #include "../../Core/Model/Gs2Error.h"
+#include "Core/Model/Gs2CoreTransaction.h"
 #include "Kismet/BlueprintAsyncActionBase.h"
 #include "Gs2RankingActionUnsubscribe.generated.h"
 

@@ -20,6 +20,7 @@
 #include "AdReward/Domain/Model/Point.h"
 #include "AdReward/Model/Gs2AdRewardEzPoint.h"
 #include "Gs2AdRewardEzPointDomain.h"
+#include "Core/EzTransactionDomain.h"
 #include "Util/Net/GameSession.h"
 #include "Util/Net/Gs2Connection.h"
 

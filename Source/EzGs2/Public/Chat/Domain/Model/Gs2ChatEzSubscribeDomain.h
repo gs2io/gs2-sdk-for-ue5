@@ -23,6 +23,7 @@
 #include "Chat/Model/Gs2ChatEzSubscribe.h"
 #include "Chat/Model/Gs2ChatEzNotificationType.h"
 #include "Gs2ChatEzSubscribeDomain.h"
+#include "Core/EzTransactionDomain.h"
 #include "Util/Net/GameSession.h"
 #include "Util/Net/Gs2Connection.h"
 

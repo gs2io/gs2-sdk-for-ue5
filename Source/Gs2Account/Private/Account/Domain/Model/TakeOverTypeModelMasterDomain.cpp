@@ -98,6 +98,16 @@ namespace Gs2::Account::Domain::Model
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithType(Self->Type);
+        const auto Future = Self->Client->CreateTakeOverTypeModelMaster(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         auto Domain = Self;
 
         *Result = Domain;
@@ -132,6 +142,16 @@ namespace Gs2::Account::Domain::Model
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithType(Self->Type);
+        const auto Future = Self->Client->GetTakeOverTypeModelMaster(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         *Result = ResultModel->GetItem();
         return nullptr;
     }
@@ -164,6 +184,16 @@ namespace Gs2::Account::Domain::Model
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithType(Self->Type);
+        const auto Future = Self->Client->UpdateTakeOverTypeModelMaster(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         auto Domain = Self;
 
         *Result = Domain;
@@ -198,6 +228,16 @@ namespace Gs2::Account::Domain::Model
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithType(Self->Type);
+        const auto Future = Self->Client->DeleteTakeOverTypeModelMaster(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         auto Domain = Self;
 
         *Result = Domain;
@@ -212,22 +252,22 @@ namespace Gs2::Account::Domain::Model
 
     FString FTakeOverTypeModelMasterDomain::CreateCacheParentKey(
         TOptional<FString> NamespaceName,
-        TOptional<FString> Type,
+        TOptional<int32> Type,
         FString ChildType
     )
     {
         return FString("") +
             (NamespaceName.IsSet() ? *NamespaceName : "null") + ":" +
-            (Type.IsSet() ? *Type : "null") + ":" +
+            (Type.IsSet() ? FString::FromInt(*Type) : "null") + ":" +
             ChildType;
     }
 
     FString FTakeOverTypeModelMasterDomain::CreateCacheKey(
-        TOptional<FString> Type
+        TOptional<int32> Type
     )
     {
         return FString("") +
-            (Type.IsSet() ? *Type : "null");
+            (Type.IsSet() ? FString::FromInt(*Type) : "null");
     }
 
     FTakeOverTypeModelMasterDomain::FModelTask::FModelTask(
@@ -253,7 +293,7 @@ namespace Gs2::Account::Domain::Model
         auto bCacheHit = Self->Gs2->Cache->TryGet<Gs2::Account::Model::FTakeOverTypeModelMaster>(
             Self->ParentKey,
             Gs2::Account::Domain::Model::FTakeOverTypeModelMasterDomain::CreateCacheKey(
-                Self->Type.IsSet() ? FString::FromInt(*Self->Type) : TOptional<FString>()
+                Self->Type
             ),
             &Value
         );
@@ -270,7 +310,7 @@ namespace Gs2::Account::Domain::Model
                 }
 
                 const auto Key = Gs2::Account::Domain::Model::FTakeOverTypeModelMasterDomain::CreateCacheKey(
-                    Self->Type.IsSet() ? FString::FromInt(*Self->Type) : TOptional<FString>()
+                    Self->Type
                 );
                 Self->Gs2->Cache->Put(
                     Gs2::Account::Model::FTakeOverTypeModelMaster::TypeName,
@@ -288,7 +328,7 @@ namespace Gs2::Account::Domain::Model
             Self->Gs2->Cache->TryGet<Gs2::Account::Model::FTakeOverTypeModelMaster>(
                 Self->ParentKey,
                 Gs2::Account::Domain::Model::FTakeOverTypeModelMasterDomain::CreateCacheKey(
-                    Self->Type.IsSet() ? FString::FromInt(*Self->Type) : TOptional<FString>()
+                    Self->Type
                 ),
                 &Value
             );
@@ -311,7 +351,7 @@ namespace Gs2::Account::Domain::Model
             Gs2::Account::Model::FTakeOverTypeModelMaster::TypeName,
             ParentKey,
             Gs2::Account::Domain::Model::FTakeOverTypeModelMasterDomain::CreateCacheKey(
-                Type.IsSet() ? FString::FromInt(*Type) : TOptional<FString>()
+                Type
             ),
             [Callback](TSharedPtr<FGs2Object> obj)
             {
@@ -328,7 +368,7 @@ namespace Gs2::Account::Domain::Model
             Gs2::Account::Model::FTakeOverTypeModelMaster::TypeName,
             ParentKey,
             Gs2::Account::Domain::Model::FTakeOverTypeModelMasterDomain::CreateCacheKey(
-                Type.IsSet() ? FString::FromInt(*Type) : TOptional<FString>()
+                Type
             ),
             CallbackID
         );

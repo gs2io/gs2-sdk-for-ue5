@@ -40,6 +40,7 @@
 #include "Gs2Ranking2EzSubscribeRankingScoreDomain.h"
 #include "Gs2Ranking2EzSubscribeRankingDataDomain.h"
 #include "Gs2Ranking2EzSubscribeRankingSeasonDomain.h"
+#include "Core/EzTransactionDomain.h"
 #include "Util/Net/GameSession.h"
 #include "Util/Net/Gs2Connection.h"
 

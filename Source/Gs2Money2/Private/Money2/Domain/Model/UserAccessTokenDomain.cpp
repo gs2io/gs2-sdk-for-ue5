@@ -104,6 +104,16 @@ namespace Gs2::Money2::Domain::Model
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithAccessToken(Self->AccessToken->GetToken());
+        const auto Future = Self->Client->VerifyReceipt(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         auto Domain = MakeShared<Gs2::Money2::Domain::Model::FEventAccessTokenDomain>(
             Self->Gs2,
             Self->Service,
@@ -144,6 +154,16 @@ namespace Gs2::Money2::Domain::Model
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithAccessToken(Self->AccessToken->GetToken());
+        const auto Future = Self->Client->AllocateSubscriptionStatus(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         auto Domain = MakeShared<Gs2::Money2::Domain::Model::FSubscriptionStatusAccessTokenDomain>(
             Self->Gs2,
             Self->Service,
@@ -184,6 +204,16 @@ namespace Gs2::Money2::Domain::Model
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithAccessToken(Self->AccessToken->GetToken());
+        const auto Future = Self->Client->TakeoverSubscriptionStatus(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         auto Domain = MakeShared<Gs2::Money2::Domain::Model::FSubscriptionStatusAccessTokenDomain>(
             Self->Gs2,
             Self->Service,

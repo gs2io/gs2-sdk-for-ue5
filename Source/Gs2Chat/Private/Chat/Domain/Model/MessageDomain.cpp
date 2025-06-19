@@ -109,6 +109,16 @@ namespace Gs2::Chat::Domain::Model
             ->WithMessageName(Self->MessageName)
             ->WithPassword(Self->Password)
             ->WithUserId(Self->UserId);
+        const auto Future = Self->Client->GetMessageByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         *Result = ResultModel->GetItem();
         return nullptr;
     }
@@ -143,6 +153,16 @@ namespace Gs2::Chat::Domain::Model
             ->WithRoomName(Self->RoomName)
             ->WithUserId(Self->UserId)
             ->WithMessageName(Self->MessageName);
+        const auto Future = Self->Client->DeleteMessage(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         auto Domain = Self;
 
         *Result = Domain;

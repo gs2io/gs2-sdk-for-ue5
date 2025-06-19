@@ -106,6 +106,16 @@ namespace Gs2::Experience::Domain::Model
             ->WithAccessToken(Self->AccessToken->GetToken())
             ->WithExperienceName(Self->ExperienceName)
             ->WithPropertyId(Self->PropertyId);
+        const auto Future = Self->Client->GetStatus(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         *Result = ResultModel->GetItem();
         return nullptr;
     }
@@ -140,11 +150,27 @@ namespace Gs2::Experience::Domain::Model
             ->WithAccessToken(Self->AccessToken->GetToken())
             ->WithExperienceName(Self->ExperienceName)
             ->WithPropertyId(Self->PropertyId);
+        const auto Future = Self->Client->GetStatusWithSignature(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         auto Domain = Self;
         if (ResultModel != nullptr)
         {
-            Domain->Body = *ResultModel->GetBody();
-            Domain->Signature = *ResultModel->GetSignature();
+            if (ResultModel->GetBody().IsSet())
+            {
+                Domain->Body = *ResultModel->GetBody();
+            }
+            if (ResultModel->GetSignature().IsSet())
+            {
+                Domain->Signature = *ResultModel->GetSignature();
+            }
         }
 
         *Result = Domain;
@@ -181,6 +207,16 @@ namespace Gs2::Experience::Domain::Model
             ->WithAccessToken(Self->AccessToken->GetToken())
             ->WithExperienceName(Self->ExperienceName)
             ->WithPropertyId(Self->PropertyId);
+        const auto Future = Self->Client->SubExperience(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         auto Domain = Self;
 
         *Result = Domain;
@@ -217,6 +253,16 @@ namespace Gs2::Experience::Domain::Model
             ->WithAccessToken(Self->AccessToken->GetToken())
             ->WithExperienceName(Self->ExperienceName)
             ->WithPropertyId(Self->PropertyId);
+        const auto Future = Self->Client->SubRankCap(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         auto Domain = Self;
 
         *Result = Domain;
@@ -253,6 +299,16 @@ namespace Gs2::Experience::Domain::Model
             ->WithAccessToken(Self->AccessToken->GetToken())
             ->WithExperienceName(Self->ExperienceName)
             ->WithPropertyId(Self->PropertyId);
+        const auto Future = Self->Client->VerifyRank(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         const auto Domain = Self;
         *Result = Domain;
         return nullptr;
@@ -288,6 +344,16 @@ namespace Gs2::Experience::Domain::Model
             ->WithAccessToken(Self->AccessToken->GetToken())
             ->WithExperienceName(Self->ExperienceName)
             ->WithPropertyId(Self->PropertyId);
+        const auto Future = Self->Client->VerifyRankCap(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         const auto Domain = Self;
         *Result = Domain;
         return nullptr;

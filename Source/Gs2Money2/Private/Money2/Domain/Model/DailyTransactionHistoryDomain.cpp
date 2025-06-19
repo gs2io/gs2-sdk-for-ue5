@@ -115,6 +115,16 @@ namespace Gs2::Money2::Domain::Model
             ->WithMonth(Self->Month)
             ->WithDay(Self->Day)
             ->WithCurrency(Self->Currency);
+        const auto Future = Self->Client->GetDailyTransactionHistory(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         *Result = ResultModel->GetItem();
         return nullptr;
     }
@@ -127,33 +137,33 @@ namespace Gs2::Money2::Domain::Model
 
     FString FDailyTransactionHistoryDomain::CreateCacheParentKey(
         TOptional<FString> NamespaceName,
-        TOptional<FString> Year,
-        TOptional<FString> Month,
-        TOptional<FString> Day,
+        TOptional<int32> Year,
+        TOptional<int32> Month,
+        TOptional<int32> Day,
         TOptional<FString> Currency,
         FString ChildType
     )
     {
         return FString("") +
             (NamespaceName.IsSet() ? *NamespaceName : "null") + ":" +
-            (Year.IsSet() ? *Year : "null") + ":" +
-            (Month.IsSet() ? *Month : "null") + ":" +
-            (Day.IsSet() ? *Day : "null") + ":" +
+            (Year.IsSet() ? FString::FromInt(*Year) : "null") + ":" +
+            (Month.IsSet() ? FString::FromInt(*Month) : "null") + ":" +
+            (Day.IsSet() ? FString::FromInt(*Day) : "null") + ":" +
             (Currency.IsSet() ? *Currency : "null") + ":" +
             ChildType;
     }
 
     FString FDailyTransactionHistoryDomain::CreateCacheKey(
-        TOptional<FString> Year,
-        TOptional<FString> Month,
-        TOptional<FString> Day,
+        TOptional<int32> Year,
+        TOptional<int32> Month,
+        TOptional<int32> Day,
         TOptional<FString> Currency
     )
     {
         return FString("") +
-            (Year.IsSet() ? *Year : "null") + ":" + 
-            (Month.IsSet() ? *Month : "null") + ":" + 
-            (Day.IsSet() ? *Day : "null") + ":" + 
+            (Year.IsSet() ? FString::FromInt(*Year) : "null") + ":" + 
+            (Month.IsSet() ? FString::FromInt(*Month) : "null") + ":" + 
+            (Day.IsSet() ? FString::FromInt(*Day) : "null") + ":" + 
             (Currency.IsSet() ? *Currency : "null");
     }
 
@@ -180,9 +190,9 @@ namespace Gs2::Money2::Domain::Model
         auto bCacheHit = Self->Gs2->Cache->TryGet<Gs2::Money2::Model::FDailyTransactionHistory>(
             Self->ParentKey,
             Gs2::Money2::Domain::Model::FDailyTransactionHistoryDomain::CreateCacheKey(
-                Self->Year.IsSet() ? FString::FromInt(*Self->Year) : TOptional<FString>(),
-                Self->Month.IsSet() ? FString::FromInt(*Self->Month) : TOptional<FString>(),
-                Self->Day.IsSet() ? FString::FromInt(*Self->Day) : TOptional<FString>(),
+                Self->Year,
+                Self->Month,
+                Self->Day,
                 Self->Currency
             ),
             &Value
@@ -200,9 +210,9 @@ namespace Gs2::Money2::Domain::Model
                 }
 
                 const auto Key = Gs2::Money2::Domain::Model::FDailyTransactionHistoryDomain::CreateCacheKey(
-                    Self->Year.IsSet() ? FString::FromInt(*Self->Year) : TOptional<FString>(),
-                    Self->Month.IsSet() ? FString::FromInt(*Self->Month) : TOptional<FString>(),
-                    Self->Day.IsSet() ? FString::FromInt(*Self->Day) : TOptional<FString>(),
+                    Self->Year,
+                    Self->Month,
+                    Self->Day,
                     Self->Currency
                 );
                 Self->Gs2->Cache->Put(
@@ -221,9 +231,9 @@ namespace Gs2::Money2::Domain::Model
             Self->Gs2->Cache->TryGet<Gs2::Money2::Model::FDailyTransactionHistory>(
                 Self->ParentKey,
                 Gs2::Money2::Domain::Model::FDailyTransactionHistoryDomain::CreateCacheKey(
-                    Self->Year.IsSet() ? FString::FromInt(*Self->Year) : TOptional<FString>(),
-                    Self->Month.IsSet() ? FString::FromInt(*Self->Month) : TOptional<FString>(),
-                    Self->Day.IsSet() ? FString::FromInt(*Self->Day) : TOptional<FString>(),
+                    Self->Year,
+                    Self->Month,
+                    Self->Day,
                     Self->Currency
                 ),
                 &Value
@@ -247,9 +257,9 @@ namespace Gs2::Money2::Domain::Model
             Gs2::Money2::Model::FDailyTransactionHistory::TypeName,
             ParentKey,
             Gs2::Money2::Domain::Model::FDailyTransactionHistoryDomain::CreateCacheKey(
-                Year.IsSet() ? FString::FromInt(*Year) : TOptional<FString>(),
-                Month.IsSet() ? FString::FromInt(*Month) : TOptional<FString>(),
-                Day.IsSet() ? FString::FromInt(*Day) : TOptional<FString>(),
+                Year,
+                Month,
+                Day,
                 Currency
             ),
             [Callback](TSharedPtr<FGs2Object> obj)
@@ -267,9 +277,9 @@ namespace Gs2::Money2::Domain::Model
             Gs2::Money2::Model::FDailyTransactionHistory::TypeName,
             ParentKey,
             Gs2::Money2::Domain::Model::FDailyTransactionHistoryDomain::CreateCacheKey(
-                Year.IsSet() ? FString::FromInt(*Year) : TOptional<FString>(),
-                Month.IsSet() ? FString::FromInt(*Month) : TOptional<FString>(),
-                Day.IsSet() ? FString::FromInt(*Day) : TOptional<FString>(),
+                Year,
+                Month,
+                Day,
                 Currency
             ),
             CallbackID

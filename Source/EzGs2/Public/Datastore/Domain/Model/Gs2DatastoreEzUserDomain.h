@@ -24,6 +24,7 @@
 #include "Gs2DatastoreEzUserDomain.h"
 #include "Gs2DatastoreEzUserDomain.h"
 #include "Gs2DatastoreEzUserGameSessionDomain.h"
+#include "Core/EzTransactionDomain.h"
 #include "Util/Net/GameSession.h"
 #include "Util/Net/Gs2Connection.h"
 

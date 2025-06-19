@@ -25,6 +25,7 @@
 #include "Money2/Model/Gs2Money2EzSubscriptionStatus.h"
 #include "Gs2Money2EzSubscriptionStatusGameSessionDomain.h"
 #include "Money2/Domain/Iterator/Gs2Money2EzDescribeSubscriptionStatusesIterator.h"
+#include "Core/EzTransactionGameSessionDomain.h"
 #include "Util/Net/GameSession.h"
 #include "Util/Net/Gs2Connection.h"
 

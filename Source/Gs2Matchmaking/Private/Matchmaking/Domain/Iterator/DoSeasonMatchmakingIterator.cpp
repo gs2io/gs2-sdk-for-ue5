@@ -146,7 +146,7 @@ namespace Gs2::Matchmaking::Domain::Iterator
                 Gs2::Matchmaking::Model::FSeasonGathering::TypeName,
                 ListParentKey,
                 Gs2::Matchmaking::Domain::Model::FSeasonGatheringDomain::CreateCacheKey(
-                    FString::FromInt(*Item->GetTier()),
+                    Item->GetTier(),
                     Item->GetName()
                 ),
                 Item,

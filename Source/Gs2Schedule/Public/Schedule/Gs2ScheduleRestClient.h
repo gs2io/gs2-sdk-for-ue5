@@ -66,8 +66,12 @@
 #include "Task/Rest/GetTriggerByUserIdTask.h"
 #include "Request/TriggerByUserIdRequest.h"
 #include "Task/Rest/TriggerByUserIdTask.h"
+#include "Request/ExtendTriggerByUserIdRequest.h"
+#include "Task/Rest/ExtendTriggerByUserIdTask.h"
 #include "Request/TriggerByStampSheetRequest.h"
 #include "Task/Rest/TriggerByStampSheetTask.h"
+#include "Request/ExtendTriggerByStampSheetRequest.h"
+#include "Task/Rest/ExtendTriggerByStampSheetTask.h"
 #include "Request/DeleteTriggerRequest.h"
 #include "Task/Rest/DeleteTriggerTask.h"
 #include "Request/DeleteTriggerByUserIdRequest.h"
@@ -216,8 +220,16 @@ namespace Gs2::Schedule
             const Request::FTriggerByUserIdRequestPtr Request
         ) const;
 
+        TSharedPtr<FAsyncTask<Task::Rest::FExtendTriggerByUserIdTask>> ExtendTriggerByUserId(
+            const Request::FExtendTriggerByUserIdRequestPtr Request
+        ) const;
+
         TSharedPtr<FAsyncTask<Task::Rest::FTriggerByStampSheetTask>> TriggerByStampSheet(
             const Request::FTriggerByStampSheetRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FExtendTriggerByStampSheetTask>> ExtendTriggerByStampSheet(
+            const Request::FExtendTriggerByStampSheetRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::Rest::FDeleteTriggerTask>> DeleteTrigger(

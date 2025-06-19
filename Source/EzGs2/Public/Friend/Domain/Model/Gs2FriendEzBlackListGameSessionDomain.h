@@ -26,6 +26,7 @@
 #include "Friend/Model/Gs2FriendEzPublicProfile.h"
 #include "Gs2FriendEzBlackListGameSessionDomain.h"
 #include "Friend/Domain/Iterator/Gs2FriendEzDescribeBlackListIterator.h"
+#include "Core/EzTransactionGameSessionDomain.h"
 #include "Util/Net/GameSession.h"
 #include "Util/Net/Gs2Connection.h"
 

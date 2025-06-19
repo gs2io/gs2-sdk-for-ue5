@@ -162,7 +162,7 @@ namespace Gs2::Ranking2::Domain::Model
         static FString CreateCacheParentKey(
             TOptional<FString> NamespaceName,
             TOptional<FString> RankingName,
-            TOptional<FString> Season,
+            TOptional<int64> Season,
             TOptional<FString> ScorerUserId,
             FString ChildType
         );

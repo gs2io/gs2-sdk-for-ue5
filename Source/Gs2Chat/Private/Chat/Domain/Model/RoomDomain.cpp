@@ -102,6 +102,16 @@ namespace Gs2::Chat::Domain::Model
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithRoomName(Self->RoomName);
+        const auto Future = Self->Client->GetRoom(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         *Result = ResultModel->GetItem();
         return nullptr;
     }
@@ -136,6 +146,16 @@ namespace Gs2::Chat::Domain::Model
             ->WithRoomName(Self->RoomName)
             ->WithPassword(Self->Password)
             ->WithUserId(Self->UserId);
+        const auto Future = Self->Client->UpdateRoomFromBackend(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         auto Domain = Self;
 
         *Result = Domain;
@@ -171,6 +191,16 @@ namespace Gs2::Chat::Domain::Model
             ->WithNamespaceName(Self->NamespaceName)
             ->WithRoomName(Self->RoomName)
             ->WithUserId(Self->UserId);
+        const auto Future = Self->Client->DeleteRoomFromBackend(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         auto Domain = Self;
 
         *Result = Domain;
@@ -207,6 +237,16 @@ namespace Gs2::Chat::Domain::Model
             ->WithRoomName(Self->RoomName)
             ->WithUserId(Self->UserId)
             ->WithPassword(Self->Password);
+        const auto Future = Self->Client->PostByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         auto Domain = MakeShared<Gs2::Chat::Domain::Model::FMessageDomain>(
             Self->Gs2,
             Self->Service,

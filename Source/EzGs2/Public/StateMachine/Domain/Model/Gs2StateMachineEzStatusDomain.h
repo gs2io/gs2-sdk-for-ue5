@@ -31,6 +31,7 @@
 #include "StateMachine/Model/Gs2StateMachineEzAcquireActionResult.h"
 #include "StateMachine/Model/Gs2StateMachineEzTransactionResult.h"
 #include "Gs2StateMachineEzStatusDomain.h"
+#include "Core/EzTransactionDomain.h"
 #include "Util/Net/GameSession.h"
 #include "Util/Net/Gs2Connection.h"
 

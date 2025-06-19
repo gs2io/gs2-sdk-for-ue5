@@ -103,7 +103,7 @@ namespace Gs2::UE5::Idle::Domain::Model
     }
 
     Gs2::Core::Model::FGs2ErrorPtr FEzStatusGameSessionDomain::FReceiveTask::Action(
-        TSharedPtr<TSharedPtr<Gs2::UE5::Idle::Domain::Model::FEzStatusGameSessionDomain>> Result
+        TSharedPtr<TSharedPtr<Gs2::UE5::Core::Domain::FEzTransactionGameSessionDomain>> Result
     )
     {
         const auto Future = Self->ConnectionValue->Run(
@@ -117,9 +117,8 @@ namespace Gs2::UE5::Idle::Domain::Model
                     Task->EnsureCompletion();
                     return Task->GetTask().Error();
                 }
-                *Result = MakeShared<Gs2::UE5::Idle::Domain::Model::FEzStatusGameSessionDomain>(
+                *Result = MakeShared<Gs2::UE5::Core::Domain::FEzTransactionGameSessionDomain>(
                     Task->GetTask().Result(),
-                    Self->GameSession,
                     Self->ConnectionValue
                 );
                 Task->EnsureCompletion();

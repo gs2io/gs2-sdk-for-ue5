@@ -94,7 +94,7 @@ namespace Gs2::Enhance::Domain::Model
         );
 
         class GS2ENHANCE_API FDirectTask final :
-            public Gs2::Core::Util::TGs2Future<Gs2::Enhance::Domain::Model::FEnhanceAccessTokenDomain>,
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::FTransactionAccessTokenDomain>,
             public TSharedFromThis<FDirectTask>
         {
             const TSharedPtr<FEnhanceAccessTokenDomain> Self;
@@ -112,7 +112,7 @@ namespace Gs2::Enhance::Domain::Model
             );
 
             virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-                TSharedPtr<TSharedPtr<Gs2::Enhance::Domain::Model::FEnhanceAccessTokenDomain>> Result
+                TSharedPtr<TSharedPtr<Gs2::Core::Domain::FTransactionAccessTokenDomain>> Result
             ) override;
         };
         friend FDirectTask;
@@ -123,7 +123,7 @@ namespace Gs2::Enhance::Domain::Model
         );
 
         class GS2ENHANCE_API FUnleashTask final :
-            public Gs2::Core::Util::TGs2Future<Gs2::Enhance::Domain::Model::FEnhanceAccessTokenDomain>,
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::FTransactionAccessTokenDomain>,
             public TSharedFromThis<FUnleashTask>
         {
             const TSharedPtr<FEnhanceAccessTokenDomain> Self;
@@ -141,7 +141,7 @@ namespace Gs2::Enhance::Domain::Model
             );
 
             virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-                TSharedPtr<TSharedPtr<Gs2::Enhance::Domain::Model::FEnhanceAccessTokenDomain>> Result
+                TSharedPtr<TSharedPtr<Gs2::Core::Domain::FTransactionAccessTokenDomain>> Result
             ) override;
         };
         friend FUnleashTask;

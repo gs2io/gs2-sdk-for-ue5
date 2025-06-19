@@ -36,6 +36,7 @@
 #include "Quest/Domain/Iterator/Gs2QuestEzDescribeCompletedQuestListsIterator.h"
 #include "Gs2QuestEzProgressGameSessionDomain.h"
 #include "Gs2QuestEzUserGameSessionDomain.h"
+#include "Core/EzTransactionGameSessionDomain.h"
 #include "Util/Net/GameSession.h"
 #include "Util/Net/Gs2Connection.h"
 
@@ -61,7 +62,7 @@ namespace Gs2::UE5::Quest::Domain::Model
         );
 
         class EZGS2_API FStartTask :
-            public Gs2::Core::Util::TGs2Future<Gs2::UE5::Quest::Domain::Model::FEzUserGameSessionDomain>,
+            public Gs2::Core::Util::TGs2Future<Gs2::UE5::Core::Domain::FEzTransactionGameSessionDomain>,
             public TSharedFromThis<FStartTask>
         {
             TSharedPtr<FEzUserGameSessionDomain> Self;
@@ -80,7 +81,7 @@ namespace Gs2::UE5::Quest::Domain::Model
             );
 
             virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-                TSharedPtr<TSharedPtr<Gs2::UE5::Quest::Domain::Model::FEzUserGameSessionDomain>> Result
+                TSharedPtr<TSharedPtr<Gs2::UE5::Core::Domain::FEzTransactionGameSessionDomain>> Result
             ) override;
         };
         friend FStartTask;

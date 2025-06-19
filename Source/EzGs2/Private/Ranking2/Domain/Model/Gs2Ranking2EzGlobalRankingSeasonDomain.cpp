@@ -12,6 +12,8 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
+ *
+ * deny overwrite
  */
 
 #include "Ranking2/Domain/Model/Gs2Ranking2EzGlobalRankingSeasonDomain.h"
@@ -37,11 +39,6 @@ namespace Gs2::UE5::Ranking2::Domain::Model
     TOptional<int64> FEzGlobalRankingSeasonDomain::Season() const
     {
         return Domain->Season;
-    }
-
-    TOptional<FString> FEzGlobalRankingSeasonDomain::UserId() const
-    {
-        return Domain->UserId;
     }
 
     FEzGlobalRankingSeasonDomain::FEzGlobalRankingSeasonDomain(

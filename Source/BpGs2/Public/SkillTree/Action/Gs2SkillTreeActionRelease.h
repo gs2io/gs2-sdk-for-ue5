@@ -20,12 +20,14 @@
 #include "SkillTree/Model/Gs2SkillTreeStatus.h"
 #include "SkillTree/Model/Gs2SkillTreeStatus.h"
 #include "../../Core/Model/Gs2Error.h"
+#include "Core/Model/Gs2CoreTransaction.h"
 #include "Kismet/BlueprintAsyncActionBase.h"
 #include "Gs2SkillTreeActionRelease.generated.h"
 
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FGs2SkillTreeReleaseSuccessDelegate, FGs2SkillTreeOwnStatus, Status, const FGs2Error, Error);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FGs2SkillTreeReleaseErrorDelegate, FGs2SkillTreeOwnStatus, Status, const FGs2Error, Error);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FGs2SkillTreeReleaseSuccessDelegate, FGs2CoreOwnTransaction, Transaction, const FGs2Error, Error);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FGs2SkillTreeReleaseErrorDelegate, FGs2CoreOwnTransaction, Transaction, const FGs2Error, Error);
+
 
 UCLASS()
 class BPGS2_API UGs2SkillTreeReleaseAsyncFunction : public UBlueprintAsyncActionBase

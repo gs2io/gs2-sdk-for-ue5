@@ -171,11 +171,23 @@
 #include "Task/Rest/TriggerByUserIdTask.h"
 #include "Task/WebSocket/TriggerByUserIdTask.h"
 
+// ExtendTriggerByUserId
+#include "Request/ExtendTriggerByUserIdRequest.h"
+#include "Result/ExtendTriggerByUserIdResult.h"
+#include "Task/Rest/ExtendTriggerByUserIdTask.h"
+#include "Task/WebSocket/ExtendTriggerByUserIdTask.h"
+
 // TriggerByStampSheet
 #include "Request/TriggerByStampSheetRequest.h"
 #include "Result/TriggerByStampSheetResult.h"
 #include "Task/Rest/TriggerByStampSheetTask.h"
 #include "Task/WebSocket/TriggerByStampSheetTask.h"
+
+// ExtendTriggerByStampSheet
+#include "Request/ExtendTriggerByStampSheetRequest.h"
+#include "Result/ExtendTriggerByStampSheetResult.h"
+#include "Task/Rest/ExtendTriggerByStampSheetTask.h"
+#include "Task/WebSocket/ExtendTriggerByStampSheetTask.h"
 
 // DeleteTrigger
 #include "Request/DeleteTriggerRequest.h"

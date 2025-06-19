@@ -28,6 +28,7 @@
 #include "Idle/Model/Gs2IdleEzAcquireActionResult.h"
 #include "Idle/Model/Gs2IdleEzTransactionResult.h"
 #include "Gs2IdleEzStatusDomain.h"
+#include "Core/EzTransactionDomain.h"
 #include "Util/Net/GameSession.h"
 #include "Util/Net/Gs2Connection.h"
 

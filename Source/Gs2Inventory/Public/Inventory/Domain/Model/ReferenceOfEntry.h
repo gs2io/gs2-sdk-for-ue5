@@ -21,7 +21,7 @@
 
 namespace Gs2::Inventory::Model
 {
-    class GS2INVENTORY_API FReferenceOfEntry : public Gs2Object
+    class GS2INVENTORY_API FReferenceOfEntry : public FGs2Object
     {
     public:
         FString Value;

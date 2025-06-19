@@ -29,6 +29,7 @@
 #include "Gs2RankingEzUserDomain.h"
 #include "Gs2RankingEzUserDomain.h"
 #include "Gs2RankingEzUserGameSessionDomain.h"
+#include "Core/EzTransactionDomain.h"
 #include "Util/Net/GameSession.h"
 #include "Util/Net/Gs2Connection.h"
 

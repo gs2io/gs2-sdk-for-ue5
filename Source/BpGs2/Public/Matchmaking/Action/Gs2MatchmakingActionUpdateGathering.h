@@ -21,6 +21,7 @@
 #include "Matchmaking/Model/Gs2MatchmakingAttributeRange.h"
 #include "Matchmaking/Model/Gs2MatchmakingGathering.h"
 #include "../../Core/Model/Gs2Error.h"
+#include "Core/Model/Gs2CoreTransaction.h"
 #include "Kismet/BlueprintAsyncActionBase.h"
 #include "Gs2MatchmakingActionUpdateGathering.generated.h"
 

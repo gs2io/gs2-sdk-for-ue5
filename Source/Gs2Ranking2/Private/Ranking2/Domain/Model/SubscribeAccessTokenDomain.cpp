@@ -128,6 +128,16 @@ namespace Gs2::Ranking2::Domain::Model
             ->WithNamespaceName(Self->NamespaceName)
             ->WithRankingName(Self->RankingName)
             ->WithAccessToken(Self->AccessToken->GetToken());
+        const auto Future = Self->Client->AddSubscribe(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         auto Domain = MakeShared<Gs2::Ranking2::Domain::Model::FSubscribeUserAccessTokenDomain>(
             Self->Gs2,
             Self->Service,

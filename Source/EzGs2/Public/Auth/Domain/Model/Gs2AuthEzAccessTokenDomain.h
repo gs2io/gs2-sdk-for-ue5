@@ -20,6 +20,7 @@
 #include "Auth/Domain/Model/AccessToken.h"
 #include "Auth/Model/Gs2AuthEzAccessToken.h"
 #include "Gs2AuthEzAccessTokenDomain.h"
+#include "Core/EzTransactionDomain.h"
 #include "Util/Net/GameSession.h"
 #include "Util/Net/Gs2Connection.h"
 

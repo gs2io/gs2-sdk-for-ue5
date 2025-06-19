@@ -82,7 +82,7 @@ namespace Gs2::SkillTree::Domain::Model
         );
 
         class GS2SKILLTREE_API FReleaseTask final :
-            public Gs2::Core::Util::TGs2Future<Gs2::SkillTree::Domain::Model::FStatusAccessTokenDomain>,
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::FTransactionAccessTokenDomain>,
             public TSharedFromThis<FReleaseTask>
         {
             const TSharedPtr<FStatusAccessTokenDomain> Self;
@@ -100,7 +100,7 @@ namespace Gs2::SkillTree::Domain::Model
             );
 
             virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-                TSharedPtr<TSharedPtr<Gs2::SkillTree::Domain::Model::FStatusAccessTokenDomain>> Result
+                TSharedPtr<TSharedPtr<Gs2::Core::Domain::FTransactionAccessTokenDomain>> Result
             ) override;
         };
         friend FReleaseTask;
@@ -137,7 +137,7 @@ namespace Gs2::SkillTree::Domain::Model
         );
 
         class GS2SKILLTREE_API FRestrainTask final :
-            public Gs2::Core::Util::TGs2Future<Gs2::SkillTree::Domain::Model::FStatusAccessTokenDomain>,
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::FTransactionAccessTokenDomain>,
             public TSharedFromThis<FRestrainTask>
         {
             const TSharedPtr<FStatusAccessTokenDomain> Self;
@@ -155,7 +155,7 @@ namespace Gs2::SkillTree::Domain::Model
             );
 
             virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-                TSharedPtr<TSharedPtr<Gs2::SkillTree::Domain::Model::FStatusAccessTokenDomain>> Result
+                TSharedPtr<TSharedPtr<Gs2::Core::Domain::FTransactionAccessTokenDomain>> Result
             ) override;
         };
         friend FRestrainTask;
@@ -192,7 +192,7 @@ namespace Gs2::SkillTree::Domain::Model
         );
 
         class GS2SKILLTREE_API FResetTask final :
-            public Gs2::Core::Util::TGs2Future<Gs2::SkillTree::Domain::Model::FStatusAccessTokenDomain>,
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::FTransactionAccessTokenDomain>,
             public TSharedFromThis<FResetTask>
         {
             const TSharedPtr<FStatusAccessTokenDomain> Self;
@@ -210,7 +210,7 @@ namespace Gs2::SkillTree::Domain::Model
             );
 
             virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-                TSharedPtr<TSharedPtr<Gs2::SkillTree::Domain::Model::FStatusAccessTokenDomain>> Result
+                TSharedPtr<TSharedPtr<Gs2::Core::Domain::FTransactionAccessTokenDomain>> Result
             ) override;
         };
         friend FResetTask;

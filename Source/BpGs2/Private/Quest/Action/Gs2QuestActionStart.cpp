@@ -12,8 +12,6 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
- *
- * deny overwrite
  */
 
 #include "Quest/Action/Gs2QuestActionStart.h"
@@ -72,18 +70,17 @@ void UGs2QuestStartAsyncFunction::Activate()
     );
     Future->GetTask().OnSuccessDelegate().BindLambda([&](auto Result)
     {
-        FGs2QuestOwnUser ReturnUser;
-        ReturnUser.Value = Result;
+        FGs2CoreOwnTransaction ReturnTransaction;
         const FGs2Error ReturnError;
-        OnSuccess.Broadcast(ReturnUser, ReturnError);
+        OnError.Broadcast(ReturnTransaction, ReturnError);
         SetReadyToDestroy();
     });
     Future->GetTask().OnErrorDelegate().BindLambda([&](auto Error)
     {
-        FGs2QuestOwnUser ReturnUser;
+        FGs2CoreOwnTransaction ReturnTransaction;
         FGs2Error ReturnError;
         ReturnError.Value = Error;
-        OnError.Broadcast(ReturnUser, ReturnError);
+        OnError.Broadcast(ReturnTransaction, ReturnError);
         SetReadyToDestroy();
     });
     Future->StartBackgroundTask();

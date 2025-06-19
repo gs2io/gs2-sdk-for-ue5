@@ -99,6 +99,16 @@ namespace Gs2::Datastore::Domain::Model
             ->WithNamespaceName(Self->NamespaceName)
             ->WithDataObjectName(Self->DataObjectName)
             ->WithAccessToken(Self->AccessToken->GetToken());
+        const auto Future = Self->Client->UpdateDataObject(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         auto Domain = Self;
 
         *Result = Domain;
@@ -134,10 +144,23 @@ namespace Gs2::Datastore::Domain::Model
             ->WithNamespaceName(Self->NamespaceName)
             ->WithDataObjectName(Self->DataObjectName)
             ->WithAccessToken(Self->AccessToken->GetToken());
+        const auto Future = Self->Client->PrepareReUpload(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         auto Domain = Self;
         if (ResultModel != nullptr)
         {
-            Domain->UploadUrl = *ResultModel->GetUploadUrl();
+            if (ResultModel->GetUploadUrl().IsSet())
+            {
+                Domain->UploadUrl = *ResultModel->GetUploadUrl();
+            }
         }
 
         *Result = Domain;
@@ -173,6 +196,16 @@ namespace Gs2::Datastore::Domain::Model
             ->WithNamespaceName(Self->NamespaceName)
             ->WithDataObjectName(Self->DataObjectName)
             ->WithAccessToken(Self->AccessToken->GetToken());
+        const auto Future = Self->Client->DoneUpload(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         auto Domain = Self;
 
         *Result = Domain;
@@ -208,6 +241,16 @@ namespace Gs2::Datastore::Domain::Model
             ->WithNamespaceName(Self->NamespaceName)
             ->WithAccessToken(Self->AccessToken->GetToken())
             ->WithDataObjectName(Self->DataObjectName);
+        const auto Future = Self->Client->DeleteDataObject(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         auto Domain = Self;
 
         *Result = Domain;
@@ -243,11 +286,27 @@ namespace Gs2::Datastore::Domain::Model
             ->WithNamespaceName(Self->NamespaceName)
             ->WithAccessToken(Self->AccessToken->GetToken())
             ->WithDataObjectName(Self->DataObjectName);
+        const auto Future = Self->Client->PrepareDownloadOwnData(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         auto Domain = Self;
         if (ResultModel != nullptr)
         {
-            Domain->FileUrl = *ResultModel->GetFileUrl();
-            Domain->ContentLength = *ResultModel->GetContentLength();
+            if (ResultModel->GetFileUrl().IsSet())
+            {
+                Domain->FileUrl = *ResultModel->GetFileUrl();
+            }
+            if (ResultModel->GetContentLength().IsSet())
+            {
+                Domain->ContentLength = *ResultModel->GetContentLength();
+            }
         }
 
         *Result = Domain;
@@ -283,11 +342,27 @@ namespace Gs2::Datastore::Domain::Model
             ->WithNamespaceName(Self->NamespaceName)
             ->WithAccessToken(Self->AccessToken->GetToken())
             ->WithDataObjectName(Self->DataObjectName);
+        const auto Future = Self->Client->PrepareDownloadOwnDataByGeneration(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         auto Domain = Self;
         if (ResultModel != nullptr)
         {
-            Domain->FileUrl = *ResultModel->GetFileUrl();
-            Domain->ContentLength = *ResultModel->GetContentLength();
+            if (ResultModel->GetFileUrl().IsSet())
+            {
+                Domain->FileUrl = *ResultModel->GetFileUrl();
+            }
+            if (ResultModel->GetContentLength().IsSet())
+            {
+                Domain->ContentLength = *ResultModel->GetContentLength();
+            }
         }
 
         *Result = Domain;

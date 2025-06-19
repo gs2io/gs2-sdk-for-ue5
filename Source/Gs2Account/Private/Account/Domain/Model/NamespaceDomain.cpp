@@ -101,12 +101,8 @@ namespace Gs2::Account::Domain::Model
         {
             return Future->GetTask().Error();
         }
-        const auto RequestModel = Request;
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-        }
         const auto Domain = Self;
         if (ResultModel != nullptr)
         {
@@ -154,25 +150,8 @@ namespace Gs2::Account::Domain::Model
         {
             return Future->GetTask().Error();
         }
-        const auto RequestModel = Request;
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-            {
-                const auto ParentKey = FString("account:Namespace");
-                const auto Key = Gs2::Account::Domain::Model::FNamespaceDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetName()
-                );
-                Self->Gs2->Cache->Put(
-                    Gs2::Account::Model::FNamespace::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
-        }
         *Result = ResultModel->GetItem();
         return nullptr;
     }
@@ -212,25 +191,8 @@ namespace Gs2::Account::Domain::Model
         {
             return Future->GetTask().Error();
         }
-        const auto RequestModel = Request;
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-            {
-                const auto ParentKey = FString("account:Namespace");
-                const auto Key = Gs2::Account::Domain::Model::FNamespaceDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetName()
-                );
-                Self->Gs2->Cache->Put(
-                    Gs2::Account::Model::FNamespace::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
-        }
         auto Domain = Self;
 
         *Result = Domain;
@@ -272,19 +234,8 @@ namespace Gs2::Account::Domain::Model
         {
             return Future->GetTask().Error();
         }
-        const auto RequestModel = Request;
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-            {
-                const auto ParentKey = FString("account:Namespace");
-                const auto Key = Gs2::Account::Domain::Model::FNamespaceDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetName()
-                );
-                Self->Gs2->Cache->Delete(Gs2::Account::Model::FNamespace::TypeName, ParentKey, Key);
-            }
-        }
         auto Domain = Self;
 
         *Result = Domain;
@@ -326,29 +277,8 @@ namespace Gs2::Account::Domain::Model
         {
             return Future->GetTask().Error();
         }
-        const auto RequestModel = Request;
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::Account::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
-                    Self->NamespaceName,
-                    "Account"
-                );
-                const auto Key = Gs2::Account::Domain::Model::FAccountDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetUserId()
-                );
-                Self->Gs2->Cache->Put(
-                    Gs2::Account::Model::FAccount::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
-        }
         auto Domain = MakeShared<Gs2::Account::Domain::Model::FAccountDomain>(
             Self->Gs2,
             Self->Service,
@@ -395,29 +325,8 @@ namespace Gs2::Account::Domain::Model
         {
             return Future->GetTask().Error();
         }
-        const auto RequestModel = Request;
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::Account::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
-                    Self->NamespaceName,
-                    "Account"
-                );
-                const auto Key = Gs2::Account::Domain::Model::FAccountDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetUserId()
-                );
-                Self->Gs2->Cache->Put(
-                    Gs2::Account::Model::FAccount::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
-        }
         auto Domain = MakeShared<Gs2::Account::Domain::Model::FAccountDomain>(
             Self->Gs2,
             Self->Service,
@@ -464,29 +373,8 @@ namespace Gs2::Account::Domain::Model
         {
             return Future->GetTask().Error();
         }
-        const auto RequestModel = Request;
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::Account::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
-                    Self->NamespaceName,
-                    "Account"
-                );
-                const auto Key = Gs2::Account::Domain::Model::FAccountDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetUserId()
-                );
-                Self->Gs2->Cache->Put(
-                    Gs2::Account::Model::FAccount::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
-        }
         auto Domain = MakeShared<Gs2::Account::Domain::Model::FAccountDomain>(
             Self->Gs2,
             Self->Service,
@@ -533,25 +421,8 @@ namespace Gs2::Account::Domain::Model
         {
             return Future->GetTask().Error();
         }
-        const auto RequestModel = Request;
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::Account::Domain::Model::FAccountDomain::CreateCacheParentKey(
-                    Self->NamespaceName,
-                    ResultModel->GetItem()->GetUserId(),
-                    "PlatformId"
-                );
-                const auto Key = Gs2::Account::Domain::Model::FPlatformIdDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetType().IsSet() ? FString::FromInt(*ResultModel->GetItem()->GetType()) : TOptional<FString>(),
-                    ResultModel->GetItem()->GetUserIdentifier().IsSet() ? *ResultModel->GetItem()->GetUserIdentifier() : TOptional<FString>()
-                );
-                Self->Gs2->Cache->Delete(Gs2::Account::Model::FPlatformId::TypeName, ParentKey, Key);
-            }
-        }
         auto Domain = MakeShared<Gs2::Account::Domain::Model::FPlatformIdDomain>(
             Self->Gs2,
             Self->Service,
@@ -845,7 +716,7 @@ namespace Gs2::Account::Domain::Model
             Gs2::Account::Domain::Model::FNamespaceDomain::CreateCacheKey(
                 NamespaceName
             ),
-            [Callback](TSharedPtr<Gs2Object> obj)
+            [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::Account::Model::FNamespace>(obj));
             }
@@ -898,21 +769,6 @@ namespace Gs2::Account::Domain::Model
         const auto RequestModel = Request;
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::Account::Domain::Model::FAccountDomain::CreateCacheParentKey(
-                    Self->NamespaceName,
-                    ResultModel->GetItem()->GetUserId(),
-                    "TakeOver"
-                );
-                const auto Key = Gs2::Account::Domain::Model::FTakeOverDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetType().IsSet() ? FString::FromInt(*ResultModel->GetItem()->GetType()) : TOptional<FString>()
-                );
-                Self->Gs2->Cache->Delete(Gs2::Account::Model::FTakeOver::TypeName, ParentKey, Key);
-            }
-        }
         auto Domain = MakeShared<Gs2::Account::Domain::Model::FTakeOverDomain>(
             Self->Gs2,
             Self->Service,

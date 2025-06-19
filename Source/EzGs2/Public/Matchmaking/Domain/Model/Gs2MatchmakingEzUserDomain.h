@@ -39,6 +39,7 @@
 #include "Gs2MatchmakingEzUserDomain.h"
 #include "Gs2MatchmakingEzUserDomain.h"
 #include "Gs2MatchmakingEzUserGameSessionDomain.h"
+#include "Core/EzTransactionDomain.h"
 #include "Util/Net/GameSession.h"
 #include "Util/Net/Gs2Connection.h"
 

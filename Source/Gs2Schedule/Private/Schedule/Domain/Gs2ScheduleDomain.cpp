@@ -75,6 +75,16 @@ namespace Gs2::Schedule::Domain
         TSharedPtr<TSharedPtr<Gs2::Schedule::Domain::Model::FNamespaceDomain>> Result
     )
     {
+        const auto Future = Self->Client->CreateNamespace(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         auto Domain = MakeShared<Gs2::Schedule::Domain::Model::FNamespaceDomain>(
             Self->Gs2,
             Self,
@@ -108,6 +118,16 @@ namespace Gs2::Schedule::Domain
         TSharedPtr<TSharedPtr<FGs2ScheduleDomain>> Result
     )
     {
+        const auto Future = Self->Client->DumpUserDataByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         const auto Domain = Self;
         *Result = Domain;
         return nullptr;
@@ -137,6 +157,16 @@ namespace Gs2::Schedule::Domain
         TSharedPtr<TSharedPtr<FGs2ScheduleDomain>> Result
     )
     {
+        const auto Future = Self->Client->CheckDumpUserDataByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         const auto Domain = Self;
         if (ResultModel != nullptr)
         {
@@ -173,6 +203,16 @@ namespace Gs2::Schedule::Domain
         TSharedPtr<TSharedPtr<FGs2ScheduleDomain>> Result
     )
     {
+        const auto Future = Self->Client->CleanUserDataByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         const auto Domain = Self;
         *Result = Domain;
         return nullptr;
@@ -202,6 +242,16 @@ namespace Gs2::Schedule::Domain
         TSharedPtr<TSharedPtr<FGs2ScheduleDomain>> Result
     )
     {
+        const auto Future = Self->Client->CheckCleanUserDataByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         const auto Domain = Self;
         *Result = Domain;
         return nullptr;
@@ -231,6 +281,16 @@ namespace Gs2::Schedule::Domain
         TSharedPtr<TSharedPtr<FGs2ScheduleDomain>> Result
     )
     {
+        const auto Future = Self->Client->PrepareImportUserDataByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         const auto Domain = Self;
         if (ResultModel != nullptr)
         {
@@ -271,6 +331,16 @@ namespace Gs2::Schedule::Domain
         TSharedPtr<TSharedPtr<FGs2ScheduleDomain>> Result
     )
     {
+        const auto Future = Self->Client->ImportUserDataByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         const auto Domain = Self;
         *Result = Domain;
         return nullptr;
@@ -300,6 +370,16 @@ namespace Gs2::Schedule::Domain
         TSharedPtr<TSharedPtr<FGs2ScheduleDomain>> Result
     )
     {
+        const auto Future = Self->Client->CheckImportUserDataByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         const auto Domain = Self;
         if (ResultModel != nullptr)
         {
@@ -404,6 +484,41 @@ namespace Gs2::Schedule::Domain
                 );
             }
         }
+        if (Method == "ExtendTriggerByUserId") {
+            TSharedPtr<FJsonObject> RequestModelJson;
+            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Request);
+                !FJsonSerializer::Deserialize(JsonReader, RequestModelJson))
+            {
+                return;
+            }
+            TSharedPtr<FJsonObject> ResultModelJson;
+            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Result);
+                !FJsonSerializer::Deserialize(JsonReader, ResultModelJson))
+            {
+                return;
+            }
+            const auto RequestModel = Gs2::Schedule::Request::FExtendTriggerByUserIdRequest::FromJson(RequestModelJson);
+            const auto ResultModel = Gs2::Schedule::Result::FExtendTriggerByUserIdResult::FromJson(ResultModelJson);
+            
+            if (ResultModel->GetItem() != nullptr)
+            {
+                const auto ParentKey = Gs2::Schedule::Domain::Model::FUserDomain::CreateCacheParentKey(
+                    RequestModel->GetNamespaceName(),
+                    RequestModel->GetUserId(),
+                    "Trigger"
+                );
+                const auto Key = Gs2::Schedule::Domain::Model::FTriggerDomain::CreateCacheKey(
+                    ResultModel->GetItem()->GetName()
+                );
+                Gs2->Cache->Put(
+                    Gs2::Schedule::Model::FTrigger::TypeName,
+                    ParentKey,
+                    Key,
+                    ResultModel->GetItem(),
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+            }
+        }
     }
 
     void FGs2ScheduleDomain::UpdateCacheFromStampTask(
@@ -491,6 +606,49 @@ namespace Gs2::Schedule::Domain
                 Gs2->Cache->ClearListCache(
                     Gs2::Schedule::Model::FEvent::TypeName,
                     ParentKey.Replace(TEXT("Trigger"), TEXT("Event"))
+                );
+            }
+        }
+        if (Method == "extend_trigger_by_user_id") {
+            TSharedPtr<FJsonObject> RequestModelJson;
+            if (!Job->GetArgs().IsSet())
+            {
+                return;
+            }
+            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(*Job->GetArgs());
+                !FJsonSerializer::Deserialize(JsonReader, RequestModelJson))
+            {
+                return;
+            }
+            TSharedPtr<FJsonObject> ResultModelJson;
+            if (!Result->GetResult().IsSet())
+            {
+                return;
+            }
+            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(*Result->GetResult());
+                !FJsonSerializer::Deserialize(JsonReader, ResultModelJson))
+            {
+                return;
+            }
+            const auto RequestModel = Gs2::Schedule::Request::FExtendTriggerByUserIdRequest::FromJson(RequestModelJson);
+            const auto ResultModel = Gs2::Schedule::Result::FExtendTriggerByUserIdResult::FromJson(ResultModelJson);
+            
+            if (ResultModel->GetItem() != nullptr)
+            {
+                const auto ParentKey = Gs2::Schedule::Domain::Model::FUserDomain::CreateCacheParentKey(
+                    RequestModel->GetNamespaceName(),
+                    RequestModel->GetUserId(),
+                    "Trigger"
+                );
+                const auto Key = Gs2::Schedule::Domain::Model::FTriggerDomain::CreateCacheKey(
+                    ResultModel->GetItem()->GetName()
+                );
+                Gs2->Cache->Put(
+                    Gs2::Schedule::Model::FTrigger::TypeName,
+                    ParentKey,
+                    Key,
+                    ResultModel->GetItem(),
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
                 );
             }
         }

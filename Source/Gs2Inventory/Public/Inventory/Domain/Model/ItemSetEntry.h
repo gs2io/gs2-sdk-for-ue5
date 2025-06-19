@@ -22,7 +22,7 @@
 
 namespace Gs2::Inventory::Model
 {
-    class GS2INVENTORY_API FItemSetEntry : public Gs2Object
+    class GS2INVENTORY_API FItemSetEntry : public FGs2Object
     {
     public:
         TArray<FItemSetPtr> Value;

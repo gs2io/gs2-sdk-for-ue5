@@ -20,6 +20,7 @@
 #include "Dictionary/Model/Gs2DictionaryLike.h"
 #include "Dictionary/Model/Gs2DictionaryUser.h"
 #include "../../Core/Model/Gs2Error.h"
+#include "Core/Model/Gs2CoreTransaction.h"
 #include "Kismet/BlueprintAsyncActionBase.h"
 #include "Gs2DictionaryActionAddLikes.generated.h"
 

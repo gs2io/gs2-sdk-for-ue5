@@ -105,6 +105,16 @@ namespace Gs2::Mission::Domain::Model
             ->WithNamespaceName(Self->NamespaceName)
             ->WithMissionGroupName(Self->MissionGroupName)
             ->WithMissionTaskName(Self->MissionTaskName);
+        const auto Future = Self->Client->GetMissionTaskModelMaster(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         *Result = ResultModel->GetItem();
         return nullptr;
     }
@@ -138,6 +148,16 @@ namespace Gs2::Mission::Domain::Model
             ->WithNamespaceName(Self->NamespaceName)
             ->WithMissionGroupName(Self->MissionGroupName)
             ->WithMissionTaskName(Self->MissionTaskName);
+        const auto Future = Self->Client->UpdateMissionTaskModelMaster(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         auto Domain = Self;
 
         *Result = Domain;
@@ -173,6 +193,16 @@ namespace Gs2::Mission::Domain::Model
             ->WithNamespaceName(Self->NamespaceName)
             ->WithMissionGroupName(Self->MissionGroupName)
             ->WithMissionTaskName(Self->MissionTaskName);
+        const auto Future = Self->Client->DeleteMissionTaskModelMaster(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         auto Domain = Self;
 
         *Result = Domain;

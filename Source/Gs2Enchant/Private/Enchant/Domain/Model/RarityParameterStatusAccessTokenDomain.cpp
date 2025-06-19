@@ -108,6 +108,16 @@ namespace Gs2::Enchant::Domain::Model
             ->WithAccessToken(Self->AccessToken->GetToken())
             ->WithParameterName(Self->ParameterName)
             ->WithPropertyId(Self->PropertyId);
+        const auto Future = Self->Client->GetRarityParameterStatus(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         *Result = ResultModel->GetItem();
         return nullptr;
     }
@@ -142,6 +152,16 @@ namespace Gs2::Enchant::Domain::Model
             ->WithParameterName(Self->ParameterName)
             ->WithAccessToken(Self->AccessToken->GetToken())
             ->WithPropertyId(Self->PropertyId);
+        const auto Future = Self->Client->VerifyRarityParameterStatus(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         auto Domain = Self;
 
         *Result = Domain;

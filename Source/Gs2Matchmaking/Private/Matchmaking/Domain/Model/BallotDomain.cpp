@@ -31,15 +31,26 @@
 #include "Matchmaking/Domain/Model/RatingModelMaster.h"
 #include "Matchmaking/Domain/Model/RatingModel.h"
 #include "Matchmaking/Domain/Model/CurrentModelMaster.h"
+#include "Matchmaking/Domain/Model/User.h"
+#include "Matchmaking/Domain/Model/UserAccessToken.h"
+#include "Matchmaking/Domain/Model/Season.h"
+#include "Matchmaking/Domain/Model/SeasonAccessToken.h"
+#include "Matchmaking/Domain/Model/SeasonModel.h"
+#include "Matchmaking/Domain/Model/SeasonModelMaster.h"
+#include "Matchmaking/Domain/Model/SeasonGathering.h"
+#include "Matchmaking/Domain/Model/SeasonGatheringAccessToken.h"
+#include "Matchmaking/Domain/Model/JoinedSeasonGathering.h"
+#include "Matchmaking/Domain/Model/JoinedSeasonGatheringAccessToken.h"
 #include "Matchmaking/Domain/Model/Rating.h"
 #include "Matchmaking/Domain/Model/RatingAccessToken.h"
 #include "Matchmaking/Domain/Model/Ballot.h"
 #include "Matchmaking/Domain/Model/BallotAccessToken.h"
 #include "Matchmaking/Domain/Model/Vote.h"
-#include "Matchmaking/Domain/Model/User.h"
-#include "Matchmaking/Domain/Model/UserAccessToken.h"
 
 #include "Core/Domain/Gs2.h"
+#include "Core/Domain/Transaction/JobQueueJobDomainFactory.h"
+#include "Core/Domain/Transaction/InternalTransactionDomainFactory.h"
+#include "Core/Domain/Transaction/ManualTransactionDomain.h"
 
 namespace Gs2::Matchmaking::Domain::Model
 {
@@ -108,10 +119,11 @@ namespace Gs2::Matchmaking::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
-            ->WithUserId(Self->UserId)
             ->WithRatingName(Self->RatingName)
             ->WithGatheringName(Self->GatheringName)
+            ->WithUserId(Self->UserId)
             ->WithNumberOfPlayer(Self->NumberOfPlayer)
             ->WithKeyId(Self->KeyId);
         const auto Future = Self->Client->GetBallotByUserId(
@@ -122,33 +134,8 @@ namespace Gs2::Matchmaking::Domain::Model
         {
             return Future->GetTask().Error();
         }
-        const auto RequestModel = Request;
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::Matchmaking::Domain::Model::FUserDomain::CreateCacheParentKey(
-                    Self->NamespaceName,
-                    Self->UserId,
-                    "Ballot"
-                );
-                const auto Key = Gs2::Matchmaking::Domain::Model::FBallotDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetRatingName(),
-                    ResultModel->GetItem()->GetGatheringName(),
-                    ResultModel->GetItem()->GetNumberOfPlayer().IsSet() ? FString::FromInt(*ResultModel->GetItem()->GetNumberOfPlayer()) : TOptional<FString>(),
-                    RequestModel->GetKeyId()
-                );
-                Self->Gs2->Cache->Put(
-                    Gs2::Matchmaking::Model::FBallot::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
-        }
         auto Domain = Self;
         if (ResultModel != nullptr)
         {
@@ -171,7 +158,7 @@ namespace Gs2::Matchmaking::Domain::Model
         TOptional<FString> UserId,
         TOptional<FString> RatingName,
         TOptional<FString> GatheringName,
-        TOptional<FString> NumberOfPlayer,
+        TOptional<int32> NumberOfPlayer,
         TOptional<FString> KeyId,
         FString ChildType
     )
@@ -181,7 +168,7 @@ namespace Gs2::Matchmaking::Domain::Model
             (UserId.IsSet() ? *UserId : "null") + ":" +
             (RatingName.IsSet() ? *RatingName : "null") + ":" +
             (GatheringName.IsSet() ? *GatheringName : "null") + ":" +
-            (NumberOfPlayer.IsSet() ? *NumberOfPlayer : "null") + ":" +
+            (NumberOfPlayer.IsSet() ? FString::FromInt(*NumberOfPlayer) : "null") + ":" +
             (KeyId.IsSet() ? *KeyId : "null") + ":" +
             ChildType;
     }
@@ -189,14 +176,14 @@ namespace Gs2::Matchmaking::Domain::Model
     FString FBallotDomain::CreateCacheKey(
         TOptional<FString> RatingName,
         TOptional<FString> GatheringName,
-        TOptional<FString> NumberOfPlayer,
+        TOptional<int32> NumberOfPlayer,
         TOptional<FString> KeyId
     )
     {
         return FString("") +
             (RatingName.IsSet() ? *RatingName : "null") + ":" + 
             (GatheringName.IsSet() ? *GatheringName : "null") + ":" + 
-            (NumberOfPlayer.IsSet() ? *NumberOfPlayer : "null") + ":" + 
+            (NumberOfPlayer.IsSet() ? FString::FromInt(*NumberOfPlayer) : "null") + ":" + 
             (KeyId.IsSet() ? *KeyId : "null");
     }
 
@@ -219,8 +206,18 @@ namespace Gs2::Matchmaking::Domain::Model
     )
     {
         // ReSharper disable once CppLocalVariableMayBeConst
-        TSharedPtr<Gs2::Matchmaking::Model::FBallot> Value = nullptr;
-        if (Value == nullptr) {
+        TSharedPtr<Gs2::Matchmaking::Model::FBallot> Value;
+        auto bCacheHit = Self->Gs2->Cache->TryGet<Gs2::Matchmaking::Model::FBallot>(
+            Self->ParentKey,
+            Gs2::Matchmaking::Domain::Model::FBallotDomain::CreateCacheKey(
+                Self->RatingName,
+                Self->GatheringName,
+                Self->NumberOfPlayer,
+                Self->KeyId
+            ),
+            &Value
+        );
+        if (!bCacheHit) {
             const auto Future = Self->Get(
                 MakeShared<Gs2::Matchmaking::Request::FGetBallotByUserIdRequest>()
             );
@@ -235,7 +232,7 @@ namespace Gs2::Matchmaking::Domain::Model
                 const auto Key = Gs2::Matchmaking::Domain::Model::FBallotDomain::CreateCacheKey(
                     Self->RatingName,
                     Self->GatheringName,
-                    Self->NumberOfPlayer.IsSet() ? FString::FromInt(*Self->NumberOfPlayer) : TOptional<FString>(),
+                    Self->NumberOfPlayer,
                     Self->KeyId
                 );
                 Self->Gs2->Cache->Put(
@@ -256,7 +253,7 @@ namespace Gs2::Matchmaking::Domain::Model
                 Gs2::Matchmaking::Domain::Model::FBallotDomain::CreateCacheKey(
                     Self->RatingName,
                     Self->GatheringName,
-                    Self->NumberOfPlayer.IsSet() ? FString::FromInt(*Self->NumberOfPlayer) : TOptional<FString>(),
+                    Self->NumberOfPlayer,
                     Self->KeyId
                 ),
                 &Value
@@ -282,10 +279,10 @@ namespace Gs2::Matchmaking::Domain::Model
             Gs2::Matchmaking::Domain::Model::FBallotDomain::CreateCacheKey(
                 RatingName,
                 GatheringName,
-                NumberOfPlayer.IsSet() ? FString::FromInt(*NumberOfPlayer) : TOptional<FString>(),
+                NumberOfPlayer,
                 KeyId
             ),
-            [Callback](TSharedPtr<Gs2Object> obj)
+            [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::Matchmaking::Model::FBallot>(obj));
             }
@@ -302,7 +299,7 @@ namespace Gs2::Matchmaking::Domain::Model
             Gs2::Matchmaking::Domain::Model::FBallotDomain::CreateCacheKey(
                 RatingName,
                 GatheringName,
-                NumberOfPlayer.IsSet() ? FString::FromInt(*NumberOfPlayer) : TOptional<FString>(),
+                NumberOfPlayer,
                 KeyId
             ),
             CallbackID

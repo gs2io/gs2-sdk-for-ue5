@@ -35,6 +35,7 @@
 #include "Gs2ShowcaseEzUserDomain.h"
 #include "Gs2ShowcaseEzUserGameSessionDomain.h"
 #include "Gs2ShowcaseEzNamespaceDomain.h"
+#include "Core/EzTransactionDomain.h"
 #include "Util/Net/GameSession.h"
 #include "Util/Net/Gs2Connection.h"
 

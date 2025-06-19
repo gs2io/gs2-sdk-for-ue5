@@ -12,8 +12,6 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
- *
- * deny overwrite
  */
 
 #if defined(_MSC_VER)
@@ -47,8 +45,9 @@
 #include "Showcase/Domain/SpeculativeExecutor/Transaction/BuyByUserIdSpeculativeExecutor.h"
 
 #include "Core/Domain/Gs2.h"
-#include "Core/Domain/Transaction/ManualTransactionAccessTokenDomain.h"
+#include "Core/Domain/Transaction/JobQueueJobDomainFactory.h"
 #include "Core/Domain/Transaction/InternalTransactionDomainFactory.h"
+#include "Core/Domain/Transaction/ManualTransactionAccessTokenDomain.h"
 
 namespace Gs2::Showcase::Domain::Model
 {
@@ -109,34 +108,15 @@ namespace Gs2::Showcase::Domain::Model
     }
 
     Gs2::Core::Model::FGs2ErrorPtr FDisplayItemAccessTokenDomain::FBuyTask::Action(
-        TSharedPtr<TSharedPtr<Gs2::Showcase::Domain::Model::FDisplayItemAccessTokenDomain>> Result
+        TSharedPtr<TSharedPtr<Gs2::Core::Domain::FTransactionAccessTokenDomain>> Result
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
-            ->WithAccessToken(Self->AccessToken->GetToken())
             ->WithShowcaseName(Self->ShowcaseName)
-            ->WithDisplayItemId(Self->DisplayItemId);
-
-        if (SpeculativeExecute) {
-            const auto SpeculativeExecuteFuture = Transaction::SpeculativeExecutor::FBuyByUserIdSpeculativeExecutor::Execute(
-                Self->Gs2,
-                Self->Service,
-                Self->AccessToken,
-                Request::FBuyByUserIdRequest::FromJson(Request->ToJson())
-            );
-            SpeculativeExecuteFuture->StartSynchronousTask();
-            if (SpeculativeExecuteFuture->GetTask().IsError())
-            {
-                return SpeculativeExecuteFuture->GetTask().Error();
-            }
-            const auto Commit = SpeculativeExecuteFuture->GetTask().Result();
-            SpeculativeExecuteFuture->EnsureCompletion();
-
-            if (Commit.IsValid()) {
-                (*Commit)();
-            }
-        }
+            ->WithDisplayItemId(Self->DisplayItemId)
+            ->WithAccessToken(Self->AccessToken->GetToken());
         const auto Future = Self->Client->Buy(
             Request
         );
@@ -145,41 +125,34 @@ namespace Gs2::Showcase::Domain::Model
         {
             return Future->GetTask().Error();
         }
-        const auto RequestModel = Request;
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
-        if (ResultModel && ResultModel->GetStampSheet())
+        const auto Transaction = Gs2::Core::Domain::Internal::FTransactionDomainFactory::ToTransaction(
+            Self->Gs2,
+            Self->AccessToken,
+            ResultModel->GetAutoRunStampSheet().IsSet() ? *ResultModel->GetAutoRunStampSheet() : false,
+            *ResultModel->GetTransactionId(),
+            *ResultModel->GetStampSheet(),
+            *ResultModel->GetStampSheetEncryptionKeyId(),
+            *ResultModel->GetAtomicCommit(),
+            ResultModel->GetTransactionResult()
+        );
+        const auto Future3 = Transaction->Wait(true);
+        Future3->StartSynchronousTask();
+        if (Future3->GetTask().IsError())
         {
-            const auto Transaction = Gs2::Core::Domain::Internal::FTransactionDomainFactory::ToTransaction(
-                Self->Gs2,
-                Self->AccessToken,
-                false,
-                *ResultModel->GetTransactionId(),
-                *ResultModel->GetStampSheet(),
-                *ResultModel->GetStampSheetEncryptionKeyId()
-            );
-            const auto Future3 = Transaction->Wait(true);
-            Future3->StartSynchronousTask();
-            if (Future3->GetTask().IsError())
-            {
-                return Future3->GetTask().Error();
-            }
+            return Future3->GetTask().Error();
         }
-        if (ResultModel != nullptr)
-        {
-            Self->AutoRunStampSheet = ResultModel->GetAutoRunStampSheet();
-            Self->TransactionId = ResultModel->GetTransactionId();
-        }
-        *Result = Self;
+        *Result = Transaction;
         return nullptr;
     }
 
-        TSharedPtr<FAsyncTask<FDisplayItemAccessTokenDomain::FBuyTask>> FDisplayItemAccessTokenDomain::Buy(
-            Request::FBuyRequestPtr Request,
-            bool SpeculativeExecute
-        ) {
-            return Gs2::Core::Util::New<FAsyncTask<FBuyTask>>(this->AsShared(), Request, SpeculativeExecute);
-        }
+    TSharedPtr<FAsyncTask<FDisplayItemAccessTokenDomain::FBuyTask>> FDisplayItemAccessTokenDomain::Buy(
+        Request::FBuyRequestPtr Request,
+        bool SpeculativeExecute
+    ) {
+        return Gs2::Core::Util::New<FAsyncTask<FBuyTask>>(this->AsShared(), Request, SpeculativeExecute);
+    }
 
     FString FDisplayItemAccessTokenDomain::CreateCacheParentKey(
         TOptional<FString> NamespaceName,
@@ -251,7 +224,7 @@ namespace Gs2::Showcase::Domain::Model
             Gs2::Showcase::Domain::Model::FDisplayItemDomain::CreateCacheKey(
                 DisplayItemId
             ),
-            [Callback](TSharedPtr<Gs2Object> obj)
+            [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::Showcase::Model::FDisplayItem>(obj));
             }

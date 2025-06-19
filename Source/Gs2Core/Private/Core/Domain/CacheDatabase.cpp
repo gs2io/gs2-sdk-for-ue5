@@ -66,7 +66,7 @@ void FCacheDatabase::Clear()
 void FCacheDatabase::SetListCached(
     FTypeName Kind,
     FParentCacheKey ParentKey,
-    Gs2ObjectPtr UpdateContext
+    FGs2ObjectPtr UpdateContext
 )
 {
     Ensure(ListCached, Kind).Add(ParentKey);
@@ -121,7 +121,7 @@ void FCacheDatabase::Put(
     FTypeName Kind,
     FParentCacheKey ParentKey,
     FCacheKey Key,
-    Gs2ObjectPtr Obj,
+    FGs2ObjectPtr Obj,
     FDateTime Ttl
 )
 {
@@ -131,7 +131,7 @@ void FCacheDatabase::Put(
     }
 
     UE_LOG(Gs2Log, VeryVerbose, TEXT("[%s][%s][%s]: Put %p"), ToCStr(Kind), ToCStr(ParentKey), ToCStr(Key), &Obj);
-    Ensure(Ensure(Cache, Kind), ParentKey).Add(Key, TTuple<Gs2ObjectPtr, int64>(Obj, Ttl.ToUnixTimestamp()));
+    Ensure(Ensure(Cache, Kind), ParentKey).Add(Key, TTuple<FGs2ObjectPtr, int64>(Obj, Ttl.ToUnixTimestamp()));
 
     {
         auto Callbacks = Ensure(Ensure(CacheUpdateCallback, Kind), ParentKey).Find(Key);
@@ -183,7 +183,7 @@ void FCacheDatabase::Delete(
 
 static CallbackID GCallbackID = 1;
 
-CallbackID FCacheDatabase::Subscribe(FTypeName Kind, FParentCacheKey ParentKey, FCacheKey Key, const TFunction<void(Gs2ObjectPtr)>& Callback)
+CallbackID FCacheDatabase::Subscribe(FTypeName Kind, FParentCacheKey ParentKey, FCacheKey Key, const TFunction<void(FGs2ObjectPtr)>& Callback)
 {
     UE_LOG(Gs2Log, VeryVerbose, TEXT("[%s][%s][%s]: Subscribe(%d)"), ToCStr(Kind), ToCStr(ParentKey), ToCStr(Key), GCallbackID);
     Ensure(Ensure(Ensure(CacheUpdateCallback, Kind), ParentKey), Key).Add(GCallbackID, Callback);
@@ -213,7 +213,7 @@ bool FCacheDatabase::TryGet(
     FTypeName Kind,
     FParentCacheKey ParentKey,
     FCacheKey Key,
-    Gs2ObjectPtr* OutObject
+    FGs2ObjectPtr* OutObject
 )
 {
     auto* Cache0 = Cache.Find(Kind);

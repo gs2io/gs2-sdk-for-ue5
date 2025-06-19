@@ -104,6 +104,16 @@ namespace Gs2::Quest::Domain::Model
             ->WithNamespaceName(Self->NamespaceName)
             ->WithQuestGroupName(Self->QuestGroupName)
             ->WithAccessToken(Self->AccessToken->GetToken());
+        const auto Future = Self->Client->GetCompletedQuestList(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         *Result = ResultModel->GetItem();
         return nullptr;
     }

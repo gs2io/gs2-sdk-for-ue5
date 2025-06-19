@@ -29,6 +29,7 @@
 #include "Idle/Model/Gs2IdleEzTransactionResult.h"
 #include "Gs2IdleEzStatusGameSessionDomain.h"
 #include "Idle/Domain/Iterator/Gs2IdleEzDescribeStatusesIterator.h"
+#include "Core/EzTransactionGameSessionDomain.h"
 #include "Util/Net/GameSession.h"
 #include "Util/Net/Gs2Connection.h"
 
@@ -74,7 +75,7 @@ namespace Gs2::UE5::Idle::Domain::Model
         );
 
         class EZGS2_API FReceiveTask :
-            public Gs2::Core::Util::TGs2Future<Gs2::UE5::Idle::Domain::Model::FEzStatusGameSessionDomain>,
+            public Gs2::Core::Util::TGs2Future<Gs2::UE5::Core::Domain::FEzTransactionGameSessionDomain>,
             public TSharedFromThis<FReceiveTask>
         {
             TSharedPtr<FEzStatusGameSessionDomain> Self;
@@ -85,7 +86,7 @@ namespace Gs2::UE5::Idle::Domain::Model
             );
 
             virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-                TSharedPtr<TSharedPtr<Gs2::UE5::Idle::Domain::Model::FEzStatusGameSessionDomain>> Result
+                TSharedPtr<TSharedPtr<Gs2::UE5::Core::Domain::FEzTransactionGameSessionDomain>> Result
             ) override;
         };
         friend FReceiveTask;

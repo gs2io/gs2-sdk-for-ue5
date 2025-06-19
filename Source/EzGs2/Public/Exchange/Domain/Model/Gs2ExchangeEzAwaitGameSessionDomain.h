@@ -31,6 +31,7 @@
 #include "Exchange/Model/Gs2ExchangeEzTransactionResult.h"
 #include "Gs2ExchangeEzAwaitGameSessionDomain.h"
 #include "Exchange/Domain/Iterator/Gs2ExchangeEzDescribeAwaitsIterator.h"
+#include "Core/EzTransactionGameSessionDomain.h"
 #include "Util/Net/GameSession.h"
 #include "Util/Net/Gs2Connection.h"
 
@@ -56,7 +57,7 @@ namespace Gs2::UE5::Exchange::Domain::Model
         );
 
         class EZGS2_API FAcquireTask :
-            public Gs2::Core::Util::TGs2Future<Gs2::UE5::Exchange::Domain::Model::FEzAwaitGameSessionDomain>,
+            public Gs2::Core::Util::TGs2Future<Gs2::UE5::Core::Domain::FEzTransactionGameSessionDomain>,
             public TSharedFromThis<FAcquireTask>
         {
             TSharedPtr<FEzAwaitGameSessionDomain> Self;
@@ -67,7 +68,7 @@ namespace Gs2::UE5::Exchange::Domain::Model
             );
 
             virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-                TSharedPtr<TSharedPtr<Gs2::UE5::Exchange::Domain::Model::FEzAwaitGameSessionDomain>> Result
+                TSharedPtr<TSharedPtr<Gs2::UE5::Core::Domain::FEzTransactionGameSessionDomain>> Result
             ) override;
         };
         friend FAcquireTask;

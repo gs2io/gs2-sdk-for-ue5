@@ -132,13 +132,13 @@ namespace Gs2::Ranking::Domain::Model
             TOptional<FString> CategoryName,
             TOptional<FString> AdditionalScopeName,
             TOptional<FString> ScorerUserId,
-            TOptional<FString> Index,
+            TOptional<int64> Index,
             FString ChildType
         );
 
         static FString CreateCacheKey(
             TOptional<FString> ScorerUserId,
-            TOptional<FString> Index
+            TOptional<int64> Index
         );
 
         class GS2RANKING_API FModelTask final :

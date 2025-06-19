@@ -12,6 +12,8 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
+ *
+ * deny overwrite
  */
 
 // ReSharper disable CppUnusedIncludeDirective
@@ -71,6 +73,7 @@ namespace Gs2::Distributor::Domain::Model
         TOptional<FString> SheetResult;
         TOptional<FString> Body;
         TOptional<FString> Signature;
+        TOptional<FString> NewContextStack;
         TSharedPtr<TArray<TSharedPtr<Gs2::Distributor::Model::FBatchResultPayload>>> Results;
         TOptional<FString> GetInboxNamespaceId() const
         {
@@ -124,6 +127,10 @@ namespace Gs2::Distributor::Domain::Model
         {
             return Results;
         }
+        TOptional<FString> GetNewContextStack() const
+        {
+            return NewContextStack;
+        }
         TOptional<FString> NamespaceName;
     private:
 
@@ -142,16 +149,42 @@ namespace Gs2::Distributor::Domain::Model
             const FDistributeDomain& From
         );
 
+        class GS2DISTRIBUTOR_API FFreezeMasterDataByUserIdTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Distributor::Domain::Model::FDistributeDomain>,
+            public TSharedFromThis<FFreezeMasterDataByUserIdTask>
+        {
+            const TSharedPtr<FDistributeDomain> Self;
+            const Request::FFreezeMasterDataByUserIdRequestPtr Request;
+        public:
+            explicit FFreezeMasterDataByUserIdTask(
+                const TSharedPtr<FDistributeDomain>& Self,
+                const Request::FFreezeMasterDataByUserIdRequestPtr Request
+            );
+
+            FFreezeMasterDataByUserIdTask(
+                const FFreezeMasterDataByUserIdTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Distributor::Domain::Model::FDistributeDomain>> Result
+            ) override;
+        };
+        friend FFreezeMasterDataByUserIdTask;
+
+        TSharedPtr<FAsyncTask<FFreezeMasterDataByUserIdTask>> FreezeMasterDataByUserId(
+            Request::FFreezeMasterDataByUserIdRequestPtr Request
+        );
+
         class GS2DISTRIBUTOR_API FFreezeMasterDataTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Distributor::Domain::Model::FDistributeDomain>,
             public TSharedFromThis<FFreezeMasterDataTask>
         {
             const TSharedPtr<FDistributeDomain> Self;
-            const Request::FFreezeMasterDataByUserIdRequestPtr Request;
+            const Request::FFreezeMasterDataRequestPtr Request;
         public:
             explicit FFreezeMasterDataTask(
                 const TSharedPtr<FDistributeDomain>& Self,
-                const Request::FFreezeMasterDataByUserIdRequestPtr Request
+                const Request::FFreezeMasterDataRequestPtr Request
             );
 
             FFreezeMasterDataTask(
@@ -165,7 +198,33 @@ namespace Gs2::Distributor::Domain::Model
         friend FFreezeMasterDataTask;
 
         TSharedPtr<FAsyncTask<FFreezeMasterDataTask>> FreezeMasterData(
-            Request::FFreezeMasterDataByUserIdRequestPtr Request
+            Request::FFreezeMasterDataRequestPtr Request
+        );
+
+        class GS2DISTRIBUTOR_API FFreezeMasterDataBySignedTimestampTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Distributor::Domain::Model::FDistributeDomain>,
+            public TSharedFromThis<FFreezeMasterDataBySignedTimestampTask>
+        {
+            const TSharedPtr<FDistributeDomain> Self;
+            const Request::FFreezeMasterDataBySignedTimestampRequestPtr Request;
+        public:
+            explicit FFreezeMasterDataBySignedTimestampTask(
+                const TSharedPtr<FDistributeDomain>& Self,
+                const Request::FFreezeMasterDataBySignedTimestampRequestPtr Request
+            );
+
+            FFreezeMasterDataBySignedTimestampTask(
+                const FFreezeMasterDataBySignedTimestampTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Distributor::Domain::Model::FDistributeDomain>> Result
+            ) override;
+        };
+        friend FFreezeMasterDataBySignedTimestampTask;
+
+        TSharedPtr<FAsyncTask<FFreezeMasterDataBySignedTimestampTask>> FreezeMasterDataBySignedTimestamp(
+            Request::FFreezeMasterDataBySignedTimestampRequestPtr Request
         );
 
         class GS2DISTRIBUTOR_API FSignFreezeMasterDataTimestampTask final :

@@ -27,6 +27,7 @@
 #include "MegaField/Model/Gs2MegaFieldEzVector.h"
 #include "Gs2MegaFieldEzLayerModelDomain.h"
 #include "MegaField/Domain/Iterator/Gs2MegaFieldEzDescribeLayerModelsIterator.h"
+#include "Core/EzTransactionDomain.h"
 #include "Util/Net/GameSession.h"
 #include "Util/Net/Gs2Connection.h"
 

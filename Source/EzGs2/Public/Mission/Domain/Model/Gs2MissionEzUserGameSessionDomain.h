@@ -39,6 +39,7 @@
 #include "Gs2MissionEzCounterGameSessionDomain.h"
 #include "Mission/Domain/Iterator/Gs2MissionEzDescribeCountersIterator.h"
 #include "Gs2MissionEzUserGameSessionDomain.h"
+#include "Core/EzTransactionGameSessionDomain.h"
 #include "Util/Net/GameSession.h"
 #include "Util/Net/Gs2Connection.h"
 

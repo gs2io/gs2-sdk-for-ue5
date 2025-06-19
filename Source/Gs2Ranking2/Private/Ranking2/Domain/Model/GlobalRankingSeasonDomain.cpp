@@ -12,8 +12,6 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
- *
- * deny overwrite
  */
 
 #if defined(_MSC_VER)
@@ -33,6 +31,7 @@
 #include "Ranking2/Domain/Model/GlobalRankingReceivedReward.h"
 #include "Ranking2/Domain/Model/GlobalRankingReceivedRewardAccessToken.h"
 #include "Ranking2/Domain/Model/GlobalRankingSeason.h"
+#include "Ranking2/Domain/Model/GlobalRankingSeasonAccessToken.h"
 #include "Ranking2/Domain/Model/GlobalRankingData.h"
 #include "Ranking2/Domain/Model/GlobalRankingDataAccessToken.h"
 #include "Ranking2/Domain/Model/ClusterRankingModel.h"
@@ -42,6 +41,7 @@
 #include "Ranking2/Domain/Model/ClusterRankingReceivedReward.h"
 #include "Ranking2/Domain/Model/ClusterRankingReceivedRewardAccessToken.h"
 #include "Ranking2/Domain/Model/ClusterRankingSeason.h"
+#include "Ranking2/Domain/Model/ClusterRankingSeasonAccessToken.h"
 #include "Ranking2/Domain/Model/ClusterRankingData.h"
 #include "Ranking2/Domain/Model/ClusterRankingDataAccessToken.h"
 #include "Ranking2/Domain/Model/SubscribeRankingModel.h"
@@ -73,7 +73,8 @@ namespace Gs2::Ranking2::Domain::Model
         const Ranking2::Domain::FGs2Ranking2DomainPtr& Service,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> RankingName,
-        const TOptional<int64> Season
+        const TOptional<int64> Season,
+        const TOptional<FString> UserId
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
@@ -82,6 +83,7 @@ namespace Gs2::Ranking2::Domain::Model
         NamespaceName(NamespaceName),
         RankingName(RankingName),
         Season(Season),
+        UserId(UserId),
         ParentKey(Gs2::Ranking2::Domain::Model::FGlobalRankingModelDomain::CreateCacheParentKey(
             NamespaceName,
             RankingName,
@@ -99,13 +101,124 @@ namespace Gs2::Ranking2::Domain::Model
         NamespaceName(From.NamespaceName),
         RankingName(From.RankingName),
         Season(From.Season),
+        UserId(From.UserId),
         ParentKey(From.ParentKey)
     {
 
     }
 
+    FGlobalRankingSeasonDomain::FPutGlobalRankingScoreTask::FPutGlobalRankingScoreTask(
+        const TSharedPtr<FGlobalRankingSeasonDomain>& Self,
+        const Request::FPutGlobalRankingScoreByUserIdRequestPtr Request
+    ): Self(Self), Request(Request)
+    {
+
+    }
+
+    FGlobalRankingSeasonDomain::FPutGlobalRankingScoreTask::FPutGlobalRankingScoreTask(
+        const FPutGlobalRankingScoreTask& From
+    ): TGs2Future(From), Self(From.Self), Request(From.Request)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FGlobalRankingSeasonDomain::FPutGlobalRankingScoreTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::Ranking2::Domain::Model::FGlobalRankingScoreDomain>> Result
+    )
+    {
+        Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
+            ->WithNamespaceName(Self->NamespaceName)
+            ->WithRankingName(Self->RankingName)
+            ->WithUserId(Self->UserId);
+        const auto Future = Self->Client->PutGlobalRankingScoreByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
+        auto Domain = MakeShared<Gs2::Ranking2::Domain::Model::FGlobalRankingScoreDomain>(
+            Self->Gs2,
+            Self->Service,
+            Request->GetNamespaceName(),
+            ResultModel->GetItem()->GetRankingName(),
+            ResultModel->GetItem()->GetSeason(),
+            ResultModel->GetItem()->GetUserId()
+        );
+
+        *Result = Domain;
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FGlobalRankingSeasonDomain::FPutGlobalRankingScoreTask>> FGlobalRankingSeasonDomain::PutGlobalRankingScore(
+        Request::FPutGlobalRankingScoreByUserIdRequestPtr Request
+    ) {
+        return Gs2::Core::Util::New<FAsyncTask<FPutGlobalRankingScoreTask>>(this->AsShared(), Request);
+    }
+
+    Gs2::Ranking2::Domain::Iterator::FDescribeGlobalRankingScoresByUserIdIteratorPtr FGlobalRankingSeasonDomain::GlobalRankingScores(
+        const TOptional<FString> TimeOffsetToken
+    ) const
+    {
+        return MakeShared<Gs2::Ranking2::Domain::Iterator::FDescribeGlobalRankingScoresByUserIdIterator>(
+            Gs2,
+            Client,
+            NamespaceName,
+            UserId,
+            RankingName,
+            TimeOffsetToken
+        );
+    }
+
+    Gs2::Core::Domain::CallbackID FGlobalRankingSeasonDomain::SubscribeGlobalRankingScores(
+    TFunction<void()> Callback
+    )
+    {
+        return Gs2->Cache->ListSubscribe(
+            Gs2::Ranking2::Model::FGlobalRankingScore::TypeName,
+            Gs2::Ranking2::Domain::Model::FGlobalRankingSeasonDomain::CreateCacheParentKey(
+                NamespaceName,
+                RankingName,
+                Season,
+                "GlobalRankingScore"
+            ),
+            Callback
+        );
+    }
+
+    void FGlobalRankingSeasonDomain::UnsubscribeGlobalRankingScores(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Gs2->Cache->ListUnsubscribe(
+            Gs2::Ranking2::Model::FGlobalRankingScore::TypeName,
+            Gs2::Ranking2::Domain::Model::FGlobalRankingSeasonDomain::CreateCacheParentKey(
+                NamespaceName,
+                RankingName,
+                Season,
+                "GlobalRankingScore"
+            ),
+            CallbackID
+        );
+    }
+
+    TSharedPtr<Gs2::Ranking2::Domain::Model::FGlobalRankingScoreDomain> FGlobalRankingSeasonDomain::GlobalRankingScore(
+    )
+    {
+        return MakeShared<Gs2::Ranking2::Domain::Model::FGlobalRankingScoreDomain>(
+            Gs2,
+            Service,
+            NamespaceName,
+            RankingName,
+            Season,
+            UserId
+        );
+    }
+
     Gs2::Ranking2::Domain::Iterator::FDescribeGlobalRankingsByUserIdIteratorPtr FGlobalRankingSeasonDomain::GlobalRankings(
-        const FString UserId,
         const TOptional<FString> TimeOffsetToken
     ) const
     {
@@ -120,20 +233,6 @@ namespace Gs2::Ranking2::Domain::Model
         );
     }
 
-    Gs2::Ranking2::Domain::Iterator::FDescribeGlobalRankingsIteratorPtr FGlobalRankingSeasonDomain::GlobalRankings(
-        const Auth::Model::FAccessTokenPtr AccessToken
-    ) const
-    {
-        return MakeShared<Gs2::Ranking2::Domain::Iterator::FDescribeGlobalRankingsIterator>(
-            Gs2,
-            Client,
-            NamespaceName,
-            AccessToken,
-            RankingName,
-            Season
-        );
-    }
-
     Gs2::Core::Domain::CallbackID FGlobalRankingSeasonDomain::SubscribeGlobalRankings(
     TFunction<void()> Callback
     )
@@ -143,7 +242,7 @@ namespace Gs2::Ranking2::Domain::Model
             Gs2::Ranking2::Domain::Model::FGlobalRankingSeasonDomain::CreateCacheParentKey(
                 NamespaceName,
                 RankingName,
-                FString::FromInt(*Season),
+                Season,
                 "GlobalRankingData"
             ),
             Callback
@@ -159,7 +258,7 @@ namespace Gs2::Ranking2::Domain::Model
             Gs2::Ranking2::Domain::Model::FGlobalRankingSeasonDomain::CreateCacheParentKey(
                 NamespaceName,
                 RankingName,
-                FString::FromInt(*Season),
+                Season,
                 "GlobalRankingData"
             ),
             CallbackID
@@ -167,7 +266,6 @@ namespace Gs2::Ranking2::Domain::Model
     }
 
     TSharedPtr<Gs2::Ranking2::Domain::Model::FGlobalRankingDataDomain> FGlobalRankingSeasonDomain::GlobalRankingData(
-        const FString UserId
     )
     {
         return MakeShared<Gs2::Ranking2::Domain::Model::FGlobalRankingDataDomain>(
@@ -176,44 +274,90 @@ namespace Gs2::Ranking2::Domain::Model
             NamespaceName,
             RankingName,
             Season,
-            UserId == TEXT("") ? TOptional<FString>() : TOptional<FString>(UserId)
+            UserId
         );
     }
 
-    TSharedPtr<Gs2::Ranking2::Domain::Model::FGlobalRankingDataAccessTokenDomain> FGlobalRankingSeasonDomain::GlobalRankingData(
-        const Auth::Model::FAccessTokenPtr AccessToken
+    Gs2::Ranking2::Domain::Iterator::FDescribeGlobalRankingReceivedRewardsByUserIdIteratorPtr FGlobalRankingSeasonDomain::GlobalRankingReceivedRewards(
+        const TOptional<FString> TimeOffsetToken
+    ) const
+    {
+        return MakeShared<Gs2::Ranking2::Domain::Iterator::FDescribeGlobalRankingReceivedRewardsByUserIdIterator>(
+            Gs2,
+            Client,
+            NamespaceName,
+            UserId,
+            RankingName,
+            Season,
+            TimeOffsetToken
+        );
+    }
+
+    Gs2::Core::Domain::CallbackID FGlobalRankingSeasonDomain::SubscribeGlobalRankingReceivedRewards(
+    TFunction<void()> Callback
     )
     {
-        return MakeShared<Gs2::Ranking2::Domain::Model::FGlobalRankingDataAccessTokenDomain>(
+        return Gs2->Cache->ListSubscribe(
+            Gs2::Ranking2::Model::FGlobalRankingReceivedReward::TypeName,
+            Gs2::Ranking2::Domain::Model::FGlobalRankingSeasonDomain::CreateCacheParentKey(
+                NamespaceName,
+                RankingName,
+                Season,
+                "GlobalRankingReceivedReward"
+            ),
+            Callback
+        );
+    }
+
+    void FGlobalRankingSeasonDomain::UnsubscribeGlobalRankingReceivedRewards(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Gs2->Cache->ListUnsubscribe(
+            Gs2::Ranking2::Model::FGlobalRankingReceivedReward::TypeName,
+            Gs2::Ranking2::Domain::Model::FGlobalRankingSeasonDomain::CreateCacheParentKey(
+                NamespaceName,
+                RankingName,
+                Season,
+                "GlobalRankingReceivedReward"
+            ),
+            CallbackID
+        );
+    }
+
+    TSharedPtr<Gs2::Ranking2::Domain::Model::FGlobalRankingReceivedRewardDomain> FGlobalRankingSeasonDomain::GlobalRankingReceivedReward(
+    )
+    {
+        return MakeShared<Gs2::Ranking2::Domain::Model::FGlobalRankingReceivedRewardDomain>(
             Gs2,
             Service,
             NamespaceName,
             RankingName,
             Season,
-            AccessToken
+            UserId
         );
     }
 
     FString FGlobalRankingSeasonDomain::CreateCacheParentKey(
         TOptional<FString> NamespaceName,
         TOptional<FString> RankingName,
-        TOptional<FString> Season,
+        TOptional<int64> Season,
         FString ChildType
     )
     {
         return FString("") +
             (NamespaceName.IsSet() ? *NamespaceName : "null") + ":" +
             (RankingName.IsSet() ? *RankingName : "null") + ":" +
-            (Season.IsSet() ? *Season : "null") + ":" +
+            (Season.IsSet() ? FString::FromInt(*Season) : "null") + ":" +
             ChildType;
     }
 
     FString FGlobalRankingSeasonDomain::CreateCacheKey(
-        TOptional<FString> Season
+        TOptional<int64> Season
     )
     {
         return FString("") +
-            (Season.IsSet() ? *Season : "null");
+            (Season.IsSet() ? FString::FromInt(*Season) : "null");
     }
 }
 

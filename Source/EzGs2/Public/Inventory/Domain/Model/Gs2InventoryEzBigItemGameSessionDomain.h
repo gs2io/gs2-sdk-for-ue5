@@ -35,6 +35,7 @@
 #include "Inventory/Model/Gs2InventoryEzAcquireCount.h"
 #include "Gs2InventoryEzBigItemGameSessionDomain.h"
 #include "Inventory/Domain/Iterator/Gs2InventoryEzDescribeBigItemsIterator.h"
+#include "Core/EzTransactionGameSessionDomain.h"
 #include "Util/Net/GameSession.h"
 #include "Util/Net/Gs2Connection.h"
 

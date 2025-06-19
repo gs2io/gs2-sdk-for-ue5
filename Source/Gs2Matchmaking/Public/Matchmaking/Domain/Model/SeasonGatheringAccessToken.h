@@ -168,14 +168,14 @@ namespace Gs2::Matchmaking::Domain::Model
             TOptional<FString> NamespaceName,
             TOptional<FString> UserId,
             TOptional<FString> SeasonName,
-            TOptional<FString> Season,
-            TOptional<FString> Tier,
+            TOptional<int64> Season,
+            TOptional<int64> Tier,
             TOptional<FString> SeasonGatheringName,
             FString ChildType
         );
 
         static FString CreateCacheKey(
-            TOptional<FString> Tier,
+            TOptional<int64> Tier,
             TOptional<FString> SeasonGatheringName
         );
 

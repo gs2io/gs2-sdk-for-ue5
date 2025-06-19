@@ -127,6 +127,16 @@ namespace Gs2::Ranking2::Domain::Model
             ->WithNamespaceName(Self->NamespaceName)
             ->WithRankingName(Self->RankingName)
             ->WithUserId(Self->UserId);
+        const auto Future = Self->Client->AddSubscribeByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         auto Domain = MakeShared<Gs2::Ranking2::Domain::Model::FSubscribeUserDomain>(
             Self->Gs2,
             Self->Service,

@@ -95,6 +95,16 @@ namespace Gs2::SerialKey::Domain::Model
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithCampaignModelName(Self->CampaignModelName);
+        const auto Future = Self->Client->GetCampaignModel(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         *Result = ResultModel->GetItem();
         return nullptr;
     }
@@ -127,6 +137,16 @@ namespace Gs2::SerialKey::Domain::Model
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithCampaignModelName(Self->CampaignModelName);
+        const auto Future = Self->Client->Issue(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         auto Domain = MakeShared<Gs2::SerialKey::Domain::Model::FIssueJobDomain>(
             Self->Gs2,
             Self->Service,

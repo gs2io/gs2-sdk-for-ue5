@@ -27,6 +27,7 @@
 #include "Gs2RankingEzRankingDomain.h"
 #include "Ranking/Domain/Iterator/Gs2RankingEzDescribeNearRankingsIterator.h"
 #include "Gs2RankingEzScoreDomain.h"
+#include "Core/EzTransactionDomain.h"
 #include "Util/Net/GameSession.h"
 #include "Util/Net/Gs2Connection.h"
 

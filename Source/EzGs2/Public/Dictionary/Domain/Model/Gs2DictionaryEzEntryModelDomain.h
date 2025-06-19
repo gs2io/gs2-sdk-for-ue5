@@ -24,6 +24,7 @@
 #include "Dictionary/Model/Gs2DictionaryEzConfig.h"
 #include "Gs2DictionaryEzEntryModelDomain.h"
 #include "Dictionary/Domain/Iterator/Gs2DictionaryEzDescribeEntryModelsIterator.h"
+#include "Core/EzTransactionDomain.h"
 #include "Util/Net/GameSession.h"
 #include "Util/Net/Gs2Connection.h"
 

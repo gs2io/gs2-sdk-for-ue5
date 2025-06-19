@@ -88,6 +88,16 @@ namespace Gs2::Freeze::Domain::Model
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithStageName(Self->StageName)
             ->WithOutputName(Self->OutputName);
+        const auto Future = Self->Client->GetOutput(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         *Result = ResultModel->GetItem();
         return nullptr;
     }

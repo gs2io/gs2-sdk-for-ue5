@@ -28,6 +28,7 @@
 #include "Gs2AccountEzPlatformIdGameSessionDomain.h"
 #include "Account/Domain/Iterator/Gs2AccountEzDescribePlatformIdsIterator.h"
 #include "Gs2AccountEzAccountGameSessionDomain.h"
+#include "Core/EzTransactionGameSessionDomain.h"
 #include "Util/Net/GameSession.h"
 #include "Util/Net/Gs2Connection.h"
 

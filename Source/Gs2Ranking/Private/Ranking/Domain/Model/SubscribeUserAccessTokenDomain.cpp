@@ -117,6 +117,16 @@ namespace Gs2::Ranking::Domain::Model
             ->WithCategoryName(Self->CategoryName)
             ->WithAccessToken(Self->AccessToken->GetToken())
             ->WithTargetUserId(Self->TargetUserId);
+        const auto Future = Self->Client->GetSubscribe(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         *Result = ResultModel->GetItem();
         return nullptr;
     }
@@ -151,6 +161,16 @@ namespace Gs2::Ranking::Domain::Model
             ->WithCategoryName(Self->CategoryName)
             ->WithAccessToken(Self->AccessToken->GetToken())
             ->WithTargetUserId(Self->TargetUserId);
+        const auto Future = Self->Client->Unsubscribe(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         auto Domain = Self;
 
         *Result = Domain;

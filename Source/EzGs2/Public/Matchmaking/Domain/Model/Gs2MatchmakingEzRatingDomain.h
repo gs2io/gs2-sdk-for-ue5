@@ -33,6 +33,7 @@
 #include "Matchmaking/Model/Gs2MatchmakingEzSignedBallot.h"
 #include "Matchmaking/Model/Gs2MatchmakingEzTimeSpan.h"
 #include "Gs2MatchmakingEzRatingDomain.h"
+#include "Core/EzTransactionDomain.h"
 #include "Util/Net/GameSession.h"
 #include "Util/Net/Gs2Connection.h"
 

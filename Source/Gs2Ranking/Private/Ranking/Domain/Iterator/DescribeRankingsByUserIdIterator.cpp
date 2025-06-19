@@ -55,6 +55,19 @@ namespace Gs2::Ranking::Domain::Iterator
     {
     }
 
+    FDescribeRankingsByUserIdIterator::FDescribeRankingsByUserIdIterator(
+        const FDescribeRankingsByUserIdIterator& From
+    ):
+        Gs2(From.Gs2),
+        Client(From.Client),
+        NamespaceName(From.NamespaceName),
+        CategoryName(From.CategoryName),
+        UserId(From.UserId),
+        AdditionalScopeName(From.AdditionalScopeName),
+        TimeOffsetToken(From.TimeOffsetToken)
+    {
+    }
+
     Gs2::Core::Model::FGs2ErrorPtr FDescribeRankingsByUserIdIterator::FIteratorNextTask::Action(TSharedPtr<TSharedPtr<Gs2::Ranking::Model::FRanking>> Result)
     {
         ++Iterator;
@@ -141,8 +154,8 @@ namespace Gs2::Ranking::Domain::Iterator
                     Gs2::Ranking::Model::FRanking::TypeName,
                     ListParentKey,
                     Gs2::Ranking::Domain::Model::FRankingDomain::CreateCacheKey(
-                        Item->GetUserId().IsSet() ? Item->GetUserId() : TOptional<FString>(),
-                        FString::FromInt(*Item->GetIndex())
+                        Item->GetUserId(),
+                        Item->GetIndex()
                     ),
                     Item,
                     FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)

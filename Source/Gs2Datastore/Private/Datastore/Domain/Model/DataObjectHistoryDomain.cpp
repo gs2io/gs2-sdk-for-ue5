@@ -103,6 +103,16 @@ namespace Gs2::Datastore::Domain::Model
             ->WithUserId(Self->UserId)
             ->WithDataObjectName(Self->DataObjectName)
             ->WithGeneration(Self->Generation);
+        const auto Future = Self->Client->GetDataObjectHistoryByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         *Result = ResultModel->GetItem();
         return nullptr;
     }

@@ -39,6 +39,7 @@
 #include "Ranking2/Model/Gs2Ranking2EzTransactionResult.h"
 #include "Gs2Ranking2EzGlobalRankingReceivedRewardGameSessionDomain.h"
 #include "Ranking2/Domain/Iterator/Gs2Ranking2EzDescribeGlobalRankingReceivedRewardsIterator.h"
+#include "Core/EzTransactionGameSessionDomain.h"
 #include "Util/Net/GameSession.h"
 #include "Util/Net/Gs2Connection.h"
 
@@ -66,7 +67,7 @@ namespace Gs2::UE5::Ranking2::Domain::Model
         );
 
         class EZGS2_API FReceiveGlobalRankingRewardTask :
-            public Gs2::Core::Util::TGs2Future<Gs2::UE5::Ranking2::Domain::Model::FEzGlobalRankingReceivedRewardGameSessionDomain>,
+            public Gs2::Core::Util::TGs2Future<Gs2::UE5::Core::Domain::FEzTransactionGameSessionDomain>,
             public TSharedFromThis<FReceiveGlobalRankingRewardTask>
         {
             TSharedPtr<FEzGlobalRankingReceivedRewardGameSessionDomain> Self;
@@ -79,7 +80,7 @@ namespace Gs2::UE5::Ranking2::Domain::Model
             );
 
             virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-                TSharedPtr<TSharedPtr<Gs2::UE5::Ranking2::Domain::Model::FEzGlobalRankingReceivedRewardGameSessionDomain>> Result
+                TSharedPtr<TSharedPtr<Gs2::UE5::Core::Domain::FEzTransactionGameSessionDomain>> Result
             ) override;
         };
         friend FReceiveGlobalRankingRewardTask;

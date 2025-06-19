@@ -90,6 +90,16 @@ namespace Gs2::Deploy::Domain::Model
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithStackName(Self->StackName)
             ->WithEventName(Self->EventName);
+        const auto Future = Self->Client->GetEvent(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         *Result = ResultModel->GetItem();
         return nullptr;
     }

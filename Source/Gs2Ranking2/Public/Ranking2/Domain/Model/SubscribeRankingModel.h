@@ -12,6 +12,8 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
+ *
+ * deny overwrite
  */
 
 // ReSharper disable CppUnusedIncludeDirective
@@ -152,8 +154,13 @@ namespace Gs2::Ranking2::Domain::Model
         );
 
         TSharedPtr<Gs2::Ranking2::Domain::Model::FSubscribeRankingSeasonDomain> SubscribeRankingSeason(
-            const int64 Season,
-            const FString UserId
+            const FString UserId,
+            const TOptional<int64> Season = TOptional<int64>()
+        );
+
+        TSharedPtr<Gs2::Ranking2::Domain::Model::FSubscribeRankingSeasonAccessTokenDomain> SubscribeRankingSeason(
+            const Auth::Model::FAccessTokenPtr UserId,
+            const TOptional<int64> Season = TOptional<int64>()
         );
 
         static FString CreateCacheParentKey(

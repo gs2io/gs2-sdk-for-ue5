@@ -12,8 +12,6 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
- *
- * deny overwrite
  */
 
 #if defined(_MSC_VER)
@@ -38,7 +36,6 @@
 #include "Core/Domain/Transaction/JobQueueJobDomainFactory.h"
 #include "Core/Domain/Transaction/InternalTransactionDomainFactory.h"
 #include "Core/Domain/Transaction/ManualTransactionDomain.h"
-#include "Experience/Domain/Model/Status.h"
 
 namespace Gs2::Grade::Domain::Model
 {
@@ -114,31 +111,8 @@ namespace Gs2::Grade::Domain::Model
         {
             return Future->GetTask().Error();
         }
-        const auto RequestModel = Request;
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::Grade::Domain::Model::FUserDomain::CreateCacheParentKey(
-                    Self->NamespaceName,
-                    Self->UserId,
-                    "Status"
-                );
-                const auto Key = Gs2::Grade::Domain::Model::FStatusDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetGradeName(),
-                    ResultModel->GetItem()->GetPropertyId()
-                );
-                Self->Gs2->Cache->Put(
-                    Gs2::Grade::Model::FStatus::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
-        }
         *Result = ResultModel->GetItem();
         return nullptr;
     }
@@ -181,54 +155,15 @@ namespace Gs2::Grade::Domain::Model
         {
             return Future->GetTask().Error();
         }
-        const auto RequestModel = Request;
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::Grade::Domain::Model::FUserDomain::CreateCacheParentKey(
-                    Self->NamespaceName,
-                    Self->UserId,
-                    "Status"
-                );
-                const auto Key = Gs2::Grade::Domain::Model::FStatusDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetGradeName(),
-                    ResultModel->GetItem()->GetPropertyId()
-                );
-                Self->Gs2->Cache->Put(
-                    Gs2::Grade::Model::FStatus::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
-            if (ResultModel->GetExperienceStatus() != nullptr)
-            {
-                const auto ParentKey = Gs2::Grade::Domain::Model::FUserDomain::CreateCacheParentKey(
-                    Self->NamespaceName,
-                    Self->UserId,
-                    "Status"
-                );
-                const auto Key = Gs2::Experience::Domain::Model::FStatusDomain::CreateCacheKey(
-                    ResultModel->GetExperienceStatus()->GetExperienceName(),
-                    ResultModel->GetExperienceStatus()->GetPropertyId()
-                );
-                Self->Gs2->Cache->Put(
-                    Gs2::Experience::Model::FStatus::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetExperienceStatus(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
-        }
         auto Domain = Self;
         if (ResultModel != nullptr)
         {
-            Domain->ExperienceNamespaceName = *ResultModel->GetExperienceNamespaceName();
+            if (ResultModel->GetExperienceNamespaceName().IsSet())
+            {
+                Domain->ExperienceNamespaceName = *ResultModel->GetExperienceNamespaceName();
+            }
         }
 
         *Result = Domain;
@@ -273,54 +208,15 @@ namespace Gs2::Grade::Domain::Model
         {
             return Future->GetTask().Error();
         }
-        const auto RequestModel = Request;
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::Grade::Domain::Model::FUserDomain::CreateCacheParentKey(
-                    Self->NamespaceName,
-                    Self->UserId,
-                    "Status"
-                );
-                const auto Key = Gs2::Grade::Domain::Model::FStatusDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetGradeName(),
-                    ResultModel->GetItem()->GetPropertyId()
-                );
-                Self->Gs2->Cache->Put(
-                    Gs2::Grade::Model::FStatus::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
-            if (ResultModel->GetExperienceStatus() != nullptr)
-            {
-                const auto ParentKey = Gs2::Grade::Domain::Model::FUserDomain::CreateCacheParentKey(
-                    Self->NamespaceName,
-                    Self->UserId,
-                    "Status"
-                );
-                const auto Key = Gs2::Experience::Domain::Model::FStatusDomain::CreateCacheKey(
-                    ResultModel->GetExperienceStatus()->GetExperienceName(),
-                    ResultModel->GetExperienceStatus()->GetPropertyId()
-                );
-                Self->Gs2->Cache->Put(
-                    Gs2::Experience::Model::FStatus::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetExperienceStatus(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
-        }
         auto Domain = Self;
         if (ResultModel != nullptr)
         {
-            Domain->ExperienceNamespaceName = *ResultModel->GetExperienceNamespaceName();
+            if (ResultModel->GetExperienceNamespaceName().IsSet())
+            {
+                Domain->ExperienceNamespaceName = *ResultModel->GetExperienceNamespaceName();
+            }
         }
 
         *Result = Domain;
@@ -365,54 +261,15 @@ namespace Gs2::Grade::Domain::Model
         {
             return Future->GetTask().Error();
         }
-        const auto RequestModel = Request;
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::Grade::Domain::Model::FUserDomain::CreateCacheParentKey(
-                    Self->NamespaceName,
-                    Self->UserId,
-                    "Status"
-                );
-                const auto Key = Gs2::Grade::Domain::Model::FStatusDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetGradeName(),
-                    ResultModel->GetItem()->GetPropertyId()
-                );
-                Self->Gs2->Cache->Put(
-                    Gs2::Grade::Model::FStatus::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
-            if (ResultModel->GetExperienceStatus() != nullptr)
-            {
-                const auto ParentKey = Gs2::Grade::Domain::Model::FUserDomain::CreateCacheParentKey(
-                    Self->NamespaceName,
-                    Self->UserId,
-                    "Status"
-                );
-                const auto Key = Gs2::Experience::Domain::Model::FStatusDomain::CreateCacheKey(
-                    ResultModel->GetExperienceStatus()->GetExperienceName(),
-                    ResultModel->GetExperienceStatus()->GetPropertyId()
-                );
-                Self->Gs2->Cache->Put(
-                    Gs2::Experience::Model::FStatus::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetExperienceStatus(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
-        }
         auto Domain = Self;
         if (ResultModel != nullptr)
         {
-            Domain->ExperienceNamespaceName = *ResultModel->GetExperienceNamespaceName();
+            if (ResultModel->GetExperienceNamespaceName().IsSet())
+            {
+                Domain->ExperienceNamespaceName = *ResultModel->GetExperienceNamespaceName();
+            }
         }
 
         *Result = Domain;
@@ -457,54 +314,15 @@ namespace Gs2::Grade::Domain::Model
         {
             return Future->GetTask().Error();
         }
-        const auto RequestModel = Request;
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::Grade::Domain::Model::FUserDomain::CreateCacheParentKey(
-                    Self->NamespaceName,
-                    Self->UserId,
-                    "Status"
-                );
-                const auto Key = Gs2::Grade::Domain::Model::FStatusDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetGradeName(),
-                    ResultModel->GetItem()->GetPropertyId()
-                );
-                Self->Gs2->Cache->Put(
-                    Gs2::Grade::Model::FStatus::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
-            if (ResultModel->GetExperienceStatus() != nullptr)
-            {
-                const auto ParentKey = Gs2::Grade::Domain::Model::FUserDomain::CreateCacheParentKey(
-                    Self->NamespaceName,
-                    Self->UserId,
-                    "Status"
-                );
-                const auto Key = Gs2::Experience::Domain::Model::FStatusDomain::CreateCacheKey(
-                    ResultModel->GetExperienceStatus()->GetExperienceName(),
-                    ResultModel->GetExperienceStatus()->GetPropertyId()
-                );
-                Self->Gs2->Cache->Put(
-                    Gs2::Experience::Model::FStatus::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetExperienceStatus(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
-        }
         auto Domain = Self;
         if (ResultModel != nullptr)
         {
-            Domain->ExperienceNamespaceName = *ResultModel->GetExperienceNamespaceName();
+            if (ResultModel->GetExperienceNamespaceName().IsSet())
+            {
+                Domain->ExperienceNamespaceName = *ResultModel->GetExperienceNamespaceName();
+            }
         }
 
         *Result = Domain;
@@ -549,25 +367,8 @@ namespace Gs2::Grade::Domain::Model
         {
             return Future->GetTask().Error();
         }
-        const auto RequestModel = Request;
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::Grade::Domain::Model::FUserDomain::CreateCacheParentKey(
-                    Self->NamespaceName,
-                    Self->UserId,
-                    "Status"
-                );
-                const auto Key = Gs2::Grade::Domain::Model::FStatusDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetGradeName(),
-                    ResultModel->GetItem()->GetPropertyId()
-                );
-                Self->Gs2->Cache->Delete(Gs2::Grade::Model::FStatus::TypeName, ParentKey, Key);
-            }
-        }
         auto Domain = Self;
 
         *Result = Domain;
@@ -612,12 +413,8 @@ namespace Gs2::Grade::Domain::Model
         {
             return Future->GetTask().Error();
         }
-        const auto RequestModel = Request;
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-        }
         const auto Domain = Self;
         *Result = Domain;
         return nullptr;
@@ -661,12 +458,8 @@ namespace Gs2::Grade::Domain::Model
         {
             return Future->GetTask().Error();
         }
-        const auto RequestModel = Request;
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-        }
         const auto Domain = Self;
         *Result = Domain;
         return nullptr;
@@ -693,7 +486,7 @@ namespace Gs2::Grade::Domain::Model
     }
 
     Gs2::Core::Model::FGs2ErrorPtr FStatusDomain::FMultiplyAcquireActionsTask::Action(
-        TSharedPtr<TSharedPtr<Gs2::Grade::Domain::Model::FStatusDomain>> Result
+        TSharedPtr<TSharedPtr<Gs2::Core::Domain::FTransactionDomain>> Result
     )
     {
         Request
@@ -710,35 +503,25 @@ namespace Gs2::Grade::Domain::Model
         {
             return Future->GetTask().Error();
         }
-        const auto RequestModel = Request;
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-        }
-        if (ResultModel && ResultModel->GetStampSheet())
+        const auto Transaction = Gs2::Core::Domain::Internal::FTransactionDomainFactory::ToTransaction(
+            Self->Gs2,
+            *Self->UserId,
+            ResultModel->GetAutoRunStampSheet().IsSet() ? *ResultModel->GetAutoRunStampSheet() : false,
+            *ResultModel->GetTransactionId(),
+            *ResultModel->GetStampSheet(),
+            *ResultModel->GetStampSheetEncryptionKeyId(),
+            *ResultModel->GetAtomicCommit(),
+            ResultModel->GetTransactionResult()
+        );
+        const auto Future3 = Transaction->Wait(true);
+        Future3->StartSynchronousTask();
+        if (Future3->GetTask().IsError())
         {
-            const auto Transaction = Gs2::Core::Domain::Internal::FTransactionDomainFactory::ToTransaction(
-                Self->Gs2,
-                *Self->UserId,
-                false,
-                *ResultModel->GetTransactionId(),
-                *ResultModel->GetStampSheet(),
-                *ResultModel->GetStampSheetEncryptionKeyId()
-            );
-            const auto Future3 = Transaction->Wait(true);
-            Future3->StartSynchronousTask();
-            if (Future3->GetTask().IsError())
-            {
-                return Future3->GetTask().Error();
-            }
+            return Future3->GetTask().Error();
         }
-        if (ResultModel != nullptr)
-        {
-            Self->AutoRunStampSheet = ResultModel->GetAutoRunStampSheet();
-            Self->TransactionId = ResultModel->GetTransactionId();
-        }
-        *Result = Self;
+        *Result = Transaction;
         return nullptr;
     }
 
@@ -861,7 +644,7 @@ namespace Gs2::Grade::Domain::Model
                 GradeName,
                 PropertyId
             ),
-            [Callback](TSharedPtr<Gs2Object> obj)
+            [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::Grade::Model::FStatus>(obj));
             }

@@ -34,6 +34,7 @@
 #include "Inventory/Model/Gs2InventoryEzConsumeCount.h"
 #include "Inventory/Model/Gs2InventoryEzAcquireCount.h"
 #include "Gs2InventoryEzSimpleItemDomain.h"
+#include "Core/EzTransactionDomain.h"
 #include "Util/Net/GameSession.h"
 #include "Util/Net/Gs2Connection.h"
 

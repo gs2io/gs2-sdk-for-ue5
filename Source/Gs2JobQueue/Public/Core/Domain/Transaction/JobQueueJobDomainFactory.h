@@ -31,7 +31,9 @@ namespace Gs2::Core::Domain
 				bool bAutoRun,
 				FString TransactionId,
 				FString StampSheet,
-				FString StampSheetEncryptionKeyId
+				FString StampSheetEncryptionKeyId,
+				bool bAtomicCommit,
+				Gs2::Core::Model::FTransactionResultPtr TransactionResult
 			)>& NewTransactionDomain,
 			const Gs2::Auth::Model::FAccessTokenPtr& AccessToken,
 			const Gs2::JobQueue::Result::FPushByUserIdResultPtr& Result
@@ -43,7 +45,9 @@ namespace Gs2::Core::Domain
 				bool bAutoRun,
 				FString TransactionId,
 				FString StampSheet,
-				FString StampSheetEncryptionKeyId
+				FString StampSheetEncryptionKeyId,
+				bool bAtomicCommit,
+				Gs2::Core::Model::FTransactionResultPtr TransactionResult
 			)>& NewTransactionDomain,
 			const FString UserId,
 			const Gs2::JobQueue::Result::FPushByUserIdResultPtr& Result
@@ -55,7 +59,9 @@ namespace Gs2::Core::Domain
 				bool bAutoRun,
 				FString TransactionId,
 				FString StampSheet,
-				FString StampSheetEncryptionKeyId
+				FString StampSheetEncryptionKeyId,
+				bool bAtomicCommit,
+				Gs2::Core::Model::FTransactionResultPtr TransactionResult
 			)>& NewTransactionDomain,
 			const Gs2::Auth::Model::FAccessTokenPtr& AccessToken,
 			bool bAutoRun,
@@ -69,7 +75,9 @@ namespace Gs2::Core::Domain
 				bool bAutoRun,
 				FString TransactionId,
 				FString StampSheet,
-				FString StampSheetEncryptionKeyId
+				FString StampSheetEncryptionKeyId,
+				bool bAtomicCommit,
+				Gs2::Core::Model::FTransactionResultPtr TransactionResult
 			)>& NewTransactionDomain,
 			const FString UserId,
 			bool bAutoRun,

@@ -30,6 +30,7 @@
 #include "LoginReward/Model/Gs2LoginRewardEzAcquireActionResult.h"
 #include "LoginReward/Model/Gs2LoginRewardEzTransactionResult.h"
 #include "Gs2LoginRewardEzReceiveStatusDomain.h"
+#include "Core/EzTransactionDomain.h"
 #include "Util/Net/GameSession.h"
 #include "Util/Net/Gs2Connection.h"
 

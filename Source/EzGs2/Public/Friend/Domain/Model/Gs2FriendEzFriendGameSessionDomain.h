@@ -27,6 +27,7 @@
 #include "Gs2FriendEzFriendUserGameSessionDomain.h"
 #include "Gs2FriendEzFriendGameSessionDomain.h"
 #include "Friend/Domain/Iterator/Gs2FriendEzDescribeFriendsIterator.h"
+#include "Core/EzTransactionGameSessionDomain.h"
 #include "Util/Net/GameSession.h"
 #include "Util/Net/Gs2Connection.h"
 

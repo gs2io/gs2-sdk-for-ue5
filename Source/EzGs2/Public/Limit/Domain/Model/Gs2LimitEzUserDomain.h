@@ -24,6 +24,7 @@
 #include "Gs2LimitEzUserDomain.h"
 #include "Gs2LimitEzUserDomain.h"
 #include "Gs2LimitEzUserGameSessionDomain.h"
+#include "Core/EzTransactionDomain.h"
 #include "Util/Net/GameSession.h"
 #include "Util/Net/Gs2Connection.h"
 

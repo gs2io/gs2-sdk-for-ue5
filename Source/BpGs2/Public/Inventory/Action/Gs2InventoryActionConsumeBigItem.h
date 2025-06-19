@@ -20,6 +20,7 @@
 #include "Inventory/Model/Gs2InventoryBigItem.h"
 #include "Inventory/Model/Gs2InventoryBigItem.h"
 #include "../../Core/Model/Gs2Error.h"
+#include "Core/Model/Gs2CoreTransaction.h"
 #include "Kismet/BlueprintAsyncActionBase.h"
 #include "Gs2InventoryActionConsumeBigItem.generated.h"
 

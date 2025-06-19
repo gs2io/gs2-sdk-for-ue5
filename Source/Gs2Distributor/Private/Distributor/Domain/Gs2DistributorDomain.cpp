@@ -274,7 +274,9 @@ namespace Gs2::Distributor::Domain
                             true,
                             *CompletedStampSheet->GetTransactionId(),
                             FString(""),
-                            FString("")
+                            FString(""),
+                            false,
+                            nullptr
                         )->Wait();
                         Future->StartSynchronousTask();
                         if (Future->GetTask().IsError())
@@ -364,7 +366,9 @@ namespace Gs2::Distributor::Domain
                             true,
                             *CompletedStampSheet->GetTransactionId(),
                             FString(""),
-                            FString("")
+                            FString(""),
+                            false,
+                            nullptr
                         )->Wait();
                         Future->StartSynchronousTask();
                         if (Future->GetTask().IsError())

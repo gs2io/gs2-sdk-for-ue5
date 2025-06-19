@@ -30,8 +30,6 @@
 #include "JobQueue/Domain/Model/JobAccessToken.h"
 #include "JobQueue/Domain/Model/JobResult.h"
 #include "JobQueue/Domain/Model/JobResultAccessToken.h"
-#include "JobQueue/Domain/Model/DeadLetterJob.h"
-#include "JobQueue/Domain/Model/DeadLetterJobAccessToken.h"
 #include "JobQueue/Domain/Model/User.h"
 #include "JobQueue/Domain/Model/UserAccessToken.h"
 
@@ -322,62 +320,6 @@ namespace Gs2::JobQueue::Domain::Model
             NamespaceName,
             UserId,
             JobName == TEXT("") ? TOptional<FString>() : TOptional<FString>(JobName)
-        );
-    }
-
-    Gs2::JobQueue::Domain::Iterator::FDescribeDeadLetterJobsByUserIdIteratorPtr FUserDomain::DeadLetterJobs(
-        const TOptional<FString> TimeOffsetToken
-    ) const
-    {
-        return MakeShared<Gs2::JobQueue::Domain::Iterator::FDescribeDeadLetterJobsByUserIdIterator>(
-            Gs2,
-            Client,
-            NamespaceName,
-            UserId,
-            TimeOffsetToken
-        );
-    }
-
-    Gs2::Core::Domain::CallbackID FUserDomain::SubscribeDeadLetterJobs(
-    TFunction<void()> Callback
-    )
-    {
-        return Gs2->Cache->ListSubscribe(
-            Gs2::JobQueue::Model::FDeadLetterJob::TypeName,
-            Gs2::JobQueue::Domain::Model::FUserDomain::CreateCacheParentKey(
-                NamespaceName,
-                UserId,
-                "DeadLetterJob"
-            ),
-            Callback
-        );
-    }
-
-    void FUserDomain::UnsubscribeDeadLetterJobs(
-        Gs2::Core::Domain::CallbackID CallbackID
-    )
-    {
-        Gs2->Cache->ListUnsubscribe(
-            Gs2::JobQueue::Model::FDeadLetterJob::TypeName,
-            Gs2::JobQueue::Domain::Model::FUserDomain::CreateCacheParentKey(
-                NamespaceName,
-                UserId,
-                "DeadLetterJob"
-            ),
-            CallbackID
-        );
-    }
-
-    TSharedPtr<Gs2::JobQueue::Domain::Model::FDeadLetterJobDomain> FUserDomain::DeadLetterJob(
-        const FString DeadLetterJobName
-    )
-    {
-        return MakeShared<Gs2::JobQueue::Domain::Model::FDeadLetterJobDomain>(
-            Gs2,
-            Service,
-            NamespaceName,
-            UserId,
-            DeadLetterJobName == TEXT("") ? TOptional<FString>() : TOptional<FString>(DeadLetterJobName)
         );
     }
 

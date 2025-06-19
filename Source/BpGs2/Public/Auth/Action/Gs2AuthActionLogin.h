@@ -19,6 +19,7 @@
 #include "CoreMinimal.h"
 #include "Auth/Model/Gs2AuthAccessToken.h"
 #include "../../Core/Model/Gs2Error.h"
+#include "Core/Model/Gs2CoreTransaction.h"
 #include "Kismet/BlueprintAsyncActionBase.h"
 #include "Gs2AuthActionLogin.generated.h"
 

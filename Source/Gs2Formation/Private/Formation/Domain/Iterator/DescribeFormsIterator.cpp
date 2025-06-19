@@ -144,7 +144,7 @@ namespace Gs2::Formation::Domain::Iterator
                     Gs2::Formation::Model::FForm::TypeName,
                     ListParentKey,
                     Gs2::Formation::Domain::Model::FFormDomain::CreateCacheKey(
-                        FString::FromInt(*Item->GetIndex())
+                        Item->GetIndex()
                     ),
                     Item,
                     FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)

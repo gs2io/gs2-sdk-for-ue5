@@ -21,7 +21,7 @@
 
 namespace Gs2::AdReward::Model
 {
-    class GS2ADREWARD_API FHistory final : public Gs2Object, public TSharedFromThis<FHistory>
+    class GS2ADREWARD_API FHistory final : public FGs2Object, public TSharedFromThis<FHistory>
     {
         TOptional<FString> ProviderValue;
         TOptional<FString> TransactionIdValue;

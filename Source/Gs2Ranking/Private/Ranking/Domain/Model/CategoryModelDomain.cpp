@@ -247,7 +247,7 @@ namespace Gs2::Ranking::Domain::Model
             Gs2::Ranking::Domain::Model::FCategoryModelDomain::CreateCacheKey(
                 CategoryName
             ),
-            [Callback](TSharedPtr<Gs2Object> obj)
+            [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::Ranking::Model::FCategoryModel>(obj));
             }

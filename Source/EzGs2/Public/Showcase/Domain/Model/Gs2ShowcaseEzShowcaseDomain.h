@@ -33,6 +33,7 @@
 #include "Showcase/Model/Gs2ShowcaseEzTransactionResult.h"
 #include "Gs2ShowcaseEzDisplayItemDomain.h"
 #include "Gs2ShowcaseEzShowcaseDomain.h"
+#include "Core/EzTransactionDomain.h"
 #include "Util/Net/GameSession.h"
 #include "Util/Net/Gs2Connection.h"
 

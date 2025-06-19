@@ -53,18 +53,17 @@ void UGs2InboxBatchReadAsyncFunction::Activate()
     );
     Future->GetTask().OnSuccessDelegate().BindLambda([&](auto Result)
     {
-        FGs2InboxOwnMessage ReturnMessage;
-        ReturnMessage.Value = Result;
+        FGs2CoreOwnTransaction ReturnTransaction;
         const FGs2Error ReturnError;
-        OnError.Broadcast(ReturnMessage, ReturnError);
+        OnError.Broadcast(ReturnTransaction, ReturnError);
         SetReadyToDestroy();
     });
     Future->GetTask().OnErrorDelegate().BindLambda([&](auto Error)
     {
-        FGs2InboxOwnMessage ReturnMessage;
+        FGs2CoreOwnTransaction ReturnTransaction;
         FGs2Error ReturnError;
         ReturnError.Value = Error;
-        OnError.Broadcast(ReturnMessage, ReturnError);
+        OnError.Broadcast(ReturnTransaction, ReturnError);
         SetReadyToDestroy();
     });
     Future->StartBackgroundTask();

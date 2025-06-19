@@ -64,18 +64,17 @@ void UGs2MissionBatchReceiveRewardsAsyncFunction::Activate()
     );
     Future->GetTask().OnSuccessDelegate().BindLambda([&](auto Result)
     {
-        FGs2MissionOwnComplete ReturnComplete;
-        ReturnComplete.Value = Result;
+        FGs2CoreOwnTransaction ReturnTransaction;
         const FGs2Error ReturnError;
-        OnError.Broadcast(ReturnComplete, ReturnError);
+        OnError.Broadcast(ReturnTransaction, ReturnError);
         SetReadyToDestroy();
     });
     Future->GetTask().OnErrorDelegate().BindLambda([&](auto Error)
     {
-        FGs2MissionOwnComplete ReturnComplete;
+        FGs2CoreOwnTransaction ReturnTransaction;
         FGs2Error ReturnError;
         ReturnError.Value = Error;
-        OnError.Broadcast(ReturnComplete, ReturnError);
+        OnError.Broadcast(ReturnTransaction, ReturnError);
         SetReadyToDestroy();
     });
     Future->StartBackgroundTask();

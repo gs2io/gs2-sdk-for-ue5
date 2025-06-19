@@ -12,8 +12,6 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
- *
- * deny overwrite
  */
 
 // ReSharper disable CppUnusedIncludeDirective
@@ -35,7 +33,6 @@ namespace Gs2::Ranking2::Domain::Iterator
         const TOptional<FString> NamespaceName;
         const TOptional<FString> UserId;
         const TOptional<FString> RankingName;
-        const TOptional<int64> Season;
         const TOptional<FString> TimeOffsetToken;
 
     public:
@@ -45,7 +42,6 @@ namespace Gs2::Ranking2::Domain::Iterator
             const TOptional<FString> NamespaceName,
             const TOptional<FString> UserId,
             const TOptional<FString> RankingName = TOptional<FString>(),
-            const TOptional<int64> Season = TOptional<int64>(),
             const TOptional<FString> TimeOffsetToken = TOptional<FString>()
         );
 

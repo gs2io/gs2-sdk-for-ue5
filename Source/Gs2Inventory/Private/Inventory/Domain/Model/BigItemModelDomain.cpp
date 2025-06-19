@@ -122,6 +122,16 @@ namespace Gs2::Inventory::Domain::Model
             ->WithNamespaceName(Self->NamespaceName)
             ->WithInventoryName(Self->InventoryName)
             ->WithItemName(Self->ItemName);
+        const auto Future = Self->Client->GetBigItemModel(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         *Result = ResultModel->GetItem();
         return nullptr;
     }

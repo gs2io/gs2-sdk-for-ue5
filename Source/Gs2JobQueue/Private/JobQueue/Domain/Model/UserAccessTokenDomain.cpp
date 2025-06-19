@@ -31,8 +31,6 @@
 #include "JobQueue/Domain/Model/JobAccessToken.h"
 #include "JobQueue/Domain/Model/JobResult.h"
 #include "JobQueue/Domain/Model/JobResultAccessToken.h"
-#include "JobQueue/Domain/Model/DeadLetterJob.h"
-#include "JobQueue/Domain/Model/DeadLetterJobAccessToken.h"
 #include "JobQueue/Domain/Model/User.h"
 #include "JobQueue/Domain/Model/UserAccessToken.h"
 
@@ -170,19 +168,6 @@ namespace Gs2::JobQueue::Domain::Model
             NamespaceName,
             AccessToken,
             JobName == TEXT("") ? TOptional<FString>() : TOptional<FString>(JobName)
-        );
-    }
-
-    TSharedPtr<Gs2::JobQueue::Domain::Model::FDeadLetterJobAccessTokenDomain> FUserAccessTokenDomain::DeadLetterJob(
-        const FString DeadLetterJobName
-    )
-    {
-        return MakeShared<Gs2::JobQueue::Domain::Model::FDeadLetterJobAccessTokenDomain>(
-            Gs2,
-            Service,
-            NamespaceName,
-            AccessToken,
-            DeadLetterJobName == TEXT("") ? TOptional<FString>() : TOptional<FString>(DeadLetterJobName)
         );
     }
 

@@ -66,8 +66,12 @@
 #include "Task/WebSocket/GetTriggerByUserIdTask.h"
 #include "Request/TriggerByUserIdRequest.h"
 #include "Task/WebSocket/TriggerByUserIdTask.h"
+#include "Request/ExtendTriggerByUserIdRequest.h"
+#include "Task/WebSocket/ExtendTriggerByUserIdTask.h"
 #include "Request/TriggerByStampSheetRequest.h"
 #include "Task/WebSocket/TriggerByStampSheetTask.h"
+#include "Request/ExtendTriggerByStampSheetRequest.h"
+#include "Task/WebSocket/ExtendTriggerByStampSheetTask.h"
 #include "Request/DeleteTriggerRequest.h"
 #include "Task/WebSocket/DeleteTriggerTask.h"
 #include "Request/DeleteTriggerByUserIdRequest.h"
@@ -216,8 +220,16 @@ namespace Gs2::Schedule
             const Request::FTriggerByUserIdRequestPtr Request
         ) const;
 
+        TSharedPtr<FAsyncTask<Task::WebSocket::FExtendTriggerByUserIdTask>> ExtendTriggerByUserId(
+            const Request::FExtendTriggerByUserIdRequestPtr Request
+        ) const;
+
         TSharedPtr<FAsyncTask<Task::WebSocket::FTriggerByStampSheetTask>> TriggerByStampSheet(
             const Request::FTriggerByStampSheetRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FExtendTriggerByStampSheetTask>> ExtendTriggerByStampSheet(
+            const Request::FExtendTriggerByStampSheetRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FDeleteTriggerTask>> DeleteTrigger(

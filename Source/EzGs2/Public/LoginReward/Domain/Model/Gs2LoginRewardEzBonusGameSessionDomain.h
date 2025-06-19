@@ -30,6 +30,7 @@
 #include "LoginReward/Model/Gs2LoginRewardEzAcquireActionResult.h"
 #include "LoginReward/Model/Gs2LoginRewardEzTransactionResult.h"
 #include "Gs2LoginRewardEzBonusGameSessionDomain.h"
+#include "Core/EzTransactionGameSessionDomain.h"
 #include "Util/Net/GameSession.h"
 #include "Util/Net/Gs2Connection.h"
 
@@ -54,7 +55,7 @@ namespace Gs2::UE5::LoginReward::Domain::Model
         );
 
         class EZGS2_API FReceiveTask :
-            public Gs2::Core::Util::TGs2Future<Gs2::UE5::LoginReward::Domain::Model::FEzBonusGameSessionDomain>,
+            public Gs2::Core::Util::TGs2Future<Gs2::UE5::Core::Domain::FEzTransactionGameSessionDomain>,
             public TSharedFromThis<FReceiveTask>
         {
             TSharedPtr<FEzBonusGameSessionDomain> Self;
@@ -69,7 +70,7 @@ namespace Gs2::UE5::LoginReward::Domain::Model
             );
 
             virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-                TSharedPtr<TSharedPtr<Gs2::UE5::LoginReward::Domain::Model::FEzBonusGameSessionDomain>> Result
+                TSharedPtr<TSharedPtr<Gs2::UE5::Core::Domain::FEzTransactionGameSessionDomain>> Result
             ) override;
         };
         friend FReceiveTask;
@@ -80,7 +81,7 @@ namespace Gs2::UE5::LoginReward::Domain::Model
         );
 
         class EZGS2_API FMissedReceiveTask :
-            public Gs2::Core::Util::TGs2Future<Gs2::UE5::LoginReward::Domain::Model::FEzBonusGameSessionDomain>,
+            public Gs2::Core::Util::TGs2Future<Gs2::UE5::Core::Domain::FEzTransactionGameSessionDomain>,
             public TSharedFromThis<FMissedReceiveTask>
         {
             TSharedPtr<FEzBonusGameSessionDomain> Self;
@@ -97,7 +98,7 @@ namespace Gs2::UE5::LoginReward::Domain::Model
             );
 
             virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-                TSharedPtr<TSharedPtr<Gs2::UE5::LoginReward::Domain::Model::FEzBonusGameSessionDomain>> Result
+                TSharedPtr<TSharedPtr<Gs2::UE5::Core::Domain::FEzTransactionGameSessionDomain>> Result
             ) override;
         };
         friend FMissedReceiveTask;

@@ -112,6 +112,16 @@ namespace Gs2::Formation::Domain::Model
             ->WithUserId(Self->UserId)
             ->WithMoldModelName(Self->MoldModelName)
             ->WithIndex(Self->Index);
+        const auto Future = Self->Client->GetFormByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         *Result = ResultModel->GetItem();
         return nullptr;
     }
@@ -146,11 +156,27 @@ namespace Gs2::Formation::Domain::Model
             ->WithUserId(Self->UserId)
             ->WithMoldModelName(Self->MoldModelName)
             ->WithIndex(Self->Index);
+        const auto Future = Self->Client->GetFormWithSignatureByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         auto Domain = Self;
         if (ResultModel != nullptr)
         {
-            Domain->Body = *ResultModel->GetBody();
-            Domain->Signature = *ResultModel->GetSignature();
+            if (ResultModel->GetBody().IsSet())
+            {
+                Domain->Body = *ResultModel->GetBody();
+            }
+            if (ResultModel->GetSignature().IsSet())
+            {
+                Domain->Signature = *ResultModel->GetSignature();
+            }
         }
 
         *Result = Domain;
@@ -187,6 +213,16 @@ namespace Gs2::Formation::Domain::Model
             ->WithUserId(Self->UserId)
             ->WithMoldModelName(Self->MoldModelName)
             ->WithIndex(Self->Index);
+        const auto Future = Self->Client->SetFormByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         auto Domain = Self;
 
         *Result = Domain;
@@ -214,7 +250,7 @@ namespace Gs2::Formation::Domain::Model
     }
 
     Gs2::Core::Model::FGs2ErrorPtr FFormDomain::FAcquireActionsToPropertiesTask::Action(
-        TSharedPtr<TSharedPtr<Gs2::Formation::Domain::Model::FFormDomain>> Result
+        TSharedPtr<TSharedPtr<Gs2::Core::Domain::FTransactionDomain>> Result
     )
     {
         Request
@@ -223,15 +259,25 @@ namespace Gs2::Formation::Domain::Model
             ->WithUserId(Self->UserId)
             ->WithMoldModelName(Self->MoldModelName)
             ->WithIndex(Self->Index);
+        const auto Future = Self->Client->AcquireActionsToFormProperties(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         const auto Transaction = Gs2::Core::Domain::Internal::FTransactionDomainFactory::ToTransaction(
             Self->Gs2,
             *Self->UserId,
-            ResultModel->AutoRunStampSheet() == nullptr ? false : *ResultModel->AutoRunStampSheet(),
+            ResultModel->GetAutoRunStampSheet().IsSet() ? *ResultModel->GetAutoRunStampSheet() : false,
             *ResultModel->GetTransactionId(),
             *ResultModel->GetStampSheet(),
             *ResultModel->GetStampSheetEncryptionKeyId(),
             *ResultModel->GetAtomicCommit(),
-            *ResultModel->GetTransactionResult()
+            ResultModel->GetTransactionResult()
         );
         const auto Future3 = Transaction->Wait(true);
         Future3->StartSynchronousTask();
@@ -273,6 +319,16 @@ namespace Gs2::Formation::Domain::Model
             ->WithUserId(Self->UserId)
             ->WithMoldModelName(Self->MoldModelName)
             ->WithIndex(Self->Index);
+        const auto Future = Self->Client->DeleteFormByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         auto Domain = Self;
 
         *Result = Domain;
@@ -289,7 +345,7 @@ namespace Gs2::Formation::Domain::Model
         TOptional<FString> NamespaceName,
         TOptional<FString> UserId,
         TOptional<FString> MoldModelName,
-        TOptional<FString> Index,
+        TOptional<int32> Index,
         FString ChildType
     )
     {
@@ -297,16 +353,16 @@ namespace Gs2::Formation::Domain::Model
             (NamespaceName.IsSet() ? *NamespaceName : "null") + ":" +
             (UserId.IsSet() ? *UserId : "null") + ":" +
             (MoldModelName.IsSet() ? *MoldModelName : "null") + ":" +
-            (Index.IsSet() ? *Index : "null") + ":" +
+            (Index.IsSet() ? FString::FromInt(*Index) : "null") + ":" +
             ChildType;
     }
 
     FString FFormDomain::CreateCacheKey(
-        TOptional<FString> Index
+        TOptional<int32> Index
     )
     {
         return FString("") +
-            (Index.IsSet() ? *Index : "null");
+            (Index.IsSet() ? FString::FromInt(*Index) : "null");
     }
 
     FFormDomain::FModelTask::FModelTask(
@@ -332,7 +388,7 @@ namespace Gs2::Formation::Domain::Model
         auto bCacheHit = Self->Gs2->Cache->TryGet<Gs2::Formation::Model::FForm>(
             Self->ParentKey,
             Gs2::Formation::Domain::Model::FFormDomain::CreateCacheKey(
-                Self->Index.IsSet() ? FString::FromInt(*Self->Index) : TOptional<FString>()
+                Self->Index
             ),
             &Value
         );
@@ -349,7 +405,7 @@ namespace Gs2::Formation::Domain::Model
                 }
 
                 const auto Key = Gs2::Formation::Domain::Model::FFormDomain::CreateCacheKey(
-                    Self->Index.IsSet() ? FString::FromInt(*Self->Index) : TOptional<FString>()
+                    Self->Index
                 );
                 Self->Gs2->Cache->Put(
                     Gs2::Formation::Model::FForm::TypeName,
@@ -367,7 +423,7 @@ namespace Gs2::Formation::Domain::Model
             Self->Gs2->Cache->TryGet<Gs2::Formation::Model::FForm>(
                 Self->ParentKey,
                 Gs2::Formation::Domain::Model::FFormDomain::CreateCacheKey(
-                    Self->Index.IsSet() ? FString::FromInt(*Self->Index) : TOptional<FString>()
+                    Self->Index
                 ),
                 &Value
             );
@@ -390,7 +446,7 @@ namespace Gs2::Formation::Domain::Model
             Gs2::Formation::Model::FForm::TypeName,
             ParentKey,
             Gs2::Formation::Domain::Model::FFormDomain::CreateCacheKey(
-                Index.IsSet() ? FString::FromInt(*Index) : TOptional<FString>()
+                Index
             ),
             [Callback](TSharedPtr<FGs2Object> obj)
             {
@@ -407,7 +463,7 @@ namespace Gs2::Formation::Domain::Model
             Gs2::Formation::Model::FForm::TypeName,
             ParentKey,
             Gs2::Formation::Domain::Model::FFormDomain::CreateCacheKey(
-                Index.IsSet() ? FString::FromInt(*Index) : TOptional<FString>()
+                Index
             ),
             CallbackID
         );

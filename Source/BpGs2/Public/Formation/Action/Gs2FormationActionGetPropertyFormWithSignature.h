@@ -20,6 +20,7 @@
 #include "Formation/Model/Gs2FormationPropertyForm.h"
 #include "Formation/Model/Gs2FormationPropertyForm.h"
 #include "../../Core/Model/Gs2Error.h"
+#include "Core/Model/Gs2CoreTransaction.h"
 #include "Kismet/BlueprintAsyncActionBase.h"
 #include "Gs2FormationActionGetPropertyFormWithSignature.generated.h"
 

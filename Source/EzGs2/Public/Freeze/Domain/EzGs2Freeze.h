@@ -12,32 +12,6 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
+ * 
+ * deny overwrite
  */
-
-#pragma once
-
-#include "CoreMinimal.h"
-#include "Freeze/Domain/Gs2Freeze.h"
-#include "Util/Net/Gs2Connection.h"
-#include "Freeze/Domain/Model/Gs2FreezeEzStageDomain.h"
-
-namespace Gs2::UE5::Freeze::Domain
-{
-
-    class EZGS2_API FEzGs2Freeze {
-        Gs2::Freeze::Domain::FGs2FreezeDomainPtr Domain;
-        Gs2::UE5::Util::FGs2ConnectionPtr ConnectionValue;
-
-        public:
-
-        FEzGs2Freeze(
-            Gs2::Freeze::Domain::FGs2FreezeDomainPtr Domain,
-            Gs2::UE5::Util::FGs2ConnectionPtr Connection
-        );
-
-        Gs2::UE5::Freeze::Domain::Model::FEzStageDomainPtr Stage(
-            const FString StageName
-        ) const;
-    };
-    typedef TSharedPtr<FEzGs2Freeze> FEzGs2FreezePtr;
-}

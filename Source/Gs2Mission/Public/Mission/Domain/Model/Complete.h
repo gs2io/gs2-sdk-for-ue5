@@ -92,7 +92,7 @@ namespace Gs2::Mission::Domain::Model
         );
 
         class GS2MISSION_API FCompleteTask final :
-            public Gs2::Core::Util::TGs2Future<Gs2::Mission::Domain::Model::FCompleteDomain>,
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::FTransactionDomain>,
             public TSharedFromThis<FCompleteTask>
         {
             const TSharedPtr<FCompleteDomain> Self;
@@ -108,7 +108,7 @@ namespace Gs2::Mission::Domain::Model
             );
 
             virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-                TSharedPtr<TSharedPtr<Gs2::Mission::Domain::Model::FCompleteDomain>> Result
+                TSharedPtr<TSharedPtr<Gs2::Core::Domain::FTransactionDomain>> Result
             ) override;
         };
         friend FCompleteTask;
@@ -118,7 +118,7 @@ namespace Gs2::Mission::Domain::Model
         );
 
         class GS2MISSION_API FBatchTask final :
-            public Gs2::Core::Util::TGs2Future<Gs2::Mission::Domain::Model::FCompleteDomain>,
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::FTransactionDomain>,
             public TSharedFromThis<FBatchTask>
         {
             const TSharedPtr<FCompleteDomain> Self;
@@ -134,7 +134,7 @@ namespace Gs2::Mission::Domain::Model
             );
 
             virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-                TSharedPtr<TSharedPtr<Gs2::Mission::Domain::Model::FCompleteDomain>> Result
+                TSharedPtr<TSharedPtr<Gs2::Core::Domain::FTransactionDomain>> Result
             ) override;
         };
         friend FBatchTask;

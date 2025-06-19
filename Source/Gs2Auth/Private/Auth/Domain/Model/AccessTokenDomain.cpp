@@ -369,7 +369,7 @@ namespace Gs2::Auth::Domain::Model
             ParentKey,
             Gs2::Auth::Domain::Model::FAccessTokenDomain::CreateCacheKey(
             ),
-            [Callback](TSharedPtr<Gs2Object> obj)
+            [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::Auth::Model::FAccessToken>(obj));
             }

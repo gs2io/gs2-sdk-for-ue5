@@ -128,6 +128,16 @@ namespace Gs2::Inventory::Domain::Model
             ->WithInventoryName(Self->InventoryName)
             ->WithAccessToken(Self->AccessToken->GetToken())
             ->WithItemName(Self->ItemName);
+        const auto Future = Self->Client->GetSimpleItem(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         *Result = ResultModel->GetItem();
         return nullptr;
     }
@@ -162,11 +172,27 @@ namespace Gs2::Inventory::Domain::Model
             ->WithInventoryName(Self->InventoryName)
             ->WithAccessToken(Self->AccessToken->GetToken())
             ->WithItemName(Self->ItemName);
+        const auto Future = Self->Client->GetSimpleItemWithSignature(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         auto Domain = Self;
         if (ResultModel != nullptr)
         {
-            Domain->Body = *ResultModel->GetBody();
-            Domain->Signature = *ResultModel->GetSignature();
+            if (ResultModel->GetBody().IsSet())
+            {
+                Domain->Body = *ResultModel->GetBody();
+            }
+            if (ResultModel->GetSignature().IsSet())
+            {
+                Domain->Signature = *ResultModel->GetSignature();
+            }
         }
 
         *Result = Domain;
@@ -203,6 +229,16 @@ namespace Gs2::Inventory::Domain::Model
             ->WithAccessToken(Self->AccessToken->GetToken())
             ->WithInventoryName(Self->InventoryName)
             ->WithItemName(Self->ItemName);
+        const auto Future = Self->Client->VerifySimpleItem(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         const auto Domain = Self;
         *Result = Domain;
         return nullptr;

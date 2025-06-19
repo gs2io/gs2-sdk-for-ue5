@@ -23,6 +23,7 @@
 #include "Buff/Model/Gs2BuffEzBuffTargetAction.h"
 #include "Buff/Model/Gs2BuffEzBuffTargetGrn.h"
 #include "Gs2BuffEzBuffDomain.h"
+#include "Core/EzTransactionDomain.h"
 #include "Util/Net/GameSession.h"
 #include "Util/Net/Gs2Connection.h"
 

@@ -101,6 +101,16 @@ namespace Gs2::LoginReward::Domain::Model
             ->WithNamespaceName(Self->NamespaceName)
             ->WithBonusModelName(Self->BonusModelName)
             ->WithUserId(Self->UserId);
+        const auto Future = Self->Client->GetReceiveStatusByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         *Result = ResultModel->GetItem();
         return nullptr;
     }
@@ -134,6 +144,16 @@ namespace Gs2::LoginReward::Domain::Model
             ->WithNamespaceName(Self->NamespaceName)
             ->WithBonusModelName(Self->BonusModelName)
             ->WithUserId(Self->UserId);
+        const auto Future = Self->Client->DeleteReceiveStatusByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         auto Domain = Self;
 
         *Result = Domain;
@@ -169,6 +189,16 @@ namespace Gs2::LoginReward::Domain::Model
             ->WithNamespaceName(Self->NamespaceName)
             ->WithBonusModelName(Self->BonusModelName)
             ->WithUserId(Self->UserId);
+        const auto Future = Self->Client->MarkReceivedByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         auto Domain = Self;
 
         *Result = Domain;
@@ -204,6 +234,16 @@ namespace Gs2::LoginReward::Domain::Model
             ->WithNamespaceName(Self->NamespaceName)
             ->WithBonusModelName(Self->BonusModelName)
             ->WithUserId(Self->UserId);
+        const auto Future = Self->Client->UnmarkReceivedByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         auto Domain = Self;
 
         *Result = Domain;

@@ -30,6 +30,7 @@
 #include "Exchange/Model/Gs2ExchangeEzAcquireActionResult.h"
 #include "Exchange/Model/Gs2ExchangeEzTransactionResult.h"
 #include "Gs2ExchangeEzExchangeGameSessionDomain.h"
+#include "Core/EzTransactionGameSessionDomain.h"
 #include "Util/Net/GameSession.h"
 #include "Util/Net/Gs2Connection.h"
 
@@ -54,7 +55,7 @@ namespace Gs2::UE5::Exchange::Domain::Model
         );
 
         class EZGS2_API FExchangeTask :
-            public Gs2::Core::Util::TGs2Future<Gs2::UE5::Exchange::Domain::Model::FEzExchangeGameSessionDomain>,
+            public Gs2::Core::Util::TGs2Future<Gs2::UE5::Core::Domain::FEzTransactionGameSessionDomain>,
             public TSharedFromThis<FExchangeTask>
         {
             TSharedPtr<FEzExchangeGameSessionDomain> Self;
@@ -71,7 +72,7 @@ namespace Gs2::UE5::Exchange::Domain::Model
             );
 
             virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-                TSharedPtr<TSharedPtr<Gs2::UE5::Exchange::Domain::Model::FEzExchangeGameSessionDomain>> Result
+                TSharedPtr<TSharedPtr<Gs2::UE5::Core::Domain::FEzTransactionGameSessionDomain>> Result
             ) override;
         };
         friend FExchangeTask;
@@ -83,7 +84,7 @@ namespace Gs2::UE5::Exchange::Domain::Model
         );
 
         class EZGS2_API FIncrementalExchangeTask :
-            public Gs2::Core::Util::TGs2Future<Gs2::UE5::Exchange::Domain::Model::FEzExchangeGameSessionDomain>,
+            public Gs2::Core::Util::TGs2Future<Gs2::UE5::Core::Domain::FEzTransactionGameSessionDomain>,
             public TSharedFromThis<FIncrementalExchangeTask>
         {
             TSharedPtr<FEzExchangeGameSessionDomain> Self;
@@ -100,7 +101,7 @@ namespace Gs2::UE5::Exchange::Domain::Model
             );
 
             virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-                TSharedPtr<TSharedPtr<Gs2::UE5::Exchange::Domain::Model::FEzExchangeGameSessionDomain>> Result
+                TSharedPtr<TSharedPtr<Gs2::UE5::Core::Domain::FEzTransactionGameSessionDomain>> Result
             ) override;
         };
         friend FIncrementalExchangeTask;

@@ -47,6 +47,7 @@
 #include "Gs2Ranking2EzClusterRankingModelDomain.h"
 #include "Ranking2/Domain/Iterator/Gs2Ranking2EzDescribeClusterRankingModelsIterator.h"
 #include "Gs2Ranking2EzNamespaceDomain.h"
+#include "Core/EzTransactionDomain.h"
 #include "Util/Net/GameSession.h"
 #include "Util/Net/Gs2Connection.h"
 

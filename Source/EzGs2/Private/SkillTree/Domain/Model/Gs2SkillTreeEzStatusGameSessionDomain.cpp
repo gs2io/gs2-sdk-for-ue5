@@ -55,7 +55,7 @@ namespace Gs2::UE5::SkillTree::Domain::Model
     }
 
     Gs2::Core::Model::FGs2ErrorPtr FEzStatusGameSessionDomain::FReleaseTask::Action(
-        TSharedPtr<TSharedPtr<Gs2::UE5::SkillTree::Domain::Model::FEzStatusGameSessionDomain>> Result
+        TSharedPtr<TSharedPtr<Gs2::UE5::Core::Domain::FEzTransactionGameSessionDomain>> Result
     )
     {
         const auto Future = Self->ConnectionValue->Run(
@@ -76,9 +76,8 @@ namespace Gs2::UE5::SkillTree::Domain::Model
                     Task->EnsureCompletion();
                     return Task->GetTask().Error();
                 }
-                *Result = MakeShared<Gs2::UE5::SkillTree::Domain::Model::FEzStatusGameSessionDomain>(
+                *Result = MakeShared<Gs2::UE5::Core::Domain::FEzTransactionGameSessionDomain>(
                     Task->GetTask().Result(),
-                    Self->GameSession,
                     Self->ConnectionValue
                 );
                 Task->EnsureCompletion();
@@ -115,7 +114,7 @@ namespace Gs2::UE5::SkillTree::Domain::Model
     }
 
     Gs2::Core::Model::FGs2ErrorPtr FEzStatusGameSessionDomain::FRestrainTask::Action(
-        TSharedPtr<TSharedPtr<Gs2::UE5::SkillTree::Domain::Model::FEzStatusGameSessionDomain>> Result
+        TSharedPtr<TSharedPtr<Gs2::UE5::Core::Domain::FEzTransactionGameSessionDomain>> Result
     )
     {
         const auto Future = Self->ConnectionValue->Run(
@@ -136,9 +135,8 @@ namespace Gs2::UE5::SkillTree::Domain::Model
                     Task->EnsureCompletion();
                     return Task->GetTask().Error();
                 }
-                *Result = MakeShared<Gs2::UE5::SkillTree::Domain::Model::FEzStatusGameSessionDomain>(
+                *Result = MakeShared<Gs2::UE5::Core::Domain::FEzTransactionGameSessionDomain>(
                     Task->GetTask().Result(),
-                    Self->GameSession,
                     Self->ConnectionValue
                 );
                 Task->EnsureCompletion();
@@ -174,7 +172,7 @@ namespace Gs2::UE5::SkillTree::Domain::Model
     }
 
     Gs2::Core::Model::FGs2ErrorPtr FEzStatusGameSessionDomain::FResetTask::Action(
-        TSharedPtr<TSharedPtr<Gs2::UE5::SkillTree::Domain::Model::FEzStatusGameSessionDomain>> Result
+        TSharedPtr<TSharedPtr<Gs2::UE5::Core::Domain::FEzTransactionGameSessionDomain>> Result
     )
     {
         const auto Future = Self->ConnectionValue->Run(
@@ -188,9 +186,8 @@ namespace Gs2::UE5::SkillTree::Domain::Model
                     Task->EnsureCompletion();
                     return Task->GetTask().Error();
                 }
-                *Result = MakeShared<Gs2::UE5::SkillTree::Domain::Model::FEzStatusGameSessionDomain>(
+                *Result = MakeShared<Gs2::UE5::Core::Domain::FEzTransactionGameSessionDomain>(
                     Task->GetTask().Result(),
-                    Self->GameSession,
                     Self->ConnectionValue
                 );
                 Task->EnsureCompletion();

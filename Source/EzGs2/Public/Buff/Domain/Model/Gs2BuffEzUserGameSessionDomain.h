@@ -24,6 +24,7 @@
 #include "Buff/Model/Gs2BuffEzBuffTargetGrn.h"
 #include "Gs2BuffEzBuffGameSessionDomain.h"
 #include "Gs2BuffEzUserGameSessionDomain.h"
+#include "Core/EzTransactionGameSessionDomain.h"
 #include "Util/Net/GameSession.h"
 #include "Util/Net/Gs2Connection.h"
 

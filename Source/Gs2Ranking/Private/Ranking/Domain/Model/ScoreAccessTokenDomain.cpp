@@ -116,6 +116,16 @@ namespace Gs2::Ranking::Domain::Model
             ->WithAccessToken(Self->AccessToken->GetToken())
             ->WithScorerUserId(Self->ScorerUserId)
             ->WithUniqueId(Self->UniqueId);
+        const auto Future = Self->Client->GetScore(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         *Result = ResultModel->GetItem();
         return nullptr;
     }

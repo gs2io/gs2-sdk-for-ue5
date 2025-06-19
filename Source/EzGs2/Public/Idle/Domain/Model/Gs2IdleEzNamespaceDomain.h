@@ -33,6 +33,7 @@
 #include "Gs2IdleEzUserDomain.h"
 #include "Gs2IdleEzUserGameSessionDomain.h"
 #include "Gs2IdleEzNamespaceDomain.h"
+#include "Core/EzTransactionDomain.h"
 #include "Util/Net/GameSession.h"
 #include "Util/Net/Gs2Connection.h"
 

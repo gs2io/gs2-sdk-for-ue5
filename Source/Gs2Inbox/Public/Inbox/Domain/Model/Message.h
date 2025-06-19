@@ -160,7 +160,7 @@ namespace Gs2::Inbox::Domain::Model
         );
 
         class GS2INBOX_API FReadTask final :
-            public Gs2::Core::Util::TGs2Future<Gs2::Inbox::Domain::Model::FMessageDomain>,
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::FTransactionDomain>,
             public TSharedFromThis<FReadTask>
         {
             const TSharedPtr<FMessageDomain> Self;
@@ -176,7 +176,7 @@ namespace Gs2::Inbox::Domain::Model
             );
 
             virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-                TSharedPtr<TSharedPtr<Gs2::Inbox::Domain::Model::FMessageDomain>> Result
+                TSharedPtr<TSharedPtr<Gs2::Core::Domain::FTransactionDomain>> Result
             ) override;
         };
         friend FReadTask;

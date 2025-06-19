@@ -27,23 +27,23 @@ namespace Gs2::UE5::LoginReward::Model
 	class EZGS2_API FEzTransactionResult final : public TSharedFromThis<FEzTransactionResult>
 	{
         TOptional<FString> TransactionIdValue;
-        TSharedPtr<TArray<TSharedPtr<Gs2::UE5::Core::Model::FEzVerifyActionResult>>> VerifyResultsValue;
-        TSharedPtr<TArray<TSharedPtr<Gs2::UE5::Core::Model::FEzConsumeActionResult>>> ConsumeResultsValue;
-        TSharedPtr<TArray<TSharedPtr<Gs2::UE5::Core::Model::FEzAcquireActionResult>>> AcquireResultsValue;
+        TSharedPtr<TArray<TSharedPtr<Gs2::UE5::LoginReward::Model::FEzVerifyActionResult>>> VerifyResultsValue;
+        TSharedPtr<TArray<TSharedPtr<Gs2::UE5::LoginReward::Model::FEzConsumeActionResult>>> ConsumeResultsValue;
+        TSharedPtr<TArray<TSharedPtr<Gs2::UE5::LoginReward::Model::FEzAcquireActionResult>>> AcquireResultsValue;
 
 	public:
         TSharedPtr<FEzTransactionResult> WithTransactionId(const TOptional<FString> TransactionId);
-        TSharedPtr<FEzTransactionResult> WithVerifyResults(const TSharedPtr<TArray<TSharedPtr<Gs2::UE5::Core::Model::FEzVerifyActionResult>>> VerifyResults);
-        TSharedPtr<FEzTransactionResult> WithConsumeResults(const TSharedPtr<TArray<TSharedPtr<Gs2::UE5::Core::Model::FEzConsumeActionResult>>> ConsumeResults);
-        TSharedPtr<FEzTransactionResult> WithAcquireResults(const TSharedPtr<TArray<TSharedPtr<Gs2::UE5::Core::Model::FEzAcquireActionResult>>> AcquireResults);
+        TSharedPtr<FEzTransactionResult> WithVerifyResults(const TSharedPtr<TArray<TSharedPtr<Gs2::UE5::LoginReward::Model::FEzVerifyActionResult>>> VerifyResults);
+        TSharedPtr<FEzTransactionResult> WithConsumeResults(const TSharedPtr<TArray<TSharedPtr<Gs2::UE5::LoginReward::Model::FEzConsumeActionResult>>> ConsumeResults);
+        TSharedPtr<FEzTransactionResult> WithAcquireResults(const TSharedPtr<TArray<TSharedPtr<Gs2::UE5::LoginReward::Model::FEzAcquireActionResult>>> AcquireResults);
 
         TOptional<FString> GetTransactionId() const;
 
-        TSharedPtr<TArray<TSharedPtr<Gs2::UE5::Core::Model::FEzVerifyActionResult>>> GetVerifyResults() const;
+        TSharedPtr<TArray<TSharedPtr<Gs2::UE5::LoginReward::Model::FEzVerifyActionResult>>> GetVerifyResults() const;
 
-        TSharedPtr<TArray<TSharedPtr<Gs2::UE5::Core::Model::FEzConsumeActionResult>>> GetConsumeResults() const;
+        TSharedPtr<TArray<TSharedPtr<Gs2::UE5::LoginReward::Model::FEzConsumeActionResult>>> GetConsumeResults() const;
 
-        TSharedPtr<TArray<TSharedPtr<Gs2::UE5::Core::Model::FEzAcquireActionResult>>> GetAcquireResults() const;
+        TSharedPtr<TArray<TSharedPtr<Gs2::UE5::LoginReward::Model::FEzAcquireActionResult>>> GetAcquireResults() const;
 
         Gs2::LoginReward::Model::FTransactionResultPtr ToModel() const;
         static TSharedPtr<FEzTransactionResult> FromModel(Gs2::LoginReward::Model::FTransactionResultPtr Model);

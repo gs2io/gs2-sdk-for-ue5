@@ -70,6 +70,7 @@ namespace Gs2::Ranking2::Domain::Model
     class FGlobalRankingReceivedRewardDomain;
     class FGlobalRankingReceivedRewardAccessTokenDomain;
     class FGlobalRankingSeasonDomain;
+    class FGlobalRankingSeasonAccessTokenDomain;
     class FGlobalRankingDataDomain;
     class FGlobalRankingDataAccessTokenDomain;
     class FClusterRankingModelDomain;
@@ -79,6 +80,7 @@ namespace Gs2::Ranking2::Domain::Model
     class FClusterRankingReceivedRewardDomain;
     class FClusterRankingReceivedRewardAccessTokenDomain;
     class FClusterRankingSeasonDomain;
+    class FClusterRankingSeasonAccessTokenDomain;
     class FClusterRankingDataDomain;
     class FClusterRankingDataAccessTokenDomain;
     class FSubscribeRankingModelDomain;
@@ -152,6 +154,12 @@ namespace Gs2::Ranking2::Domain::Model
         );
 
         TSharedPtr<Gs2::Ranking2::Domain::Model::FGlobalRankingSeasonDomain> GlobalRankingSeason(
+            const FString UserId,
+            const TOptional<int64> Season = TOptional<int64>()
+        );
+
+        TSharedPtr<Gs2::Ranking2::Domain::Model::FGlobalRankingSeasonAccessTokenDomain> GlobalRankingSeason(
+            const Auth::Model::FAccessTokenPtr AccessToken,
             const TOptional<int64> Season = TOptional<int64>()
         );
 

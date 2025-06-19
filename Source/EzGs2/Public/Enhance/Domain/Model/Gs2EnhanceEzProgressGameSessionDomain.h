@@ -27,6 +27,7 @@
 #include "Enhance/Model/Gs2EnhanceEzAcquireActionResult.h"
 #include "Enhance/Model/Gs2EnhanceEzTransactionResult.h"
 #include "Gs2EnhanceEzProgressGameSessionDomain.h"
+#include "Core/EzTransactionGameSessionDomain.h"
 #include "Util/Net/GameSession.h"
 #include "Util/Net/Gs2Connection.h"
 
@@ -53,7 +54,7 @@ namespace Gs2::UE5::Enhance::Domain::Model
         );
 
         class EZGS2_API FStartTask :
-            public Gs2::Core::Util::TGs2Future<Gs2::UE5::Enhance::Domain::Model::FEzProgressGameSessionDomain>,
+            public Gs2::Core::Util::TGs2Future<Gs2::UE5::Core::Domain::FEzTransactionGameSessionDomain>,
             public TSharedFromThis<FStartTask>
         {
             TSharedPtr<FEzProgressGameSessionDomain> Self;
@@ -74,7 +75,7 @@ namespace Gs2::UE5::Enhance::Domain::Model
             );
 
             virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-                TSharedPtr<TSharedPtr<Gs2::UE5::Enhance::Domain::Model::FEzProgressGameSessionDomain>> Result
+                TSharedPtr<TSharedPtr<Gs2::UE5::Core::Domain::FEzTransactionGameSessionDomain>> Result
             ) override;
         };
         friend FStartTask;
@@ -88,7 +89,7 @@ namespace Gs2::UE5::Enhance::Domain::Model
         );
 
         class EZGS2_API FEndTask :
-            public Gs2::Core::Util::TGs2Future<Gs2::UE5::Enhance::Domain::Model::FEzProgressGameSessionDomain>,
+            public Gs2::Core::Util::TGs2Future<Gs2::UE5::Core::Domain::FEzTransactionGameSessionDomain>,
             public TSharedFromThis<FEndTask>
         {
             TSharedPtr<FEzProgressGameSessionDomain> Self;
@@ -101,7 +102,7 @@ namespace Gs2::UE5::Enhance::Domain::Model
             );
 
             virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-                TSharedPtr<TSharedPtr<Gs2::UE5::Enhance::Domain::Model::FEzProgressGameSessionDomain>> Result
+                TSharedPtr<TSharedPtr<Gs2::UE5::Core::Domain::FEzTransactionGameSessionDomain>> Result
             ) override;
         };
         friend FEndTask;

@@ -185,7 +185,7 @@ namespace Gs2::Formation::Domain::Model
         );
 
         class GS2FORMATION_API FAcquireActionsToPropertiesTask final :
-            public Gs2::Core::Util::TGs2Future<Gs2::Formation::Domain::Model::FFormDomain>,
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::FTransactionDomain>,
             public TSharedFromThis<FAcquireActionsToPropertiesTask>
         {
             const TSharedPtr<FFormDomain> Self;
@@ -201,7 +201,7 @@ namespace Gs2::Formation::Domain::Model
             );
 
             virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-                TSharedPtr<TSharedPtr<Gs2::Formation::Domain::Model::FFormDomain>> Result
+                TSharedPtr<TSharedPtr<Gs2::Core::Domain::FTransactionDomain>> Result
             ) override;
         };
         friend FAcquireActionsToPropertiesTask;
@@ -240,12 +240,12 @@ namespace Gs2::Formation::Domain::Model
             TOptional<FString> NamespaceName,
             TOptional<FString> UserId,
             TOptional<FString> MoldModelName,
-            TOptional<FString> Index,
+            TOptional<int32> Index,
             FString ChildType
         );
 
         static FString CreateCacheKey(
-            TOptional<FString> Index
+            TOptional<int32> Index
         );
 
         class GS2FORMATION_API FModelTask final :

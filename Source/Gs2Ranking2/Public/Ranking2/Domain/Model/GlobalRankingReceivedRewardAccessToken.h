@@ -163,7 +163,7 @@ namespace Gs2::Ranking2::Domain::Model
         );
 
         class GS2RANKING2_API FReceiveTask final :
-            public Gs2::Core::Util::TGs2Future<Gs2::Ranking2::Domain::Model::FGlobalRankingReceivedRewardAccessTokenDomain>,
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::FTransactionAccessTokenDomain>,
             public TSharedFromThis<FReceiveTask>
         {
             const TSharedPtr<FGlobalRankingReceivedRewardAccessTokenDomain> Self;
@@ -181,7 +181,7 @@ namespace Gs2::Ranking2::Domain::Model
             );
 
             virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-                TSharedPtr<TSharedPtr<Gs2::Ranking2::Domain::Model::FGlobalRankingReceivedRewardAccessTokenDomain>> Result
+                TSharedPtr<TSharedPtr<Gs2::Core::Domain::FTransactionAccessTokenDomain>> Result
             ) override;
         };
         friend FReceiveTask;
@@ -220,13 +220,13 @@ namespace Gs2::Ranking2::Domain::Model
         static FString CreateCacheParentKey(
             TOptional<FString> NamespaceName,
             TOptional<FString> RankingName,
-            TOptional<FString> Season,
+            TOptional<int64> Season,
             TOptional<FString> UserId,
             FString ChildType
         );
 
         static FString CreateCacheKey(
-            TOptional<FString> Season,
+            TOptional<int64> Season,
             TOptional<FString> UserId
         );
 

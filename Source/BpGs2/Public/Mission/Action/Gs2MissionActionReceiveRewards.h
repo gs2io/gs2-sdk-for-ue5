@@ -20,12 +20,14 @@
 #include "Mission/Model/Gs2MissionConfig.h"
 #include "Mission/Model/Gs2MissionComplete.h"
 #include "../../Core/Model/Gs2Error.h"
+#include "Core/Model/Gs2CoreTransaction.h"
 #include "Kismet/BlueprintAsyncActionBase.h"
 #include "Gs2MissionActionReceiveRewards.generated.h"
 
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FGs2MissionReceiveRewardsSuccessDelegate, FGs2MissionOwnComplete, Complete, const FGs2Error, Error);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FGs2MissionReceiveRewardsErrorDelegate, FGs2MissionOwnComplete, Complete, const FGs2Error, Error);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FGs2MissionReceiveRewardsSuccessDelegate, FGs2CoreOwnTransaction, Transaction, const FGs2Error, Error);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FGs2MissionReceiveRewardsErrorDelegate, FGs2CoreOwnTransaction, Transaction, const FGs2Error, Error);
+
 
 UCLASS()
 class BPGS2_API UGs2MissionReceiveRewardsAsyncFunction : public UBlueprintAsyncActionBase

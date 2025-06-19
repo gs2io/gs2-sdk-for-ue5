@@ -73,6 +73,16 @@ namespace Gs2::Identifier::Domain
         TSharedPtr<TSharedPtr<Gs2::Identifier::Domain::Model::FUserDomain>> Result
     )
     {
+        const auto Future = Self->Client->CreateUser(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         auto Domain = MakeShared<Gs2::Identifier::Domain::Model::FUserDomain>(
             Self->Gs2,
             Self,
@@ -106,6 +116,16 @@ namespace Gs2::Identifier::Domain
         TSharedPtr<TSharedPtr<Gs2::Identifier::Domain::Model::FSecurityPolicyDomain>> Result
     )
     {
+        const auto Future = Self->Client->CreateSecurityPolicy(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         auto Domain = MakeShared<Gs2::Identifier::Domain::Model::FSecurityPolicyDomain>(
             Self->Gs2,
             Self,

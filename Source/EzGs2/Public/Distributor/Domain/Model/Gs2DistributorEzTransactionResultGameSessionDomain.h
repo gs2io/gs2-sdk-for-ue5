@@ -32,6 +32,7 @@
 #include "Distributor/Model/Gs2DistributorEzConsumeActionResult.h"
 #include "Distributor/Model/Gs2DistributorEzVerifyActionResult.h"
 #include "Gs2DistributorEzTransactionResultGameSessionDomain.h"
+#include "Core/EzTransactionGameSessionDomain.h"
 #include "Util/Net/GameSession.h"
 #include "Util/Net/Gs2Connection.h"
 

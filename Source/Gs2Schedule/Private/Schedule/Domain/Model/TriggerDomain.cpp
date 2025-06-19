@@ -100,6 +100,16 @@ namespace Gs2::Schedule::Domain::Model
             ->WithNamespaceName(Self->NamespaceName)
             ->WithUserId(Self->UserId)
             ->WithTriggerName(Self->TriggerName);
+        const auto Future = Self->Client->GetTriggerByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         *Result = ResultModel->GetItem();
         return nullptr;
     }
@@ -133,6 +143,16 @@ namespace Gs2::Schedule::Domain::Model
             ->WithNamespaceName(Self->NamespaceName)
             ->WithTriggerName(Self->TriggerName)
             ->WithUserId(Self->UserId);
+        const auto Future = Self->Client->TriggerByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         auto Domain = Self;
 
         *Result = Domain;
@@ -143,6 +163,51 @@ namespace Gs2::Schedule::Domain::Model
         Request::FTriggerByUserIdRequestPtr Request
     ) {
         return Gs2::Core::Util::New<FAsyncTask<FTriggerTask>>(this->AsShared(), Request);
+    }
+
+    FTriggerDomain::FExtendTask::FExtendTask(
+        const TSharedPtr<FTriggerDomain>& Self,
+        const Request::FExtendTriggerByUserIdRequestPtr Request
+    ): Self(Self), Request(Request)
+    {
+
+    }
+
+    FTriggerDomain::FExtendTask::FExtendTask(
+        const FExtendTask& From
+    ): TGs2Future(From), Self(From.Self), Request(From.Request)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FTriggerDomain::FExtendTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::Schedule::Domain::Model::FTriggerDomain>> Result
+    )
+    {
+        Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
+            ->WithNamespaceName(Self->NamespaceName)
+            ->WithTriggerName(Self->TriggerName)
+            ->WithUserId(Self->UserId);
+        const auto Future = Self->Client->ExtendTriggerByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
+        auto Domain = Self;
+
+        *Result = Domain;
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FTriggerDomain::FExtendTask>> FTriggerDomain::Extend(
+        Request::FExtendTriggerByUserIdRequestPtr Request
+    ) {
+        return Gs2::Core::Util::New<FAsyncTask<FExtendTask>>(this->AsShared(), Request);
     }
 
     FTriggerDomain::FDeleteTask::FDeleteTask(
@@ -168,6 +233,16 @@ namespace Gs2::Schedule::Domain::Model
             ->WithNamespaceName(Self->NamespaceName)
             ->WithUserId(Self->UserId)
             ->WithTriggerName(Self->TriggerName);
+        const auto Future = Self->Client->DeleteTriggerByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         auto Domain = Self;
 
         *Result = Domain;
@@ -203,6 +278,16 @@ namespace Gs2::Schedule::Domain::Model
             ->WithNamespaceName(Self->NamespaceName)
             ->WithUserId(Self->UserId)
             ->WithTriggerName(Self->TriggerName);
+        const auto Future = Self->Client->VerifyTriggerByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         const auto Domain = Self;
         *Result = Domain;
         return nullptr;

@@ -28,6 +28,7 @@
 #include "Experience/Model/Gs2ExperienceEzAcquireActionResult.h"
 #include "Experience/Model/Gs2ExperienceEzTransactionResult.h"
 #include "Gs2ExperienceEzStatusDomain.h"
+#include "Core/EzTransactionDomain.h"
 #include "Util/Net/GameSession.h"
 #include "Util/Net/Gs2Connection.h"
 

@@ -35,6 +35,7 @@
 #include "Gs2MatchmakingEzSeasonGatheringDomain.h"
 #include "Gs2MatchmakingEzJoinedSeasonGatheringDomain.h"
 #include "Gs2MatchmakingEzSeasonDomain.h"
+#include "Core/EzTransactionDomain.h"
 #include "Util/Net/GameSession.h"
 #include "Util/Net/Gs2Connection.h"
 

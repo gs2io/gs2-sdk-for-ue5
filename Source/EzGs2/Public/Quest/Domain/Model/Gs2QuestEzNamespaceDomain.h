@@ -38,6 +38,7 @@
 #include "Gs2QuestEzUserDomain.h"
 #include "Gs2QuestEzUserGameSessionDomain.h"
 #include "Gs2QuestEzNamespaceDomain.h"
+#include "Core/EzTransactionDomain.h"
 #include "Util/Net/GameSession.h"
 #include "Util/Net/Gs2Connection.h"
 

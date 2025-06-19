@@ -24,6 +24,7 @@
 #include "Stamina/Model/Gs2StaminaEzRecoverValueTable.h"
 #include "Stamina/Model/Gs2StaminaEzStamina.h"
 #include "Gs2StaminaEzStaminaDomain.h"
+#include "Core/EzTransactionDomain.h"
 #include "Util/Net/GameSession.h"
 #include "Util/Net/Gs2Connection.h"
 

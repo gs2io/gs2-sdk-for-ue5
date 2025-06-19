@@ -12,6 +12,8 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
+ *
+ * deny overwrite
  */
 
 // ReSharper disable CppUnusedIncludeDirective
@@ -79,6 +81,84 @@ namespace Gs2::Dictionary::Domain::Model
 
         FEntryModelMasterDomain(
             const FEntryModelMasterDomain& From
+        );
+
+        class GS2DICTIONARY_API FGetTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Dictionary::Model::FEntryModelMaster>,
+            public TSharedFromThis<FGetTask>
+        {
+            const TSharedPtr<FEntryModelMasterDomain> Self;
+            const Request::FGetEntryModelMasterRequestPtr Request;
+        public:
+            explicit FGetTask(
+                const TSharedPtr<FEntryModelMasterDomain>& Self,
+                const Request::FGetEntryModelMasterRequestPtr Request
+            );
+
+            FGetTask(
+                const FGetTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Dictionary::Model::FEntryModelMaster>> Result
+            ) override;
+        };
+        friend FGetTask;
+
+        TSharedPtr<FAsyncTask<FGetTask>> Get(
+            Request::FGetEntryModelMasterRequestPtr Request
+        );
+
+        class GS2DICTIONARY_API FUpdateTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Dictionary::Domain::Model::FEntryModelMasterDomain>,
+            public TSharedFromThis<FUpdateTask>
+        {
+            const TSharedPtr<FEntryModelMasterDomain> Self;
+            const Request::FUpdateEntryModelMasterRequestPtr Request;
+        public:
+            explicit FUpdateTask(
+                const TSharedPtr<FEntryModelMasterDomain>& Self,
+                const Request::FUpdateEntryModelMasterRequestPtr Request
+            );
+
+            FUpdateTask(
+                const FUpdateTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Dictionary::Domain::Model::FEntryModelMasterDomain>> Result
+            ) override;
+        };
+        friend FUpdateTask;
+
+        TSharedPtr<FAsyncTask<FUpdateTask>> Update(
+            Request::FUpdateEntryModelMasterRequestPtr Request
+        );
+
+        class GS2DICTIONARY_API FDeleteTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Dictionary::Domain::Model::FEntryModelMasterDomain>,
+            public TSharedFromThis<FDeleteTask>
+        {
+            const TSharedPtr<FEntryModelMasterDomain> Self;
+            const Request::FDeleteEntryModelMasterRequestPtr Request;
+        public:
+            explicit FDeleteTask(
+                const TSharedPtr<FEntryModelMasterDomain>& Self,
+                const Request::FDeleteEntryModelMasterRequestPtr Request
+            );
+
+            FDeleteTask(
+                const FDeleteTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Dictionary::Domain::Model::FEntryModelMasterDomain>> Result
+            ) override;
+        };
+        friend FDeleteTask;
+
+        TSharedPtr<FAsyncTask<FDeleteTask>> Delete(
+            Request::FDeleteEntryModelMasterRequestPtr Request
         );
 
         static FString CreateCacheParentKey(

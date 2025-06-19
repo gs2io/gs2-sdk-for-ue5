@@ -29,6 +29,7 @@
 #include "SeasonRating/Model/Gs2SeasonRatingEzTransactionResult.h"
 #include "Gs2SeasonRatingEzBallotGameSessionDomain.h"
 #include "Gs2SeasonRatingEzUserGameSessionDomain.h"
+#include "Core/EzTransactionGameSessionDomain.h"
 #include "Util/Net/GameSession.h"
 #include "Util/Net/Gs2Connection.h"
 

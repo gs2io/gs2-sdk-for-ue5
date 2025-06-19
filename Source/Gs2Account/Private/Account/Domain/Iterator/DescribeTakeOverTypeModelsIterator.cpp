@@ -130,7 +130,7 @@ namespace Gs2::Account::Domain::Iterator
                     Gs2::Account::Model::FTakeOverTypeModel::TypeName,
                     ListParentKey,
                     Gs2::Account::Domain::Model::FTakeOverTypeModelDomain::CreateCacheKey(
-                        FString::FromInt(*Item->GetType())
+                        Item->GetType()
                     ),
                     Item,
                     FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)

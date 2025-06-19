@@ -80,7 +80,7 @@ namespace Gs2::LoginReward::Domain::Model
         );
 
         class GS2LOGINREWARD_API FReceiveTask final :
-            public Gs2::Core::Util::TGs2Future<Gs2::LoginReward::Domain::Model::FBonusDomain>,
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::FTransactionDomain>,
             public TSharedFromThis<FReceiveTask>
         {
             const TSharedPtr<FBonusDomain> Self;
@@ -96,7 +96,7 @@ namespace Gs2::LoginReward::Domain::Model
             );
 
             virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-                TSharedPtr<TSharedPtr<Gs2::LoginReward::Domain::Model::FBonusDomain>> Result
+                TSharedPtr<TSharedPtr<Gs2::Core::Domain::FTransactionDomain>> Result
             ) override;
         };
         friend FReceiveTask;
@@ -106,7 +106,7 @@ namespace Gs2::LoginReward::Domain::Model
         );
 
         class GS2LOGINREWARD_API FMissedReceiveTask final :
-            public Gs2::Core::Util::TGs2Future<Gs2::LoginReward::Domain::Model::FBonusDomain>,
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::FTransactionDomain>,
             public TSharedFromThis<FMissedReceiveTask>
         {
             const TSharedPtr<FBonusDomain> Self;
@@ -122,7 +122,7 @@ namespace Gs2::LoginReward::Domain::Model
             );
 
             virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-                TSharedPtr<TSharedPtr<Gs2::LoginReward::Domain::Model::FBonusDomain>> Result
+                TSharedPtr<TSharedPtr<Gs2::Core::Domain::FTransactionDomain>> Result
             ) override;
         };
         friend FMissedReceiveTask;

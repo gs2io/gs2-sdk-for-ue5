@@ -25,9 +25,9 @@
 #endif
 
 #include "Money2/Domain/SpeculativeExecutor/Consume/WithdrawByUserIdSpeculativeExecutor.h"
+#include "Money2/Domain/Gs2Money2.h"
 
 #include "Core/Domain/Gs2.h"
-#include "Money2/Domain/Gs2Money2.h"
 
 namespace Gs2::Money2::Domain::SpeculativeExecutor
 {
@@ -112,7 +112,7 @@ namespace Gs2::Money2::Domain::SpeculativeExecutor
             FString("Wallet")
         );
         const auto Key = Model::FWalletDomain::CreateCacheKey(
-            FString::FromInt(Request->GetSlot().IsSet() ? *Request->GetSlot() : 0)
+            Request->GetSlot()
         );
 
         *Result = MakeShared<TFunction<void()>>([&]()

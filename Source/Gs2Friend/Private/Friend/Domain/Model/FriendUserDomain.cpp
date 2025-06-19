@@ -118,6 +118,16 @@ namespace Gs2::Friend::Domain::Model
             ->WithUserId(Self->UserId)
             ->WithTargetUserId(Self->TargetUserId)
             ->WithWithProfile(Self->WithProfile);
+        const auto Future = Self->Client->GetFriendByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         *Result = ResultModel->GetItem();
         return nullptr;
     }

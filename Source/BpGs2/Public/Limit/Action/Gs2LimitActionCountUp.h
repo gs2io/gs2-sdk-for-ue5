@@ -20,6 +20,7 @@
 #include "Limit/Model/Gs2LimitCounter.h"
 #include "Limit/Model/Gs2LimitCounter.h"
 #include "../../Core/Model/Gs2Error.h"
+#include "Core/Model/Gs2CoreTransaction.h"
 #include "Kismet/BlueprintAsyncActionBase.h"
 #include "Gs2LimitActionCountUp.generated.h"
 

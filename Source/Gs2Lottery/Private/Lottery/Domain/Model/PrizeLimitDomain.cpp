@@ -106,6 +106,16 @@ namespace Gs2::Lottery::Domain::Model
             ->WithNamespaceName(Self->NamespaceName)
             ->WithPrizeTableName(Self->PrizeTableName)
             ->WithPrizeId(Self->PrizeId);
+        const auto Future = Self->Client->GetPrizeLimit(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         *Result = ResultModel->GetItem();
         return nullptr;
     }
@@ -139,6 +149,16 @@ namespace Gs2::Lottery::Domain::Model
             ->WithNamespaceName(Self->NamespaceName)
             ->WithPrizeTableName(Self->PrizeTableName)
             ->WithPrizeId(Self->PrizeId);
+        const auto Future = Self->Client->ResetPrizeLimit(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         const auto Domain = Self;
         *Result = Domain;
         return nullptr;

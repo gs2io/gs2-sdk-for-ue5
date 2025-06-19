@@ -33,14 +33,18 @@ namespace Gs2::Core::Domain
 		bool bAutoRun,
 		FString TransactionId,
 		FString StampSheet,
-		FString StampSheetEncryptionKeyId
+		FString StampSheetEncryptionKeyId,
+		bool bAtomicCommit,
+		Gs2::Core::Model::FTransactionResultPtr TransactionResult
 	)
 	{
 		auto NewTransactionDomain = [&](
 			bool bAutoRun,
 			FString TransactionId,
 			FString StampSheet,
-			FString StampSheetEncryptionKeyId
+			FString StampSheetEncryptionKeyId,
+			bool bAtomicCommit,
+			Gs2::Core::Model::FTransactionResultPtr TransactionResult
 		)
 		{
 			return ToTransaction(
@@ -50,7 +54,9 @@ namespace Gs2::Core::Domain
 				bAutoRun,
 				TransactionId,
 				StampSheet,
-				StampSheetEncryptionKeyId
+				StampSheetEncryptionKeyId,
+				bAtomicCommit,
+				TransactionResult
 			);
 		};
 		if (bAutoRun) {
@@ -84,14 +90,18 @@ namespace Gs2::Core::Domain
 		bool bAutoRun,
 		FString TransactionId,
 		FString StampSheet,
-		FString StampSheetEncryptionKeyId
+		FString StampSheetEncryptionKeyId,
+		bool bAtomicCommit,
+		Gs2::Core::Model::FTransactionResultPtr TransactionResult
 	)
 	{
 		auto NewTransactionDomain = [&GS2, NewJobQueueDomain, UserId](
 			bool bAutoRun,
 			FString TransactionId,
 			FString StampSheet,
-			FString StampSheetEncryptionKeyId
+			FString StampSheetEncryptionKeyId,
+			bool bAtomicCommit,
+			Gs2::Core::Model::FTransactionResultPtr TransactionResult
 		)
 		{
 			return ToTransaction(
@@ -101,7 +111,9 @@ namespace Gs2::Core::Domain
 				bAutoRun,
 				TransactionId,
 				StampSheet,
-				StampSheetEncryptionKeyId
+				StampSheetEncryptionKeyId,
+				bAtomicCommit,
+				TransactionResult
 			);
 		};
 		if (bAutoRun) {

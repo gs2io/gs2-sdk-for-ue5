@@ -108,6 +108,16 @@ namespace Gs2::Enchant::Domain::Model
             ->WithAccessToken(Self->AccessToken->GetToken())
             ->WithParameterName(Self->ParameterName)
             ->WithPropertyId(Self->PropertyId);
+        const auto Future = Self->Client->GetBalanceParameterStatus(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         *Result = ResultModel->GetItem();
         return nullptr;
     }

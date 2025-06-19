@@ -242,12 +242,12 @@ namespace Gs2::Formation::Domain::Model
             TOptional<FString> NamespaceName,
             TOptional<FString> UserId,
             TOptional<FString> MoldModelName,
-            TOptional<FString> Index,
+            TOptional<int32> Index,
             FString ChildType
         );
 
         static FString CreateCacheKey(
-            TOptional<FString> Index
+            TOptional<int32> Index
         );
 
         class GS2FORMATION_API FModelTask final :

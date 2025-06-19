@@ -177,12 +177,12 @@ namespace Gs2::Account::Domain::Model
         static FString CreateCacheParentKey(
             TOptional<FString> NamespaceName,
             TOptional<FString> UserId,
-            TOptional<FString> Type,
+            TOptional<int32> Type,
             FString ChildType
         );
 
         static FString CreateCacheKey(
-            TOptional<FString> Type
+            TOptional<int32> Type
         );
 
         class GS2ACCOUNT_API FModelTask final :

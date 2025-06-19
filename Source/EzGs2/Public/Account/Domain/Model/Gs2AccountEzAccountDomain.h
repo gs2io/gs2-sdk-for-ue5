@@ -28,6 +28,7 @@
 #include "Gs2AccountEzAccountDomain.h"
 #include "Gs2AccountEzAccountDomain.h"
 #include "Gs2AccountEzAccountGameSessionDomain.h"
+#include "Core/EzTransactionDomain.h"
 #include "Util/Net/GameSession.h"
 #include "Util/Net/Gs2Connection.h"
 

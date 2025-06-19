@@ -546,7 +546,7 @@ namespace Gs2::Grade::Domain::Model
                 GradeName,
                 PropertyId
             ),
-            [Callback](TSharedPtr<Gs2Object> obj)
+            [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::Grade::Model::FStatus>(obj));
             }

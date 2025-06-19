@@ -20,12 +20,14 @@
 #include "Idle/Model/Gs2IdleAcquireAction.h"
 #include "Idle/Model/Gs2IdleStatus.h"
 #include "../../Core/Model/Gs2Error.h"
+#include "Core/Model/Gs2CoreTransaction.h"
 #include "Kismet/BlueprintAsyncActionBase.h"
 #include "Gs2IdleActionReceive.generated.h"
 
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FGs2IdleReceiveSuccessDelegate, FGs2IdleOwnStatus, Status, const FGs2Error, Error);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FGs2IdleReceiveErrorDelegate, FGs2IdleOwnStatus, Status, const FGs2Error, Error);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FGs2IdleReceiveSuccessDelegate, FGs2CoreOwnTransaction, Transaction, const FGs2Error, Error);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FGs2IdleReceiveErrorDelegate, FGs2CoreOwnTransaction, Transaction, const FGs2Error, Error);
+
 
 UCLASS()
 class BPGS2_API UGs2IdleReceiveAsyncFunction : public UBlueprintAsyncActionBase

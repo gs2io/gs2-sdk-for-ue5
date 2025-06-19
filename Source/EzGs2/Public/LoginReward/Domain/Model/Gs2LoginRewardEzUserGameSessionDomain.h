@@ -33,6 +33,7 @@
 #include "Gs2LoginRewardEzReceiveStatusGameSessionDomain.h"
 #include "LoginReward/Domain/Iterator/Gs2LoginRewardEzDescribeReceiveStatusesIterator.h"
 #include "Gs2LoginRewardEzUserGameSessionDomain.h"
+#include "Core/EzTransactionGameSessionDomain.h"
 #include "Util/Net/GameSession.h"
 #include "Util/Net/Gs2Connection.h"
 

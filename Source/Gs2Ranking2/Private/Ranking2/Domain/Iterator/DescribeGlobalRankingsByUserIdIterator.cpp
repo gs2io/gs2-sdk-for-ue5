@@ -106,7 +106,7 @@ namespace Gs2::Ranking2::Domain::Iterator
             const auto ListParentKey = Gs2::Ranking2::Domain::Model::FGlobalRankingSeasonDomain::CreateCacheParentKey(
                 Self->NamespaceName,
                 Self->RankingName,
-                FString::FromInt(*Self->Season),
+                Self->Season,
                 "GlobalRankingData"
             );
 

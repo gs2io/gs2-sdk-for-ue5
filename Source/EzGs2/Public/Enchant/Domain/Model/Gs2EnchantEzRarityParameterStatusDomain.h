@@ -32,6 +32,7 @@
 #include "Enchant/Model/Gs2EnchantEzAcquireActionResult.h"
 #include "Enchant/Model/Gs2EnchantEzTransactionResult.h"
 #include "Gs2EnchantEzRarityParameterStatusDomain.h"
+#include "Core/EzTransactionDomain.h"
 #include "Util/Net/GameSession.h"
 #include "Util/Net/Gs2Connection.h"
 

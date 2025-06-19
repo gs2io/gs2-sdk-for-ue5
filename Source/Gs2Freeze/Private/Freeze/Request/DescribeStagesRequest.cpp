@@ -18,13 +18,13 @@
 
 namespace Gs2::Freeze::Request
 {
-    FDescribeStagesRequest::FDescribeStagesRequest():
+    FDescribeStagesRequest::FDescribeStagesRequest()
     {
     }
 
     FDescribeStagesRequest::FDescribeStagesRequest(
         const FDescribeStagesRequest& From
-    ):
+    )
     {
     }
 

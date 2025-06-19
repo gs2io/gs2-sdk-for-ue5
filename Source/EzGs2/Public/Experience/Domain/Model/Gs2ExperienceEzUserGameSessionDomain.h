@@ -30,6 +30,7 @@
 #include "Gs2ExperienceEzStatusGameSessionDomain.h"
 #include "Experience/Domain/Iterator/Gs2ExperienceEzDescribeStatusesIterator.h"
 #include "Gs2ExperienceEzUserGameSessionDomain.h"
+#include "Core/EzTransactionGameSessionDomain.h"
 #include "Util/Net/GameSession.h"
 #include "Util/Net/Gs2Connection.h"
 

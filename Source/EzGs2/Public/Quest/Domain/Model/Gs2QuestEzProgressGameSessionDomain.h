@@ -33,6 +33,7 @@
 #include "Quest/Model/Gs2QuestEzAcquireActionResult.h"
 #include "Quest/Model/Gs2QuestEzTransactionResult.h"
 #include "Gs2QuestEzProgressGameSessionDomain.h"
+#include "Core/EzTransactionGameSessionDomain.h"
 #include "Util/Net/GameSession.h"
 #include "Util/Net/Gs2Connection.h"
 
@@ -57,7 +58,7 @@ namespace Gs2::UE5::Quest::Domain::Model
         );
 
         class EZGS2_API FEndTask :
-            public Gs2::Core::Util::TGs2Future<Gs2::UE5::Quest::Domain::Model::FEzProgressGameSessionDomain>,
+            public Gs2::Core::Util::TGs2Future<Gs2::UE5::Core::Domain::FEzTransactionGameSessionDomain>,
             public TSharedFromThis<FEndTask>
         {
             TSharedPtr<FEzProgressGameSessionDomain> Self;
@@ -74,7 +75,7 @@ namespace Gs2::UE5::Quest::Domain::Model
             );
 
             virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-                TSharedPtr<TSharedPtr<Gs2::UE5::Quest::Domain::Model::FEzProgressGameSessionDomain>> Result
+                TSharedPtr<TSharedPtr<Gs2::UE5::Core::Domain::FEzTransactionGameSessionDomain>> Result
             ) override;
         };
         friend FEndTask;

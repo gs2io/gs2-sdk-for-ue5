@@ -12,6 +12,8 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
+ *
+ * deny overwrite
  */
 
 #include "Chat/Domain/Model/Gs2ChatEzRoomGameSessionDomain.h"
@@ -167,6 +169,7 @@ namespace Gs2::UE5::Chat::Domain::Model
             Domain,
             GameSession,
             ConnectionValue,
+            Password(),
             Category
         );
     }
@@ -193,6 +196,7 @@ namespace Gs2::UE5::Chat::Domain::Model
             Domain,
             GameSession,
             ConnectionValue,
+            Password(),
             Category
         );
     }

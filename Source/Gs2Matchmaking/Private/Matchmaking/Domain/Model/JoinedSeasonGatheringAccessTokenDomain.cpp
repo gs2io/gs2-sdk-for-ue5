@@ -168,7 +168,7 @@ namespace Gs2::Matchmaking::Domain::Model
         TOptional<FString> NamespaceName,
         TOptional<FString> UserId,
         TOptional<FString> SeasonName,
-        TOptional<FString> Season,
+        TOptional<int64> Season,
         FString ChildType
     )
     {
@@ -176,7 +176,7 @@ namespace Gs2::Matchmaking::Domain::Model
             (NamespaceName.IsSet() ? *NamespaceName : "null") + ":" +
             (UserId.IsSet() ? *UserId : "null") + ":" +
             (SeasonName.IsSet() ? *SeasonName : "null") + ":" +
-            (Season.IsSet() ? *Season : "null") + ":" +
+            (Season.IsSet() ? FString::FromInt(*Season) : "null") + ":" +
             ChildType;
     }
 
@@ -265,7 +265,7 @@ namespace Gs2::Matchmaking::Domain::Model
             ParentKey,
             Gs2::Matchmaking::Domain::Model::FJoinedSeasonGatheringDomain::CreateCacheKey(
             ),
-            [Callback](TSharedPtr<Gs2Object> obj)
+            [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::Matchmaking::Model::FJoinedSeasonGathering>(obj));
             }

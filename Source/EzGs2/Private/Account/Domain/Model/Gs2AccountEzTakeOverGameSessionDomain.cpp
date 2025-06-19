@@ -12,6 +12,8 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
+ *
+ * deny overwrite
  */
 
 #include "Account/Domain/Model/Gs2AccountEzTakeOverGameSessionDomain.h"
@@ -223,6 +225,56 @@ namespace Gs2::UE5::Account::Domain::Model
             this->AsShared(),
             OldPassword,
             Password
+        );
+    }
+
+    FEzTakeOverGameSessionDomain::FDeleteTakeOverSettingTask::FDeleteTakeOverSettingTask(
+        TSharedPtr<FEzTakeOverGameSessionDomain> Self
+    ): Self(Self)
+    {
+
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FEzTakeOverGameSessionDomain::FDeleteTakeOverSettingTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::UE5::Account::Domain::Model::FEzTakeOverGameSessionDomain>> Result
+    )
+    {
+        const auto Future = Self->ConnectionValue->Run(
+            [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
+                const auto Task = Self->Domain->Delete(
+                    MakeShared<Gs2::Account::Request::FDeleteTakeOverRequest>()
+                );
+                Task->StartSynchronousTask();
+                if (Task->GetTask().IsError())
+                {
+                    Task->EnsureCompletion();
+                    return Task->GetTask().Error();
+                }
+                *Result = MakeShared<Gs2::UE5::Account::Domain::Model::FEzTakeOverGameSessionDomain>(
+                    Task->GetTask().Result(),
+                    Self->GameSession,
+                    Self->ConnectionValue
+                );
+                Task->EnsureCompletion();
+                return nullptr;
+            },
+            nullptr
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            Future->EnsureCompletion();
+            return Future->GetTask().Error();
+        }
+        Future->EnsureCompletion();
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FEzTakeOverGameSessionDomain::FDeleteTakeOverSettingTask>> FEzTakeOverGameSessionDomain::DeleteTakeOverSetting(
+    )
+    {
+        return Gs2::Core::Util::New<FAsyncTask<FDeleteTakeOverSettingTask>>(
+            this->AsShared()
         );
     }
 

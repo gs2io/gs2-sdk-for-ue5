@@ -35,6 +35,7 @@
 #include "Gs2LoginRewardEzBonusModelDomain.h"
 #include "LoginReward/Domain/Iterator/Gs2LoginRewardEzDescribeBonusModelsIterator.h"
 #include "Gs2LoginRewardEzNamespaceDomain.h"
+#include "Core/EzTransactionDomain.h"
 #include "Util/Net/GameSession.h"
 #include "Util/Net/Gs2Connection.h"
 

@@ -22,6 +22,7 @@
 #include "Datastore/Model/Gs2DatastoreEzDataObjectHistory.h"
 #include "Gs2DatastoreEzDataObjectHistoryGameSessionDomain.h"
 #include "Datastore/Domain/Iterator/Gs2DatastoreEzDescribeDataObjectHistoriesIterator.h"
+#include "Core/EzTransactionGameSessionDomain.h"
 #include "Util/Net/GameSession.h"
 #include "Util/Net/Gs2Connection.h"
 

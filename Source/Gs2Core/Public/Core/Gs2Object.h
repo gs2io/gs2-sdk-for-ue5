@@ -1,6 +1,6 @@
 #pragma once
 
-class GS2CORE_API Gs2Object
+class GS2CORE_API FGs2Object
 {
 protected:
 	static TOptional<FString> AsText(TSharedPtr<FJsonValue> Data);
@@ -41,5 +41,5 @@ protected:
 	}
 	
 public:
-	virtual ~Gs2Object() = default;	
+	virtual ~FGs2Object() = default;	
 };

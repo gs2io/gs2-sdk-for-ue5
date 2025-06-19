@@ -103,6 +103,16 @@ namespace Gs2::Limit::Domain::Model
             ->WithLimitName(Self->LimitName)
             ->WithUserId(Self->UserId)
             ->WithCounterName(Self->CounterName);
+        const auto Future = Self->Client->GetCounterByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         *Result = ResultModel->GetItem();
         return nullptr;
     }
@@ -137,6 +147,16 @@ namespace Gs2::Limit::Domain::Model
             ->WithLimitName(Self->LimitName)
             ->WithCounterName(Self->CounterName)
             ->WithUserId(Self->UserId);
+        const auto Future = Self->Client->CountUpByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         auto Domain = Self;
 
         *Result = Domain;
@@ -173,6 +193,16 @@ namespace Gs2::Limit::Domain::Model
             ->WithLimitName(Self->LimitName)
             ->WithCounterName(Self->CounterName)
             ->WithUserId(Self->UserId);
+        const auto Future = Self->Client->CountDownByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         auto Domain = Self;
 
         *Result = Domain;
@@ -209,6 +239,16 @@ namespace Gs2::Limit::Domain::Model
             ->WithLimitName(Self->LimitName)
             ->WithUserId(Self->UserId)
             ->WithCounterName(Self->CounterName);
+        const auto Future = Self->Client->DeleteCounterByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         auto Domain = Self;
 
         *Result = Domain;
@@ -245,6 +285,16 @@ namespace Gs2::Limit::Domain::Model
             ->WithUserId(Self->UserId)
             ->WithLimitName(Self->LimitName)
             ->WithCounterName(Self->CounterName);
+        const auto Future = Self->Client->VerifyCounterByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         const auto Domain = Self;
         *Result = Domain;
         return nullptr;

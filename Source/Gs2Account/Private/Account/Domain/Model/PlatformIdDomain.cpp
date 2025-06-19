@@ -357,7 +357,7 @@ namespace Gs2::Account::Domain::Model
                 Type.IsSet() ? FString::FromInt(*Type) : TOptional<FString>(),
                 UserIdentifier
             ),
-            [Callback](TSharedPtr<Gs2Object> obj)
+            [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::Account::Model::FPlatformId>(obj));
             }

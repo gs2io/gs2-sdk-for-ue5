@@ -34,6 +34,7 @@
 #include "Ranking2/Domain/Model/GlobalRankingReceivedReward.h"
 #include "Ranking2/Domain/Model/GlobalRankingReceivedRewardAccessToken.h"
 #include "Ranking2/Domain/Model/GlobalRankingSeason.h"
+#include "Ranking2/Domain/Model/GlobalRankingSeasonAccessToken.h"
 #include "Ranking2/Domain/Model/GlobalRankingData.h"
 #include "Ranking2/Domain/Model/GlobalRankingDataAccessToken.h"
 #include "Ranking2/Domain/Model/ClusterRankingModel.h"
@@ -43,6 +44,7 @@
 #include "Ranking2/Domain/Model/ClusterRankingReceivedReward.h"
 #include "Ranking2/Domain/Model/ClusterRankingReceivedRewardAccessToken.h"
 #include "Ranking2/Domain/Model/ClusterRankingSeason.h"
+#include "Ranking2/Domain/Model/ClusterRankingSeasonAccessToken.h"
 #include "Ranking2/Domain/Model/ClusterRankingData.h"
 #include "Ranking2/Domain/Model/ClusterRankingDataAccessToken.h"
 #include "Ranking2/Domain/Model/SubscribeRankingModel.h"
@@ -73,23 +75,22 @@ namespace Gs2::Ranking2::Domain::Model
         const Core::Domain::FGs2Ptr& Gs2,
         const Ranking2::Domain::FGs2Ranking2DomainPtr& Service,
         const TOptional<FString> NamespaceName,
-        const Gs2::Auth::Model::FAccessTokenPtr& AccessToken,
         const TOptional<FString> RankingName,
-        const TOptional<int64> Season
+        const TOptional<int64> Season,
+        const Gs2::Auth::Model::FAccessTokenPtr& AccessToken
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
         Service(Service),
         Client(MakeShared<Gs2::Ranking2::FGs2Ranking2RestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
-        AccessToken(AccessToken),
         RankingName(RankingName),
         Season(Season),
+        AccessToken(AccessToken),
         ParentKey(Gs2::Ranking2::Domain::Model::FSubscribeRankingSeasonDomain::CreateCacheParentKey(
             NamespaceName,
-            UserId(),
             RankingName,
-            FString::FromInt(*Season),
+            Season,
             "SubscribeRankingScore"
         ))
     {
@@ -102,9 +103,9 @@ namespace Gs2::Ranking2::Domain::Model
         Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
-        AccessToken(From.AccessToken),
         RankingName(From.RankingName),
         Season(From.Season),
+        AccessToken(From.AccessToken),
         ParentKey(From.ParentKey)
     {
 
@@ -131,8 +132,8 @@ namespace Gs2::Ranking2::Domain::Model
         Request
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
-            ->WithAccessToken(Self->AccessToken->GetToken())
             ->WithRankingName(Self->RankingName)
+            ->WithAccessToken(Self->AccessToken->GetToken())
             ->WithSeason(Self->Season);
         const auto Future = Self->Client->GetSubscribeRankingScore(
             Request
@@ -142,31 +143,7 @@ namespace Gs2::Ranking2::Domain::Model
         {
             return Future->GetTask().Error();
         }
-        const auto RequestModel = Request;
         const auto ResultModel = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::Ranking2::Domain::Model::FSubscribeRankingSeasonDomain::CreateCacheParentKey(
-                    Self->NamespaceName,
-                    Self->UserId(),
-                    Self->RankingName,
-                    FString::FromInt(*Self->Season),
-                    "SubscribeRankingScore"
-                );
-                const auto Key = Gs2::Ranking2::Domain::Model::FSubscribeRankingScoreDomain::CreateCacheKey(
-                );
-                Self->Gs2->Cache->Put(
-                    Gs2::Ranking2::Model::FSubscribeRankingScore::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
-        }
         *Result = ResultModel->GetItem();
         return nullptr;
     }
@@ -177,26 +154,77 @@ namespace Gs2::Ranking2::Domain::Model
         return Gs2::Core::Util::New<FAsyncTask<FGetTask>>(this->AsShared(), Request);
     }
 
+    FSubscribeRankingScoreAccessTokenDomain::FVerifyTask::FVerifyTask(
+        const TSharedPtr<FSubscribeRankingScoreAccessTokenDomain>& Self,
+        const Request::FVerifySubscribeRankingScoreRequestPtr Request
+    ): Self(Self), Request(Request)
+    {
+
+    }
+
+    FSubscribeRankingScoreAccessTokenDomain::FVerifyTask::FVerifyTask(
+        const FVerifyTask& From
+    ): TGs2Future(From), Self(From.Self), Request(From.Request)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FSubscribeRankingScoreAccessTokenDomain::FVerifyTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::Ranking2::Domain::Model::FSubscribeRankingScoreAccessTokenDomain>> Result
+    )
+    {
+        Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
+            ->WithNamespaceName(Self->NamespaceName)
+            ->WithAccessToken(Self->AccessToken->GetToken())
+            ->WithRankingName(Self->RankingName)
+            ->WithSeason(Self->Season);
+        const auto Future = Self->Client->VerifySubscribeRankingScore(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        auto Domain = Self;
+
+        *Result = Domain;
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FSubscribeRankingScoreAccessTokenDomain::FVerifyTask>> FSubscribeRankingScoreAccessTokenDomain::Verify(
+        Request::FVerifySubscribeRankingScoreRequestPtr Request
+    ) {
+        return Gs2::Core::Util::New<FAsyncTask<FVerifyTask>>(this->AsShared(), Request);
+    }
+
     FString FSubscribeRankingScoreAccessTokenDomain::CreateCacheParentKey(
         TOptional<FString> NamespaceName,
-        TOptional<FString> UserId,
         TOptional<FString> RankingName,
-        TOptional<FString> Season,
+        TOptional<int64> Season,
+        TOptional<FString> UserId,
         FString ChildType
     )
     {
         return FString("") +
             (NamespaceName.IsSet() ? *NamespaceName : "null") + ":" +
-            (UserId.IsSet() ? *UserId : "null") + ":" +
             (RankingName.IsSet() ? *RankingName : "null") + ":" +
-            (Season.IsSet() ? *Season : "null") + ":" +
+            (Season.IsSet() ? FString::FromInt(*Season) : "null") + ":" +
+            (UserId.IsSet() ? *UserId : "null") + ":" +
             ChildType;
     }
 
     FString FSubscribeRankingScoreAccessTokenDomain::CreateCacheKey(
+        TOptional<FString> RankingName,
+        TOptional<int64> Season,
+        TOptional<FString> UserId
     )
     {
-        return "Singleton";
+        return FString("") +
+            (RankingName.IsSet() ? *RankingName : "null") + ":" + 
+            (Season.IsSet() ? FString::FromInt(*Season) : "null") + ":" + 
+            (UserId.IsSet() ? *UserId : "null");
     }
 
     FSubscribeRankingScoreAccessTokenDomain::FModelTask::FModelTask(
@@ -222,6 +250,9 @@ namespace Gs2::Ranking2::Domain::Model
         auto bCacheHit = Self->Gs2->Cache->TryGet<Gs2::Ranking2::Model::FSubscribeRankingScore>(
             Self->ParentKey,
             Gs2::Ranking2::Domain::Model::FSubscribeRankingScoreDomain::CreateCacheKey(
+                Self->RankingName,
+                Self->Season,
+                Self->UserId()
             ),
             &Value
         );
@@ -238,6 +269,9 @@ namespace Gs2::Ranking2::Domain::Model
                 }
 
                 const auto Key = Gs2::Ranking2::Domain::Model::FSubscribeRankingScoreDomain::CreateCacheKey(
+                    Self->RankingName,
+                    Self->Season,
+                    Self->UserId()
                 );
                 Self->Gs2->Cache->Put(
                     Gs2::Ranking2::Model::FSubscribeRankingScore::TypeName,
@@ -255,6 +289,9 @@ namespace Gs2::Ranking2::Domain::Model
             Self->Gs2->Cache->TryGet<Gs2::Ranking2::Model::FSubscribeRankingScore>(
                 Self->ParentKey,
                 Gs2::Ranking2::Domain::Model::FSubscribeRankingScoreDomain::CreateCacheKey(
+                    Self->RankingName,
+                    Self->Season,
+                    Self->UserId()
                 ),
                 &Value
             );
@@ -277,8 +314,11 @@ namespace Gs2::Ranking2::Domain::Model
             Gs2::Ranking2::Model::FSubscribeRankingScore::TypeName,
             ParentKey,
             Gs2::Ranking2::Domain::Model::FSubscribeRankingScoreDomain::CreateCacheKey(
+                RankingName,
+                Season,
+                UserId()
             ),
-            [Callback](TSharedPtr<Gs2Object> obj)
+            [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::Ranking2::Model::FSubscribeRankingScore>(obj));
             }
@@ -293,6 +333,9 @@ namespace Gs2::Ranking2::Domain::Model
             Gs2::Ranking2::Model::FSubscribeRankingScore::TypeName,
             ParentKey,
             Gs2::Ranking2::Domain::Model::FSubscribeRankingScoreDomain::CreateCacheKey(
+                RankingName,
+                Season,
+                UserId()
             ),
             CallbackID
         );

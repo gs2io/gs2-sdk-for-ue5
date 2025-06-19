@@ -18,13 +18,13 @@
 
 namespace Gs2::Deploy::Request
 {
-    FPreValidateRequest::FPreValidateRequest():
+    FPreValidateRequest::FPreValidateRequest()
     {
     }
 
     FPreValidateRequest::FPreValidateRequest(
         const FPreValidateRequest& From
-    ):
+    )
     {
     }
 

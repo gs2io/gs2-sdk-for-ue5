@@ -34,7 +34,7 @@
 
 namespace Gs2::Chat::Domain::Iterator
 {
-    class FDescribeMessagesStartAt : public Gs2Object
+    class FDescribeMessagesStartAt : public FGs2Object
     {
     public:
         int64 Value;

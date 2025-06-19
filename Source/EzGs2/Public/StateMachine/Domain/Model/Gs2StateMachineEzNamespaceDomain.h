@@ -34,6 +34,7 @@
 #include "Gs2StateMachineEzUserDomain.h"
 #include "Gs2StateMachineEzUserGameSessionDomain.h"
 #include "Gs2StateMachineEzNamespaceDomain.h"
+#include "Core/EzTransactionDomain.h"
 #include "Util/Net/GameSession.h"
 #include "Util/Net/Gs2Connection.h"
 

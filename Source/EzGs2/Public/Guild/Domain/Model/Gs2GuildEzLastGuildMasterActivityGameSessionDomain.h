@@ -32,6 +32,7 @@
 #include "Guild/Model/Gs2GuildEzAcquireActionResult.h"
 #include "Guild/Model/Gs2GuildEzTransactionResult.h"
 #include "Gs2GuildEzLastGuildMasterActivityGameSessionDomain.h"
+#include "Core/EzTransactionGameSessionDomain.h"
 #include "Util/Net/GameSession.h"
 #include "Util/Net/Gs2Connection.h"
 

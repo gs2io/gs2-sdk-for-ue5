@@ -26,6 +26,7 @@
 #include "Friend/Model/Gs2FriendEzPublicProfile.h"
 #include "Gs2FriendEzFriendUserDomain.h"
 #include "Gs2FriendEzFriendDomain.h"
+#include "Core/EzTransactionDomain.h"
 #include "Util/Net/GameSession.h"
 #include "Util/Net/Gs2Connection.h"
 

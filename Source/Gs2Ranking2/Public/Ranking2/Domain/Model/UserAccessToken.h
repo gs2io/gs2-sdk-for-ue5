@@ -71,6 +71,7 @@ namespace Gs2::Ranking2::Domain::Model
     class FGlobalRankingReceivedRewardDomain;
     class FGlobalRankingReceivedRewardAccessTokenDomain;
     class FGlobalRankingSeasonDomain;
+    class FGlobalRankingSeasonAccessTokenDomain;
     class FGlobalRankingDataDomain;
     class FGlobalRankingDataAccessTokenDomain;
     class FClusterRankingModelDomain;
@@ -80,6 +81,7 @@ namespace Gs2::Ranking2::Domain::Model
     class FClusterRankingReceivedRewardDomain;
     class FClusterRankingReceivedRewardAccessTokenDomain;
     class FClusterRankingSeasonDomain;
+    class FClusterRankingSeasonAccessTokenDomain;
     class FClusterRankingDataDomain;
     class FClusterRankingDataAccessTokenDomain;
     class FSubscribeRankingModelDomain;
@@ -132,80 +134,6 @@ namespace Gs2::Ranking2::Domain::Model
             const FUserAccessTokenDomain& From
         );
 
-        class GS2RANKING2_API FPutGlobalRankingScoreTask final :
-            public Gs2::Core::Util::TGs2Future<Gs2::Ranking2::Domain::Model::FGlobalRankingScoreAccessTokenDomain>,
-            public TSharedFromThis<FPutGlobalRankingScoreTask>
-        {
-            const TSharedPtr<FUserAccessTokenDomain> Self;
-            const Request::FPutGlobalRankingScoreRequestPtr Request;
-        public:
-            explicit FPutGlobalRankingScoreTask(
-                const TSharedPtr<FUserAccessTokenDomain>& Self,
-                const Request::FPutGlobalRankingScoreRequestPtr Request
-            );
-
-            FPutGlobalRankingScoreTask(
-                const FPutGlobalRankingScoreTask& From
-            );
-
-            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-                TSharedPtr<TSharedPtr<Gs2::Ranking2::Domain::Model::FGlobalRankingScoreAccessTokenDomain>> Result
-            ) override;
-        };
-        friend FPutGlobalRankingScoreTask;
-
-        TSharedPtr<FAsyncTask<FPutGlobalRankingScoreTask>> PutGlobalRankingScore(
-            Request::FPutGlobalRankingScoreRequestPtr Request
-        );
-
-        class GS2RANKING2_API FPutClusterRankingScoreTask final :
-            public Gs2::Core::Util::TGs2Future<Gs2::Ranking2::Domain::Model::FClusterRankingScoreAccessTokenDomain>,
-            public TSharedFromThis<FPutClusterRankingScoreTask>
-        {
-            const TSharedPtr<FUserAccessTokenDomain> Self;
-            const Request::FPutClusterRankingScoreRequestPtr Request;
-        public:
-            explicit FPutClusterRankingScoreTask(
-                const TSharedPtr<FUserAccessTokenDomain>& Self,
-                const Request::FPutClusterRankingScoreRequestPtr Request
-            );
-
-            FPutClusterRankingScoreTask(
-                const FPutClusterRankingScoreTask& From
-            );
-
-            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-                TSharedPtr<TSharedPtr<Gs2::Ranking2::Domain::Model::FClusterRankingScoreAccessTokenDomain>> Result
-            ) override;
-        };
-        friend FPutClusterRankingScoreTask;
-
-        TSharedPtr<FAsyncTask<FPutClusterRankingScoreTask>> PutClusterRankingScore(
-            Request::FPutClusterRankingScoreRequestPtr Request
-        );
-
-        Gs2::Ranking2::Domain::Iterator::FDescribeGlobalRankingScoresIteratorPtr GlobalRankingScores(
-            const TOptional<FString> RankingName = TOptional<FString>()
-        ) const;
-
-        Gs2::Core::Domain::CallbackID SubscribeGlobalRankingScores(
-            TFunction<void()> Callback
-        );
-
-        void UnsubscribeGlobalRankingScores(
-            Gs2::Core::Domain::CallbackID CallbackID
-        );
-
-        TSharedPtr<Gs2::Ranking2::Domain::Model::FGlobalRankingScoreAccessTokenDomain> GlobalRankingScore(
-            const FString RankingName,
-            const TOptional<int64> Season = TOptional<int64>()
-        );
-
-        TSharedPtr<Gs2::Ranking2::Domain::Model::FSubscribeRankingSeasonAccessTokenDomain> SubscribeRankingSeason(
-            const FString RankingName,
-            const TOptional<int64> Season = TOptional<int64>()
-        );
-
         Gs2::Ranking2::Domain::Iterator::FDescribeSubscribesIteratorPtr Subscribes(
             const TOptional<FString> RankingName = TOptional<FString>()
         ) const;
@@ -222,64 +150,6 @@ namespace Gs2::Ranking2::Domain::Model
 
         TSharedPtr<Gs2::Ranking2::Domain::Model::FSubscribeAccessTokenDomain> Subscribe(
             const FString RankingName
-        );
-
-        Gs2::Ranking2::Domain::Iterator::FDescribeGlobalRankingReceivedRewardsIteratorPtr GlobalRankingReceivedRewards(
-            const TOptional<FString> RankingName = TOptional<FString>(),
-            const TOptional<int64> Season = TOptional<int64>()
-        ) const;
-
-        Gs2::Core::Domain::CallbackID SubscribeGlobalRankingReceivedRewards(
-            TFunction<void()> Callback
-        );
-
-        void UnsubscribeGlobalRankingReceivedRewards(
-            Gs2::Core::Domain::CallbackID CallbackID
-        );
-
-        TSharedPtr<Gs2::Ranking2::Domain::Model::FGlobalRankingReceivedRewardAccessTokenDomain> GlobalRankingReceivedReward(
-            const FString RankingName,
-            const TOptional<int64> Season = TOptional<int64>()
-        );
-
-        Gs2::Ranking2::Domain::Iterator::FDescribeClusterRankingReceivedRewardsIteratorPtr ClusterRankingReceivedRewards(
-            const TOptional<FString> RankingName = TOptional<FString>(),
-            const TOptional<FString> ClusterName = TOptional<FString>(),
-            const TOptional<int64> Season = TOptional<int64>()
-        ) const;
-
-        Gs2::Core::Domain::CallbackID SubscribeClusterRankingReceivedRewards(
-            TFunction<void()> Callback
-        );
-
-        void UnsubscribeClusterRankingReceivedRewards(
-            Gs2::Core::Domain::CallbackID CallbackID
-        );
-
-        TSharedPtr<Gs2::Ranking2::Domain::Model::FClusterRankingReceivedRewardAccessTokenDomain> ClusterRankingReceivedReward(
-            const FString RankingName,
-            const FString ClusterName,
-            const TOptional<int64> Season = TOptional<int64>()
-        );
-
-        Gs2::Ranking2::Domain::Iterator::FDescribeClusterRankingScoresIteratorPtr ClusterRankingScores(
-            const TOptional<FString> RankingName = TOptional<FString>(),
-            const TOptional<FString> ClusterName = TOptional<FString>(),
-            const TOptional<int64> Season = TOptional<int64>()
-        ) const;
-
-        Gs2::Core::Domain::CallbackID SubscribeClusterRankingScores(
-            TFunction<void()> Callback
-        );
-
-        void UnsubscribeClusterRankingScores(
-            Gs2::Core::Domain::CallbackID CallbackID
-        );
-
-        TSharedPtr<Gs2::Ranking2::Domain::Model::FClusterRankingScoreAccessTokenDomain> ClusterRankingScore(
-            const FString RankingName,
-            const FString ClusterName,
-            const TOptional<int64> Season = TOptional<int64>()
         );
 
         static FString CreateCacheParentKey(

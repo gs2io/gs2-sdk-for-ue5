@@ -128,12 +128,12 @@ namespace Gs2::StateMachine::Domain::Model
 
         static FString CreateCacheParentKey(
             TOptional<FString> NamespaceName,
-            TOptional<FString> Version,
+            TOptional<int64> Version,
             FString ChildType
         );
 
         static FString CreateCacheKey(
-            TOptional<FString> Version
+            TOptional<int64> Version
         );
 
         class GS2STATEMACHINE_API FModelTask final :

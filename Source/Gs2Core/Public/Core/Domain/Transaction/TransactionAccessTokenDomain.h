@@ -16,6 +16,7 @@
 
 #pragma once
 
+#include "Core/Model/TransactionResult.h"
 #include "JobQueue/Result/PushByUserIdResult.h"
 #include "Core/Util/Gs2Future.h"
 
@@ -45,7 +46,9 @@ namespace Gs2::Core::Domain
 			bool bAutoRun,
 			FString TransactionId,
 			FString StampSheet,
-			FString StampSheetEncryptionKeyId
+			FString StampSheetEncryptionKeyId,
+			bool bAtomicCommit,
+			Gs2::Core::Model::FTransactionResultPtr TransactionResult
 		)> NewTransactionDomain;
 		const Gs2::Auth::Model::FAccessTokenPtr AccessToken;
 		const TSharedPtr<TArray<TSharedPtr<FTransactionAccessTokenDomain>>> Actions;
@@ -59,7 +62,9 @@ namespace Gs2::Core::Domain
 				bool bAutoRun,
 				FString TransactionId,
 				FString StampSheet,
-				FString StampSheetEncryptionKeyId
+				FString StampSheetEncryptionKeyId,
+				bool bAtomicCommit,
+				Gs2::Core::Model::FTransactionResultPtr TransactionResult
 			)>& NewTransactionDomain,
 	        const Gs2::Auth::Model::FAccessTokenPtr& AccessToken,
 	        const TSharedPtr<TArray<TSharedPtr<FTransactionAccessTokenDomain>>>& Actions

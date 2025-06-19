@@ -24,6 +24,7 @@
 
 #include "Schedule/Domain/SpeculativeExecutor/Acquire/AcquireActionSpeculativeExecutorIndex.h"
 #include "Schedule/Domain/SpeculativeExecutor/Acquire/TriggerByUserIdSpeculativeExecutor.h"
+#include "Schedule/Domain/SpeculativeExecutor/Acquire/ExtendTriggerByUserIdSpeculativeExecutor.h"
 
 #include "Core/Domain/Gs2.h"
 
@@ -74,6 +75,28 @@ namespace Gs2::Schedule::Domain::SpeculativeExecutor
             auto Request = Request::FTriggerByUserIdRequest::FromJson(RequestModelJson);
             Request = FTriggerByUserIdSpeculativeExecutor::Rate(Request, Rate);
             auto Future = FTriggerByUserIdSpeculativeExecutor::Execute(
+                Domain,
+                Service,
+                AccessToken,
+                Request
+            );
+            Future->StartSynchronousTask();
+            if (Future->GetTask().IsError())
+            {
+                return Future->GetTask().Error();
+            }
+            *Result = Future->GetTask().Result();
+        }
+        if (FExtendTriggerByUserIdSpeculativeExecutor::Action() == NewAcquireAction->GetAction()) {
+            TSharedPtr<FJsonObject> RequestModelJson;
+            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(NewAcquireAction->GetRequest().IsSet() ? *NewAcquireAction->GetRequest() : "{}");
+                !FJsonSerializer::Deserialize(JsonReader, RequestModelJson))
+            {
+                return nullptr;
+            }
+            auto Request = Request::FExtendTriggerByUserIdRequest::FromJson(RequestModelJson);
+            Request = FExtendTriggerByUserIdSpeculativeExecutor::Rate(Request, Rate);
+            auto Future = FExtendTriggerByUserIdSpeculativeExecutor::Execute(
                 Domain,
                 Service,
                 AccessToken,

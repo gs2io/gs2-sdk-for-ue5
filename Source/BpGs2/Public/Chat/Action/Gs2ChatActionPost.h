@@ -20,6 +20,7 @@
 #include "Chat/Model/Gs2ChatMessage.h"
 #include "Chat/Model/Gs2ChatRoom.h"
 #include "../../Core/Model/Gs2Error.h"
+#include "Core/Model/Gs2CoreTransaction.h"
 #include "Kismet/BlueprintAsyncActionBase.h"
 #include "Gs2ChatActionPost.generated.h"
 

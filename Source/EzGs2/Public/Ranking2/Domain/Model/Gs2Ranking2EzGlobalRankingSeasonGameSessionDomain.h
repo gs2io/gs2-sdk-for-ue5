@@ -44,6 +44,7 @@
 #include "Gs2Ranking2EzGlobalRankingReceivedRewardGameSessionDomain.h"
 #include "Ranking2/Domain/Iterator/Gs2Ranking2EzDescribeGlobalRankingReceivedRewardsIterator.h"
 #include "Gs2Ranking2EzGlobalRankingSeasonGameSessionDomain.h"
+#include "Core/EzTransactionGameSessionDomain.h"
 #include "Util/Net/GameSession.h"
 #include "Util/Net/Gs2Connection.h"
 

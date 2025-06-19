@@ -25,6 +25,7 @@
 #include "Gs2NewsEzUserDomain.h"
 #include "Gs2NewsEzUserGameSessionDomain.h"
 #include "Gs2NewsEzNamespaceDomain.h"
+#include "Core/EzTransactionDomain.h"
 #include "Util/Net/GameSession.h"
 #include "Util/Net/Gs2Connection.h"
 

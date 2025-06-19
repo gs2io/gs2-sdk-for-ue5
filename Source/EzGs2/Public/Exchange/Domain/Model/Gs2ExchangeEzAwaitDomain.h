@@ -30,6 +30,7 @@
 #include "Exchange/Model/Gs2ExchangeEzAcquireActionResult.h"
 #include "Exchange/Model/Gs2ExchangeEzTransactionResult.h"
 #include "Gs2ExchangeEzAwaitDomain.h"
+#include "Core/EzTransactionDomain.h"
 #include "Util/Net/GameSession.h"
 #include "Util/Net/Gs2Connection.h"
 

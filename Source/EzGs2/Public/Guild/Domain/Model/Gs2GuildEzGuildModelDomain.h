@@ -33,6 +33,7 @@
 #include "Guild/Model/Gs2GuildEzTransactionResult.h"
 #include "Gs2GuildEzGuildModelDomain.h"
 #include "Guild/Domain/Iterator/Gs2GuildEzDescribeGuildModelsIterator.h"
+#include "Core/EzTransactionDomain.h"
 #include "Util/Net/GameSession.h"
 #include "Util/Net/Gs2Connection.h"
 

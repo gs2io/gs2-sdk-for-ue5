@@ -20,6 +20,7 @@
 #include "Money/Domain/Model/Wallet.h"
 #include "Money/Model/Gs2MoneyEzWallet.h"
 #include "Gs2MoneyEzWalletDomain.h"
+#include "Core/EzTransactionDomain.h"
 #include "Util/Net/GameSession.h"
 #include "Util/Net/Gs2Connection.h"
 

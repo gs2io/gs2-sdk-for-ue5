@@ -34,6 +34,7 @@
 #include "Quest/Model/Gs2QuestEzTransactionResult.h"
 #include "Gs2QuestEzCompletedQuestListGameSessionDomain.h"
 #include "Quest/Domain/Iterator/Gs2QuestEzDescribeCompletedQuestListsIterator.h"
+#include "Core/EzTransactionGameSessionDomain.h"
 #include "Util/Net/GameSession.h"
 #include "Util/Net/Gs2Connection.h"
 

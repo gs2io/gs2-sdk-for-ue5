@@ -29,6 +29,7 @@
 #include "Gs2StaminaEzUserDomain.h"
 #include "Gs2StaminaEzUserGameSessionDomain.h"
 #include "Gs2StaminaEzNamespaceDomain.h"
+#include "Core/EzTransactionDomain.h"
 #include "Util/Net/GameSession.h"
 #include "Util/Net/Gs2Connection.h"
 

@@ -18,13 +18,13 @@
 
 namespace Gs2::Datastore::Request
 {
-    FGetServiceVersionRequest::FGetServiceVersionRequest():
+    FGetServiceVersionRequest::FGetServiceVersionRequest()
     {
     }
 
     FGetServiceVersionRequest::FGetServiceVersionRequest(
         const FGetServiceVersionRequest& From
-    ):
+    )
     {
     }
 

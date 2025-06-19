@@ -21,12 +21,14 @@
 #include "LoginReward/Model/Gs2LoginRewardConfig.h"
 #include "LoginReward/Model/Gs2LoginRewardBonus.h"
 #include "../../Core/Model/Gs2Error.h"
+#include "Core/Model/Gs2CoreTransaction.h"
 #include "Kismet/BlueprintAsyncActionBase.h"
 #include "Gs2LoginRewardActionReceive.generated.h"
 
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FGs2LoginRewardReceiveSuccessDelegate, FGs2LoginRewardOwnBonus, Bonus, const FGs2Error, Error);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FGs2LoginRewardReceiveErrorDelegate, FGs2LoginRewardOwnBonus, Bonus, const FGs2Error, Error);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FGs2LoginRewardReceiveSuccessDelegate, FGs2CoreOwnTransaction, Transaction, const FGs2Error, Error);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FGs2LoginRewardReceiveErrorDelegate, FGs2CoreOwnTransaction, Transaction, const FGs2Error, Error);
+
 
 UCLASS()
 class BPGS2_API UGs2LoginRewardReceiveAsyncFunction : public UBlueprintAsyncActionBase

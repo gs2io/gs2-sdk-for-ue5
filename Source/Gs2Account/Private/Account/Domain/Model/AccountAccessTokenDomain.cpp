@@ -79,6 +79,56 @@ namespace Gs2::Account::Domain::Model
 
     }
 
+    FAccountAccessTokenDomain::FDeleteTakeOverTask::FDeleteTakeOverTask(
+        const TSharedPtr<FAccountAccessTokenDomain>& Self,
+        const Request::FDeleteTakeOverRequestPtr Request
+    ): Self(Self), Request(Request)
+    {
+
+    }
+
+    FAccountAccessTokenDomain::FDeleteTakeOverTask::FDeleteTakeOverTask(
+        const FDeleteTakeOverTask& From
+    ): TGs2Future(From), Self(From.Self), Request(From.Request)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FAccountAccessTokenDomain::FDeleteTakeOverTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::Account::Domain::Model::FTakeOverAccessTokenDomain>> Result
+    )
+    {
+        Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
+            ->WithNamespaceName(Self->NamespaceName)
+            ->WithAccessToken(Self->AccessToken->GetToken());
+        const auto Future = Self->Client->DeleteTakeOver(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
+        auto Domain = MakeShared<Gs2::Account::Domain::Model::FTakeOverAccessTokenDomain>(
+            Self->Gs2,
+            Self->Service,
+            Request->GetNamespaceName(),
+            Self->AccessToken,
+            ResultModel->GetItem()->GetType()
+        );
+
+        *Result = Domain;
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FAccountAccessTokenDomain::FDeleteTakeOverTask>> FAccountAccessTokenDomain::DeleteTakeOver(
+        Request::FDeleteTakeOverRequestPtr Request
+    ) {
+        return Gs2::Core::Util::New<FAsyncTask<FDeleteTakeOverTask>>(this->AsShared(), Request);
+    }
+
     FAccountAccessTokenDomain::FGetAuthorizationUrlTask::FGetAuthorizationUrlTask(
         const TSharedPtr<FAccountAccessTokenDomain>& Self,
         const Request::FGetAuthorizationUrlRequestPtr Request
@@ -109,12 +159,8 @@ namespace Gs2::Account::Domain::Model
         {
             return Future->GetTask().Error();
         }
-        const auto RequestModel = Request;
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-        }
         const auto Domain = Self;
         if (ResultModel != nullptr)
         {
@@ -320,7 +366,7 @@ namespace Gs2::Account::Domain::Model
             Gs2::Account::Domain::Model::FAccountDomain::CreateCacheKey(
                 UserId()
             ),
-            [Callback](TSharedPtr<Gs2Object> obj)
+            [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::Account::Model::FAccount>(obj));
             }

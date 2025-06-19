@@ -31,6 +31,7 @@
 #include "Exchange/Model/Gs2ExchangeEzTransactionResult.h"
 #include "Gs2ExchangeEzRateModelDomain.h"
 #include "Exchange/Domain/Iterator/Gs2ExchangeEzDescribeRateModelsIterator.h"
+#include "Core/EzTransactionDomain.h"
 #include "Util/Net/GameSession.h"
 #include "Util/Net/Gs2Connection.h"
 

@@ -114,6 +114,16 @@ namespace Gs2::Showcase::Domain::Model
             ->WithShowcaseName(Self->ShowcaseName)
             ->WithDisplayItemName(Self->DisplayItemName)
             ->WithUserId(Self->UserId);
+        const auto Future = Self->Client->GetRandomDisplayItemByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         *Result = ResultModel->GetItem();
         return nullptr;
     }
@@ -139,7 +149,7 @@ namespace Gs2::Showcase::Domain::Model
     }
 
     Gs2::Core::Model::FGs2ErrorPtr FRandomDisplayItemDomain::FRandomShowcaseBuyTask::Action(
-        TSharedPtr<TSharedPtr<Gs2::Showcase::Domain::Model::FRandomDisplayItemDomain>> Result
+        TSharedPtr<TSharedPtr<Gs2::Core::Domain::FTransactionDomain>> Result
     )
     {
         Request
@@ -148,15 +158,25 @@ namespace Gs2::Showcase::Domain::Model
             ->WithShowcaseName(Self->ShowcaseName)
             ->WithDisplayItemName(Self->DisplayItemName)
             ->WithUserId(Self->UserId);
+        const auto Future = Self->Client->RandomShowcaseBuyByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         const auto Transaction = Gs2::Core::Domain::Internal::FTransactionDomainFactory::ToTransaction(
             Self->Gs2,
             *Self->UserId,
-            ResultModel->AutoRunStampSheet() == nullptr ? false : *ResultModel->AutoRunStampSheet(),
+            ResultModel->GetAutoRunStampSheet().IsSet() ? *ResultModel->GetAutoRunStampSheet() : false,
             *ResultModel->GetTransactionId(),
             *ResultModel->GetStampSheet(),
             *ResultModel->GetStampSheetEncryptionKeyId(),
             *ResultModel->GetAtomicCommit(),
-            *ResultModel->GetTransactionResult()
+            ResultModel->GetTransactionResult()
         );
         const auto Future3 = Transaction->Wait(true);
         Future3->StartSynchronousTask();

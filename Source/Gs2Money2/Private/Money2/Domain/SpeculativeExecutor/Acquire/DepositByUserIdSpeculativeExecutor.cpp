@@ -112,7 +112,7 @@ namespace Gs2::Money2::Domain::SpeculativeExecutor
             FString("Wallet")
         );
         const auto Key = Model::FWalletDomain::CreateCacheKey(
-            FString::FromInt(*Item->GetSlot())
+            Item->GetSlot()
         );
 
         *Result = MakeShared<TFunction<void()>>([&]()

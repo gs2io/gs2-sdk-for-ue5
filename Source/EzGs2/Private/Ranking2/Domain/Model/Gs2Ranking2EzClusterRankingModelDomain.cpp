@@ -12,9 +12,13 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
+ *
+ * deny overwrite
  */
 
 #include "Ranking2/Domain/Model/Gs2Ranking2EzClusterRankingModelDomain.h"
+
+#include "Ranking2/Domain/Model/Gs2Ranking2EzClusterRankingSeasonGameSessionDomain.h"
 
 namespace Gs2::UE5::Ranking2::Domain::Model
 {
@@ -41,16 +45,33 @@ namespace Gs2::UE5::Ranking2::Domain::Model
 
     Gs2::UE5::Ranking2::Domain::Model::FEzClusterRankingSeasonDomainPtr FEzClusterRankingModelDomain::ClusterRankingSeason(
         const FString ClusterName,
-        const int64 Season,
-        const FString UserId
+        const FString UserId,
+        const TOptional<int64> Season
     ) const
     {
         return MakeShared<Gs2::UE5::Ranking2::Domain::Model::FEzClusterRankingSeasonDomain>(
             Domain->ClusterRankingSeason(
                 ClusterName,
-                Season,
-                UserId
+                UserId,
+                Season
             ),
+            ConnectionValue
+        );
+    }
+
+    Gs2::UE5::Ranking2::Domain::Model::FEzClusterRankingSeasonGameSessionDomainPtr FEzClusterRankingModelDomain::ClusterRankingSeason(
+        const FString ClusterName,
+        const Util::FGameSessionPtr GameSession,
+        const TOptional<int64> Season
+    ) const
+    {
+        return MakeShared<Gs2::UE5::Ranking2::Domain::Model::FEzClusterRankingSeasonGameSessionDomain>(
+            Domain->ClusterRankingSeason(
+                ClusterName,
+                GameSession->AccessToken(),
+                Season
+            ),
+            GameSession,
             ConnectionValue
         );
     }

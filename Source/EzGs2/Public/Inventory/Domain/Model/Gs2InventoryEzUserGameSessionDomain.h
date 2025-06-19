@@ -38,6 +38,7 @@
 #include "Gs2InventoryEzSimpleInventoryGameSessionDomain.h"
 #include "Gs2InventoryEzBigInventoryGameSessionDomain.h"
 #include "Gs2InventoryEzUserGameSessionDomain.h"
+#include "Core/EzTransactionGameSessionDomain.h"
 #include "Util/Net/GameSession.h"
 #include "Util/Net/Gs2Connection.h"
 

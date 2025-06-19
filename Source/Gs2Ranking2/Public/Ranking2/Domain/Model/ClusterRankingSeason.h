@@ -12,8 +12,6 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
- *
- * deny overwrite
  */
 
 // ReSharper disable CppUnusedIncludeDirective
@@ -70,6 +68,7 @@ namespace Gs2::Ranking2::Domain::Model
     class FGlobalRankingReceivedRewardDomain;
     class FGlobalRankingReceivedRewardAccessTokenDomain;
     class FGlobalRankingSeasonDomain;
+    class FGlobalRankingSeasonAccessTokenDomain;
     class FGlobalRankingDataDomain;
     class FGlobalRankingDataAccessTokenDomain;
     class FClusterRankingModelDomain;
@@ -79,6 +78,7 @@ namespace Gs2::Ranking2::Domain::Model
     class FClusterRankingReceivedRewardDomain;
     class FClusterRankingReceivedRewardAccessTokenDomain;
     class FClusterRankingSeasonDomain;
+    class FClusterRankingSeasonAccessTokenDomain;
     class FClusterRankingDataDomain;
     class FClusterRankingDataAccessTokenDomain;
     class FSubscribeRankingModelDomain;
@@ -114,6 +114,7 @@ namespace Gs2::Ranking2::Domain::Model
         TOptional<FString> RankingName;
         TOptional<FString> ClusterName;
         TOptional<int64> Season;
+        TOptional<FString> UserId;
     private:
 
         FString ParentKey;
@@ -126,7 +127,8 @@ namespace Gs2::Ranking2::Domain::Model
             const TOptional<FString> NamespaceName,
             const TOptional<FString> RankingName,
             const TOptional<FString> ClusterName,
-            const TOptional<int64> Season
+            const TOptional<int64> Season,
+            const TOptional<FString> UserId
             // ReSharper disable once CppMemberInitializersOrder
         );
 
@@ -134,13 +136,34 @@ namespace Gs2::Ranking2::Domain::Model
             const FClusterRankingSeasonDomain& From
         );
 
-        Gs2::Ranking2::Domain::Iterator::FDescribeClusterRankingsByUserIdIteratorPtr ClusterRankings(
-            const FString UserId,
-            const TOptional<FString> TimeOffsetToken = TOptional<FString>()
-        ) const;
+        class GS2RANKING2_API FPutClusterRankingScoreTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Ranking2::Domain::Model::FClusterRankingScoreDomain>,
+            public TSharedFromThis<FPutClusterRankingScoreTask>
+        {
+            const TSharedPtr<FClusterRankingSeasonDomain> Self;
+            const Request::FPutClusterRankingScoreByUserIdRequestPtr Request;
+        public:
+            explicit FPutClusterRankingScoreTask(
+                const TSharedPtr<FClusterRankingSeasonDomain>& Self,
+                const Request::FPutClusterRankingScoreByUserIdRequestPtr Request
+            );
 
-        Gs2::Ranking2::Domain::Iterator::FDescribeClusterRankingsIteratorPtr ClusterRankings(
-            const Auth::Model::FAccessTokenPtr AccessToken
+            FPutClusterRankingScoreTask(
+                const FPutClusterRankingScoreTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Ranking2::Domain::Model::FClusterRankingScoreDomain>> Result
+            ) override;
+        };
+        friend FPutClusterRankingScoreTask;
+
+        TSharedPtr<FAsyncTask<FPutClusterRankingScoreTask>> PutClusterRankingScore(
+            Request::FPutClusterRankingScoreByUserIdRequestPtr Request
+        );
+
+        Gs2::Ranking2::Domain::Iterator::FDescribeClusterRankingsByUserIdIteratorPtr ClusterRankings(
+            const TOptional<FString> TimeOffsetToken = TOptional<FString>()
         ) const;
 
         Gs2::Core::Domain::CallbackID SubscribeClusterRankings(
@@ -152,24 +175,49 @@ namespace Gs2::Ranking2::Domain::Model
         );
 
         TSharedPtr<Gs2::Ranking2::Domain::Model::FClusterRankingDataDomain> ClusterRankingData(
-            const FString UserId
         );
 
-        TSharedPtr<Gs2::Ranking2::Domain::Model::FClusterRankingDataAccessTokenDomain> ClusterRankingData(
-            const Auth::Model::FAccessTokenPtr AccessToken
+        Gs2::Ranking2::Domain::Iterator::FDescribeClusterRankingReceivedRewardsByUserIdIteratorPtr ClusterRankingReceivedRewards(
+            const TOptional<FString> TimeOffsetToken = TOptional<FString>()
+        ) const;
+
+        Gs2::Core::Domain::CallbackID SubscribeClusterRankingReceivedRewards(
+            TFunction<void()> Callback
         );
-        
+
+        void UnsubscribeClusterRankingReceivedRewards(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
+
+        TSharedPtr<Gs2::Ranking2::Domain::Model::FClusterRankingReceivedRewardDomain> ClusterRankingReceivedReward(
+        );
+
+        Gs2::Ranking2::Domain::Iterator::FDescribeClusterRankingScoresByUserIdIteratorPtr ClusterRankingScores(
+            const TOptional<FString> TimeOffsetToken = TOptional<FString>()
+        ) const;
+
+        Gs2::Core::Domain::CallbackID SubscribeClusterRankingScores(
+            TFunction<void()> Callback
+        );
+
+        void UnsubscribeClusterRankingScores(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
+
+        TSharedPtr<Gs2::Ranking2::Domain::Model::FClusterRankingScoreDomain> ClusterRankingScore(
+        );
+
         static FString CreateCacheParentKey(
             TOptional<FString> NamespaceName,
             TOptional<FString> RankingName,
             TOptional<FString> ClusterName,
-            TOptional<FString> Season,
+            TOptional<int64> Season,
             FString ChildType
         );
 
         static FString CreateCacheKey(
             TOptional<FString> ClusterName,
-            TOptional<FString> Season
+            TOptional<int64> Season
         );
 
     };

@@ -12,6 +12,8 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
+ *
+ * deny overwrite
  */
 
 #if defined(_MSC_VER)
@@ -73,9 +75,51 @@ namespace Gs2::Distributor::Domain::Model
 
     }
 
-    FDistributeDomain::FFreezeMasterDataTask::FFreezeMasterDataTask(
+    FDistributeDomain::FFreezeMasterDataByUserIdTask::FFreezeMasterDataByUserIdTask(
         const TSharedPtr<FDistributeDomain>& Self,
         const Request::FFreezeMasterDataByUserIdRequestPtr Request
+    ): Self(Self), Request(Request)
+    {
+
+    }
+
+    FDistributeDomain::FFreezeMasterDataByUserIdTask::FFreezeMasterDataByUserIdTask(
+        const FFreezeMasterDataByUserIdTask& From
+    ): TGs2Future(From), Self(From.Self), Request(From.Request)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FDistributeDomain::FFreezeMasterDataByUserIdTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::Distributor::Domain::Model::FDistributeDomain>> Result
+    )
+    {
+        Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
+            ->WithNamespaceName(Self->NamespaceName);
+        const auto Future = Self->Client->FreezeMasterDataByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        const auto Domain = Self;
+        Domain->NewContextStack = ResultModel->GetNewContextStack();
+        *Result = Domain;
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FDistributeDomain::FFreezeMasterDataByUserIdTask>> FDistributeDomain::FreezeMasterDataByUserId(
+        Request::FFreezeMasterDataByUserIdRequestPtr Request
+    ) {
+        return Gs2::Core::Util::New<FAsyncTask<FFreezeMasterDataByUserIdTask>>(this->AsShared(), Request);
+    }
+
+    FDistributeDomain::FFreezeMasterDataTask::FFreezeMasterDataTask(
+        const TSharedPtr<FDistributeDomain>& Self,
+        const Request::FFreezeMasterDataRequestPtr Request
     ): Self(Self), Request(Request)
     {
 
@@ -93,17 +137,70 @@ namespace Gs2::Distributor::Domain::Model
     {
         Request
             ->WithContextStack(Self->Gs2->DefaultContextStack)
-            ->WithNamespaceName(Self->NamespaceName)
-            ->WithUserId(Self->UserId);
+            ->WithNamespaceName(Self->NamespaceName);
+        const auto Future = Self->Client->FreezeMasterData(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         const auto Domain = Self;
+        Domain->NewContextStack = ResultModel->GetNewContextStack();
         *Result = Domain;
         return nullptr;
     }
 
     TSharedPtr<FAsyncTask<FDistributeDomain::FFreezeMasterDataTask>> FDistributeDomain::FreezeMasterData(
-        Request::FFreezeMasterDataByUserIdRequestPtr Request
+        Request::FFreezeMasterDataRequestPtr Request
     ) {
         return Gs2::Core::Util::New<FAsyncTask<FFreezeMasterDataTask>>(this->AsShared(), Request);
+    }
+    
+    FDistributeDomain::FFreezeMasterDataBySignedTimestampTask::FFreezeMasterDataBySignedTimestampTask(
+        const TSharedPtr<FDistributeDomain>& Self,
+        const Request::FFreezeMasterDataBySignedTimestampRequestPtr Request
+    ): Self(Self), Request(Request)
+    {
+
+    }
+
+    FDistributeDomain::FFreezeMasterDataBySignedTimestampTask::FFreezeMasterDataBySignedTimestampTask(
+        const FFreezeMasterDataBySignedTimestampTask& From
+    ): TGs2Future(From), Self(From.Self), Request(From.Request)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FDistributeDomain::FFreezeMasterDataBySignedTimestampTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::Distributor::Domain::Model::FDistributeDomain>> Result
+    )
+    {
+        Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
+            ->WithNamespaceName(Self->NamespaceName);
+        const auto Future = Self->Client->FreezeMasterDataBySignedTimestamp(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
+        const auto Domain = Self;
+        Domain->NewContextStack = ResultModel->GetNewContextStack();
+        *Result = Domain;
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FDistributeDomain::FFreezeMasterDataBySignedTimestampTask>> FDistributeDomain::FreezeMasterDataBySignedTimestamp(
+        Request::FFreezeMasterDataBySignedTimestampRequestPtr Request
+    ) {
+        return Gs2::Core::Util::New<FAsyncTask<FFreezeMasterDataBySignedTimestampTask>>(this->AsShared(), Request);
     }
 
     FDistributeDomain::FSignFreezeMasterDataTimestampTask::FSignFreezeMasterDataTimestampTask(
@@ -127,6 +224,16 @@ namespace Gs2::Distributor::Domain::Model
         Request
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName);
+        const auto Future = Self->Client->SignFreezeMasterDataTimestamp(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         const auto Domain = Self;
         if (ResultModel != nullptr)
         {

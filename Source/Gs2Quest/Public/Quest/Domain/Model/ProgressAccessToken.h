@@ -114,7 +114,7 @@ namespace Gs2::Quest::Domain::Model
         );
 
         class GS2QUEST_API FEndTask final :
-            public Gs2::Core::Util::TGs2Future<Gs2::Quest::Domain::Model::FProgressAccessTokenDomain>,
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::FTransactionAccessTokenDomain>,
             public TSharedFromThis<FEndTask>
         {
             const TSharedPtr<FProgressAccessTokenDomain> Self;
@@ -132,7 +132,7 @@ namespace Gs2::Quest::Domain::Model
             );
 
             virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-                TSharedPtr<TSharedPtr<Gs2::Quest::Domain::Model::FProgressAccessTokenDomain>> Result
+                TSharedPtr<TSharedPtr<Gs2::Core::Domain::FTransactionAccessTokenDomain>> Result
             ) override;
         };
         friend FEndTask;

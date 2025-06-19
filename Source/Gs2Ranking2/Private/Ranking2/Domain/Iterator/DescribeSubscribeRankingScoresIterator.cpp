@@ -102,9 +102,8 @@ namespace Gs2::Ranking2::Domain::Iterator
         {
             const auto ListParentKey = Gs2::Ranking2::Domain::Model::FSubscribeRankingSeasonDomain::CreateCacheParentKey(
                 Self->NamespaceName,
-                Self->UserId(),
                 Self->RankingName,
-                FString::FromInt(*Self->Season),
+                Self->Season,
                 "SubscribeRankingScore"
             );
 
@@ -150,6 +149,9 @@ namespace Gs2::Ranking2::Domain::Iterator
                     Gs2::Ranking2::Model::FSubscribeRankingScore::TypeName,
                     ListParentKey,
                     Gs2::Ranking2::Domain::Model::FSubscribeRankingScoreDomain::CreateCacheKey(
+                        Self->RankingName,
+                        Self->Season,
+                        Item->GetUserId()
                     ),
                     Item,
                     FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)

@@ -81,6 +81,16 @@ namespace Gs2::Formation::Domain
         TSharedPtr<TSharedPtr<Gs2::Formation::Domain::Model::FNamespaceDomain>> Result
     )
     {
+        const auto Future = Self->Client->CreateNamespace(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         auto Domain = MakeShared<Gs2::Formation::Domain::Model::FNamespaceDomain>(
             Self->Gs2,
             Self,
@@ -114,6 +124,16 @@ namespace Gs2::Formation::Domain
         TSharedPtr<TSharedPtr<FGs2FormationDomain>> Result
     )
     {
+        const auto Future = Self->Client->DumpUserDataByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         const auto Domain = Self;
         *Result = Domain;
         return nullptr;
@@ -143,6 +163,16 @@ namespace Gs2::Formation::Domain
         TSharedPtr<TSharedPtr<FGs2FormationDomain>> Result
     )
     {
+        const auto Future = Self->Client->CheckDumpUserDataByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         const auto Domain = Self;
         if (ResultModel != nullptr)
         {
@@ -179,6 +209,16 @@ namespace Gs2::Formation::Domain
         TSharedPtr<TSharedPtr<FGs2FormationDomain>> Result
     )
     {
+        const auto Future = Self->Client->CleanUserDataByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         const auto Domain = Self;
         *Result = Domain;
         return nullptr;
@@ -208,6 +248,16 @@ namespace Gs2::Formation::Domain
         TSharedPtr<TSharedPtr<FGs2FormationDomain>> Result
     )
     {
+        const auto Future = Self->Client->CheckCleanUserDataByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         const auto Domain = Self;
         *Result = Domain;
         return nullptr;
@@ -237,6 +287,16 @@ namespace Gs2::Formation::Domain
         TSharedPtr<TSharedPtr<FGs2FormationDomain>> Result
     )
     {
+        const auto Future = Self->Client->PrepareImportUserDataByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         const auto Domain = Self;
         if (ResultModel != nullptr)
         {
@@ -277,6 +337,16 @@ namespace Gs2::Formation::Domain
         TSharedPtr<TSharedPtr<FGs2FormationDomain>> Result
     )
     {
+        const auto Future = Self->Client->ImportUserDataByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         const auto Domain = Self;
         *Result = Domain;
         return nullptr;
@@ -306,6 +376,16 @@ namespace Gs2::Formation::Domain
         TSharedPtr<TSharedPtr<FGs2FormationDomain>> Result
     )
     {
+        const auto Future = Self->Client->CheckImportUserDataByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         const auto Domain = Self;
         if (ResultModel != nullptr)
         {
@@ -500,7 +580,7 @@ namespace Gs2::Formation::Domain
                     "Form"
                 );
                 const auto Key = Gs2::Formation::Domain::Model::FFormDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetIndex().IsSet() ? FString::FromInt(*ResultModel->GetItem()->GetIndex()) : TOptional<FString>()
+                    ResultModel->GetItem()->GetIndex()
                 );
                 Gs2->Cache->Put(
                     Gs2::Formation::Model::FForm::TypeName,
@@ -554,7 +634,7 @@ namespace Gs2::Formation::Domain
                     "Form"
                 );
                 const auto Key = Gs2::Formation::Domain::Model::FFormDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetIndex().IsSet() ? FString::FromInt(*ResultModel->GetItem()->GetIndex()) : TOptional<FString>()
+                    ResultModel->GetItem()->GetIndex()
                 );
                 Gs2->Cache->Put(
                     Gs2::Formation::Model::FForm::TypeName,
@@ -872,7 +952,7 @@ namespace Gs2::Formation::Domain
                     "Form"
                 );
                 const auto Key = Gs2::Formation::Domain::Model::FFormDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetIndex().IsSet() ? FString::FromInt(*ResultModel->GetItem()->GetIndex()) : TOptional<FString>()
+                    ResultModel->GetItem()->GetIndex()
                 );
                 Gs2->Cache->Put(
                     Gs2::Formation::Model::FForm::TypeName,
@@ -934,7 +1014,7 @@ namespace Gs2::Formation::Domain
                     "Form"
                 );
                 const auto Key = Gs2::Formation::Domain::Model::FFormDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetIndex().IsSet() ? FString::FromInt(*ResultModel->GetItem()->GetIndex()) : TOptional<FString>()
+                    ResultModel->GetItem()->GetIndex()
                 );
                 Gs2->Cache->Put(
                     Gs2::Formation::Model::FForm::TypeName,

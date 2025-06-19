@@ -123,6 +123,16 @@ namespace Gs2::Inventory::Domain::Model
             ->WithNamespaceName(Self->NamespaceName)
             ->WithInventoryName(Self->InventoryName)
             ->WithAccessToken(Self->AccessToken->GetToken());
+        const auto Future = Self->Client->ConsumeSimpleItems(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         auto Domain = MakeShared<TArray<TSharedPtr<Gs2::Inventory::Domain::Model::FSimpleItemAccessTokenDomain>>>();
         for (auto i=0; i<ResultModel->GetItems()->Num(); i++)
         {

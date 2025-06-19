@@ -23,6 +23,7 @@
 #include "Gs2LimitEzCounterGameSessionDomain.h"
 #include "Limit/Domain/Iterator/Gs2LimitEzDescribeCountersIterator.h"
 #include "Gs2LimitEzUserGameSessionDomain.h"
+#include "Core/EzTransactionGameSessionDomain.h"
 #include "Util/Net/GameSession.h"
 #include "Util/Net/Gs2Connection.h"
 

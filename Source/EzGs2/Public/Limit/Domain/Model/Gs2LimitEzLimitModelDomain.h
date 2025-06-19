@@ -22,6 +22,7 @@
 #include "Limit/Model/Gs2LimitEzLimitModel.h"
 #include "Gs2LimitEzLimitModelDomain.h"
 #include "Limit/Domain/Iterator/Gs2LimitEzDescribeLimitModelsIterator.h"
+#include "Core/EzTransactionDomain.h"
 #include "Util/Net/GameSession.h"
 #include "Util/Net/Gs2Connection.h"
 

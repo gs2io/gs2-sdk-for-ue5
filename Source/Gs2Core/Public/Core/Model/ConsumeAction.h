@@ -21,7 +21,7 @@
 
 namespace Gs2::Core::Model
 {
-    class GS2CORE_API FConsumeAction final : public Gs2Object, public TSharedFromThis<FConsumeAction>
+    class GS2CORE_API FConsumeAction final : public FGs2Object, public TSharedFromThis<FConsumeAction>
     {
         TOptional<FString> ActionValue;
         TOptional<FString> RequestValue;

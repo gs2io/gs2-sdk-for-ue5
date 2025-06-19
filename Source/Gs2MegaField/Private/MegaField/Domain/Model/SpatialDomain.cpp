@@ -105,6 +105,16 @@ namespace Gs2::MegaField::Domain::Model
             ->WithUserId(Self->UserId)
             ->WithAreaModelName(Self->AreaModelName)
             ->WithLayerModelName(Self->LayerModelName);
+        const auto Future = Self->Client->PutPositionByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         auto Domain = Self;
 
         *Result = Domain;
@@ -141,6 +151,16 @@ namespace Gs2::MegaField::Domain::Model
             ->WithUserId(Self->UserId)
             ->WithAreaModelName(Self->AreaModelName)
             ->WithLayerModelName(Self->LayerModelName);
+        const auto Future = Self->Client->ActionByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         auto Domain = MakeShared<TArray<TSharedPtr<Gs2::MegaField::Domain::Model::FSpatialDomain>>>();
         for (auto i=0; i<ResultModel->GetItems()->Num(); i++)
         {

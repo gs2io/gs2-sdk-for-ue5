@@ -27,6 +27,7 @@
 #include "Gs2DictionaryEzUserDomain.h"
 #include "Gs2DictionaryEzUserDomain.h"
 #include "Gs2DictionaryEzUserGameSessionDomain.h"
+#include "Core/EzTransactionDomain.h"
 #include "Util/Net/GameSession.h"
 #include "Util/Net/Gs2Connection.h"
 

@@ -105,6 +105,16 @@ namespace Gs2::Chat::Domain::Model
             ->WithRoomName(Self->RoomName)
             ->WithPassword(Self->Password)
             ->WithAccessToken(Self->AccessToken->GetToken());
+        const auto Future = Self->Client->UpdateRoom(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         auto Domain = Self;
 
         *Result = Domain;
@@ -140,6 +150,16 @@ namespace Gs2::Chat::Domain::Model
             ->WithNamespaceName(Self->NamespaceName)
             ->WithRoomName(Self->RoomName)
             ->WithAccessToken(Self->AccessToken->GetToken());
+        const auto Future = Self->Client->DeleteRoom(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         auto Domain = Self;
 
         *Result = Domain;
@@ -176,6 +196,16 @@ namespace Gs2::Chat::Domain::Model
             ->WithRoomName(Self->RoomName)
             ->WithAccessToken(Self->AccessToken->GetToken())
             ->WithPassword(Self->Password);
+        const auto Future = Self->Client->Post(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         auto Domain = MakeShared<Gs2::Chat::Domain::Model::FMessageAccessTokenDomain>(
             Self->Gs2,
             Self->Service,
@@ -218,6 +248,16 @@ namespace Gs2::Chat::Domain::Model
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithRoomName(Self->RoomName);
+        const auto Future = Self->Client->GetRoom(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         *Result = ResultModel->GetItem();
         return nullptr;
     }

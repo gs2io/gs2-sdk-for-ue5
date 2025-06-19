@@ -110,7 +110,7 @@ namespace Gs2::Ranking2::Domain::Iterator
                 Self->NamespaceName,
                 Self->RankingName,
                 Self->ClusterName,
-                FString::FromInt(*Self->Season),
+                Self->Season,
                 "ClusterRankingData"
             );
 

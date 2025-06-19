@@ -28,6 +28,7 @@
 #include "Gs2BuffEzUserDomain.h"
 #include "Gs2BuffEzUserGameSessionDomain.h"
 #include "Gs2BuffEzNamespaceDomain.h"
+#include "Core/EzTransactionDomain.h"
 #include "Util/Net/GameSession.h"
 #include "Util/Net/Gs2Connection.h"
 

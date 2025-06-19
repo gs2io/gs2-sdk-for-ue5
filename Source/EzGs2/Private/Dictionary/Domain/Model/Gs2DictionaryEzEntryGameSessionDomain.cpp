@@ -43,7 +43,7 @@ namespace Gs2::UE5::Dictionary::Domain::Model
 
     TOptional<FString> FEzEntryGameSessionDomain::EntryName() const
     {
-        return Domain->EntryName;
+        return Domain->EntryModelName;
     }
 
     FEzEntryGameSessionDomain::FEzEntryGameSessionDomain(

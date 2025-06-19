@@ -37,6 +37,7 @@
 #include "Ranking2/Model/Gs2Ranking2EzSubscribeUser.h"
 #include "Gs2Ranking2EzGlobalRankingModelDomain.h"
 #include "Gs2Ranking2EzGlobalRankingSeasonDomain.h"
+#include "Gs2Ranking2EzGlobalRankingSeasonGameSessionDomain.h"
 #include "Ranking2/Domain/Iterator/Gs2Ranking2EzDescribeGlobalRankingModelsIterator.h"
 #include "Util/Net/GameSession.h"
 #include "Util/Net/Gs2Connection.h"
@@ -59,8 +60,9 @@ namespace Gs2::UE5::Ranking2::Domain::Model
             Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
 
-        Gs2::UE5::Ranking2::Domain::Model::FEzGlobalRankingSeasonDomainPtr GlobalRankingSeason(
-            const int64 Season
+        Gs2::UE5::Ranking2::Domain::Model::FEzGlobalRankingSeasonGameSessionDomainPtr GlobalRankingSeason(
+            const Util::FGameSessionPtr GameSession,
+            const TOptional<int64> Season = TOptional<int64>()
         ) const;
 
         class FModelTask :

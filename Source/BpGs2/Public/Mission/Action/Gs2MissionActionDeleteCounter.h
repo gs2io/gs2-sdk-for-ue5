@@ -20,6 +20,7 @@
 #include "Mission/Model/Gs2MissionCounter.h"
 #include "Mission/Model/Gs2MissionCounter.h"
 #include "../../Core/Model/Gs2Error.h"
+#include "Core/Model/Gs2CoreTransaction.h"
 #include "Kismet/BlueprintAsyncActionBase.h"
 #include "Gs2MissionActionDeleteCounter.generated.h"
 

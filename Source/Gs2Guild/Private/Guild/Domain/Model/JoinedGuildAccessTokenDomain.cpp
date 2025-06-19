@@ -30,15 +30,19 @@
 #include "Guild/Domain/Model/GuildModelMaster.h"
 #include "Guild/Domain/Model/GuildModel.h"
 #include "Guild/Domain/Model/User.h"
-#include "Guild/Domain/Model/UserAccessToken.h"
 #include "Guild/Domain/Model/Guild.h"
+#include "Guild/Domain/Model/GuildAccessToken.h"
 #include "Guild/Domain/Model/JoinedGuild.h"
 #include "Guild/Domain/Model/JoinedGuildAccessToken.h"
+#include "Guild/Domain/Model/LastGuildMasterActivity.h"
+#include "Guild/Domain/Model/LastGuildMasterActivityAccessToken.h"
 #include "Guild/Domain/Model/CurrentGuildMaster.h"
 #include "Guild/Domain/Model/ReceiveMemberRequest.h"
+#include "Guild/Domain/Model/ReceiveMemberRequestAccessToken.h"
 #include "Guild/Domain/Model/SendMemberRequest.h"
 #include "Guild/Domain/Model/SendMemberRequestAccessToken.h"
 #include "Guild/Domain/Model/IgnoreUser.h"
+#include "Guild/Domain/Model/IgnoreUserAccessToken.h"
 
 #include "Core/Domain/Gs2.h"
 #include "Core/Domain/Transaction/JobQueueJobDomainFactory.h"
@@ -119,31 +123,8 @@ namespace Gs2::Guild::Domain::Model
         {
             return Future->GetTask().Error();
         }
-        const auto RequestModel = Request;
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::Guild::Domain::Model::FUserDomain::CreateCacheParentKey(
-                    Self->NamespaceName,
-                    Self->UserId(),
-                    "JoinedGuild"
-                );
-                const auto Key = Gs2::Guild::Domain::Model::FJoinedGuildDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetGuildModelName(),
-                    ResultModel->GetItem()->GetGuildName()
-                );
-                Self->Gs2->Cache->Put(
-                    Gs2::Guild::Model::FJoinedGuild::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
-        }
         *Result = ResultModel->GetItem();
         return nullptr;
     }
@@ -152,6 +133,58 @@ namespace Gs2::Guild::Domain::Model
         Request::FGetJoinedGuildRequestPtr Request
     ) {
         return Gs2::Core::Util::New<FAsyncTask<FGetTask>>(this->AsShared(), Request);
+    }
+
+    FJoinedGuildAccessTokenDomain::FUpdateMemberMetadataTask::FUpdateMemberMetadataTask(
+        const TSharedPtr<FJoinedGuildAccessTokenDomain>& Self,
+        const Request::FUpdateMemberMetadataRequestPtr Request
+    ): Self(Self), Request(Request)
+    {
+
+    }
+
+    FJoinedGuildAccessTokenDomain::FUpdateMemberMetadataTask::FUpdateMemberMetadataTask(
+        const FUpdateMemberMetadataTask& From
+    ): TGs2Future(From), Self(From.Self), Request(From.Request)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FJoinedGuildAccessTokenDomain::FUpdateMemberMetadataTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::Guild::Domain::Model::FGuildAccessTokenDomain>> Result
+    )
+    {
+        Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
+            ->WithNamespaceName(Self->NamespaceName)
+            ->WithGuildModelName(Self->GuildModelName)
+            ->WithGuildName(Self->GuildName)
+            ->WithAccessToken(Self->AccessToken->GetToken());
+        const auto Future = Self->Client->UpdateMemberMetadata(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
+        auto Domain = MakeShared<Gs2::Guild::Domain::Model::FGuildAccessTokenDomain>(
+            Self->Gs2,
+            Self->Service,
+            Request->GetNamespaceName(),
+            ResultModel->GetItem()->GetGuildModelName(),
+            Self->AccessToken
+        );
+
+        *Result = Domain;
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FJoinedGuildAccessTokenDomain::FUpdateMemberMetadataTask>> FJoinedGuildAccessTokenDomain::UpdateMemberMetadata(
+        Request::FUpdateMemberMetadataRequestPtr Request
+    ) {
+        return Gs2::Core::Util::New<FAsyncTask<FUpdateMemberMetadataTask>>(this->AsShared(), Request);
     }
 
     FJoinedGuildAccessTokenDomain::FWithdrawalTask::FWithdrawalTask(
@@ -186,49 +219,8 @@ namespace Gs2::Guild::Domain::Model
         {
             return Future->GetTask().Error();
         }
-        const auto RequestModel = Request;
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::Guild::Domain::Model::FUserDomain::CreateCacheParentKey(
-                    Self->NamespaceName,
-                    Self->UserId(),
-                    "JoinedGuild"
-                );
-                const auto Key = Gs2::Guild::Domain::Model::FJoinedGuildDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetGuildModelName(),
-                    ResultModel->GetItem()->GetGuildName()
-                );
-                Self->Gs2->Cache->Put(
-                    Gs2::Guild::Model::FJoinedGuild::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
-            if (ResultModel->GetGuild() != nullptr)
-            {
-                const auto ParentKey = Gs2::Guild::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
-                    Self->NamespaceName,
-                    "Guild"
-                );
-                const auto Key = Gs2::Guild::Domain::Model::FGuildDomain::CreateCacheKey(
-                    ResultModel->GetGuild()->GetGuildModelName(),
-                    ResultModel->GetGuild()->GetName()
-                );
-                Self->Gs2->Cache->Put(
-                    Gs2::Guild::Model::FGuild::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetGuild(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
-        }
         auto Domain = Self;
 
         *Result = Domain;
@@ -354,7 +346,7 @@ namespace Gs2::Guild::Domain::Model
                 GuildModelName,
                 GuildName
             ),
-            [Callback](TSharedPtr<Gs2Object> obj)
+            [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::Guild::Model::FJoinedGuild>(obj));
             }

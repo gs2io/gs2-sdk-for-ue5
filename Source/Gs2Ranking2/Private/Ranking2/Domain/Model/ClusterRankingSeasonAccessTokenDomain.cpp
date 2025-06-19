@@ -12,6 +12,8 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
+ *
+ * deny overwrite
  */
 
 #if defined(_MSC_VER)
@@ -135,6 +137,15 @@ namespace Gs2::Ranking2::Domain::Model
             ->WithRankingName(Self->RankingName)
             ->WithClusterName(Self->ClusterName)
             ->WithAccessToken(Self->AccessToken->GetToken());
+        const auto Future = Self->Client->PutClusterRankingScore(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
         auto Domain = MakeShared<Gs2::Ranking2::Domain::Model::FClusterRankingScoreAccessTokenDomain>(
             Self->Gs2,
             Self->Service,
@@ -345,7 +356,7 @@ namespace Gs2::Ranking2::Domain::Model
         TOptional<FString> NamespaceName,
         TOptional<FString> RankingName,
         TOptional<FString> ClusterName,
-        TOptional<FString> Season,
+        TOptional<int64> Season,
         FString ChildType
     )
     {
@@ -353,7 +364,7 @@ namespace Gs2::Ranking2::Domain::Model
             (NamespaceName.IsSet() ? *NamespaceName : "null") + ":" +
             (RankingName.IsSet() ? *RankingName : "null") + ":" +
             (ClusterName.IsSet() ? *ClusterName : "null") + ":" +
-            (Season.IsSet() ? *Season : "null") + ":" +
+            (Season.IsSet() ? FString::FromInt(*Season) : "null") + ":" +
             ChildType;
     }
 

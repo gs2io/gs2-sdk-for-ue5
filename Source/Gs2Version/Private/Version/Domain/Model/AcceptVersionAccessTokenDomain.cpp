@@ -102,6 +102,16 @@ namespace Gs2::Version::Domain::Model
             ->WithNamespaceName(Self->NamespaceName)
             ->WithVersionName(Self->VersionName)
             ->WithAccessToken(Self->AccessToken->GetToken());
+        const auto Future = Self->Client->Accept(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         auto Domain = Self;
 
         *Result = Domain;
@@ -137,6 +147,16 @@ namespace Gs2::Version::Domain::Model
             ->WithNamespaceName(Self->NamespaceName)
             ->WithVersionName(Self->VersionName)
             ->WithAccessToken(Self->AccessToken->GetToken());
+        const auto Future = Self->Client->Reject(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         auto Domain = Self;
 
         *Result = Domain;
@@ -172,6 +192,16 @@ namespace Gs2::Version::Domain::Model
             ->WithNamespaceName(Self->NamespaceName)
             ->WithAccessToken(Self->AccessToken->GetToken())
             ->WithVersionName(Self->VersionName);
+        const auto Future = Self->Client->GetAcceptVersion(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         *Result = ResultModel->GetItem();
         return nullptr;
     }
@@ -205,6 +235,16 @@ namespace Gs2::Version::Domain::Model
             ->WithNamespaceName(Self->NamespaceName)
             ->WithAccessToken(Self->AccessToken->GetToken())
             ->WithVersionName(Self->VersionName);
+        const auto Future = Self->Client->DeleteAcceptVersion(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         auto Domain = Self;
 
         *Result = Domain;

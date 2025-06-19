@@ -25,6 +25,7 @@
 #include "Stamina/Model/Gs2StaminaEzStamina.h"
 #include "Gs2StaminaEzStaminaModelDomain.h"
 #include "Stamina/Domain/Iterator/Gs2StaminaEzDescribeStaminaModelsIterator.h"
+#include "Core/EzTransactionDomain.h"
 #include "Util/Net/GameSession.h"
 #include "Util/Net/Gs2Connection.h"
 

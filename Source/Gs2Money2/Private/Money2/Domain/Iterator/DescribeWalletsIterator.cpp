@@ -139,7 +139,7 @@ namespace Gs2::Money2::Domain::Iterator
                     Gs2::Money2::Model::FWallet::TypeName,
                     ListParentKey,
                     Gs2::Money2::Domain::Model::FWalletDomain::CreateCacheKey(
-                        FString::FromInt(*Item->GetSlot())
+                        Item->GetSlot()
                     ),
                     Item,
                     FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)

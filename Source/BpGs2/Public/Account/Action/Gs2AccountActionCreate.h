@@ -20,6 +20,7 @@
 #include "Account/Model/Gs2AccountAccount.h"
 #include "Account/Model/Gs2AccountNamespace.h"
 #include "../../Core/Model/Gs2Error.h"
+#include "Core/Model/Gs2CoreTransaction.h"
 #include "Kismet/BlueprintAsyncActionBase.h"
 #include "Gs2AccountActionCreate.generated.h"
 

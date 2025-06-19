@@ -90,7 +90,7 @@ namespace Gs2::Ranking2::Domain::Model
             NamespaceName,
             RankingName,
             ClusterName,
-            FString::FromInt(*Season),
+            Season,
             "ClusterRankingData"
         ))
     {
@@ -156,7 +156,7 @@ namespace Gs2::Ranking2::Domain::Model
                     Self->NamespaceName,
                     Self->RankingName,
                     Self->ClusterName,
-                    FString::FromInt(*Self->Season),
+                    Self->Season,
                     "ClusterRankingData"
                 );
                 const auto Key = Gs2::Ranking2::Domain::Model::FClusterRankingDataDomain::CreateCacheKey(
@@ -187,7 +187,7 @@ namespace Gs2::Ranking2::Domain::Model
         TOptional<FString> NamespaceName,
         TOptional<FString> RankingName,
         TOptional<FString> ClusterName,
-        TOptional<FString> Season,
+        TOptional<int64> Season,
         TOptional<FString> UserId,
         FString ChildType
     )
@@ -196,7 +196,7 @@ namespace Gs2::Ranking2::Domain::Model
             (NamespaceName.IsSet() ? *NamespaceName : "null") + ":" +
             (RankingName.IsSet() ? *RankingName : "null") + ":" +
             (ClusterName.IsSet() ? *ClusterName : "null") + ":" +
-            (Season.IsSet() ? *Season : "null") + ":" +
+            (Season.IsSet() ? FString::FromInt(*Season) : "null") + ":" +
             (UserId.IsSet() ? *UserId : "null") + ":" +
             ChildType;
     }
@@ -255,7 +255,7 @@ namespace Gs2::Ranking2::Domain::Model
             Gs2::Ranking2::Domain::Model::FClusterRankingDataDomain::CreateCacheKey(
                 UserId
             ),
-            [Callback](TSharedPtr<Gs2Object> obj)
+            [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::Ranking2::Model::FClusterRankingData>(obj));
             }

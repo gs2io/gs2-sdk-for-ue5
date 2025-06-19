@@ -12,14 +12,12 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
- *
- * deny overwrite
  */
 
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Ranking2/Domain/Model/ClusterRankingSeason.h"
+#include "Ranking2/Domain/Model/ClusterRankingSeasonAccessToken.h"
 #include "Ranking2/Model/Gs2Ranking2EzClusterRankingData.h"
 #include "Util/Net/GameSession.h"
 
@@ -30,20 +28,19 @@ namespace Gs2::UE5::Ranking2::Domain::Iterator
         public TSharedFromThis<FEzDescribeClusterRankingsIterator>
     {
         Gs2::Ranking2::Domain::Iterator::FDescribeClusterRankingsIteratorPtr It;
-        Gs2::Ranking2::Domain::Model::FClusterRankingSeasonDomainPtr Domain;
-        Gs2::UE5::Util::FGameSessionPtr GameSession;
+        Gs2::Ranking2::Domain::Model::FClusterRankingSeasonAccessTokenDomainPtr Domain;
+        Gs2::UE5::Util::IGameSessionPtr GameSession;
         Gs2::UE5::Util::FGs2ConnectionPtr Connection;
 
 	public:
 
         explicit FEzDescribeClusterRankingsIterator(
-            Gs2::Ranking2::Domain::Model::FClusterRankingSeasonDomainPtr Domain,
-            Gs2::UE5::Util::FGameSessionPtr GameSession,
+            Gs2::Ranking2::Domain::Model::FClusterRankingSeasonAccessTokenDomainPtr Domain,
+            Gs2::UE5::Util::IGameSessionPtr GameSession,
             Gs2::UE5::Util::FGs2ConnectionPtr Connection
         ) :
             It(
                 Domain->ClusterRankings(
-                	GameSession->AccessToken()
                 )
             ),
             Domain(Domain),

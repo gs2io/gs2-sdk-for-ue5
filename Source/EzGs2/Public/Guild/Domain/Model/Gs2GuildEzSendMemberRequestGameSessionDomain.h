@@ -33,6 +33,7 @@
 #include "Guild/Model/Gs2GuildEzTransactionResult.h"
 #include "Gs2GuildEzSendMemberRequestGameSessionDomain.h"
 #include "Guild/Domain/Iterator/Gs2GuildEzDescribeSendRequestsIterator.h"
+#include "Core/EzTransactionGameSessionDomain.h"
 #include "Util/Net/GameSession.h"
 #include "Util/Net/Gs2Connection.h"
 

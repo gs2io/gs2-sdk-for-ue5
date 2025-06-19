@@ -22,7 +22,7 @@
 
 namespace Gs2::Formation::Model
 {
-    class GS2FORMATION_API FAcquireActionConfig final : public Gs2Object, public TSharedFromThis<FAcquireActionConfig>
+    class GS2FORMATION_API FAcquireActionConfig final : public FGs2Object, public TSharedFromThis<FAcquireActionConfig>
     {
         TOptional<FString> NameValue;
         TSharedPtr<TArray<TSharedPtr<FConfig>>> ConfigValue;

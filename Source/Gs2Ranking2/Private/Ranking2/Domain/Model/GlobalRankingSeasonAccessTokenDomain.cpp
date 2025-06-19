@@ -131,6 +131,16 @@ namespace Gs2::Ranking2::Domain::Model
             ->WithNamespaceName(Self->NamespaceName)
             ->WithRankingName(Self->RankingName)
             ->WithAccessToken(Self->AccessToken->GetToken());
+        const auto Future = Self->Client->PutGlobalRankingScore(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         auto Domain = MakeShared<Gs2::Ranking2::Domain::Model::FGlobalRankingScoreAccessTokenDomain>(
             Self->Gs2,
             Self->Service,
@@ -326,23 +336,23 @@ namespace Gs2::Ranking2::Domain::Model
     FString FGlobalRankingSeasonAccessTokenDomain::CreateCacheParentKey(
         TOptional<FString> NamespaceName,
         TOptional<FString> RankingName,
-        TOptional<FString> Season,
+        TOptional<int64> Season,
         FString ChildType
     )
     {
         return FString("") +
             (NamespaceName.IsSet() ? *NamespaceName : "null") + ":" +
             (RankingName.IsSet() ? *RankingName : "null") + ":" +
-            (Season.IsSet() ? *Season : "null") + ":" +
+            (Season.IsSet() ? FString::FromInt(*Season) : "null") + ":" +
             ChildType;
     }
 
     FString FGlobalRankingSeasonAccessTokenDomain::CreateCacheKey(
-        TOptional<FString> Season
+        TOptional<int64> Season
     )
     {
         return FString("") +
-            (Season.IsSet() ? *Season : "null");
+            (Season.IsSet() ? FString::FromInt(*Season) : "null");
     }
 }
 

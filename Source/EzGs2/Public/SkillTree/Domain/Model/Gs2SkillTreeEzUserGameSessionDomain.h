@@ -30,6 +30,7 @@
 #include "SkillTree/Model/Gs2SkillTreeEzTransactionResult.h"
 #include "Gs2SkillTreeEzStatusGameSessionDomain.h"
 #include "Gs2SkillTreeEzUserGameSessionDomain.h"
+#include "Core/EzTransactionGameSessionDomain.h"
 #include "Util/Net/GameSession.h"
 #include "Util/Net/Gs2Connection.h"
 

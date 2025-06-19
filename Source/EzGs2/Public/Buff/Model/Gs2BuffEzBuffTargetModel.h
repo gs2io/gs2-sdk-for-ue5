@@ -12,13 +12,15 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
+ *
+ * deny overwrite
  */
 
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Buff/Model/BuffTargetModel.h"
 #include "Gs2BuffEzBuffTargetGrn.h"
+#include "Buff/Model/BuffTargetModel.h"
 
 namespace Gs2::UE5::Buff::Model
 {

@@ -27,6 +27,7 @@
 #include "Gs2ChatEzUserDomain.h"
 #include "Gs2ChatEzUserDomain.h"
 #include "Gs2ChatEzUserGameSessionDomain.h"
+#include "Core/EzTransactionDomain.h"
 #include "Util/Net/GameSession.h"
 #include "Util/Net/Gs2Connection.h"
 

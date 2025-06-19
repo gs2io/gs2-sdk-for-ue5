@@ -110,6 +110,16 @@ namespace Gs2::Chat::Domain::Model
             ->WithMessageName(Self->MessageName)
             ->WithPassword(Self->Password)
             ->WithAccessToken(Self->AccessToken->GetToken());
+        const auto Future = Self->Client->GetMessage(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         *Result = ResultModel->GetItem();
         return nullptr;
     }

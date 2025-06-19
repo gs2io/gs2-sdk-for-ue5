@@ -24,6 +24,7 @@
 #include "Chat/Model/Gs2ChatEzNotificationType.h"
 #include "Gs2ChatEzSubscribeGameSessionDomain.h"
 #include "Chat/Domain/Iterator/Gs2ChatEzDescribeSubscribesIterator.h"
+#include "Core/EzTransactionGameSessionDomain.h"
 #include "Util/Net/GameSession.h"
 #include "Util/Net/Gs2Connection.h"
 

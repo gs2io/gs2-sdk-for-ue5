@@ -12,6 +12,8 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
+ *
+ * deny overwrite
  */
 
 #if defined(_MSC_VER)
@@ -139,7 +141,6 @@ namespace Gs2::Chat::Domain::Iterator
                     ->WithRoomName(Self->RoomName)
                     ->WithPassword(Self->Password)
                     ->WithAccessToken(Self->AccessToken == nullptr ? TOptional<FString>() : Self->AccessToken->GetToken())
-                    ->WithStartAt(StartAt)
                     ->WithLimit(FetchSize)
             );
             Future->StartSynchronousTask();
@@ -167,20 +168,6 @@ namespace Gs2::Chat::Domain::Iterator
                     Item,
                     FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
                 );
-            }
-            if (Range)
-            {
-                if (UpdateContext)
-                {
-                    auto UpdateContextValue = StaticCastSharedPtr<FDescribeMessagesStartAt>(UpdateContext)->Value;
-                    Range->RemoveAll([UpdateContextValue](const Gs2::Chat::Model::FMessagePtr& Message){ return *Message->GetCreatedAt() >= UpdateContextValue; });
-                    StartAt = UpdateContextValue;
-                    bLast = false;
-                }
-                else
-                {
-                    bLast = true;
-                }
             }
             RangeIteratorOpt = Range->CreateIterator();
             if (Range->Num() > 0) {

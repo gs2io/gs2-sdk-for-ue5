@@ -100,6 +100,16 @@ namespace Gs2::SerialKey::Domain::Model
             ->WithNamespaceName(Self->NamespaceName)
             ->WithCampaignModelName(Self->CampaignModelName)
             ->WithIssueJobName(Self->IssueJobName);
+        const auto Future = Self->Client->GetIssueJob(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         *Result = ResultModel->GetItem();
         return nullptr;
     }

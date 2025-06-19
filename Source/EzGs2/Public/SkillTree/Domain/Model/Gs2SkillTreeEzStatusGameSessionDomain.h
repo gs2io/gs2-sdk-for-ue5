@@ -29,6 +29,7 @@
 #include "SkillTree/Model/Gs2SkillTreeEzAcquireActionResult.h"
 #include "SkillTree/Model/Gs2SkillTreeEzTransactionResult.h"
 #include "Gs2SkillTreeEzStatusGameSessionDomain.h"
+#include "Core/EzTransactionGameSessionDomain.h"
 #include "Util/Net/GameSession.h"
 #include "Util/Net/Gs2Connection.h"
 
@@ -54,7 +55,7 @@ namespace Gs2::UE5::SkillTree::Domain::Model
         );
 
         class EZGS2_API FReleaseTask :
-            public Gs2::Core::Util::TGs2Future<Gs2::UE5::SkillTree::Domain::Model::FEzStatusGameSessionDomain>,
+            public Gs2::Core::Util::TGs2Future<Gs2::UE5::Core::Domain::FEzTransactionGameSessionDomain>,
             public TSharedFromThis<FReleaseTask>
         {
             TSharedPtr<FEzStatusGameSessionDomain> Self;
@@ -67,7 +68,7 @@ namespace Gs2::UE5::SkillTree::Domain::Model
             );
 
             virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-                TSharedPtr<TSharedPtr<Gs2::UE5::SkillTree::Domain::Model::FEzStatusGameSessionDomain>> Result
+                TSharedPtr<TSharedPtr<Gs2::UE5::Core::Domain::FEzTransactionGameSessionDomain>> Result
             ) override;
         };
         friend FReleaseTask;
@@ -77,7 +78,7 @@ namespace Gs2::UE5::SkillTree::Domain::Model
         );
 
         class EZGS2_API FRestrainTask :
-            public Gs2::Core::Util::TGs2Future<Gs2::UE5::SkillTree::Domain::Model::FEzStatusGameSessionDomain>,
+            public Gs2::Core::Util::TGs2Future<Gs2::UE5::Core::Domain::FEzTransactionGameSessionDomain>,
             public TSharedFromThis<FRestrainTask>
         {
             TSharedPtr<FEzStatusGameSessionDomain> Self;
@@ -90,7 +91,7 @@ namespace Gs2::UE5::SkillTree::Domain::Model
             );
 
             virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-                TSharedPtr<TSharedPtr<Gs2::UE5::SkillTree::Domain::Model::FEzStatusGameSessionDomain>> Result
+                TSharedPtr<TSharedPtr<Gs2::UE5::Core::Domain::FEzTransactionGameSessionDomain>> Result
             ) override;
         };
         friend FRestrainTask;
@@ -100,7 +101,7 @@ namespace Gs2::UE5::SkillTree::Domain::Model
         );
 
         class EZGS2_API FResetTask :
-            public Gs2::Core::Util::TGs2Future<Gs2::UE5::SkillTree::Domain::Model::FEzStatusGameSessionDomain>,
+            public Gs2::Core::Util::TGs2Future<Gs2::UE5::Core::Domain::FEzTransactionGameSessionDomain>,
             public TSharedFromThis<FResetTask>
         {
             TSharedPtr<FEzStatusGameSessionDomain> Self;
@@ -111,7 +112,7 @@ namespace Gs2::UE5::SkillTree::Domain::Model
             );
 
             virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-                TSharedPtr<TSharedPtr<Gs2::UE5::SkillTree::Domain::Model::FEzStatusGameSessionDomain>> Result
+                TSharedPtr<TSharedPtr<Gs2::UE5::Core::Domain::FEzTransactionGameSessionDomain>> Result
             ) override;
         };
         friend FResetTask;

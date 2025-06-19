@@ -113,6 +113,16 @@ namespace Gs2::Formation::Domain::Model
             ->WithAccessToken(Self->AccessToken->GetToken())
             ->WithPropertyFormModelName(Self->PropertyFormModelName)
             ->WithPropertyId(Self->PropertyId);
+        const auto Future = Self->Client->GetPropertyForm(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         *Result = ResultModel->GetItem();
         return nullptr;
     }
@@ -147,11 +157,27 @@ namespace Gs2::Formation::Domain::Model
             ->WithAccessToken(Self->AccessToken->GetToken())
             ->WithPropertyFormModelName(Self->PropertyFormModelName)
             ->WithPropertyId(Self->PropertyId);
+        const auto Future = Self->Client->GetPropertyFormWithSignature(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         auto Domain = Self;
         if (ResultModel != nullptr)
         {
-            Domain->Body = *ResultModel->GetBody();
-            Domain->Signature = *ResultModel->GetSignature();
+            if (ResultModel->GetBody().IsSet())
+            {
+                Domain->Body = *ResultModel->GetBody();
+            }
+            if (ResultModel->GetSignature().IsSet())
+            {
+                Domain->Signature = *ResultModel->GetSignature();
+            }
         }
 
         *Result = Domain;
@@ -188,6 +214,16 @@ namespace Gs2::Formation::Domain::Model
             ->WithAccessToken(Self->AccessToken->GetToken())
             ->WithPropertyFormModelName(Self->PropertyFormModelName)
             ->WithPropertyId(Self->PropertyId);
+        const auto Future = Self->Client->SetPropertyForm(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         auto Domain = Self;
 
         *Result = Domain;
@@ -224,6 +260,16 @@ namespace Gs2::Formation::Domain::Model
             ->WithAccessToken(Self->AccessToken->GetToken())
             ->WithPropertyFormModelName(Self->PropertyFormModelName)
             ->WithPropertyId(Self->PropertyId);
+        const auto Future = Self->Client->SetPropertyFormWithSignature(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         auto Domain = Self;
 
         *Result = Domain;
@@ -260,6 +306,16 @@ namespace Gs2::Formation::Domain::Model
             ->WithAccessToken(Self->AccessToken->GetToken())
             ->WithPropertyFormModelName(Self->PropertyFormModelName)
             ->WithPropertyId(Self->PropertyId);
+        const auto Future = Self->Client->DeletePropertyForm(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         auto Domain = Self;
 
         *Result = Domain;

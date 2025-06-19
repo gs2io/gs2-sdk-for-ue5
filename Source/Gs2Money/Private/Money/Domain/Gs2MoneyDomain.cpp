@@ -73,6 +73,16 @@ namespace Gs2::Money::Domain
         TSharedPtr<TSharedPtr<Gs2::Money::Domain::Model::FNamespaceDomain>> Result
     )
     {
+        const auto Future = Self->Client->CreateNamespace(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         auto Domain = MakeShared<Gs2::Money::Domain::Model::FNamespaceDomain>(
             Self->Gs2,
             Self,
@@ -106,6 +116,16 @@ namespace Gs2::Money::Domain
         TSharedPtr<TSharedPtr<FGs2MoneyDomain>> Result
     )
     {
+        const auto Future = Self->Client->DumpUserDataByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         const auto Domain = Self;
         *Result = Domain;
         return nullptr;
@@ -135,6 +155,16 @@ namespace Gs2::Money::Domain
         TSharedPtr<TSharedPtr<FGs2MoneyDomain>> Result
     )
     {
+        const auto Future = Self->Client->CheckDumpUserDataByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         const auto Domain = Self;
         if (ResultModel != nullptr)
         {
@@ -171,6 +201,16 @@ namespace Gs2::Money::Domain
         TSharedPtr<TSharedPtr<FGs2MoneyDomain>> Result
     )
     {
+        const auto Future = Self->Client->CleanUserDataByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         const auto Domain = Self;
         *Result = Domain;
         return nullptr;
@@ -200,6 +240,16 @@ namespace Gs2::Money::Domain
         TSharedPtr<TSharedPtr<FGs2MoneyDomain>> Result
     )
     {
+        const auto Future = Self->Client->CheckCleanUserDataByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         const auto Domain = Self;
         *Result = Domain;
         return nullptr;
@@ -229,6 +279,16 @@ namespace Gs2::Money::Domain
         TSharedPtr<TSharedPtr<FGs2MoneyDomain>> Result
     )
     {
+        const auto Future = Self->Client->PrepareImportUserDataByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         const auto Domain = Self;
         if (ResultModel != nullptr)
         {
@@ -269,6 +329,16 @@ namespace Gs2::Money::Domain
         TSharedPtr<TSharedPtr<FGs2MoneyDomain>> Result
     )
     {
+        const auto Future = Self->Client->ImportUserDataByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         const auto Domain = Self;
         *Result = Domain;
         return nullptr;
@@ -298,6 +368,16 @@ namespace Gs2::Money::Domain
         TSharedPtr<TSharedPtr<FGs2MoneyDomain>> Result
     )
     {
+        const auto Future = Self->Client->CheckImportUserDataByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         const auto Domain = Self;
         if (ResultModel != nullptr)
         {
@@ -387,7 +467,7 @@ namespace Gs2::Money::Domain
                     "Wallet"
                 );
                 const auto Key = Gs2::Money::Domain::Model::FWalletDomain::CreateCacheKey(
-                    TOptional<FString>()
+                    TOptional<int32>()
                 );
                 Gs2->Cache->Put(
                     Gs2::Money::Model::FWallet::TypeName,
@@ -464,7 +544,7 @@ namespace Gs2::Money::Domain
                     "Wallet"
                 );
                 const auto Key = Gs2::Money::Domain::Model::FWalletDomain::CreateCacheKey(
-                    TOptional<FString>()
+                    TOptional<int32>()
                 );
                 Gs2->Cache->Put(
                     Gs2::Money::Model::FWallet::TypeName,
@@ -549,7 +629,7 @@ namespace Gs2::Money::Domain
                     "Wallet"
                 );
                 const auto Key = Gs2::Money::Domain::Model::FWalletDomain::CreateCacheKey(
-                    TOptional<FString>()
+                    TOptional<int32>()
                 );
                 Gs2->Cache->Put(
                     Gs2::Money::Model::FWallet::TypeName,

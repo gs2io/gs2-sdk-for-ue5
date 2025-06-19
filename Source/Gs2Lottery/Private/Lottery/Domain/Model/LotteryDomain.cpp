@@ -45,7 +45,6 @@
 #include "Core/Domain/Transaction/JobQueueJobDomainFactory.h"
 #include "Core/Domain/Transaction/InternalTransactionDomainFactory.h"
 #include "Core/Domain/Transaction/ManualTransactionDomain.h"
-#include "Lottery/Domain/Model/DrawnPrize.h"
 
 namespace Gs2::Lottery::Domain::Model
 {
@@ -101,13 +100,14 @@ namespace Gs2::Lottery::Domain::Model
     }
 
     Gs2::Core::Model::FGs2ErrorPtr FLotteryDomain::FDrawTask::Action(
-        TSharedPtr<TSharedPtr<Gs2::Lottery::Domain::Model::FLotteryDomain>> Result
+        TSharedPtr<TSharedPtr<Gs2::Core::Domain::FTransactionDomain>> Result
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
-            ->WithUserId(Self->UserId)
-            ->WithLotteryName(Self->LotteryName);
+            ->WithLotteryName(Self->LotteryName)
+            ->WithUserId(Self->UserId);
         const auto Future = Self->Client->DrawByUserId(
             Request
         );
@@ -116,70 +116,24 @@ namespace Gs2::Lottery::Domain::Model
         {
             return Future->GetTask().Error();
         }
-        const auto RequestModel = Request;
         const auto ResultModel = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            {
-                for (auto Item : *ResultModel->GetItems())
-                {
-                    const auto ParentKey = Gs2::Lottery::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
-                        Self->NamespaceName,
-                        "DrawnPrize"
-                    );
-                    const auto Key = Gs2::Lottery::Domain::Model::FDrawnPrizeDomain::CreateCacheKey(
-                    );
-                    Self->Gs2->Cache->Put(
-                        Gs2::Lottery::Model::FDrawnPrize::TypeName,
-                        ParentKey,
-                        Key,
-                        Item,
-                        FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                    );
-                }
-            }
-            if (ResultModel->GetBoxItems() != nullptr)
-            {
-                const auto ParentKey = Gs2::Lottery::Domain::Model::FUserDomain::CreateCacheParentKey(
-                    Self->NamespaceName,
-                    Self->UserId,
-                    "BoxItems"
-                );
-                const auto Key = Gs2::Lottery::Domain::Model::FBoxItemsDomain::CreateCacheKey(
-                    ResultModel->GetBoxItems()->GetPrizeTableName()
-                );
-                Self->Gs2->Cache->Put(
-                    Gs2::Lottery::Model::FBoxItems::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetBoxItems(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
-        }
-        if (ResultModel && ResultModel->GetStampSheet())
+        const auto Transaction = Gs2::Core::Domain::Internal::FTransactionDomainFactory::ToTransaction(
+            Self->Gs2,
+            *Self->UserId,
+            ResultModel->GetAutoRunStampSheet().IsSet() ? *ResultModel->GetAutoRunStampSheet() : false,
+            *ResultModel->GetTransactionId(),
+            *ResultModel->GetStampSheet(),
+            *ResultModel->GetStampSheetEncryptionKeyId(),
+            *ResultModel->GetAtomicCommit(),
+            ResultModel->GetTransactionResult()
+        );
+        const auto Future3 = Transaction->Wait(true);
+        Future3->StartSynchronousTask();
+        if (Future3->GetTask().IsError())
         {
-            const auto Transaction = Gs2::Core::Domain::Internal::FTransactionDomainFactory::ToTransaction(
-                Self->Gs2,
-                *Self->UserId,
-                false,
-                *ResultModel->GetTransactionId(),
-                *ResultModel->GetStampSheet(),
-                *ResultModel->GetStampSheetEncryptionKeyId()
-            );
-            const auto Future3 = Transaction->Wait(true);
-            Future3->StartSynchronousTask();
-            if (Future3->GetTask().IsError())
-            {
-                return Future3->GetTask().Error();
-            }
+            return Future3->GetTask().Error();
         }
-        if (ResultModel != nullptr)
-        {
-            Self->AutoRunStampSheet = ResultModel->GetAutoRunStampSheet();
-            Self->TransactionId = ResultModel->GetTransactionId();
-        }
-        *Result = Self;
+        *Result = Transaction;
         return nullptr;
     }
 
@@ -208,9 +162,10 @@ namespace Gs2::Lottery::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
-            ->WithUserId(Self->UserId)
-            ->WithLotteryName(Self->LotteryName);
+            ->WithLotteryName(Self->LotteryName)
+            ->WithUserId(Self->UserId);
         const auto Future = Self->Client->PredictionByUserId(
             Request
         );
@@ -219,12 +174,7 @@ namespace Gs2::Lottery::Domain::Model
         {
             return Future->GetTask().Error();
         }
-        const auto RequestModel = Request;
         const auto ResultModel = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-        }
         *Result = ResultModel->GetItems();
         return nullptr;
     }
@@ -250,13 +200,14 @@ namespace Gs2::Lottery::Domain::Model
     }
 
     Gs2::Core::Model::FGs2ErrorPtr FLotteryDomain::FDrawWithRandomSeedTask::Action(
-        TSharedPtr<TSharedPtr<Gs2::Lottery::Domain::Model::FLotteryDomain>> Result
+        TSharedPtr<TSharedPtr<Gs2::Core::Domain::FTransactionDomain>> Result
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
-            ->WithUserId(Self->UserId)
-            ->WithLotteryName(Self->LotteryName);
+            ->WithLotteryName(Self->LotteryName)
+            ->WithUserId(Self->UserId);
         const auto Future = Self->Client->DrawWithRandomSeedByUserId(
             Request
         );
@@ -265,35 +216,24 @@ namespace Gs2::Lottery::Domain::Model
         {
             return Future->GetTask().Error();
         }
-        const auto RequestModel = Request;
         const auto ResultModel = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-        }
-        if (ResultModel && ResultModel->GetStampSheet())
+        const auto Transaction = Gs2::Core::Domain::Internal::FTransactionDomainFactory::ToTransaction(
+            Self->Gs2,
+            *Self->UserId,
+            ResultModel->GetAutoRunStampSheet().IsSet() ? *ResultModel->GetAutoRunStampSheet() : false,
+            *ResultModel->GetTransactionId(),
+            *ResultModel->GetStampSheet(),
+            *ResultModel->GetStampSheetEncryptionKeyId(),
+            *ResultModel->GetAtomicCommit(),
+            ResultModel->GetTransactionResult()
+        );
+        const auto Future3 = Transaction->Wait(true);
+        Future3->StartSynchronousTask();
+        if (Future3->GetTask().IsError())
         {
-            const auto Transaction = Gs2::Core::Domain::Internal::FTransactionDomainFactory::ToTransaction(
-                Self->Gs2,
-                *Self->UserId,
-                false,
-                *ResultModel->GetTransactionId(),
-                *ResultModel->GetStampSheet(),
-                *ResultModel->GetStampSheetEncryptionKeyId()
-            );
-            const auto Future3 = Transaction->Wait(true);
-            Future3->StartSynchronousTask();
-            if (Future3->GetTask().IsError())
-            {
-                return Future3->GetTask().Error();
-            }
+            return Future3->GetTask().Error();
         }
-        if (ResultModel != nullptr)
-        {
-            Self->AutoRunStampSheet = ResultModel->GetAutoRunStampSheet();
-            Self->TransactionId = ResultModel->GetTransactionId();
-        }
-        *Result = Self;
+        *Result = Transaction;
         return nullptr;
     }
 
@@ -304,6 +244,7 @@ namespace Gs2::Lottery::Domain::Model
     }
 
     Gs2::Lottery::Domain::Iterator::FDescribeProbabilitiesByUserIdIteratorPtr FLotteryDomain::Probabilities(
+        const TOptional<FString> TimeOffsetToken
     ) const
     {
         return MakeShared<Gs2::Lottery::Domain::Iterator::FDescribeProbabilitiesByUserIdIterator>(
@@ -311,7 +252,8 @@ namespace Gs2::Lottery::Domain::Model
             Client,
             NamespaceName,
             LotteryName,
-            UserId
+            UserId,
+            TimeOffsetToken
         );
     }
 

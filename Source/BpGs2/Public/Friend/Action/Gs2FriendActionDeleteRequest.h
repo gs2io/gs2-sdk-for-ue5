@@ -20,6 +20,7 @@
 #include "Friend/Model/Gs2FriendFriendRequest.h"
 #include "Friend/Model/Gs2FriendSendFriendRequest.h"
 #include "../../Core/Model/Gs2Error.h"
+#include "Core/Model/Gs2CoreTransaction.h"
 #include "Kismet/BlueprintAsyncActionBase.h"
 #include "Gs2FriendActionDeleteRequest.generated.h"
 

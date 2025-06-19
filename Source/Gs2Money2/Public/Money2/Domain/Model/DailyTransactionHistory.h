@@ -130,17 +130,17 @@ namespace Gs2::Money2::Domain::Model
 
         static FString CreateCacheParentKey(
             TOptional<FString> NamespaceName,
-            TOptional<FString> Year,
-            TOptional<FString> Month,
-            TOptional<FString> Day,
+            TOptional<int32> Year,
+            TOptional<int32> Month,
+            TOptional<int32> Day,
             TOptional<FString> Currency,
             FString ChildType
         );
 
         static FString CreateCacheKey(
-            TOptional<FString> Year,
-            TOptional<FString> Month,
-            TOptional<FString> Day,
+            TOptional<int32> Year,
+            TOptional<int32> Month,
+            TOptional<int32> Day,
             TOptional<FString> Currency
         );
 

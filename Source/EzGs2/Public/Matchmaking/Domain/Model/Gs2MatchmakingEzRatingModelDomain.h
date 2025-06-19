@@ -34,6 +34,7 @@
 #include "Matchmaking/Model/Gs2MatchmakingEzTimeSpan.h"
 #include "Gs2MatchmakingEzRatingModelDomain.h"
 #include "Matchmaking/Domain/Iterator/Gs2MatchmakingEzDescribeRatingModelsIterator.h"
+#include "Core/EzTransactionDomain.h"
 #include "Util/Net/GameSession.h"
 #include "Util/Net/Gs2Connection.h"
 

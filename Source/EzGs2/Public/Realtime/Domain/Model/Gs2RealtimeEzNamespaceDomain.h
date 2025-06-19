@@ -21,6 +21,7 @@
 #include "Realtime/Model/Gs2RealtimeEzRoom.h"
 #include "Gs2RealtimeEzRoomDomain.h"
 #include "Gs2RealtimeEzNamespaceDomain.h"
+#include "Core/EzTransactionDomain.h"
 #include "Util/Net/GameSession.h"
 #include "Util/Net/Gs2Connection.h"
 

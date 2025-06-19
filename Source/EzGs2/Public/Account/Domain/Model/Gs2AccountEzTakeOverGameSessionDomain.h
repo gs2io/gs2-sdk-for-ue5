@@ -12,6 +12,8 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
+ *
+ * deny overwrite
  */
 
 #pragma once
@@ -25,6 +27,7 @@
 #include "Account/Model/Gs2AccountEzBanStatus.h"
 #include "Gs2AccountEzTakeOverGameSessionDomain.h"
 #include "Account/Domain/Iterator/Gs2AccountEzDescribeTakeOversIterator.h"
+#include "Core/EzTransactionGameSessionDomain.h"
 #include "Util/Net/GameSession.h"
 #include "Util/Net/Gs2Connection.h"
 
@@ -124,6 +127,26 @@ namespace Gs2::UE5::Account::Domain::Model
         TSharedPtr<FAsyncTask<FUpdateTakeOverSettingTask>> UpdateTakeOverSetting(
             FString OldPassword,
             FString Password
+        );
+
+        class EZGS2_API FDeleteTakeOverSettingTask :
+            public Gs2::Core::Util::TGs2Future<Gs2::UE5::Account::Domain::Model::FEzTakeOverGameSessionDomain>,
+            public TSharedFromThis<FDeleteTakeOverSettingTask>
+        {
+            TSharedPtr<FEzTakeOverGameSessionDomain> Self;
+
+        public:
+            explicit FDeleteTakeOverSettingTask(
+                TSharedPtr<FEzTakeOverGameSessionDomain> Self
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::UE5::Account::Domain::Model::FEzTakeOverGameSessionDomain>> Result
+            ) override;
+        };
+        friend FDeleteTakeOverSettingTask;
+
+        TSharedPtr<FAsyncTask<FDeleteTakeOverSettingTask>> DeleteTakeOverSetting(
         );
 
         class EZGS2_API FModelTask :

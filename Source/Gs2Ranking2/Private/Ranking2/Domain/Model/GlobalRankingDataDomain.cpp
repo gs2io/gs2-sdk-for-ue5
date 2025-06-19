@@ -87,7 +87,7 @@ namespace Gs2::Ranking2::Domain::Model
         ParentKey(Gs2::Ranking2::Domain::Model::FGlobalRankingSeasonDomain::CreateCacheParentKey(
             NamespaceName,
             RankingName,
-            FString::FromInt(*Season),
+            Season,
             "GlobalRankingData"
         ))
     {
@@ -150,7 +150,7 @@ namespace Gs2::Ranking2::Domain::Model
                 const auto ParentKey = Gs2::Ranking2::Domain::Model::FGlobalRankingSeasonDomain::CreateCacheParentKey(
                     Self->NamespaceName,
                     Self->RankingName,
-                    FString::FromInt(*Self->Season),
+                    Self->Season,
                     "GlobalRankingData"
                 );
                 const auto Key = Gs2::Ranking2::Domain::Model::FGlobalRankingDataDomain::CreateCacheKey(
@@ -180,7 +180,7 @@ namespace Gs2::Ranking2::Domain::Model
     FString FGlobalRankingDataDomain::CreateCacheParentKey(
         TOptional<FString> NamespaceName,
         TOptional<FString> RankingName,
-        TOptional<FString> Season,
+        TOptional<int64> Season,
         TOptional<FString> UserId,
         FString ChildType
     )
@@ -188,7 +188,7 @@ namespace Gs2::Ranking2::Domain::Model
         return FString("") +
             (NamespaceName.IsSet() ? *NamespaceName : "null") + ":" +
             (RankingName.IsSet() ? *RankingName : "null") + ":" +
-            (Season.IsSet() ? *Season : "null") + ":" +
+            (Season.IsSet() ? FString::FromInt(*Season) : "null") + ":" +
             (UserId.IsSet() ? *UserId : "null") + ":" +
             ChildType;
     }
@@ -247,7 +247,7 @@ namespace Gs2::Ranking2::Domain::Model
             Gs2::Ranking2::Domain::Model::FGlobalRankingDataDomain::CreateCacheKey(
                 UserId
             ),
-            [Callback](TSharedPtr<Gs2Object> obj)
+            [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::Ranking2::Model::FGlobalRankingData>(obj));
             }

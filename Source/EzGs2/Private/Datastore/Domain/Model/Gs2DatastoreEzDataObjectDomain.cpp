@@ -80,7 +80,7 @@ namespace Gs2::UE5::Datastore::Domain::Model
     {
         const auto Future = Self->ConnectionValue->Run(
             [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
-                const auto Task = Self->Domain->PrepareDownloadByUserIdAndName(
+                const auto Task = Self->Domain->PrepareDownloadByUserIdAndDataObjectName(
                     MakeShared<Gs2::Datastore::Request::FPrepareDownloadByUserIdAndDataObjectNameRequest>()
                 );
                 Task->StartSynchronousTask();
@@ -200,7 +200,7 @@ namespace Gs2::UE5::Datastore::Domain::Model
             [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
                 FString Url("");
                 {
-                    const auto Task = Self->Domain->PrepareDownloadByUserIdAndName(
+                    const auto Task = Self->Domain->PrepareDownloadByUserIdAndDataObjectName(
                         MakeShared<Gs2::Datastore::Request::FPrepareDownloadByUserIdAndDataObjectNameRequest>()
                     );
                     Task->StartSynchronousTask();

@@ -78,20 +78,19 @@ void UGs2EnhanceEnhanceAsyncFunction::Activate()
             return r;
         }()
     );
-    Future->GetTask().OnSuccessDelegate().BindLambda([&](const auto Result)
+    Future->GetTask().OnSuccessDelegate().BindLambda([&](auto Result)
     {
-        FGs2EnhanceOwnEnhance ReturnEnhance;
-        ReturnEnhance.Value = Result;
+        FGs2CoreOwnTransaction ReturnTransaction;
         const FGs2Error ReturnError;
-        OnSuccess.Broadcast(ReturnEnhance, ReturnError);
+        OnError.Broadcast(ReturnTransaction, ReturnError);
         SetReadyToDestroy();
     });
-    Future->GetTask().OnErrorDelegate().BindLambda([&](const auto Error)
+    Future->GetTask().OnErrorDelegate().BindLambda([&](auto Error)
     {
-        FGs2EnhanceOwnEnhance ReturnEnhance;
+        FGs2CoreOwnTransaction ReturnTransaction;
         FGs2Error ReturnError;
         ReturnError.Value = Error;
-        OnError.Broadcast(ReturnEnhance, ReturnError);
+        OnError.Broadcast(ReturnTransaction, ReturnError);
         SetReadyToDestroy();
     });
     Future->StartBackgroundTask();

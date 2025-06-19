@@ -133,6 +133,32 @@ namespace Gs2::Schedule::Domain::Model
             Request::FTriggerByUserIdRequestPtr Request
         );
 
+        class GS2SCHEDULE_API FExtendTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Schedule::Domain::Model::FTriggerDomain>,
+            public TSharedFromThis<FExtendTask>
+        {
+            const TSharedPtr<FTriggerDomain> Self;
+            const Request::FExtendTriggerByUserIdRequestPtr Request;
+        public:
+            explicit FExtendTask(
+                const TSharedPtr<FTriggerDomain>& Self,
+                const Request::FExtendTriggerByUserIdRequestPtr Request
+            );
+
+            FExtendTask(
+                const FExtendTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Schedule::Domain::Model::FTriggerDomain>> Result
+            ) override;
+        };
+        friend FExtendTask;
+
+        TSharedPtr<FAsyncTask<FExtendTask>> Extend(
+            Request::FExtendTriggerByUserIdRequestPtr Request
+        );
+
         class GS2SCHEDULE_API FDeleteTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Schedule::Domain::Model::FTriggerDomain>,
             public TSharedFromThis<FDeleteTask>

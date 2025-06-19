@@ -24,6 +24,7 @@
 #include "Account/Model/Gs2AccountEzPlatformUser.h"
 #include "Account/Model/Gs2AccountEzBanStatus.h"
 #include "Gs2AccountEzTakeOverDomain.h"
+#include "Core/EzTransactionDomain.h"
 #include "Util/Net/GameSession.h"
 #include "Util/Net/Gs2Connection.h"
 

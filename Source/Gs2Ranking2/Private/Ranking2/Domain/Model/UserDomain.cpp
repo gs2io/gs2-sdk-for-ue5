@@ -33,6 +33,7 @@
 #include "Ranking2/Domain/Model/GlobalRankingReceivedReward.h"
 #include "Ranking2/Domain/Model/GlobalRankingReceivedRewardAccessToken.h"
 #include "Ranking2/Domain/Model/GlobalRankingSeason.h"
+#include "Ranking2/Domain/Model/GlobalRankingSeasonAccessToken.h"
 #include "Ranking2/Domain/Model/GlobalRankingData.h"
 #include "Ranking2/Domain/Model/GlobalRankingDataAccessToken.h"
 #include "Ranking2/Domain/Model/ClusterRankingModel.h"
@@ -42,6 +43,7 @@
 #include "Ranking2/Domain/Model/ClusterRankingReceivedReward.h"
 #include "Ranking2/Domain/Model/ClusterRankingReceivedRewardAccessToken.h"
 #include "Ranking2/Domain/Model/ClusterRankingSeason.h"
+#include "Ranking2/Domain/Model/ClusterRankingSeasonAccessToken.h"
 #include "Ranking2/Domain/Model/ClusterRankingData.h"
 #include "Ranking2/Domain/Model/ClusterRankingDataAccessToken.h"
 #include "Ranking2/Domain/Model/SubscribeRankingModel.h"
@@ -143,8 +145,8 @@ namespace Gs2::Ranking2::Domain::Model
                     "GlobalRankingScore"
                 );
                 const auto Key = Gs2::Ranking2::Domain::Model::FGlobalRankingScoreDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetRankingName(),
-                    ResultModel->GetItem()->GetSeason().IsSet() ? FString::FromInt(*ResultModel->GetItem()->GetSeason()) : TOptional<FString>()
+                    ResultModel->GetItem()->GetSeason(),
+                    Self->UserId
                 );
                 Self->Gs2->Cache->Put(
                     Gs2::Ranking2::Model::FGlobalRankingScore::TypeName,
@@ -159,9 +161,9 @@ namespace Gs2::Ranking2::Domain::Model
             Self->Gs2,
             Self->Service,
             Request->GetNamespaceName(),
-            ResultModel->GetItem()->GetUserId(),
             ResultModel->GetItem()->GetRankingName(),
-            ResultModel->GetItem()->GetSeason()
+            ResultModel->GetItem()->GetSeason(),
+            ResultModel->GetItem()->GetUserId()
         );
 
         *Result = Domain;
@@ -218,8 +220,8 @@ namespace Gs2::Ranking2::Domain::Model
                 );
                 const auto Key = Gs2::Ranking2::Domain::Model::FClusterRankingScoreDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetRankingName(),
-                    ResultModel->GetItem()->GetClusterName(),
-                    ResultModel->GetItem()->GetSeason().IsSet() ? FString::FromInt(*ResultModel->GetItem()->GetSeason()) : TOptional<FString>()
+                    ResultModel->GetItem()->GetSeason(),
+                    Self->UserId
                 );
                 Self->Gs2->Cache->Put(
                     Gs2::Ranking2::Model::FClusterRankingScore::TypeName,
@@ -234,10 +236,10 @@ namespace Gs2::Ranking2::Domain::Model
             Self->Gs2,
             Self->Service,
             Request->GetNamespaceName(),
-            ResultModel->GetItem()->GetUserId(),
             ResultModel->GetItem()->GetRankingName(),
             ResultModel->GetItem()->GetClusterName(),
-            ResultModel->GetItem()->GetSeason()
+            ResultModel->GetItem()->GetSeason(),
+            ResultModel->GetItem()->GetUserId()
         );
 
         *Result = Domain;
@@ -304,9 +306,9 @@ namespace Gs2::Ranking2::Domain::Model
             Gs2,
             Service,
             NamespaceName,
-            UserId,
             RankingName == TEXT("") ? TOptional<FString>() : TOptional<FString>(RankingName),
-            Season
+            Season,
+            UserId
         );
     }
 
@@ -319,9 +321,9 @@ namespace Gs2::Ranking2::Domain::Model
             Gs2,
             Service,
             NamespaceName,
-            UserId,
             RankingName == TEXT("") ? TOptional<FString>() : TOptional<FString>(RankingName),
-            Season
+            Season,
+            UserId
         );
     }
 
@@ -443,9 +445,9 @@ namespace Gs2::Ranking2::Domain::Model
             Gs2,
             Service,
             NamespaceName,
-            UserId,
             RankingName == TEXT("") ? TOptional<FString>() : TOptional<FString>(RankingName),
-            Season
+            Season,
+            UserId
         );
     }
 
@@ -508,10 +510,10 @@ namespace Gs2::Ranking2::Domain::Model
             Gs2,
             Service,
             NamespaceName,
-            UserId,
             RankingName == TEXT("") ? TOptional<FString>() : TOptional<FString>(RankingName),
             ClusterName == TEXT("") ? TOptional<FString>() : TOptional<FString>(ClusterName),
-            Season
+            Season,
+            UserId
         );
     }
 
@@ -574,10 +576,10 @@ namespace Gs2::Ranking2::Domain::Model
             Gs2,
             Service,
             NamespaceName,
-            UserId,
             RankingName == TEXT("") ? TOptional<FString>() : TOptional<FString>(RankingName),
             ClusterName == TEXT("") ? TOptional<FString>() : TOptional<FString>(ClusterName),
-            Season
+            Season,
+            UserId
         );
     }
 

@@ -33,6 +33,7 @@
 #include "Gs2ExchangeEzAwaitGameSessionDomain.h"
 #include "Exchange/Domain/Iterator/Gs2ExchangeEzDescribeAwaitsIterator.h"
 #include "Gs2ExchangeEzUserGameSessionDomain.h"
+#include "Core/EzTransactionGameSessionDomain.h"
 #include "Util/Net/GameSession.h"
 #include "Util/Net/Gs2Connection.h"
 

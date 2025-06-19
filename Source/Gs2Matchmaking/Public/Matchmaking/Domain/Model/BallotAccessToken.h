@@ -153,7 +153,7 @@ namespace Gs2::Matchmaking::Domain::Model
             TOptional<FString> UserId,
             TOptional<FString> RatingName,
             TOptional<FString> GatheringName,
-            TOptional<FString> NumberOfPlayer,
+            TOptional<int32> NumberOfPlayer,
             TOptional<FString> KeyId,
             FString ChildType
         );
@@ -161,7 +161,7 @@ namespace Gs2::Matchmaking::Domain::Model
         static FString CreateCacheKey(
             TOptional<FString> RatingName,
             TOptional<FString> GatheringName,
-            TOptional<FString> NumberOfPlayer,
+            TOptional<int32> NumberOfPlayer,
             TOptional<FString> KeyId
         );
 

@@ -12,6 +12,8 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
+ *
+ * deny overwrite
  */
 
 #if defined(_MSC_VER)
@@ -23,7 +25,6 @@
 #endif
 
 #include "Distributor/Domain/SpeculativeExecutor/Verify/IfExpressionByUserIdSpeculativeExecutor.h"
-#include "Distributor/Domain/Gs2Distributor.h"
 
 #include "Core/Domain/Gs2.h"
 
@@ -33,18 +34,6 @@ namespace Gs2::Distributor::Domain::SpeculativeExecutor
     FString FIfExpressionByUserIdSpeculativeExecutor::Action()
     {
         return FString("Gs2Distributor:IfExpressionByUserId");
-    }
-
-    Gs2::Core::Model::FGs2ErrorPtr FIfExpressionByUserIdSpeculativeExecutor::Transform(
-        const Gs2::Core::Domain::FGs2Ptr& Domain,
-        const Gs2::Auth::Model::FAccessTokenPtr& AccessToken,
-        const Gs2::Distributor::Request::FIfExpressionByUserIdRequestPtr& Request,
-        Gs2::Distributor::Model::FExpressionPtr Item
-    )
-    {
-        // TODO: Speculative execution not supported
-        UE_LOG(Gs2Log, Warning, TEXT("Speculative execution not supported on this action: %s"), ToCStr(Action()))
-        return nullptr;
     }
 
     FIfExpressionByUserIdSpeculativeExecutor::FCommitTask::FCommitTask(
@@ -76,47 +65,11 @@ namespace Gs2::Distributor::Domain::SpeculativeExecutor
         TSharedPtr<TSharedPtr<TFunction<void()>>> Result
     )
     {
-        const auto Future = Domain->Distributor->Namespace(
-                Request->GetNamespaceName().IsSet() ? *Request->GetNamespaceName() : FString("")
-            )->Expression(
-            )->Model();
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            return Future->GetTask().Error();
-        }
-        auto Item = Future->GetTask().Result();
-
-        if (!Item.IsValid())
-        {
-            *Result = MakeShared<TFunction<void()>>([&]()
-            {
-                return nullptr;
-            });
-            return nullptr;
-        }
-        auto Err = Transform(Domain, AccessToken, Request, Item);
-        if (Err != nullptr)
-        {
-            return Err;
-        }
-
-        const auto ParentKey = Model::FNamespaceDomain::CreateCacheParentKey(
-            Request->GetNamespaceName(),
-            FString("Expression")
-        );
-        const auto Key = Model::FExpressionDomain::CreateCacheKey(
-        );
-
+        // TODO: Speculative execution not supported
+        UE_LOG(Gs2Log, Warning, TEXT("Speculative execution not supported on this action: %s"), ToCStr("Gs2Distributor:IfExpressionByUserId"))
+        
         *Result = MakeShared<TFunction<void()>>([&]()
         {
-            Domain->Cache->Put(
-                Distributor::Model::FExpression::TypeName,
-                ParentKey,
-                Key,
-                Item,
-                FDateTime::Now() + FTimespan::FromSeconds(10)
-            );
             return nullptr;
         });
         return nullptr;

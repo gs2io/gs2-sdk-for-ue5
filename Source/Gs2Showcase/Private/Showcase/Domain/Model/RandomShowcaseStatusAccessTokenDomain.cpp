@@ -110,6 +110,16 @@ namespace Gs2::Showcase::Domain::Model
             ->WithNamespaceName(Self->NamespaceName)
             ->WithShowcaseName(Self->ShowcaseName)
             ->WithAccessToken(Self->AccessToken->GetToken());
+        const auto Future = Self->Client->IncrementPurchaseCount(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         auto Domain = MakeShared<Gs2::Showcase::Domain::Model::FRandomDisplayItemAccessTokenDomain>(
             Self->Gs2,
             Self->Service,

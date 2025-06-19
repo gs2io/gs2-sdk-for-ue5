@@ -104,6 +104,16 @@ namespace Gs2::Limit::Domain::Model
             ->WithLimitName(Self->LimitName)
             ->WithAccessToken(Self->AccessToken->GetToken())
             ->WithCounterName(Self->CounterName);
+        const auto Future = Self->Client->GetCounter(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         *Result = ResultModel->GetItem();
         return nullptr;
     }
@@ -138,6 +148,16 @@ namespace Gs2::Limit::Domain::Model
             ->WithLimitName(Self->LimitName)
             ->WithCounterName(Self->CounterName)
             ->WithAccessToken(Self->AccessToken->GetToken());
+        const auto Future = Self->Client->CountUp(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         auto Domain = Self;
 
         *Result = Domain;
@@ -174,6 +194,16 @@ namespace Gs2::Limit::Domain::Model
             ->WithAccessToken(Self->AccessToken->GetToken())
             ->WithLimitName(Self->LimitName)
             ->WithCounterName(Self->CounterName);
+        const auto Future = Self->Client->VerifyCounter(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         const auto Domain = Self;
         *Result = Domain;
         return nullptr;

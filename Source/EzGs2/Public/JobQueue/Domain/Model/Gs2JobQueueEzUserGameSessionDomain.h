@@ -24,6 +24,7 @@
 #include "JobQueue/Model/Gs2JobQueueEzJobResultBody.h"
 #include "Gs2JobQueueEzJobGameSessionDomain.h"
 #include "Gs2JobQueueEzUserGameSessionDomain.h"
+#include "Core/EzTransactionGameSessionDomain.h"
 #include "Util/Net/GameSession.h"
 #include "Util/Net/Gs2Connection.h"
 

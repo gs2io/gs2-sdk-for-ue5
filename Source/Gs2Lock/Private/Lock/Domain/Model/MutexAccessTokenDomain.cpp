@@ -97,6 +97,16 @@ namespace Gs2::Lock::Domain::Model
             ->WithNamespaceName(Self->NamespaceName)
             ->WithPropertyId(Self->PropertyId)
             ->WithAccessToken(Self->AccessToken->GetToken());
+        const auto Future = Self->Client->Lock(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         auto Domain = Self;
 
         *Result = Domain;
@@ -132,6 +142,16 @@ namespace Gs2::Lock::Domain::Model
             ->WithNamespaceName(Self->NamespaceName)
             ->WithPropertyId(Self->PropertyId)
             ->WithAccessToken(Self->AccessToken->GetToken());
+        const auto Future = Self->Client->Unlock(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         auto Domain = Self;
 
         *Result = Domain;
@@ -167,6 +187,16 @@ namespace Gs2::Lock::Domain::Model
             ->WithNamespaceName(Self->NamespaceName)
             ->WithAccessToken(Self->AccessToken->GetToken())
             ->WithPropertyId(Self->PropertyId);
+        const auto Future = Self->Client->GetMutex(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         *Result = ResultModel->GetItem();
         return nullptr;
     }

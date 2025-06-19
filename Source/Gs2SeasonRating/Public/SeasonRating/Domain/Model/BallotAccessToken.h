@@ -129,7 +129,7 @@ namespace Gs2::SeasonRating::Domain::Model
             TOptional<FString> UserId,
             TOptional<FString> SeasonName,
             TOptional<FString> SessionName,
-            TOptional<FString> NumberOfPlayer,
+            TOptional<int32> NumberOfPlayer,
             TOptional<FString> KeyId,
             FString ChildType
         );
@@ -137,7 +137,7 @@ namespace Gs2::SeasonRating::Domain::Model
         static FString CreateCacheKey(
             TOptional<FString> SeasonName,
             TOptional<FString> SessionName,
-            TOptional<FString> NumberOfPlayer,
+            TOptional<int32> NumberOfPlayer,
             TOptional<FString> KeyId
         );
 

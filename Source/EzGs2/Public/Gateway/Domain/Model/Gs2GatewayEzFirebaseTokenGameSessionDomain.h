@@ -20,6 +20,7 @@
 #include "Gateway/Domain/Model/FirebaseTokenAccessToken.h"
 #include "Gateway/Model/Gs2GatewayEzWebSocketSession.h"
 #include "Gs2GatewayEzFirebaseTokenGameSessionDomain.h"
+#include "Core/EzTransactionGameSessionDomain.h"
 #include "Util/Net/GameSession.h"
 #include "Util/Net/Gs2Connection.h"
 

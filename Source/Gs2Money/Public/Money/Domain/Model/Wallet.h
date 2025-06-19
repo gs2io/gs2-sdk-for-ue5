@@ -163,12 +163,12 @@ namespace Gs2::Money::Domain::Model
         static FString CreateCacheParentKey(
             TOptional<FString> NamespaceName,
             TOptional<FString> UserId,
-            TOptional<FString> Slot,
+            TOptional<int32> Slot,
             FString ChildType
         );
 
         static FString CreateCacheKey(
-            TOptional<FString> Slot
+            TOptional<int32> Slot
         );
 
         class GS2MONEY_API FModelTask final :

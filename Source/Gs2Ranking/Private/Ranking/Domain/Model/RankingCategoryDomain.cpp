@@ -110,6 +110,16 @@ namespace Gs2::Ranking::Domain::Model
             ->WithNamespaceName(Self->NamespaceName)
             ->WithCategoryName(Self->CategoryName)
             ->WithUserId(Self->UserId);
+        const auto Future = Self->Client->SubscribeByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         auto Domain = MakeShared<Gs2::Ranking::Domain::Model::FSubscribeUserDomain>(
             Self->Gs2,
             Self->Service,
@@ -153,6 +163,16 @@ namespace Gs2::Ranking::Domain::Model
             ->WithNamespaceName(Self->NamespaceName)
             ->WithCategoryName(Self->CategoryName)
             ->WithUserId(Self->UserId);
+        const auto Future = Self->Client->PutScoreByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         auto Domain = MakeShared<Gs2::Ranking::Domain::Model::FScoreDomain>(
             Self->Gs2,
             Self->Service,

@@ -21,12 +21,14 @@
 #include "Showcase/Model/Gs2ShowcaseConfig.h"
 #include "Showcase/Model/Gs2ShowcaseRandomDisplayItem.h"
 #include "../../Core/Model/Gs2Error.h"
+#include "Core/Model/Gs2CoreTransaction.h"
 #include "Kismet/BlueprintAsyncActionBase.h"
 #include "Gs2ShowcaseActionRandomShowcaseBuy.generated.h"
 
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FGs2ShowcaseRandomShowcaseBuySuccessDelegate, FGs2ShowcaseOwnRandomDisplayItem, RandomDisplayItem, const FGs2Error, Error);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FGs2ShowcaseRandomShowcaseBuyErrorDelegate, FGs2ShowcaseOwnRandomDisplayItem, RandomDisplayItem, const FGs2Error, Error);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FGs2ShowcaseRandomShowcaseBuySuccessDelegate, FGs2CoreOwnTransaction, Transaction, const FGs2Error, Error);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FGs2ShowcaseRandomShowcaseBuyErrorDelegate, FGs2CoreOwnTransaction, Transaction, const FGs2Error, Error);
+
 
 UCLASS()
 class BPGS2_API UGs2ShowcaseRandomShowcaseBuyAsyncFunction : public UBlueprintAsyncActionBase

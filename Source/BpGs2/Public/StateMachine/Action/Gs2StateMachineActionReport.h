@@ -21,6 +21,7 @@
 #include "StateMachine/Model/Gs2StateMachineEvent.h"
 #include "StateMachine/Model/Gs2StateMachineStatus.h"
 #include "../../Core/Model/Gs2Error.h"
+#include "Core/Model/Gs2CoreTransaction.h"
 #include "Kismet/BlueprintAsyncActionBase.h"
 #include "Gs2StateMachineActionReport.generated.h"
 

@@ -147,9 +147,9 @@ namespace Gs2::Money2::Domain::Iterator
                     Gs2::Money2::Model::FDailyTransactionHistory::TypeName,
                     ListParentKey,
                     Gs2::Money2::Domain::Model::FDailyTransactionHistoryDomain::CreateCacheKey(
-                        FString::FromInt(*Item->GetYear()),
-                        FString::FromInt(*Item->GetMonth()),
-                        FString::FromInt(*Item->GetDay()),
+                        Item->GetYear(),
+                        Item->GetMonth(),
+                        Item->GetDay(),
                         Item->GetCurrency()
                     ),
                     Item,

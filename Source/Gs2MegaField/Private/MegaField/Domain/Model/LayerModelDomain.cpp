@@ -101,6 +101,16 @@ namespace Gs2::MegaField::Domain::Model
             ->WithNamespaceName(Self->NamespaceName)
             ->WithAreaModelName(Self->AreaModelName)
             ->WithLayerModelName(Self->LayerModelName);
+        const auto Future = Self->Client->GetLayerModel(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         *Result = ResultModel->GetItem();
         return nullptr;
     }

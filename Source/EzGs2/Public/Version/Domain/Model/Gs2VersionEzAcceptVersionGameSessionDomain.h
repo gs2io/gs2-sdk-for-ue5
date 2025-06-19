@@ -25,6 +25,7 @@
 #include "Version/Model/Gs2VersionEzTargetVersion.h"
 #include "Gs2VersionEzAcceptVersionGameSessionDomain.h"
 #include "Version/Domain/Iterator/Gs2VersionEzDescribeAcceptVersionsIterator.h"
+#include "Core/EzTransactionGameSessionDomain.h"
 #include "Util/Net/GameSession.h"
 #include "Util/Net/Gs2Connection.h"
 

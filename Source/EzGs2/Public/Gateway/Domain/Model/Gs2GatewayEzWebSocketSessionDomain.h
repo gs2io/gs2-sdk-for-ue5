@@ -20,6 +20,7 @@
 #include "Gateway/Domain/Model/WebSocketSession.h"
 #include "Gateway/Model/Gs2GatewayEzWebSocketSession.h"
 #include "Gs2GatewayEzWebSocketSessionDomain.h"
+#include "Core/EzTransactionDomain.h"
 #include "Util/Net/GameSession.h"
 #include "Util/Net/Gs2Connection.h"
 

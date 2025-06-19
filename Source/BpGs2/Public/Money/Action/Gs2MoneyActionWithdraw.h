@@ -20,6 +20,7 @@
 #include "Money/Model/Gs2MoneyWallet.h"
 #include "Money/Model/Gs2MoneyWallet.h"
 #include "../../Core/Model/Gs2Error.h"
+#include "Core/Model/Gs2CoreTransaction.h"
 #include "Kismet/BlueprintAsyncActionBase.h"
 #include "Gs2MoneyActionWithdraw.generated.h"
 

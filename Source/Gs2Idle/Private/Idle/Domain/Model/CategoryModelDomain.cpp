@@ -236,7 +236,7 @@ namespace Gs2::Idle::Domain::Model
             Gs2::Idle::Domain::Model::FCategoryModelDomain::CreateCacheKey(
                 CategoryName
             ),
-            [Callback](TSharedPtr<Gs2Object> obj)
+            [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::Idle::Model::FCategoryModel>(obj));
             }

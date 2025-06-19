@@ -12,11 +12,14 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
+ *
+ * deny overwrite
  */
 
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Gs2GuildEzGuildGameSessionDomain.h"
 #include "Guild/Domain/Model/JoinedGuildAccessToken.h"
 #include "Guild/Model/Gs2GuildEzGuildModel.h"
 #include "Guild/Model/Gs2GuildEzGuild.h"
@@ -33,6 +36,7 @@
 #include "Guild/Model/Gs2GuildEzTransactionResult.h"
 #include "Gs2GuildEzJoinedGuildGameSessionDomain.h"
 #include "Guild/Domain/Iterator/Gs2GuildEzDescribeJoinedGuildsIterator.h"
+#include "Core/EzTransactionGameSessionDomain.h"
 #include "Util/Net/GameSession.h"
 #include "Util/Net/Gs2Connection.h"
 

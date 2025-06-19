@@ -125,6 +125,16 @@ namespace Gs2::Matchmaking::Domain::Model
             ->WithSeason(Self->Season)
             ->WithTier(Self->Tier)
             ->WithSeasonGatheringName(Self->SeasonGatheringName);
+        const auto Future = Self->Client->GetSeasonGathering(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         *Result = ResultModel->GetItem();
         return nullptr;
     }
@@ -161,6 +171,16 @@ namespace Gs2::Matchmaking::Domain::Model
             ->WithTier(Self->Tier)
             ->WithSeasonGatheringName(Self->SeasonGatheringName)
             ->WithUserId(Self->UserId);
+        const auto Future = Self->Client->VerifyIncludeParticipantByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         const auto Domain = Self;
         *Result = Domain;
         return nullptr;
@@ -197,6 +217,16 @@ namespace Gs2::Matchmaking::Domain::Model
             ->WithSeason(Self->Season)
             ->WithTier(Self->Tier)
             ->WithSeasonGatheringName(Self->SeasonGatheringName);
+        const auto Future = Self->Client->DeleteSeasonGathering(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         auto Domain = Self;
 
         *Result = Domain;
@@ -213,8 +243,8 @@ namespace Gs2::Matchmaking::Domain::Model
         TOptional<FString> NamespaceName,
         TOptional<FString> UserId,
         TOptional<FString> SeasonName,
-        TOptional<FString> Season,
-        TOptional<FString> Tier,
+        TOptional<int64> Season,
+        TOptional<int64> Tier,
         TOptional<FString> SeasonGatheringName,
         FString ChildType
     )
@@ -223,19 +253,19 @@ namespace Gs2::Matchmaking::Domain::Model
             (NamespaceName.IsSet() ? *NamespaceName : "null") + ":" +
             (UserId.IsSet() ? *UserId : "null") + ":" +
             (SeasonName.IsSet() ? *SeasonName : "null") + ":" +
-            (Season.IsSet() ? *Season : "null") + ":" +
-            (Tier.IsSet() ? *Tier : "null") + ":" +
+            (Season.IsSet() ? FString::FromInt(*Season) : "null") + ":" +
+            (Tier.IsSet() ? FString::FromInt(*Tier) : "null") + ":" +
             (SeasonGatheringName.IsSet() ? *SeasonGatheringName : "null") + ":" +
             ChildType;
     }
 
     FString FSeasonGatheringDomain::CreateCacheKey(
-        TOptional<FString> Tier,
+        TOptional<int64> Tier,
         TOptional<FString> SeasonGatheringName
     )
     {
         return FString("") +
-            (Tier.IsSet() ? *Tier : "null") + ":" + 
+            (Tier.IsSet() ? FString::FromInt(*Tier) : "null") + ":" + 
             (SeasonGatheringName.IsSet() ? *SeasonGatheringName : "null");
     }
 
@@ -262,7 +292,7 @@ namespace Gs2::Matchmaking::Domain::Model
         auto bCacheHit = Self->Gs2->Cache->TryGet<Gs2::Matchmaking::Model::FSeasonGathering>(
             Self->ParentKey,
             Gs2::Matchmaking::Domain::Model::FSeasonGatheringDomain::CreateCacheKey(
-                Self->Tier.IsSet() ? FString::FromInt(*Self->Tier) : TOptional<FString>(),
+                Self->Tier,
                 Self->SeasonGatheringName
             ),
             &Value
@@ -280,7 +310,7 @@ namespace Gs2::Matchmaking::Domain::Model
                 }
 
                 const auto Key = Gs2::Matchmaking::Domain::Model::FSeasonGatheringDomain::CreateCacheKey(
-                    Self->Tier.IsSet() ? FString::FromInt(*Self->Tier) : TOptional<FString>(),
+                    Self->Tier,
                     Self->SeasonGatheringName
                 );
                 Self->Gs2->Cache->Put(
@@ -299,7 +329,7 @@ namespace Gs2::Matchmaking::Domain::Model
             Self->Gs2->Cache->TryGet<Gs2::Matchmaking::Model::FSeasonGathering>(
                 Self->ParentKey,
                 Gs2::Matchmaking::Domain::Model::FSeasonGatheringDomain::CreateCacheKey(
-                    Self->Tier.IsSet() ? FString::FromInt(*Self->Tier) : TOptional<FString>(),
+                    Self->Tier,
                     Self->SeasonGatheringName
                 ),
                 &Value
@@ -323,7 +353,7 @@ namespace Gs2::Matchmaking::Domain::Model
             Gs2::Matchmaking::Model::FSeasonGathering::TypeName,
             ParentKey,
             Gs2::Matchmaking::Domain::Model::FSeasonGatheringDomain::CreateCacheKey(
-                Tier.IsSet() ? FString::FromInt(*Tier) : TOptional<FString>(),
+                Tier,
                 SeasonGatheringName
             ),
             [Callback](TSharedPtr<FGs2Object> obj)
@@ -341,7 +371,7 @@ namespace Gs2::Matchmaking::Domain::Model
             Gs2::Matchmaking::Model::FSeasonGathering::TypeName,
             ParentKey,
             Gs2::Matchmaking::Domain::Model::FSeasonGatheringDomain::CreateCacheKey(
-                Tier.IsSet() ? FString::FromInt(*Tier) : TOptional<FString>(),
+                Tier,
                 SeasonGatheringName
             ),
             CallbackID

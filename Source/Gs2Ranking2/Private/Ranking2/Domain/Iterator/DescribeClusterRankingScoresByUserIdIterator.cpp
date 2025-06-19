@@ -157,7 +157,7 @@ namespace Gs2::Ranking2::Domain::Iterator
                     ListParentKey,
                     Gs2::Ranking2::Domain::Model::FClusterRankingScoreDomain::CreateCacheKey(
                         Item->GetClusterName(),
-                        FString::FromInt(*Item->GetSeason()),
+                        Item->GetSeason(),
                         Item->GetUserId()
                     ),
                     Item,

@@ -12,6 +12,8 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
+ *
+ * deny overwrite
  */
 
 // ReSharper disable CppUnusedIncludeDirective
@@ -202,15 +204,41 @@ namespace Gs2::Account::Domain::Model
             Request::FUpdateTakeOverRequestPtr Request
         );
 
+        class GS2ACCOUNT_API FDeleteTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Account::Domain::Model::FTakeOverAccessTokenDomain>,
+            public TSharedFromThis<FDeleteTask>
+        {
+            const TSharedPtr<FTakeOverAccessTokenDomain> Self;
+            const Request::FDeleteTakeOverRequestPtr Request;
+        public:
+            explicit FDeleteTask(
+                const TSharedPtr<FTakeOverAccessTokenDomain>& Self,
+                const Request::FDeleteTakeOverRequestPtr Request
+            );
+
+            FDeleteTask(
+                const FDeleteTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Account::Domain::Model::FTakeOverAccessTokenDomain>> Result
+            ) override;
+        };
+        friend FDeleteTask;
+
+        TSharedPtr<FAsyncTask<FDeleteTask>> Delete(
+            Request::FDeleteTakeOverRequestPtr Request
+        );
+
         static FString CreateCacheParentKey(
             TOptional<FString> NamespaceName,
             TOptional<FString> UserId,
-            TOptional<FString> Type,
+            TOptional<int32> Type,
             FString ChildType
         );
 
         static FString CreateCacheKey(
-            TOptional<FString> Type
+            TOptional<int32> Type
         );
 
         class GS2ACCOUNT_API FModelTask final :

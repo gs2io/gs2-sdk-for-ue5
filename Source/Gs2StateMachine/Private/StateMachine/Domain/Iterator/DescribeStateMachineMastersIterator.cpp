@@ -134,7 +134,7 @@ namespace Gs2::StateMachine::Domain::Iterator
                     Gs2::StateMachine::Model::FStateMachineMaster::TypeName,
                     ListParentKey,
                     Gs2::StateMachine::Domain::Model::FStateMachineMasterDomain::CreateCacheKey(
-                        FString::FromInt(*Item->GetVersion())
+                        Item->GetVersion()
                     ),
                     Item,
                     FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)

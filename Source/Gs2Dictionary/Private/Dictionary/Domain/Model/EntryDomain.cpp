@@ -12,6 +12,8 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
+ *
+ * deny overwrite
  */
 
 #if defined(_MSC_VER)
@@ -100,8 +102,16 @@ namespace Gs2::Dictionary::Domain::Model
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithUserId(Self->UserId)
-            ->WithEntryModelName(Self->EntryModelName)
-            ->WithEntryModelName(Self->EntryName);
+            ->WithEntryModelName(Self->EntryModelName);
+        const auto Future = Self->Client->GetEntryByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
         *Result = ResultModel->GetItem();
         return nullptr;
     }
@@ -134,8 +144,16 @@ namespace Gs2::Dictionary::Domain::Model
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithUserId(Self->UserId)
-            ->WithEntryModelName(Self->EntryModelName)
-            ->WithEntryModelName(Self->EntryName);
+            ->WithEntryModelName(Self->EntryModelName);
+        const auto Future = Self->Client->GetEntryWithSignatureByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
         auto Domain = Self;
         if (ResultModel != nullptr)
         {
@@ -176,6 +194,15 @@ namespace Gs2::Dictionary::Domain::Model
             ->WithNamespaceName(Self->NamespaceName)
             ->WithUserId(Self->UserId)
             ->WithEntryModelName(Self->EntryModelName);
+        const auto Future = Self->Client->VerifyEntryByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
         const auto Domain = Self;
         *Result = Domain;
         return nullptr;

@@ -21,6 +21,7 @@
 #include "Chat/Model/Gs2ChatNotificationType.h"
 #include "Chat/Model/Gs2ChatSubscribe.h"
 #include "../../Core/Model/Gs2Error.h"
+#include "Core/Model/Gs2CoreTransaction.h"
 #include "Kismet/BlueprintAsyncActionBase.h"
 #include "Gs2ChatActionUpdateSubscribeSetting.generated.h"
 

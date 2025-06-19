@@ -12,6 +12,8 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
+ *
+ * deny overwrite
  */
 
 #if defined(_MSC_VER)
@@ -70,6 +72,16 @@ namespace Gs2::Script::Domain
         TSharedPtr<TSharedPtr<Gs2::Script::Domain::Model::FNamespaceDomain>> Result
     )
     {
+        const auto Future = Self->Client->CreateNamespace(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         auto Domain = MakeShared<Gs2::Script::Domain::Model::FNamespaceDomain>(
             Self->Gs2,
             Self,
@@ -163,31 +175,7 @@ namespace Gs2::Script::Domain
         const Gs2::JobQueue::Model::FJobPtr Job,
         const Gs2::JobQueue::Model::FJobResultBodyPtr Result
     ) {
-        if (Method == "invoke_script") {
-            TSharedPtr<FJsonObject> RequestModelJson;
-            if (!Job->GetArgs().IsSet())
-            {
-                return;
-            }
-            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(*Job->GetArgs());
-                !FJsonSerializer::Deserialize(JsonReader, RequestModelJson))
-            {
-                return;
-            }
-            TSharedPtr<FJsonObject> ResultModelJson;
-            if (!Result->GetResult().IsSet())
-            {
-                return;
-            }
-            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(*Result->GetResult());
-                !FJsonSerializer::Deserialize(JsonReader, ResultModelJson))
-            {
-                return;
-            }
-            const auto RequestModel = Gs2::Script::Request::FInvokeScriptRequest::FromJson(RequestModelJson);
-            const auto ResultModel = Gs2::Script::Result::FInvokeScriptResult::FromJson(ResultModelJson);
-            
-        }
+
     }
 
     void FGs2ScriptDomain::HandleNotification(

@@ -41,7 +41,6 @@ namespace Gs2::Ranking2::Domain::Iterator
         const TOptional<FString> NamespaceName,
         const TOptional<FString> UserId,
         const TOptional<FString> RankingName,
-        const TOptional<int64> Season,
         const TOptional<FString> TimeOffsetToken
         // ReSharper disable once CppMemberInitializersOrder
     ):
@@ -50,7 +49,6 @@ namespace Gs2::Ranking2::Domain::Iterator
         NamespaceName(NamespaceName),
         UserId(UserId),
         RankingName(RankingName),
-        Season(Season),
         TimeOffsetToken(TimeOffsetToken)
     {
     }
@@ -63,7 +61,6 @@ namespace Gs2::Ranking2::Domain::Iterator
         NamespaceName(From.NamespaceName),
         UserId(From.UserId),
         RankingName(From.RankingName),
-        Season(From.Season),
         TimeOffsetToken(From.TimeOffsetToken)
     {
     }
@@ -105,9 +102,8 @@ namespace Gs2::Ranking2::Domain::Iterator
         {
             const auto ListParentKey = Gs2::Ranking2::Domain::Model::FSubscribeRankingSeasonDomain::CreateCacheParentKey(
                 Self->NamespaceName,
-                Self->UserId,
                 Self->RankingName,
-                FString::FromInt(*Self->Season),
+                TOptional<int64>(),
                 "SubscribeRankingScore"
             );
 
@@ -153,6 +149,9 @@ namespace Gs2::Ranking2::Domain::Iterator
                     Gs2::Ranking2::Model::FSubscribeRankingScore::TypeName,
                     ListParentKey,
                     Gs2::Ranking2::Domain::Model::FSubscribeRankingScoreDomain::CreateCacheKey(
+                        Item->GetRankingName(),
+                        Item->GetSeason(),
+                        Item->GetUserId()
                     ),
                     Item,
                     FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)

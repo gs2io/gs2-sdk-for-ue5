@@ -20,6 +20,7 @@
 #include "Stamina/Model/Gs2StaminaStamina.h"
 #include "Stamina/Model/Gs2StaminaStamina.h"
 #include "../../Core/Model/Gs2Error.h"
+#include "Core/Model/Gs2CoreTransaction.h"
 #include "Kismet/BlueprintAsyncActionBase.h"
 #include "Gs2StaminaActionSetMaxValue.generated.h"
 

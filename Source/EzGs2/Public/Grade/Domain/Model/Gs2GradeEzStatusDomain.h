@@ -28,6 +28,7 @@
 #include "Grade/Model/Gs2GradeEzAcquireActionResult.h"
 #include "Grade/Model/Gs2GradeEzTransactionResult.h"
 #include "Gs2GradeEzStatusDomain.h"
+#include "Core/EzTransactionDomain.h"
 #include "Util/Net/GameSession.h"
 #include "Util/Net/Gs2Connection.h"
 

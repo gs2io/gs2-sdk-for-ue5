@@ -114,6 +114,16 @@ namespace Gs2::Guild::Domain::Model
             ->WithGuildModelName(Self->GuildModelName)
             ->WithAccessToken(Self->AccessToken->GetToken())
             ->WithFromUserId(Self->FromUserId);
+        const auto Future = Self->Client->GetReceiveRequest(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         *Result = ResultModel->GetItem();
         return nullptr;
     }
@@ -148,6 +158,16 @@ namespace Gs2::Guild::Domain::Model
             ->WithGuildModelName(Self->GuildModelName)
             ->WithAccessToken(Self->AccessToken->GetToken())
             ->WithFromUserId(Self->FromUserId);
+        const auto Future = Self->Client->AcceptRequest(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         auto Domain = Self;
 
         *Result = Domain;
@@ -184,6 +204,16 @@ namespace Gs2::Guild::Domain::Model
             ->WithGuildModelName(Self->GuildModelName)
             ->WithAccessToken(Self->AccessToken->GetToken())
             ->WithFromUserId(Self->FromUserId);
+        const auto Future = Self->Client->RejectRequest(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         auto Domain = Self;
 
         *Result = Domain;

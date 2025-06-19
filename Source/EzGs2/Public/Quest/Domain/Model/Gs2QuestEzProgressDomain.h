@@ -33,6 +33,7 @@
 #include "Quest/Model/Gs2QuestEzAcquireActionResult.h"
 #include "Quest/Model/Gs2QuestEzTransactionResult.h"
 #include "Gs2QuestEzProgressDomain.h"
+#include "Core/EzTransactionDomain.h"
 #include "Util/Net/GameSession.h"
 #include "Util/Net/Gs2Connection.h"
 

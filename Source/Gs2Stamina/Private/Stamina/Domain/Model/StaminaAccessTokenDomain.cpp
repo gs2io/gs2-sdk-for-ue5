@@ -103,6 +103,16 @@ namespace Gs2::Stamina::Domain::Model
             ->WithNamespaceName(Self->NamespaceName)
             ->WithStaminaName(Self->StaminaName)
             ->WithAccessToken(Self->AccessToken->GetToken());
+        const auto Future = Self->Client->GetStamina(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         *Result = ResultModel->GetItem();
         return nullptr;
     }
@@ -136,6 +146,16 @@ namespace Gs2::Stamina::Domain::Model
             ->WithNamespaceName(Self->NamespaceName)
             ->WithStaminaName(Self->StaminaName)
             ->WithAccessToken(Self->AccessToken->GetToken());
+        const auto Future = Self->Client->ConsumeStamina(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         auto Domain = Self;
 
         *Result = Domain;
@@ -171,6 +191,16 @@ namespace Gs2::Stamina::Domain::Model
             ->WithNamespaceName(Self->NamespaceName)
             ->WithStaminaName(Self->StaminaName)
             ->WithAccessToken(Self->AccessToken->GetToken());
+        const auto Future = Self->Client->ApplyStamina(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         auto Domain = Self;
 
         *Result = Domain;
@@ -206,6 +236,16 @@ namespace Gs2::Stamina::Domain::Model
             ->WithNamespaceName(Self->NamespaceName)
             ->WithStaminaName(Self->StaminaName)
             ->WithAccessToken(Self->AccessToken->GetToken());
+        const auto Future = Self->Client->DecreaseMaxValue(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         auto Domain = Self;
 
         *Result = Domain;
@@ -241,6 +281,16 @@ namespace Gs2::Stamina::Domain::Model
             ->WithNamespaceName(Self->NamespaceName)
             ->WithStaminaName(Self->StaminaName)
             ->WithAccessToken(Self->AccessToken->GetToken());
+        const auto Future = Self->Client->SetMaxValueByStatus(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         auto Domain = Self;
 
         *Result = Domain;
@@ -276,6 +326,16 @@ namespace Gs2::Stamina::Domain::Model
             ->WithNamespaceName(Self->NamespaceName)
             ->WithStaminaName(Self->StaminaName)
             ->WithAccessToken(Self->AccessToken->GetToken());
+        const auto Future = Self->Client->SetRecoverIntervalByStatus(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         auto Domain = Self;
 
         *Result = Domain;
@@ -311,6 +371,16 @@ namespace Gs2::Stamina::Domain::Model
             ->WithNamespaceName(Self->NamespaceName)
             ->WithStaminaName(Self->StaminaName)
             ->WithAccessToken(Self->AccessToken->GetToken());
+        const auto Future = Self->Client->SetRecoverValueByStatus(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         auto Domain = Self;
 
         *Result = Domain;
@@ -346,6 +416,16 @@ namespace Gs2::Stamina::Domain::Model
             ->WithNamespaceName(Self->NamespaceName)
             ->WithAccessToken(Self->AccessToken->GetToken())
             ->WithStaminaName(Self->StaminaName);
+        const auto Future = Self->Client->VerifyStaminaValue(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         const auto Domain = Self;
         *Result = Domain;
         return nullptr;
@@ -380,6 +460,16 @@ namespace Gs2::Stamina::Domain::Model
             ->WithNamespaceName(Self->NamespaceName)
             ->WithAccessToken(Self->AccessToken->GetToken())
             ->WithStaminaName(Self->StaminaName);
+        const auto Future = Self->Client->VerifyStaminaMaxValue(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         const auto Domain = Self;
         *Result = Domain;
         return nullptr;
@@ -414,6 +504,16 @@ namespace Gs2::Stamina::Domain::Model
             ->WithNamespaceName(Self->NamespaceName)
             ->WithAccessToken(Self->AccessToken->GetToken())
             ->WithStaminaName(Self->StaminaName);
+        const auto Future = Self->Client->VerifyStaminaRecoverIntervalMinutes(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         const auto Domain = Self;
         *Result = Domain;
         return nullptr;
@@ -448,6 +548,16 @@ namespace Gs2::Stamina::Domain::Model
             ->WithNamespaceName(Self->NamespaceName)
             ->WithAccessToken(Self->AccessToken->GetToken())
             ->WithStaminaName(Self->StaminaName);
+        const auto Future = Self->Client->VerifyStaminaRecoverValue(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         const auto Domain = Self;
         *Result = Domain;
         return nullptr;
@@ -482,6 +592,16 @@ namespace Gs2::Stamina::Domain::Model
             ->WithNamespaceName(Self->NamespaceName)
             ->WithAccessToken(Self->AccessToken->GetToken())
             ->WithStaminaName(Self->StaminaName);
+        const auto Future = Self->Client->VerifyStaminaOverflowValue(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         const auto Domain = Self;
         *Result = Domain;
         return nullptr;

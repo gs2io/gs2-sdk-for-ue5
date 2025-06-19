@@ -22,6 +22,7 @@
 #include "Schedule/Model/Gs2ScheduleEzEvent.h"
 #include "Schedule/Model/Gs2ScheduleEzRepeatSchedule.h"
 #include "Gs2ScheduleEzEventDomain.h"
+#include "Core/EzTransactionDomain.h"
 #include "Util/Net/GameSession.h"
 #include "Util/Net/Gs2Connection.h"
 

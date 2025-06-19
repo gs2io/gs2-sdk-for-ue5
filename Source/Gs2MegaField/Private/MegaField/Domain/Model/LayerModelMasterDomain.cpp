@@ -101,6 +101,16 @@ namespace Gs2::MegaField::Domain::Model
             ->WithNamespaceName(Self->NamespaceName)
             ->WithAreaModelName(Self->AreaModelName)
             ->WithLayerModelName(Self->LayerModelName);
+        const auto Future = Self->Client->GetLayerModelMaster(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         *Result = ResultModel->GetItem();
         return nullptr;
     }
@@ -134,6 +144,16 @@ namespace Gs2::MegaField::Domain::Model
             ->WithNamespaceName(Self->NamespaceName)
             ->WithAreaModelName(Self->AreaModelName)
             ->WithLayerModelName(Self->LayerModelName);
+        const auto Future = Self->Client->UpdateLayerModelMaster(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         auto Domain = Self;
 
         *Result = Domain;
@@ -169,6 +189,16 @@ namespace Gs2::MegaField::Domain::Model
             ->WithNamespaceName(Self->NamespaceName)
             ->WithAreaModelName(Self->AreaModelName)
             ->WithLayerModelName(Self->LayerModelName);
+        const auto Future = Self->Client->DeleteLayerModelMaster(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         auto Domain = Self;
 
         *Result = Domain;

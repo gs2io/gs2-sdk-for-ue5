@@ -12,6 +12,8 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
+ *
+ * deny overwrite
  */
 
 #if defined(_MSC_VER)
@@ -60,35 +62,6 @@ namespace Gs2::Mission::Domain::Transaction::SpeculativeExecutor
     {
         // TODO: Speculative execution not supported
         UE_LOG(Gs2Log, Warning, TEXT("Speculative execution not supported on this action: %s"), ToCStr(FBatchCompleteByUserIdSpeculativeExecutor::Action()))
-
-        const auto Future = Domain->Mission->Namespace(
-                Request->GetNamespaceName().IsSet() ? *Request->GetNamespaceName() : ""
-            )->AccessToken(
-                AccessToken
-            )->Complete(
-                Request->GetMissionGroupName().IsSet() ? *Request->GetMissionGroupName() : ""
-            )->Model();
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            return Future->GetTask().Error();
-        }
-        const auto Item = Future->GetTask().Result();
-
-        if (!Item.IsValid())
-        {
-            *Result = MakeShared<TFunction<void()>>([]{});
-            return nullptr;
-        }
-
-        Service->OnIssueTransaction.Broadcast(
-            MakeShared<Gs2::Core::Domain::Model::FIssueTransactionEvent>(
-                AccessToken,
-                Item->GetConsumeActions(),
-                Item->GetAcquireActions(),
-                1.0
-            )
-        );
 
         return nullptr;
     }

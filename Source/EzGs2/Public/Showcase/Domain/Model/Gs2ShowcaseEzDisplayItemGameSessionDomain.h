@@ -32,6 +32,7 @@
 #include "Showcase/Model/Gs2ShowcaseEzAcquireActionResult.h"
 #include "Showcase/Model/Gs2ShowcaseEzTransactionResult.h"
 #include "Gs2ShowcaseEzDisplayItemGameSessionDomain.h"
+#include "Core/EzTransactionGameSessionDomain.h"
 #include "Util/Net/GameSession.h"
 #include "Util/Net/Gs2Connection.h"
 
@@ -58,7 +59,7 @@ namespace Gs2::UE5::Showcase::Domain::Model
         );
 
         class EZGS2_API FBuyTask :
-            public Gs2::Core::Util::TGs2Future<Gs2::UE5::Showcase::Domain::Model::FEzDisplayItemGameSessionDomain>,
+            public Gs2::Core::Util::TGs2Future<Gs2::UE5::Core::Domain::FEzTransactionGameSessionDomain>,
             public TSharedFromThis<FBuyTask>
         {
             TSharedPtr<FEzDisplayItemGameSessionDomain> Self;
@@ -73,7 +74,7 @@ namespace Gs2::UE5::Showcase::Domain::Model
             );
 
             virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-                TSharedPtr<TSharedPtr<Gs2::UE5::Showcase::Domain::Model::FEzDisplayItemGameSessionDomain>> Result
+                TSharedPtr<TSharedPtr<Gs2::UE5::Core::Domain::FEzTransactionGameSessionDomain>> Result
             ) override;
         };
         friend FBuyTask;

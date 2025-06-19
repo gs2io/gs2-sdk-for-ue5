@@ -35,6 +35,7 @@
 #include "Mission/Model/Gs2MissionEzAcquireActionResult.h"
 #include "Mission/Model/Gs2MissionEzTransactionResult.h"
 #include "Gs2MissionEzCounterDomain.h"
+#include "Core/EzTransactionDomain.h"
 #include "Util/Net/GameSession.h"
 #include "Util/Net/Gs2Connection.h"
 

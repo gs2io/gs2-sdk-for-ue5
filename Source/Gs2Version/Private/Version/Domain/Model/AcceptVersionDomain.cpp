@@ -101,6 +101,16 @@ namespace Gs2::Version::Domain::Model
             ->WithNamespaceName(Self->NamespaceName)
             ->WithVersionName(Self->VersionName)
             ->WithUserId(Self->UserId);
+        const auto Future = Self->Client->AcceptByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         auto Domain = Self;
 
         *Result = Domain;
@@ -136,6 +146,16 @@ namespace Gs2::Version::Domain::Model
             ->WithNamespaceName(Self->NamespaceName)
             ->WithVersionName(Self->VersionName)
             ->WithUserId(Self->UserId);
+        const auto Future = Self->Client->RejectByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         auto Domain = Self;
 
         *Result = Domain;
@@ -171,6 +191,16 @@ namespace Gs2::Version::Domain::Model
             ->WithNamespaceName(Self->NamespaceName)
             ->WithUserId(Self->UserId)
             ->WithVersionName(Self->VersionName);
+        const auto Future = Self->Client->GetAcceptVersionByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         *Result = ResultModel->GetItem();
         return nullptr;
     }
@@ -204,6 +234,16 @@ namespace Gs2::Version::Domain::Model
             ->WithNamespaceName(Self->NamespaceName)
             ->WithUserId(Self->UserId)
             ->WithVersionName(Self->VersionName);
+        const auto Future = Self->Client->DeleteAcceptVersionByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         auto Domain = Self;
 
         *Result = Domain;
