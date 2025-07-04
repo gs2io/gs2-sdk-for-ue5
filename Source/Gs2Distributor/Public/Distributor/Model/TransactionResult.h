@@ -32,6 +32,7 @@ namespace Gs2::Distributor::Model
         TSharedPtr<TArray<TSharedPtr<FVerifyActionResult>>> VerifyResultsValue;
         TSharedPtr<TArray<TSharedPtr<FConsumeActionResult>>> ConsumeResultsValue;
         TSharedPtr<TArray<TSharedPtr<FAcquireActionResult>>> AcquireResultsValue;
+        TOptional<bool> HasErrorValue;
         TOptional<int64> CreatedAtValue;
         TOptional<int64> RevisionValue;
 
@@ -48,6 +49,7 @@ namespace Gs2::Distributor::Model
         TSharedPtr<FTransactionResult> WithVerifyResults(const TSharedPtr<TArray<TSharedPtr<FVerifyActionResult>>> VerifyResults);
         TSharedPtr<FTransactionResult> WithConsumeResults(const TSharedPtr<TArray<TSharedPtr<FConsumeActionResult>>> ConsumeResults);
         TSharedPtr<FTransactionResult> WithAcquireResults(const TSharedPtr<TArray<TSharedPtr<FAcquireActionResult>>> AcquireResults);
+        TSharedPtr<FTransactionResult> WithHasError(const TOptional<bool> HasError);
         TSharedPtr<FTransactionResult> WithCreatedAt(const TOptional<int64> CreatedAt);
         TSharedPtr<FTransactionResult> WithRevision(const TOptional<int64> Revision);
 
@@ -57,6 +59,8 @@ namespace Gs2::Distributor::Model
         TSharedPtr<TArray<TSharedPtr<FVerifyActionResult>>> GetVerifyResults() const;
         TSharedPtr<TArray<TSharedPtr<FConsumeActionResult>>> GetConsumeResults() const;
         TSharedPtr<TArray<TSharedPtr<FAcquireActionResult>>> GetAcquireResults() const;
+        TOptional<bool> GetHasError() const;
+        FString GetHasErrorString() const;
         TOptional<int64> GetCreatedAt() const;
         FString GetCreatedAtString() const;
         TOptional<int64> GetRevision() const;

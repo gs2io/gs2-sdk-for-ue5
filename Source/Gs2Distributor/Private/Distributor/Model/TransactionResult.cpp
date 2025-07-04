@@ -25,6 +25,7 @@ namespace Gs2::Distributor::Model
         VerifyResultsValue(nullptr),
         ConsumeResultsValue(nullptr),
         AcquireResultsValue(nullptr),
+        HasErrorValue(TOptional<bool>()),
         CreatedAtValue(TOptional<int64>()),
         RevisionValue(TOptional<int64>())
     {
@@ -39,6 +40,7 @@ namespace Gs2::Distributor::Model
         VerifyResultsValue(From.VerifyResultsValue),
         ConsumeResultsValue(From.ConsumeResultsValue),
         AcquireResultsValue(From.AcquireResultsValue),
+        HasErrorValue(From.HasErrorValue),
         CreatedAtValue(From.CreatedAtValue),
         RevisionValue(From.RevisionValue)
     {
@@ -92,6 +94,14 @@ namespace Gs2::Distributor::Model
         return SharedThis(this);
     }
 
+    TSharedPtr<FTransactionResult> FTransactionResult::WithHasError(
+        const TOptional<bool> HasError
+    )
+    {
+        this->HasErrorValue = HasError;
+        return SharedThis(this);
+    }
+
     TSharedPtr<FTransactionResult> FTransactionResult::WithCreatedAt(
         const TOptional<int64> CreatedAt
     )
@@ -130,6 +140,19 @@ namespace Gs2::Distributor::Model
     TSharedPtr<TArray<TSharedPtr<Model::FAcquireActionResult>>> FTransactionResult::GetAcquireResults() const
     {
         return AcquireResultsValue;
+    }
+    TOptional<bool> FTransactionResult::GetHasError() const
+    {
+        return HasErrorValue;
+    }
+
+    FString FTransactionResult::GetHasErrorString() const
+    {
+        if (!HasErrorValue.IsSet())
+        {
+            return FString("null");
+        }
+        return FString(HasErrorValue.GetValue() ? "true" : "false");
     }
     TOptional<int64> FTransactionResult::GetCreatedAt() const
     {
@@ -282,6 +305,15 @@ namespace Gs2::Distributor::Model
                     }
                     return v;
                  }() : MakeShared<TArray<Model::FAcquireActionResultPtr>>())
+            ->WithHasError(Data->HasField(ANSI_TO_TCHAR("hasError")) ? [Data]() -> TOptional<bool>
+                {
+                    bool v;
+                    if (Data->TryGetBoolField(ANSI_TO_TCHAR("hasError"), v))
+                    {
+                        return TOptional(v);
+                    }
+                    return TOptional<bool>();
+                }() : TOptional<bool>())
             ->WithCreatedAt(Data->HasField(ANSI_TO_TCHAR("createdAt")) ? [Data]() -> TOptional<int64>
                 {
                     int64 v;
@@ -343,6 +375,10 @@ namespace Gs2::Distributor::Model
                 v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
             }
             JsonRootObject->SetArrayField("acquireResults", v);
+        }
+        if (HasErrorValue.IsSet())
+        {
+            JsonRootObject->SetBoolField("hasError", HasErrorValue.GetValue());
         }
         if (CreatedAtValue.IsSet())
         {
