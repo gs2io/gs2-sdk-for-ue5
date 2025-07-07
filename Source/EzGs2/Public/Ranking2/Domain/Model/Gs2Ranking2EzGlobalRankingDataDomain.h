@@ -37,7 +37,6 @@
 #include "Ranking2/Model/Gs2Ranking2EzConsumeActionResult.h"
 #include "Ranking2/Model/Gs2Ranking2EzAcquireActionResult.h"
 #include "Ranking2/Model/Gs2Ranking2EzTransactionResult.h"
-#include "Gs2Ranking2EzGlobalRankingDataDomain.h"
 #include "Core/EzTransactionDomain.h"
 #include "Util/Net/GameSession.h"
 #include "Util/Net/Gs2Connection.h"
@@ -56,6 +55,7 @@ namespace Gs2::UE5::Ranking2::Domain::Model
         TOptional<FString> RankingName() const;
         TOptional<int64> Season() const;
         TOptional<FString> UserId() const;
+        TOptional<FString> ScorerUserId() const;
 
         FEzGlobalRankingDataDomain(
             Gs2::Ranking2::Domain::Model::FGlobalRankingDataDomainPtr Domain,

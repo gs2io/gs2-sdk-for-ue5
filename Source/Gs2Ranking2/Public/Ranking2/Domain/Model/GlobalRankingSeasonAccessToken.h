@@ -162,6 +162,32 @@ namespace Gs2::Ranking2::Domain::Model
             Request::FPutGlobalRankingScoreRequestPtr Request
         );
 
+        class GS2RANKING2_API FGetGlobalRankingTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Ranking2::Domain::Model::FGlobalRankingDataAccessTokenDomain>,
+            public TSharedFromThis<FGetGlobalRankingTask>
+        {
+            const TSharedPtr<FGlobalRankingSeasonAccessTokenDomain> Self;
+            const Request::FGetGlobalRankingRequestPtr Request;
+        public:
+            explicit FGetGlobalRankingTask(
+                const TSharedPtr<FGlobalRankingSeasonAccessTokenDomain>& Self,
+                const Request::FGetGlobalRankingRequestPtr Request
+            );
+
+            FGetGlobalRankingTask(
+                const FGetGlobalRankingTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Ranking2::Domain::Model::FGlobalRankingDataAccessTokenDomain>> Result
+            ) override;
+        };
+        friend FGetGlobalRankingTask;
+
+        TSharedPtr<FAsyncTask<FGetGlobalRankingTask>> GetGlobalRanking(
+            Request::FGetGlobalRankingRequestPtr Request
+        );
+
         Gs2::Ranking2::Domain::Iterator::FDescribeGlobalRankingScoresIteratorPtr GlobalRankingScores(
         ) const;
 
@@ -188,6 +214,7 @@ namespace Gs2::Ranking2::Domain::Model
         );
 
         TSharedPtr<Gs2::Ranking2::Domain::Model::FGlobalRankingDataAccessTokenDomain> GlobalRankingData(
+            const FString ScorerUserId
         );
 
         Gs2::Ranking2::Domain::Iterator::FDescribeGlobalRankingReceivedRewardsIteratorPtr GlobalRankingReceivedRewards(

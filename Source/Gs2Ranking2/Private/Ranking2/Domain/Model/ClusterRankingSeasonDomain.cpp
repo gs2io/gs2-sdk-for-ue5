@@ -110,6 +110,62 @@ namespace Gs2::Ranking2::Domain::Model
 
     }
 
+    FClusterRankingSeasonDomain::FGetClusterRankingTask::FGetClusterRankingTask(
+        const TSharedPtr<FClusterRankingSeasonDomain>& Self,
+        const Request::FGetClusterRankingByUserIdRequestPtr Request
+    ): Self(Self), Request(Request)
+    {
+
+    }
+
+    FClusterRankingSeasonDomain::FGetClusterRankingTask::FGetClusterRankingTask(
+        const FGetClusterRankingTask& From
+    ): TGs2Future(From), Self(From.Self), Request(From.Request)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FClusterRankingSeasonDomain::FGetClusterRankingTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::Ranking2::Domain::Model::FClusterRankingDataDomain>> Result
+    )
+    {
+        Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
+            ->WithNamespaceName(Self->NamespaceName)
+            ->WithRankingName(Self->RankingName)
+            ->WithClusterName(Self->ClusterName)
+            ->WithUserId(Self->UserId)
+            ->WithSeason(Self->Season);
+        const auto Future = Self->Client->GetClusterRankingByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
+        auto Domain = MakeShared<Gs2::Ranking2::Domain::Model::FClusterRankingDataDomain>(
+            Self->Gs2,
+            Self->Service,
+            Request->GetNamespaceName(),
+            ResultModel->GetItem()->GetRankingName(),
+            ResultModel->GetItem()->GetClusterName(),
+            ResultModel->GetItem()->GetSeason(),
+            ResultModel->GetItem()->GetUserId(),
+            ResultModel->GetItem()->GetUserId()
+        );
+
+        *Result = Domain;
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FClusterRankingSeasonDomain::FGetClusterRankingTask>> FClusterRankingSeasonDomain::GetClusterRanking(
+        Request::FGetClusterRankingByUserIdRequestPtr Request
+    ) {
+        return Gs2::Core::Util::New<FAsyncTask<FGetClusterRankingTask>>(this->AsShared(), Request);
+    }
+
     FClusterRankingSeasonDomain::FPutClusterRankingScoreTask::FPutClusterRankingScoreTask(
         const TSharedPtr<FClusterRankingSeasonDomain>& Self,
         const Request::FPutClusterRankingScoreByUserIdRequestPtr Request
@@ -215,6 +271,7 @@ namespace Gs2::Ranking2::Domain::Model
     }
 
     TSharedPtr<Gs2::Ranking2::Domain::Model::FClusterRankingDataDomain> FClusterRankingSeasonDomain::ClusterRankingData(
+        const FString ScorerUserId
     )
     {
         return MakeShared<Gs2::Ranking2::Domain::Model::FClusterRankingDataDomain>(
@@ -224,7 +281,8 @@ namespace Gs2::Ranking2::Domain::Model
             RankingName,
             ClusterName,
             Season,
-            UserId
+            UserId,
+            ScorerUserId == TEXT("") ? TOptional<FString>() : TOptional<FString>(ScorerUserId)
         );
     }
 

@@ -44,6 +44,11 @@ namespace Gs2::UE5::Ranking2::Domain::Model
         return Domain->UserId();
     }
 
+    TOptional<FString> FEzClusterRankingDataGameSessionDomain::ScorerUserId() const
+    {
+        return Domain->ScorerUserId;
+    }
+
     FEzClusterRankingDataGameSessionDomain::FEzClusterRankingDataGameSessionDomain(
         Gs2::Ranking2::Domain::Model::FClusterRankingDataAccessTokenDomainPtr Domain,
         Gs2::UE5::Util::IGameSessionPtr GameSession,
@@ -54,56 +59,6 @@ namespace Gs2::UE5::Ranking2::Domain::Model
         ConnectionValue(Connection)
     {
 
-    }
-
-    FEzClusterRankingDataGameSessionDomain::FGetClusterRankingRankTask::FGetClusterRankingRankTask(
-        TSharedPtr<FEzClusterRankingDataGameSessionDomain> Self
-    ): Self(Self)
-    {
-
-    }
-
-    Gs2::Core::Model::FGs2ErrorPtr FEzClusterRankingDataGameSessionDomain::FGetClusterRankingRankTask::Action(
-        TSharedPtr<TSharedPtr<Gs2::UE5::Ranking2::Domain::Model::FEzClusterRankingDataGameSessionDomain>> Result
-    )
-    {
-        const auto Future = Self->ConnectionValue->Run(
-            [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
-                const auto Task = Self->Domain->GetClusterRanking(
-                    MakeShared<Gs2::Ranking2::Request::FGetClusterRankingRequest>()
-                );
-                Task->StartSynchronousTask();
-                if (Task->GetTask().IsError())
-                {
-                    Task->EnsureCompletion();
-                    return Task->GetTask().Error();
-                }
-                *Result = MakeShared<Gs2::UE5::Ranking2::Domain::Model::FEzClusterRankingDataGameSessionDomain>(
-                    Task->GetTask().Result(),
-                    Self->GameSession,
-                    Self->ConnectionValue
-                );
-                Task->EnsureCompletion();
-                return nullptr;
-            },
-            nullptr
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            Future->EnsureCompletion();
-            return Future->GetTask().Error();
-        }
-        Future->EnsureCompletion();
-        return nullptr;
-    }
-
-    TSharedPtr<FAsyncTask<FEzClusterRankingDataGameSessionDomain::FGetClusterRankingRankTask>> FEzClusterRankingDataGameSessionDomain::GetClusterRankingRank(
-    )
-    {
-        return Gs2::Core::Util::New<FAsyncTask<FGetClusterRankingRankTask>>(
-            this->AsShared()
-        );
     }
 
     FEzClusterRankingDataGameSessionDomain::FModelTask::FModelTask(

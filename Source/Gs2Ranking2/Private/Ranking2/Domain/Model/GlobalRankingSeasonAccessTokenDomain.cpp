@@ -160,6 +160,60 @@ namespace Gs2::Ranking2::Domain::Model
         return Gs2::Core::Util::New<FAsyncTask<FPutGlobalRankingScoreTask>>(this->AsShared(), Request);
     }
 
+    FGlobalRankingSeasonAccessTokenDomain::FGetGlobalRankingTask::FGetGlobalRankingTask(
+        const TSharedPtr<FGlobalRankingSeasonAccessTokenDomain>& Self,
+        const Request::FGetGlobalRankingRequestPtr Request
+    ): Self(Self), Request(Request)
+    {
+
+    }
+
+    FGlobalRankingSeasonAccessTokenDomain::FGetGlobalRankingTask::FGetGlobalRankingTask(
+        const FGetGlobalRankingTask& From
+    ): TGs2Future(From), Self(From.Self), Request(From.Request)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FGlobalRankingSeasonAccessTokenDomain::FGetGlobalRankingTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::Ranking2::Domain::Model::FGlobalRankingDataAccessTokenDomain>> Result
+    )
+    {
+        Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
+            ->WithNamespaceName(Self->NamespaceName)
+            ->WithRankingName(Self->RankingName)
+            ->WithAccessToken(Self->AccessToken->GetToken())
+            ->WithSeason(Self->Season);
+        const auto Future = Self->Client->GetGlobalRanking(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
+        auto Domain = MakeShared<Gs2::Ranking2::Domain::Model::FGlobalRankingDataAccessTokenDomain>(
+            Self->Gs2,
+            Self->Service,
+            Request->GetNamespaceName(),
+            ResultModel->GetItem()->GetRankingName(),
+            ResultModel->GetItem()->GetSeason(),
+            Self->AccessToken,
+            ResultModel->GetItem()->GetUserId()
+        );
+
+        *Result = Domain;
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FGlobalRankingSeasonAccessTokenDomain::FGetGlobalRankingTask>> FGlobalRankingSeasonAccessTokenDomain::GetGlobalRanking(
+        Request::FGetGlobalRankingRequestPtr Request
+    ) {
+        return Gs2::Core::Util::New<FAsyncTask<FGetGlobalRankingTask>>(this->AsShared(), Request);
+    }
+
     Gs2::Ranking2::Domain::Iterator::FDescribeGlobalRankingScoresIteratorPtr FGlobalRankingSeasonAccessTokenDomain::GlobalRankingScores(
     ) const
     {
@@ -263,6 +317,7 @@ namespace Gs2::Ranking2::Domain::Model
     }
 
     TSharedPtr<Gs2::Ranking2::Domain::Model::FGlobalRankingDataAccessTokenDomain> FGlobalRankingSeasonAccessTokenDomain::GlobalRankingData(
+        const FString ScorerUserId
     )
     {
         return MakeShared<Gs2::Ranking2::Domain::Model::FGlobalRankingDataAccessTokenDomain>(
@@ -271,7 +326,8 @@ namespace Gs2::Ranking2::Domain::Model
             NamespaceName,
             RankingName,
             Season,
-            AccessToken
+            AccessToken,
+            ScorerUserId == TEXT("") ? TOptional<FString>() : TOptional<FString>(ScorerUserId)
         );
     }
 

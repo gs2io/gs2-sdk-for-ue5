@@ -59,16 +59,6 @@ namespace Gs2::UE5::Ranking2::Domain::Model
 
     }
 
-    Gs2::UE5::Ranking2::Domain::Model::FEzClusterRankingDataDomainPtr FEzClusterRankingSeasonDomain::ClusterRankingData(
-    ) const
-    {
-        return MakeShared<Gs2::UE5::Ranking2::Domain::Model::FEzClusterRankingDataDomain>(
-            Domain->ClusterRankingData(
-            ),
-            ConnectionValue
-        );
-    }
-
     Gs2::UE5::Ranking2::Domain::Model::FEzClusterRankingReceivedRewardDomainPtr FEzClusterRankingSeasonDomain::ClusterRankingReceivedReward(
     ) const
     {

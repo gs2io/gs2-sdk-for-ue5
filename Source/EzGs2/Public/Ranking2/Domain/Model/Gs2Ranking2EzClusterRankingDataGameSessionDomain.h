@@ -37,7 +37,6 @@
 #include "Ranking2/Model/Gs2Ranking2EzConsumeActionResult.h"
 #include "Ranking2/Model/Gs2Ranking2EzAcquireActionResult.h"
 #include "Ranking2/Model/Gs2Ranking2EzTransactionResult.h"
-#include "Gs2Ranking2EzClusterRankingDataGameSessionDomain.h"
 #include "Ranking2/Domain/Iterator/Gs2Ranking2EzDescribeClusterRankingsIterator.h"
 #include "Core/EzTransactionGameSessionDomain.h"
 #include "Util/Net/GameSession.h"
@@ -59,31 +58,12 @@ namespace Gs2::UE5::Ranking2::Domain::Model
         TOptional<FString> ClusterName() const;
         TOptional<int64> Season() const;
         TOptional<FString> UserId() const;
+        TOptional<FString> ScorerUserId() const;
 
         FEzClusterRankingDataGameSessionDomain(
             Gs2::Ranking2::Domain::Model::FClusterRankingDataAccessTokenDomainPtr Domain,
             Gs2::UE5::Util::IGameSessionPtr GameSession,
             Gs2::UE5::Util::FGs2ConnectionPtr Connection
-        );
-
-        class EZGS2_API FGetClusterRankingRankTask :
-            public Gs2::Core::Util::TGs2Future<Gs2::UE5::Ranking2::Domain::Model::FEzClusterRankingDataGameSessionDomain>,
-            public TSharedFromThis<FGetClusterRankingRankTask>
-        {
-            TSharedPtr<FEzClusterRankingDataGameSessionDomain> Self;
-
-        public:
-            explicit FGetClusterRankingRankTask(
-                TSharedPtr<FEzClusterRankingDataGameSessionDomain> Self
-            );
-
-            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-                TSharedPtr<TSharedPtr<Gs2::UE5::Ranking2::Domain::Model::FEzClusterRankingDataGameSessionDomain>> Result
-            ) override;
-        };
-        friend FGetClusterRankingRankTask;
-
-        TSharedPtr<FAsyncTask<FGetClusterRankingRankTask>> GetClusterRankingRank(
         );
 
         class EZGS2_API FModelTask :

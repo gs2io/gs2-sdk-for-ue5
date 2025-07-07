@@ -111,6 +111,7 @@ namespace Gs2::Ranking2::Domain::Model
         TOptional<int64> Season;
         Gs2::Auth::Model::FAccessTokenPtr AccessToken;
         TOptional<FString> UserId() const { return AccessToken->GetUserId(); }
+        TOptional<FString> ScorerUserId;
     private:
 
         FString ParentKey;
@@ -123,7 +124,8 @@ namespace Gs2::Ranking2::Domain::Model
             const TOptional<FString> NamespaceName,
             const TOptional<FString> RankingName,
             const TOptional<int64> Season,
-            const Gs2::Auth::Model::FAccessTokenPtr& AccessToken
+            const Gs2::Auth::Model::FAccessTokenPtr& AccessToken,
+            const TOptional<FString> ScorerUserId
             // ReSharper disable once CppMemberInitializersOrder
         );
 
@@ -131,42 +133,16 @@ namespace Gs2::Ranking2::Domain::Model
             const FGlobalRankingDataAccessTokenDomain& From
         );
 
-        class GS2RANKING2_API FGetGlobalRankingTask final :
-            public Gs2::Core::Util::TGs2Future<Gs2::Ranking2::Domain::Model::FGlobalRankingDataAccessTokenDomain>,
-            public TSharedFromThis<FGetGlobalRankingTask>
-        {
-            const TSharedPtr<FGlobalRankingDataAccessTokenDomain> Self;
-            const Request::FGetGlobalRankingRequestPtr Request;
-        public:
-            explicit FGetGlobalRankingTask(
-                const TSharedPtr<FGlobalRankingDataAccessTokenDomain>& Self,
-                const Request::FGetGlobalRankingRequestPtr Request
-            );
-
-            FGetGlobalRankingTask(
-                const FGetGlobalRankingTask& From
-            );
-
-            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-                TSharedPtr<TSharedPtr<Gs2::Ranking2::Domain::Model::FGlobalRankingDataAccessTokenDomain>> Result
-            ) override;
-        };
-        friend FGetGlobalRankingTask;
-
-        TSharedPtr<FAsyncTask<FGetGlobalRankingTask>> GetGlobalRanking(
-            Request::FGetGlobalRankingRequestPtr Request
-        );
-
         static FString CreateCacheParentKey(
             TOptional<FString> NamespaceName,
             TOptional<FString> RankingName,
             TOptional<int64> Season,
-            TOptional<FString> UserId,
+            TOptional<FString> ScorerUserId,
             FString ChildType
         );
 
         static FString CreateCacheKey(
-            TOptional<FString> UserId
+            TOptional<FString> ScorerUserId
         );
 
         class GS2RANKING2_API FModelTask final :

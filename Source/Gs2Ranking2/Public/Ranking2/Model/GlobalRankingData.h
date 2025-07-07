@@ -82,7 +82,7 @@ namespace Gs2::Ranking2::Model
         static TOptional<FString> GetNamespaceNameFromGrn(const FString Grn);
         static TOptional<FString> GetRankingNameFromGrn(const FString Grn);
         static TOptional<FString> GetSeasonFromGrn(const FString Grn);
-        static TOptional<FString> GetUserIdFromGrn(const FString Grn);
+        static TOptional<FString> GetScorerUserIdFromGrn(const FString Grn);
 
         static TSharedPtr<FGlobalRankingData> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;

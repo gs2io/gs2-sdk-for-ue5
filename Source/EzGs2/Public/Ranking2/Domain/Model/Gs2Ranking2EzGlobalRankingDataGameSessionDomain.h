@@ -37,7 +37,6 @@
 #include "Ranking2/Model/Gs2Ranking2EzConsumeActionResult.h"
 #include "Ranking2/Model/Gs2Ranking2EzAcquireActionResult.h"
 #include "Ranking2/Model/Gs2Ranking2EzTransactionResult.h"
-#include "Gs2Ranking2EzGlobalRankingDataGameSessionDomain.h"
 #include "Ranking2/Domain/Iterator/Gs2Ranking2EzDescribeGlobalRankingsIterator.h"
 #include "Core/EzTransactionGameSessionDomain.h"
 #include "Util/Net/GameSession.h"
@@ -58,31 +57,12 @@ namespace Gs2::UE5::Ranking2::Domain::Model
         TOptional<FString> RankingName() const;
         TOptional<int64> Season() const;
         TOptional<FString> UserId() const;
+        TOptional<FString> ScorerUserId() const;
 
         FEzGlobalRankingDataGameSessionDomain(
             Gs2::Ranking2::Domain::Model::FGlobalRankingDataAccessTokenDomainPtr Domain,
             Gs2::UE5::Util::IGameSessionPtr GameSession,
             Gs2::UE5::Util::FGs2ConnectionPtr Connection
-        );
-
-        class EZGS2_API FGetGlobalRankingRankTask :
-            public Gs2::Core::Util::TGs2Future<Gs2::UE5::Ranking2::Domain::Model::FEzGlobalRankingDataGameSessionDomain>,
-            public TSharedFromThis<FGetGlobalRankingRankTask>
-        {
-            TSharedPtr<FEzGlobalRankingDataGameSessionDomain> Self;
-
-        public:
-            explicit FGetGlobalRankingRankTask(
-                TSharedPtr<FEzGlobalRankingDataGameSessionDomain> Self
-            );
-
-            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-                TSharedPtr<TSharedPtr<Gs2::UE5::Ranking2::Domain::Model::FEzGlobalRankingDataGameSessionDomain>> Result
-            ) override;
-        };
-        friend FGetGlobalRankingRankTask;
-
-        TSharedPtr<FAsyncTask<FGetGlobalRankingRankTask>> GetGlobalRankingRank(
         );
 
         class EZGS2_API FModelTask :

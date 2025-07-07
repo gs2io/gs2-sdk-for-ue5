@@ -39,7 +39,6 @@
 #include "Ranking2/Model/Gs2Ranking2EzTransactionResult.h"
 #include "Gs2Ranking2EzGlobalRankingScoreGameSessionDomain.h"
 #include "Ranking2/Domain/Iterator/Gs2Ranking2EzDescribeGlobalRankingScoresIterator.h"
-#include "Gs2Ranking2EzGlobalRankingDataGameSessionDomain.h"
 #include "Ranking2/Domain/Iterator/Gs2Ranking2EzDescribeGlobalRankingsIterator.h"
 #include "Gs2Ranking2EzGlobalRankingReceivedRewardGameSessionDomain.h"
 #include "Ranking2/Domain/Iterator/Gs2Ranking2EzDescribeGlobalRankingReceivedRewardsIterator.h"
@@ -97,6 +96,26 @@ namespace Gs2::UE5::Ranking2::Domain::Model
             TOptional<FString> Metadata = TOptional<FString>()
         );
 
+        class EZGS2_API FGetGlobalRankingRankTask :
+            public Gs2::Core::Util::TGs2Future<Gs2::UE5::Ranking2::Domain::Model::FEzGlobalRankingDataGameSessionDomain>,
+            public TSharedFromThis<FGetGlobalRankingRankTask>
+        {
+            TSharedPtr<FEzGlobalRankingSeasonGameSessionDomain> Self;
+
+        public:
+            explicit FGetGlobalRankingRankTask(
+                TSharedPtr<FEzGlobalRankingSeasonGameSessionDomain> Self
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::UE5::Ranking2::Domain::Model::FEzGlobalRankingDataGameSessionDomain>> Result
+            ) override;
+        };
+        friend FGetGlobalRankingRankTask;
+
+        TSharedPtr<FAsyncTask<FGetGlobalRankingRankTask>> GetGlobalRankingRank(
+        );
+
         Gs2::UE5::Ranking2::Domain::Iterator::FEzDescribeGlobalRankingScoresIteratorPtr GlobalRankingScores(
         ) const;
 
@@ -115,6 +134,7 @@ namespace Gs2::UE5::Ranking2::Domain::Model
         void UnsubscribeGlobalRankings(Gs2::Core::Domain::CallbackID CallbackId);
 
         Gs2::UE5::Ranking2::Domain::Model::FEzGlobalRankingDataGameSessionDomainPtr GlobalRankingData(
+            const FString ScorerUserId
         ) const;
 
         Gs2::UE5::Ranking2::Domain::Iterator::FEzDescribeGlobalRankingReceivedRewardsIteratorPtr GlobalRankingReceivedRewards(

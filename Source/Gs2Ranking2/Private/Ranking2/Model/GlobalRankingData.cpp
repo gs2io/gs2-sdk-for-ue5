@@ -270,7 +270,7 @@ namespace Gs2::Ranking2::Model
 
     TOptional<FString> FGlobalRankingData::GetRegionFromGrn(const FString Grn)
     {
-        const auto Pattern = FRegexPattern(TEXT("grn:gs2:(?<region>.+):(?<ownerId>.+):ranking2:(?<namespaceName>.+):global:(?<rankingName>.+):ranking:global:(?<season>.+):user:(?<userId>.+):score"));
+        const auto Pattern = FRegexPattern(TEXT("grn:gs2:(?<region>.+):(?<ownerId>.+):ranking2:(?<namespaceName>.+):global:(?<rankingName>.+):ranking:global:(?<season>.+):user:(?<scorerUserId>.+):score"));
         FRegexMatcher Matcher(Pattern, Grn);
         while (Matcher.FindNext())
         {
@@ -281,7 +281,7 @@ namespace Gs2::Ranking2::Model
 
     TOptional<FString> FGlobalRankingData::GetOwnerIdFromGrn(const FString Grn)
     {
-        const auto Pattern = FRegexPattern(TEXT("grn:gs2:(?<region>.+):(?<ownerId>.+):ranking2:(?<namespaceName>.+):global:(?<rankingName>.+):ranking:global:(?<season>.+):user:(?<userId>.+):score"));
+        const auto Pattern = FRegexPattern(TEXT("grn:gs2:(?<region>.+):(?<ownerId>.+):ranking2:(?<namespaceName>.+):global:(?<rankingName>.+):ranking:global:(?<season>.+):user:(?<scorerUserId>.+):score"));
         FRegexMatcher Matcher(Pattern, Grn);
         while (Matcher.FindNext())
         {
@@ -292,7 +292,7 @@ namespace Gs2::Ranking2::Model
 
     TOptional<FString> FGlobalRankingData::GetNamespaceNameFromGrn(const FString Grn)
     {
-        const auto Pattern = FRegexPattern(TEXT("grn:gs2:(?<region>.+):(?<ownerId>.+):ranking2:(?<namespaceName>.+):global:(?<rankingName>.+):ranking:global:(?<season>.+):user:(?<userId>.+):score"));
+        const auto Pattern = FRegexPattern(TEXT("grn:gs2:(?<region>.+):(?<ownerId>.+):ranking2:(?<namespaceName>.+):global:(?<rankingName>.+):ranking:global:(?<season>.+):user:(?<scorerUserId>.+):score"));
         FRegexMatcher Matcher(Pattern, Grn);
         while (Matcher.FindNext())
         {
@@ -303,7 +303,7 @@ namespace Gs2::Ranking2::Model
 
     TOptional<FString> FGlobalRankingData::GetRankingNameFromGrn(const FString Grn)
     {
-        const auto Pattern = FRegexPattern(TEXT("grn:gs2:(?<region>.+):(?<ownerId>.+):ranking2:(?<namespaceName>.+):global:(?<rankingName>.+):ranking:global:(?<season>.+):user:(?<userId>.+):score"));
+        const auto Pattern = FRegexPattern(TEXT("grn:gs2:(?<region>.+):(?<ownerId>.+):ranking2:(?<namespaceName>.+):global:(?<rankingName>.+):ranking:global:(?<season>.+):user:(?<scorerUserId>.+):score"));
         FRegexMatcher Matcher(Pattern, Grn);
         while (Matcher.FindNext())
         {
@@ -314,7 +314,7 @@ namespace Gs2::Ranking2::Model
 
     TOptional<FString> FGlobalRankingData::GetSeasonFromGrn(const FString Grn)
     {
-        const auto Pattern = FRegexPattern(TEXT("grn:gs2:(?<region>.+):(?<ownerId>.+):ranking2:(?<namespaceName>.+):global:(?<rankingName>.+):ranking:global:(?<season>.+):user:(?<userId>.+):score"));
+        const auto Pattern = FRegexPattern(TEXT("grn:gs2:(?<region>.+):(?<ownerId>.+):ranking2:(?<namespaceName>.+):global:(?<rankingName>.+):ranking:global:(?<season>.+):user:(?<scorerUserId>.+):score"));
         FRegexMatcher Matcher(Pattern, Grn);
         while (Matcher.FindNext())
         {
@@ -323,9 +323,9 @@ namespace Gs2::Ranking2::Model
         return TOptional<FString>();
     }
 
-    TOptional<FString> FGlobalRankingData::GetUserIdFromGrn(const FString Grn)
+    TOptional<FString> FGlobalRankingData::GetScorerUserIdFromGrn(const FString Grn)
     {
-        const auto Pattern = FRegexPattern(TEXT("grn:gs2:(?<region>.+):(?<ownerId>.+):ranking2:(?<namespaceName>.+):global:(?<rankingName>.+):ranking:global:(?<season>.+):user:(?<userId>.+):score"));
+        const auto Pattern = FRegexPattern(TEXT("grn:gs2:(?<region>.+):(?<ownerId>.+):ranking2:(?<namespaceName>.+):global:(?<rankingName>.+):ranking:global:(?<season>.+):user:(?<scorerUserId>.+):score"));
         FRegexMatcher Matcher(Pattern, Grn);
         while (Matcher.FindNext())
         {

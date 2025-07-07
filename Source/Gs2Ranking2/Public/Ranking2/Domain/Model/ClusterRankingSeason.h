@@ -136,6 +136,32 @@ namespace Gs2::Ranking2::Domain::Model
             const FClusterRankingSeasonDomain& From
         );
 
+        class GS2RANKING2_API FGetClusterRankingTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Ranking2::Domain::Model::FClusterRankingDataDomain>,
+            public TSharedFromThis<FGetClusterRankingTask>
+        {
+            const TSharedPtr<FClusterRankingSeasonDomain> Self;
+            const Request::FGetClusterRankingByUserIdRequestPtr Request;
+        public:
+            explicit FGetClusterRankingTask(
+                const TSharedPtr<FClusterRankingSeasonDomain>& Self,
+                const Request::FGetClusterRankingByUserIdRequestPtr Request
+            );
+
+            FGetClusterRankingTask(
+                const FGetClusterRankingTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Ranking2::Domain::Model::FClusterRankingDataDomain>> Result
+            ) override;
+        };
+        friend FGetClusterRankingTask;
+
+        TSharedPtr<FAsyncTask<FGetClusterRankingTask>> GetClusterRanking(
+            Request::FGetClusterRankingByUserIdRequestPtr Request
+        );
+
         class GS2RANKING2_API FPutClusterRankingScoreTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Ranking2::Domain::Model::FClusterRankingScoreDomain>,
             public TSharedFromThis<FPutClusterRankingScoreTask>
@@ -175,6 +201,7 @@ namespace Gs2::Ranking2::Domain::Model
         );
 
         TSharedPtr<Gs2::Ranking2::Domain::Model::FClusterRankingDataDomain> ClusterRankingData(
+            const FString ScorerUserId
         );
 
         Gs2::Ranking2::Domain::Iterator::FDescribeClusterRankingReceivedRewardsByUserIdIteratorPtr ClusterRankingReceivedRewards(

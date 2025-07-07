@@ -44,6 +44,11 @@ namespace Gs2::UE5::Ranking2::Domain::Model
         return Domain->UserId;
     }
 
+    TOptional<FString> FEzClusterRankingDataDomain::ScorerUserId() const
+    {
+        return Domain->ScorerUserId;
+    }
+
     FEzClusterRankingDataDomain::FEzClusterRankingDataDomain(
         Gs2::Ranking2::Domain::Model::FClusterRankingDataDomainPtr Domain,
         Gs2::UE5::Util::FGs2ConnectionPtr Connection
