@@ -20,6 +20,7 @@
 #include "Core/Gs2Constant.h"
 #include "Core/Net/WebSocket/Gs2WebSocketSession.h"
 #include "Core/Net/WebSocket/Task/WebSocketResult.h"
+#include "Guild/Error/MaximumJoinedGuildsReachedError.h"
 
 namespace Gs2::Guild::Task::WebSocket
 {
@@ -73,5 +74,15 @@ namespace Gs2::Guild::Task::WebSocket
         *Result = Result::FSendRequestByUserIdResult::FromJson(WebSocketResult->Body());
 
         return nullptr;
+    }
+
+    void FSendRequestByUserIdTask::OnError(Core::Model::FGs2ErrorPtr Error)
+    {
+        if (Error->Count() > 0 && Error->Detail(0)->Code() == "user.joinedGuild.tooMany") {
+            TGs2Future<Result::FSendRequestByUserIdResult>::OnError(MakeShared<Guild::Error::FMaximumJoinedGuildsReachedError>(Error));
+        }
+        else {
+            TGs2Future<Result::FSendRequestByUserIdResult>::OnError(Error);
+        }
     }
 }
