@@ -31,6 +31,7 @@ namespace Gs2::Chat::Request
         TOptional<FString> PasswordValue;
         TOptional<int32> CategoryValue;
         TOptional<FString> AccessTokenValue;
+        TOptional<FString> PageTokenValue;
         TOptional<int32> LimitValue;
         
     public:
@@ -47,6 +48,7 @@ namespace Gs2::Chat::Request
         TSharedPtr<FDescribeLatestMessagesRequest> WithPassword(const TOptional<FString> Password);
         TSharedPtr<FDescribeLatestMessagesRequest> WithCategory(const TOptional<int32> Category);
         TSharedPtr<FDescribeLatestMessagesRequest> WithAccessToken(const TOptional<FString> AccessToken);
+        TSharedPtr<FDescribeLatestMessagesRequest> WithPageToken(const TOptional<FString> PageToken);
         TSharedPtr<FDescribeLatestMessagesRequest> WithLimit(const TOptional<int32> Limit);
 
         TOptional<FString> GetContextStack() const;
@@ -56,6 +58,7 @@ namespace Gs2::Chat::Request
         TOptional<int32> GetCategory() const;
         FString GetCategoryString() const;
         TOptional<FString> GetAccessToken() const;
+        TOptional<FString> GetPageToken() const;
         TOptional<int32> GetLimit() const;
         FString GetLimitString() const;
 

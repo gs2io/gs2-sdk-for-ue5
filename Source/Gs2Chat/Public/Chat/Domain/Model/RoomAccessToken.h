@@ -63,6 +63,11 @@ namespace Gs2::Chat::Domain::Model
         const Gs2::Chat::FGs2ChatRestClientPtr Client;
 
         public:
+        TOptional<FString> NextPageToken;
+        TOptional<FString> GetNextPageToken() const
+        {
+            return NextPageToken;
+        }
         TOptional<FString> NamespaceName;
         Gs2::Auth::Model::FAccessTokenPtr AccessToken;
         TOptional<FString> UserId() const { return AccessToken->GetUserId(); }

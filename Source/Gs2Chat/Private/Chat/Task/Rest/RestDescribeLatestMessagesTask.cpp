@@ -95,6 +95,9 @@ namespace Gs2::Chat::Task::Rest
             if (this->Request->GetCategory().IsSet()) {
                 queryStrings.Add("category=" + this->Request->GetCategoryString());
             }
+            if (this->Request->GetPageToken().IsSet()) {
+                queryStrings.Add("pageToken=" + FGenericPlatformHttp::UrlEncode(this->Request->GetPageToken().GetValue()));
+            }
             if (this->Request->GetLimit().IsSet()) {
                 queryStrings.Add("limit=" + this->Request->GetLimitString());
             }

@@ -98,6 +98,9 @@ namespace Gs2::Chat::Task::Rest
             if (this->Request->GetUserId().IsSet()) {
                 queryStrings.Add("userId=" + FGenericPlatformHttp::UrlEncode(this->Request->GetUserId().GetValue()));
             }
+            if (this->Request->GetPageToken().IsSet()) {
+                queryStrings.Add("pageToken=" + FGenericPlatformHttp::UrlEncode(this->Request->GetPageToken().GetValue()));
+            }
             if (this->Request->GetLimit().IsSet()) {
                 queryStrings.Add("limit=" + this->Request->GetLimitString());
             }

@@ -24,6 +24,7 @@ namespace Gs2::Chat::Request
         PasswordValue(TOptional<FString>()),
         CategoryValue(TOptional<int32>()),
         UserIdValue(TOptional<FString>()),
+        PageTokenValue(TOptional<FString>()),
         LimitValue(TOptional<int32>()),
         TimeOffsetTokenValue(TOptional<FString>())
     {
@@ -37,6 +38,7 @@ namespace Gs2::Chat::Request
         PasswordValue(From.PasswordValue),
         CategoryValue(From.CategoryValue),
         UserIdValue(From.UserIdValue),
+        PageTokenValue(From.PageTokenValue),
         LimitValue(From.LimitValue),
         TimeOffsetTokenValue(From.TimeOffsetTokenValue)
     {
@@ -87,6 +89,14 @@ namespace Gs2::Chat::Request
     )
     {
         this->UserIdValue = UserId;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FDescribeLatestMessagesByUserIdRequest> FDescribeLatestMessagesByUserIdRequest::WithPageToken(
+        const TOptional<FString> PageToken
+    )
+    {
+        this->PageTokenValue = PageToken;
         return SharedThis(this);
     }
 
@@ -143,6 +153,11 @@ namespace Gs2::Chat::Request
     TOptional<FString> FDescribeLatestMessagesByUserIdRequest::GetUserId() const
     {
         return UserIdValue;
+    }
+
+    TOptional<FString> FDescribeLatestMessagesByUserIdRequest::GetPageToken() const
+    {
+        return PageTokenValue;
     }
 
     TOptional<int32> FDescribeLatestMessagesByUserIdRequest::GetLimit() const
@@ -216,6 +231,15 @@ namespace Gs2::Chat::Request
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
+            ->WithPageToken(Data->HasField(ANSI_TO_TCHAR("pageToken")) ? [Data]() -> TOptional<FString>
+              {
+                  FString v("");
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("pageToken"), v))
+                  {
+                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                  }
+                  return TOptional<FString>();
+              }() : TOptional<FString>())
             ->WithLimit(Data->HasField(ANSI_TO_TCHAR("limit")) ? [Data]() -> TOptional<int32>
               {
                   int32 v;
@@ -262,6 +286,10 @@ namespace Gs2::Chat::Request
         if (UserIdValue.IsSet())
         {
             JsonRootObject->SetStringField("userId", UserIdValue.GetValue());
+        }
+        if (PageTokenValue.IsSet())
+        {
+            JsonRootObject->SetStringField("pageToken", PageTokenValue.GetValue());
         }
         if (LimitValue.IsSet())
         {

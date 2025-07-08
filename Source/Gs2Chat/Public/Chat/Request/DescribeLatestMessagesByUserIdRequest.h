@@ -31,6 +31,7 @@ namespace Gs2::Chat::Request
         TOptional<FString> PasswordValue;
         TOptional<int32> CategoryValue;
         TOptional<FString> UserIdValue;
+        TOptional<FString> PageTokenValue;
         TOptional<int32> LimitValue;
         TOptional<FString> TimeOffsetTokenValue;
         
@@ -48,6 +49,7 @@ namespace Gs2::Chat::Request
         TSharedPtr<FDescribeLatestMessagesByUserIdRequest> WithPassword(const TOptional<FString> Password);
         TSharedPtr<FDescribeLatestMessagesByUserIdRequest> WithCategory(const TOptional<int32> Category);
         TSharedPtr<FDescribeLatestMessagesByUserIdRequest> WithUserId(const TOptional<FString> UserId);
+        TSharedPtr<FDescribeLatestMessagesByUserIdRequest> WithPageToken(const TOptional<FString> PageToken);
         TSharedPtr<FDescribeLatestMessagesByUserIdRequest> WithLimit(const TOptional<int32> Limit);
         TSharedPtr<FDescribeLatestMessagesByUserIdRequest> WithTimeOffsetToken(const TOptional<FString> TimeOffsetToken);
 
@@ -58,6 +60,7 @@ namespace Gs2::Chat::Request
         TOptional<int32> GetCategory() const;
         FString GetCategoryString() const;
         TOptional<FString> GetUserId() const;
+        TOptional<FString> GetPageToken() const;
         TOptional<int32> GetLimit() const;
         FString GetLimitString() const;
         TOptional<FString> GetTimeOffsetToken() const;

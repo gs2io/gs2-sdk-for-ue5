@@ -19,14 +19,16 @@
 namespace Gs2::Chat::Result
 {
     FDescribeLatestMessagesResult::FDescribeLatestMessagesResult():
-        ItemsValue(nullptr)
+        ItemsValue(nullptr),
+        NextPageTokenValue(TOptional<FString>())
     {
     }
 
     FDescribeLatestMessagesResult::FDescribeLatestMessagesResult(
         const FDescribeLatestMessagesResult& From
     ):
-        ItemsValue(From.ItemsValue)
+        ItemsValue(From.ItemsValue),
+        NextPageTokenValue(From.NextPageTokenValue)
     {
     }
 
@@ -38,6 +40,14 @@ namespace Gs2::Chat::Result
         return SharedThis(this);
     }
 
+    TSharedPtr<FDescribeLatestMessagesResult> FDescribeLatestMessagesResult::WithNextPageToken(
+        const TOptional<FString> NextPageToken
+    )
+    {
+        this->NextPageTokenValue = NextPageToken;
+        return SharedThis(this);
+    }
+
     TSharedPtr<TArray<TSharedPtr<Model::FMessage>>> FDescribeLatestMessagesResult::GetItems() const
     {
         if (!ItemsValue.IsValid())
@@ -45,6 +55,11 @@ namespace Gs2::Chat::Result
             return nullptr;
         }
         return ItemsValue;
+    }
+
+    TOptional<FString> FDescribeLatestMessagesResult::GetNextPageToken() const
+    {
+        return NextPageTokenValue;
     }
 
     TSharedPtr<FDescribeLatestMessagesResult> FDescribeLatestMessagesResult::FromJson(const TSharedPtr<FJsonObject> Data)
@@ -64,7 +79,16 @@ namespace Gs2::Chat::Result
                         }
                     }
                     return v;
-                 }() : MakeShared<TArray<Model::FMessagePtr>>());
+                 }() : MakeShared<TArray<Model::FMessagePtr>>())
+            ->WithNextPageToken(Data->HasField(ANSI_TO_TCHAR("nextPageToken")) ? [Data]() -> TOptional<FString>
+                {
+                    FString v("");
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("nextPageToken"), v))
+                    {
+                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                    }
+                    return TOptional<FString>();
+                }() : TOptional<FString>());
     }
 
     TSharedPtr<FJsonObject> FDescribeLatestMessagesResult::ToJson() const
@@ -78,6 +102,10 @@ namespace Gs2::Chat::Result
                 v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
             }
             JsonRootObject->SetArrayField("items", v);
+        }
+        if (NextPageTokenValue.IsSet())
+        {
+            JsonRootObject->SetStringField("nextPageToken", NextPageTokenValue.GetValue());
         }
         return JsonRootObject;
     }

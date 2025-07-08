@@ -24,6 +24,7 @@ namespace Gs2::Chat::Result
     class GS2CHAT_API FDescribeLatestMessagesResult final : public TSharedFromThis<FDescribeLatestMessagesResult>
     {
         TSharedPtr<TArray<TSharedPtr<Model::FMessage>>> ItemsValue;
+        TOptional<FString> NextPageTokenValue;
         
     public:
         
@@ -34,8 +35,10 @@ namespace Gs2::Chat::Result
         ~FDescribeLatestMessagesResult() = default;
 
         TSharedPtr<FDescribeLatestMessagesResult> WithItems(const TSharedPtr<TArray<TSharedPtr<Model::FMessage>>> Items);
+        TSharedPtr<FDescribeLatestMessagesResult> WithNextPageToken(const TOptional<FString> NextPageToken);
 
         TSharedPtr<TArray<TSharedPtr<Model::FMessage>>> GetItems() const;
+        TOptional<FString> GetNextPageToken() const;
 
         static TSharedPtr<FDescribeLatestMessagesResult> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;

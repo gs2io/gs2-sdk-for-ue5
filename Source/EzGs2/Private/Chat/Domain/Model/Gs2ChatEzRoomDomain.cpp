@@ -19,6 +19,11 @@
 namespace Gs2::UE5::Chat::Domain::Model
 {
 
+    TOptional<FString> FEzRoomDomain::NextPageToken() const
+    {
+        return Domain->NextPageToken;
+    }
+
     TOptional<FString> FEzRoomDomain::NamespaceName() const
     {
         return Domain->NamespaceName;
