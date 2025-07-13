@@ -20,6 +20,7 @@
 #include "Core/Gs2Constant.h"
 #include "Core/Net/WebSocket/Gs2WebSocketSession.h"
 #include "Core/Net/WebSocket/Task/WebSocketResult.h"
+#include "Guild/Error/NotIncludedGuildMemberError.h"
 
 namespace Gs2::Guild::Task::WebSocket
 {
@@ -73,5 +74,15 @@ namespace Gs2::Guild::Task::WebSocket
         *Result = Result::FAssumeResult::FromJson(WebSocketResult->Body());
 
         return nullptr;
+    }
+
+    void FAssumeTask::OnError(Core::Model::FGs2ErrorPtr Error)
+    {
+        if (Error->Count() > 0 && Error->Detail(0)->Code() == "guild.member.notFound") {
+            TGs2Future<Result::FAssumeResult>::OnError(MakeShared<Guild::Error::FNotIncludedGuildMemberError>(Error));
+        }
+        else {
+            TGs2Future<Result::FAssumeResult>::OnError(Error);
+        }
     }
 }

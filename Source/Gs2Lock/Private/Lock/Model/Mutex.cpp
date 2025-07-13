@@ -24,6 +24,7 @@ namespace Gs2::Lock::Model
         PropertyIdValue(TOptional<FString>()),
         TransactionIdValue(TOptional<FString>()),
         CreatedAtValue(TOptional<int64>()),
+        TtlAtValue(TOptional<int64>()),
         RevisionValue(TOptional<int64>())
     {
     }
@@ -36,6 +37,7 @@ namespace Gs2::Lock::Model
         PropertyIdValue(From.PropertyIdValue),
         TransactionIdValue(From.TransactionIdValue),
         CreatedAtValue(From.CreatedAtValue),
+        TtlAtValue(From.TtlAtValue),
         RevisionValue(From.RevisionValue)
     {
     }
@@ -80,6 +82,14 @@ namespace Gs2::Lock::Model
         return SharedThis(this);
     }
 
+    TSharedPtr<FMutex> FMutex::WithTtlAt(
+        const TOptional<int64> TtlAt
+    )
+    {
+        this->TtlAtValue = TtlAt;
+        return SharedThis(this);
+    }
+
     TSharedPtr<FMutex> FMutex::WithRevision(
         const TOptional<int64> Revision
     )
@@ -115,6 +125,19 @@ namespace Gs2::Lock::Model
             return FString("null");
         }
         return FString::Printf(TEXT("%lld"), CreatedAtValue.GetValue());
+    }
+    TOptional<int64> FMutex::GetTtlAt() const
+    {
+        return TtlAtValue;
+    }
+
+    FString FMutex::GetTtlAtString() const
+    {
+        if (!TtlAtValue.IsSet())
+        {
+            return FString("null");
+        }
+        return FString::Printf(TEXT("%lld"), TtlAtValue.GetValue());
     }
     TOptional<int64> FMutex::GetRevision() const
     {
@@ -236,6 +259,15 @@ namespace Gs2::Lock::Model
                     }
                     return TOptional<int64>();
                 }() : TOptional<int64>())
+            ->WithTtlAt(Data->HasField(ANSI_TO_TCHAR("ttlAt")) ? [Data]() -> TOptional<int64>
+                {
+                    int64 v;
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("ttlAt"), v))
+                    {
+                        return TOptional(v);
+                    }
+                    return TOptional<int64>();
+                }() : TOptional<int64>())
             ->WithRevision(Data->HasField(ANSI_TO_TCHAR("revision")) ? [Data]() -> TOptional<int64>
                 {
                     int64 v;
@@ -269,6 +301,10 @@ namespace Gs2::Lock::Model
         if (CreatedAtValue.IsSet())
         {
             JsonRootObject->SetStringField("createdAt", FString::Printf(TEXT("%lld"), CreatedAtValue.GetValue()));
+        }
+        if (TtlAtValue.IsSet())
+        {
+            JsonRootObject->SetStringField("ttlAt", FString::Printf(TEXT("%lld"), TtlAtValue.GetValue()));
         }
         if (RevisionValue.IsSet())
         {

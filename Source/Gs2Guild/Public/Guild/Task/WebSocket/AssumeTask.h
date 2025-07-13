@@ -39,6 +39,8 @@ namespace Gs2::Guild::Task::WebSocket
         virtual ~FAssumeTask() override = default;
 
         virtual Core::Model::FGs2ErrorPtr Action(const TSharedPtr<Result::FAssumeResultPtr> Result) override;
+    protected:
+        virtual void OnError(Core::Model::FGs2ErrorPtr Error) override;
     };
     typedef TSharedPtr<FAssumeTask, ESPMode::ThreadSafe> FAssumeTaskPtr;
 }

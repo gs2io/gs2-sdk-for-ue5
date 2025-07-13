@@ -28,6 +28,7 @@ namespace Gs2::Lock::Model
         TOptional<FString> PropertyIdValue;
         TOptional<FString> TransactionIdValue;
         TOptional<int64> CreatedAtValue;
+        TOptional<int64> TtlAtValue;
         TOptional<int64> RevisionValue;
 
     public:
@@ -42,6 +43,7 @@ namespace Gs2::Lock::Model
         TSharedPtr<FMutex> WithPropertyId(const TOptional<FString> PropertyId);
         TSharedPtr<FMutex> WithTransactionId(const TOptional<FString> TransactionId);
         TSharedPtr<FMutex> WithCreatedAt(const TOptional<int64> CreatedAt);
+        TSharedPtr<FMutex> WithTtlAt(const TOptional<int64> TtlAt);
         TSharedPtr<FMutex> WithRevision(const TOptional<int64> Revision);
 
         TOptional<FString> GetMutexId() const;
@@ -50,6 +52,8 @@ namespace Gs2::Lock::Model
         TOptional<FString> GetTransactionId() const;
         TOptional<int64> GetCreatedAt() const;
         FString GetCreatedAtString() const;
+        TOptional<int64> GetTtlAt() const;
+        FString GetTtlAtString() const;
         TOptional<int64> GetRevision() const;
         FString GetRevisionString() const;
 

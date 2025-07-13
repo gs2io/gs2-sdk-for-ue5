@@ -22,6 +22,9 @@
 #include "Core/Gs2Constant.h"
 #include "Core/Net/Rest/Gs2RestSession.h"
 #include "Guild/Error/MaximumJoinedGuildsReachedError.h"
+#include "Guild/Error/MaximumReceiveRequestsReachedError.h"
+#include "Guild/Error/MaximumSendRequestsReachedError.h"
+#include "Guild/Error/DotMeetJoinRequirementsError.h"
 #include "Interfaces/IHttpResponse.h"
 
 namespace Gs2::Guild::Task::Rest
@@ -161,6 +164,15 @@ namespace Gs2::Guild::Task::Rest
     {
         if (Error->Count() > 0 && Error->Detail(0)->Code() == "user.joinedGuild.tooMany") {
             TGs2Future<Result::FSendRequestByUserIdResult>::OnError(MakeShared<Guild::Error::FMaximumJoinedGuildsReachedError>(Error));
+        }
+        else if (Error->Count() > 0 && Error->Detail(0)->Code() == "guild.receiveRequests.tooMany") {
+            TGs2Future<Result::FSendRequestByUserIdResult>::OnError(MakeShared<Guild::Error::FMaximumReceiveRequestsReachedError>(Error));
+        }
+        else if (Error->Count() > 0 && Error->Detail(0)->Code() == "guild.sendRequests.tooMany") {
+            TGs2Future<Result::FSendRequestByUserIdResult>::OnError(MakeShared<Guild::Error::FMaximumSendRequestsReachedError>(Error));
+        }
+        else if (Error->Count() > 0 && Error->Detail(0)->Code() == "guild.sendRequests.notMeetJoinRequirements") {
+            TGs2Future<Result::FSendRequestByUserIdResult>::OnError(MakeShared<Guild::Error::FDotMeetJoinRequirementsError>(Error));
         }
         else {
             TGs2Future<Result::FSendRequestByUserIdResult>::OnError(Error);
