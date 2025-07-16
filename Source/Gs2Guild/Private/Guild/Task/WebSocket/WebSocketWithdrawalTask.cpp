@@ -20,6 +20,7 @@
 #include "Core/Gs2Constant.h"
 #include "Core/Net/WebSocket/Gs2WebSocketSession.h"
 #include "Core/Net/WebSocket/Task/WebSocketResult.h"
+#include "Guild/Error/GuildMasterRequiredError.h"
 
 namespace Gs2::Guild::Task::WebSocket
 {
@@ -73,5 +74,15 @@ namespace Gs2::Guild::Task::WebSocket
         *Result = Result::FWithdrawalResult::FromJson(WebSocketResult->Body());
 
         return nullptr;
+    }
+
+    void FWithdrawalTask::OnError(Core::Model::FGs2ErrorPtr Error)
+    {
+        if (Error->Count() > 0 && Error->Detail(0)->Code() == "guild.member.master.require") {
+            TGs2Future<Result::FWithdrawalResult>::OnError(MakeShared<Guild::Error::FGuildMasterRequiredError>(Error));
+        }
+        else {
+            TGs2Future<Result::FWithdrawalResult>::OnError(Error);
+        }
     }
 }

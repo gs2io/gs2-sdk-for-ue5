@@ -21,7 +21,8 @@ namespace Gs2::Guild::Model
     FSendMemberRequest::FSendMemberRequest():
         UserIdValue(TOptional<FString>()),
         TargetGuildNameValue(TOptional<FString>()),
-        MetadataValue(TOptional<FString>())
+        MetadataValue(TOptional<FString>()),
+        CreatedAtValue(TOptional<int64>())
     {
     }
 
@@ -30,7 +31,8 @@ namespace Gs2::Guild::Model
     ):
         UserIdValue(From.UserIdValue),
         TargetGuildNameValue(From.TargetGuildNameValue),
-        MetadataValue(From.MetadataValue)
+        MetadataValue(From.MetadataValue),
+        CreatedAtValue(From.CreatedAtValue)
     {
     }
 
@@ -57,6 +59,14 @@ namespace Gs2::Guild::Model
         this->MetadataValue = Metadata;
         return SharedThis(this);
     }
+
+    TSharedPtr<FSendMemberRequest> FSendMemberRequest::WithCreatedAt(
+        const TOptional<int64> CreatedAt
+    )
+    {
+        this->CreatedAtValue = CreatedAt;
+        return SharedThis(this);
+    }
     TOptional<FString> FSendMemberRequest::GetUserId() const
     {
         return UserIdValue;
@@ -68,6 +78,19 @@ namespace Gs2::Guild::Model
     TOptional<FString> FSendMemberRequest::GetMetadata() const
     {
         return MetadataValue;
+    }
+    TOptional<int64> FSendMemberRequest::GetCreatedAt() const
+    {
+        return CreatedAtValue;
+    }
+
+    FString FSendMemberRequest::GetCreatedAtString() const
+    {
+        if (!CreatedAtValue.IsSet())
+        {
+            return FString("null");
+        }
+        return FString::Printf(TEXT("%lld"), CreatedAtValue.GetValue());
     }
 
     TSharedPtr<FSendMemberRequest> FSendMemberRequest::FromJson(const TSharedPtr<FJsonObject> Data)
@@ -102,7 +125,16 @@ namespace Gs2::Guild::Model
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
-                }() : TOptional<FString>());
+                }() : TOptional<FString>())
+            ->WithCreatedAt(Data->HasField(ANSI_TO_TCHAR("createdAt")) ? [Data]() -> TOptional<int64>
+                {
+                    int64 v;
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("createdAt"), v))
+                    {
+                        return TOptional(v);
+                    }
+                    return TOptional<int64>();
+                }() : TOptional<int64>());
     }
 
     TSharedPtr<FJsonObject> FSendMemberRequest::ToJson() const
@@ -119,6 +151,10 @@ namespace Gs2::Guild::Model
         if (MetadataValue.IsSet())
         {
             JsonRootObject->SetStringField("metadata", MetadataValue.GetValue());
+        }
+        if (CreatedAtValue.IsSet())
+        {
+            JsonRootObject->SetStringField("createdAt", FString::Printf(TEXT("%lld"), CreatedAtValue.GetValue()));
         }
         return JsonRootObject;
     }

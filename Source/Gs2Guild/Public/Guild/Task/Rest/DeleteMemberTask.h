@@ -39,6 +39,8 @@ namespace Gs2::Guild::Task::Rest
         virtual ~FDeleteMemberTask() override = default;
 
         virtual Core::Model::FGs2ErrorPtr Action(const TSharedPtr<Result::FDeleteMemberResultPtr> Result) override;
+    protected:
+        virtual void OnError(Core::Model::FGs2ErrorPtr Error) override;
     };
     typedef TSharedPtr<FDeleteMemberTask, ESPMode::ThreadSafe> FDeleteMemberTaskPtr;
 }

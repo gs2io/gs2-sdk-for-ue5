@@ -26,6 +26,7 @@ namespace Gs2::Guild::Model
         TOptional<FString> UserIdValue;
         TOptional<FString> TargetGuildNameValue;
         TOptional<FString> MetadataValue;
+        TOptional<int64> CreatedAtValue;
 
     public:
         FReceiveMemberRequest();
@@ -37,10 +38,13 @@ namespace Gs2::Guild::Model
         TSharedPtr<FReceiveMemberRequest> WithUserId(const TOptional<FString> UserId);
         TSharedPtr<FReceiveMemberRequest> WithTargetGuildName(const TOptional<FString> TargetGuildName);
         TSharedPtr<FReceiveMemberRequest> WithMetadata(const TOptional<FString> Metadata);
+        TSharedPtr<FReceiveMemberRequest> WithCreatedAt(const TOptional<int64> CreatedAt);
 
         TOptional<FString> GetUserId() const;
         TOptional<FString> GetTargetGuildName() const;
         TOptional<FString> GetMetadata() const;
+        TOptional<int64> GetCreatedAt() const;
+        FString GetCreatedAtString() const;
 
 
         static TSharedPtr<FReceiveMemberRequest> FromJson(const TSharedPtr<FJsonObject> Data);

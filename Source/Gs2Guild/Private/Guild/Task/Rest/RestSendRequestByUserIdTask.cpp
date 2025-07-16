@@ -21,6 +21,7 @@
 #include "GenericPlatform/GenericPlatformHttp.h"
 #include "Core/Gs2Constant.h"
 #include "Core/Net/Rest/Gs2RestSession.h"
+#include "Guild/Error/MaximumMembersReachedError.h"
 #include "Guild/Error/MaximumJoinedGuildsReachedError.h"
 #include "Guild/Error/MaximumReceiveRequestsReachedError.h"
 #include "Guild/Error/MaximumSendRequestsReachedError.h"
@@ -162,7 +163,10 @@ namespace Gs2::Guild::Task::Rest
 
     void FSendRequestByUserIdTask::OnError(Core::Model::FGs2ErrorPtr Error)
     {
-        if (Error->Count() > 0 && Error->Detail(0)->Code() == "user.joinedGuild.tooMany") {
+        if (Error->Count() > 0 && Error->Detail(0)->Code() == "guild.members.tooMany") {
+            TGs2Future<Result::FSendRequestByUserIdResult>::OnError(MakeShared<Guild::Error::FMaximumMembersReachedError>(Error));
+        }
+        else if (Error->Count() > 0 && Error->Detail(0)->Code() == "user.joinedGuild.tooMany") {
             TGs2Future<Result::FSendRequestByUserIdResult>::OnError(MakeShared<Guild::Error::FMaximumJoinedGuildsReachedError>(Error));
         }
         else if (Error->Count() > 0 && Error->Detail(0)->Code() == "guild.receiveRequests.tooMany") {

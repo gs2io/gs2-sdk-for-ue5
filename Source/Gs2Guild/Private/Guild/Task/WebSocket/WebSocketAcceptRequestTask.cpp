@@ -21,6 +21,7 @@
 #include "Core/Net/WebSocket/Gs2WebSocketSession.h"
 #include "Core/Net/WebSocket/Task/WebSocketResult.h"
 #include "Guild/Error/MaximumJoinedGuildsReachedError.h"
+#include "Guild/Error/MaximumMembersReachedError.h"
 
 namespace Gs2::Guild::Task::WebSocket
 {
@@ -80,6 +81,9 @@ namespace Gs2::Guild::Task::WebSocket
     {
         if (Error->Count() > 0 && Error->Detail(0)->Code() == "user.joinedGuild.tooMany") {
             TGs2Future<Result::FAcceptRequestResult>::OnError(MakeShared<Guild::Error::FMaximumJoinedGuildsReachedError>(Error));
+        }
+        else if (Error->Count() > 0 && Error->Detail(0)->Code() == "guild.members.tooMany") {
+            TGs2Future<Result::FAcceptRequestResult>::OnError(MakeShared<Guild::Error::FMaximumMembersReachedError>(Error));
         }
         else {
             TGs2Future<Result::FAcceptRequestResult>::OnError(Error);

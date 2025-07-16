@@ -20,8 +20,6 @@
 #include "Model/Namespace.h"
 #include "Model/GuildModelMaster.h"
 #include "Model/GuildModel.h"
-#include "Model/Inbox.h"
-#include "Model/SendBox.h"
 #include "Model/Guild.h"
 #include "Model/JoinedGuild.h"
 #include "Model/LastGuildMasterActivity.h"
