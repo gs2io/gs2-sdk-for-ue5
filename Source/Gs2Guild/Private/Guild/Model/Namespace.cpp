@@ -31,6 +31,7 @@ namespace Gs2::Guild::Model
         CreateGuildScriptValue(nullptr),
         UpdateGuildScriptValue(nullptr),
         JoinGuildScriptValue(nullptr),
+        ReceiveJoinRequestScriptValue(nullptr),
         LeaveGuildScriptValue(nullptr),
         ChangeRoleScriptValue(nullptr),
         DeleteGuildScriptValue(nullptr),
@@ -56,6 +57,7 @@ namespace Gs2::Guild::Model
         CreateGuildScriptValue(From.CreateGuildScriptValue),
         UpdateGuildScriptValue(From.UpdateGuildScriptValue),
         JoinGuildScriptValue(From.JoinGuildScriptValue),
+        ReceiveJoinRequestScriptValue(From.ReceiveJoinRequestScriptValue),
         LeaveGuildScriptValue(From.LeaveGuildScriptValue),
         ChangeRoleScriptValue(From.ChangeRoleScriptValue),
         DeleteGuildScriptValue(From.DeleteGuildScriptValue),
@@ -162,6 +164,14 @@ namespace Gs2::Guild::Model
         return SharedThis(this);
     }
 
+    TSharedPtr<FNamespace> FNamespace::WithReceiveJoinRequestScript(
+        const TSharedPtr<FScriptSetting> ReceiveJoinRequestScript
+    )
+    {
+        this->ReceiveJoinRequestScriptValue = ReceiveJoinRequestScript;
+        return SharedThis(this);
+    }
+
     TSharedPtr<FNamespace> FNamespace::WithLeaveGuildScript(
         const TSharedPtr<FScriptSetting> LeaveGuildScript
     )
@@ -264,6 +274,10 @@ namespace Gs2::Guild::Model
     TSharedPtr<FScriptSetting> FNamespace::GetJoinGuildScript() const
     {
         return JoinGuildScriptValue;
+    }
+    TSharedPtr<FScriptSetting> FNamespace::GetReceiveJoinRequestScript() const
+    {
+        return ReceiveJoinRequestScriptValue;
     }
     TSharedPtr<FScriptSetting> FNamespace::GetLeaveGuildScript() const
     {
@@ -459,6 +473,14 @@ namespace Gs2::Guild::Model
                     }
                     return Model::FScriptSetting::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("joinGuildScript")));
                  }() : nullptr)
+            ->WithReceiveJoinRequestScript(Data->HasField(ANSI_TO_TCHAR("receiveJoinRequestScript")) ? [Data]() -> Model::FScriptSettingPtr
+                {
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("receiveJoinRequestScript")))
+                    {
+                        return nullptr;
+                    }
+                    return Model::FScriptSetting::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("receiveJoinRequestScript")));
+                 }() : nullptr)
             ->WithLeaveGuildScript(Data->HasField(ANSI_TO_TCHAR("leaveGuildScript")) ? [Data]() -> Model::FScriptSettingPtr
                 {
                     if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("leaveGuildScript")))
@@ -570,6 +592,10 @@ namespace Gs2::Guild::Model
         if (JoinGuildScriptValue != nullptr && JoinGuildScriptValue.IsValid())
         {
             JsonRootObject->SetObjectField("joinGuildScript", JoinGuildScriptValue->ToJson());
+        }
+        if (ReceiveJoinRequestScriptValue != nullptr && ReceiveJoinRequestScriptValue.IsValid())
+        {
+            JsonRootObject->SetObjectField("receiveJoinRequestScript", ReceiveJoinRequestScriptValue->ToJson());
         }
         if (LeaveGuildScriptValue != nullptr && LeaveGuildScriptValue.IsValid())
         {

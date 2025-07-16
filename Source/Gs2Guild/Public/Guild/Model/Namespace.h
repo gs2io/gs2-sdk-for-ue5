@@ -38,6 +38,7 @@ namespace Gs2::Guild::Model
         TSharedPtr<FScriptSetting> CreateGuildScriptValue;
         TSharedPtr<FScriptSetting> UpdateGuildScriptValue;
         TSharedPtr<FScriptSetting> JoinGuildScriptValue;
+        TSharedPtr<FScriptSetting> ReceiveJoinRequestScriptValue;
         TSharedPtr<FScriptSetting> LeaveGuildScriptValue;
         TSharedPtr<FScriptSetting> ChangeRoleScriptValue;
         TSharedPtr<FScriptSetting> DeleteGuildScriptValue;
@@ -65,6 +66,7 @@ namespace Gs2::Guild::Model
         TSharedPtr<FNamespace> WithCreateGuildScript(const TSharedPtr<FScriptSetting> CreateGuildScript);
         TSharedPtr<FNamespace> WithUpdateGuildScript(const TSharedPtr<FScriptSetting> UpdateGuildScript);
         TSharedPtr<FNamespace> WithJoinGuildScript(const TSharedPtr<FScriptSetting> JoinGuildScript);
+        TSharedPtr<FNamespace> WithReceiveJoinRequestScript(const TSharedPtr<FScriptSetting> ReceiveJoinRequestScript);
         TSharedPtr<FNamespace> WithLeaveGuildScript(const TSharedPtr<FScriptSetting> LeaveGuildScript);
         TSharedPtr<FNamespace> WithChangeRoleScript(const TSharedPtr<FScriptSetting> ChangeRoleScript);
         TSharedPtr<FNamespace> WithDeleteGuildScript(const TSharedPtr<FScriptSetting> DeleteGuildScript);
@@ -85,6 +87,7 @@ namespace Gs2::Guild::Model
         TSharedPtr<FScriptSetting> GetCreateGuildScript() const;
         TSharedPtr<FScriptSetting> GetUpdateGuildScript() const;
         TSharedPtr<FScriptSetting> GetJoinGuildScript() const;
+        TSharedPtr<FScriptSetting> GetReceiveJoinRequestScript() const;
         TSharedPtr<FScriptSetting> GetLeaveGuildScript() const;
         TSharedPtr<FScriptSetting> GetChangeRoleScript() const;
         TSharedPtr<FScriptSetting> GetDeleteGuildScript() const;

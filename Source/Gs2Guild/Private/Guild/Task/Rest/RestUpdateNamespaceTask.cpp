@@ -124,6 +124,10 @@ namespace Gs2::Guild::Task::Rest
             {
                 JsonRootObject->SetObjectField("joinGuildScript", this->Request->GetJoinGuildScript()->ToJson());
             }
+            if (this->Request->GetReceiveJoinRequestScript() != nullptr && this->Request->GetReceiveJoinRequestScript().IsValid())
+            {
+                JsonRootObject->SetObjectField("receiveJoinRequestScript", this->Request->GetReceiveJoinRequestScript()->ToJson());
+            }
             if (this->Request->GetLeaveGuildScript() != nullptr && this->Request->GetLeaveGuildScript().IsValid())
             {
                 JsonRootObject->SetObjectField("leaveGuildScript", this->Request->GetLeaveGuildScript()->ToJson());
