@@ -30,6 +30,9 @@
 #include "Chat/Domain/Model/MessageAccessToken.h"
 #include "Chat/Domain/Model/Subscribe.h"
 #include "Chat/Domain/Model/SubscribeAccessToken.h"
+#include "Chat/Domain/Model/CategoryModel.h"
+#include "Chat/Domain/Model/CategoryModelMaster.h"
+#include "Chat/Domain/Model/CurrentModelMaster.h"
 #include "Chat/Domain/Model/User.h"
 #include "Chat/Domain/Model/UserAccessToken.h"
 
@@ -241,6 +244,116 @@ namespace Gs2::Chat::Domain::Model
         Request::FDeleteNamespaceRequestPtr Request
     ) {
         return Gs2::Core::Util::New<FAsyncTask<FDeleteTask>>(this->AsShared(), Request);
+    }
+
+    TSharedPtr<Gs2::Chat::Domain::Model::FCurrentModelMasterDomain> FNamespaceDomain::CurrentModelMaster(
+    )
+    {
+        return MakeShared<Gs2::Chat::Domain::Model::FCurrentModelMasterDomain>(
+            Gs2,
+            Service,
+            NamespaceName
+        );
+    }
+
+    Gs2::Chat::Domain::Iterator::FDescribeCategoryModelsIteratorPtr FNamespaceDomain::CategoryModels(
+    ) const
+    {
+        return MakeShared<Gs2::Chat::Domain::Iterator::FDescribeCategoryModelsIterator>(
+            Gs2,
+            Client,
+            NamespaceName
+        );
+    }
+
+    Gs2::Core::Domain::CallbackID FNamespaceDomain::SubscribeCategoryModels(
+    TFunction<void()> Callback
+    )
+    {
+        return Gs2->Cache->ListSubscribe(
+            Gs2::Chat::Model::FCategoryModel::TypeName,
+            Gs2::Chat::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                NamespaceName,
+                "CategoryModel"
+            ),
+            Callback
+        );
+    }
+
+    void FNamespaceDomain::UnsubscribeCategoryModels(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Gs2->Cache->ListUnsubscribe(
+            Gs2::Chat::Model::FCategoryModel::TypeName,
+            Gs2::Chat::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                NamespaceName,
+                "CategoryModel"
+            ),
+            CallbackID
+        );
+    }
+
+    TSharedPtr<Gs2::Chat::Domain::Model::FCategoryModelDomain> FNamespaceDomain::CategoryModel(
+        const int32 Category
+    )
+    {
+        return MakeShared<Gs2::Chat::Domain::Model::FCategoryModelDomain>(
+            Gs2,
+            Service,
+            NamespaceName,
+            Category
+        );
+    }
+
+    Gs2::Chat::Domain::Iterator::FDescribeCategoryModelMastersIteratorPtr FNamespaceDomain::CategoryModelMasters(
+    ) const
+    {
+        return MakeShared<Gs2::Chat::Domain::Iterator::FDescribeCategoryModelMastersIterator>(
+            Gs2,
+            Client,
+            NamespaceName
+        );
+    }
+
+    Gs2::Core::Domain::CallbackID FNamespaceDomain::SubscribeCategoryModelMasters(
+    TFunction<void()> Callback
+    )
+    {
+        return Gs2->Cache->ListSubscribe(
+            Gs2::Chat::Model::FCategoryModelMaster::TypeName,
+            Gs2::Chat::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                NamespaceName,
+                "CategoryModelMaster"
+            ),
+            Callback
+        );
+    }
+
+    void FNamespaceDomain::UnsubscribeCategoryModelMasters(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Gs2->Cache->ListUnsubscribe(
+            Gs2::Chat::Model::FCategoryModelMaster::TypeName,
+            Gs2::Chat::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                NamespaceName,
+                "CategoryModelMaster"
+            ),
+            CallbackID
+        );
+    }
+
+    TSharedPtr<Gs2::Chat::Domain::Model::FCategoryModelMasterDomain> FNamespaceDomain::CategoryModelMaster(
+        const int32 Category
+    )
+    {
+        return MakeShared<Gs2::Chat::Domain::Model::FCategoryModelMasterDomain>(
+            Gs2,
+            Service,
+            NamespaceName,
+            Category
+        );
     }
 
     TSharedPtr<Gs2::Chat::Domain::Model::FUserDomain> FNamespaceDomain::User(

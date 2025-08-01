@@ -29,6 +29,8 @@
 #include "Chat/Domain/Iterator/DescribeSubscribesIterator.h"
 #include "Chat/Domain/Iterator/DescribeSubscribesByUserIdIterator.h"
 #include "Chat/Domain/Iterator/DescribeSubscribesByRoomNameIterator.h"
+#include "Chat/Domain/Iterator/DescribeCategoryModelsIterator.h"
+#include "Chat/Domain/Iterator/DescribeCategoryModelMastersIterator.h"
 
 namespace Gs2::Core::Domain
 {
@@ -51,6 +53,9 @@ namespace Gs2::Chat::Domain::Model
     class FMessageAccessTokenDomain;
     class FSubscribeDomain;
     class FSubscribeAccessTokenDomain;
+    class FCategoryModelDomain;
+    class FCategoryModelMasterDomain;
+    class FCurrentModelMasterDomain;
     class FUserDomain;
     class FUserAccessTokenDomain;
 
@@ -66,6 +71,7 @@ namespace Gs2::Chat::Domain::Model
         TOptional<FString> Url;
         TOptional<FString> UploadToken;
         TOptional<FString> UploadUrl;
+        TOptional<FString> NextPageToken;
         TOptional<FString> GetStatus() const
         {
             return Status;
@@ -81,6 +87,10 @@ namespace Gs2::Chat::Domain::Model
         TOptional<FString> GetUploadUrl() const
         {
             return UploadUrl;
+        }
+        TOptional<FString> GetNextPageToken() const
+        {
+            return NextPageToken;
         }
         TOptional<FString> NamespaceName;
     private:
@@ -202,6 +212,39 @@ namespace Gs2::Chat::Domain::Model
 
         TSharedPtr<FAsyncTask<FDeleteTask>> Delete(
             Request::FDeleteNamespaceRequestPtr Request
+        );
+
+        TSharedPtr<Gs2::Chat::Domain::Model::FCurrentModelMasterDomain> CurrentModelMaster(
+        );
+
+        Gs2::Chat::Domain::Iterator::FDescribeCategoryModelsIteratorPtr CategoryModels(
+        ) const;
+
+        Gs2::Core::Domain::CallbackID SubscribeCategoryModels(
+            TFunction<void()> Callback
+        );
+
+        void UnsubscribeCategoryModels(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
+
+        TSharedPtr<Gs2::Chat::Domain::Model::FCategoryModelDomain> CategoryModel(
+            const int32 Category
+        );
+
+        Gs2::Chat::Domain::Iterator::FDescribeCategoryModelMastersIteratorPtr CategoryModelMasters(
+        ) const;
+
+        Gs2::Core::Domain::CallbackID SubscribeCategoryModelMasters(
+            TFunction<void()> Callback
+        );
+
+        void UnsubscribeCategoryModelMasters(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
+
+        TSharedPtr<Gs2::Chat::Domain::Model::FCategoryModelMasterDomain> CategoryModelMaster(
+            const int32 Category
         );
 
         TSharedPtr<Gs2::Chat::Domain::Model::FUserDomain> User(

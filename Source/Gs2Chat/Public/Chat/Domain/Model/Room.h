@@ -29,6 +29,8 @@
 #include "Chat/Domain/Iterator/DescribeSubscribesIterator.h"
 #include "Chat/Domain/Iterator/DescribeSubscribesByUserIdIterator.h"
 #include "Chat/Domain/Iterator/DescribeSubscribesByRoomNameIterator.h"
+#include "Chat/Domain/Iterator/DescribeCategoryModelsIterator.h"
+#include "Chat/Domain/Iterator/DescribeCategoryModelMastersIterator.h"
 
 namespace Gs2::Core::Domain
 {
@@ -51,6 +53,9 @@ namespace Gs2::Chat::Domain::Model
     class FMessageAccessTokenDomain;
     class FSubscribeDomain;
     class FSubscribeAccessTokenDomain;
+    class FCategoryModelDomain;
+    class FCategoryModelMasterDomain;
+    class FCurrentModelMasterDomain;
     class FUserDomain;
     class FUserAccessTokenDomain;
 

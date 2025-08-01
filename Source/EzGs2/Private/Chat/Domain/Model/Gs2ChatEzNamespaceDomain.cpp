@@ -39,6 +39,11 @@ namespace Gs2::UE5::Chat::Domain::Model
         return Domain->UploadUrl;
     }
 
+    TOptional<FString> FEzNamespaceDomain::NextPageToken() const
+    {
+        return Domain->NextPageToken;
+    }
+
     TOptional<FString> FEzNamespaceDomain::NamespaceName() const
     {
         return Domain->NamespaceName;
@@ -52,6 +57,41 @@ namespace Gs2::UE5::Chat::Domain::Model
         ConnectionValue(Connection)
     {
 
+    }
+
+    Gs2::UE5::Chat::Domain::Iterator::FEzDescribeCategoryModelsIteratorPtr FEzNamespaceDomain::CategoryModels(
+    ) const
+    {
+        return MakeShared<Gs2::UE5::Chat::Domain::Iterator::FEzDescribeCategoryModelsIterator>(
+            Domain,
+            ConnectionValue
+        );
+    }
+
+    Gs2::Core::Domain::CallbackID FEzNamespaceDomain::SubscribeCategoryModels(TFunction<void()> Callback)
+    {
+        return Domain->SubscribeCategoryModels(
+            Callback
+        );
+    }
+
+    void FEzNamespaceDomain::UnsubscribeCategoryModels(Gs2::Core::Domain::CallbackID CallbackId)
+    {
+        Domain->UnsubscribeCategoryModels(
+            CallbackId
+        );
+    }
+
+    Gs2::UE5::Chat::Domain::Model::FEzCategoryModelDomainPtr FEzNamespaceDomain::CategoryModel(
+        const int32 Category
+    ) const
+    {
+        return MakeShared<Gs2::UE5::Chat::Domain::Model::FEzCategoryModelDomain>(
+            Domain->CategoryModel(
+                Category
+            ),
+            ConnectionValue
+        );
     }
 
     Gs2::UE5::Chat::Domain::Model::FEzUserDomainPtr FEzNamespaceDomain::User(

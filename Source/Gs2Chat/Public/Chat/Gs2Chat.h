@@ -21,10 +21,14 @@
 #include "Model/Room.h"
 #include "Model/Message.h"
 #include "Model/Subscribe.h"
+#include "Model/CategoryModel.h"
+#include "Model/CategoryModelMaster.h"
+#include "Model/CurrentModelMaster.h"
 #include "Model/NotificationType.h"
 #include "Model/ScriptSetting.h"
 #include "Model/NotificationSetting.h"
 #include "Model/LogSetting.h"
+#include "Model/GitHubCheckoutSetting.h"
 
 // DescribeNamespaces
 #include "Request/DescribeNamespacesRequest.h"
@@ -277,6 +281,78 @@
 #include "Result/UnsubscribeByUserIdResult.h"
 #include "Task/Rest/UnsubscribeByUserIdTask.h"
 #include "Task/WebSocket/UnsubscribeByUserIdTask.h"
+
+// DescribeCategoryModels
+#include "Request/DescribeCategoryModelsRequest.h"
+#include "Result/DescribeCategoryModelsResult.h"
+#include "Task/Rest/DescribeCategoryModelsTask.h"
+#include "Task/WebSocket/DescribeCategoryModelsTask.h"
+
+// GetCategoryModel
+#include "Request/GetCategoryModelRequest.h"
+#include "Result/GetCategoryModelResult.h"
+#include "Task/Rest/GetCategoryModelTask.h"
+#include "Task/WebSocket/GetCategoryModelTask.h"
+
+// DescribeCategoryModelMasters
+#include "Request/DescribeCategoryModelMastersRequest.h"
+#include "Result/DescribeCategoryModelMastersResult.h"
+#include "Task/Rest/DescribeCategoryModelMastersTask.h"
+#include "Task/WebSocket/DescribeCategoryModelMastersTask.h"
+
+// CreateCategoryModelMaster
+#include "Request/CreateCategoryModelMasterRequest.h"
+#include "Result/CreateCategoryModelMasterResult.h"
+#include "Task/Rest/CreateCategoryModelMasterTask.h"
+#include "Task/WebSocket/CreateCategoryModelMasterTask.h"
+
+// GetCategoryModelMaster
+#include "Request/GetCategoryModelMasterRequest.h"
+#include "Result/GetCategoryModelMasterResult.h"
+#include "Task/Rest/GetCategoryModelMasterTask.h"
+#include "Task/WebSocket/GetCategoryModelMasterTask.h"
+
+// UpdateCategoryModelMaster
+#include "Request/UpdateCategoryModelMasterRequest.h"
+#include "Result/UpdateCategoryModelMasterResult.h"
+#include "Task/Rest/UpdateCategoryModelMasterTask.h"
+#include "Task/WebSocket/UpdateCategoryModelMasterTask.h"
+
+// DeleteCategoryModelMaster
+#include "Request/DeleteCategoryModelMasterRequest.h"
+#include "Result/DeleteCategoryModelMasterResult.h"
+#include "Task/Rest/DeleteCategoryModelMasterTask.h"
+#include "Task/WebSocket/DeleteCategoryModelMasterTask.h"
+
+// ExportMaster
+#include "Request/ExportMasterRequest.h"
+#include "Result/ExportMasterResult.h"
+#include "Task/Rest/ExportMasterTask.h"
+#include "Task/WebSocket/ExportMasterTask.h"
+
+// GetCurrentModelMaster
+#include "Request/GetCurrentModelMasterRequest.h"
+#include "Result/GetCurrentModelMasterResult.h"
+#include "Task/Rest/GetCurrentModelMasterTask.h"
+#include "Task/WebSocket/GetCurrentModelMasterTask.h"
+
+// PreUpdateCurrentModelMaster
+#include "Request/PreUpdateCurrentModelMasterRequest.h"
+#include "Result/PreUpdateCurrentModelMasterResult.h"
+#include "Task/Rest/PreUpdateCurrentModelMasterTask.h"
+#include "Task/WebSocket/PreUpdateCurrentModelMasterTask.h"
+
+// UpdateCurrentModelMaster
+#include "Request/UpdateCurrentModelMasterRequest.h"
+#include "Result/UpdateCurrentModelMasterResult.h"
+#include "Task/Rest/UpdateCurrentModelMasterTask.h"
+#include "Task/WebSocket/UpdateCurrentModelMasterTask.h"
+
+// UpdateCurrentModelMasterFromGitHub
+#include "Request/UpdateCurrentModelMasterFromGitHubRequest.h"
+#include "Result/UpdateCurrentModelMasterFromGitHubResult.h"
+#include "Task/Rest/UpdateCurrentModelMasterFromGitHubTask.h"
+#include "Task/WebSocket/UpdateCurrentModelMasterFromGitHubTask.h"
 
 // Client
 #include "Gs2ChatRestClient.h"

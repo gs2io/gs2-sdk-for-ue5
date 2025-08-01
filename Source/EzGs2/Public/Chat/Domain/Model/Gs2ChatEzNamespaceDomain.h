@@ -21,7 +21,10 @@
 #include "Chat/Model/Gs2ChatEzRoom.h"
 #include "Chat/Model/Gs2ChatEzMessage.h"
 #include "Chat/Model/Gs2ChatEzSubscribe.h"
+#include "Chat/Model/Gs2ChatEzCategoryModel.h"
 #include "Chat/Model/Gs2ChatEzNotificationType.h"
+#include "Gs2ChatEzCategoryModelDomain.h"
+#include "Chat/Domain/Iterator/Gs2ChatEzDescribeCategoryModelsIterator.h"
 #include "Gs2ChatEzUserDomain.h"
 #include "Gs2ChatEzUserDomain.h"
 #include "Gs2ChatEzUserGameSessionDomain.h"
@@ -44,12 +47,24 @@ namespace Gs2::UE5::Chat::Domain::Model
         TOptional<FString> Url() const;
         TOptional<FString> UploadToken() const;
         TOptional<FString> UploadUrl() const;
+        TOptional<FString> NextPageToken() const;
         TOptional<FString> NamespaceName() const;
 
         FEzNamespaceDomain(
             Gs2::Chat::Domain::Model::FNamespaceDomainPtr Domain,
             Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
+
+        Gs2::UE5::Chat::Domain::Iterator::FEzDescribeCategoryModelsIteratorPtr CategoryModels(
+        ) const;
+
+        Gs2::Core::Domain::CallbackID SubscribeCategoryModels(TFunction<void()> Callback);
+
+        void UnsubscribeCategoryModels(Gs2::Core::Domain::CallbackID CallbackId);
+
+        Gs2::UE5::Chat::Domain::Model::FEzCategoryModelDomainPtr CategoryModel(
+            const int32 Category
+        ) const;
 
         Gs2::UE5::Chat::Domain::Model::FEzUserDomainPtr User(
             const FString UserId

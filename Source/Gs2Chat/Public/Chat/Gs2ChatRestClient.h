@@ -102,6 +102,30 @@
 #include "Task/Rest/UnsubscribeTask.h"
 #include "Request/UnsubscribeByUserIdRequest.h"
 #include "Task/Rest/UnsubscribeByUserIdTask.h"
+#include "Request/DescribeCategoryModelsRequest.h"
+#include "Task/Rest/DescribeCategoryModelsTask.h"
+#include "Request/GetCategoryModelRequest.h"
+#include "Task/Rest/GetCategoryModelTask.h"
+#include "Request/DescribeCategoryModelMastersRequest.h"
+#include "Task/Rest/DescribeCategoryModelMastersTask.h"
+#include "Request/CreateCategoryModelMasterRequest.h"
+#include "Task/Rest/CreateCategoryModelMasterTask.h"
+#include "Request/GetCategoryModelMasterRequest.h"
+#include "Task/Rest/GetCategoryModelMasterTask.h"
+#include "Request/UpdateCategoryModelMasterRequest.h"
+#include "Task/Rest/UpdateCategoryModelMasterTask.h"
+#include "Request/DeleteCategoryModelMasterRequest.h"
+#include "Task/Rest/DeleteCategoryModelMasterTask.h"
+#include "Request/ExportMasterRequest.h"
+#include "Task/Rest/ExportMasterTask.h"
+#include "Request/GetCurrentModelMasterRequest.h"
+#include "Task/Rest/GetCurrentModelMasterTask.h"
+#include "Request/PreUpdateCurrentModelMasterRequest.h"
+#include "Task/Rest/PreUpdateCurrentModelMasterTask.h"
+#include "Request/UpdateCurrentModelMasterRequest.h"
+#include "Task/Rest/UpdateCurrentModelMasterTask.h"
+#include "Request/UpdateCurrentModelMasterFromGitHubRequest.h"
+#include "Task/Rest/UpdateCurrentModelMasterFromGitHubTask.h"
 
 namespace Gs2::Chat
 {
@@ -280,6 +304,54 @@ namespace Gs2::Chat
 
         TSharedPtr<FAsyncTask<Task::Rest::FUnsubscribeByUserIdTask>> UnsubscribeByUserId(
             const Request::FUnsubscribeByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FDescribeCategoryModelsTask>> DescribeCategoryModels(
+            const Request::FDescribeCategoryModelsRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FGetCategoryModelTask>> GetCategoryModel(
+            const Request::FGetCategoryModelRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FDescribeCategoryModelMastersTask>> DescribeCategoryModelMasters(
+            const Request::FDescribeCategoryModelMastersRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FCreateCategoryModelMasterTask>> CreateCategoryModelMaster(
+            const Request::FCreateCategoryModelMasterRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FGetCategoryModelMasterTask>> GetCategoryModelMaster(
+            const Request::FGetCategoryModelMasterRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FUpdateCategoryModelMasterTask>> UpdateCategoryModelMaster(
+            const Request::FUpdateCategoryModelMasterRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FDeleteCategoryModelMasterTask>> DeleteCategoryModelMaster(
+            const Request::FDeleteCategoryModelMasterRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FExportMasterTask>> ExportMaster(
+            const Request::FExportMasterRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FGetCurrentModelMasterTask>> GetCurrentModelMaster(
+            const Request::FGetCurrentModelMasterRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FPreUpdateCurrentModelMasterTask>> PreUpdateCurrentModelMaster(
+            const Request::FPreUpdateCurrentModelMasterRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FUpdateCurrentModelMasterTask>> UpdateCurrentModelMaster(
+            const Request::FUpdateCurrentModelMasterRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FUpdateCurrentModelMasterFromGitHubTask>> UpdateCurrentModelMasterFromGitHub(
+            const Request::FUpdateCurrentModelMasterFromGitHubRequestPtr Request
         ) const;
     };
     typedef TSharedPtr<FGs2ChatRestClient, ESPMode::ThreadSafe> FGs2ChatRestClientPtr;

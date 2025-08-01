@@ -30,6 +30,9 @@
 #include "Chat/Domain/Model/MessageAccessToken.h"
 #include "Chat/Domain/Model/Subscribe.h"
 #include "Chat/Domain/Model/SubscribeAccessToken.h"
+#include "Chat/Domain/Model/CategoryModel.h"
+#include "Chat/Domain/Model/CategoryModelMaster.h"
+#include "Chat/Domain/Model/CurrentModelMaster.h"
 #include "Chat/Domain/Model/User.h"
 #include "Chat/Domain/Model/UserAccessToken.h"
 

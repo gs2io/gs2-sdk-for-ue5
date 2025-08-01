@@ -102,6 +102,30 @@
 #include "Task/WebSocket/UnsubscribeTask.h"
 #include "Request/UnsubscribeByUserIdRequest.h"
 #include "Task/WebSocket/UnsubscribeByUserIdTask.h"
+#include "Request/DescribeCategoryModelsRequest.h"
+#include "Task/WebSocket/DescribeCategoryModelsTask.h"
+#include "Request/GetCategoryModelRequest.h"
+#include "Task/WebSocket/GetCategoryModelTask.h"
+#include "Request/DescribeCategoryModelMastersRequest.h"
+#include "Task/WebSocket/DescribeCategoryModelMastersTask.h"
+#include "Request/CreateCategoryModelMasterRequest.h"
+#include "Task/WebSocket/CreateCategoryModelMasterTask.h"
+#include "Request/GetCategoryModelMasterRequest.h"
+#include "Task/WebSocket/GetCategoryModelMasterTask.h"
+#include "Request/UpdateCategoryModelMasterRequest.h"
+#include "Task/WebSocket/UpdateCategoryModelMasterTask.h"
+#include "Request/DeleteCategoryModelMasterRequest.h"
+#include "Task/WebSocket/DeleteCategoryModelMasterTask.h"
+#include "Request/ExportMasterRequest.h"
+#include "Task/WebSocket/ExportMasterTask.h"
+#include "Request/GetCurrentModelMasterRequest.h"
+#include "Task/WebSocket/GetCurrentModelMasterTask.h"
+#include "Request/PreUpdateCurrentModelMasterRequest.h"
+#include "Task/WebSocket/PreUpdateCurrentModelMasterTask.h"
+#include "Request/UpdateCurrentModelMasterRequest.h"
+#include "Task/WebSocket/UpdateCurrentModelMasterTask.h"
+#include "Request/UpdateCurrentModelMasterFromGitHubRequest.h"
+#include "Task/WebSocket/UpdateCurrentModelMasterFromGitHubTask.h"
 
 namespace Gs2::Chat
 {
@@ -280,6 +304,54 @@ namespace Gs2::Chat
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FUnsubscribeByUserIdTask>> UnsubscribeByUserId(
             const Request::FUnsubscribeByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FDescribeCategoryModelsTask>> DescribeCategoryModels(
+            const Request::FDescribeCategoryModelsRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FGetCategoryModelTask>> GetCategoryModel(
+            const Request::FGetCategoryModelRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FDescribeCategoryModelMastersTask>> DescribeCategoryModelMasters(
+            const Request::FDescribeCategoryModelMastersRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FCreateCategoryModelMasterTask>> CreateCategoryModelMaster(
+            const Request::FCreateCategoryModelMasterRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FGetCategoryModelMasterTask>> GetCategoryModelMaster(
+            const Request::FGetCategoryModelMasterRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FUpdateCategoryModelMasterTask>> UpdateCategoryModelMaster(
+            const Request::FUpdateCategoryModelMasterRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FDeleteCategoryModelMasterTask>> DeleteCategoryModelMaster(
+            const Request::FDeleteCategoryModelMasterRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FExportMasterTask>> ExportMaster(
+            const Request::FExportMasterRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FGetCurrentModelMasterTask>> GetCurrentModelMaster(
+            const Request::FGetCurrentModelMasterRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FPreUpdateCurrentModelMasterTask>> PreUpdateCurrentModelMaster(
+            const Request::FPreUpdateCurrentModelMasterRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FUpdateCurrentModelMasterTask>> UpdateCurrentModelMaster(
+            const Request::FUpdateCurrentModelMasterRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FUpdateCurrentModelMasterFromGitHubTask>> UpdateCurrentModelMasterFromGitHub(
+            const Request::FUpdateCurrentModelMasterFromGitHubRequestPtr Request
         ) const;
     };
     typedef TSharedPtr<FGs2ChatWebSocketClient, ESPMode::ThreadSafe> FGs2ChatWebSocketClientPtr;

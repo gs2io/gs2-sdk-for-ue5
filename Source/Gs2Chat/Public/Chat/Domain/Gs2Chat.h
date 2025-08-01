@@ -31,6 +31,9 @@
 #include "Chat/Domain/Model/MessageAccessToken.h"
 #include "Chat/Domain/Model/Subscribe.h"
 #include "Chat/Domain/Model/SubscribeAccessToken.h"
+#include "Chat/Domain/Model/CategoryModel.h"
+#include "Chat/Domain/Model/CategoryModelMaster.h"
+#include "Chat/Domain/Model/CurrentModelMaster.h"
 #include "Chat/Domain/Model/User.h"
 #include "Chat/Domain/Model/UserAccessToken.h"
 
@@ -44,6 +47,8 @@
 #include "Chat/Domain/Iterator/DescribeSubscribesIterator.h"
 #include "Chat/Domain/Iterator/DescribeSubscribesByUserIdIterator.h"
 #include "Chat/Domain/Iterator/DescribeSubscribesByRoomNameIterator.h"
+#include "Chat/Domain/Iterator/DescribeCategoryModelsIterator.h"
+#include "Chat/Domain/Iterator/DescribeCategoryModelMastersIterator.h"
 
 // Notification
 #include "Chat/Model/PostNotification.h"

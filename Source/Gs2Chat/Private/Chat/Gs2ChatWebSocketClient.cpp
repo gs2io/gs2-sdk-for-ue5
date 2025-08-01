@@ -396,4 +396,112 @@ namespace Gs2::Chat
             Request
         );
     }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FDescribeCategoryModelsTask>> FGs2ChatWebSocketClient::DescribeCategoryModels(
+        const Request::FDescribeCategoryModelsRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FDescribeCategoryModelsTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FGetCategoryModelTask>> FGs2ChatWebSocketClient::GetCategoryModel(
+        const Request::FGetCategoryModelRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FGetCategoryModelTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FDescribeCategoryModelMastersTask>> FGs2ChatWebSocketClient::DescribeCategoryModelMasters(
+        const Request::FDescribeCategoryModelMastersRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FDescribeCategoryModelMastersTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FCreateCategoryModelMasterTask>> FGs2ChatWebSocketClient::CreateCategoryModelMaster(
+        const Request::FCreateCategoryModelMasterRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FCreateCategoryModelMasterTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FGetCategoryModelMasterTask>> FGs2ChatWebSocketClient::GetCategoryModelMaster(
+        const Request::FGetCategoryModelMasterRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FGetCategoryModelMasterTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FUpdateCategoryModelMasterTask>> FGs2ChatWebSocketClient::UpdateCategoryModelMaster(
+        const Request::FUpdateCategoryModelMasterRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FUpdateCategoryModelMasterTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FDeleteCategoryModelMasterTask>> FGs2ChatWebSocketClient::DeleteCategoryModelMaster(
+        const Request::FDeleteCategoryModelMasterRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FDeleteCategoryModelMasterTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FExportMasterTask>> FGs2ChatWebSocketClient::ExportMaster(
+        const Request::FExportMasterRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FExportMasterTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FGetCurrentModelMasterTask>> FGs2ChatWebSocketClient::GetCurrentModelMaster(
+        const Request::FGetCurrentModelMasterRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FGetCurrentModelMasterTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FPreUpdateCurrentModelMasterTask>> FGs2ChatWebSocketClient::PreUpdateCurrentModelMaster(
+        const Request::FPreUpdateCurrentModelMasterRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FPreUpdateCurrentModelMasterTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FUpdateCurrentModelMasterTask>> FGs2ChatWebSocketClient::UpdateCurrentModelMaster(
+        const Request::FUpdateCurrentModelMasterRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FUpdateCurrentModelMasterTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FUpdateCurrentModelMasterFromGitHubTask>> FGs2ChatWebSocketClient::UpdateCurrentModelMasterFromGitHub(
+        const Request::FUpdateCurrentModelMasterFromGitHubRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FUpdateCurrentModelMasterFromGitHubTask>>(
+            Session,
+            Request
+        );
+    }
 }

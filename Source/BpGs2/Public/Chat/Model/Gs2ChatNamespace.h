@@ -34,6 +34,12 @@ class BPGS2_API UGs2ChatNamespaceFunctionLibrary : public UBlueprintFunctionLibr
 {
     GENERATED_BODY()
 
+    UFUNCTION(BlueprintCallable, DisplayName="Gs2::Chat::CategoryModel", Category="Game Server Services|GS2-Chat|Namespace|CategoryModel", meta=(WorldContext="WorldContextObject"))
+    static UPARAM(DisplayName="CategoryModel") FGs2ChatCategoryModel CategoryModel(
+        FGs2ChatNamespace Namespace,
+        int32 Category
+    );
+
     UFUNCTION(BlueprintCallable, DisplayName="Gs2::Chat::User", Category="Game Server Services|GS2-Chat|Namespace|User", meta=(WorldContext="WorldContextObject"))
     static UPARAM(DisplayName="User") FGs2ChatUser User(
         FGs2ChatNamespace Namespace,

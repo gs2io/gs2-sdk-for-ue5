@@ -396,4 +396,112 @@ namespace Gs2::Chat
             Request
         );
     }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FDescribeCategoryModelsTask>> FGs2ChatRestClient::DescribeCategoryModels(
+        const Request::FDescribeCategoryModelsRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FDescribeCategoryModelsTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FGetCategoryModelTask>> FGs2ChatRestClient::GetCategoryModel(
+        const Request::FGetCategoryModelRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FGetCategoryModelTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FDescribeCategoryModelMastersTask>> FGs2ChatRestClient::DescribeCategoryModelMasters(
+        const Request::FDescribeCategoryModelMastersRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FDescribeCategoryModelMastersTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FCreateCategoryModelMasterTask>> FGs2ChatRestClient::CreateCategoryModelMaster(
+        const Request::FCreateCategoryModelMasterRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FCreateCategoryModelMasterTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FGetCategoryModelMasterTask>> FGs2ChatRestClient::GetCategoryModelMaster(
+        const Request::FGetCategoryModelMasterRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FGetCategoryModelMasterTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FUpdateCategoryModelMasterTask>> FGs2ChatRestClient::UpdateCategoryModelMaster(
+        const Request::FUpdateCategoryModelMasterRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FUpdateCategoryModelMasterTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FDeleteCategoryModelMasterTask>> FGs2ChatRestClient::DeleteCategoryModelMaster(
+        const Request::FDeleteCategoryModelMasterRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FDeleteCategoryModelMasterTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FExportMasterTask>> FGs2ChatRestClient::ExportMaster(
+        const Request::FExportMasterRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FExportMasterTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FGetCurrentModelMasterTask>> FGs2ChatRestClient::GetCurrentModelMaster(
+        const Request::FGetCurrentModelMasterRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FGetCurrentModelMasterTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FPreUpdateCurrentModelMasterTask>> FGs2ChatRestClient::PreUpdateCurrentModelMaster(
+        const Request::FPreUpdateCurrentModelMasterRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FPreUpdateCurrentModelMasterTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FUpdateCurrentModelMasterTask>> FGs2ChatRestClient::UpdateCurrentModelMaster(
+        const Request::FUpdateCurrentModelMasterRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FUpdateCurrentModelMasterTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FUpdateCurrentModelMasterFromGitHubTask>> FGs2ChatRestClient::UpdateCurrentModelMasterFromGitHub(
+        const Request::FUpdateCurrentModelMasterFromGitHubRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FUpdateCurrentModelMasterFromGitHubTask>>(
+            Session,
+            Request
+        );
+    }
 }

@@ -16,9 +16,27 @@
 
 #include "Chat/Model/Gs2ChatNamespace.h"
 #include "Chat/Domain/EzGs2Chat.h"
+#include "Chat/Model/Gs2ChatCategoryModel.h"
 #include "Core/Model/Gs2AccessToken.h"
+#include "Chat/Model/Gs2ChatCategoryModel.h"
 #include "Chat/Model/Gs2ChatUser.h"
 #include "Core/BpGs2Constant.h"
+
+FGs2ChatCategoryModel UGs2ChatNamespaceFunctionLibrary::CategoryModel(
+    FGs2ChatNamespace Namespace,
+    int32 Category
+)
+{
+    FGs2ChatCategoryModel Return;
+    if (Namespace.Value == nullptr) {
+        UE_LOG(BpGs2Log, Error, TEXT("[UGs2ChatNamespaceFunctionLibrary::CategoryModel] Namespace parameter specification is missing."))
+        return Return;
+    }
+    Return.Value = Namespace.Value->CategoryModel(
+        Category
+    );
+    return Return;
+}
 
 FGs2ChatUser UGs2ChatNamespaceFunctionLibrary::User(
     FGs2ChatNamespace Namespace,

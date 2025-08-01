@@ -21,6 +21,7 @@
 #include "Chat/Model/Gs2ChatEzRoom.h"
 #include "Chat/Model/Gs2ChatEzMessage.h"
 #include "Chat/Model/Gs2ChatEzSubscribe.h"
+#include "Chat/Model/Gs2ChatEzCategoryModel.h"
 #include "Chat/Model/Gs2ChatEzNotificationType.h"
 #include "Gs2ChatEzSubscribeGameSessionDomain.h"
 #include "Chat/Domain/Iterator/Gs2ChatEzDescribeSubscribesIterator.h"
