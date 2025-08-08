@@ -23,9 +23,15 @@
 #include "Money2/Model/Gs2Money2EzDepositTransaction.h"
 #include "Money2/Model/Gs2Money2EzSubscribeTransaction.h"
 #include "Money2/Model/Gs2Money2EzSubscriptionStatus.h"
+#include "Money2/Model/Gs2Money2EzStoreContentModel.h"
+#include "Money2/Model/Gs2Money2EzAppleAppStoreContent.h"
+#include "Money2/Model/Gs2Money2EzGooglePlayContent.h"
+#include "Money2/Model/Gs2Money2EzAppleAppStoreSubscriptionContent.h"
+#include "Money2/Model/Gs2Money2EzGooglePlaySubscriptionContent.h"
 #include "Gs2Money2EzUserDomain.h"
 #include "Gs2Money2EzUserDomain.h"
 #include "Gs2Money2EzUserGameSessionDomain.h"
+#include "Gs2Money2EzStoreContentModelDomain.h"
 #include "Gs2Money2EzNamespaceDomain.h"
 #include "Core/EzTransactionDomain.h"
 #include "Util/Net/GameSession.h"
@@ -59,6 +65,10 @@ namespace Gs2::UE5::Money2::Domain::Model
 
         Gs2::UE5::Money2::Domain::Model::FEzUserGameSessionDomainPtr Me(
             Gs2::UE5::Util::IGameSessionPtr GameSession
+        ) const;
+
+        Gs2::UE5::Money2::Domain::Model::FEzStoreContentModelDomainPtr StoreContentModel(
+            const FString ContentName
         ) const;
 
     };

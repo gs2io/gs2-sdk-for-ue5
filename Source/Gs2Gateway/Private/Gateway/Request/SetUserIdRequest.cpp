@@ -21,7 +21,8 @@ namespace Gs2::Gateway::Request
     FSetUserIdRequest::FSetUserIdRequest():
         NamespaceNameValue(TOptional<FString>()),
         AccessTokenValue(TOptional<FString>()),
-        AllowConcurrentAccessValue(TOptional<bool>())
+        AllowConcurrentAccessValue(TOptional<bool>()),
+        ForceValue(TOptional<bool>())
     {
     }
 
@@ -30,7 +31,8 @@ namespace Gs2::Gateway::Request
     ):
         NamespaceNameValue(From.NamespaceNameValue),
         AccessTokenValue(From.AccessTokenValue),
-        AllowConcurrentAccessValue(From.AllowConcurrentAccessValue)
+        AllowConcurrentAccessValue(From.AllowConcurrentAccessValue),
+        ForceValue(From.ForceValue)
     {
     }
 
@@ -63,6 +65,14 @@ namespace Gs2::Gateway::Request
     )
     {
         this->AllowConcurrentAccessValue = AllowConcurrentAccess;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FSetUserIdRequest> FSetUserIdRequest::WithForce(
+        const TOptional<bool> Force
+    )
+    {
+        this->ForceValue = Force;
         return SharedThis(this);
     }
 
@@ -101,6 +111,20 @@ namespace Gs2::Gateway::Request
             return FString("null");
         }
         return FString(AllowConcurrentAccessValue.GetValue() ? "true" : "false");
+    }
+
+    TOptional<bool> FSetUserIdRequest::GetForce() const
+    {
+        return ForceValue;
+    }
+
+    FString FSetUserIdRequest::GetForceString() const
+    {
+        if (!ForceValue.IsSet())
+        {
+            return FString("null");
+        }
+        return FString(ForceValue.GetValue() ? "true" : "false");
     }
 
     TOptional<FString> FSetUserIdRequest::GetDuplicationAvoider() const
@@ -142,6 +166,15 @@ namespace Gs2::Gateway::Request
                   }
                   return TOptional<bool>();
               }() : TOptional<bool>())
+            ->WithForce(Data->HasField(ANSI_TO_TCHAR("force")) ? [Data]() -> TOptional<bool>
+              {
+                  bool v;
+                    if (Data->TryGetBoolField(ANSI_TO_TCHAR("force"), v))
+                  {
+                        return TOptional(v);
+                  }
+                  return TOptional<bool>();
+              }() : TOptional<bool>())
           ->WithDuplicationAvoider(Data->HasField(ANSI_TO_TCHAR("duplicationAvoider")) ? TOptional<FString>(Data->GetStringField(ANSI_TO_TCHAR("duplicationAvoider"))) : TOptional<FString>());
     }
 
@@ -163,6 +196,10 @@ namespace Gs2::Gateway::Request
         if (AllowConcurrentAccessValue.IsSet())
         {
             JsonRootObject->SetBoolField("allowConcurrentAccess", AllowConcurrentAccessValue.GetValue());
+        }
+        if (ForceValue.IsSet())
+        {
+            JsonRootObject->SetBoolField("force", ForceValue.GetValue());
         }
         if (DuplicationAvoiderValue.IsSet())
         {

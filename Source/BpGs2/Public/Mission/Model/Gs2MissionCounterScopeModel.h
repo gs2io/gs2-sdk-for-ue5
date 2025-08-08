@@ -27,7 +27,11 @@ struct FGs2MissionCounterScopeModel
     GENERATED_BODY()
 
     UPROPERTY(Category = Gs2, BlueprintReadWrite)
+    FString ScopeType = "";
+    UPROPERTY(Category = Gs2, BlueprintReadWrite)
     FString ResetType = "";
+    UPROPERTY(Category = Gs2, BlueprintReadWrite)
+    FString ConditionName = "";
     UPROPERTY(Category = Gs2, BlueprintReadWrite)
     int32 ResetDayOfMonth = 0;
     UPROPERTY(Category = Gs2, BlueprintReadWrite)
@@ -41,7 +45,9 @@ inline FGs2MissionCounterScopeModel EzCounterScopeModelToFGs2MissionCounterScope
 )
 {
     FGs2MissionCounterScopeModel Value;
+    Value.ScopeType = Model->GetScopeType() ? *Model->GetScopeType() : "";
     Value.ResetType = Model->GetResetType() ? *Model->GetResetType() : "";
+    Value.ConditionName = Model->GetConditionName() ? *Model->GetConditionName() : "";
     Value.ResetDayOfMonth = Model->GetResetDayOfMonth() ? *Model->GetResetDayOfMonth() : 0;
     Value.ResetDayOfWeek = Model->GetResetDayOfWeek() ? *Model->GetResetDayOfWeek() : "";
     Value.ResetHour = Model->GetResetHour() ? *Model->GetResetHour() : 0;
@@ -53,7 +59,9 @@ inline Gs2::UE5::Mission::Model::FEzCounterScopeModelPtr FGs2MissionCounterScope
 )
 {
     return MakeShared<Gs2::UE5::Mission::Model::FEzCounterScopeModel>()
+        ->WithScopeType(Model.ScopeType)
         ->WithResetType(Model.ResetType)
+        ->WithConditionName(Model.ConditionName)
         ->WithResetDayOfMonth(Model.ResetDayOfMonth)
         ->WithResetDayOfWeek(Model.ResetDayOfWeek)
         ->WithResetHour(Model.ResetHour);

@@ -35,7 +35,6 @@ namespace Gs2::Ranking2::Request
         TOptional<int64> MinimumValueValue;
         TOptional<int64> MaximumValueValue;
         TOptional<bool> SumValue;
-        TOptional<int32> ScoreTtlDaysValue;
         TOptional<FString> OrderDirectionValue;
         TSharedPtr<TArray<TSharedPtr<Model::FRankingReward>>> RankingRewardsValue;
         TOptional<FString> RewardCalculationIndexValue;
@@ -59,7 +58,6 @@ namespace Gs2::Ranking2::Request
         TSharedPtr<FUpdateClusterRankingModelMasterRequest> WithMinimumValue(const TOptional<int64> MinimumValue);
         TSharedPtr<FUpdateClusterRankingModelMasterRequest> WithMaximumValue(const TOptional<int64> MaximumValue);
         TSharedPtr<FUpdateClusterRankingModelMasterRequest> WithSum(const TOptional<bool> Sum);
-        TSharedPtr<FUpdateClusterRankingModelMasterRequest> WithScoreTtlDays(const TOptional<int32> ScoreTtlDays);
         TSharedPtr<FUpdateClusterRankingModelMasterRequest> WithOrderDirection(const TOptional<FString> OrderDirection);
         TSharedPtr<FUpdateClusterRankingModelMasterRequest> WithRankingRewards(const TSharedPtr<TArray<TSharedPtr<Model::FRankingReward>>> RankingRewards);
         TSharedPtr<FUpdateClusterRankingModelMasterRequest> WithRewardCalculationIndex(const TOptional<FString> RewardCalculationIndex);
@@ -78,8 +76,6 @@ namespace Gs2::Ranking2::Request
         FString GetMaximumValueString() const;
         TOptional<bool> GetSum() const;
         FString GetSumString() const;
-        TOptional<int32> GetScoreTtlDays() const;
-        FString GetScoreTtlDaysString() const;
         TOptional<FString> GetOrderDirection() const;TSharedPtr<TArray<TSharedPtr<Model::FRankingReward>>> GetRankingRewards() const;
         TOptional<FString> GetRewardCalculationIndex() const;
         TOptional<FString> GetEntryPeriodEventId() const;

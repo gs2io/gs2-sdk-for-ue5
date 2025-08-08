@@ -23,18 +23,26 @@ namespace Gs2::UE5::Mission::Model
 {
 	class EZGS2_API FEzCounterScopeModel final : public TSharedFromThis<FEzCounterScopeModel>
 	{
+        TOptional<FString> ScopeTypeValue;
         TOptional<FString> ResetTypeValue;
+        TOptional<FString> ConditionNameValue;
         TOptional<int32> ResetDayOfMonthValue;
         TOptional<FString> ResetDayOfWeekValue;
         TOptional<int32> ResetHourValue;
 
 	public:
+        TSharedPtr<FEzCounterScopeModel> WithScopeType(const TOptional<FString> ScopeType);
         TSharedPtr<FEzCounterScopeModel> WithResetType(const TOptional<FString> ResetType);
+        TSharedPtr<FEzCounterScopeModel> WithConditionName(const TOptional<FString> ConditionName);
         TSharedPtr<FEzCounterScopeModel> WithResetDayOfMonth(const TOptional<int32> ResetDayOfMonth);
         TSharedPtr<FEzCounterScopeModel> WithResetDayOfWeek(const TOptional<FString> ResetDayOfWeek);
         TSharedPtr<FEzCounterScopeModel> WithResetHour(const TOptional<int32> ResetHour);
 
+        TOptional<FString> GetScopeType() const;
+
         TOptional<FString> GetResetType() const;
+
+        TOptional<FString> GetConditionName() const;
 
         TOptional<int32> GetResetDayOfMonth() const;
         FString GetResetDayOfMonthString() const;

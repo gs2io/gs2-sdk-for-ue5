@@ -19,11 +19,27 @@
 namespace Gs2::UE5::Mission::Model
 {
 
+    TSharedPtr<FEzCounterScopeModel> FEzCounterScopeModel::WithScopeType(
+        const TOptional<FString> ScopeType
+    )
+    {
+        this->ScopeTypeValue = ScopeType;
+        return SharedThis(this);
+    }
+
     TSharedPtr<FEzCounterScopeModel> FEzCounterScopeModel::WithResetType(
         const TOptional<FString> ResetType
     )
     {
         this->ResetTypeValue = ResetType;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FEzCounterScopeModel> FEzCounterScopeModel::WithConditionName(
+        const TOptional<FString> ConditionName
+    )
+    {
+        this->ConditionNameValue = ConditionName;
         return SharedThis(this);
     }
 
@@ -50,9 +66,17 @@ namespace Gs2::UE5::Mission::Model
         this->ResetHourValue = ResetHour;
         return SharedThis(this);
     }
+    TOptional<FString> FEzCounterScopeModel::GetScopeType() const
+    {
+        return ScopeTypeValue;
+    }
     TOptional<FString> FEzCounterScopeModel::GetResetType() const
     {
         return ResetTypeValue;
+    }
+    TOptional<FString> FEzCounterScopeModel::GetConditionName() const
+    {
+        return ConditionNameValue;
     }
     TOptional<int32> FEzCounterScopeModel::GetResetDayOfMonth() const
     {
@@ -88,7 +112,9 @@ namespace Gs2::UE5::Mission::Model
     Gs2::Mission::Model::FCounterScopeModelPtr FEzCounterScopeModel::ToModel() const
     {
         return MakeShared<Gs2::Mission::Model::FCounterScopeModel>()
+            ->WithScopeType(ScopeTypeValue)
             ->WithResetType(ResetTypeValue)
+            ->WithConditionName(ConditionNameValue)
             ->WithResetDayOfMonth(ResetDayOfMonthValue)
             ->WithResetDayOfWeek(ResetDayOfWeekValue)
             ->WithResetHour(ResetHourValue);
@@ -101,7 +127,9 @@ namespace Gs2::UE5::Mission::Model
             return nullptr;
         }
         return MakeShared<FEzCounterScopeModel>()
+            ->WithScopeType(Model->GetScopeType())
             ->WithResetType(Model->GetResetType())
+            ->WithConditionName(Model->GetConditionName())
             ->WithResetDayOfMonth(Model->GetResetDayOfMonth())
             ->WithResetDayOfWeek(Model->GetResetDayOfWeek())
             ->WithResetHour(Model->GetResetHour());

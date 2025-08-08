@@ -22,6 +22,7 @@ namespace Gs2::Gateway::Request
         NamespaceNameValue(TOptional<FString>()),
         UserIdValue(TOptional<FString>()),
         AllowConcurrentAccessValue(TOptional<bool>()),
+        ForceValue(TOptional<bool>()),
         TimeOffsetTokenValue(TOptional<FString>())
     {
     }
@@ -32,6 +33,7 @@ namespace Gs2::Gateway::Request
         NamespaceNameValue(From.NamespaceNameValue),
         UserIdValue(From.UserIdValue),
         AllowConcurrentAccessValue(From.AllowConcurrentAccessValue),
+        ForceValue(From.ForceValue),
         TimeOffsetTokenValue(From.TimeOffsetTokenValue)
     {
     }
@@ -65,6 +67,14 @@ namespace Gs2::Gateway::Request
     )
     {
         this->AllowConcurrentAccessValue = AllowConcurrentAccess;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FSetUserIdByUserIdRequest> FSetUserIdByUserIdRequest::WithForce(
+        const TOptional<bool> Force
+    )
+    {
+        this->ForceValue = Force;
         return SharedThis(this);
     }
 
@@ -113,6 +123,20 @@ namespace Gs2::Gateway::Request
         return FString(AllowConcurrentAccessValue.GetValue() ? "true" : "false");
     }
 
+    TOptional<bool> FSetUserIdByUserIdRequest::GetForce() const
+    {
+        return ForceValue;
+    }
+
+    FString FSetUserIdByUserIdRequest::GetForceString() const
+    {
+        if (!ForceValue.IsSet())
+        {
+            return FString("null");
+        }
+        return FString(ForceValue.GetValue() ? "true" : "false");
+    }
+
     TOptional<FString> FSetUserIdByUserIdRequest::GetTimeOffsetToken() const
     {
         return TimeOffsetTokenValue;
@@ -157,6 +181,15 @@ namespace Gs2::Gateway::Request
                   }
                   return TOptional<bool>();
               }() : TOptional<bool>())
+            ->WithForce(Data->HasField(ANSI_TO_TCHAR("force")) ? [Data]() -> TOptional<bool>
+              {
+                  bool v;
+                    if (Data->TryGetBoolField(ANSI_TO_TCHAR("force"), v))
+                  {
+                        return TOptional(v);
+                  }
+                  return TOptional<bool>();
+              }() : TOptional<bool>())
             ->WithTimeOffsetToken(Data->HasField(ANSI_TO_TCHAR("timeOffsetToken")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
@@ -187,6 +220,10 @@ namespace Gs2::Gateway::Request
         if (AllowConcurrentAccessValue.IsSet())
         {
             JsonRootObject->SetBoolField("allowConcurrentAccess", AllowConcurrentAccessValue.GetValue());
+        }
+        if (ForceValue.IsSet())
+        {
+            JsonRootObject->SetBoolField("force", ForceValue.GetValue());
         }
         if (TimeOffsetTokenValue.IsSet())
         {

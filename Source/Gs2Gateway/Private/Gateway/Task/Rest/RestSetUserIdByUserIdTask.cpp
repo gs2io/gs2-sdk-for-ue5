@@ -93,6 +93,10 @@ namespace Gs2::Gateway::Task::Rest
             {
                 JsonRootObject->SetBoolField("allowConcurrentAccess", this->Request->GetAllowConcurrentAccess().GetValue());
             }
+            if (this->Request->GetForce().IsSet())
+            {
+                JsonRootObject->SetBoolField("force", this->Request->GetForce().GetValue());
+            }
             if (this->Request->GetContextStack().IsSet())
             {
                 JsonRootObject->SetStringField("contextStack", this->Request->GetContextStack().GetValue());

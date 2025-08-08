@@ -83,4 +83,16 @@ namespace Gs2::UE5::Money2::Domain::Model
             ConnectionValue
         );
     }
+
+    Gs2::UE5::Money2::Domain::Model::FEzStoreContentModelDomainPtr FEzNamespaceDomain::StoreContentModel(
+        const FString ContentName
+    ) const
+    {
+        return MakeShared<Gs2::UE5::Money2::Domain::Model::FEzStoreContentModelDomain>(
+            Domain->StoreContentModel(
+                ContentName
+            ),
+            ConnectionValue
+        );
+    }
 }

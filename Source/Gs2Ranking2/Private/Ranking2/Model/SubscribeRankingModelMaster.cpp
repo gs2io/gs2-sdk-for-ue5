@@ -26,7 +26,6 @@ namespace Gs2::Ranking2::Model
         MinimumValueValue(TOptional<int64>()),
         MaximumValueValue(TOptional<int64>()),
         SumValue(TOptional<bool>()),
-        ScoreTtlDaysValue(TOptional<int32>()),
         OrderDirectionValue(TOptional<FString>()),
         EntryPeriodEventIdValue(TOptional<FString>()),
         AccessPeriodEventIdValue(TOptional<FString>()),
@@ -46,7 +45,6 @@ namespace Gs2::Ranking2::Model
         MinimumValueValue(From.MinimumValueValue),
         MaximumValueValue(From.MaximumValueValue),
         SumValue(From.SumValue),
-        ScoreTtlDaysValue(From.ScoreTtlDaysValue),
         OrderDirectionValue(From.OrderDirectionValue),
         EntryPeriodEventIdValue(From.EntryPeriodEventIdValue),
         AccessPeriodEventIdValue(From.AccessPeriodEventIdValue),
@@ -109,14 +107,6 @@ namespace Gs2::Ranking2::Model
     )
     {
         this->SumValue = Sum;
-        return SharedThis(this);
-    }
-
-    TSharedPtr<FSubscribeRankingModelMaster> FSubscribeRankingModelMaster::WithScoreTtlDays(
-        const TOptional<int32> ScoreTtlDays
-    )
-    {
-        this->ScoreTtlDaysValue = ScoreTtlDays;
         return SharedThis(this);
     }
 
@@ -221,19 +211,6 @@ namespace Gs2::Ranking2::Model
             return FString("null");
         }
         return FString(SumValue.GetValue() ? "true" : "false");
-    }
-    TOptional<int32> FSubscribeRankingModelMaster::GetScoreTtlDays() const
-    {
-        return ScoreTtlDaysValue;
-    }
-
-    FString FSubscribeRankingModelMaster::GetScoreTtlDaysString() const
-    {
-        if (!ScoreTtlDaysValue.IsSet())
-        {
-            return FString("null");
-        }
-        return FString::Printf(TEXT("%d"), ScoreTtlDaysValue.GetValue());
     }
     TOptional<FString> FSubscribeRankingModelMaster::GetOrderDirection() const
     {
@@ -400,15 +377,6 @@ namespace Gs2::Ranking2::Model
                     }
                     return TOptional<bool>();
                 }() : TOptional<bool>())
-            ->WithScoreTtlDays(Data->HasField(ANSI_TO_TCHAR("scoreTtlDays")) ? [Data]() -> TOptional<int32>
-                {
-                    int32 v;
-                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("scoreTtlDays"), v))
-                    {
-                        return TOptional(v);
-                    }
-                    return TOptional<int32>();
-                }() : TOptional<int32>())
             ->WithOrderDirection(Data->HasField(ANSI_TO_TCHAR("orderDirection")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
@@ -495,10 +463,6 @@ namespace Gs2::Ranking2::Model
         if (SumValue.IsSet())
         {
             JsonRootObject->SetBoolField("sum", SumValue.GetValue());
-        }
-        if (ScoreTtlDaysValue.IsSet())
-        {
-            JsonRootObject->SetNumberField("scoreTtlDays", ScoreTtlDaysValue.GetValue());
         }
         if (OrderDirectionValue.IsSet())
         {

@@ -109,10 +109,6 @@ namespace Gs2::Ranking2::Task::Rest
             {
                 JsonRootObject->SetBoolField("sum", this->Request->GetSum().GetValue());
             }
-            if (this->Request->GetScoreTtlDays().IsSet())
-            {
-                JsonRootObject->SetNumberField("scoreTtlDays", this->Request->GetScoreTtlDays().GetValue());
-            }
             if (this->Request->GetOrderDirection().IsSet())
             {
                 JsonRootObject->SetStringField("orderDirection", this->Request->GetOrderDirection().GetValue());
