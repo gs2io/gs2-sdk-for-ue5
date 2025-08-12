@@ -37,13 +37,15 @@ namespace Gs2::Friend::Domain::Iterator
         const TSharedPtr<Core::Domain::FGs2> Gs2,
         const Gs2::Friend::FGs2FriendRestClientPtr Client,
         const TOptional<FString> NamespaceName,
-        const Gs2::Auth::Model::FAccessTokenPtr AccessToken
+        const Gs2::Auth::Model::FAccessTokenPtr AccessToken,
+        const TOptional<bool> WithProfile
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
         Client(Client),
         NamespaceName(NamespaceName),
-        AccessToken(AccessToken)
+        AccessToken(AccessToken),
+        WithProfile(WithProfile)
     {
     }
 
@@ -53,7 +55,8 @@ namespace Gs2::Friend::Domain::Iterator
         Gs2(From.Gs2),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
-        AccessToken(From.AccessToken)
+        AccessToken(From.AccessToken),
+        WithProfile(From.WithProfile)
     {
     }
 
@@ -116,6 +119,7 @@ namespace Gs2::Friend::Domain::Iterator
                 MakeShared<Gs2::Friend::Request::FDescribeSendRequestsRequest>()
                     ->WithNamespaceName(Self->NamespaceName)
                     ->WithAccessToken(Self->AccessToken == nullptr ? TOptional<FString>() : Self->AccessToken->GetToken())
+                    ->WithWithProfile(Self->WithProfile)
                     ->WithPageToken(PageToken)
                     ->WithLimit(FetchSize)
             );

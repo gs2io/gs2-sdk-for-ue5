@@ -34,6 +34,14 @@ namespace Gs2::UE5::Friend::Model
         this->TargetUserIdValue = TargetUserId;
         return SharedThis(this);
     }
+
+    TSharedPtr<FEzFriendRequest> FEzFriendRequest::WithPublicProfile(
+        const TOptional<FString> PublicProfile
+    )
+    {
+        this->PublicProfileValue = PublicProfile;
+        return SharedThis(this);
+    }
     TOptional<FString> FEzFriendRequest::GetUserId() const
     {
         return UserIdValue;
@@ -42,12 +50,17 @@ namespace Gs2::UE5::Friend::Model
     {
         return TargetUserIdValue;
     }
+    TOptional<FString> FEzFriendRequest::GetPublicProfile() const
+    {
+        return PublicProfileValue;
+    }
 
     Gs2::Friend::Model::FFriendRequestPtr FEzFriendRequest::ToModel() const
     {
         return MakeShared<Gs2::Friend::Model::FFriendRequest>()
             ->WithUserId(UserIdValue)
-            ->WithTargetUserId(TargetUserIdValue);
+            ->WithTargetUserId(TargetUserIdValue)
+            ->WithPublicProfile(PublicProfileValue);
     }
 
     TSharedPtr<FEzFriendRequest> FEzFriendRequest::FromModel(const Gs2::Friend::Model::FFriendRequestPtr Model)
@@ -58,6 +71,7 @@ namespace Gs2::UE5::Friend::Model
         }
         return MakeShared<FEzFriendRequest>()
             ->WithUserId(Model->GetUserId())
-            ->WithTargetUserId(Model->GetTargetUserId());
+            ->WithTargetUserId(Model->GetTargetUserId())
+            ->WithPublicProfile(Model->GetPublicProfile());
     }
 }

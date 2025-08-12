@@ -21,7 +21,8 @@ namespace Gs2::Friend::Request
     FGetReceiveRequestRequest::FGetReceiveRequestRequest():
         NamespaceNameValue(TOptional<FString>()),
         AccessTokenValue(TOptional<FString>()),
-        FromUserIdValue(TOptional<FString>())
+        FromUserIdValue(TOptional<FString>()),
+        WithProfileValue(TOptional<bool>())
     {
     }
 
@@ -30,7 +31,8 @@ namespace Gs2::Friend::Request
     ):
         NamespaceNameValue(From.NamespaceNameValue),
         AccessTokenValue(From.AccessTokenValue),
-        FromUserIdValue(From.FromUserIdValue)
+        FromUserIdValue(From.FromUserIdValue),
+        WithProfileValue(From.WithProfileValue)
     {
     }
 
@@ -66,6 +68,14 @@ namespace Gs2::Friend::Request
         return SharedThis(this);
     }
 
+    TSharedPtr<FGetReceiveRequestRequest> FGetReceiveRequestRequest::WithWithProfile(
+        const TOptional<bool> WithProfile
+    )
+    {
+        this->WithProfileValue = WithProfile;
+        return SharedThis(this);
+    }
+
     TOptional<FString> FGetReceiveRequestRequest::GetContextStack() const
     {
         return ContextStackValue;
@@ -84,6 +94,20 @@ namespace Gs2::Friend::Request
     TOptional<FString> FGetReceiveRequestRequest::GetFromUserId() const
     {
         return FromUserIdValue;
+    }
+
+    TOptional<bool> FGetReceiveRequestRequest::GetWithProfile() const
+    {
+        return WithProfileValue;
+    }
+
+    FString FGetReceiveRequestRequest::GetWithProfileString() const
+    {
+        if (!WithProfileValue.IsSet())
+        {
+            return FString("null");
+        }
+        return FString(WithProfileValue.GetValue() ? "true" : "false");
     }
 
     TSharedPtr<FGetReceiveRequestRequest> FGetReceiveRequestRequest::FromJson(const TSharedPtr<FJsonObject> Data)
@@ -119,7 +143,16 @@ namespace Gs2::Friend::Request
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
-              }() : TOptional<FString>());
+              }() : TOptional<FString>())
+            ->WithWithProfile(Data->HasField(ANSI_TO_TCHAR("withProfile")) ? [Data]() -> TOptional<bool>
+              {
+                  bool v;
+                    if (Data->TryGetBoolField(ANSI_TO_TCHAR("withProfile"), v))
+                  {
+                        return TOptional(v);
+                  }
+                  return TOptional<bool>();
+              }() : TOptional<bool>());
     }
 
     TSharedPtr<FJsonObject> FGetReceiveRequestRequest::ToJson() const
@@ -140,6 +173,10 @@ namespace Gs2::Friend::Request
         if (FromUserIdValue.IsSet())
         {
             JsonRootObject->SetStringField("fromUserId", FromUserIdValue.GetValue());
+        }
+        if (WithProfileValue.IsSet())
+        {
+            JsonRootObject->SetBoolField("withProfile", WithProfileValue.GetValue());
         }
         return JsonRootObject;
     }

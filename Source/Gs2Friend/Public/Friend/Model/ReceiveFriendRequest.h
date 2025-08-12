@@ -25,6 +25,7 @@ namespace Gs2::Friend::Model
     {
         TOptional<FString> UserIdValue;
         TOptional<FString> TargetUserIdValue;
+        TOptional<FString> PublicProfileValue;
 
     public:
         FReceiveFriendRequest();
@@ -35,9 +36,11 @@ namespace Gs2::Friend::Model
 
         TSharedPtr<FReceiveFriendRequest> WithUserId(const TOptional<FString> UserId);
         TSharedPtr<FReceiveFriendRequest> WithTargetUserId(const TOptional<FString> TargetUserId);
+        TSharedPtr<FReceiveFriendRequest> WithPublicProfile(const TOptional<FString> PublicProfile);
 
         TOptional<FString> GetUserId() const;
         TOptional<FString> GetTargetUserId() const;
+        TOptional<FString> GetPublicProfile() const;
 
 
         static TSharedPtr<FReceiveFriendRequest> FromJson(const TSharedPtr<FJsonObject> Data);

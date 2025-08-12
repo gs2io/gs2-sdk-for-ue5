@@ -91,6 +91,9 @@ namespace Gs2::Friend::Task::Rest
             if (this->Request->GetContextStack().IsSet()) {
                 queryStrings.Add("contextStack=" + FGenericPlatformHttp::UrlEncode(*this->Request->GetContextStack().GetValue()));
             }
+            if (this->Request->GetWithProfile().IsSet()) {
+                queryStrings.Add("withProfile=" + this->Request->GetWithProfileString());
+            }
             Url += "?" + FString::Join(queryStrings, TEXT("&"));
 
             request->SetURL(Url);

@@ -28,6 +28,7 @@ namespace Gs2::Friend::Request
         TOptional<FString> ContextStackValue;
         TOptional<FString> NamespaceNameValue;
         TOptional<FString> UserIdValue;
+        TOptional<bool> WithProfileValue;
         TOptional<FString> PageTokenValue;
         TOptional<int32> LimitValue;
         TOptional<FString> TimeOffsetTokenValue;
@@ -43,6 +44,7 @@ namespace Gs2::Friend::Request
         TSharedPtr<FDescribeSendRequestsByUserIdRequest> WithContextStack(const TOptional<FString> ContextStack);
         TSharedPtr<FDescribeSendRequestsByUserIdRequest> WithNamespaceName(const TOptional<FString> NamespaceName);
         TSharedPtr<FDescribeSendRequestsByUserIdRequest> WithUserId(const TOptional<FString> UserId);
+        TSharedPtr<FDescribeSendRequestsByUserIdRequest> WithWithProfile(const TOptional<bool> WithProfile);
         TSharedPtr<FDescribeSendRequestsByUserIdRequest> WithPageToken(const TOptional<FString> PageToken);
         TSharedPtr<FDescribeSendRequestsByUserIdRequest> WithLimit(const TOptional<int32> Limit);
         TSharedPtr<FDescribeSendRequestsByUserIdRequest> WithTimeOffsetToken(const TOptional<FString> TimeOffsetToken);
@@ -50,6 +52,8 @@ namespace Gs2::Friend::Request
         TOptional<FString> GetContextStack() const;
         TOptional<FString> GetNamespaceName() const;
         TOptional<FString> GetUserId() const;
+        TOptional<bool> GetWithProfile() const;
+        FString GetWithProfileString() const;
         TOptional<FString> GetPageToken() const;
         TOptional<int32> GetLimit() const;
         FString GetLimitString() const;

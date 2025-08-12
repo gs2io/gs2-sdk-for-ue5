@@ -38,6 +38,7 @@ namespace Gs2::Friend::Domain::Iterator
         const Gs2::Friend::FGs2FriendRestClientPtr Client,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> UserId,
+        const TOptional<bool> WithProfile,
         const TOptional<FString> TimeOffsetToken
         // ReSharper disable once CppMemberInitializersOrder
     ):
@@ -45,6 +46,7 @@ namespace Gs2::Friend::Domain::Iterator
         Client(Client),
         NamespaceName(NamespaceName),
         UserId(UserId),
+        WithProfile(WithProfile),
         TimeOffsetToken(TimeOffsetToken)
     {
     }
@@ -56,6 +58,7 @@ namespace Gs2::Friend::Domain::Iterator
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         UserId(From.UserId),
+        WithProfile(From.WithProfile),
         TimeOffsetToken(From.TimeOffsetToken)
     {
     }
@@ -120,6 +123,7 @@ namespace Gs2::Friend::Domain::Iterator
                 MakeShared<Gs2::Friend::Request::FDescribeReceiveRequestsByUserIdRequest>()
                     ->WithNamespaceName(Self->NamespaceName)
                     ->WithUserId(Self->UserId)
+                    ->WithWithProfile(Self->WithProfile)
                     ->WithPageToken(PageToken)
                     ->WithLimit(FetchSize)
             );

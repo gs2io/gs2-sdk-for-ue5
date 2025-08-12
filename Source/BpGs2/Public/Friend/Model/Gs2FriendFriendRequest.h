@@ -30,6 +30,8 @@ struct FGs2FriendFriendRequest
     FString UserId = "";
     UPROPERTY(Category = Gs2, BlueprintReadWrite)
     FString TargetUserId = "";
+    UPROPERTY(Category = Gs2, BlueprintReadWrite)
+    FString PublicProfile = "";
 };
 
 inline FGs2FriendFriendRequest EzFriendRequestToFGs2FriendFriendRequest(
@@ -39,6 +41,7 @@ inline FGs2FriendFriendRequest EzFriendRequestToFGs2FriendFriendRequest(
     FGs2FriendFriendRequest Value;
     Value.UserId = Model->GetUserId() ? *Model->GetUserId() : "";
     Value.TargetUserId = Model->GetTargetUserId() ? *Model->GetTargetUserId() : "";
+    Value.PublicProfile = Model->GetPublicProfile() ? *Model->GetPublicProfile() : "";
     return Value;
 }
 
@@ -48,5 +51,6 @@ inline Gs2::UE5::Friend::Model::FEzFriendRequestPtr FGs2FriendFriendRequestToEzF
 {
     return MakeShared<Gs2::UE5::Friend::Model::FEzFriendRequest>()
         ->WithUserId(Model.UserId)
-        ->WithTargetUserId(Model.TargetUserId);
+        ->WithTargetUserId(Model.TargetUserId)
+        ->WithPublicProfile(Model.PublicProfile);
 }

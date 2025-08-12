@@ -29,6 +29,7 @@ namespace Gs2::Friend::Request
         TOptional<FString> NamespaceNameValue;
         TOptional<FString> AccessTokenValue;
         TOptional<FString> TargetUserIdValue;
+        TOptional<bool> WithProfileValue;
         
     public:
         
@@ -42,11 +43,14 @@ namespace Gs2::Friend::Request
         TSharedPtr<FGetSendRequestRequest> WithNamespaceName(const TOptional<FString> NamespaceName);
         TSharedPtr<FGetSendRequestRequest> WithAccessToken(const TOptional<FString> AccessToken);
         TSharedPtr<FGetSendRequestRequest> WithTargetUserId(const TOptional<FString> TargetUserId);
+        TSharedPtr<FGetSendRequestRequest> WithWithProfile(const TOptional<bool> WithProfile);
 
         TOptional<FString> GetContextStack() const;
         TOptional<FString> GetNamespaceName() const;
         TOptional<FString> GetAccessToken() const;
         TOptional<FString> GetTargetUserId() const;
+        TOptional<bool> GetWithProfile() const;
+        FString GetWithProfileString() const;
 
         static TSharedPtr<FGetSendRequestRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;

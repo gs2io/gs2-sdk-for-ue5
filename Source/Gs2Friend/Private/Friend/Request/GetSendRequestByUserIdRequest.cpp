@@ -22,6 +22,7 @@ namespace Gs2::Friend::Request
         NamespaceNameValue(TOptional<FString>()),
         UserIdValue(TOptional<FString>()),
         TargetUserIdValue(TOptional<FString>()),
+        WithProfileValue(TOptional<bool>()),
         TimeOffsetTokenValue(TOptional<FString>())
     {
     }
@@ -32,6 +33,7 @@ namespace Gs2::Friend::Request
         NamespaceNameValue(From.NamespaceNameValue),
         UserIdValue(From.UserIdValue),
         TargetUserIdValue(From.TargetUserIdValue),
+        WithProfileValue(From.WithProfileValue),
         TimeOffsetTokenValue(From.TimeOffsetTokenValue)
     {
     }
@@ -68,6 +70,14 @@ namespace Gs2::Friend::Request
         return SharedThis(this);
     }
 
+    TSharedPtr<FGetSendRequestByUserIdRequest> FGetSendRequestByUserIdRequest::WithWithProfile(
+        const TOptional<bool> WithProfile
+    )
+    {
+        this->WithProfileValue = WithProfile;
+        return SharedThis(this);
+    }
+
     TSharedPtr<FGetSendRequestByUserIdRequest> FGetSendRequestByUserIdRequest::WithTimeOffsetToken(
         const TOptional<FString> TimeOffsetToken
     )
@@ -94,6 +104,20 @@ namespace Gs2::Friend::Request
     TOptional<FString> FGetSendRequestByUserIdRequest::GetTargetUserId() const
     {
         return TargetUserIdValue;
+    }
+
+    TOptional<bool> FGetSendRequestByUserIdRequest::GetWithProfile() const
+    {
+        return WithProfileValue;
+    }
+
+    FString FGetSendRequestByUserIdRequest::GetWithProfileString() const
+    {
+        if (!WithProfileValue.IsSet())
+        {
+            return FString("null");
+        }
+        return FString(WithProfileValue.GetValue() ? "true" : "false");
     }
 
     TOptional<FString> FGetSendRequestByUserIdRequest::GetTimeOffsetToken() const
@@ -135,6 +159,15 @@ namespace Gs2::Friend::Request
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
+            ->WithWithProfile(Data->HasField(ANSI_TO_TCHAR("withProfile")) ? [Data]() -> TOptional<bool>
+              {
+                  bool v;
+                    if (Data->TryGetBoolField(ANSI_TO_TCHAR("withProfile"), v))
+                  {
+                        return TOptional(v);
+                  }
+                  return TOptional<bool>();
+              }() : TOptional<bool>())
             ->WithTimeOffsetToken(Data->HasField(ANSI_TO_TCHAR("timeOffsetToken")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
@@ -164,6 +197,10 @@ namespace Gs2::Friend::Request
         if (TargetUserIdValue.IsSet())
         {
             JsonRootObject->SetStringField("targetUserId", TargetUserIdValue.GetValue());
+        }
+        if (WithProfileValue.IsSet())
+        {
+            JsonRootObject->SetBoolField("withProfile", WithProfileValue.GetValue());
         }
         if (TimeOffsetTokenValue.IsSet())
         {

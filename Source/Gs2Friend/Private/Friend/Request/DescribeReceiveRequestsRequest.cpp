@@ -21,6 +21,7 @@ namespace Gs2::Friend::Request
     FDescribeReceiveRequestsRequest::FDescribeReceiveRequestsRequest():
         NamespaceNameValue(TOptional<FString>()),
         AccessTokenValue(TOptional<FString>()),
+        WithProfileValue(TOptional<bool>()),
         PageTokenValue(TOptional<FString>()),
         LimitValue(TOptional<int32>())
     {
@@ -31,6 +32,7 @@ namespace Gs2::Friend::Request
     ):
         NamespaceNameValue(From.NamespaceNameValue),
         AccessTokenValue(From.AccessTokenValue),
+        WithProfileValue(From.WithProfileValue),
         PageTokenValue(From.PageTokenValue),
         LimitValue(From.LimitValue)
     {
@@ -57,6 +59,14 @@ namespace Gs2::Friend::Request
     )
     {
         this->AccessTokenValue = AccessToken;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FDescribeReceiveRequestsRequest> FDescribeReceiveRequestsRequest::WithWithProfile(
+        const TOptional<bool> WithProfile
+    )
+    {
+        this->WithProfileValue = WithProfile;
         return SharedThis(this);
     }
 
@@ -89,6 +99,20 @@ namespace Gs2::Friend::Request
     TOptional<FString> FDescribeReceiveRequestsRequest::GetAccessToken() const
     {
         return AccessTokenValue;
+    }
+
+    TOptional<bool> FDescribeReceiveRequestsRequest::GetWithProfile() const
+    {
+        return WithProfileValue;
+    }
+
+    FString FDescribeReceiveRequestsRequest::GetWithProfileString() const
+    {
+        if (!WithProfileValue.IsSet())
+        {
+            return FString("null");
+        }
+        return FString(WithProfileValue.GetValue() ? "true" : "false");
     }
 
     TOptional<FString> FDescribeReceiveRequestsRequest::GetPageToken() const
@@ -135,6 +159,15 @@ namespace Gs2::Friend::Request
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
+            ->WithWithProfile(Data->HasField(ANSI_TO_TCHAR("withProfile")) ? [Data]() -> TOptional<bool>
+              {
+                  bool v;
+                    if (Data->TryGetBoolField(ANSI_TO_TCHAR("withProfile"), v))
+                  {
+                        return TOptional(v);
+                  }
+                  return TOptional<bool>();
+              }() : TOptional<bool>())
             ->WithPageToken(Data->HasField(ANSI_TO_TCHAR("pageToken")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
@@ -169,6 +202,10 @@ namespace Gs2::Friend::Request
         if (AccessTokenValue.IsSet())
         {
             JsonRootObject->SetStringField("xGs2AccessToken", AccessTokenValue.GetValue());
+        }
+        if (WithProfileValue.IsSet())
+        {
+            JsonRootObject->SetBoolField("withProfile", WithProfileValue.GetValue());
         }
         if (PageTokenValue.IsSet())
         {

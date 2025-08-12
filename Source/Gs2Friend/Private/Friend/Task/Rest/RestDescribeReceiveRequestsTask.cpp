@@ -81,6 +81,9 @@ namespace Gs2::Friend::Task::Rest
             if (this->Request->GetContextStack().IsSet()) {
                 queryStrings.Add("contextStack=" + FGenericPlatformHttp::UrlEncode(*this->Request->GetContextStack().GetValue()));
             }
+            if (this->Request->GetWithProfile().IsSet()) {
+                queryStrings.Add("withProfile=" + this->Request->GetWithProfileString());
+            }
             if (this->Request->GetPageToken().IsSet()) {
                 queryStrings.Add("pageToken=" + FGenericPlatformHttp::UrlEncode(this->Request->GetPageToken().GetValue()));
             }

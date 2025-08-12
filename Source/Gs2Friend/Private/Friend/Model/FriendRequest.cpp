@@ -20,7 +20,8 @@ namespace Gs2::Friend::Model
 {
     FFriendRequest::FFriendRequest():
         UserIdValue(TOptional<FString>()),
-        TargetUserIdValue(TOptional<FString>())
+        TargetUserIdValue(TOptional<FString>()),
+        PublicProfileValue(TOptional<FString>())
     {
     }
 
@@ -28,7 +29,8 @@ namespace Gs2::Friend::Model
         const FFriendRequest& From
     ):
         UserIdValue(From.UserIdValue),
-        TargetUserIdValue(From.TargetUserIdValue)
+        TargetUserIdValue(From.TargetUserIdValue),
+        PublicProfileValue(From.PublicProfileValue)
     {
     }
 
@@ -47,6 +49,14 @@ namespace Gs2::Friend::Model
         this->TargetUserIdValue = TargetUserId;
         return SharedThis(this);
     }
+
+    TSharedPtr<FFriendRequest> FFriendRequest::WithPublicProfile(
+        const TOptional<FString> PublicProfile
+    )
+    {
+        this->PublicProfileValue = PublicProfile;
+        return SharedThis(this);
+    }
     TOptional<FString> FFriendRequest::GetUserId() const
     {
         return UserIdValue;
@@ -54,6 +64,10 @@ namespace Gs2::Friend::Model
     TOptional<FString> FFriendRequest::GetTargetUserId() const
     {
         return TargetUserIdValue;
+    }
+    TOptional<FString> FFriendRequest::GetPublicProfile() const
+    {
+        return PublicProfileValue;
     }
 
     TSharedPtr<FFriendRequest> FFriendRequest::FromJson(const TSharedPtr<FJsonObject> Data)
@@ -79,6 +93,15 @@ namespace Gs2::Friend::Model
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
+                }() : TOptional<FString>())
+            ->WithPublicProfile(Data->HasField(ANSI_TO_TCHAR("publicProfile")) ? [Data]() -> TOptional<FString>
+                {
+                    FString v("");
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("publicProfile"), v))
+                    {
+                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                    }
+                    return TOptional<FString>();
                 }() : TOptional<FString>());
     }
 
@@ -92,6 +115,10 @@ namespace Gs2::Friend::Model
         if (TargetUserIdValue.IsSet())
         {
             JsonRootObject->SetStringField("targetUserId", TargetUserIdValue.GetValue());
+        }
+        if (PublicProfileValue.IsSet())
+        {
+            JsonRootObject->SetStringField("publicProfile", PublicProfileValue.GetValue());
         }
         return JsonRootObject;
     }

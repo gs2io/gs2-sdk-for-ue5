@@ -25,14 +25,18 @@ namespace Gs2::UE5::Friend::Model
 	{
         TOptional<FString> UserIdValue;
         TOptional<FString> TargetUserIdValue;
+        TOptional<FString> PublicProfileValue;
 
 	public:
         TSharedPtr<FEzFriendRequest> WithUserId(const TOptional<FString> UserId);
         TSharedPtr<FEzFriendRequest> WithTargetUserId(const TOptional<FString> TargetUserId);
+        TSharedPtr<FEzFriendRequest> WithPublicProfile(const TOptional<FString> PublicProfile);
 
         TOptional<FString> GetUserId() const;
 
         TOptional<FString> GetTargetUserId() const;
+
+        TOptional<FString> GetPublicProfile() const;
 
         Gs2::Friend::Model::FFriendRequestPtr ToModel() const;
         static TSharedPtr<FEzFriendRequest> FromModel(Gs2::Friend::Model::FFriendRequestPtr Model);
