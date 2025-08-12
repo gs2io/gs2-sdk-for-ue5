@@ -41,6 +41,7 @@ namespace Gs2::UE5::Schedule::Domain::Model
         TOptional<bool> InSchedule() const;
         TOptional<int64> ScheduleStartAt() const;
         TOptional<int64> ScheduleEndAt() const;
+        TOptional<bool> IsGlobalSchedule() const;
         TOptional<FString> NamespaceName() const;
         TOptional<FString> UserId() const;
         TOptional<FString> EventName() const;

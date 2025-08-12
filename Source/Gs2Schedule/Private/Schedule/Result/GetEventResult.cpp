@@ -23,7 +23,8 @@ namespace Gs2::Schedule::Result
         InScheduleValue(TOptional<bool>()),
         ScheduleStartAtValue(TOptional<int64>()),
         ScheduleEndAtValue(TOptional<int64>()),
-        RepeatScheduleValue(nullptr)
+        RepeatScheduleValue(nullptr),
+        IsGlobalScheduleValue(TOptional<bool>())
     {
     }
 
@@ -34,7 +35,8 @@ namespace Gs2::Schedule::Result
         InScheduleValue(From.InScheduleValue),
         ScheduleStartAtValue(From.ScheduleStartAtValue),
         ScheduleEndAtValue(From.ScheduleEndAtValue),
-        RepeatScheduleValue(From.RepeatScheduleValue)
+        RepeatScheduleValue(From.RepeatScheduleValue),
+        IsGlobalScheduleValue(From.IsGlobalScheduleValue)
     {
     }
 
@@ -75,6 +77,14 @@ namespace Gs2::Schedule::Result
     )
     {
         this->RepeatScheduleValue = RepeatSchedule;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FGetEventResult> FGetEventResult::WithIsGlobalSchedule(
+        const TOptional<bool> IsGlobalSchedule
+    )
+    {
+        this->IsGlobalScheduleValue = IsGlobalSchedule;
         return SharedThis(this);
     }
 
@@ -138,6 +148,20 @@ namespace Gs2::Schedule::Result
         return RepeatScheduleValue;
     }
 
+    TOptional<bool> FGetEventResult::GetIsGlobalSchedule() const
+    {
+        return IsGlobalScheduleValue;
+    }
+
+    FString FGetEventResult::GetIsGlobalScheduleString() const
+    {
+        if (!IsGlobalScheduleValue.IsSet())
+        {
+            return FString("null");
+        }
+        return FString(IsGlobalScheduleValue.GetValue() ? "true" : "false");
+    }
+
     TSharedPtr<FGetEventResult> FGetEventResult::FromJson(const TSharedPtr<FJsonObject> Data)
     {
         if (Data == nullptr) {
@@ -186,7 +210,16 @@ namespace Gs2::Schedule::Result
                         return nullptr;
                     }
                     return Model::FRepeatSchedule::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("repeatSchedule")));
-                 }() : nullptr);
+                 }() : nullptr)
+            ->WithIsGlobalSchedule(Data->HasField(ANSI_TO_TCHAR("isGlobalSchedule")) ? [Data]() -> TOptional<bool>
+                {
+                    bool v;
+                    if (Data->TryGetBoolField(ANSI_TO_TCHAR("isGlobalSchedule"), v))
+                    {
+                        return TOptional(v);
+                    }
+                    return TOptional<bool>();
+                }() : TOptional<bool>());
     }
 
     TSharedPtr<FJsonObject> FGetEventResult::ToJson() const
@@ -211,6 +244,10 @@ namespace Gs2::Schedule::Result
         if (RepeatScheduleValue != nullptr && RepeatScheduleValue.IsValid())
         {
             JsonRootObject->SetObjectField("repeatSchedule", RepeatScheduleValue->ToJson());
+        }
+        if (IsGlobalScheduleValue.IsSet())
+        {
+            JsonRootObject->SetBoolField("isGlobalSchedule", IsGlobalScheduleValue.GetValue());
         }
         return JsonRootObject;
     }

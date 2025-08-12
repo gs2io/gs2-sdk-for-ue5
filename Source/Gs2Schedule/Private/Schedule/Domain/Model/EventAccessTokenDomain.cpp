@@ -154,7 +154,27 @@ namespace Gs2::Schedule::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
-        const auto Domain = Self;
+        auto Domain = Self;
+        if (ResultModel != nullptr)
+        {
+            if (ResultModel->GetInSchedule().IsSet())
+            {
+                Domain->InSchedule = *ResultModel->GetInSchedule();
+            }
+            if (ResultModel->GetScheduleStartAt().IsSet())
+            {
+                Domain->ScheduleStartAt = *ResultModel->GetScheduleStartAt();
+            }
+            if (ResultModel->GetScheduleEndAt().IsSet())
+            {
+                Domain->ScheduleEndAt = *ResultModel->GetScheduleEndAt();
+            }
+            if (ResultModel->GetIsGlobalSchedule().IsSet())
+            {
+                Domain->IsGlobalSchedule = *ResultModel->GetIsGlobalSchedule();
+            }
+        }
+
         *Result = Domain;
         return nullptr;
     }

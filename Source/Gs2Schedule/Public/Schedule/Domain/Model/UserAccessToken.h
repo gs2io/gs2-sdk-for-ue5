@@ -60,7 +60,27 @@ namespace Gs2::Schedule::Domain::Model
         const Gs2::Schedule::FGs2ScheduleRestClientPtr Client;
 
         public:
+        TOptional<bool> InSchedule;
+        TOptional<int64> ScheduleStartAt;
+        TOptional<int64> ScheduleEndAt;
+        TOptional<bool> IsGlobalSchedule;
         TOptional<FString> NextPageToken;
+        TOptional<bool> GetInSchedule() const
+        {
+            return InSchedule;
+        }
+        TOptional<int64> GetScheduleStartAt() const
+        {
+            return ScheduleStartAt;
+        }
+        TOptional<int64> GetScheduleEndAt() const
+        {
+            return ScheduleEndAt;
+        }
+        TOptional<bool> GetIsGlobalSchedule() const
+        {
+            return IsGlobalSchedule;
+        }
         TOptional<FString> GetNextPageToken() const
         {
             return NextPageToken;

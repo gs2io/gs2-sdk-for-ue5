@@ -19,6 +19,26 @@
 namespace Gs2::UE5::Schedule::Domain::Model
 {
 
+    TOptional<bool> FEzUserGameSessionDomain::InSchedule() const
+    {
+        return Domain->InSchedule;
+    }
+
+    TOptional<int64> FEzUserGameSessionDomain::ScheduleStartAt() const
+    {
+        return Domain->ScheduleStartAt;
+    }
+
+    TOptional<int64> FEzUserGameSessionDomain::ScheduleEndAt() const
+    {
+        return Domain->ScheduleEndAt;
+    }
+
+    TOptional<bool> FEzUserGameSessionDomain::IsGlobalSchedule() const
+    {
+        return Domain->IsGlobalSchedule;
+    }
+
     TOptional<FString> FEzUserGameSessionDomain::NextPageToken() const
     {
         return Domain->NextPageToken;

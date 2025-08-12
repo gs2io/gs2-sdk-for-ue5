@@ -17,11 +17,19 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "../Model/Event.h"
+#include "../Model/RepeatSchedule.h"
 
 namespace Gs2::Schedule::Result
 {
     class GS2SCHEDULE_API FVerifyEventByUserIdResult final : public TSharedFromThis<FVerifyEventByUserIdResult>
     {
+        TSharedPtr<Model::FEvent> ItemValue;
+        TOptional<bool> InScheduleValue;
+        TOptional<int64> ScheduleStartAtValue;
+        TOptional<int64> ScheduleEndAtValue;
+        TSharedPtr<Model::FRepeatSchedule> RepeatScheduleValue;
+        TOptional<bool> IsGlobalScheduleValue;
         
     public:
         
@@ -31,7 +39,23 @@ namespace Gs2::Schedule::Result
         );
         ~FVerifyEventByUserIdResult() = default;
 
+        TSharedPtr<FVerifyEventByUserIdResult> WithItem(const TSharedPtr<Model::FEvent> Item);
+        TSharedPtr<FVerifyEventByUserIdResult> WithInSchedule(const TOptional<bool> InSchedule);
+        TSharedPtr<FVerifyEventByUserIdResult> WithScheduleStartAt(const TOptional<int64> ScheduleStartAt);
+        TSharedPtr<FVerifyEventByUserIdResult> WithScheduleEndAt(const TOptional<int64> ScheduleEndAt);
+        TSharedPtr<FVerifyEventByUserIdResult> WithRepeatSchedule(const TSharedPtr<Model::FRepeatSchedule> RepeatSchedule);
+        TSharedPtr<FVerifyEventByUserIdResult> WithIsGlobalSchedule(const TOptional<bool> IsGlobalSchedule);
 
+        TSharedPtr<Model::FEvent> GetItem() const;
+        TOptional<bool> GetInSchedule() const;
+        FString GetInScheduleString() const;
+        TOptional<int64> GetScheduleStartAt() const;
+        FString GetScheduleStartAtString() const;
+        TOptional<int64> GetScheduleEndAt() const;
+        FString GetScheduleEndAtString() const;
+        TSharedPtr<Model::FRepeatSchedule> GetRepeatSchedule() const;
+        TOptional<bool> GetIsGlobalSchedule() const;
+        FString GetIsGlobalScheduleString() const;
 
         static TSharedPtr<FVerifyEventByUserIdResult> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;

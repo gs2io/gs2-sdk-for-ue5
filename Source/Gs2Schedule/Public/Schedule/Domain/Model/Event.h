@@ -62,6 +62,7 @@ namespace Gs2::Schedule::Domain::Model
         TOptional<bool> InSchedule;
         TOptional<int64> ScheduleStartAt;
         TOptional<int64> ScheduleEndAt;
+        TOptional<bool> IsGlobalSchedule;
         TOptional<bool> GetInSchedule() const
         {
             return InSchedule;
@@ -73,6 +74,10 @@ namespace Gs2::Schedule::Domain::Model
         TOptional<int64> GetScheduleEndAt() const
         {
             return ScheduleEndAt;
+        }
+        TOptional<bool> GetIsGlobalSchedule() const
+        {
+            return IsGlobalSchedule;
         }
         TOptional<FString> NamespaceName;
         TOptional<FString> UserId;

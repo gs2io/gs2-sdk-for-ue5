@@ -34,6 +34,11 @@ namespace Gs2::UE5::Schedule::Domain::Model
         return Domain->ScheduleEndAt;
     }
 
+    TOptional<bool> FEzEventGameSessionDomain::IsGlobalSchedule() const
+    {
+        return Domain->IsGlobalSchedule;
+    }
+
     TOptional<FString> FEzEventGameSessionDomain::NamespaceName() const
     {
         return Domain->NamespaceName;

@@ -41,6 +41,10 @@ namespace Gs2::UE5::Schedule::Domain::Model
         Gs2::UE5::Util::FGs2ConnectionPtr ConnectionValue;
 
         public:
+        TOptional<bool> InSchedule() const;
+        TOptional<int64> ScheduleStartAt() const;
+        TOptional<int64> ScheduleEndAt() const;
+        TOptional<bool> IsGlobalSchedule() const;
         TOptional<FString> NextPageToken() const;
         TOptional<FString> NamespaceName() const;
         TOptional<FString> UserId() const;

@@ -29,6 +29,7 @@ namespace Gs2::Schedule::Result
         TOptional<int64> ScheduleStartAtValue;
         TOptional<int64> ScheduleEndAtValue;
         TSharedPtr<Model::FRepeatSchedule> RepeatScheduleValue;
+        TOptional<bool> IsGlobalScheduleValue;
         
     public:
         
@@ -43,6 +44,7 @@ namespace Gs2::Schedule::Result
         TSharedPtr<FGetEventByUserIdResult> WithScheduleStartAt(const TOptional<int64> ScheduleStartAt);
         TSharedPtr<FGetEventByUserIdResult> WithScheduleEndAt(const TOptional<int64> ScheduleEndAt);
         TSharedPtr<FGetEventByUserIdResult> WithRepeatSchedule(const TSharedPtr<Model::FRepeatSchedule> RepeatSchedule);
+        TSharedPtr<FGetEventByUserIdResult> WithIsGlobalSchedule(const TOptional<bool> IsGlobalSchedule);
 
         TSharedPtr<Model::FEvent> GetItem() const;
         TOptional<bool> GetInSchedule() const;
@@ -52,6 +54,8 @@ namespace Gs2::Schedule::Result
         TOptional<int64> GetScheduleEndAt() const;
         FString GetScheduleEndAtString() const;
         TSharedPtr<Model::FRepeatSchedule> GetRepeatSchedule() const;
+        TOptional<bool> GetIsGlobalSchedule() const;
+        FString GetIsGlobalScheduleString() const;
 
         static TSharedPtr<FGetEventByUserIdResult> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;
