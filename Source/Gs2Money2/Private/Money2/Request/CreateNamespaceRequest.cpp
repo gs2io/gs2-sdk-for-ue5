@@ -26,6 +26,7 @@ namespace Gs2::Money2::Request
         PlatformSettingValue(nullptr),
         DepositBalanceScriptValue(nullptr),
         WithdrawBalanceScriptValue(nullptr),
+        VerifyReceiptScriptValue(nullptr),
         SubscribeScriptValue(TOptional<FString>()),
         RenewScriptValue(TOptional<FString>()),
         UnsubscribeScriptValue(TOptional<FString>()),
@@ -45,6 +46,7 @@ namespace Gs2::Money2::Request
         PlatformSettingValue(From.PlatformSettingValue),
         DepositBalanceScriptValue(From.DepositBalanceScriptValue),
         WithdrawBalanceScriptValue(From.WithdrawBalanceScriptValue),
+        VerifyReceiptScriptValue(From.VerifyReceiptScriptValue),
         SubscribeScriptValue(From.SubscribeScriptValue),
         RenewScriptValue(From.RenewScriptValue),
         UnsubscribeScriptValue(From.UnsubscribeScriptValue),
@@ -115,6 +117,14 @@ namespace Gs2::Money2::Request
     )
     {
         this->WithdrawBalanceScriptValue = WithdrawBalanceScript;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FCreateNamespaceRequest> FCreateNamespaceRequest::WithVerifyReceiptScript(
+        const TSharedPtr<Model::FScriptSetting> VerifyReceiptScript
+    )
+    {
+        this->VerifyReceiptScriptValue = VerifyReceiptScript;
         return SharedThis(this);
     }
 
@@ -227,6 +237,15 @@ namespace Gs2::Money2::Request
         return WithdrawBalanceScriptValue;
     }
 
+    TSharedPtr<Model::FScriptSetting> FCreateNamespaceRequest::GetVerifyReceiptScript() const
+    {
+        if (!VerifyReceiptScriptValue.IsValid())
+        {
+            return nullptr;
+        }
+        return VerifyReceiptScriptValue;
+    }
+
     TOptional<FString> FCreateNamespaceRequest::GetSubscribeScript() const
     {
         return SubscribeScriptValue;
@@ -336,6 +355,14 @@ namespace Gs2::Money2::Request
                   }
                   return Model::FScriptSetting::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("withdrawBalanceScript")));
               }() : nullptr)
+          ->WithVerifyReceiptScript(Data->HasField(ANSI_TO_TCHAR("verifyReceiptScript")) ? [Data]() -> Model::FScriptSettingPtr
+              {
+                  if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("verifyReceiptScript")))
+                  {
+                      return nullptr;
+                  }
+                  return Model::FScriptSetting::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("verifyReceiptScript")));
+              }() : nullptr)
             ->WithSubscribeScript(Data->HasField(ANSI_TO_TCHAR("subscribeScript")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
@@ -423,6 +450,10 @@ namespace Gs2::Money2::Request
         if (WithdrawBalanceScriptValue != nullptr && WithdrawBalanceScriptValue.IsValid())
         {
             JsonRootObject->SetObjectField("withdrawBalanceScript", WithdrawBalanceScriptValue->ToJson());
+        }
+        if (VerifyReceiptScriptValue != nullptr && VerifyReceiptScriptValue.IsValid())
+        {
+            JsonRootObject->SetObjectField("verifyReceiptScript", VerifyReceiptScriptValue->ToJson());
         }
         if (SubscribeScriptValue.IsSet())
         {

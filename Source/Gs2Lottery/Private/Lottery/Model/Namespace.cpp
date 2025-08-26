@@ -24,7 +24,6 @@ namespace Gs2::Lottery::Model
         DescriptionValue(TOptional<FString>()),
         TransactionSettingValue(nullptr),
         LotteryTriggerScriptIdValue(TOptional<FString>()),
-        ChoicePrizeTableScriptIdValue(TOptional<FString>()),
         LogSettingValue(nullptr),
         CreatedAtValue(TOptional<int64>()),
         UpdatedAtValue(TOptional<int64>()),
@@ -42,7 +41,6 @@ namespace Gs2::Lottery::Model
         DescriptionValue(From.DescriptionValue),
         TransactionSettingValue(From.TransactionSettingValue),
         LotteryTriggerScriptIdValue(From.LotteryTriggerScriptIdValue),
-        ChoicePrizeTableScriptIdValue(From.ChoicePrizeTableScriptIdValue),
         LogSettingValue(From.LogSettingValue),
         CreatedAtValue(From.CreatedAtValue),
         UpdatedAtValue(From.UpdatedAtValue),
@@ -89,14 +87,6 @@ namespace Gs2::Lottery::Model
     )
     {
         this->LotteryTriggerScriptIdValue = LotteryTriggerScriptId;
-        return SharedThis(this);
-    }
-
-    TSharedPtr<FNamespace> FNamespace::WithChoicePrizeTableScriptId(
-        const TOptional<FString> ChoicePrizeTableScriptId
-    )
-    {
-        this->ChoicePrizeTableScriptIdValue = ChoicePrizeTableScriptId;
         return SharedThis(this);
     }
 
@@ -166,10 +156,6 @@ namespace Gs2::Lottery::Model
     TOptional<FString> FNamespace::GetLotteryTriggerScriptId() const
     {
         return LotteryTriggerScriptIdValue;
-    }
-    TOptional<FString> FNamespace::GetChoicePrizeTableScriptId() const
-    {
-        return ChoicePrizeTableScriptIdValue;
     }
     TSharedPtr<FLogSetting> FNamespace::GetLogSetting() const
     {
@@ -306,15 +292,6 @@ namespace Gs2::Lottery::Model
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithChoicePrizeTableScriptId(Data->HasField(ANSI_TO_TCHAR("choicePrizeTableScriptId")) ? [Data]() -> TOptional<FString>
-                {
-                    FString v("");
-                    if (Data->TryGetStringField(ANSI_TO_TCHAR("choicePrizeTableScriptId"), v))
-                    {
-                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
-                    }
-                    return TOptional<FString>();
-                }() : TOptional<FString>())
             ->WithLogSetting(Data->HasField(ANSI_TO_TCHAR("logSetting")) ? [Data]() -> Model::FLogSettingPtr
                 {
                     if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("logSetting")))
@@ -392,10 +369,6 @@ namespace Gs2::Lottery::Model
         if (LotteryTriggerScriptIdValue.IsSet())
         {
             JsonRootObject->SetStringField("lotteryTriggerScriptId", LotteryTriggerScriptIdValue.GetValue());
-        }
-        if (ChoicePrizeTableScriptIdValue.IsSet())
-        {
-            JsonRootObject->SetStringField("choicePrizeTableScriptId", ChoicePrizeTableScriptIdValue.GetValue());
         }
         if (LogSettingValue != nullptr && LogSettingValue.IsValid())
         {

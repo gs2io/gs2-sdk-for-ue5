@@ -56,14 +56,6 @@ namespace Gs2::Distributor::Request
         return SharedThis(this);
     }
 
-    TSharedPtr<FFreezeMasterDataRequest> FFreezeMasterDataRequest::WithDuplicationAvoider(
-        const TOptional<FString> DuplicationAvoider
-    )
-    {
-        this->DuplicationAvoiderValue = DuplicationAvoider;
-        return SharedThis(this);
-    }
-
     TOptional<FString> FFreezeMasterDataRequest::GetContextStack() const
     {
         return ContextStackValue;
@@ -77,11 +69,6 @@ namespace Gs2::Distributor::Request
     TOptional<FString> FFreezeMasterDataRequest::GetAccessToken() const
     {
         return AccessTokenValue;
-    }
-
-    TOptional<FString> FFreezeMasterDataRequest::GetDuplicationAvoider() const
-    {
-        return DuplicationAvoiderValue;
     }
 
     TSharedPtr<FFreezeMasterDataRequest> FFreezeMasterDataRequest::FromJson(const TSharedPtr<FJsonObject> Data)
@@ -108,8 +95,7 @@ namespace Gs2::Distributor::Request
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
-              }() : TOptional<FString>())
-          ->WithDuplicationAvoider(Data->HasField(ANSI_TO_TCHAR("duplicationAvoider")) ? TOptional<FString>(Data->GetStringField(ANSI_TO_TCHAR("duplicationAvoider"))) : TOptional<FString>());
+              }() : TOptional<FString>());
     }
 
     TSharedPtr<FJsonObject> FFreezeMasterDataRequest::ToJson() const
@@ -126,10 +112,6 @@ namespace Gs2::Distributor::Request
         if (AccessTokenValue.IsSet())
         {
             JsonRootObject->SetStringField("xGs2AccessToken", AccessTokenValue.GetValue());
-        }
-        if (DuplicationAvoiderValue.IsSet())
-        {
-            JsonRootObject->SetStringField("duplicationAvoider", DuplicationAvoiderValue.GetValue());
         }
         return JsonRootObject;
     }

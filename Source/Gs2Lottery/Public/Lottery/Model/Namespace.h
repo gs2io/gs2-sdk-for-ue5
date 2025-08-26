@@ -30,7 +30,6 @@ namespace Gs2::Lottery::Model
         TOptional<FString> DescriptionValue;
         TSharedPtr<FTransactionSetting> TransactionSettingValue;
         TOptional<FString> LotteryTriggerScriptIdValue;
-        TOptional<FString> ChoicePrizeTableScriptIdValue;
         TSharedPtr<FLogSetting> LogSettingValue;
         TOptional<int64> CreatedAtValue;
         TOptional<int64> UpdatedAtValue;
@@ -50,7 +49,6 @@ namespace Gs2::Lottery::Model
         TSharedPtr<FNamespace> WithDescription(const TOptional<FString> Description);
         TSharedPtr<FNamespace> WithTransactionSetting(const TSharedPtr<FTransactionSetting> TransactionSetting);
         TSharedPtr<FNamespace> WithLotteryTriggerScriptId(const TOptional<FString> LotteryTriggerScriptId);
-        TSharedPtr<FNamespace> WithChoicePrizeTableScriptId(const TOptional<FString> ChoicePrizeTableScriptId);
         TSharedPtr<FNamespace> WithLogSetting(const TSharedPtr<FLogSetting> LogSetting);
         TSharedPtr<FNamespace> WithCreatedAt(const TOptional<int64> CreatedAt);
         TSharedPtr<FNamespace> WithUpdatedAt(const TOptional<int64> UpdatedAt);
@@ -63,7 +61,6 @@ namespace Gs2::Lottery::Model
         TOptional<FString> GetDescription() const;
         TSharedPtr<FTransactionSetting> GetTransactionSetting() const;
         TOptional<FString> GetLotteryTriggerScriptId() const;
-        TOptional<FString> GetChoicePrizeTableScriptId() const;
         TSharedPtr<FLogSetting> GetLogSetting() const;
         TOptional<int64> GetCreatedAt() const;
         FString GetCreatedAtString() const;

@@ -36,6 +36,7 @@ namespace Gs2::Money2::Request
         TSharedPtr<Model::FPlatformSetting> PlatformSettingValue;
         TSharedPtr<Model::FScriptSetting> DepositBalanceScriptValue;
         TSharedPtr<Model::FScriptSetting> WithdrawBalanceScriptValue;
+        TSharedPtr<Model::FScriptSetting> VerifyReceiptScriptValue;
         TOptional<FString> SubscribeScriptValue;
         TOptional<FString> RenewScriptValue;
         TOptional<FString> UnsubscribeScriptValue;
@@ -58,6 +59,7 @@ namespace Gs2::Money2::Request
         TSharedPtr<FUpdateNamespaceRequest> WithPlatformSetting(const TSharedPtr<Model::FPlatformSetting> PlatformSetting);
         TSharedPtr<FUpdateNamespaceRequest> WithDepositBalanceScript(const TSharedPtr<Model::FScriptSetting> DepositBalanceScript);
         TSharedPtr<FUpdateNamespaceRequest> WithWithdrawBalanceScript(const TSharedPtr<Model::FScriptSetting> WithdrawBalanceScript);
+        TSharedPtr<FUpdateNamespaceRequest> WithVerifyReceiptScript(const TSharedPtr<Model::FScriptSetting> VerifyReceiptScript);
         TSharedPtr<FUpdateNamespaceRequest> WithSubscribeScript(const TOptional<FString> SubscribeScript);
         TSharedPtr<FUpdateNamespaceRequest> WithRenewScript(const TOptional<FString> RenewScript);
         TSharedPtr<FUpdateNamespaceRequest> WithUnsubscribeScript(const TOptional<FString> UnsubscribeScript);
@@ -72,6 +74,7 @@ namespace Gs2::Money2::Request
         TSharedPtr<Model::FPlatformSetting> GetPlatformSetting() const;
         TSharedPtr<Model::FScriptSetting> GetDepositBalanceScript() const;
         TSharedPtr<Model::FScriptSetting> GetWithdrawBalanceScript() const;
+        TSharedPtr<Model::FScriptSetting> GetVerifyReceiptScript() const;
         TOptional<FString> GetSubscribeScript() const;
         TOptional<FString> GetRenewScript() const;
         TOptional<FString> GetUnsubscribeScript() const;

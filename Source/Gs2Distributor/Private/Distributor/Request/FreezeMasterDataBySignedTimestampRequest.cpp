@@ -86,14 +86,6 @@ namespace Gs2::Distributor::Request
         return SharedThis(this);
     }
 
-    TSharedPtr<FFreezeMasterDataBySignedTimestampRequest> FFreezeMasterDataBySignedTimestampRequest::WithDuplicationAvoider(
-        const TOptional<FString> DuplicationAvoider
-    )
-    {
-        this->DuplicationAvoiderValue = DuplicationAvoider;
-        return SharedThis(this);
-    }
-
     TOptional<FString> FFreezeMasterDataBySignedTimestampRequest::GetContextStack() const
     {
         return ContextStackValue;
@@ -122,11 +114,6 @@ namespace Gs2::Distributor::Request
     TOptional<FString> FFreezeMasterDataBySignedTimestampRequest::GetKeyId() const
     {
         return KeyIdValue;
-    }
-
-    TOptional<FString> FFreezeMasterDataBySignedTimestampRequest::GetDuplicationAvoider() const
-    {
-        return DuplicationAvoiderValue;
     }
 
     TSharedPtr<FFreezeMasterDataBySignedTimestampRequest> FFreezeMasterDataBySignedTimestampRequest::FromJson(const TSharedPtr<FJsonObject> Data)
@@ -180,8 +167,7 @@ namespace Gs2::Distributor::Request
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
-              }() : TOptional<FString>())
-          ->WithDuplicationAvoider(Data->HasField(ANSI_TO_TCHAR("duplicationAvoider")) ? TOptional<FString>(Data->GetStringField(ANSI_TO_TCHAR("duplicationAvoider"))) : TOptional<FString>());
+              }() : TOptional<FString>());
     }
 
     TSharedPtr<FJsonObject> FFreezeMasterDataBySignedTimestampRequest::ToJson() const
@@ -210,10 +196,6 @@ namespace Gs2::Distributor::Request
         if (KeyIdValue.IsSet())
         {
             JsonRootObject->SetStringField("keyId", KeyIdValue.GetValue());
-        }
-        if (DuplicationAvoiderValue.IsSet())
-        {
-            JsonRootObject->SetStringField("duplicationAvoider", DuplicationAvoiderValue.GetValue());
         }
         return JsonRootObject;
     }

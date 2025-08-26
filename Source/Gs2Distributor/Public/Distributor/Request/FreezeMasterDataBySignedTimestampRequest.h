@@ -31,7 +31,6 @@ namespace Gs2::Distributor::Request
         TOptional<FString> BodyValue;
         TOptional<FString> SignatureValue;
         TOptional<FString> KeyIdValue;
-        TOptional<FString> DuplicationAvoiderValue;
         
     public:
         
@@ -47,7 +46,6 @@ namespace Gs2::Distributor::Request
         TSharedPtr<FFreezeMasterDataBySignedTimestampRequest> WithBody(const TOptional<FString> Body);
         TSharedPtr<FFreezeMasterDataBySignedTimestampRequest> WithSignature(const TOptional<FString> Signature);
         TSharedPtr<FFreezeMasterDataBySignedTimestampRequest> WithKeyId(const TOptional<FString> KeyId);
-        TSharedPtr<FFreezeMasterDataBySignedTimestampRequest> WithDuplicationAvoider(const TOptional<FString> DuplicationAvoider);
 
         TOptional<FString> GetContextStack() const;
         TOptional<FString> GetNamespaceName() const;
@@ -55,7 +53,6 @@ namespace Gs2::Distributor::Request
         TOptional<FString> GetBody() const;
         TOptional<FString> GetSignature() const;
         TOptional<FString> GetKeyId() const;
-        TOptional<FString> GetDuplicationAvoider() const;
 
         static TSharedPtr<FFreezeMasterDataBySignedTimestampRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;

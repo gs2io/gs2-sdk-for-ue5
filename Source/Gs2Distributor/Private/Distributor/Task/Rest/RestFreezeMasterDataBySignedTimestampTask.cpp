@@ -110,10 +110,6 @@ namespace Gs2::Distributor::Task::Rest
             {
                 request->SetHeader("X-GS2-ACCESS-TOKEN", this->Request->GetAccessToken().GetValue());
             }
-            if (this->Request->GetDuplicationAvoider().IsSet())
-            {
-                request->SetHeader("X-GS2-DUPLICATION-AVOIDER", this->Request->GetDuplicationAvoider().GetValue());
-            }
 
             request->ProcessRequest();
             UE_LOG(Gs2Log, VeryVerbose, TEXT("[%s] %s %s"), TEXT("POST"), ToCStr(Url), ToCStr(Body));

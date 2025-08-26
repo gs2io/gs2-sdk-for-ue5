@@ -29,7 +29,6 @@ namespace Gs2::Idle::Request
         TOptional<FString> NamespaceNameValue;
         TOptional<FString> AccessTokenValue;
         TOptional<FString> CategoryNameValue;
-        TOptional<FString> DuplicationAvoiderValue;
         
     public:
         
@@ -43,13 +42,11 @@ namespace Gs2::Idle::Request
         TSharedPtr<FPredictionRequest> WithNamespaceName(const TOptional<FString> NamespaceName);
         TSharedPtr<FPredictionRequest> WithAccessToken(const TOptional<FString> AccessToken);
         TSharedPtr<FPredictionRequest> WithCategoryName(const TOptional<FString> CategoryName);
-        TSharedPtr<FPredictionRequest> WithDuplicationAvoider(const TOptional<FString> DuplicationAvoider);
 
         TOptional<FString> GetContextStack() const;
         TOptional<FString> GetNamespaceName() const;
         TOptional<FString> GetAccessToken() const;
         TOptional<FString> GetCategoryName() const;
-        TOptional<FString> GetDuplicationAvoider() const;
 
         static TSharedPtr<FPredictionRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;

@@ -32,7 +32,6 @@ namespace Gs2::Lottery::Request
         TOptional<FString> DescriptionValue;
         TSharedPtr<Model::FTransactionSetting> TransactionSettingValue;
         TOptional<FString> LotteryTriggerScriptIdValue;
-        TOptional<FString> ChoicePrizeTableScriptIdValue;
         TSharedPtr<Model::FLogSetting> LogSettingValue;
         TOptional<FString> QueueNamespaceIdValue;
         TOptional<FString> KeyIdValue;
@@ -50,7 +49,6 @@ namespace Gs2::Lottery::Request
         TSharedPtr<FUpdateNamespaceRequest> WithDescription(const TOptional<FString> Description);
         TSharedPtr<FUpdateNamespaceRequest> WithTransactionSetting(const TSharedPtr<Model::FTransactionSetting> TransactionSetting);
         TSharedPtr<FUpdateNamespaceRequest> WithLotteryTriggerScriptId(const TOptional<FString> LotteryTriggerScriptId);
-        TSharedPtr<FUpdateNamespaceRequest> WithChoicePrizeTableScriptId(const TOptional<FString> ChoicePrizeTableScriptId);
         TSharedPtr<FUpdateNamespaceRequest> WithLogSetting(const TSharedPtr<Model::FLogSetting> LogSetting);
         TSharedPtr<FUpdateNamespaceRequest> WithQueueNamespaceId(const TOptional<FString> QueueNamespaceId);
         TSharedPtr<FUpdateNamespaceRequest> WithKeyId(const TOptional<FString> KeyId);
@@ -60,7 +58,6 @@ namespace Gs2::Lottery::Request
         TOptional<FString> GetDescription() const;
         TSharedPtr<Model::FTransactionSetting> GetTransactionSetting() const;
         TOptional<FString> GetLotteryTriggerScriptId() const;
-        TOptional<FString> GetChoicePrizeTableScriptId() const;
         TSharedPtr<Model::FLogSetting> GetLogSetting() const;
         TOptional<FString> GetQueueNamespaceId() const;
         TOptional<FString> GetKeyId() const;

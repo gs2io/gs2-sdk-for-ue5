@@ -29,7 +29,6 @@ namespace Gs2::Distributor::Request
         TOptional<FString> NamespaceNameValue;
         TOptional<FString> AccessTokenValue;
         TOptional<int64> TimestampValue;
-        TOptional<FString> DuplicationAvoiderValue;
         
     public:
         
@@ -43,14 +42,12 @@ namespace Gs2::Distributor::Request
         TSharedPtr<FFreezeMasterDataByTimestampRequest> WithNamespaceName(const TOptional<FString> NamespaceName);
         TSharedPtr<FFreezeMasterDataByTimestampRequest> WithAccessToken(const TOptional<FString> AccessToken);
         TSharedPtr<FFreezeMasterDataByTimestampRequest> WithTimestamp(const TOptional<int64> Timestamp);
-        TSharedPtr<FFreezeMasterDataByTimestampRequest> WithDuplicationAvoider(const TOptional<FString> DuplicationAvoider);
 
         TOptional<FString> GetContextStack() const;
         TOptional<FString> GetNamespaceName() const;
         TOptional<FString> GetAccessToken() const;
         TOptional<int64> GetTimestamp() const;
         FString GetTimestampString() const;
-        TOptional<FString> GetDuplicationAvoider() const;
 
         static TSharedPtr<FFreezeMasterDataByTimestampRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;

@@ -106,6 +106,10 @@ namespace Gs2::Money2::Task::Rest
             {
                 JsonRootObject->SetObjectField("withdrawBalanceScript", this->Request->GetWithdrawBalanceScript()->ToJson());
             }
+            if (this->Request->GetVerifyReceiptScript() != nullptr && this->Request->GetVerifyReceiptScript().IsValid())
+            {
+                JsonRootObject->SetObjectField("verifyReceiptScript", this->Request->GetVerifyReceiptScript()->ToJson());
+            }
             if (this->Request->GetSubscribeScript().IsSet())
             {
                 JsonRootObject->SetStringField("subscribeScript", this->Request->GetSubscribeScript().GetValue());

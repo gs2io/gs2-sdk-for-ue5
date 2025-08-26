@@ -66,14 +66,6 @@ namespace Gs2::Idle::Request
         return SharedThis(this);
     }
 
-    TSharedPtr<FPredictionRequest> FPredictionRequest::WithDuplicationAvoider(
-        const TOptional<FString> DuplicationAvoider
-    )
-    {
-        this->DuplicationAvoiderValue = DuplicationAvoider;
-        return SharedThis(this);
-    }
-
     TOptional<FString> FPredictionRequest::GetContextStack() const
     {
         return ContextStackValue;
@@ -92,11 +84,6 @@ namespace Gs2::Idle::Request
     TOptional<FString> FPredictionRequest::GetCategoryName() const
     {
         return CategoryNameValue;
-    }
-
-    TOptional<FString> FPredictionRequest::GetDuplicationAvoider() const
-    {
-        return DuplicationAvoiderValue;
     }
 
     TSharedPtr<FPredictionRequest> FPredictionRequest::FromJson(const TSharedPtr<FJsonObject> Data)
@@ -132,8 +119,7 @@ namespace Gs2::Idle::Request
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
-              }() : TOptional<FString>())
-          ->WithDuplicationAvoider(Data->HasField(ANSI_TO_TCHAR("duplicationAvoider")) ? TOptional<FString>(Data->GetStringField(ANSI_TO_TCHAR("duplicationAvoider"))) : TOptional<FString>());
+              }() : TOptional<FString>());
     }
 
     TSharedPtr<FJsonObject> FPredictionRequest::ToJson() const
@@ -154,10 +140,6 @@ namespace Gs2::Idle::Request
         if (CategoryNameValue.IsSet())
         {
             JsonRootObject->SetStringField("categoryName", CategoryNameValue.GetValue());
-        }
-        if (DuplicationAvoiderValue.IsSet())
-        {
-            JsonRootObject->SetStringField("duplicationAvoider", DuplicationAvoiderValue.GetValue());
         }
         return JsonRootObject;
     }

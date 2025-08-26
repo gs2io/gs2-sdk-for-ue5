@@ -28,7 +28,6 @@ namespace Gs2::Distributor::Request
         TOptional<FString> ContextStackValue;
         TOptional<FString> NamespaceNameValue;
         TOptional<FString> AccessTokenValue;
-        TOptional<FString> DuplicationAvoiderValue;
         
     public:
         
@@ -41,12 +40,10 @@ namespace Gs2::Distributor::Request
         TSharedPtr<FFreezeMasterDataRequest> WithContextStack(const TOptional<FString> ContextStack);
         TSharedPtr<FFreezeMasterDataRequest> WithNamespaceName(const TOptional<FString> NamespaceName);
         TSharedPtr<FFreezeMasterDataRequest> WithAccessToken(const TOptional<FString> AccessToken);
-        TSharedPtr<FFreezeMasterDataRequest> WithDuplicationAvoider(const TOptional<FString> DuplicationAvoider);
 
         TOptional<FString> GetContextStack() const;
         TOptional<FString> GetNamespaceName() const;
         TOptional<FString> GetAccessToken() const;
-        TOptional<FString> GetDuplicationAvoider() const;
 
         static TSharedPtr<FFreezeMasterDataRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;

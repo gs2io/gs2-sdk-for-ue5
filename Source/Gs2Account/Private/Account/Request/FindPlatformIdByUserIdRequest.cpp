@@ -86,14 +86,6 @@ namespace Gs2::Account::Request
         return SharedThis(this);
     }
 
-    TSharedPtr<FFindPlatformIdByUserIdRequest> FFindPlatformIdByUserIdRequest::WithDuplicationAvoider(
-        const TOptional<FString> DuplicationAvoider
-    )
-    {
-        this->DuplicationAvoiderValue = DuplicationAvoider;
-        return SharedThis(this);
-    }
-
     TOptional<FString> FFindPlatformIdByUserIdRequest::GetContextStack() const
     {
         return ContextStackValue;
@@ -131,11 +123,6 @@ namespace Gs2::Account::Request
     TOptional<FString> FFindPlatformIdByUserIdRequest::GetTimeOffsetToken() const
     {
         return TimeOffsetTokenValue;
-    }
-
-    TOptional<FString> FFindPlatformIdByUserIdRequest::GetDuplicationAvoider() const
-    {
-        return DuplicationAvoiderValue;
     }
 
     TSharedPtr<FFindPlatformIdByUserIdRequest> FFindPlatformIdByUserIdRequest::FromJson(const TSharedPtr<FJsonObject> Data)
@@ -189,8 +176,7 @@ namespace Gs2::Account::Request
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
-              }() : TOptional<FString>())
-          ->WithDuplicationAvoider(Data->HasField(ANSI_TO_TCHAR("duplicationAvoider")) ? TOptional<FString>(Data->GetStringField(ANSI_TO_TCHAR("duplicationAvoider"))) : TOptional<FString>());
+              }() : TOptional<FString>());
     }
 
     TSharedPtr<FJsonObject> FFindPlatformIdByUserIdRequest::ToJson() const
@@ -219,10 +205,6 @@ namespace Gs2::Account::Request
         if (TimeOffsetTokenValue.IsSet())
         {
             JsonRootObject->SetStringField("timeOffsetToken", TimeOffsetTokenValue.GetValue());
-        }
-        if (DuplicationAvoiderValue.IsSet())
-        {
-            JsonRootObject->SetStringField("duplicationAvoider", DuplicationAvoiderValue.GetValue());
         }
         return JsonRootObject;
     }

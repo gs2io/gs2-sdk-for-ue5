@@ -30,7 +30,6 @@ namespace Gs2::Idle::Request
         TOptional<FString> UserIdValue;
         TOptional<FString> CategoryNameValue;
         TOptional<FString> TimeOffsetTokenValue;
-        TOptional<FString> DuplicationAvoiderValue;
         
     public:
         
@@ -45,14 +44,12 @@ namespace Gs2::Idle::Request
         TSharedPtr<FPredictionByUserIdRequest> WithUserId(const TOptional<FString> UserId);
         TSharedPtr<FPredictionByUserIdRequest> WithCategoryName(const TOptional<FString> CategoryName);
         TSharedPtr<FPredictionByUserIdRequest> WithTimeOffsetToken(const TOptional<FString> TimeOffsetToken);
-        TSharedPtr<FPredictionByUserIdRequest> WithDuplicationAvoider(const TOptional<FString> DuplicationAvoider);
 
         TOptional<FString> GetContextStack() const;
         TOptional<FString> GetNamespaceName() const;
         TOptional<FString> GetUserId() const;
         TOptional<FString> GetCategoryName() const;
         TOptional<FString> GetTimeOffsetToken() const;
-        TOptional<FString> GetDuplicationAvoider() const;
 
         static TSharedPtr<FPredictionByUserIdRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;

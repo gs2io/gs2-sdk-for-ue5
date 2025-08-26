@@ -30,7 +30,6 @@ namespace Gs2::Account::Request
         TOptional<FString> AccessTokenValue;
         TOptional<int32> TypeValue;
         TOptional<FString> UserIdentifierValue;
-        TOptional<FString> DuplicationAvoiderValue;
         
     public:
         
@@ -45,7 +44,6 @@ namespace Gs2::Account::Request
         TSharedPtr<FFindPlatformIdRequest> WithAccessToken(const TOptional<FString> AccessToken);
         TSharedPtr<FFindPlatformIdRequest> WithType(const TOptional<int32> Type);
         TSharedPtr<FFindPlatformIdRequest> WithUserIdentifier(const TOptional<FString> UserIdentifier);
-        TSharedPtr<FFindPlatformIdRequest> WithDuplicationAvoider(const TOptional<FString> DuplicationAvoider);
 
         TOptional<FString> GetContextStack() const;
         TOptional<FString> GetNamespaceName() const;
@@ -53,7 +51,6 @@ namespace Gs2::Account::Request
         TOptional<int32> GetType() const;
         FString GetTypeString() const;
         TOptional<FString> GetUserIdentifier() const;
-        TOptional<FString> GetDuplicationAvoider() const;
 
         static TSharedPtr<FFindPlatformIdRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;

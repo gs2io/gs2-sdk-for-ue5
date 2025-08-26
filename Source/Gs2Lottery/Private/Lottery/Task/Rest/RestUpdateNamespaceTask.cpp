@@ -96,10 +96,6 @@ namespace Gs2::Lottery::Task::Rest
             {
                 JsonRootObject->SetStringField("lotteryTriggerScriptId", this->Request->GetLotteryTriggerScriptId().GetValue());
             }
-            if (this->Request->GetChoicePrizeTableScriptId().IsSet())
-            {
-                JsonRootObject->SetStringField("choicePrizeTableScriptId", this->Request->GetChoicePrizeTableScriptId().GetValue());
-            }
             if (this->Request->GetLogSetting() != nullptr && this->Request->GetLogSetting().IsValid())
             {
                 JsonRootObject->SetObjectField("logSetting", this->Request->GetLogSetting()->ToJson());

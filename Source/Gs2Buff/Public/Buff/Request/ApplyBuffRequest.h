@@ -28,7 +28,6 @@ namespace Gs2::Buff::Request
         TOptional<FString> ContextStackValue;
         TOptional<FString> NamespaceNameValue;
         TOptional<FString> AccessTokenValue;
-        TOptional<FString> DuplicationAvoiderValue;
         
     public:
         
@@ -41,12 +40,10 @@ namespace Gs2::Buff::Request
         TSharedPtr<FApplyBuffRequest> WithContextStack(const TOptional<FString> ContextStack);
         TSharedPtr<FApplyBuffRequest> WithNamespaceName(const TOptional<FString> NamespaceName);
         TSharedPtr<FApplyBuffRequest> WithAccessToken(const TOptional<FString> AccessToken);
-        TSharedPtr<FApplyBuffRequest> WithDuplicationAvoider(const TOptional<FString> DuplicationAvoider);
 
         TOptional<FString> GetContextStack() const;
         TOptional<FString> GetNamespaceName() const;
         TOptional<FString> GetAccessToken() const;
-        TOptional<FString> GetDuplicationAvoider() const;
 
         static TSharedPtr<FApplyBuffRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;
