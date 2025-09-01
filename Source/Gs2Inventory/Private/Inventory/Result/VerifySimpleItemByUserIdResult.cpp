@@ -18,14 +18,33 @@
 
 namespace Gs2::Inventory::Result
 {
-    FVerifySimpleItemByUserIdResult::FVerifySimpleItemByUserIdResult()
+    FVerifySimpleItemByUserIdResult::FVerifySimpleItemByUserIdResult():
+        ItemValue(nullptr)
     {
     }
 
     FVerifySimpleItemByUserIdResult::FVerifySimpleItemByUserIdResult(
         const FVerifySimpleItemByUserIdResult& From
+    ):
+        ItemValue(From.ItemValue)
+    {
+    }
+
+    TSharedPtr<FVerifySimpleItemByUserIdResult> FVerifySimpleItemByUserIdResult::WithItem(
+        const TSharedPtr<Model::FSimpleItem> Item
     )
     {
+        this->ItemValue = Item;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<Model::FSimpleItem> FVerifySimpleItemByUserIdResult::GetItem() const
+    {
+        if (!ItemValue.IsValid())
+        {
+            return nullptr;
+        }
+        return ItemValue;
     }
 
     TSharedPtr<FVerifySimpleItemByUserIdResult> FVerifySimpleItemByUserIdResult::FromJson(const TSharedPtr<FJsonObject> Data)
@@ -33,12 +52,24 @@ namespace Gs2::Inventory::Result
         if (Data == nullptr) {
             return nullptr;
         }
-        return MakeShared<FVerifySimpleItemByUserIdResult>();
+        return MakeShared<FVerifySimpleItemByUserIdResult>()
+            ->WithItem(Data->HasField(ANSI_TO_TCHAR("item")) ? [Data]() -> Model::FSimpleItemPtr
+                 {
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("item")))
+                    {
+                        return nullptr;
+                    }
+                    return Model::FSimpleItem::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("item")));
+                 }() : nullptr);
     }
 
     TSharedPtr<FJsonObject> FVerifySimpleItemByUserIdResult::ToJson() const
     {
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
+        if (ItemValue != nullptr && ItemValue.IsValid())
+        {
+            JsonRootObject->SetObjectField("item", ItemValue->ToJson());
+        }
         return JsonRootObject;
     }
 }

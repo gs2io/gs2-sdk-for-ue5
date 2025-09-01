@@ -19,6 +19,7 @@
 namespace Gs2::Mission::Result
 {
     FVerifyCompleteByStampTaskResult::FVerifyCompleteByStampTaskResult():
+        ItemValue(nullptr),
         NewContextStackValue(TOptional<FString>())
     {
     }
@@ -26,8 +27,17 @@ namespace Gs2::Mission::Result
     FVerifyCompleteByStampTaskResult::FVerifyCompleteByStampTaskResult(
         const FVerifyCompleteByStampTaskResult& From
     ):
+        ItemValue(From.ItemValue),
         NewContextStackValue(From.NewContextStackValue)
     {
+    }
+
+    TSharedPtr<FVerifyCompleteByStampTaskResult> FVerifyCompleteByStampTaskResult::WithItem(
+        const TSharedPtr<Model::FComplete> Item
+    )
+    {
+        this->ItemValue = Item;
+        return SharedThis(this);
     }
 
     TSharedPtr<FVerifyCompleteByStampTaskResult> FVerifyCompleteByStampTaskResult::WithNewContextStack(
@@ -36,6 +46,15 @@ namespace Gs2::Mission::Result
     {
         this->NewContextStackValue = NewContextStack;
         return SharedThis(this);
+    }
+
+    TSharedPtr<Model::FComplete> FVerifyCompleteByStampTaskResult::GetItem() const
+    {
+        if (!ItemValue.IsValid())
+        {
+            return nullptr;
+        }
+        return ItemValue;
     }
 
     TOptional<FString> FVerifyCompleteByStampTaskResult::GetNewContextStack() const
@@ -49,6 +68,14 @@ namespace Gs2::Mission::Result
             return nullptr;
         }
         return MakeShared<FVerifyCompleteByStampTaskResult>()
+            ->WithItem(Data->HasField(ANSI_TO_TCHAR("item")) ? [Data]() -> Model::FCompletePtr
+                 {
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("item")))
+                    {
+                        return nullptr;
+                    }
+                    return Model::FComplete::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("item")));
+                 }() : nullptr)
             ->WithNewContextStack(Data->HasField(ANSI_TO_TCHAR("newContextStack")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
@@ -63,6 +90,10 @@ namespace Gs2::Mission::Result
     TSharedPtr<FJsonObject> FVerifyCompleteByStampTaskResult::ToJson() const
     {
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
+        if (ItemValue != nullptr && ItemValue.IsValid())
+        {
+            JsonRootObject->SetObjectField("item", ItemValue->ToJson());
+        }
         if (NewContextStackValue.IsSet())
         {
             JsonRootObject->SetStringField("newContextStack", NewContextStackValue.GetValue());

@@ -18,14 +18,33 @@
 
 namespace Gs2::Stamina::Result
 {
-    FVerifyStaminaOverflowValueResult::FVerifyStaminaOverflowValueResult()
+    FVerifyStaminaOverflowValueResult::FVerifyStaminaOverflowValueResult():
+        ItemValue(nullptr)
     {
     }
 
     FVerifyStaminaOverflowValueResult::FVerifyStaminaOverflowValueResult(
         const FVerifyStaminaOverflowValueResult& From
+    ):
+        ItemValue(From.ItemValue)
+    {
+    }
+
+    TSharedPtr<FVerifyStaminaOverflowValueResult> FVerifyStaminaOverflowValueResult::WithItem(
+        const TSharedPtr<Model::FStamina> Item
     )
     {
+        this->ItemValue = Item;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<Model::FStamina> FVerifyStaminaOverflowValueResult::GetItem() const
+    {
+        if (!ItemValue.IsValid())
+        {
+            return nullptr;
+        }
+        return ItemValue;
     }
 
     TSharedPtr<FVerifyStaminaOverflowValueResult> FVerifyStaminaOverflowValueResult::FromJson(const TSharedPtr<FJsonObject> Data)
@@ -33,12 +52,24 @@ namespace Gs2::Stamina::Result
         if (Data == nullptr) {
             return nullptr;
         }
-        return MakeShared<FVerifyStaminaOverflowValueResult>();
+        return MakeShared<FVerifyStaminaOverflowValueResult>()
+            ->WithItem(Data->HasField(ANSI_TO_TCHAR("item")) ? [Data]() -> Model::FStaminaPtr
+                 {
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("item")))
+                    {
+                        return nullptr;
+                    }
+                    return Model::FStamina::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("item")));
+                 }() : nullptr);
     }
 
     TSharedPtr<FJsonObject> FVerifyStaminaOverflowValueResult::ToJson() const
     {
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
+        if (ItemValue != nullptr && ItemValue.IsValid())
+        {
+            JsonRootObject->SetObjectField("item", ItemValue->ToJson());
+        }
         return JsonRootObject;
     }
 }

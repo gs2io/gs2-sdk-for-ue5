@@ -17,11 +17,13 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "../Model/Stamina.h"
 
 namespace Gs2::Stamina::Result
 {
     class GS2STAMINA_API FVerifyStaminaOverflowValueByStampTaskResult final : public TSharedFromThis<FVerifyStaminaOverflowValueByStampTaskResult>
     {
+        TSharedPtr<Model::FStamina> ItemValue;
         TOptional<FString> NewContextStackValue;
         
     public:
@@ -32,8 +34,10 @@ namespace Gs2::Stamina::Result
         );
         ~FVerifyStaminaOverflowValueByStampTaskResult() = default;
 
+        TSharedPtr<FVerifyStaminaOverflowValueByStampTaskResult> WithItem(const TSharedPtr<Model::FStamina> Item);
         TSharedPtr<FVerifyStaminaOverflowValueByStampTaskResult> WithNewContextStack(const TOptional<FString> NewContextStack);
 
+        TSharedPtr<Model::FStamina> GetItem() const;
         TOptional<FString> GetNewContextStack() const;
 
         static TSharedPtr<FVerifyStaminaOverflowValueByStampTaskResult> FromJson(const TSharedPtr<FJsonObject> Data);

@@ -17,11 +17,13 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "../Model/Counter.h"
 
 namespace Gs2::Mission::Result
 {
     class GS2MISSION_API FVerifyCounterValueResult final : public TSharedFromThis<FVerifyCounterValueResult>
     {
+        TSharedPtr<Model::FCounter> ItemValue;
         
     public:
         
@@ -31,7 +33,9 @@ namespace Gs2::Mission::Result
         );
         ~FVerifyCounterValueResult() = default;
 
+        TSharedPtr<FVerifyCounterValueResult> WithItem(const TSharedPtr<Model::FCounter> Item);
 
+        TSharedPtr<Model::FCounter> GetItem() const;
 
         static TSharedPtr<FVerifyCounterValueResult> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;

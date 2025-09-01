@@ -17,11 +17,13 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "../Model/Trigger.h"
 
 namespace Gs2::Schedule::Result
 {
     class GS2SCHEDULE_API FVerifyTriggerByStampTaskResult final : public TSharedFromThis<FVerifyTriggerByStampTaskResult>
     {
+        TSharedPtr<Model::FTrigger> ItemValue;
         TOptional<FString> NewContextStackValue;
         
     public:
@@ -32,8 +34,10 @@ namespace Gs2::Schedule::Result
         );
         ~FVerifyTriggerByStampTaskResult() = default;
 
+        TSharedPtr<FVerifyTriggerByStampTaskResult> WithItem(const TSharedPtr<Model::FTrigger> Item);
         TSharedPtr<FVerifyTriggerByStampTaskResult> WithNewContextStack(const TOptional<FString> NewContextStack);
 
+        TSharedPtr<Model::FTrigger> GetItem() const;
         TOptional<FString> GetNewContextStack() const;
 
         static TSharedPtr<FVerifyTriggerByStampTaskResult> FromJson(const TSharedPtr<FJsonObject> Data);

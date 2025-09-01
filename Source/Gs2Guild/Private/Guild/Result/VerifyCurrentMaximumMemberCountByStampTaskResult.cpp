@@ -19,6 +19,7 @@
 namespace Gs2::Guild::Result
 {
     FVerifyCurrentMaximumMemberCountByStampTaskResult::FVerifyCurrentMaximumMemberCountByStampTaskResult():
+        ItemValue(nullptr),
         NewContextStackValue(TOptional<FString>())
     {
     }
@@ -26,8 +27,17 @@ namespace Gs2::Guild::Result
     FVerifyCurrentMaximumMemberCountByStampTaskResult::FVerifyCurrentMaximumMemberCountByStampTaskResult(
         const FVerifyCurrentMaximumMemberCountByStampTaskResult& From
     ):
+        ItemValue(From.ItemValue),
         NewContextStackValue(From.NewContextStackValue)
     {
+    }
+
+    TSharedPtr<FVerifyCurrentMaximumMemberCountByStampTaskResult> FVerifyCurrentMaximumMemberCountByStampTaskResult::WithItem(
+        const TSharedPtr<Model::FGuild> Item
+    )
+    {
+        this->ItemValue = Item;
+        return SharedThis(this);
     }
 
     TSharedPtr<FVerifyCurrentMaximumMemberCountByStampTaskResult> FVerifyCurrentMaximumMemberCountByStampTaskResult::WithNewContextStack(
@@ -36,6 +46,15 @@ namespace Gs2::Guild::Result
     {
         this->NewContextStackValue = NewContextStack;
         return SharedThis(this);
+    }
+
+    TSharedPtr<Model::FGuild> FVerifyCurrentMaximumMemberCountByStampTaskResult::GetItem() const
+    {
+        if (!ItemValue.IsValid())
+        {
+            return nullptr;
+        }
+        return ItemValue;
     }
 
     TOptional<FString> FVerifyCurrentMaximumMemberCountByStampTaskResult::GetNewContextStack() const
@@ -49,6 +68,14 @@ namespace Gs2::Guild::Result
             return nullptr;
         }
         return MakeShared<FVerifyCurrentMaximumMemberCountByStampTaskResult>()
+            ->WithItem(Data->HasField(ANSI_TO_TCHAR("item")) ? [Data]() -> Model::FGuildPtr
+                 {
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("item")))
+                    {
+                        return nullptr;
+                    }
+                    return Model::FGuild::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("item")));
+                 }() : nullptr)
             ->WithNewContextStack(Data->HasField(ANSI_TO_TCHAR("newContextStack")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
@@ -63,6 +90,10 @@ namespace Gs2::Guild::Result
     TSharedPtr<FJsonObject> FVerifyCurrentMaximumMemberCountByStampTaskResult::ToJson() const
     {
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
+        if (ItemValue != nullptr && ItemValue.IsValid())
+        {
+            JsonRootObject->SetObjectField("item", ItemValue->ToJson());
+        }
         if (NewContextStackValue.IsSet())
         {
             JsonRootObject->SetStringField("newContextStack", NewContextStackValue.GetValue());

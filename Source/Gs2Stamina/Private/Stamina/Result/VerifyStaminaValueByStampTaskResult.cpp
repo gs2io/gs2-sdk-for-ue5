@@ -19,6 +19,7 @@
 namespace Gs2::Stamina::Result
 {
     FVerifyStaminaValueByStampTaskResult::FVerifyStaminaValueByStampTaskResult():
+        ItemValue(nullptr),
         NewContextStackValue(TOptional<FString>())
     {
     }
@@ -26,8 +27,17 @@ namespace Gs2::Stamina::Result
     FVerifyStaminaValueByStampTaskResult::FVerifyStaminaValueByStampTaskResult(
         const FVerifyStaminaValueByStampTaskResult& From
     ):
+        ItemValue(From.ItemValue),
         NewContextStackValue(From.NewContextStackValue)
     {
+    }
+
+    TSharedPtr<FVerifyStaminaValueByStampTaskResult> FVerifyStaminaValueByStampTaskResult::WithItem(
+        const TSharedPtr<Model::FStamina> Item
+    )
+    {
+        this->ItemValue = Item;
+        return SharedThis(this);
     }
 
     TSharedPtr<FVerifyStaminaValueByStampTaskResult> FVerifyStaminaValueByStampTaskResult::WithNewContextStack(
@@ -36,6 +46,15 @@ namespace Gs2::Stamina::Result
     {
         this->NewContextStackValue = NewContextStack;
         return SharedThis(this);
+    }
+
+    TSharedPtr<Model::FStamina> FVerifyStaminaValueByStampTaskResult::GetItem() const
+    {
+        if (!ItemValue.IsValid())
+        {
+            return nullptr;
+        }
+        return ItemValue;
     }
 
     TOptional<FString> FVerifyStaminaValueByStampTaskResult::GetNewContextStack() const
@@ -49,6 +68,14 @@ namespace Gs2::Stamina::Result
             return nullptr;
         }
         return MakeShared<FVerifyStaminaValueByStampTaskResult>()
+            ->WithItem(Data->HasField(ANSI_TO_TCHAR("item")) ? [Data]() -> Model::FStaminaPtr
+                 {
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("item")))
+                    {
+                        return nullptr;
+                    }
+                    return Model::FStamina::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("item")));
+                 }() : nullptr)
             ->WithNewContextStack(Data->HasField(ANSI_TO_TCHAR("newContextStack")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
@@ -63,6 +90,10 @@ namespace Gs2::Stamina::Result
     TSharedPtr<FJsonObject> FVerifyStaminaValueByStampTaskResult::ToJson() const
     {
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
+        if (ItemValue != nullptr && ItemValue.IsValid())
+        {
+            JsonRootObject->SetObjectField("item", ItemValue->ToJson());
+        }
         if (NewContextStackValue.IsSet())
         {
             JsonRootObject->SetStringField("newContextStack", NewContextStackValue.GetValue());

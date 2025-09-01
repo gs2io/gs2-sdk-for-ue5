@@ -17,11 +17,13 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "../Model/SeasonGathering.h"
 
 namespace Gs2::Matchmaking::Result
 {
     class GS2MATCHMAKING_API FVerifyIncludeParticipantByStampTaskResult final : public TSharedFromThis<FVerifyIncludeParticipantByStampTaskResult>
     {
+        TSharedPtr<Model::FSeasonGathering> ItemValue;
         TOptional<FString> NewContextStackValue;
         
     public:
@@ -32,8 +34,10 @@ namespace Gs2::Matchmaking::Result
         );
         ~FVerifyIncludeParticipantByStampTaskResult() = default;
 
+        TSharedPtr<FVerifyIncludeParticipantByStampTaskResult> WithItem(const TSharedPtr<Model::FSeasonGathering> Item);
         TSharedPtr<FVerifyIncludeParticipantByStampTaskResult> WithNewContextStack(const TOptional<FString> NewContextStack);
 
+        TSharedPtr<Model::FSeasonGathering> GetItem() const;
         TOptional<FString> GetNewContextStack() const;
 
         static TSharedPtr<FVerifyIncludeParticipantByStampTaskResult> FromJson(const TSharedPtr<FJsonObject> Data);

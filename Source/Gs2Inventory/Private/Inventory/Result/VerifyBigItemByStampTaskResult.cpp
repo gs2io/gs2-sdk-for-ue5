@@ -19,6 +19,7 @@
 namespace Gs2::Inventory::Result
 {
     FVerifyBigItemByStampTaskResult::FVerifyBigItemByStampTaskResult():
+        ItemValue(nullptr),
         NewContextStackValue(TOptional<FString>())
     {
     }
@@ -26,8 +27,17 @@ namespace Gs2::Inventory::Result
     FVerifyBigItemByStampTaskResult::FVerifyBigItemByStampTaskResult(
         const FVerifyBigItemByStampTaskResult& From
     ):
+        ItemValue(From.ItemValue),
         NewContextStackValue(From.NewContextStackValue)
     {
+    }
+
+    TSharedPtr<FVerifyBigItemByStampTaskResult> FVerifyBigItemByStampTaskResult::WithItem(
+        const TSharedPtr<Model::FBigItem> Item
+    )
+    {
+        this->ItemValue = Item;
+        return SharedThis(this);
     }
 
     TSharedPtr<FVerifyBigItemByStampTaskResult> FVerifyBigItemByStampTaskResult::WithNewContextStack(
@@ -36,6 +46,15 @@ namespace Gs2::Inventory::Result
     {
         this->NewContextStackValue = NewContextStack;
         return SharedThis(this);
+    }
+
+    TSharedPtr<Model::FBigItem> FVerifyBigItemByStampTaskResult::GetItem() const
+    {
+        if (!ItemValue.IsValid())
+        {
+            return nullptr;
+        }
+        return ItemValue;
     }
 
     TOptional<FString> FVerifyBigItemByStampTaskResult::GetNewContextStack() const
@@ -49,6 +68,14 @@ namespace Gs2::Inventory::Result
             return nullptr;
         }
         return MakeShared<FVerifyBigItemByStampTaskResult>()
+            ->WithItem(Data->HasField(ANSI_TO_TCHAR("item")) ? [Data]() -> Model::FBigItemPtr
+                 {
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("item")))
+                    {
+                        return nullptr;
+                    }
+                    return Model::FBigItem::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("item")));
+                 }() : nullptr)
             ->WithNewContextStack(Data->HasField(ANSI_TO_TCHAR("newContextStack")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
@@ -63,6 +90,10 @@ namespace Gs2::Inventory::Result
     TSharedPtr<FJsonObject> FVerifyBigItemByStampTaskResult::ToJson() const
     {
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
+        if (ItemValue != nullptr && ItemValue.IsValid())
+        {
+            JsonRootObject->SetObjectField("item", ItemValue->ToJson());
+        }
         if (NewContextStackValue.IsSet())
         {
             JsonRootObject->SetStringField("newContextStack", NewContextStackValue.GetValue());

@@ -18,14 +18,33 @@
 
 namespace Gs2::Experience::Result
 {
-    FVerifyRankCapByUserIdResult::FVerifyRankCapByUserIdResult()
+    FVerifyRankCapByUserIdResult::FVerifyRankCapByUserIdResult():
+        ItemValue(nullptr)
     {
     }
 
     FVerifyRankCapByUserIdResult::FVerifyRankCapByUserIdResult(
         const FVerifyRankCapByUserIdResult& From
+    ):
+        ItemValue(From.ItemValue)
+    {
+    }
+
+    TSharedPtr<FVerifyRankCapByUserIdResult> FVerifyRankCapByUserIdResult::WithItem(
+        const TSharedPtr<Model::FStatus> Item
     )
     {
+        this->ItemValue = Item;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<Model::FStatus> FVerifyRankCapByUserIdResult::GetItem() const
+    {
+        if (!ItemValue.IsValid())
+        {
+            return nullptr;
+        }
+        return ItemValue;
     }
 
     TSharedPtr<FVerifyRankCapByUserIdResult> FVerifyRankCapByUserIdResult::FromJson(const TSharedPtr<FJsonObject> Data)
@@ -33,12 +52,24 @@ namespace Gs2::Experience::Result
         if (Data == nullptr) {
             return nullptr;
         }
-        return MakeShared<FVerifyRankCapByUserIdResult>();
+        return MakeShared<FVerifyRankCapByUserIdResult>()
+            ->WithItem(Data->HasField(ANSI_TO_TCHAR("item")) ? [Data]() -> Model::FStatusPtr
+                 {
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("item")))
+                    {
+                        return nullptr;
+                    }
+                    return Model::FStatus::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("item")));
+                 }() : nullptr);
     }
 
     TSharedPtr<FJsonObject> FVerifyRankCapByUserIdResult::ToJson() const
     {
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
+        if (ItemValue != nullptr && ItemValue.IsValid())
+        {
+            JsonRootObject->SetObjectField("item", ItemValue->ToJson());
+        }
         return JsonRootObject;
     }
 }

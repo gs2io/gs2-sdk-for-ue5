@@ -17,11 +17,13 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "../Model/Stamina.h"
 
 namespace Gs2::Stamina::Result
 {
     class GS2STAMINA_API FVerifyStaminaRecoverIntervalMinutesByStampTaskResult final : public TSharedFromThis<FVerifyStaminaRecoverIntervalMinutesByStampTaskResult>
     {
+        TSharedPtr<Model::FStamina> ItemValue;
         TOptional<FString> NewContextStackValue;
         
     public:
@@ -32,8 +34,10 @@ namespace Gs2::Stamina::Result
         );
         ~FVerifyStaminaRecoverIntervalMinutesByStampTaskResult() = default;
 
+        TSharedPtr<FVerifyStaminaRecoverIntervalMinutesByStampTaskResult> WithItem(const TSharedPtr<Model::FStamina> Item);
         TSharedPtr<FVerifyStaminaRecoverIntervalMinutesByStampTaskResult> WithNewContextStack(const TOptional<FString> NewContextStack);
 
+        TSharedPtr<Model::FStamina> GetItem() const;
         TOptional<FString> GetNewContextStack() const;
 
         static TSharedPtr<FVerifyStaminaRecoverIntervalMinutesByStampTaskResult> FromJson(const TSharedPtr<FJsonObject> Data);

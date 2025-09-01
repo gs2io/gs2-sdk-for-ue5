@@ -18,14 +18,33 @@
 
 namespace Gs2::Grade::Result
 {
-    FVerifyGradeByUserIdResult::FVerifyGradeByUserIdResult()
+    FVerifyGradeByUserIdResult::FVerifyGradeByUserIdResult():
+        ItemValue(nullptr)
     {
     }
 
     FVerifyGradeByUserIdResult::FVerifyGradeByUserIdResult(
         const FVerifyGradeByUserIdResult& From
+    ):
+        ItemValue(From.ItemValue)
+    {
+    }
+
+    TSharedPtr<FVerifyGradeByUserIdResult> FVerifyGradeByUserIdResult::WithItem(
+        const TSharedPtr<Model::FStatus> Item
     )
     {
+        this->ItemValue = Item;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<Model::FStatus> FVerifyGradeByUserIdResult::GetItem() const
+    {
+        if (!ItemValue.IsValid())
+        {
+            return nullptr;
+        }
+        return ItemValue;
     }
 
     TSharedPtr<FVerifyGradeByUserIdResult> FVerifyGradeByUserIdResult::FromJson(const TSharedPtr<FJsonObject> Data)
@@ -33,12 +52,24 @@ namespace Gs2::Grade::Result
         if (Data == nullptr) {
             return nullptr;
         }
-        return MakeShared<FVerifyGradeByUserIdResult>();
+        return MakeShared<FVerifyGradeByUserIdResult>()
+            ->WithItem(Data->HasField(ANSI_TO_TCHAR("item")) ? [Data]() -> Model::FStatusPtr
+                 {
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("item")))
+                    {
+                        return nullptr;
+                    }
+                    return Model::FStatus::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("item")));
+                 }() : nullptr);
     }
 
     TSharedPtr<FJsonObject> FVerifyGradeByUserIdResult::ToJson() const
     {
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
+        if (ItemValue != nullptr && ItemValue.IsValid())
+        {
+            JsonRootObject->SetObjectField("item", ItemValue->ToJson());
+        }
         return JsonRootObject;
     }
 }

@@ -17,11 +17,13 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "../Model/Guild.h"
 
 namespace Gs2::Guild::Result
 {
     class GS2GUILD_API FVerifyCurrentMaximumMemberCountResult final : public TSharedFromThis<FVerifyCurrentMaximumMemberCountResult>
     {
+        TSharedPtr<Model::FGuild> ItemValue;
         
     public:
         
@@ -31,7 +33,9 @@ namespace Gs2::Guild::Result
         );
         ~FVerifyCurrentMaximumMemberCountResult() = default;
 
+        TSharedPtr<FVerifyCurrentMaximumMemberCountResult> WithItem(const TSharedPtr<Model::FGuild> Item);
 
+        TSharedPtr<Model::FGuild> GetItem() const;
 
         static TSharedPtr<FVerifyCurrentMaximumMemberCountResult> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;

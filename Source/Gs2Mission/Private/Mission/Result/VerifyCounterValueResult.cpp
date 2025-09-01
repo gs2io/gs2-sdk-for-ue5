@@ -18,14 +18,33 @@
 
 namespace Gs2::Mission::Result
 {
-    FVerifyCounterValueResult::FVerifyCounterValueResult()
+    FVerifyCounterValueResult::FVerifyCounterValueResult():
+        ItemValue(nullptr)
     {
     }
 
     FVerifyCounterValueResult::FVerifyCounterValueResult(
         const FVerifyCounterValueResult& From
+    ):
+        ItemValue(From.ItemValue)
+    {
+    }
+
+    TSharedPtr<FVerifyCounterValueResult> FVerifyCounterValueResult::WithItem(
+        const TSharedPtr<Model::FCounter> Item
     )
     {
+        this->ItemValue = Item;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<Model::FCounter> FVerifyCounterValueResult::GetItem() const
+    {
+        if (!ItemValue.IsValid())
+        {
+            return nullptr;
+        }
+        return ItemValue;
     }
 
     TSharedPtr<FVerifyCounterValueResult> FVerifyCounterValueResult::FromJson(const TSharedPtr<FJsonObject> Data)
@@ -33,12 +52,24 @@ namespace Gs2::Mission::Result
         if (Data == nullptr) {
             return nullptr;
         }
-        return MakeShared<FVerifyCounterValueResult>();
+        return MakeShared<FVerifyCounterValueResult>()
+            ->WithItem(Data->HasField(ANSI_TO_TCHAR("item")) ? [Data]() -> Model::FCounterPtr
+                 {
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("item")))
+                    {
+                        return nullptr;
+                    }
+                    return Model::FCounter::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("item")));
+                 }() : nullptr);
     }
 
     TSharedPtr<FJsonObject> FVerifyCounterValueResult::ToJson() const
     {
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
+        if (ItemValue != nullptr && ItemValue.IsValid())
+        {
+            JsonRootObject->SetObjectField("item", ItemValue->ToJson());
+        }
         return JsonRootObject;
     }
 }

@@ -17,11 +17,13 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "../Model/Complete.h"
 
 namespace Gs2::Mission::Result
 {
     class GS2MISSION_API FVerifyCompleteByUserIdResult final : public TSharedFromThis<FVerifyCompleteByUserIdResult>
     {
+        TSharedPtr<Model::FComplete> ItemValue;
         
     public:
         
@@ -31,7 +33,9 @@ namespace Gs2::Mission::Result
         );
         ~FVerifyCompleteByUserIdResult() = default;
 
+        TSharedPtr<FVerifyCompleteByUserIdResult> WithItem(const TSharedPtr<Model::FComplete> Item);
 
+        TSharedPtr<Model::FComplete> GetItem() const;
 
         static TSharedPtr<FVerifyCompleteByUserIdResult> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;

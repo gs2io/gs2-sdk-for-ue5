@@ -17,11 +17,13 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "../Model/Status.h"
 
 namespace Gs2::Grade::Result
 {
     class GS2GRADE_API FVerifyGradeByStampTaskResult final : public TSharedFromThis<FVerifyGradeByStampTaskResult>
     {
+        TSharedPtr<Model::FStatus> ItemValue;
         TOptional<FString> NewContextStackValue;
         
     public:
@@ -32,8 +34,10 @@ namespace Gs2::Grade::Result
         );
         ~FVerifyGradeByStampTaskResult() = default;
 
+        TSharedPtr<FVerifyGradeByStampTaskResult> WithItem(const TSharedPtr<Model::FStatus> Item);
         TSharedPtr<FVerifyGradeByStampTaskResult> WithNewContextStack(const TOptional<FString> NewContextStack);
 
+        TSharedPtr<Model::FStatus> GetItem() const;
         TOptional<FString> GetNewContextStack() const;
 
         static TSharedPtr<FVerifyGradeByStampTaskResult> FromJson(const TSharedPtr<FJsonObject> Data);

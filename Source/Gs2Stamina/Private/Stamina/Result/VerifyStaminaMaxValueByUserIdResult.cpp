@@ -18,14 +18,33 @@
 
 namespace Gs2::Stamina::Result
 {
-    FVerifyStaminaMaxValueByUserIdResult::FVerifyStaminaMaxValueByUserIdResult()
+    FVerifyStaminaMaxValueByUserIdResult::FVerifyStaminaMaxValueByUserIdResult():
+        ItemValue(nullptr)
     {
     }
 
     FVerifyStaminaMaxValueByUserIdResult::FVerifyStaminaMaxValueByUserIdResult(
         const FVerifyStaminaMaxValueByUserIdResult& From
+    ):
+        ItemValue(From.ItemValue)
+    {
+    }
+
+    TSharedPtr<FVerifyStaminaMaxValueByUserIdResult> FVerifyStaminaMaxValueByUserIdResult::WithItem(
+        const TSharedPtr<Model::FStamina> Item
     )
     {
+        this->ItemValue = Item;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<Model::FStamina> FVerifyStaminaMaxValueByUserIdResult::GetItem() const
+    {
+        if (!ItemValue.IsValid())
+        {
+            return nullptr;
+        }
+        return ItemValue;
     }
 
     TSharedPtr<FVerifyStaminaMaxValueByUserIdResult> FVerifyStaminaMaxValueByUserIdResult::FromJson(const TSharedPtr<FJsonObject> Data)
@@ -33,12 +52,24 @@ namespace Gs2::Stamina::Result
         if (Data == nullptr) {
             return nullptr;
         }
-        return MakeShared<FVerifyStaminaMaxValueByUserIdResult>();
+        return MakeShared<FVerifyStaminaMaxValueByUserIdResult>()
+            ->WithItem(Data->HasField(ANSI_TO_TCHAR("item")) ? [Data]() -> Model::FStaminaPtr
+                 {
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("item")))
+                    {
+                        return nullptr;
+                    }
+                    return Model::FStamina::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("item")));
+                 }() : nullptr);
     }
 
     TSharedPtr<FJsonObject> FVerifyStaminaMaxValueByUserIdResult::ToJson() const
     {
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
+        if (ItemValue != nullptr && ItemValue.IsValid())
+        {
+            JsonRootObject->SetObjectField("item", ItemValue->ToJson());
+        }
         return JsonRootObject;
     }
 }

@@ -17,11 +17,13 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "../Model/Stamina.h"
 
 namespace Gs2::Stamina::Result
 {
     class GS2STAMINA_API FVerifyStaminaMaxValueByStampTaskResult final : public TSharedFromThis<FVerifyStaminaMaxValueByStampTaskResult>
     {
+        TSharedPtr<Model::FStamina> ItemValue;
         TOptional<FString> NewContextStackValue;
         
     public:
@@ -32,8 +34,10 @@ namespace Gs2::Stamina::Result
         );
         ~FVerifyStaminaMaxValueByStampTaskResult() = default;
 
+        TSharedPtr<FVerifyStaminaMaxValueByStampTaskResult> WithItem(const TSharedPtr<Model::FStamina> Item);
         TSharedPtr<FVerifyStaminaMaxValueByStampTaskResult> WithNewContextStack(const TOptional<FString> NewContextStack);
 
+        TSharedPtr<Model::FStamina> GetItem() const;
         TOptional<FString> GetNewContextStack() const;
 
         static TSharedPtr<FVerifyStaminaMaxValueByStampTaskResult> FromJson(const TSharedPtr<FJsonObject> Data);

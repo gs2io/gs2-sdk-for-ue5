@@ -18,14 +18,33 @@
 
 namespace Gs2::Inventory::Result
 {
-    FVerifySimpleItemResult::FVerifySimpleItemResult()
+    FVerifySimpleItemResult::FVerifySimpleItemResult():
+        ItemValue(nullptr)
     {
     }
 
     FVerifySimpleItemResult::FVerifySimpleItemResult(
         const FVerifySimpleItemResult& From
+    ):
+        ItemValue(From.ItemValue)
+    {
+    }
+
+    TSharedPtr<FVerifySimpleItemResult> FVerifySimpleItemResult::WithItem(
+        const TSharedPtr<Model::FSimpleItem> Item
     )
     {
+        this->ItemValue = Item;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<Model::FSimpleItem> FVerifySimpleItemResult::GetItem() const
+    {
+        if (!ItemValue.IsValid())
+        {
+            return nullptr;
+        }
+        return ItemValue;
     }
 
     TSharedPtr<FVerifySimpleItemResult> FVerifySimpleItemResult::FromJson(const TSharedPtr<FJsonObject> Data)
@@ -33,12 +52,24 @@ namespace Gs2::Inventory::Result
         if (Data == nullptr) {
             return nullptr;
         }
-        return MakeShared<FVerifySimpleItemResult>();
+        return MakeShared<FVerifySimpleItemResult>()
+            ->WithItem(Data->HasField(ANSI_TO_TCHAR("item")) ? [Data]() -> Model::FSimpleItemPtr
+                 {
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("item")))
+                    {
+                        return nullptr;
+                    }
+                    return Model::FSimpleItem::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("item")));
+                 }() : nullptr);
     }
 
     TSharedPtr<FJsonObject> FVerifySimpleItemResult::ToJson() const
     {
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
+        if (ItemValue != nullptr && ItemValue.IsValid())
+        {
+            JsonRootObject->SetObjectField("item", ItemValue->ToJson());
+        }
         return JsonRootObject;
     }
 }

@@ -176,7 +176,8 @@ namespace Gs2::Inventory::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
-        const auto Domain = Self;
+        auto Domain = Self;
+
         *Result = Domain;
         return nullptr;
     }

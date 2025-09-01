@@ -17,11 +17,13 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "../Model/BigItem.h"
 
 namespace Gs2::Inventory::Result
 {
     class GS2INVENTORY_API FVerifyBigItemByStampTaskResult final : public TSharedFromThis<FVerifyBigItemByStampTaskResult>
     {
+        TSharedPtr<Model::FBigItem> ItemValue;
         TOptional<FString> NewContextStackValue;
         
     public:
@@ -32,8 +34,10 @@ namespace Gs2::Inventory::Result
         );
         ~FVerifyBigItemByStampTaskResult() = default;
 
+        TSharedPtr<FVerifyBigItemByStampTaskResult> WithItem(const TSharedPtr<Model::FBigItem> Item);
         TSharedPtr<FVerifyBigItemByStampTaskResult> WithNewContextStack(const TOptional<FString> NewContextStack);
 
+        TSharedPtr<Model::FBigItem> GetItem() const;
         TOptional<FString> GetNewContextStack() const;
 
         static TSharedPtr<FVerifyBigItemByStampTaskResult> FromJson(const TSharedPtr<FJsonObject> Data);

@@ -18,14 +18,33 @@
 
 namespace Gs2::Inventory::Result
 {
-    FVerifyInventoryCurrentMaxCapacityResult::FVerifyInventoryCurrentMaxCapacityResult()
+    FVerifyInventoryCurrentMaxCapacityResult::FVerifyInventoryCurrentMaxCapacityResult():
+        ItemValue(nullptr)
     {
     }
 
     FVerifyInventoryCurrentMaxCapacityResult::FVerifyInventoryCurrentMaxCapacityResult(
         const FVerifyInventoryCurrentMaxCapacityResult& From
+    ):
+        ItemValue(From.ItemValue)
+    {
+    }
+
+    TSharedPtr<FVerifyInventoryCurrentMaxCapacityResult> FVerifyInventoryCurrentMaxCapacityResult::WithItem(
+        const TSharedPtr<Model::FInventory> Item
     )
     {
+        this->ItemValue = Item;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<Model::FInventory> FVerifyInventoryCurrentMaxCapacityResult::GetItem() const
+    {
+        if (!ItemValue.IsValid())
+        {
+            return nullptr;
+        }
+        return ItemValue;
     }
 
     TSharedPtr<FVerifyInventoryCurrentMaxCapacityResult> FVerifyInventoryCurrentMaxCapacityResult::FromJson(const TSharedPtr<FJsonObject> Data)
@@ -33,12 +52,24 @@ namespace Gs2::Inventory::Result
         if (Data == nullptr) {
             return nullptr;
         }
-        return MakeShared<FVerifyInventoryCurrentMaxCapacityResult>();
+        return MakeShared<FVerifyInventoryCurrentMaxCapacityResult>()
+            ->WithItem(Data->HasField(ANSI_TO_TCHAR("item")) ? [Data]() -> Model::FInventoryPtr
+                 {
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("item")))
+                    {
+                        return nullptr;
+                    }
+                    return Model::FInventory::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("item")));
+                 }() : nullptr);
     }
 
     TSharedPtr<FJsonObject> FVerifyInventoryCurrentMaxCapacityResult::ToJson() const
     {
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
+        if (ItemValue != nullptr && ItemValue.IsValid())
+        {
+            JsonRootObject->SetObjectField("item", ItemValue->ToJson());
+        }
         return JsonRootObject;
     }
 }

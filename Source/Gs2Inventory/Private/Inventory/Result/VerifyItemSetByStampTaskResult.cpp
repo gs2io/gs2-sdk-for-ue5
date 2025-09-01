@@ -19,6 +19,7 @@
 namespace Gs2::Inventory::Result
 {
     FVerifyItemSetByStampTaskResult::FVerifyItemSetByStampTaskResult():
+        ItemsValue(nullptr),
         NewContextStackValue(TOptional<FString>())
     {
     }
@@ -26,8 +27,17 @@ namespace Gs2::Inventory::Result
     FVerifyItemSetByStampTaskResult::FVerifyItemSetByStampTaskResult(
         const FVerifyItemSetByStampTaskResult& From
     ):
+        ItemsValue(From.ItemsValue),
         NewContextStackValue(From.NewContextStackValue)
     {
+    }
+
+    TSharedPtr<FVerifyItemSetByStampTaskResult> FVerifyItemSetByStampTaskResult::WithItems(
+        const TSharedPtr<TArray<TSharedPtr<Model::FItemSet>>> Items
+    )
+    {
+        this->ItemsValue = Items;
+        return SharedThis(this);
     }
 
     TSharedPtr<FVerifyItemSetByStampTaskResult> FVerifyItemSetByStampTaskResult::WithNewContextStack(
@@ -36,6 +46,15 @@ namespace Gs2::Inventory::Result
     {
         this->NewContextStackValue = NewContextStack;
         return SharedThis(this);
+    }
+
+    TSharedPtr<TArray<TSharedPtr<Model::FItemSet>>> FVerifyItemSetByStampTaskResult::GetItems() const
+    {
+        if (!ItemsValue.IsValid())
+        {
+            return nullptr;
+        }
+        return ItemsValue;
     }
 
     TOptional<FString> FVerifyItemSetByStampTaskResult::GetNewContextStack() const
@@ -49,6 +68,18 @@ namespace Gs2::Inventory::Result
             return nullptr;
         }
         return MakeShared<FVerifyItemSetByStampTaskResult>()
+            ->WithItems(Data->HasField(ANSI_TO_TCHAR("items")) ? [Data]() -> TSharedPtr<TArray<Model::FItemSetPtr>>
+                 {
+                    auto v = MakeShared<TArray<Model::FItemSetPtr>>();
+                    if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("items")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("items")))
+                    {
+                        for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("items")))
+                        {
+                            v->Add(Model::FItemSet::FromJson(JsonObjectValue->AsObject()));
+                        }
+                    }
+                    return v;
+                 }() : MakeShared<TArray<Model::FItemSetPtr>>())
             ->WithNewContextStack(Data->HasField(ANSI_TO_TCHAR("newContextStack")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
@@ -63,6 +94,15 @@ namespace Gs2::Inventory::Result
     TSharedPtr<FJsonObject> FVerifyItemSetByStampTaskResult::ToJson() const
     {
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
+        if (ItemsValue != nullptr && ItemsValue.IsValid())
+        {
+            TArray<TSharedPtr<FJsonValue>> v;
+            for (auto JsonObjectValue : *ItemsValue)
+            {
+                v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
+            }
+            JsonRootObject->SetArrayField("items", v);
+        }
         if (NewContextStackValue.IsSet())
         {
             JsonRootObject->SetStringField("newContextStack", NewContextStackValue.GetValue());

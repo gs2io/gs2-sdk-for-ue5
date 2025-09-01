@@ -18,14 +18,33 @@
 
 namespace Gs2::Guild::Result
 {
-    FVerifyCurrentMaximumMemberCountByGuildNameResult::FVerifyCurrentMaximumMemberCountByGuildNameResult()
+    FVerifyCurrentMaximumMemberCountByGuildNameResult::FVerifyCurrentMaximumMemberCountByGuildNameResult():
+        ItemValue(nullptr)
     {
     }
 
     FVerifyCurrentMaximumMemberCountByGuildNameResult::FVerifyCurrentMaximumMemberCountByGuildNameResult(
         const FVerifyCurrentMaximumMemberCountByGuildNameResult& From
+    ):
+        ItemValue(From.ItemValue)
+    {
+    }
+
+    TSharedPtr<FVerifyCurrentMaximumMemberCountByGuildNameResult> FVerifyCurrentMaximumMemberCountByGuildNameResult::WithItem(
+        const TSharedPtr<Model::FGuild> Item
     )
     {
+        this->ItemValue = Item;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<Model::FGuild> FVerifyCurrentMaximumMemberCountByGuildNameResult::GetItem() const
+    {
+        if (!ItemValue.IsValid())
+        {
+            return nullptr;
+        }
+        return ItemValue;
     }
 
     TSharedPtr<FVerifyCurrentMaximumMemberCountByGuildNameResult> FVerifyCurrentMaximumMemberCountByGuildNameResult::FromJson(const TSharedPtr<FJsonObject> Data)
@@ -33,12 +52,24 @@ namespace Gs2::Guild::Result
         if (Data == nullptr) {
             return nullptr;
         }
-        return MakeShared<FVerifyCurrentMaximumMemberCountByGuildNameResult>();
+        return MakeShared<FVerifyCurrentMaximumMemberCountByGuildNameResult>()
+            ->WithItem(Data->HasField(ANSI_TO_TCHAR("item")) ? [Data]() -> Model::FGuildPtr
+                 {
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("item")))
+                    {
+                        return nullptr;
+                    }
+                    return Model::FGuild::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("item")));
+                 }() : nullptr);
     }
 
     TSharedPtr<FJsonObject> FVerifyCurrentMaximumMemberCountByGuildNameResult::ToJson() const
     {
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
+        if (ItemValue != nullptr && ItemValue.IsValid())
+        {
+            JsonRootObject->SetObjectField("item", ItemValue->ToJson());
+        }
         return JsonRootObject;
     }
 }

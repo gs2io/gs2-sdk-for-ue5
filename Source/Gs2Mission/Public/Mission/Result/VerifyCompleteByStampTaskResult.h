@@ -17,11 +17,13 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "../Model/Complete.h"
 
 namespace Gs2::Mission::Result
 {
     class GS2MISSION_API FVerifyCompleteByStampTaskResult final : public TSharedFromThis<FVerifyCompleteByStampTaskResult>
     {
+        TSharedPtr<Model::FComplete> ItemValue;
         TOptional<FString> NewContextStackValue;
         
     public:
@@ -32,8 +34,10 @@ namespace Gs2::Mission::Result
         );
         ~FVerifyCompleteByStampTaskResult() = default;
 
+        TSharedPtr<FVerifyCompleteByStampTaskResult> WithItem(const TSharedPtr<Model::FComplete> Item);
         TSharedPtr<FVerifyCompleteByStampTaskResult> WithNewContextStack(const TOptional<FString> NewContextStack);
 
+        TSharedPtr<Model::FComplete> GetItem() const;
         TOptional<FString> GetNewContextStack() const;
 
         static TSharedPtr<FVerifyCompleteByStampTaskResult> FromJson(const TSharedPtr<FJsonObject> Data);

@@ -17,11 +17,13 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "../Model/Stamina.h"
 
 namespace Gs2::Stamina::Result
 {
     class GS2STAMINA_API FVerifyStaminaValueResult final : public TSharedFromThis<FVerifyStaminaValueResult>
     {
+        TSharedPtr<Model::FStamina> ItemValue;
         
     public:
         
@@ -31,7 +33,9 @@ namespace Gs2::Stamina::Result
         );
         ~FVerifyStaminaValueResult() = default;
 
+        TSharedPtr<FVerifyStaminaValueResult> WithItem(const TSharedPtr<Model::FStamina> Item);
 
+        TSharedPtr<Model::FStamina> GetItem() const;
 
         static TSharedPtr<FVerifyStaminaValueResult> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;

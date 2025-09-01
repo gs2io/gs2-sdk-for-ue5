@@ -17,11 +17,13 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "../Model/Inventory.h"
 
 namespace Gs2::Inventory::Result
 {
     class GS2INVENTORY_API FVerifyInventoryCurrentMaxCapacityResult final : public TSharedFromThis<FVerifyInventoryCurrentMaxCapacityResult>
     {
+        TSharedPtr<Model::FInventory> ItemValue;
         
     public:
         
@@ -31,7 +33,9 @@ namespace Gs2::Inventory::Result
         );
         ~FVerifyInventoryCurrentMaxCapacityResult() = default;
 
+        TSharedPtr<FVerifyInventoryCurrentMaxCapacityResult> WithItem(const TSharedPtr<Model::FInventory> Item);
 
+        TSharedPtr<Model::FInventory> GetItem() const;
 
         static TSharedPtr<FVerifyInventoryCurrentMaxCapacityResult> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;

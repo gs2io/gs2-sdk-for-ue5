@@ -17,11 +17,13 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "../Model/Status.h"
 
 namespace Gs2::Experience::Result
 {
     class GS2EXPERIENCE_API FVerifyRankCapResult final : public TSharedFromThis<FVerifyRankCapResult>
     {
+        TSharedPtr<Model::FStatus> ItemValue;
         
     public:
         
@@ -31,7 +33,9 @@ namespace Gs2::Experience::Result
         );
         ~FVerifyRankCapResult() = default;
 
+        TSharedPtr<FVerifyRankCapResult> WithItem(const TSharedPtr<Model::FStatus> Item);
 
+        TSharedPtr<Model::FStatus> GetItem() const;
 
         static TSharedPtr<FVerifyRankCapResult> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;

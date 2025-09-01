@@ -18,14 +18,33 @@
 
 namespace Gs2::Stamina::Result
 {
-    FVerifyStaminaOverflowValueByUserIdResult::FVerifyStaminaOverflowValueByUserIdResult()
+    FVerifyStaminaOverflowValueByUserIdResult::FVerifyStaminaOverflowValueByUserIdResult():
+        ItemValue(nullptr)
     {
     }
 
     FVerifyStaminaOverflowValueByUserIdResult::FVerifyStaminaOverflowValueByUserIdResult(
         const FVerifyStaminaOverflowValueByUserIdResult& From
+    ):
+        ItemValue(From.ItemValue)
+    {
+    }
+
+    TSharedPtr<FVerifyStaminaOverflowValueByUserIdResult> FVerifyStaminaOverflowValueByUserIdResult::WithItem(
+        const TSharedPtr<Model::FStamina> Item
     )
     {
+        this->ItemValue = Item;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<Model::FStamina> FVerifyStaminaOverflowValueByUserIdResult::GetItem() const
+    {
+        if (!ItemValue.IsValid())
+        {
+            return nullptr;
+        }
+        return ItemValue;
     }
 
     TSharedPtr<FVerifyStaminaOverflowValueByUserIdResult> FVerifyStaminaOverflowValueByUserIdResult::FromJson(const TSharedPtr<FJsonObject> Data)
@@ -33,12 +52,24 @@ namespace Gs2::Stamina::Result
         if (Data == nullptr) {
             return nullptr;
         }
-        return MakeShared<FVerifyStaminaOverflowValueByUserIdResult>();
+        return MakeShared<FVerifyStaminaOverflowValueByUserIdResult>()
+            ->WithItem(Data->HasField(ANSI_TO_TCHAR("item")) ? [Data]() -> Model::FStaminaPtr
+                 {
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("item")))
+                    {
+                        return nullptr;
+                    }
+                    return Model::FStamina::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("item")));
+                 }() : nullptr);
     }
 
     TSharedPtr<FJsonObject> FVerifyStaminaOverflowValueByUserIdResult::ToJson() const
     {
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
+        if (ItemValue != nullptr && ItemValue.IsValid())
+        {
+            JsonRootObject->SetObjectField("item", ItemValue->ToJson());
+        }
         return JsonRootObject;
     }
 }

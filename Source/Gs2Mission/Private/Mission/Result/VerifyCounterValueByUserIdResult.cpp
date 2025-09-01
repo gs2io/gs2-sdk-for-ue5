@@ -18,14 +18,33 @@
 
 namespace Gs2::Mission::Result
 {
-    FVerifyCounterValueByUserIdResult::FVerifyCounterValueByUserIdResult()
+    FVerifyCounterValueByUserIdResult::FVerifyCounterValueByUserIdResult():
+        ItemValue(nullptr)
     {
     }
 
     FVerifyCounterValueByUserIdResult::FVerifyCounterValueByUserIdResult(
         const FVerifyCounterValueByUserIdResult& From
+    ):
+        ItemValue(From.ItemValue)
+    {
+    }
+
+    TSharedPtr<FVerifyCounterValueByUserIdResult> FVerifyCounterValueByUserIdResult::WithItem(
+        const TSharedPtr<Model::FCounter> Item
     )
     {
+        this->ItemValue = Item;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<Model::FCounter> FVerifyCounterValueByUserIdResult::GetItem() const
+    {
+        if (!ItemValue.IsValid())
+        {
+            return nullptr;
+        }
+        return ItemValue;
     }
 
     TSharedPtr<FVerifyCounterValueByUserIdResult> FVerifyCounterValueByUserIdResult::FromJson(const TSharedPtr<FJsonObject> Data)
@@ -33,12 +52,24 @@ namespace Gs2::Mission::Result
         if (Data == nullptr) {
             return nullptr;
         }
-        return MakeShared<FVerifyCounterValueByUserIdResult>();
+        return MakeShared<FVerifyCounterValueByUserIdResult>()
+            ->WithItem(Data->HasField(ANSI_TO_TCHAR("item")) ? [Data]() -> Model::FCounterPtr
+                 {
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("item")))
+                    {
+                        return nullptr;
+                    }
+                    return Model::FCounter::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("item")));
+                 }() : nullptr);
     }
 
     TSharedPtr<FJsonObject> FVerifyCounterValueByUserIdResult::ToJson() const
     {
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
+        if (ItemValue != nullptr && ItemValue.IsValid())
+        {
+            JsonRootObject->SetObjectField("item", ItemValue->ToJson());
+        }
         return JsonRootObject;
     }
 }

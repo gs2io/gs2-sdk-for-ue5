@@ -19,6 +19,7 @@
 namespace Gs2::Matchmaking::Result
 {
     FVerifyIncludeParticipantByStampTaskResult::FVerifyIncludeParticipantByStampTaskResult():
+        ItemValue(nullptr),
         NewContextStackValue(TOptional<FString>())
     {
     }
@@ -26,8 +27,17 @@ namespace Gs2::Matchmaking::Result
     FVerifyIncludeParticipantByStampTaskResult::FVerifyIncludeParticipantByStampTaskResult(
         const FVerifyIncludeParticipantByStampTaskResult& From
     ):
+        ItemValue(From.ItemValue),
         NewContextStackValue(From.NewContextStackValue)
     {
+    }
+
+    TSharedPtr<FVerifyIncludeParticipantByStampTaskResult> FVerifyIncludeParticipantByStampTaskResult::WithItem(
+        const TSharedPtr<Model::FSeasonGathering> Item
+    )
+    {
+        this->ItemValue = Item;
+        return SharedThis(this);
     }
 
     TSharedPtr<FVerifyIncludeParticipantByStampTaskResult> FVerifyIncludeParticipantByStampTaskResult::WithNewContextStack(
@@ -36,6 +46,15 @@ namespace Gs2::Matchmaking::Result
     {
         this->NewContextStackValue = NewContextStack;
         return SharedThis(this);
+    }
+
+    TSharedPtr<Model::FSeasonGathering> FVerifyIncludeParticipantByStampTaskResult::GetItem() const
+    {
+        if (!ItemValue.IsValid())
+        {
+            return nullptr;
+        }
+        return ItemValue;
     }
 
     TOptional<FString> FVerifyIncludeParticipantByStampTaskResult::GetNewContextStack() const
@@ -49,6 +68,14 @@ namespace Gs2::Matchmaking::Result
             return nullptr;
         }
         return MakeShared<FVerifyIncludeParticipantByStampTaskResult>()
+            ->WithItem(Data->HasField(ANSI_TO_TCHAR("item")) ? [Data]() -> Model::FSeasonGatheringPtr
+                 {
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("item")))
+                    {
+                        return nullptr;
+                    }
+                    return Model::FSeasonGathering::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("item")));
+                 }() : nullptr)
             ->WithNewContextStack(Data->HasField(ANSI_TO_TCHAR("newContextStack")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
@@ -63,6 +90,10 @@ namespace Gs2::Matchmaking::Result
     TSharedPtr<FJsonObject> FVerifyIncludeParticipantByStampTaskResult::ToJson() const
     {
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
+        if (ItemValue != nullptr && ItemValue.IsValid())
+        {
+            JsonRootObject->SetObjectField("item", ItemValue->ToJson());
+        }
         if (NewContextStackValue.IsSet())
         {
             JsonRootObject->SetStringField("newContextStack", NewContextStackValue.GetValue());

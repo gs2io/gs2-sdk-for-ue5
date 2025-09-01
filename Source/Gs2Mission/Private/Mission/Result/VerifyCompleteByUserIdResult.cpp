@@ -18,14 +18,33 @@
 
 namespace Gs2::Mission::Result
 {
-    FVerifyCompleteByUserIdResult::FVerifyCompleteByUserIdResult()
+    FVerifyCompleteByUserIdResult::FVerifyCompleteByUserIdResult():
+        ItemValue(nullptr)
     {
     }
 
     FVerifyCompleteByUserIdResult::FVerifyCompleteByUserIdResult(
         const FVerifyCompleteByUserIdResult& From
+    ):
+        ItemValue(From.ItemValue)
+    {
+    }
+
+    TSharedPtr<FVerifyCompleteByUserIdResult> FVerifyCompleteByUserIdResult::WithItem(
+        const TSharedPtr<Model::FComplete> Item
     )
     {
+        this->ItemValue = Item;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<Model::FComplete> FVerifyCompleteByUserIdResult::GetItem() const
+    {
+        if (!ItemValue.IsValid())
+        {
+            return nullptr;
+        }
+        return ItemValue;
     }
 
     TSharedPtr<FVerifyCompleteByUserIdResult> FVerifyCompleteByUserIdResult::FromJson(const TSharedPtr<FJsonObject> Data)
@@ -33,12 +52,24 @@ namespace Gs2::Mission::Result
         if (Data == nullptr) {
             return nullptr;
         }
-        return MakeShared<FVerifyCompleteByUserIdResult>();
+        return MakeShared<FVerifyCompleteByUserIdResult>()
+            ->WithItem(Data->HasField(ANSI_TO_TCHAR("item")) ? [Data]() -> Model::FCompletePtr
+                 {
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("item")))
+                    {
+                        return nullptr;
+                    }
+                    return Model::FComplete::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("item")));
+                 }() : nullptr);
     }
 
     TSharedPtr<FJsonObject> FVerifyCompleteByUserIdResult::ToJson() const
     {
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
+        if (ItemValue != nullptr && ItemValue.IsValid())
+        {
+            JsonRootObject->SetObjectField("item", ItemValue->ToJson());
+        }
         return JsonRootObject;
     }
 }

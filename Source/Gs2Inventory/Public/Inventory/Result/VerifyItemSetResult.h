@@ -17,11 +17,13 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "../Model/ItemSet.h"
 
 namespace Gs2::Inventory::Result
 {
     class GS2INVENTORY_API FVerifyItemSetResult final : public TSharedFromThis<FVerifyItemSetResult>
     {
+        TSharedPtr<TArray<TSharedPtr<Model::FItemSet>>> ItemsValue;
         
     public:
         
@@ -31,7 +33,9 @@ namespace Gs2::Inventory::Result
         );
         ~FVerifyItemSetResult() = default;
 
+        TSharedPtr<FVerifyItemSetResult> WithItems(const TSharedPtr<TArray<TSharedPtr<Model::FItemSet>>> Items);
 
+        TSharedPtr<TArray<TSharedPtr<Model::FItemSet>>> GetItems() const;
 
         static TSharedPtr<FVerifyItemSetResult> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;

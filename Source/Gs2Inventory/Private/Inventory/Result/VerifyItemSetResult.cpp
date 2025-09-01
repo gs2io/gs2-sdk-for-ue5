@@ -18,14 +18,33 @@
 
 namespace Gs2::Inventory::Result
 {
-    FVerifyItemSetResult::FVerifyItemSetResult()
+    FVerifyItemSetResult::FVerifyItemSetResult():
+        ItemsValue(nullptr)
     {
     }
 
     FVerifyItemSetResult::FVerifyItemSetResult(
         const FVerifyItemSetResult& From
+    ):
+        ItemsValue(From.ItemsValue)
+    {
+    }
+
+    TSharedPtr<FVerifyItemSetResult> FVerifyItemSetResult::WithItems(
+        const TSharedPtr<TArray<TSharedPtr<Model::FItemSet>>> Items
     )
     {
+        this->ItemsValue = Items;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<TArray<TSharedPtr<Model::FItemSet>>> FVerifyItemSetResult::GetItems() const
+    {
+        if (!ItemsValue.IsValid())
+        {
+            return nullptr;
+        }
+        return ItemsValue;
     }
 
     TSharedPtr<FVerifyItemSetResult> FVerifyItemSetResult::FromJson(const TSharedPtr<FJsonObject> Data)
@@ -33,12 +52,33 @@ namespace Gs2::Inventory::Result
         if (Data == nullptr) {
             return nullptr;
         }
-        return MakeShared<FVerifyItemSetResult>();
+        return MakeShared<FVerifyItemSetResult>()
+            ->WithItems(Data->HasField(ANSI_TO_TCHAR("items")) ? [Data]() -> TSharedPtr<TArray<Model::FItemSetPtr>>
+                 {
+                    auto v = MakeShared<TArray<Model::FItemSetPtr>>();
+                    if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("items")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("items")))
+                    {
+                        for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("items")))
+                        {
+                            v->Add(Model::FItemSet::FromJson(JsonObjectValue->AsObject()));
+                        }
+                    }
+                    return v;
+                 }() : MakeShared<TArray<Model::FItemSetPtr>>());
     }
 
     TSharedPtr<FJsonObject> FVerifyItemSetResult::ToJson() const
     {
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
+        if (ItemsValue != nullptr && ItemsValue.IsValid())
+        {
+            TArray<TSharedPtr<FJsonValue>> v;
+            for (auto JsonObjectValue : *ItemsValue)
+            {
+                v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
+            }
+            JsonRootObject->SetArrayField("items", v);
+        }
         return JsonRootObject;
     }
 }

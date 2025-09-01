@@ -17,11 +17,13 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "../Model/Counter.h"
 
 namespace Gs2::Limit::Result
 {
     class GS2LIMIT_API FVerifyCounterByStampTaskResult final : public TSharedFromThis<FVerifyCounterByStampTaskResult>
     {
+        TSharedPtr<Model::FCounter> ItemValue;
         TOptional<FString> NewContextStackValue;
         
     public:
@@ -32,8 +34,10 @@ namespace Gs2::Limit::Result
         );
         ~FVerifyCounterByStampTaskResult() = default;
 
+        TSharedPtr<FVerifyCounterByStampTaskResult> WithItem(const TSharedPtr<Model::FCounter> Item);
         TSharedPtr<FVerifyCounterByStampTaskResult> WithNewContextStack(const TOptional<FString> NewContextStack);
 
+        TSharedPtr<Model::FCounter> GetItem() const;
         TOptional<FString> GetNewContextStack() const;
 
         static TSharedPtr<FVerifyCounterByStampTaskResult> FromJson(const TSharedPtr<FJsonObject> Data);

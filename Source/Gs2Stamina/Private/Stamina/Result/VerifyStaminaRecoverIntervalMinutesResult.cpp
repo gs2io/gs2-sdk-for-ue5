@@ -18,14 +18,33 @@
 
 namespace Gs2::Stamina::Result
 {
-    FVerifyStaminaRecoverIntervalMinutesResult::FVerifyStaminaRecoverIntervalMinutesResult()
+    FVerifyStaminaRecoverIntervalMinutesResult::FVerifyStaminaRecoverIntervalMinutesResult():
+        ItemValue(nullptr)
     {
     }
 
     FVerifyStaminaRecoverIntervalMinutesResult::FVerifyStaminaRecoverIntervalMinutesResult(
         const FVerifyStaminaRecoverIntervalMinutesResult& From
+    ):
+        ItemValue(From.ItemValue)
+    {
+    }
+
+    TSharedPtr<FVerifyStaminaRecoverIntervalMinutesResult> FVerifyStaminaRecoverIntervalMinutesResult::WithItem(
+        const TSharedPtr<Model::FStamina> Item
     )
     {
+        this->ItemValue = Item;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<Model::FStamina> FVerifyStaminaRecoverIntervalMinutesResult::GetItem() const
+    {
+        if (!ItemValue.IsValid())
+        {
+            return nullptr;
+        }
+        return ItemValue;
     }
 
     TSharedPtr<FVerifyStaminaRecoverIntervalMinutesResult> FVerifyStaminaRecoverIntervalMinutesResult::FromJson(const TSharedPtr<FJsonObject> Data)
@@ -33,12 +52,24 @@ namespace Gs2::Stamina::Result
         if (Data == nullptr) {
             return nullptr;
         }
-        return MakeShared<FVerifyStaminaRecoverIntervalMinutesResult>();
+        return MakeShared<FVerifyStaminaRecoverIntervalMinutesResult>()
+            ->WithItem(Data->HasField(ANSI_TO_TCHAR("item")) ? [Data]() -> Model::FStaminaPtr
+                 {
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("item")))
+                    {
+                        return nullptr;
+                    }
+                    return Model::FStamina::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("item")));
+                 }() : nullptr);
     }
 
     TSharedPtr<FJsonObject> FVerifyStaminaRecoverIntervalMinutesResult::ToJson() const
     {
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
+        if (ItemValue != nullptr && ItemValue.IsValid())
+        {
+            JsonRootObject->SetObjectField("item", ItemValue->ToJson());
+        }
         return JsonRootObject;
     }
 }

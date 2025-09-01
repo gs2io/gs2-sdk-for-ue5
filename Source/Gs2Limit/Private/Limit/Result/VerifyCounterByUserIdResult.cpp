@@ -18,14 +18,33 @@
 
 namespace Gs2::Limit::Result
 {
-    FVerifyCounterByUserIdResult::FVerifyCounterByUserIdResult()
+    FVerifyCounterByUserIdResult::FVerifyCounterByUserIdResult():
+        ItemValue(nullptr)
     {
     }
 
     FVerifyCounterByUserIdResult::FVerifyCounterByUserIdResult(
         const FVerifyCounterByUserIdResult& From
+    ):
+        ItemValue(From.ItemValue)
+    {
+    }
+
+    TSharedPtr<FVerifyCounterByUserIdResult> FVerifyCounterByUserIdResult::WithItem(
+        const TSharedPtr<Model::FCounter> Item
     )
     {
+        this->ItemValue = Item;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<Model::FCounter> FVerifyCounterByUserIdResult::GetItem() const
+    {
+        if (!ItemValue.IsValid())
+        {
+            return nullptr;
+        }
+        return ItemValue;
     }
 
     TSharedPtr<FVerifyCounterByUserIdResult> FVerifyCounterByUserIdResult::FromJson(const TSharedPtr<FJsonObject> Data)
@@ -33,12 +52,24 @@ namespace Gs2::Limit::Result
         if (Data == nullptr) {
             return nullptr;
         }
-        return MakeShared<FVerifyCounterByUserIdResult>();
+        return MakeShared<FVerifyCounterByUserIdResult>()
+            ->WithItem(Data->HasField(ANSI_TO_TCHAR("item")) ? [Data]() -> Model::FCounterPtr
+                 {
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("item")))
+                    {
+                        return nullptr;
+                    }
+                    return Model::FCounter::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("item")));
+                 }() : nullptr);
     }
 
     TSharedPtr<FJsonObject> FVerifyCounterByUserIdResult::ToJson() const
     {
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
+        if (ItemValue != nullptr && ItemValue.IsValid())
+        {
+            JsonRootObject->SetObjectField("item", ItemValue->ToJson());
+        }
         return JsonRootObject;
     }
 }

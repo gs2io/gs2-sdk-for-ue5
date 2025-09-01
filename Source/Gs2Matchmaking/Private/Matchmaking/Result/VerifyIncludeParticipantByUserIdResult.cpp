@@ -18,14 +18,33 @@
 
 namespace Gs2::Matchmaking::Result
 {
-    FVerifyIncludeParticipantByUserIdResult::FVerifyIncludeParticipantByUserIdResult()
+    FVerifyIncludeParticipantByUserIdResult::FVerifyIncludeParticipantByUserIdResult():
+        ItemValue(nullptr)
     {
     }
 
     FVerifyIncludeParticipantByUserIdResult::FVerifyIncludeParticipantByUserIdResult(
         const FVerifyIncludeParticipantByUserIdResult& From
+    ):
+        ItemValue(From.ItemValue)
+    {
+    }
+
+    TSharedPtr<FVerifyIncludeParticipantByUserIdResult> FVerifyIncludeParticipantByUserIdResult::WithItem(
+        const TSharedPtr<Model::FSeasonGathering> Item
     )
     {
+        this->ItemValue = Item;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<Model::FSeasonGathering> FVerifyIncludeParticipantByUserIdResult::GetItem() const
+    {
+        if (!ItemValue.IsValid())
+        {
+            return nullptr;
+        }
+        return ItemValue;
     }
 
     TSharedPtr<FVerifyIncludeParticipantByUserIdResult> FVerifyIncludeParticipantByUserIdResult::FromJson(const TSharedPtr<FJsonObject> Data)
@@ -33,12 +52,24 @@ namespace Gs2::Matchmaking::Result
         if (Data == nullptr) {
             return nullptr;
         }
-        return MakeShared<FVerifyIncludeParticipantByUserIdResult>();
+        return MakeShared<FVerifyIncludeParticipantByUserIdResult>()
+            ->WithItem(Data->HasField(ANSI_TO_TCHAR("item")) ? [Data]() -> Model::FSeasonGatheringPtr
+                 {
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("item")))
+                    {
+                        return nullptr;
+                    }
+                    return Model::FSeasonGathering::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("item")));
+                 }() : nullptr);
     }
 
     TSharedPtr<FJsonObject> FVerifyIncludeParticipantByUserIdResult::ToJson() const
     {
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
+        if (ItemValue != nullptr && ItemValue.IsValid())
+        {
+            JsonRootObject->SetObjectField("item", ItemValue->ToJson());
+        }
         return JsonRootObject;
     }
 }

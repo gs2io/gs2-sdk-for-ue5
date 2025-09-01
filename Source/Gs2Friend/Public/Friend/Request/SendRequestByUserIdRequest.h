@@ -29,6 +29,7 @@ namespace Gs2::Friend::Request
         TOptional<FString> NamespaceNameValue;
         TOptional<FString> UserIdValue;
         TOptional<FString> TargetUserIdValue;
+        TOptional<bool> WithProfileValue;
         TOptional<FString> TimeOffsetTokenValue;
         TOptional<FString> DuplicationAvoiderValue;
         
@@ -44,6 +45,7 @@ namespace Gs2::Friend::Request
         TSharedPtr<FSendRequestByUserIdRequest> WithNamespaceName(const TOptional<FString> NamespaceName);
         TSharedPtr<FSendRequestByUserIdRequest> WithUserId(const TOptional<FString> UserId);
         TSharedPtr<FSendRequestByUserIdRequest> WithTargetUserId(const TOptional<FString> TargetUserId);
+        TSharedPtr<FSendRequestByUserIdRequest> WithWithProfile(const TOptional<bool> WithProfile);
         TSharedPtr<FSendRequestByUserIdRequest> WithTimeOffsetToken(const TOptional<FString> TimeOffsetToken);
         TSharedPtr<FSendRequestByUserIdRequest> WithDuplicationAvoider(const TOptional<FString> DuplicationAvoider);
 
@@ -51,6 +53,8 @@ namespace Gs2::Friend::Request
         TOptional<FString> GetNamespaceName() const;
         TOptional<FString> GetUserId() const;
         TOptional<FString> GetTargetUserId() const;
+        TOptional<bool> GetWithProfile() const;
+        FString GetWithProfileString() const;
         TOptional<FString> GetTimeOffsetToken() const;
         TOptional<FString> GetDuplicationAvoider() const;
 

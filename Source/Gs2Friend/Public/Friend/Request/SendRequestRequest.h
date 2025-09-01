@@ -29,6 +29,7 @@ namespace Gs2::Friend::Request
         TOptional<FString> NamespaceNameValue;
         TOptional<FString> AccessTokenValue;
         TOptional<FString> TargetUserIdValue;
+        TOptional<bool> WithProfileValue;
         TOptional<FString> DuplicationAvoiderValue;
         
     public:
@@ -43,12 +44,15 @@ namespace Gs2::Friend::Request
         TSharedPtr<FSendRequestRequest> WithNamespaceName(const TOptional<FString> NamespaceName);
         TSharedPtr<FSendRequestRequest> WithAccessToken(const TOptional<FString> AccessToken);
         TSharedPtr<FSendRequestRequest> WithTargetUserId(const TOptional<FString> TargetUserId);
+        TSharedPtr<FSendRequestRequest> WithWithProfile(const TOptional<bool> WithProfile);
         TSharedPtr<FSendRequestRequest> WithDuplicationAvoider(const TOptional<FString> DuplicationAvoider);
 
         TOptional<FString> GetContextStack() const;
         TOptional<FString> GetNamespaceName() const;
         TOptional<FString> GetAccessToken() const;
         TOptional<FString> GetTargetUserId() const;
+        TOptional<bool> GetWithProfile() const;
+        FString GetWithProfileString() const;
         TOptional<FString> GetDuplicationAvoider() const;
 
         static TSharedPtr<FSendRequestRequest> FromJson(const TSharedPtr<FJsonObject> Data);

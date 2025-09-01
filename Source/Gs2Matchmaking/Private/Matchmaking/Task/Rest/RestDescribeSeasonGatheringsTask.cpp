@@ -85,14 +85,13 @@ namespace Gs2::Matchmaking::Task::Rest
                 TEXT("{season}"),
                 ToCStr(*this->Request->GetSeasonString())
             );
-            Url = Url.Replace(
-                TEXT("{tier}"),
-                ToCStr(*this->Request->GetTierString())
-            );
 
             TArray<FString> queryStrings;
             if (this->Request->GetContextStack().IsSet()) {
                 queryStrings.Add("contextStack=" + FGenericPlatformHttp::UrlEncode(*this->Request->GetContextStack().GetValue()));
+            }
+            if (this->Request->GetTier().IsSet()) {
+                queryStrings.Add("tier=" + this->Request->GetTierString());
             }
             if (this->Request->GetPageToken().IsSet()) {
                 queryStrings.Add("pageToken=" + FGenericPlatformHttp::UrlEncode(this->Request->GetPageToken().GetValue()));

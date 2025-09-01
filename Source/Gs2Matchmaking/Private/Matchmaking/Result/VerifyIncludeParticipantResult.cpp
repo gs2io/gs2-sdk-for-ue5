@@ -18,14 +18,33 @@
 
 namespace Gs2::Matchmaking::Result
 {
-    FVerifyIncludeParticipantResult::FVerifyIncludeParticipantResult()
+    FVerifyIncludeParticipantResult::FVerifyIncludeParticipantResult():
+        ItemValue(nullptr)
     {
     }
 
     FVerifyIncludeParticipantResult::FVerifyIncludeParticipantResult(
         const FVerifyIncludeParticipantResult& From
+    ):
+        ItemValue(From.ItemValue)
+    {
+    }
+
+    TSharedPtr<FVerifyIncludeParticipantResult> FVerifyIncludeParticipantResult::WithItem(
+        const TSharedPtr<Model::FSeasonGathering> Item
     )
     {
+        this->ItemValue = Item;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<Model::FSeasonGathering> FVerifyIncludeParticipantResult::GetItem() const
+    {
+        if (!ItemValue.IsValid())
+        {
+            return nullptr;
+        }
+        return ItemValue;
     }
 
     TSharedPtr<FVerifyIncludeParticipantResult> FVerifyIncludeParticipantResult::FromJson(const TSharedPtr<FJsonObject> Data)
@@ -33,12 +52,24 @@ namespace Gs2::Matchmaking::Result
         if (Data == nullptr) {
             return nullptr;
         }
-        return MakeShared<FVerifyIncludeParticipantResult>();
+        return MakeShared<FVerifyIncludeParticipantResult>()
+            ->WithItem(Data->HasField(ANSI_TO_TCHAR("item")) ? [Data]() -> Model::FSeasonGatheringPtr
+                 {
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("item")))
+                    {
+                        return nullptr;
+                    }
+                    return Model::FSeasonGathering::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("item")));
+                 }() : nullptr);
     }
 
     TSharedPtr<FJsonObject> FVerifyIncludeParticipantResult::ToJson() const
     {
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
+        if (ItemValue != nullptr && ItemValue.IsValid())
+        {
+            JsonRootObject->SetObjectField("item", ItemValue->ToJson());
+        }
         return JsonRootObject;
     }
 }

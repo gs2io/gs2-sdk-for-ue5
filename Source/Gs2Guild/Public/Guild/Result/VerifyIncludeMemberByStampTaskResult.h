@@ -17,11 +17,13 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "../Model/Guild.h"
 
 namespace Gs2::Guild::Result
 {
     class GS2GUILD_API FVerifyIncludeMemberByStampTaskResult final : public TSharedFromThis<FVerifyIncludeMemberByStampTaskResult>
     {
+        TSharedPtr<Model::FGuild> ItemValue;
         TOptional<FString> NewContextStackValue;
         
     public:
@@ -32,8 +34,10 @@ namespace Gs2::Guild::Result
         );
         ~FVerifyIncludeMemberByStampTaskResult() = default;
 
+        TSharedPtr<FVerifyIncludeMemberByStampTaskResult> WithItem(const TSharedPtr<Model::FGuild> Item);
         TSharedPtr<FVerifyIncludeMemberByStampTaskResult> WithNewContextStack(const TOptional<FString> NewContextStack);
 
+        TSharedPtr<Model::FGuild> GetItem() const;
         TOptional<FString> GetNewContextStack() const;
 
         static TSharedPtr<FVerifyIncludeMemberByStampTaskResult> FromJson(const TSharedPtr<FJsonObject> Data);

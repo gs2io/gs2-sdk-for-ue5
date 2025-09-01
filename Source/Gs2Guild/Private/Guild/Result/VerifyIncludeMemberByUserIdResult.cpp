@@ -18,14 +18,33 @@
 
 namespace Gs2::Guild::Result
 {
-    FVerifyIncludeMemberByUserIdResult::FVerifyIncludeMemberByUserIdResult()
+    FVerifyIncludeMemberByUserIdResult::FVerifyIncludeMemberByUserIdResult():
+        ItemValue(nullptr)
     {
     }
 
     FVerifyIncludeMemberByUserIdResult::FVerifyIncludeMemberByUserIdResult(
         const FVerifyIncludeMemberByUserIdResult& From
+    ):
+        ItemValue(From.ItemValue)
+    {
+    }
+
+    TSharedPtr<FVerifyIncludeMemberByUserIdResult> FVerifyIncludeMemberByUserIdResult::WithItem(
+        const TSharedPtr<Model::FGuild> Item
     )
     {
+        this->ItemValue = Item;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<Model::FGuild> FVerifyIncludeMemberByUserIdResult::GetItem() const
+    {
+        if (!ItemValue.IsValid())
+        {
+            return nullptr;
+        }
+        return ItemValue;
     }
 
     TSharedPtr<FVerifyIncludeMemberByUserIdResult> FVerifyIncludeMemberByUserIdResult::FromJson(const TSharedPtr<FJsonObject> Data)
@@ -33,12 +52,24 @@ namespace Gs2::Guild::Result
         if (Data == nullptr) {
             return nullptr;
         }
-        return MakeShared<FVerifyIncludeMemberByUserIdResult>();
+        return MakeShared<FVerifyIncludeMemberByUserIdResult>()
+            ->WithItem(Data->HasField(ANSI_TO_TCHAR("item")) ? [Data]() -> Model::FGuildPtr
+                 {
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("item")))
+                    {
+                        return nullptr;
+                    }
+                    return Model::FGuild::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("item")));
+                 }() : nullptr);
     }
 
     TSharedPtr<FJsonObject> FVerifyIncludeMemberByUserIdResult::ToJson() const
     {
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
+        if (ItemValue != nullptr && ItemValue.IsValid())
+        {
+            JsonRootObject->SetObjectField("item", ItemValue->ToJson());
+        }
         return JsonRootObject;
     }
 }

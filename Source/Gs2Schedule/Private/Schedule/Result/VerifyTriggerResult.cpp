@@ -18,14 +18,33 @@
 
 namespace Gs2::Schedule::Result
 {
-    FVerifyTriggerResult::FVerifyTriggerResult()
+    FVerifyTriggerResult::FVerifyTriggerResult():
+        ItemValue(nullptr)
     {
     }
 
     FVerifyTriggerResult::FVerifyTriggerResult(
         const FVerifyTriggerResult& From
+    ):
+        ItemValue(From.ItemValue)
+    {
+    }
+
+    TSharedPtr<FVerifyTriggerResult> FVerifyTriggerResult::WithItem(
+        const TSharedPtr<Model::FTrigger> Item
     )
     {
+        this->ItemValue = Item;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<Model::FTrigger> FVerifyTriggerResult::GetItem() const
+    {
+        if (!ItemValue.IsValid())
+        {
+            return nullptr;
+        }
+        return ItemValue;
     }
 
     TSharedPtr<FVerifyTriggerResult> FVerifyTriggerResult::FromJson(const TSharedPtr<FJsonObject> Data)
@@ -33,12 +52,24 @@ namespace Gs2::Schedule::Result
         if (Data == nullptr) {
             return nullptr;
         }
-        return MakeShared<FVerifyTriggerResult>();
+        return MakeShared<FVerifyTriggerResult>()
+            ->WithItem(Data->HasField(ANSI_TO_TCHAR("item")) ? [Data]() -> Model::FTriggerPtr
+                 {
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("item")))
+                    {
+                        return nullptr;
+                    }
+                    return Model::FTrigger::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("item")));
+                 }() : nullptr);
     }
 
     TSharedPtr<FJsonObject> FVerifyTriggerResult::ToJson() const
     {
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
+        if (ItemValue != nullptr && ItemValue.IsValid())
+        {
+            JsonRootObject->SetObjectField("item", ItemValue->ToJson());
+        }
         return JsonRootObject;
     }
 }
