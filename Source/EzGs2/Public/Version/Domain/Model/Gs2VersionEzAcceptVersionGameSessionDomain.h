@@ -73,6 +73,29 @@ namespace Gs2::UE5::Version::Domain::Model
             Gs2::UE5::Version::Model::FEzVersionPtr Version = nullptr
         );
 
+        class EZGS2_API FRejectTask :
+            public Gs2::Core::Util::TGs2Future<Gs2::UE5::Version::Domain::Model::FEzAcceptVersionGameSessionDomain>,
+            public TSharedFromThis<FRejectTask>
+        {
+            TSharedPtr<FEzAcceptVersionGameSessionDomain> Self;
+            Gs2::UE5::Version::Model::FEzVersionPtr Version;
+
+        public:
+            explicit FRejectTask(
+                TSharedPtr<FEzAcceptVersionGameSessionDomain> Self,
+                Gs2::UE5::Version::Model::FEzVersionPtr Version = nullptr
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::UE5::Version::Domain::Model::FEzAcceptVersionGameSessionDomain>> Result
+            ) override;
+        };
+        friend FRejectTask;
+
+        TSharedPtr<FAsyncTask<FRejectTask>> Reject(
+            Gs2::UE5::Version::Model::FEzVersionPtr Version = nullptr
+        );
+
         class EZGS2_API FDeleteTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::Version::Domain::Model::FEzAcceptVersionGameSessionDomain>,
             public TSharedFromThis<FDeleteTask>

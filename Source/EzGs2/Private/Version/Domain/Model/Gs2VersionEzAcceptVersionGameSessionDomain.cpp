@@ -100,6 +100,60 @@ namespace Gs2::UE5::Version::Domain::Model
         );
     }
 
+    FEzAcceptVersionGameSessionDomain::FRejectTask::FRejectTask(
+        TSharedPtr<FEzAcceptVersionGameSessionDomain> Self,
+        Gs2::UE5::Version::Model::FEzVersionPtr Version
+    ): Self(Self), Version(Version)
+    {
+
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FEzAcceptVersionGameSessionDomain::FRejectTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::UE5::Version::Domain::Model::FEzAcceptVersionGameSessionDomain>> Result
+    )
+    {
+        const auto Future = Self->ConnectionValue->Run(
+            [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
+                const auto Task = Self->Domain->Reject(
+                    MakeShared<Gs2::Version::Request::FRejectRequest>()
+                        ->WithVersion(Version == nullptr ? nullptr : Version->ToModel())
+                );
+                Task->StartSynchronousTask();
+                if (Task->GetTask().IsError())
+                {
+                    Task->EnsureCompletion();
+                    return Task->GetTask().Error();
+                }
+                *Result = MakeShared<Gs2::UE5::Version::Domain::Model::FEzAcceptVersionGameSessionDomain>(
+                    Task->GetTask().Result(),
+                    Self->GameSession,
+                    Self->ConnectionValue
+                );
+                Task->EnsureCompletion();
+                return nullptr;
+            },
+            nullptr
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            Future->EnsureCompletion();
+            return Future->GetTask().Error();
+        }
+        Future->EnsureCompletion();
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FEzAcceptVersionGameSessionDomain::FRejectTask>> FEzAcceptVersionGameSessionDomain::Reject(
+        Gs2::UE5::Version::Model::FEzVersionPtr Version
+    )
+    {
+        return Gs2::Core::Util::New<FAsyncTask<FRejectTask>>(
+            this->AsShared(),
+            Version
+        );
+    }
+
     FEzAcceptVersionGameSessionDomain::FDeleteTask::FDeleteTask(
         TSharedPtr<FEzAcceptVersionGameSessionDomain> Self
     ): Self(Self)
