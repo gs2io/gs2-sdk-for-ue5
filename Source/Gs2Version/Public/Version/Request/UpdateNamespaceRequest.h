@@ -18,6 +18,7 @@
 
 #include "CoreMinimal.h"
 #include "Dom/JsonObject.h"
+#include "../Model/TransactionSetting.h"
 #include "../Model/ScriptSetting.h"
 #include "../Model/LogSetting.h"
 
@@ -30,6 +31,7 @@ namespace Gs2::Version::Request
         TOptional<FString> ContextStackValue;
         TOptional<FString> NamespaceNameValue;
         TOptional<FString> DescriptionValue;
+        TSharedPtr<Model::FTransactionSetting> TransactionSettingValue;
         TOptional<FString> AssumeUserIdValue;
         TSharedPtr<Model::FScriptSetting> AcceptVersionScriptValue;
         TOptional<FString> CheckVersionTriggerScriptIdValue;
@@ -46,6 +48,7 @@ namespace Gs2::Version::Request
         TSharedPtr<FUpdateNamespaceRequest> WithContextStack(const TOptional<FString> ContextStack);
         TSharedPtr<FUpdateNamespaceRequest> WithNamespaceName(const TOptional<FString> NamespaceName);
         TSharedPtr<FUpdateNamespaceRequest> WithDescription(const TOptional<FString> Description);
+        TSharedPtr<FUpdateNamespaceRequest> WithTransactionSetting(const TSharedPtr<Model::FTransactionSetting> TransactionSetting);
         TSharedPtr<FUpdateNamespaceRequest> WithAssumeUserId(const TOptional<FString> AssumeUserId);
         TSharedPtr<FUpdateNamespaceRequest> WithAcceptVersionScript(const TSharedPtr<Model::FScriptSetting> AcceptVersionScript);
         TSharedPtr<FUpdateNamespaceRequest> WithCheckVersionTriggerScriptId(const TOptional<FString> CheckVersionTriggerScriptId);
@@ -54,6 +57,7 @@ namespace Gs2::Version::Request
         TOptional<FString> GetContextStack() const;
         TOptional<FString> GetNamespaceName() const;
         TOptional<FString> GetDescription() const;
+        TSharedPtr<Model::FTransactionSetting> GetTransactionSetting() const;
         TOptional<FString> GetAssumeUserId() const;
         TSharedPtr<Model::FScriptSetting> GetAcceptVersionScript() const;
         TOptional<FString> GetCheckVersionTriggerScriptId() const;

@@ -88,6 +88,10 @@ namespace Gs2::Matchmaking::Task::Rest
             {
                 JsonRootObject->SetStringField("description", this->Request->GetDescription().GetValue());
             }
+            if (this->Request->GetTransactionSetting() != nullptr && this->Request->GetTransactionSetting().IsValid())
+            {
+                JsonRootObject->SetObjectField("transactionSetting", this->Request->GetTransactionSetting()->ToJson());
+            }
             if (this->Request->GetEnableRating().IsSet())
             {
                 JsonRootObject->SetBoolField("enableRating", this->Request->GetEnableRating().GetValue());

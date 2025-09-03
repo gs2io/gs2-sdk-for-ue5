@@ -22,6 +22,7 @@ namespace Gs2::Money2::Model
         NamespaceIdValue(TOptional<FString>()),
         NameValue(TOptional<FString>()),
         DescriptionValue(TOptional<FString>()),
+        TransactionSettingValue(nullptr),
         CurrencyUsagePriorityValue(TOptional<FString>()),
         SharedFreeCurrencyValue(TOptional<bool>()),
         PlatformSettingValue(nullptr),
@@ -46,6 +47,7 @@ namespace Gs2::Money2::Model
         NamespaceIdValue(From.NamespaceIdValue),
         NameValue(From.NameValue),
         DescriptionValue(From.DescriptionValue),
+        TransactionSettingValue(From.TransactionSettingValue),
         CurrencyUsagePriorityValue(From.CurrencyUsagePriorityValue),
         SharedFreeCurrencyValue(From.SharedFreeCurrencyValue),
         PlatformSettingValue(From.PlatformSettingValue),
@@ -85,6 +87,14 @@ namespace Gs2::Money2::Model
     )
     {
         this->DescriptionValue = Description;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FNamespace> FNamespace::WithTransactionSetting(
+        const TSharedPtr<FTransactionSetting> TransactionSetting
+    )
+    {
+        this->TransactionSettingValue = TransactionSetting;
         return SharedThis(this);
     }
 
@@ -218,6 +228,10 @@ namespace Gs2::Money2::Model
     TOptional<FString> FNamespace::GetDescription() const
     {
         return DescriptionValue;
+    }
+    TSharedPtr<FTransactionSetting> FNamespace::GetTransactionSetting() const
+    {
+        return TransactionSettingValue;
     }
     TOptional<FString> FNamespace::GetCurrencyUsagePriority() const
     {
@@ -382,6 +396,14 @@ namespace Gs2::Money2::Model
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
+            ->WithTransactionSetting(Data->HasField(ANSI_TO_TCHAR("transactionSetting")) ? [Data]() -> Model::FTransactionSettingPtr
+                {
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("transactionSetting")))
+                    {
+                        return nullptr;
+                    }
+                    return Model::FTransactionSetting::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("transactionSetting")));
+                 }() : nullptr)
             ->WithCurrencyUsagePriority(Data->HasField(ANSI_TO_TCHAR("currencyUsagePriority")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
@@ -526,6 +548,10 @@ namespace Gs2::Money2::Model
         if (DescriptionValue.IsSet())
         {
             JsonRootObject->SetStringField("description", DescriptionValue.GetValue());
+        }
+        if (TransactionSettingValue != nullptr && TransactionSettingValue.IsValid())
+        {
+            JsonRootObject->SetObjectField("transactionSetting", TransactionSettingValue->ToJson());
         }
         if (CurrencyUsagePriorityValue.IsSet())
         {

@@ -18,6 +18,7 @@
 
 #include "CoreMinimal.h"
 #include "Dom/JsonObject.h"
+#include "../Model/TransactionSetting.h"
 #include "../Model/AdMob.h"
 #include "../Model/UnityAd.h"
 #include "../Model/AppLovinMax.h"
@@ -33,10 +34,11 @@ namespace Gs2::AdReward::Request
     {
         TOptional<FString> ContextStackValue;
         TOptional<FString> NameValue;
+        TOptional<FString> DescriptionValue;
+        TSharedPtr<Model::FTransactionSetting> TransactionSettingValue;
         TSharedPtr<Model::FAdMob> AdmobValue;
         TSharedPtr<Model::FUnityAd> UnityAdValue;
         TSharedPtr<TArray<TSharedPtr<Model::FAppLovinMax>>> AppLovinMaxesValue;
-        TOptional<FString> DescriptionValue;
         TSharedPtr<Model::FScriptSetting> AcquirePointScriptValue;
         TSharedPtr<Model::FScriptSetting> ConsumePointScriptValue;
         TSharedPtr<Model::FNotificationSetting> ChangePointNotificationValue;
@@ -52,10 +54,11 @@ namespace Gs2::AdReward::Request
 
         TSharedPtr<FCreateNamespaceRequest> WithContextStack(const TOptional<FString> ContextStack);
         TSharedPtr<FCreateNamespaceRequest> WithName(const TOptional<FString> Name);
+        TSharedPtr<FCreateNamespaceRequest> WithDescription(const TOptional<FString> Description);
+        TSharedPtr<FCreateNamespaceRequest> WithTransactionSetting(const TSharedPtr<Model::FTransactionSetting> TransactionSetting);
         TSharedPtr<FCreateNamespaceRequest> WithAdmob(const TSharedPtr<Model::FAdMob> Admob);
         TSharedPtr<FCreateNamespaceRequest> WithUnityAd(const TSharedPtr<Model::FUnityAd> UnityAd);
         TSharedPtr<FCreateNamespaceRequest> WithAppLovinMaxes(const TSharedPtr<TArray<TSharedPtr<Model::FAppLovinMax>>> AppLovinMaxes);
-        TSharedPtr<FCreateNamespaceRequest> WithDescription(const TOptional<FString> Description);
         TSharedPtr<FCreateNamespaceRequest> WithAcquirePointScript(const TSharedPtr<Model::FScriptSetting> AcquirePointScript);
         TSharedPtr<FCreateNamespaceRequest> WithConsumePointScript(const TSharedPtr<Model::FScriptSetting> ConsumePointScript);
         TSharedPtr<FCreateNamespaceRequest> WithChangePointNotification(const TSharedPtr<Model::FNotificationSetting> ChangePointNotification);
@@ -63,9 +66,10 @@ namespace Gs2::AdReward::Request
 
         TOptional<FString> GetContextStack() const;
         TOptional<FString> GetName() const;
+        TOptional<FString> GetDescription() const;
+        TSharedPtr<Model::FTransactionSetting> GetTransactionSetting() const;
         TSharedPtr<Model::FAdMob> GetAdmob() const;
         TSharedPtr<Model::FUnityAd> GetUnityAd() const;TSharedPtr<TArray<TSharedPtr<Model::FAppLovinMax>>> GetAppLovinMaxes() const;
-        TOptional<FString> GetDescription() const;
         TSharedPtr<Model::FScriptSetting> GetAcquirePointScript() const;
         TSharedPtr<Model::FScriptSetting> GetConsumePointScript() const;
         TSharedPtr<Model::FNotificationSetting> GetChangePointNotification() const;

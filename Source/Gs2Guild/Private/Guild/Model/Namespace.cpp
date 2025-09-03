@@ -22,6 +22,7 @@ namespace Gs2::Guild::Model
         NamespaceIdValue(TOptional<FString>()),
         NameValue(TOptional<FString>()),
         DescriptionValue(TOptional<FString>()),
+        TransactionSettingValue(nullptr),
         ChangeNotificationValue(nullptr),
         JoinNotificationValue(nullptr),
         LeaveNotificationValue(nullptr),
@@ -48,6 +49,7 @@ namespace Gs2::Guild::Model
         NamespaceIdValue(From.NamespaceIdValue),
         NameValue(From.NameValue),
         DescriptionValue(From.DescriptionValue),
+        TransactionSettingValue(From.TransactionSettingValue),
         ChangeNotificationValue(From.ChangeNotificationValue),
         JoinNotificationValue(From.JoinNotificationValue),
         LeaveNotificationValue(From.LeaveNotificationValue),
@@ -89,6 +91,14 @@ namespace Gs2::Guild::Model
     )
     {
         this->DescriptionValue = Description;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FNamespace> FNamespace::WithTransactionSetting(
+        const TSharedPtr<FTransactionSetting> TransactionSetting
+    )
+    {
+        this->TransactionSettingValue = TransactionSetting;
         return SharedThis(this);
     }
 
@@ -238,6 +248,10 @@ namespace Gs2::Guild::Model
     TOptional<FString> FNamespace::GetDescription() const
     {
         return DescriptionValue;
+    }
+    TSharedPtr<FTransactionSetting> FNamespace::GetTransactionSetting() const
+    {
+        return TransactionSettingValue;
     }
     TSharedPtr<FNotificationSetting> FNamespace::GetChangeNotification() const
     {
@@ -401,6 +415,14 @@ namespace Gs2::Guild::Model
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
+            ->WithTransactionSetting(Data->HasField(ANSI_TO_TCHAR("transactionSetting")) ? [Data]() -> Model::FTransactionSettingPtr
+                {
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("transactionSetting")))
+                    {
+                        return nullptr;
+                    }
+                    return Model::FTransactionSetting::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("transactionSetting")));
+                 }() : nullptr)
             ->WithChangeNotification(Data->HasField(ANSI_TO_TCHAR("changeNotification")) ? [Data]() -> Model::FNotificationSettingPtr
                 {
                     if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("changeNotification")))
@@ -556,6 +578,10 @@ namespace Gs2::Guild::Model
         if (DescriptionValue.IsSet())
         {
             JsonRootObject->SetStringField("description", DescriptionValue.GetValue());
+        }
+        if (TransactionSettingValue != nullptr && TransactionSettingValue.IsValid())
+        {
+            JsonRootObject->SetObjectField("transactionSetting", TransactionSettingValue->ToJson());
         }
         if (ChangeNotificationValue != nullptr && ChangeNotificationValue.IsValid())
         {

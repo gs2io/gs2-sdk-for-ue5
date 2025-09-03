@@ -18,6 +18,7 @@
 
 #include "CoreMinimal.h"
 #include "Dom/JsonObject.h"
+#include "../Model/TransactionSetting.h"
 #include "../Model/LogSetting.h"
 
 namespace Gs2::SerialKey::Request
@@ -29,6 +30,7 @@ namespace Gs2::SerialKey::Request
         TOptional<FString> ContextStackValue;
         TOptional<FString> NameValue;
         TOptional<FString> DescriptionValue;
+        TSharedPtr<Model::FTransactionSetting> TransactionSettingValue;
         TSharedPtr<Model::FLogSetting> LogSettingValue;
         
     public:
@@ -42,11 +44,13 @@ namespace Gs2::SerialKey::Request
         TSharedPtr<FCreateNamespaceRequest> WithContextStack(const TOptional<FString> ContextStack);
         TSharedPtr<FCreateNamespaceRequest> WithName(const TOptional<FString> Name);
         TSharedPtr<FCreateNamespaceRequest> WithDescription(const TOptional<FString> Description);
+        TSharedPtr<FCreateNamespaceRequest> WithTransactionSetting(const TSharedPtr<Model::FTransactionSetting> TransactionSetting);
         TSharedPtr<FCreateNamespaceRequest> WithLogSetting(const TSharedPtr<Model::FLogSetting> LogSetting);
 
         TOptional<FString> GetContextStack() const;
         TOptional<FString> GetName() const;
         TOptional<FString> GetDescription() const;
+        TSharedPtr<Model::FTransactionSetting> GetTransactionSetting() const;
         TSharedPtr<Model::FLogSetting> GetLogSetting() const;
 
         static TSharedPtr<FCreateNamespaceRequest> FromJson(const TSharedPtr<FJsonObject> Data);

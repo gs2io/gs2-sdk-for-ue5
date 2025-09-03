@@ -86,6 +86,10 @@ namespace Gs2::Version::Task::Rest
             {
                 JsonRootObject->SetStringField("description", this->Request->GetDescription().GetValue());
             }
+            if (this->Request->GetTransactionSetting() != nullptr && this->Request->GetTransactionSetting().IsValid())
+            {
+                JsonRootObject->SetObjectField("transactionSetting", this->Request->GetTransactionSetting()->ToJson());
+            }
             if (this->Request->GetAssumeUserId().IsSet())
             {
                 JsonRootObject->SetStringField("assumeUserId", this->Request->GetAssumeUserId().GetValue());

@@ -24,6 +24,7 @@
 #include "Model/CampaignModelMaster.h"
 #include "Model/CurrentCampaignMaster.h"
 #include "Model/LogSetting.h"
+#include "Model/TransactionSetting.h"
 #include "Model/GitHubCheckoutSetting.h"
 
 // DescribeNamespaces

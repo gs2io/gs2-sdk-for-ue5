@@ -18,6 +18,7 @@
 
 #include "CoreMinimal.h"
 #include "Dom/JsonObject.h"
+#include "../Model/TransactionSetting.h"
 #include "../Model/AdMob.h"
 #include "../Model/UnityAd.h"
 #include "../Model/AppLovinMax.h"
@@ -34,6 +35,7 @@ namespace Gs2::AdReward::Request
         TOptional<FString> ContextStackValue;
         TOptional<FString> NamespaceNameValue;
         TOptional<FString> DescriptionValue;
+        TSharedPtr<Model::FTransactionSetting> TransactionSettingValue;
         TSharedPtr<Model::FAdMob> AdmobValue;
         TSharedPtr<Model::FUnityAd> UnityAdValue;
         TSharedPtr<TArray<TSharedPtr<Model::FAppLovinMax>>> AppLovinMaxesValue;
@@ -53,6 +55,7 @@ namespace Gs2::AdReward::Request
         TSharedPtr<FUpdateNamespaceRequest> WithContextStack(const TOptional<FString> ContextStack);
         TSharedPtr<FUpdateNamespaceRequest> WithNamespaceName(const TOptional<FString> NamespaceName);
         TSharedPtr<FUpdateNamespaceRequest> WithDescription(const TOptional<FString> Description);
+        TSharedPtr<FUpdateNamespaceRequest> WithTransactionSetting(const TSharedPtr<Model::FTransactionSetting> TransactionSetting);
         TSharedPtr<FUpdateNamespaceRequest> WithAdmob(const TSharedPtr<Model::FAdMob> Admob);
         TSharedPtr<FUpdateNamespaceRequest> WithUnityAd(const TSharedPtr<Model::FUnityAd> UnityAd);
         TSharedPtr<FUpdateNamespaceRequest> WithAppLovinMaxes(const TSharedPtr<TArray<TSharedPtr<Model::FAppLovinMax>>> AppLovinMaxes);
@@ -64,6 +67,7 @@ namespace Gs2::AdReward::Request
         TOptional<FString> GetContextStack() const;
         TOptional<FString> GetNamespaceName() const;
         TOptional<FString> GetDescription() const;
+        TSharedPtr<Model::FTransactionSetting> GetTransactionSetting() const;
         TSharedPtr<Model::FAdMob> GetAdmob() const;
         TSharedPtr<Model::FUnityAd> GetUnityAd() const;TSharedPtr<TArray<TSharedPtr<Model::FAppLovinMax>>> GetAppLovinMaxes() const;
         TSharedPtr<Model::FScriptSetting> GetAcquirePointScript() const;

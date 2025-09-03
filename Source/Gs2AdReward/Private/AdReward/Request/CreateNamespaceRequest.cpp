@@ -20,10 +20,11 @@ namespace Gs2::AdReward::Request
 {
     FCreateNamespaceRequest::FCreateNamespaceRequest():
         NameValue(TOptional<FString>()),
+        DescriptionValue(TOptional<FString>()),
+        TransactionSettingValue(nullptr),
         AdmobValue(nullptr),
         UnityAdValue(nullptr),
         AppLovinMaxesValue(nullptr),
-        DescriptionValue(TOptional<FString>()),
         AcquirePointScriptValue(nullptr),
         ConsumePointScriptValue(nullptr),
         ChangePointNotificationValue(nullptr),
@@ -35,10 +36,11 @@ namespace Gs2::AdReward::Request
         const FCreateNamespaceRequest& From
     ):
         NameValue(From.NameValue),
+        DescriptionValue(From.DescriptionValue),
+        TransactionSettingValue(From.TransactionSettingValue),
         AdmobValue(From.AdmobValue),
         UnityAdValue(From.UnityAdValue),
         AppLovinMaxesValue(From.AppLovinMaxesValue),
-        DescriptionValue(From.DescriptionValue),
         AcquirePointScriptValue(From.AcquirePointScriptValue),
         ConsumePointScriptValue(From.ConsumePointScriptValue),
         ChangePointNotificationValue(From.ChangePointNotificationValue),
@@ -59,6 +61,22 @@ namespace Gs2::AdReward::Request
     )
     {
         this->NameValue = Name;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FCreateNamespaceRequest> FCreateNamespaceRequest::WithDescription(
+        const TOptional<FString> Description
+    )
+    {
+        this->DescriptionValue = Description;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FCreateNamespaceRequest> FCreateNamespaceRequest::WithTransactionSetting(
+        const TSharedPtr<Model::FTransactionSetting> TransactionSetting
+    )
+    {
+        this->TransactionSettingValue = TransactionSetting;
         return SharedThis(this);
     }
 
@@ -83,14 +101,6 @@ namespace Gs2::AdReward::Request
     )
     {
         this->AppLovinMaxesValue = AppLovinMaxes;
-        return SharedThis(this);
-    }
-
-    TSharedPtr<FCreateNamespaceRequest> FCreateNamespaceRequest::WithDescription(
-        const TOptional<FString> Description
-    )
-    {
-        this->DescriptionValue = Description;
         return SharedThis(this);
     }
 
@@ -136,6 +146,20 @@ namespace Gs2::AdReward::Request
         return NameValue;
     }
 
+    TOptional<FString> FCreateNamespaceRequest::GetDescription() const
+    {
+        return DescriptionValue;
+    }
+
+    TSharedPtr<Model::FTransactionSetting> FCreateNamespaceRequest::GetTransactionSetting() const
+    {
+        if (!TransactionSettingValue.IsValid())
+        {
+            return nullptr;
+        }
+        return TransactionSettingValue;
+    }
+
     TSharedPtr<Model::FAdMob> FCreateNamespaceRequest::GetAdmob() const
     {
         if (!AdmobValue.IsValid())
@@ -161,11 +185,6 @@ namespace Gs2::AdReward::Request
             return nullptr;
         }
         return AppLovinMaxesValue;
-    }
-
-    TOptional<FString> FCreateNamespaceRequest::GetDescription() const
-    {
-        return DescriptionValue;
     }
 
     TSharedPtr<Model::FScriptSetting> FCreateNamespaceRequest::GetAcquirePointScript() const
@@ -220,6 +239,23 @@ namespace Gs2::AdReward::Request
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
+            ->WithDescription(Data->HasField(ANSI_TO_TCHAR("description")) ? [Data]() -> TOptional<FString>
+              {
+                  FString v("");
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("description"), v))
+                  {
+                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                  }
+                  return TOptional<FString>();
+              }() : TOptional<FString>())
+          ->WithTransactionSetting(Data->HasField(ANSI_TO_TCHAR("transactionSetting")) ? [Data]() -> Model::FTransactionSettingPtr
+              {
+                  if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("transactionSetting")))
+                  {
+                      return nullptr;
+                  }
+                  return Model::FTransactionSetting::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("transactionSetting")));
+              }() : nullptr)
           ->WithAdmob(Data->HasField(ANSI_TO_TCHAR("admob")) ? [Data]() -> Model::FAdMobPtr
               {
                   if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("admob")))
@@ -248,15 +284,6 @@ namespace Gs2::AdReward::Request
                   }
                   return v;
               }() : MakeShared<TArray<Model::FAppLovinMaxPtr>>())
-            ->WithDescription(Data->HasField(ANSI_TO_TCHAR("description")) ? [Data]() -> TOptional<FString>
-              {
-                  FString v("");
-                    if (Data->TryGetStringField(ANSI_TO_TCHAR("description"), v))
-                  {
-                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
-                  }
-                  return TOptional<FString>();
-              }() : TOptional<FString>())
           ->WithAcquirePointScript(Data->HasField(ANSI_TO_TCHAR("acquirePointScript")) ? [Data]() -> Model::FScriptSettingPtr
               {
                   if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("acquirePointScript")))
@@ -302,6 +329,14 @@ namespace Gs2::AdReward::Request
         {
             JsonRootObject->SetStringField("name", NameValue.GetValue());
         }
+        if (DescriptionValue.IsSet())
+        {
+            JsonRootObject->SetStringField("description", DescriptionValue.GetValue());
+        }
+        if (TransactionSettingValue != nullptr && TransactionSettingValue.IsValid())
+        {
+            JsonRootObject->SetObjectField("transactionSetting", TransactionSettingValue->ToJson());
+        }
         if (AdmobValue != nullptr && AdmobValue.IsValid())
         {
             JsonRootObject->SetObjectField("admob", AdmobValue->ToJson());
@@ -318,10 +353,6 @@ namespace Gs2::AdReward::Request
                 v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
             }
             JsonRootObject->SetArrayField("appLovinMaxes", v);
-        }
-        if (DescriptionValue.IsSet())
-        {
-            JsonRootObject->SetStringField("description", DescriptionValue.GetValue());
         }
         if (AcquirePointScriptValue != nullptr && AcquirePointScriptValue.IsValid())
         {

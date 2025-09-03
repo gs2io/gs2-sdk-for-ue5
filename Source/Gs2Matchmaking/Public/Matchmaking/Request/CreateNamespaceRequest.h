@@ -18,6 +18,7 @@
 
 #include "CoreMinimal.h"
 #include "Dom/JsonObject.h"
+#include "../Model/TransactionSetting.h"
 #include "../Model/ScriptSetting.h"
 #include "../Model/NotificationSetting.h"
 #include "../Model/LogSetting.h"
@@ -31,6 +32,7 @@ namespace Gs2::Matchmaking::Request
         TOptional<FString> ContextStackValue;
         TOptional<FString> NameValue;
         TOptional<FString> DescriptionValue;
+        TSharedPtr<Model::FTransactionSetting> TransactionSettingValue;
         TOptional<bool> EnableRatingValue;
         TOptional<FString> EnableDisconnectDetectionValue;
         TOptional<int32> DisconnectDetectionTimeoutSecondsValue;
@@ -61,6 +63,7 @@ namespace Gs2::Matchmaking::Request
         TSharedPtr<FCreateNamespaceRequest> WithContextStack(const TOptional<FString> ContextStack);
         TSharedPtr<FCreateNamespaceRequest> WithName(const TOptional<FString> Name);
         TSharedPtr<FCreateNamespaceRequest> WithDescription(const TOptional<FString> Description);
+        TSharedPtr<FCreateNamespaceRequest> WithTransactionSetting(const TSharedPtr<Model::FTransactionSetting> TransactionSetting);
         TSharedPtr<FCreateNamespaceRequest> WithEnableRating(const TOptional<bool> EnableRating);
         TSharedPtr<FCreateNamespaceRequest> WithEnableDisconnectDetection(const TOptional<FString> EnableDisconnectDetection);
         TSharedPtr<FCreateNamespaceRequest> WithDisconnectDetectionTimeoutSeconds(const TOptional<int32> DisconnectDetectionTimeoutSeconds);
@@ -83,6 +86,7 @@ namespace Gs2::Matchmaking::Request
         TOptional<FString> GetContextStack() const;
         TOptional<FString> GetName() const;
         TOptional<FString> GetDescription() const;
+        TSharedPtr<Model::FTransactionSetting> GetTransactionSetting() const;
         TOptional<bool> GetEnableRating() const;
         FString GetEnableRatingString() const;
         TOptional<FString> GetEnableDisconnectDetection() const;

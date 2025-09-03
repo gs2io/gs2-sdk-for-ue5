@@ -21,6 +21,7 @@ namespace Gs2::Account::Request
     FCreateNamespaceRequest::FCreateNamespaceRequest():
         NameValue(TOptional<FString>()),
         DescriptionValue(TOptional<FString>()),
+        TransactionSettingValue(nullptr),
         ChangePasswordIfTakeOverValue(TOptional<bool>()),
         DifferentUserIdForLoginAndDataRetentionValue(TOptional<bool>()),
         CreateAccountScriptValue(nullptr),
@@ -38,6 +39,7 @@ namespace Gs2::Account::Request
     ):
         NameValue(From.NameValue),
         DescriptionValue(From.DescriptionValue),
+        TransactionSettingValue(From.TransactionSettingValue),
         ChangePasswordIfTakeOverValue(From.ChangePasswordIfTakeOverValue),
         DifferentUserIdForLoginAndDataRetentionValue(From.DifferentUserIdForLoginAndDataRetentionValue),
         CreateAccountScriptValue(From.CreateAccountScriptValue),
@@ -71,6 +73,14 @@ namespace Gs2::Account::Request
     )
     {
         this->DescriptionValue = Description;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FCreateNamespaceRequest> FCreateNamespaceRequest::WithTransactionSetting(
+        const TSharedPtr<Model::FTransactionSetting> TransactionSetting
+    )
+    {
+        this->TransactionSettingValue = TransactionSetting;
         return SharedThis(this);
     }
 
@@ -159,6 +169,15 @@ namespace Gs2::Account::Request
     TOptional<FString> FCreateNamespaceRequest::GetDescription() const
     {
         return DescriptionValue;
+    }
+
+    TSharedPtr<Model::FTransactionSetting> FCreateNamespaceRequest::GetTransactionSetting() const
+    {
+        if (!TransactionSettingValue.IsValid())
+        {
+            return nullptr;
+        }
+        return TransactionSettingValue;
     }
 
     TOptional<bool> FCreateNamespaceRequest::GetChangePasswordIfTakeOver() const
@@ -277,6 +296,14 @@ namespace Gs2::Account::Request
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
+          ->WithTransactionSetting(Data->HasField(ANSI_TO_TCHAR("transactionSetting")) ? [Data]() -> Model::FTransactionSettingPtr
+              {
+                  if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("transactionSetting")))
+                  {
+                      return nullptr;
+                  }
+                  return Model::FTransactionSetting::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("transactionSetting")));
+              }() : nullptr)
             ->WithChangePasswordIfTakeOver(Data->HasField(ANSI_TO_TCHAR("changePasswordIfTakeOver")) ? [Data]() -> TOptional<bool>
               {
                   bool v;
@@ -367,6 +394,10 @@ namespace Gs2::Account::Request
         if (DescriptionValue.IsSet())
         {
             JsonRootObject->SetStringField("description", DescriptionValue.GetValue());
+        }
+        if (TransactionSettingValue != nullptr && TransactionSettingValue.IsValid())
+        {
+            JsonRootObject->SetObjectField("transactionSetting", TransactionSettingValue->ToJson());
         }
         if (ChangePasswordIfTakeOverValue.IsSet())
         {

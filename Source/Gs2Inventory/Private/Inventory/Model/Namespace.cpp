@@ -22,6 +22,7 @@ namespace Gs2::Inventory::Model
         NamespaceIdValue(TOptional<FString>()),
         NameValue(TOptional<FString>()),
         DescriptionValue(TOptional<FString>()),
+        TransactionSettingValue(nullptr),
         AcquireScriptValue(nullptr),
         OverflowScriptValue(nullptr),
         ConsumeScriptValue(nullptr),
@@ -42,6 +43,7 @@ namespace Gs2::Inventory::Model
         NamespaceIdValue(From.NamespaceIdValue),
         NameValue(From.NameValue),
         DescriptionValue(From.DescriptionValue),
+        TransactionSettingValue(From.TransactionSettingValue),
         AcquireScriptValue(From.AcquireScriptValue),
         OverflowScriptValue(From.OverflowScriptValue),
         ConsumeScriptValue(From.ConsumeScriptValue),
@@ -77,6 +79,14 @@ namespace Gs2::Inventory::Model
     )
     {
         this->DescriptionValue = Description;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FNamespace> FNamespace::WithTransactionSetting(
+        const TSharedPtr<FTransactionSetting> TransactionSetting
+    )
+    {
+        this->TransactionSettingValue = TransactionSetting;
         return SharedThis(this);
     }
 
@@ -178,6 +188,10 @@ namespace Gs2::Inventory::Model
     TOptional<FString> FNamespace::GetDescription() const
     {
         return DescriptionValue;
+    }
+    TSharedPtr<FTransactionSetting> FNamespace::GetTransactionSetting() const
+    {
+        return TransactionSettingValue;
     }
     TSharedPtr<FScriptSetting> FNamespace::GetAcquireScript() const
     {
@@ -317,6 +331,14 @@ namespace Gs2::Inventory::Model
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
+            ->WithTransactionSetting(Data->HasField(ANSI_TO_TCHAR("transactionSetting")) ? [Data]() -> Model::FTransactionSettingPtr
+                {
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("transactionSetting")))
+                    {
+                        return nullptr;
+                    }
+                    return Model::FTransactionSetting::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("transactionSetting")));
+                 }() : nullptr)
             ->WithAcquireScript(Data->HasField(ANSI_TO_TCHAR("acquireScript")) ? [Data]() -> Model::FScriptSettingPtr
                 {
                     if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("acquireScript")))
@@ -424,6 +446,10 @@ namespace Gs2::Inventory::Model
         if (DescriptionValue.IsSet())
         {
             JsonRootObject->SetStringField("description", DescriptionValue.GetValue());
+        }
+        if (TransactionSettingValue != nullptr && TransactionSettingValue.IsValid())
+        {
+            JsonRootObject->SetObjectField("transactionSetting", TransactionSettingValue->ToJson());
         }
         if (AcquireScriptValue != nullptr && AcquireScriptValue.IsValid())
         {

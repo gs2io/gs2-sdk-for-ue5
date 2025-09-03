@@ -18,6 +18,7 @@
 
 #include "CoreMinimal.h"
 #include "Dom/JsonObject.h"
+#include "../Model/TransactionSetting.h"
 #include "../Model/LogSetting.h"
 #include "../Model/ScriptSetting.h"
 
@@ -30,6 +31,7 @@ namespace Gs2::Datastore::Request
         TOptional<FString> ContextStackValue;
         TOptional<FString> NamespaceNameValue;
         TOptional<FString> DescriptionValue;
+        TSharedPtr<Model::FTransactionSetting> TransactionSettingValue;
         TSharedPtr<Model::FLogSetting> LogSettingValue;
         TSharedPtr<Model::FScriptSetting> DoneUploadScriptValue;
         
@@ -44,12 +46,14 @@ namespace Gs2::Datastore::Request
         TSharedPtr<FUpdateNamespaceRequest> WithContextStack(const TOptional<FString> ContextStack);
         TSharedPtr<FUpdateNamespaceRequest> WithNamespaceName(const TOptional<FString> NamespaceName);
         TSharedPtr<FUpdateNamespaceRequest> WithDescription(const TOptional<FString> Description);
+        TSharedPtr<FUpdateNamespaceRequest> WithTransactionSetting(const TSharedPtr<Model::FTransactionSetting> TransactionSetting);
         TSharedPtr<FUpdateNamespaceRequest> WithLogSetting(const TSharedPtr<Model::FLogSetting> LogSetting);
         TSharedPtr<FUpdateNamespaceRequest> WithDoneUploadScript(const TSharedPtr<Model::FScriptSetting> DoneUploadScript);
 
         TOptional<FString> GetContextStack() const;
         TOptional<FString> GetNamespaceName() const;
         TOptional<FString> GetDescription() const;
+        TSharedPtr<Model::FTransactionSetting> GetTransactionSetting() const;
         TSharedPtr<Model::FLogSetting> GetLogSetting() const;
         TSharedPtr<Model::FScriptSetting> GetDoneUploadScript() const;
 

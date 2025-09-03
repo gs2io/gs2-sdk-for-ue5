@@ -18,6 +18,7 @@
 
 #include "CoreMinimal.h"
 #include "Dom/JsonObject.h"
+#include "../Model/TransactionSetting.h"
 #include "../Model/NotificationSetting.h"
 #include "../Model/LogSetting.h"
 
@@ -30,6 +31,7 @@ namespace Gs2::Realtime::Request
         TOptional<FString> ContextStackValue;
         TOptional<FString> NamespaceNameValue;
         TOptional<FString> DescriptionValue;
+        TSharedPtr<Model::FTransactionSetting> TransactionSettingValue;
         TOptional<FString> ServerTypeValue;
         TOptional<FString> ServerSpecValue;
         TSharedPtr<Model::FNotificationSetting> CreateNotificationValue;
@@ -46,6 +48,7 @@ namespace Gs2::Realtime::Request
         TSharedPtr<FUpdateNamespaceRequest> WithContextStack(const TOptional<FString> ContextStack);
         TSharedPtr<FUpdateNamespaceRequest> WithNamespaceName(const TOptional<FString> NamespaceName);
         TSharedPtr<FUpdateNamespaceRequest> WithDescription(const TOptional<FString> Description);
+        TSharedPtr<FUpdateNamespaceRequest> WithTransactionSetting(const TSharedPtr<Model::FTransactionSetting> TransactionSetting);
         TSharedPtr<FUpdateNamespaceRequest> WithServerType(const TOptional<FString> ServerType);
         TSharedPtr<FUpdateNamespaceRequest> WithServerSpec(const TOptional<FString> ServerSpec);
         TSharedPtr<FUpdateNamespaceRequest> WithCreateNotification(const TSharedPtr<Model::FNotificationSetting> CreateNotification);
@@ -54,6 +57,7 @@ namespace Gs2::Realtime::Request
         TOptional<FString> GetContextStack() const;
         TOptional<FString> GetNamespaceName() const;
         TOptional<FString> GetDescription() const;
+        TSharedPtr<Model::FTransactionSetting> GetTransactionSetting() const;
         TOptional<FString> GetServerType() const;
         TOptional<FString> GetServerSpec() const;
         TSharedPtr<Model::FNotificationSetting> GetCreateNotification() const;

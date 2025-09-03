@@ -18,6 +18,7 @@
 
 #include "CoreMinimal.h"
 #include "Dom/JsonObject.h"
+#include "../Model/TransactionSetting.h"
 #include "../Model/NotificationSetting.h"
 #include "../Model/ScriptSetting.h"
 #include "../Model/LogSetting.h"
@@ -31,6 +32,7 @@ namespace Gs2::Guild::Request
         TOptional<FString> ContextStackValue;
         TOptional<FString> NameValue;
         TOptional<FString> DescriptionValue;
+        TSharedPtr<Model::FTransactionSetting> TransactionSettingValue;
         TSharedPtr<Model::FNotificationSetting> ChangeNotificationValue;
         TSharedPtr<Model::FNotificationSetting> JoinNotificationValue;
         TSharedPtr<Model::FNotificationSetting> LeaveNotificationValue;
@@ -57,6 +59,7 @@ namespace Gs2::Guild::Request
         TSharedPtr<FCreateNamespaceRequest> WithContextStack(const TOptional<FString> ContextStack);
         TSharedPtr<FCreateNamespaceRequest> WithName(const TOptional<FString> Name);
         TSharedPtr<FCreateNamespaceRequest> WithDescription(const TOptional<FString> Description);
+        TSharedPtr<FCreateNamespaceRequest> WithTransactionSetting(const TSharedPtr<Model::FTransactionSetting> TransactionSetting);
         TSharedPtr<FCreateNamespaceRequest> WithChangeNotification(const TSharedPtr<Model::FNotificationSetting> ChangeNotification);
         TSharedPtr<FCreateNamespaceRequest> WithJoinNotification(const TSharedPtr<Model::FNotificationSetting> JoinNotification);
         TSharedPtr<FCreateNamespaceRequest> WithLeaveNotification(const TSharedPtr<Model::FNotificationSetting> LeaveNotification);
@@ -75,6 +78,7 @@ namespace Gs2::Guild::Request
         TOptional<FString> GetContextStack() const;
         TOptional<FString> GetName() const;
         TOptional<FString> GetDescription() const;
+        TSharedPtr<Model::FTransactionSetting> GetTransactionSetting() const;
         TSharedPtr<Model::FNotificationSetting> GetChangeNotification() const;
         TSharedPtr<Model::FNotificationSetting> GetJoinNotification() const;
         TSharedPtr<Model::FNotificationSetting> GetLeaveNotification() const;

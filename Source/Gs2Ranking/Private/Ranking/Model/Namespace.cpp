@@ -22,6 +22,7 @@ namespace Gs2::Ranking::Model
         NamespaceIdValue(TOptional<FString>()),
         NameValue(TOptional<FString>()),
         DescriptionValue(TOptional<FString>()),
+        TransactionSettingValue(nullptr),
         LastCalculatedAtsValue(nullptr),
         LogSettingValue(nullptr),
         CreatedAtValue(TOptional<int64>()),
@@ -36,6 +37,7 @@ namespace Gs2::Ranking::Model
         NamespaceIdValue(From.NamespaceIdValue),
         NameValue(From.NameValue),
         DescriptionValue(From.DescriptionValue),
+        TransactionSettingValue(From.TransactionSettingValue),
         LastCalculatedAtsValue(From.LastCalculatedAtsValue),
         LogSettingValue(From.LogSettingValue),
         CreatedAtValue(From.CreatedAtValue),
@@ -65,6 +67,14 @@ namespace Gs2::Ranking::Model
     )
     {
         this->DescriptionValue = Description;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FNamespace> FNamespace::WithTransactionSetting(
+        const TSharedPtr<FTransactionSetting> TransactionSetting
+    )
+    {
+        this->TransactionSettingValue = TransactionSetting;
         return SharedThis(this);
     }
 
@@ -118,6 +128,10 @@ namespace Gs2::Ranking::Model
     TOptional<FString> FNamespace::GetDescription() const
     {
         return DescriptionValue;
+    }
+    TSharedPtr<FTransactionSetting> FNamespace::GetTransactionSetting() const
+    {
+        return TransactionSettingValue;
     }
     TSharedPtr<TArray<TSharedPtr<Model::FCalculatedAt>>> FNamespace::GetLastCalculatedAts() const
     {
@@ -233,6 +247,14 @@ namespace Gs2::Ranking::Model
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
+            ->WithTransactionSetting(Data->HasField(ANSI_TO_TCHAR("transactionSetting")) ? [Data]() -> Model::FTransactionSettingPtr
+                {
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("transactionSetting")))
+                    {
+                        return nullptr;
+                    }
+                    return Model::FTransactionSetting::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("transactionSetting")));
+                 }() : nullptr)
             ->WithLastCalculatedAts(Data->HasField(ANSI_TO_TCHAR("lastCalculatedAts")) ? [Data]() -> TSharedPtr<TArray<Model::FCalculatedAtPtr>>
                 {
                     auto v = MakeShared<TArray<Model::FCalculatedAtPtr>>();
@@ -296,6 +318,10 @@ namespace Gs2::Ranking::Model
         if (DescriptionValue.IsSet())
         {
             JsonRootObject->SetStringField("description", DescriptionValue.GetValue());
+        }
+        if (TransactionSettingValue != nullptr && TransactionSettingValue.IsValid())
+        {
+            JsonRootObject->SetObjectField("transactionSetting", TransactionSettingValue->ToJson());
         }
         if (LastCalculatedAtsValue != nullptr && LastCalculatedAtsValue.IsValid())
         {

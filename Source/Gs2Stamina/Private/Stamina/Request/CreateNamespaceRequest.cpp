@@ -21,6 +21,7 @@ namespace Gs2::Stamina::Request
     FCreateNamespaceRequest::FCreateNamespaceRequest():
         NameValue(TOptional<FString>()),
         DescriptionValue(TOptional<FString>()),
+        TransactionSettingValue(nullptr),
         OverflowTriggerScriptValue(TOptional<FString>()),
         LogSettingValue(nullptr)
     {
@@ -31,6 +32,7 @@ namespace Gs2::Stamina::Request
     ):
         NameValue(From.NameValue),
         DescriptionValue(From.DescriptionValue),
+        TransactionSettingValue(From.TransactionSettingValue),
         OverflowTriggerScriptValue(From.OverflowTriggerScriptValue),
         LogSettingValue(From.LogSettingValue)
     {
@@ -57,6 +59,14 @@ namespace Gs2::Stamina::Request
     )
     {
         this->DescriptionValue = Description;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FCreateNamespaceRequest> FCreateNamespaceRequest::WithTransactionSetting(
+        const TSharedPtr<Model::FTransactionSetting> TransactionSetting
+    )
+    {
+        this->TransactionSettingValue = TransactionSetting;
         return SharedThis(this);
     }
 
@@ -89,6 +99,15 @@ namespace Gs2::Stamina::Request
     TOptional<FString> FCreateNamespaceRequest::GetDescription() const
     {
         return DescriptionValue;
+    }
+
+    TSharedPtr<Model::FTransactionSetting> FCreateNamespaceRequest::GetTransactionSetting() const
+    {
+        if (!TransactionSettingValue.IsValid())
+        {
+            return nullptr;
+        }
+        return TransactionSettingValue;
     }
 
     TOptional<FString> FCreateNamespaceRequest::GetOverflowTriggerScript() const
@@ -130,6 +149,14 @@ namespace Gs2::Stamina::Request
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
+          ->WithTransactionSetting(Data->HasField(ANSI_TO_TCHAR("transactionSetting")) ? [Data]() -> Model::FTransactionSettingPtr
+              {
+                  if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("transactionSetting")))
+                  {
+                      return nullptr;
+                  }
+                  return Model::FTransactionSetting::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("transactionSetting")));
+              }() : nullptr)
             ->WithOverflowTriggerScript(Data->HasField(ANSI_TO_TCHAR("overflowTriggerScript")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
@@ -163,6 +190,10 @@ namespace Gs2::Stamina::Request
         if (DescriptionValue.IsSet())
         {
             JsonRootObject->SetStringField("description", DescriptionValue.GetValue());
+        }
+        if (TransactionSettingValue != nullptr && TransactionSettingValue.IsValid())
+        {
+            JsonRootObject->SetObjectField("transactionSetting", TransactionSettingValue->ToJson());
         }
         if (OverflowTriggerScriptValue.IsSet())
         {

@@ -18,6 +18,7 @@
 
 #include "CoreMinimal.h"
 #include "Dom/JsonObject.h"
+#include "../Model/TransactionSetting.h"
 #include "../Model/ScriptSetting.h"
 #include "../Model/LogSetting.h"
 
@@ -30,6 +31,7 @@ namespace Gs2::Dictionary::Request
         TOptional<FString> ContextStackValue;
         TOptional<FString> NameValue;
         TOptional<FString> DescriptionValue;
+        TSharedPtr<Model::FTransactionSetting> TransactionSettingValue;
         TSharedPtr<Model::FScriptSetting> EntryScriptValue;
         TOptional<FString> DuplicateEntryScriptValue;
         TSharedPtr<Model::FLogSetting> LogSettingValue;
@@ -45,6 +47,7 @@ namespace Gs2::Dictionary::Request
         TSharedPtr<FCreateNamespaceRequest> WithContextStack(const TOptional<FString> ContextStack);
         TSharedPtr<FCreateNamespaceRequest> WithName(const TOptional<FString> Name);
         TSharedPtr<FCreateNamespaceRequest> WithDescription(const TOptional<FString> Description);
+        TSharedPtr<FCreateNamespaceRequest> WithTransactionSetting(const TSharedPtr<Model::FTransactionSetting> TransactionSetting);
         TSharedPtr<FCreateNamespaceRequest> WithEntryScript(const TSharedPtr<Model::FScriptSetting> EntryScript);
         TSharedPtr<FCreateNamespaceRequest> WithDuplicateEntryScript(const TOptional<FString> DuplicateEntryScript);
         TSharedPtr<FCreateNamespaceRequest> WithLogSetting(const TSharedPtr<Model::FLogSetting> LogSetting);
@@ -52,6 +55,7 @@ namespace Gs2::Dictionary::Request
         TOptional<FString> GetContextStack() const;
         TOptional<FString> GetName() const;
         TOptional<FString> GetDescription() const;
+        TSharedPtr<Model::FTransactionSetting> GetTransactionSetting() const;
         TSharedPtr<Model::FScriptSetting> GetEntryScript() const;
         TOptional<FString> GetDuplicateEntryScript() const;
         TSharedPtr<Model::FLogSetting> GetLogSetting() const;

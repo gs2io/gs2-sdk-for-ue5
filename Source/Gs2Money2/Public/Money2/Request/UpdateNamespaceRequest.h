@@ -18,6 +18,7 @@
 
 #include "CoreMinimal.h"
 #include "Dom/JsonObject.h"
+#include "../Model/TransactionSetting.h"
 #include "../Model/PlatformSetting.h"
 #include "../Model/ScriptSetting.h"
 #include "../Model/NotificationSetting.h"
@@ -33,6 +34,7 @@ namespace Gs2::Money2::Request
         TOptional<FString> NamespaceNameValue;
         TOptional<FString> CurrencyUsagePriorityValue;
         TOptional<FString> DescriptionValue;
+        TSharedPtr<Model::FTransactionSetting> TransactionSettingValue;
         TSharedPtr<Model::FPlatformSetting> PlatformSettingValue;
         TSharedPtr<Model::FScriptSetting> DepositBalanceScriptValue;
         TSharedPtr<Model::FScriptSetting> WithdrawBalanceScriptValue;
@@ -56,6 +58,7 @@ namespace Gs2::Money2::Request
         TSharedPtr<FUpdateNamespaceRequest> WithNamespaceName(const TOptional<FString> NamespaceName);
         TSharedPtr<FUpdateNamespaceRequest> WithCurrencyUsagePriority(const TOptional<FString> CurrencyUsagePriority);
         TSharedPtr<FUpdateNamespaceRequest> WithDescription(const TOptional<FString> Description);
+        TSharedPtr<FUpdateNamespaceRequest> WithTransactionSetting(const TSharedPtr<Model::FTransactionSetting> TransactionSetting);
         TSharedPtr<FUpdateNamespaceRequest> WithPlatformSetting(const TSharedPtr<Model::FPlatformSetting> PlatformSetting);
         TSharedPtr<FUpdateNamespaceRequest> WithDepositBalanceScript(const TSharedPtr<Model::FScriptSetting> DepositBalanceScript);
         TSharedPtr<FUpdateNamespaceRequest> WithWithdrawBalanceScript(const TSharedPtr<Model::FScriptSetting> WithdrawBalanceScript);
@@ -71,6 +74,7 @@ namespace Gs2::Money2::Request
         TOptional<FString> GetNamespaceName() const;
         TOptional<FString> GetCurrencyUsagePriority() const;
         TOptional<FString> GetDescription() const;
+        TSharedPtr<Model::FTransactionSetting> GetTransactionSetting() const;
         TSharedPtr<Model::FPlatformSetting> GetPlatformSetting() const;
         TSharedPtr<Model::FScriptSetting> GetDepositBalanceScript() const;
         TSharedPtr<Model::FScriptSetting> GetWithdrawBalanceScript() const;

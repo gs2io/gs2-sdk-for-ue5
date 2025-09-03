@@ -18,6 +18,7 @@
 
 #include "CoreMinimal.h"
 #include "Core/Gs2Object.h"
+#include "TransactionSetting.h"
 #include "PlatformSetting.h"
 #include "ScriptSetting.h"
 #include "NotificationSetting.h"
@@ -30,6 +31,7 @@ namespace Gs2::Money2::Model
         TOptional<FString> NamespaceIdValue;
         TOptional<FString> NameValue;
         TOptional<FString> DescriptionValue;
+        TSharedPtr<FTransactionSetting> TransactionSettingValue;
         TOptional<FString> CurrencyUsagePriorityValue;
         TOptional<bool> SharedFreeCurrencyValue;
         TSharedPtr<FPlatformSetting> PlatformSettingValue;
@@ -56,6 +58,7 @@ namespace Gs2::Money2::Model
         TSharedPtr<FNamespace> WithNamespaceId(const TOptional<FString> NamespaceId);
         TSharedPtr<FNamespace> WithName(const TOptional<FString> Name);
         TSharedPtr<FNamespace> WithDescription(const TOptional<FString> Description);
+        TSharedPtr<FNamespace> WithTransactionSetting(const TSharedPtr<FTransactionSetting> TransactionSetting);
         TSharedPtr<FNamespace> WithCurrencyUsagePriority(const TOptional<FString> CurrencyUsagePriority);
         TSharedPtr<FNamespace> WithSharedFreeCurrency(const TOptional<bool> SharedFreeCurrency);
         TSharedPtr<FNamespace> WithPlatformSetting(const TSharedPtr<FPlatformSetting> PlatformSetting);
@@ -75,6 +78,7 @@ namespace Gs2::Money2::Model
         TOptional<FString> GetNamespaceId() const;
         TOptional<FString> GetName() const;
         TOptional<FString> GetDescription() const;
+        TSharedPtr<FTransactionSetting> GetTransactionSetting() const;
         TOptional<FString> GetCurrencyUsagePriority() const;
         TOptional<bool> GetSharedFreeCurrency() const;
         FString GetSharedFreeCurrencyString() const;

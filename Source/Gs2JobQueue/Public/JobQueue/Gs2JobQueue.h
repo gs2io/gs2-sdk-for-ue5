@@ -22,6 +22,7 @@
 #include "Model/JobResult.h"
 #include "Model/NotificationSetting.h"
 #include "Model/LogSetting.h"
+#include "Model/TransactionSetting.h"
 #include "Model/JobEntry.h"
 #include "Model/JobResultBody.h"
 

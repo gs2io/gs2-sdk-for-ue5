@@ -28,6 +28,7 @@
 #include "Model/ScriptSetting.h"
 #include "Model/GitHubCheckoutSetting.h"
 #include "Model/LogSetting.h"
+#include "Model/TransactionSetting.h"
 #include "Model/Version.h"
 #include "Model/ScheduleVersion.h"
 

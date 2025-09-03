@@ -22,6 +22,7 @@ namespace Gs2::JobQueue::Model
         NamespaceIdValue(TOptional<FString>()),
         NameValue(TOptional<FString>()),
         DescriptionValue(TOptional<FString>()),
+        TransactionSettingValue(nullptr),
         EnableAutoRunValue(TOptional<bool>()),
         RunNotificationValue(nullptr),
         PushNotificationValue(nullptr),
@@ -38,6 +39,7 @@ namespace Gs2::JobQueue::Model
         NamespaceIdValue(From.NamespaceIdValue),
         NameValue(From.NameValue),
         DescriptionValue(From.DescriptionValue),
+        TransactionSettingValue(From.TransactionSettingValue),
         EnableAutoRunValue(From.EnableAutoRunValue),
         RunNotificationValue(From.RunNotificationValue),
         PushNotificationValue(From.PushNotificationValue),
@@ -69,6 +71,14 @@ namespace Gs2::JobQueue::Model
     )
     {
         this->DescriptionValue = Description;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FNamespace> FNamespace::WithTransactionSetting(
+        const TSharedPtr<FTransactionSetting> TransactionSetting
+    )
+    {
+        this->TransactionSettingValue = TransactionSetting;
         return SharedThis(this);
     }
 
@@ -138,6 +148,10 @@ namespace Gs2::JobQueue::Model
     TOptional<FString> FNamespace::GetDescription() const
     {
         return DescriptionValue;
+    }
+    TSharedPtr<FTransactionSetting> FNamespace::GetTransactionSetting() const
+    {
+        return TransactionSettingValue;
     }
     TOptional<bool> FNamespace::GetEnableAutoRun() const
     {
@@ -270,6 +284,14 @@ namespace Gs2::JobQueue::Model
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
+            ->WithTransactionSetting(Data->HasField(ANSI_TO_TCHAR("transactionSetting")) ? [Data]() -> Model::FTransactionSettingPtr
+                {
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("transactionSetting")))
+                    {
+                        return nullptr;
+                    }
+                    return Model::FTransactionSetting::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("transactionSetting")));
+                 }() : nullptr)
             ->WithEnableAutoRun(Data->HasField(ANSI_TO_TCHAR("enableAutoRun")) ? [Data]() -> TOptional<bool>
                 {
                     bool v;
@@ -346,6 +368,10 @@ namespace Gs2::JobQueue::Model
         if (DescriptionValue.IsSet())
         {
             JsonRootObject->SetStringField("description", DescriptionValue.GetValue());
+        }
+        if (TransactionSettingValue != nullptr && TransactionSettingValue.IsValid())
+        {
+            JsonRootObject->SetObjectField("transactionSetting", TransactionSettingValue->ToJson());
         }
         if (EnableAutoRunValue.IsSet())
         {

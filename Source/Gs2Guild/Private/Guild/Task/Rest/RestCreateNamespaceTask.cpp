@@ -86,6 +86,10 @@ namespace Gs2::Guild::Task::Rest
             {
                 JsonRootObject->SetStringField("description", this->Request->GetDescription().GetValue());
             }
+            if (this->Request->GetTransactionSetting() != nullptr && this->Request->GetTransactionSetting().IsValid())
+            {
+                JsonRootObject->SetObjectField("transactionSetting", this->Request->GetTransactionSetting()->ToJson());
+            }
             if (this->Request->GetChangeNotification() != nullptr && this->Request->GetChangeNotification().IsValid())
             {
                 JsonRootObject->SetObjectField("changeNotification", this->Request->GetChangeNotification()->ToJson());

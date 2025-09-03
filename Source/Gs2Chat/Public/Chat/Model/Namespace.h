@@ -18,6 +18,7 @@
 
 #include "CoreMinimal.h"
 #include "Core/Gs2Object.h"
+#include "TransactionSetting.h"
 #include "ScriptSetting.h"
 #include "NotificationSetting.h"
 #include "LogSetting.h"
@@ -29,6 +30,7 @@ namespace Gs2::Chat::Model
         TOptional<FString> NamespaceIdValue;
         TOptional<FString> NameValue;
         TOptional<FString> DescriptionValue;
+        TSharedPtr<FTransactionSetting> TransactionSettingValue;
         TOptional<bool> AllowCreateRoomValue;
         TOptional<int32> MessageLifeTimeDaysValue;
         TSharedPtr<FScriptSetting> PostMessageScriptValue;
@@ -52,6 +54,7 @@ namespace Gs2::Chat::Model
         TSharedPtr<FNamespace> WithNamespaceId(const TOptional<FString> NamespaceId);
         TSharedPtr<FNamespace> WithName(const TOptional<FString> Name);
         TSharedPtr<FNamespace> WithDescription(const TOptional<FString> Description);
+        TSharedPtr<FNamespace> WithTransactionSetting(const TSharedPtr<FTransactionSetting> TransactionSetting);
         TSharedPtr<FNamespace> WithAllowCreateRoom(const TOptional<bool> AllowCreateRoom);
         TSharedPtr<FNamespace> WithMessageLifeTimeDays(const TOptional<int32> MessageLifeTimeDays);
         TSharedPtr<FNamespace> WithPostMessageScript(const TSharedPtr<FScriptSetting> PostMessageScript);
@@ -68,6 +71,7 @@ namespace Gs2::Chat::Model
         TOptional<FString> GetNamespaceId() const;
         TOptional<FString> GetName() const;
         TOptional<FString> GetDescription() const;
+        TSharedPtr<FTransactionSetting> GetTransactionSetting() const;
         TOptional<bool> GetAllowCreateRoom() const;
         FString GetAllowCreateRoomString() const;
         TOptional<int32> GetMessageLifeTimeDays() const;

@@ -86,6 +86,10 @@ namespace Gs2::Gateway::Task::Rest
             {
                 JsonRootObject->SetStringField("description", this->Request->GetDescription().GetValue());
             }
+            if (this->Request->GetTransactionSetting() != nullptr && this->Request->GetTransactionSetting().IsValid())
+            {
+                JsonRootObject->SetObjectField("transactionSetting", this->Request->GetTransactionSetting()->ToJson());
+            }
             if (this->Request->GetFirebaseSecret().IsSet())
             {
                 JsonRootObject->SetStringField("firebaseSecret", this->Request->GetFirebaseSecret().GetValue());

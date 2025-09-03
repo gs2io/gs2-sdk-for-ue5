@@ -18,6 +18,7 @@
 
 #include "CoreMinimal.h"
 #include "Dom/JsonObject.h"
+#include "../Model/TransactionSetting.h"
 #include "../Model/NotificationSetting.h"
 #include "../Model/LogSetting.h"
 
@@ -30,6 +31,7 @@ namespace Gs2::JobQueue::Request
         TOptional<FString> ContextStackValue;
         TOptional<FString> NamespaceNameValue;
         TOptional<FString> DescriptionValue;
+        TSharedPtr<Model::FTransactionSetting> TransactionSettingValue;
         TOptional<bool> EnableAutoRunValue;
         TSharedPtr<Model::FNotificationSetting> PushNotificationValue;
         TSharedPtr<Model::FNotificationSetting> RunNotificationValue;
@@ -46,6 +48,7 @@ namespace Gs2::JobQueue::Request
         TSharedPtr<FUpdateNamespaceRequest> WithContextStack(const TOptional<FString> ContextStack);
         TSharedPtr<FUpdateNamespaceRequest> WithNamespaceName(const TOptional<FString> NamespaceName);
         TSharedPtr<FUpdateNamespaceRequest> WithDescription(const TOptional<FString> Description);
+        TSharedPtr<FUpdateNamespaceRequest> WithTransactionSetting(const TSharedPtr<Model::FTransactionSetting> TransactionSetting);
         TSharedPtr<FUpdateNamespaceRequest> WithEnableAutoRun(const TOptional<bool> EnableAutoRun);
         TSharedPtr<FUpdateNamespaceRequest> WithPushNotification(const TSharedPtr<Model::FNotificationSetting> PushNotification);
         TSharedPtr<FUpdateNamespaceRequest> WithRunNotification(const TSharedPtr<Model::FNotificationSetting> RunNotification);
@@ -54,6 +57,7 @@ namespace Gs2::JobQueue::Request
         TOptional<FString> GetContextStack() const;
         TOptional<FString> GetNamespaceName() const;
         TOptional<FString> GetDescription() const;
+        TSharedPtr<Model::FTransactionSetting> GetTransactionSetting() const;
         TOptional<bool> GetEnableAutoRun() const;
         FString GetEnableAutoRunString() const;
         TSharedPtr<Model::FNotificationSetting> GetPushNotification() const;

@@ -92,6 +92,10 @@ namespace Gs2::Money2::Task::Rest
             {
                 JsonRootObject->SetStringField("description", this->Request->GetDescription().GetValue());
             }
+            if (this->Request->GetTransactionSetting() != nullptr && this->Request->GetTransactionSetting().IsValid())
+            {
+                JsonRootObject->SetObjectField("transactionSetting", this->Request->GetTransactionSetting()->ToJson());
+            }
             if (this->Request->GetPlatformSetting() != nullptr && this->Request->GetPlatformSetting().IsValid())
             {
                 JsonRootObject->SetObjectField("platformSetting", this->Request->GetPlatformSetting()->ToJson());

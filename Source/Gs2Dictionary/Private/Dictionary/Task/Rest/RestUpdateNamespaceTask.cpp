@@ -88,6 +88,10 @@ namespace Gs2::Dictionary::Task::Rest
             {
                 JsonRootObject->SetStringField("description", this->Request->GetDescription().GetValue());
             }
+            if (this->Request->GetTransactionSetting() != nullptr && this->Request->GetTransactionSetting().IsValid())
+            {
+                JsonRootObject->SetObjectField("transactionSetting", this->Request->GetTransactionSetting()->ToJson());
+            }
             if (this->Request->GetEntryScript() != nullptr && this->Request->GetEntryScript().IsValid())
             {
                 JsonRootObject->SetObjectField("entryScript", this->Request->GetEntryScript()->ToJson());

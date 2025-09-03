@@ -22,6 +22,7 @@ namespace Gs2::Money2::Request
         NameValue(TOptional<FString>()),
         CurrencyUsagePriorityValue(TOptional<FString>()),
         DescriptionValue(TOptional<FString>()),
+        TransactionSettingValue(nullptr),
         SharedFreeCurrencyValue(TOptional<bool>()),
         PlatformSettingValue(nullptr),
         DepositBalanceScriptValue(nullptr),
@@ -42,6 +43,7 @@ namespace Gs2::Money2::Request
         NameValue(From.NameValue),
         CurrencyUsagePriorityValue(From.CurrencyUsagePriorityValue),
         DescriptionValue(From.DescriptionValue),
+        TransactionSettingValue(From.TransactionSettingValue),
         SharedFreeCurrencyValue(From.SharedFreeCurrencyValue),
         PlatformSettingValue(From.PlatformSettingValue),
         DepositBalanceScriptValue(From.DepositBalanceScriptValue),
@@ -85,6 +87,14 @@ namespace Gs2::Money2::Request
     )
     {
         this->DescriptionValue = Description;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FCreateNamespaceRequest> FCreateNamespaceRequest::WithTransactionSetting(
+        const TSharedPtr<Model::FTransactionSetting> TransactionSetting
+    )
+    {
+        this->TransactionSettingValue = TransactionSetting;
         return SharedThis(this);
     }
 
@@ -194,6 +204,15 @@ namespace Gs2::Money2::Request
     TOptional<FString> FCreateNamespaceRequest::GetDescription() const
     {
         return DescriptionValue;
+    }
+
+    TSharedPtr<Model::FTransactionSetting> FCreateNamespaceRequest::GetTransactionSetting() const
+    {
+        if (!TransactionSettingValue.IsValid())
+        {
+            return nullptr;
+        }
+        return TransactionSettingValue;
     }
 
     TOptional<bool> FCreateNamespaceRequest::GetSharedFreeCurrency() const
@@ -322,6 +341,14 @@ namespace Gs2::Money2::Request
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
+          ->WithTransactionSetting(Data->HasField(ANSI_TO_TCHAR("transactionSetting")) ? [Data]() -> Model::FTransactionSettingPtr
+              {
+                  if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("transactionSetting")))
+                  {
+                      return nullptr;
+                  }
+                  return Model::FTransactionSetting::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("transactionSetting")));
+              }() : nullptr)
             ->WithSharedFreeCurrency(Data->HasField(ANSI_TO_TCHAR("sharedFreeCurrency")) ? [Data]() -> TOptional<bool>
               {
                   bool v;
@@ -434,6 +461,10 @@ namespace Gs2::Money2::Request
         if (DescriptionValue.IsSet())
         {
             JsonRootObject->SetStringField("description", DescriptionValue.GetValue());
+        }
+        if (TransactionSettingValue != nullptr && TransactionSettingValue.IsValid())
+        {
+            JsonRootObject->SetObjectField("transactionSetting", TransactionSettingValue->ToJson());
         }
         if (SharedFreeCurrencyValue.IsSet())
         {

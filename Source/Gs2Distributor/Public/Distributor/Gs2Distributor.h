@@ -35,6 +35,7 @@
 #include "Model/GitHubCheckoutSetting.h"
 #include "Model/DistributeResource.h"
 #include "Model/LogSetting.h"
+#include "Model/TransactionSetting.h"
 #include "Model/NotificationSetting.h"
 
 // DescribeNamespaces

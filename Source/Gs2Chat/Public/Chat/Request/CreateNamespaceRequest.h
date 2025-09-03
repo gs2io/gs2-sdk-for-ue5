@@ -18,6 +18,7 @@
 
 #include "CoreMinimal.h"
 #include "Dom/JsonObject.h"
+#include "../Model/TransactionSetting.h"
 #include "../Model/ScriptSetting.h"
 #include "../Model/NotificationSetting.h"
 #include "../Model/LogSetting.h"
@@ -31,6 +32,7 @@ namespace Gs2::Chat::Request
         TOptional<FString> ContextStackValue;
         TOptional<FString> NameValue;
         TOptional<FString> DescriptionValue;
+        TSharedPtr<Model::FTransactionSetting> TransactionSettingValue;
         TOptional<bool> AllowCreateRoomValue;
         TOptional<int32> MessageLifeTimeDaysValue;
         TSharedPtr<Model::FScriptSetting> PostMessageScriptValue;
@@ -52,6 +54,7 @@ namespace Gs2::Chat::Request
         TSharedPtr<FCreateNamespaceRequest> WithContextStack(const TOptional<FString> ContextStack);
         TSharedPtr<FCreateNamespaceRequest> WithName(const TOptional<FString> Name);
         TSharedPtr<FCreateNamespaceRequest> WithDescription(const TOptional<FString> Description);
+        TSharedPtr<FCreateNamespaceRequest> WithTransactionSetting(const TSharedPtr<Model::FTransactionSetting> TransactionSetting);
         TSharedPtr<FCreateNamespaceRequest> WithAllowCreateRoom(const TOptional<bool> AllowCreateRoom);
         TSharedPtr<FCreateNamespaceRequest> WithMessageLifeTimeDays(const TOptional<int32> MessageLifeTimeDays);
         TSharedPtr<FCreateNamespaceRequest> WithPostMessageScript(const TSharedPtr<Model::FScriptSetting> PostMessageScript);
@@ -65,6 +68,7 @@ namespace Gs2::Chat::Request
         TOptional<FString> GetContextStack() const;
         TOptional<FString> GetName() const;
         TOptional<FString> GetDescription() const;
+        TSharedPtr<Model::FTransactionSetting> GetTransactionSetting() const;
         TOptional<bool> GetAllowCreateRoom() const;
         FString GetAllowCreateRoomString() const;
         TOptional<int32> GetMessageLifeTimeDays() const;

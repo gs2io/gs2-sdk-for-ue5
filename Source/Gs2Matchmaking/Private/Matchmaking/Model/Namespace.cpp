@@ -22,6 +22,7 @@ namespace Gs2::Matchmaking::Model
         NamespaceIdValue(TOptional<FString>()),
         NameValue(TOptional<FString>()),
         DescriptionValue(TOptional<FString>()),
+        TransactionSettingValue(nullptr),
         EnableRatingValue(TOptional<bool>()),
         EnableDisconnectDetectionValue(TOptional<FString>()),
         DisconnectDetectionTimeoutSecondsValue(TOptional<int32>()),
@@ -52,6 +53,7 @@ namespace Gs2::Matchmaking::Model
         NamespaceIdValue(From.NamespaceIdValue),
         NameValue(From.NameValue),
         DescriptionValue(From.DescriptionValue),
+        TransactionSettingValue(From.TransactionSettingValue),
         EnableRatingValue(From.EnableRatingValue),
         EnableDisconnectDetectionValue(From.EnableDisconnectDetectionValue),
         DisconnectDetectionTimeoutSecondsValue(From.DisconnectDetectionTimeoutSecondsValue),
@@ -97,6 +99,14 @@ namespace Gs2::Matchmaking::Model
     )
     {
         this->DescriptionValue = Description;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FNamespace> FNamespace::WithTransactionSetting(
+        const TSharedPtr<FTransactionSetting> TransactionSetting
+    )
+    {
+        this->TransactionSettingValue = TransactionSetting;
         return SharedThis(this);
     }
 
@@ -278,6 +288,10 @@ namespace Gs2::Matchmaking::Model
     TOptional<FString> FNamespace::GetDescription() const
     {
         return DescriptionValue;
+    }
+    TSharedPtr<FTransactionSetting> FNamespace::GetTransactionSetting() const
+    {
+        return TransactionSettingValue;
     }
     TOptional<bool> FNamespace::GetEnableRating() const
     {
@@ -484,6 +498,14 @@ namespace Gs2::Matchmaking::Model
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
+            ->WithTransactionSetting(Data->HasField(ANSI_TO_TCHAR("transactionSetting")) ? [Data]() -> Model::FTransactionSettingPtr
+                {
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("transactionSetting")))
+                    {
+                        return nullptr;
+                    }
+                    return Model::FTransactionSetting::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("transactionSetting")));
+                 }() : nullptr)
             ->WithEnableRating(Data->HasField(ANSI_TO_TCHAR("enableRating")) ? [Data]() -> TOptional<bool>
                 {
                     bool v;
@@ -683,6 +705,10 @@ namespace Gs2::Matchmaking::Model
         if (DescriptionValue.IsSet())
         {
             JsonRootObject->SetStringField("description", DescriptionValue.GetValue());
+        }
+        if (TransactionSettingValue != nullptr && TransactionSettingValue.IsValid())
+        {
+            JsonRootObject->SetObjectField("transactionSetting", TransactionSettingValue->ToJson());
         }
         if (EnableRatingValue.IsSet())
         {

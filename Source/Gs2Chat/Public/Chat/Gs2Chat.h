@@ -28,6 +28,7 @@
 #include "Model/ScriptSetting.h"
 #include "Model/NotificationSetting.h"
 #include "Model/LogSetting.h"
+#include "Model/TransactionSetting.h"
 #include "Model/GitHubCheckoutSetting.h"
 
 // DescribeNamespaces

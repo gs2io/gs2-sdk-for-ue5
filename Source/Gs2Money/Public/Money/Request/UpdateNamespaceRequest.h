@@ -18,6 +18,7 @@
 
 #include "CoreMinimal.h"
 #include "Dom/JsonObject.h"
+#include "../Model/TransactionSetting.h"
 #include "../Model/ScriptSetting.h"
 #include "../Model/LogSetting.h"
 
@@ -30,6 +31,7 @@ namespace Gs2::Money::Request
         TOptional<FString> ContextStackValue;
         TOptional<FString> NamespaceNameValue;
         TOptional<FString> DescriptionValue;
+        TSharedPtr<Model::FTransactionSetting> TransactionSettingValue;
         TOptional<FString> PriorityValue;
         TOptional<FString> AppleKeyValue;
         TOptional<FString> GoogleKeyValue;
@@ -50,6 +52,7 @@ namespace Gs2::Money::Request
         TSharedPtr<FUpdateNamespaceRequest> WithContextStack(const TOptional<FString> ContextStack);
         TSharedPtr<FUpdateNamespaceRequest> WithNamespaceName(const TOptional<FString> NamespaceName);
         TSharedPtr<FUpdateNamespaceRequest> WithDescription(const TOptional<FString> Description);
+        TSharedPtr<FUpdateNamespaceRequest> WithTransactionSetting(const TSharedPtr<Model::FTransactionSetting> TransactionSetting);
         TSharedPtr<FUpdateNamespaceRequest> WithPriority(const TOptional<FString> Priority);
         TSharedPtr<FUpdateNamespaceRequest> WithAppleKey(const TOptional<FString> AppleKey);
         TSharedPtr<FUpdateNamespaceRequest> WithGoogleKey(const TOptional<FString> GoogleKey);
@@ -62,6 +65,7 @@ namespace Gs2::Money::Request
         TOptional<FString> GetContextStack() const;
         TOptional<FString> GetNamespaceName() const;
         TOptional<FString> GetDescription() const;
+        TSharedPtr<Model::FTransactionSetting> GetTransactionSetting() const;
         TOptional<FString> GetPriority() const;
         TOptional<FString> GetAppleKey() const;
         TOptional<FString> GetGoogleKey() const;

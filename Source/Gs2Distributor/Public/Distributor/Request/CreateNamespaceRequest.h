@@ -18,6 +18,7 @@
 
 #include "CoreMinimal.h"
 #include "Dom/JsonObject.h"
+#include "../Model/TransactionSetting.h"
 #include "../Model/NotificationSetting.h"
 #include "../Model/LogSetting.h"
 
@@ -30,6 +31,7 @@ namespace Gs2::Distributor::Request
         TOptional<FString> ContextStackValue;
         TOptional<FString> NameValue;
         TOptional<FString> DescriptionValue;
+        TSharedPtr<Model::FTransactionSetting> TransactionSettingValue;
         TOptional<FString> AssumeUserIdValue;
         TSharedPtr<Model::FNotificationSetting> AutoRunStampSheetNotificationValue;
         TSharedPtr<Model::FNotificationSetting> AutoRunTransactionNotificationValue;
@@ -46,6 +48,7 @@ namespace Gs2::Distributor::Request
         TSharedPtr<FCreateNamespaceRequest> WithContextStack(const TOptional<FString> ContextStack);
         TSharedPtr<FCreateNamespaceRequest> WithName(const TOptional<FString> Name);
         TSharedPtr<FCreateNamespaceRequest> WithDescription(const TOptional<FString> Description);
+        TSharedPtr<FCreateNamespaceRequest> WithTransactionSetting(const TSharedPtr<Model::FTransactionSetting> TransactionSetting);
         TSharedPtr<FCreateNamespaceRequest> WithAssumeUserId(const TOptional<FString> AssumeUserId);
         TSharedPtr<FCreateNamespaceRequest> WithAutoRunStampSheetNotification(const TSharedPtr<Model::FNotificationSetting> AutoRunStampSheetNotification);
         TSharedPtr<FCreateNamespaceRequest> WithAutoRunTransactionNotification(const TSharedPtr<Model::FNotificationSetting> AutoRunTransactionNotification);
@@ -54,6 +57,7 @@ namespace Gs2::Distributor::Request
         TOptional<FString> GetContextStack() const;
         TOptional<FString> GetName() const;
         TOptional<FString> GetDescription() const;
+        TSharedPtr<Model::FTransactionSetting> GetTransactionSetting() const;
         TOptional<FString> GetAssumeUserId() const;
         TSharedPtr<Model::FNotificationSetting> GetAutoRunStampSheetNotification() const;
         TSharedPtr<Model::FNotificationSetting> GetAutoRunTransactionNotification() const;

@@ -22,6 +22,7 @@ namespace Gs2::Realtime::Model
         NamespaceIdValue(TOptional<FString>()),
         NameValue(TOptional<FString>()),
         DescriptionValue(TOptional<FString>()),
+        TransactionSettingValue(nullptr),
         ServerTypeValue(TOptional<FString>()),
         ServerSpecValue(TOptional<FString>()),
         CreateNotificationValue(nullptr),
@@ -38,6 +39,7 @@ namespace Gs2::Realtime::Model
         NamespaceIdValue(From.NamespaceIdValue),
         NameValue(From.NameValue),
         DescriptionValue(From.DescriptionValue),
+        TransactionSettingValue(From.TransactionSettingValue),
         ServerTypeValue(From.ServerTypeValue),
         ServerSpecValue(From.ServerSpecValue),
         CreateNotificationValue(From.CreateNotificationValue),
@@ -69,6 +71,14 @@ namespace Gs2::Realtime::Model
     )
     {
         this->DescriptionValue = Description;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FNamespace> FNamespace::WithTransactionSetting(
+        const TSharedPtr<FTransactionSetting> TransactionSetting
+    )
+    {
+        this->TransactionSettingValue = TransactionSetting;
         return SharedThis(this);
     }
 
@@ -138,6 +148,10 @@ namespace Gs2::Realtime::Model
     TOptional<FString> FNamespace::GetDescription() const
     {
         return DescriptionValue;
+    }
+    TSharedPtr<FTransactionSetting> FNamespace::GetTransactionSetting() const
+    {
+        return TransactionSettingValue;
     }
     TOptional<FString> FNamespace::GetServerType() const
     {
@@ -261,6 +275,14 @@ namespace Gs2::Realtime::Model
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
+            ->WithTransactionSetting(Data->HasField(ANSI_TO_TCHAR("transactionSetting")) ? [Data]() -> Model::FTransactionSettingPtr
+                {
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("transactionSetting")))
+                    {
+                        return nullptr;
+                    }
+                    return Model::FTransactionSetting::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("transactionSetting")));
+                 }() : nullptr)
             ->WithServerType(Data->HasField(ANSI_TO_TCHAR("serverType")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
@@ -338,6 +360,10 @@ namespace Gs2::Realtime::Model
         if (DescriptionValue.IsSet())
         {
             JsonRootObject->SetStringField("description", DescriptionValue.GetValue());
+        }
+        if (TransactionSettingValue != nullptr && TransactionSettingValue.IsValid())
+        {
+            JsonRootObject->SetObjectField("transactionSetting", TransactionSettingValue->ToJson());
         }
         if (ServerTypeValue.IsSet())
         {

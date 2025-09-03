@@ -82,6 +82,14 @@ namespace Gs2::AdReward::Task::Rest
             {
                 JsonRootObject->SetStringField("name", this->Request->GetName().GetValue());
             }
+            if (this->Request->GetDescription().IsSet())
+            {
+                JsonRootObject->SetStringField("description", this->Request->GetDescription().GetValue());
+            }
+            if (this->Request->GetTransactionSetting() != nullptr && this->Request->GetTransactionSetting().IsValid())
+            {
+                JsonRootObject->SetObjectField("transactionSetting", this->Request->GetTransactionSetting()->ToJson());
+            }
             if (this->Request->GetAdmob() != nullptr && this->Request->GetAdmob().IsValid())
             {
                 JsonRootObject->SetObjectField("admob", this->Request->GetAdmob()->ToJson());
@@ -98,10 +106,6 @@ namespace Gs2::AdReward::Task::Rest
                     v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
                 }
                 JsonRootObject->SetArrayField("appLovinMaxes", v);
-            }
-            if (this->Request->GetDescription().IsSet())
-            {
-                JsonRootObject->SetStringField("description", this->Request->GetDescription().GetValue());
             }
             if (this->Request->GetAcquirePointScript() != nullptr && this->Request->GetAcquirePointScript().IsValid())
             {

@@ -21,6 +21,7 @@
 #include "Model/WebSocketSession.h"
 #include "Model/FirebaseToken.h"
 #include "Model/LogSetting.h"
+#include "Model/TransactionSetting.h"
 
 // DescribeNamespaces
 #include "Request/DescribeNamespacesRequest.h"

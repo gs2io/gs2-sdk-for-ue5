@@ -88,6 +88,10 @@ namespace Gs2::Chat::Task::Rest
             {
                 JsonRootObject->SetStringField("description", this->Request->GetDescription().GetValue());
             }
+            if (this->Request->GetTransactionSetting() != nullptr && this->Request->GetTransactionSetting().IsValid())
+            {
+                JsonRootObject->SetObjectField("transactionSetting", this->Request->GetTransactionSetting()->ToJson());
+            }
             if (this->Request->GetAllowCreateRoom().IsSet())
             {
                 JsonRootObject->SetBoolField("allowCreateRoom", this->Request->GetAllowCreateRoom().GetValue());

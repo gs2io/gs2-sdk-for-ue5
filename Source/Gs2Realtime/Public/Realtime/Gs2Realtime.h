@@ -21,6 +21,7 @@
 #include "Model/Room.h"
 #include "Model/NotificationSetting.h"
 #include "Model/LogSetting.h"
+#include "Model/TransactionSetting.h"
 
 // DescribeNamespaces
 #include "Request/DescribeNamespacesRequest.h"

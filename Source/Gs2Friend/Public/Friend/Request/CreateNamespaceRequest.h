@@ -18,6 +18,7 @@
 
 #include "CoreMinimal.h"
 #include "Dom/JsonObject.h"
+#include "../Model/TransactionSetting.h"
 #include "../Model/ScriptSetting.h"
 #include "../Model/NotificationSetting.h"
 #include "../Model/LogSetting.h"
@@ -31,6 +32,7 @@ namespace Gs2::Friend::Request
         TOptional<FString> ContextStackValue;
         TOptional<FString> NameValue;
         TOptional<FString> DescriptionValue;
+        TSharedPtr<Model::FTransactionSetting> TransactionSettingValue;
         TSharedPtr<Model::FScriptSetting> FollowScriptValue;
         TSharedPtr<Model::FScriptSetting> UnfollowScriptValue;
         TSharedPtr<Model::FScriptSetting> SendRequestScriptValue;
@@ -58,6 +60,7 @@ namespace Gs2::Friend::Request
         TSharedPtr<FCreateNamespaceRequest> WithContextStack(const TOptional<FString> ContextStack);
         TSharedPtr<FCreateNamespaceRequest> WithName(const TOptional<FString> Name);
         TSharedPtr<FCreateNamespaceRequest> WithDescription(const TOptional<FString> Description);
+        TSharedPtr<FCreateNamespaceRequest> WithTransactionSetting(const TSharedPtr<Model::FTransactionSetting> TransactionSetting);
         TSharedPtr<FCreateNamespaceRequest> WithFollowScript(const TSharedPtr<Model::FScriptSetting> FollowScript);
         TSharedPtr<FCreateNamespaceRequest> WithUnfollowScript(const TSharedPtr<Model::FScriptSetting> UnfollowScript);
         TSharedPtr<FCreateNamespaceRequest> WithSendRequestScript(const TSharedPtr<Model::FScriptSetting> SendRequestScript);
@@ -77,6 +80,7 @@ namespace Gs2::Friend::Request
         TOptional<FString> GetContextStack() const;
         TOptional<FString> GetName() const;
         TOptional<FString> GetDescription() const;
+        TSharedPtr<Model::FTransactionSetting> GetTransactionSetting() const;
         TSharedPtr<Model::FScriptSetting> GetFollowScript() const;
         TSharedPtr<Model::FScriptSetting> GetUnfollowScript() const;
         TSharedPtr<Model::FScriptSetting> GetSendRequestScript() const;
