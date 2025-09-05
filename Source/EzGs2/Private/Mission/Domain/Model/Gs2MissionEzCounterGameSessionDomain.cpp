@@ -61,6 +61,66 @@ namespace Gs2::UE5::Mission::Domain::Model
 
     }
 
+    FEzCounterGameSessionDomain::FResetCounterTask::FResetCounterTask(
+        TSharedPtr<FEzCounterGameSessionDomain> Self,
+        TArray<TSharedPtr<Gs2::UE5::Mission::Model::FEzScopedValue>> Scopes
+    ): Self(Self), Scopes(Scopes)
+    {
+
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FEzCounterGameSessionDomain::FResetCounterTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::UE5::Mission::Domain::Model::FEzCounterGameSessionDomain>> Result
+    )
+    {
+        const auto Future = Self->ConnectionValue->Run(
+            [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
+                const auto Task = Self->Domain->Reset(
+                    MakeShared<Gs2::Mission::Request::FResetCounterRequest>()
+                        ->WithScopes([&]{
+                            auto Arr = MakeShared<TArray<TSharedPtr<Gs2::Mission::Model::FScopedValue>>>();
+                            for (auto Value : Scopes) {
+                                Arr->Add(Value->ToModel());
+                            }
+                            return Arr;
+                        }())
+                );
+                Task->StartSynchronousTask();
+                if (Task->GetTask().IsError())
+                {
+                    Task->EnsureCompletion();
+                    return Task->GetTask().Error();
+                }
+                *Result = MakeShared<Gs2::UE5::Mission::Domain::Model::FEzCounterGameSessionDomain>(
+                    Task->GetTask().Result(),
+                    Self->GameSession,
+                    Self->ConnectionValue
+                );
+                Task->EnsureCompletion();
+                return nullptr;
+            },
+            nullptr
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            Future->EnsureCompletion();
+            return Future->GetTask().Error();
+        }
+        Future->EnsureCompletion();
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FEzCounterGameSessionDomain::FResetCounterTask>> FEzCounterGameSessionDomain::ResetCounter(
+        TArray<TSharedPtr<Gs2::UE5::Mission::Model::FEzScopedValue>> Scopes
+    )
+    {
+        return Gs2::Core::Util::New<FAsyncTask<FResetCounterTask>>(
+            this->AsShared(),
+            Scopes
+        );
+    }
+
     FEzCounterGameSessionDomain::FDeleteCounterTask::FDeleteCounterTask(
         TSharedPtr<FEzCounterGameSessionDomain> Self
     ): Self(Self)
