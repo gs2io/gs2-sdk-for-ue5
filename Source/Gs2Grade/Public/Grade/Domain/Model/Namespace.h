@@ -249,6 +249,7 @@ namespace Gs2::Grade::Domain::Model
         );
 
         Gs2::Grade::Domain::Iterator::FDescribeGradeModelMastersIteratorPtr GradeModelMasters(
+            const TOptional<FString> NamePrefix = TOptional<FString>()
         ) const;
 
         Gs2::Core::Domain::CallbackID SubscribeGradeModelMasters(

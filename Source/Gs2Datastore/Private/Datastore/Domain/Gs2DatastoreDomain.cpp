@@ -397,11 +397,13 @@ namespace Gs2::Datastore::Domain
     }
 
     Gs2::Datastore::Domain::Iterator::FDescribeNamespacesIteratorPtr FGs2DatastoreDomain::Namespaces(
+        const TOptional<FString> NamePrefix
     ) const
     {
         return MakeShared<Gs2::Datastore::Domain::Iterator::FDescribeNamespacesIterator>(
             Gs2,
             Client
+            NamePrefix
         );
     }
 

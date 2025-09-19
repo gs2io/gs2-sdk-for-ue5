@@ -27,6 +27,7 @@ namespace Gs2::Experience::Request
     {
         TOptional<FString> ContextStackValue;
         TOptional<FString> NamespaceNameValue;
+        TOptional<FString> NamePrefixValue;
         TOptional<FString> PageTokenValue;
         TOptional<int32> LimitValue;
         
@@ -40,11 +41,13 @@ namespace Gs2::Experience::Request
 
         TSharedPtr<FDescribeExperienceModelMastersRequest> WithContextStack(const TOptional<FString> ContextStack);
         TSharedPtr<FDescribeExperienceModelMastersRequest> WithNamespaceName(const TOptional<FString> NamespaceName);
+        TSharedPtr<FDescribeExperienceModelMastersRequest> WithNamePrefix(const TOptional<FString> NamePrefix);
         TSharedPtr<FDescribeExperienceModelMastersRequest> WithPageToken(const TOptional<FString> PageToken);
         TSharedPtr<FDescribeExperienceModelMastersRequest> WithLimit(const TOptional<int32> Limit);
 
         TOptional<FString> GetContextStack() const;
         TOptional<FString> GetNamespaceName() const;
+        TOptional<FString> GetNamePrefix() const;
         TOptional<FString> GetPageToken() const;
         TOptional<int32> GetLimit() const;
         FString GetLimitString() const;

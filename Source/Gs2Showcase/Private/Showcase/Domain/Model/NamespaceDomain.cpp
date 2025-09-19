@@ -455,12 +455,14 @@ namespace Gs2::Showcase::Domain::Model
     }
 
     Gs2::Showcase::Domain::Iterator::FDescribeSalesItemMastersIteratorPtr FNamespaceDomain::SalesItemMasters(
+        const TOptional<FString> NamePrefix
     ) const
     {
         return MakeShared<Gs2::Showcase::Domain::Iterator::FDescribeSalesItemMastersIterator>(
             Gs2,
             Client,
-            NamespaceName
+            NamespaceName,
+            NamePrefix
         );
     }
 
@@ -505,12 +507,14 @@ namespace Gs2::Showcase::Domain::Model
     }
 
     Gs2::Showcase::Domain::Iterator::FDescribeSalesItemGroupMastersIteratorPtr FNamespaceDomain::SalesItemGroupMasters(
+        const TOptional<FString> NamePrefix
     ) const
     {
         return MakeShared<Gs2::Showcase::Domain::Iterator::FDescribeSalesItemGroupMastersIterator>(
             Gs2,
             Client,
-            NamespaceName
+            NamespaceName,
+            NamePrefix
         );
     }
 
@@ -579,12 +583,14 @@ namespace Gs2::Showcase::Domain::Model
     }
 
     Gs2::Showcase::Domain::Iterator::FDescribeShowcaseMastersIteratorPtr FNamespaceDomain::ShowcaseMasters(
+        const TOptional<FString> NamePrefix
     ) const
     {
         return MakeShared<Gs2::Showcase::Domain::Iterator::FDescribeShowcaseMastersIterator>(
             Gs2,
             Client,
-            NamespaceName
+            NamespaceName,
+            NamePrefix
         );
     }
 
@@ -629,12 +635,14 @@ namespace Gs2::Showcase::Domain::Model
     }
 
     Gs2::Showcase::Domain::Iterator::FDescribeRandomShowcaseMastersIteratorPtr FNamespaceDomain::RandomShowcaseMasters(
+        const TOptional<FString> NamePrefix
     ) const
     {
         return MakeShared<Gs2::Showcase::Domain::Iterator::FDescribeRandomShowcaseMastersIterator>(
             Gs2,
             Client,
-            NamespaceName
+            NamespaceName,
+            NamePrefix
         );
     }
 

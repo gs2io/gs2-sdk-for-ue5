@@ -396,11 +396,13 @@ namespace Gs2::AdReward::Domain
     }
 
     Gs2::AdReward::Domain::Iterator::FDescribeNamespacesIteratorPtr FGs2AdRewardDomain::Namespaces(
+        const TOptional<FString> NamePrefix
     ) const
     {
         return MakeShared<Gs2::AdReward::Domain::Iterator::FDescribeNamespacesIterator>(
             Gs2,
             Client
+            NamePrefix
         );
     }
 

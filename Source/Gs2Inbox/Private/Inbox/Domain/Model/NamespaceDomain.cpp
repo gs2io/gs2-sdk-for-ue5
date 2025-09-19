@@ -377,12 +377,14 @@ namespace Gs2::Inbox::Domain::Model
     }
 
     Gs2::Inbox::Domain::Iterator::FDescribeGlobalMessageMastersIteratorPtr FNamespaceDomain::GlobalMessageMasters(
+        const TOptional<FString> NamePrefix
     ) const
     {
         return MakeShared<Gs2::Inbox::Domain::Iterator::FDescribeGlobalMessageMastersIterator>(
             Gs2,
             Client,
-            NamespaceName
+            NamespaceName,
+            NamePrefix
         );
     }
 

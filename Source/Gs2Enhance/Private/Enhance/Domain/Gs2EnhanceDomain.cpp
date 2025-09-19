@@ -402,11 +402,13 @@ namespace Gs2::Enhance::Domain
     }
 
     Gs2::Enhance::Domain::Iterator::FDescribeNamespacesIteratorPtr FGs2EnhanceDomain::Namespaces(
+        const TOptional<FString> NamePrefix
     ) const
     {
         return MakeShared<Gs2::Enhance::Domain::Iterator::FDescribeNamespacesIterator>(
             Gs2,
             Client
+            NamePrefix
         );
     }
 

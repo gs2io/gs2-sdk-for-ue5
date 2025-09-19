@@ -397,11 +397,13 @@ namespace Gs2::StateMachine::Domain
     }
 
     Gs2::StateMachine::Domain::Iterator::FDescribeNamespacesIteratorPtr FGs2StateMachineDomain::Namespaces(
+        const TOptional<FString> NamePrefix
     ) const
     {
         return MakeShared<Gs2::StateMachine::Domain::Iterator::FDescribeNamespacesIterator>(
             Gs2,
             Client
+            NamePrefix
         );
     }
 

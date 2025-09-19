@@ -96,11 +96,13 @@ namespace Gs2::Realtime::Domain
     }
 
     Gs2::Realtime::Domain::Iterator::FDescribeNamespacesIteratorPtr FGs2RealtimeDomain::Namespaces(
+        const TOptional<FString> NamePrefix
     ) const
     {
         return MakeShared<Gs2::Realtime::Domain::Iterator::FDescribeNamespacesIterator>(
             Gs2,
             Client
+            NamePrefix
         );
     }
 

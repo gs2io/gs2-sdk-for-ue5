@@ -279,6 +279,7 @@ namespace Gs2::Enhance::Domain::Model
         );
 
         Gs2::Enhance::Domain::Iterator::FDescribeUnleashRateModelMastersIteratorPtr UnleashRateModelMasters(
+            const TOptional<FString> NamePrefix = TOptional<FString>()
         ) const;
 
         Gs2::Core::Domain::CallbackID SubscribeUnleashRateModelMasters(
@@ -317,6 +318,7 @@ namespace Gs2::Enhance::Domain::Model
         );
 
         Gs2::Enhance::Domain::Iterator::FDescribeRateModelMastersIteratorPtr RateModelMasters(
+            const TOptional<FString> NamePrefix = TOptional<FString>()
         ) const;
 
         Gs2::Core::Domain::CallbackID SubscribeRateModelMasters(

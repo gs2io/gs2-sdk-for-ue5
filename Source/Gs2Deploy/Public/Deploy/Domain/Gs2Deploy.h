@@ -209,6 +209,7 @@ namespace Gs2::Deploy::Domain
         );
 
         Gs2::Deploy::Domain::Iterator::FDescribeStacksIteratorPtr Stacks(
+            const TOptional<FString> NamePrefix = TOptional<FString>()
         ) const;
 
         Gs2::Core::Domain::CallbackID SubscribeStacks(

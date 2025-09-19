@@ -285,6 +285,7 @@ namespace Gs2::Experience::Domain::Model
         );
 
         Gs2::Experience::Domain::Iterator::FDescribeThresholdMastersIteratorPtr ThresholdMasters(
+            const TOptional<FString> NamePrefix = TOptional<FString>()
         ) const;
 
         Gs2::Core::Domain::CallbackID SubscribeThresholdMasters(
@@ -300,6 +301,7 @@ namespace Gs2::Experience::Domain::Model
         );
 
         Gs2::Experience::Domain::Iterator::FDescribeExperienceModelMastersIteratorPtr ExperienceModelMasters(
+            const TOptional<FString> NamePrefix = TOptional<FString>()
         ) const;
 
         Gs2::Core::Domain::CallbackID SubscribeExperienceModelMasters(

@@ -572,12 +572,14 @@ namespace Gs2::Stamina::Domain::Model
     }
 
     Gs2::Stamina::Domain::Iterator::FDescribeRecoverIntervalTableMastersIteratorPtr FNamespaceDomain::RecoverIntervalTableMasters(
+        const TOptional<FString> NamePrefix
     ) const
     {
         return MakeShared<Gs2::Stamina::Domain::Iterator::FDescribeRecoverIntervalTableMastersIterator>(
             Gs2,
             Client,
-            NamespaceName
+            NamespaceName,
+            NamePrefix
         );
     }
 
@@ -622,12 +624,14 @@ namespace Gs2::Stamina::Domain::Model
     }
 
     Gs2::Stamina::Domain::Iterator::FDescribeRecoverValueTableMastersIteratorPtr FNamespaceDomain::RecoverValueTableMasters(
+        const TOptional<FString> NamePrefix
     ) const
     {
         return MakeShared<Gs2::Stamina::Domain::Iterator::FDescribeRecoverValueTableMastersIterator>(
             Gs2,
             Client,
-            NamespaceName
+            NamespaceName,
+            NamePrefix
         );
     }
 
@@ -672,12 +676,14 @@ namespace Gs2::Stamina::Domain::Model
     }
 
     Gs2::Stamina::Domain::Iterator::FDescribeStaminaModelMastersIteratorPtr FNamespaceDomain::StaminaModelMasters(
+        const TOptional<FString> NamePrefix
     ) const
     {
         return MakeShared<Gs2::Stamina::Domain::Iterator::FDescribeStaminaModelMastersIterator>(
             Gs2,
             Client,
-            NamespaceName
+            NamespaceName,
+            NamePrefix
         );
     }
 

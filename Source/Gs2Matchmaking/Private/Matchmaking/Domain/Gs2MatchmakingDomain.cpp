@@ -407,11 +407,13 @@ namespace Gs2::Matchmaking::Domain
     }
 
     Gs2::Matchmaking::Domain::Iterator::FDescribeNamespacesIteratorPtr FGs2MatchmakingDomain::Namespaces(
+        const TOptional<FString> NamePrefix
     ) const
     {
         return MakeShared<Gs2::Matchmaking::Domain::Iterator::FDescribeNamespacesIterator>(
             Gs2,
             Client
+            NamePrefix
         );
     }
 

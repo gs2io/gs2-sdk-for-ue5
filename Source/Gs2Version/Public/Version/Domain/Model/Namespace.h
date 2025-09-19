@@ -259,6 +259,7 @@ namespace Gs2::Version::Domain::Model
         );
 
         Gs2::Version::Domain::Iterator::FDescribeVersionModelMastersIteratorPtr VersionModelMasters(
+            const TOptional<FString> NamePrefix = TOptional<FString>()
         ) const;
 
         Gs2::Core::Domain::CallbackID SubscribeVersionModelMasters(

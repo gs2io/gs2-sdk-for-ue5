@@ -294,6 +294,7 @@ namespace Gs2::StateMachine::Domain
         );
 
         Gs2::StateMachine::Domain::Iterator::FDescribeNamespacesIteratorPtr Namespaces(
+            const TOptional<FString> NamePrefix = TOptional<FString>()
         ) const;
 
         Gs2::Core::Domain::CallbackID SubscribeNamespaces(

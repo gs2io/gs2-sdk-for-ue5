@@ -30,11 +30,13 @@ namespace Gs2::Lock::Domain::Iterator
     {
         const TSharedPtr<Core::Domain::FGs2> Gs2;
         const Gs2::Lock::FGs2LockRestClientPtr Client;
+        const TOptional<FString> NamePrefix;
 
     public:
         FDescribeNamespacesIterator(
             const TSharedPtr<Core::Domain::FGs2> Gs2,
-            const Gs2::Lock::FGs2LockRestClientPtr Client
+            const Gs2::Lock::FGs2LockRestClientPtr Client,
+            const TOptional<FString> NamePrefix = TOptional<FString>()
         );
 
         FDescribeNamespacesIterator(

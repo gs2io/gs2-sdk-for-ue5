@@ -540,12 +540,14 @@ namespace Gs2::Matchmaking::Domain::Model
     }
 
     Gs2::Matchmaking::Domain::Iterator::FDescribeRatingModelMastersIteratorPtr FNamespaceDomain::RatingModelMasters(
+        const TOptional<FString> NamePrefix
     ) const
     {
         return MakeShared<Gs2::Matchmaking::Domain::Iterator::FDescribeRatingModelMastersIterator>(
             Gs2,
             Client,
-            NamespaceName
+            NamespaceName,
+            NamePrefix
         );
     }
 
@@ -654,12 +656,14 @@ namespace Gs2::Matchmaking::Domain::Model
     }
 
     Gs2::Matchmaking::Domain::Iterator::FDescribeSeasonModelMastersIteratorPtr FNamespaceDomain::SeasonModelMasters(
+        const TOptional<FString> NamePrefix
     ) const
     {
         return MakeShared<Gs2::Matchmaking::Domain::Iterator::FDescribeSeasonModelMastersIterator>(
             Gs2,
             Client,
-            NamespaceName
+            NamespaceName,
+            NamePrefix
         );
     }
 

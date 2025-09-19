@@ -228,6 +228,7 @@ namespace Gs2::Inventory::Domain::Model
         );
 
         Gs2::Inventory::Domain::Iterator::FDescribeBigItemModelMastersIteratorPtr BigItemModelMasters(
+            const TOptional<FString> NamePrefix = TOptional<FString>()
         ) const;
 
         Gs2::Core::Domain::CallbackID SubscribeBigItemModelMasters(

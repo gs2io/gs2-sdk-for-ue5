@@ -30,11 +30,13 @@ namespace Gs2::Deploy::Domain::Iterator
     {
         const TSharedPtr<Core::Domain::FGs2> Gs2;
         const Gs2::Deploy::FGs2DeployRestClientPtr Client;
+        const TOptional<FString> NamePrefix;
 
     public:
         FDescribeStacksIterator(
             const TSharedPtr<Core::Domain::FGs2> Gs2,
-            const Gs2::Deploy::FGs2DeployRestClientPtr Client
+            const Gs2::Deploy::FGs2DeployRestClientPtr Client,
+            const TOptional<FString> NamePrefix = TOptional<FString>()
         );
 
         FDescribeStacksIterator(

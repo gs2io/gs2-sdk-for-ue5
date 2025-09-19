@@ -405,11 +405,13 @@ namespace Gs2::Formation::Domain
     }
 
     Gs2::Formation::Domain::Iterator::FDescribeNamespacesIteratorPtr FGs2FormationDomain::Namespaces(
+        const TOptional<FString> NamePrefix
     ) const
     {
         return MakeShared<Gs2::Formation::Domain::Iterator::FDescribeNamespacesIterator>(
             Gs2,
             Client
+            NamePrefix
         );
     }
 

@@ -377,12 +377,14 @@ namespace Gs2::Version::Domain::Model
     }
 
     Gs2::Version::Domain::Iterator::FDescribeVersionModelMastersIteratorPtr FNamespaceDomain::VersionModelMasters(
+        const TOptional<FString> NamePrefix
     ) const
     {
         return MakeShared<Gs2::Version::Domain::Iterator::FDescribeVersionModelMastersIterator>(
             Gs2,
             Client,
-            NamespaceName
+            NamespaceName,
+            NamePrefix
         );
     }
 

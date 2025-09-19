@@ -93,6 +93,7 @@ namespace Gs2::Chat::Domain::Model
         );
 
         Gs2::Chat::Domain::Iterator::FDescribeRoomsIteratorPtr Rooms(
+            const TOptional<FString> NamePrefix = TOptional<FString>()
         ) const;
 
         Gs2::Core::Domain::CallbackID SubscribeRooms(
@@ -109,6 +110,7 @@ namespace Gs2::Chat::Domain::Model
         );
 
         Gs2::Chat::Domain::Iterator::FDescribeSubscribesByUserIdIteratorPtr Subscribes(
+            const TOptional<FString> NamePrefix = TOptional<FString>(),
             const TOptional<FString> TimeOffsetToken = TOptional<FString>()
         ) const;
 

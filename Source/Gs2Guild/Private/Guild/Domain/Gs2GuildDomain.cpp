@@ -404,11 +404,13 @@ namespace Gs2::Guild::Domain
     }
 
     Gs2::Guild::Domain::Iterator::FDescribeNamespacesIteratorPtr FGs2GuildDomain::Namespaces(
+        const TOptional<FString> NamePrefix
     ) const
     {
         return MakeShared<Gs2::Guild::Domain::Iterator::FDescribeNamespacesIterator>(
             Gs2,
             Client
+            NamePrefix
         );
     }
 

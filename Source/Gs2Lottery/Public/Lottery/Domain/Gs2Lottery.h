@@ -311,6 +311,7 @@ namespace Gs2::Lottery::Domain
         );
 
         Gs2::Lottery::Domain::Iterator::FDescribeNamespacesIteratorPtr Namespaces(
+            const TOptional<FString> NamePrefix = TOptional<FString>()
         ) const;
 
         Gs2::Core::Domain::CallbackID SubscribeNamespaces(

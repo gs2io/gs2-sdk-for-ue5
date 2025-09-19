@@ -232,6 +232,7 @@ namespace Gs2::Buff::Domain::Model
         );
 
         Gs2::Buff::Domain::Iterator::FDescribeBuffEntryModelMastersIteratorPtr BuffEntryModelMasters(
+            const TOptional<FString> NamePrefix = TOptional<FString>()
         ) const;
 
         Gs2::Core::Domain::CallbackID SubscribeBuffEntryModelMasters(

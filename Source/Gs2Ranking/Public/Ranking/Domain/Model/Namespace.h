@@ -270,6 +270,7 @@ namespace Gs2::Ranking::Domain::Model
         );
 
         Gs2::Ranking::Domain::Iterator::FDescribeCategoryModelMastersIteratorPtr CategoryModelMasters(
+            const TOptional<FString> NamePrefix = TOptional<FString>()
         ) const;
 
         Gs2::Core::Domain::CallbackID SubscribeCategoryModelMasters(

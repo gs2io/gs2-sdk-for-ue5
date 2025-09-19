@@ -334,12 +334,14 @@ namespace Gs2::Key::Domain::Model
     }
 
     Gs2::Key::Domain::Iterator::FDescribeKeysIteratorPtr FNamespaceDomain::Keys(
+        const TOptional<FString> NamePrefix
     ) const
     {
         return MakeShared<Gs2::Key::Domain::Iterator::FDescribeKeysIterator>(
             Gs2,
             Client,
-            NamespaceName
+            NamespaceName,
+            NamePrefix
         );
     }
 

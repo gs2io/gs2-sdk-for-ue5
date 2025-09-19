@@ -319,6 +319,7 @@ namespace Gs2::Money2::Domain
         );
 
         Gs2::Money2::Domain::Iterator::FDescribeNamespacesIteratorPtr Namespaces(
+            const TOptional<FString> NamePrefix = TOptional<FString>()
         ) const;
 
         Gs2::Core::Domain::CallbackID SubscribeNamespaces(

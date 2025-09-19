@@ -405,11 +405,13 @@ namespace Gs2::Showcase::Domain
     }
 
     Gs2::Showcase::Domain::Iterator::FDescribeNamespacesIteratorPtr FGs2ShowcaseDomain::Namespaces(
+        const TOptional<FString> NamePrefix
     ) const
     {
         return MakeShared<Gs2::Showcase::Domain::Iterator::FDescribeNamespacesIterator>(
             Gs2,
             Client
+            NamePrefix
         );
     }
 

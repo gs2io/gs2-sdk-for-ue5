@@ -77,12 +77,14 @@ namespace Gs2::Chat::Domain::Model
     }
 
     Gs2::Chat::Domain::Iterator::FDescribeRoomsIteratorPtr FUserDomain::Rooms(
+        const TOptional<FString> NamePrefix
     ) const
     {
         return MakeShared<Gs2::Chat::Domain::Iterator::FDescribeRoomsIterator>(
             Gs2,
             Client,
-            NamespaceName
+            NamespaceName,
+            NamePrefix
         );
     }
 
@@ -132,6 +134,7 @@ namespace Gs2::Chat::Domain::Model
     }
 
     Gs2::Chat::Domain::Iterator::FDescribeSubscribesByUserIdIteratorPtr FUserDomain::Subscribes(
+        const TOptional<FString> NamePrefix,
         const TOptional<FString> TimeOffsetToken
     ) const
     {
@@ -140,6 +143,7 @@ namespace Gs2::Chat::Domain::Model
             Client,
             NamespaceName,
             UserId,
+            NamePrefix,
             TimeOffsetToken
         );
     }

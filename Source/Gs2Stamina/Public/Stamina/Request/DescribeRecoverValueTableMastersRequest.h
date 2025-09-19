@@ -27,6 +27,7 @@ namespace Gs2::Stamina::Request
     {
         TOptional<FString> ContextStackValue;
         TOptional<FString> NamespaceNameValue;
+        TOptional<FString> NamePrefixValue;
         TOptional<FString> PageTokenValue;
         TOptional<int32> LimitValue;
         
@@ -40,11 +41,13 @@ namespace Gs2::Stamina::Request
 
         TSharedPtr<FDescribeRecoverValueTableMastersRequest> WithContextStack(const TOptional<FString> ContextStack);
         TSharedPtr<FDescribeRecoverValueTableMastersRequest> WithNamespaceName(const TOptional<FString> NamespaceName);
+        TSharedPtr<FDescribeRecoverValueTableMastersRequest> WithNamePrefix(const TOptional<FString> NamePrefix);
         TSharedPtr<FDescribeRecoverValueTableMastersRequest> WithPageToken(const TOptional<FString> PageToken);
         TSharedPtr<FDescribeRecoverValueTableMastersRequest> WithLimit(const TOptional<int32> Limit);
 
         TOptional<FString> GetContextStack() const;
         TOptional<FString> GetNamespaceName() const;
+        TOptional<FString> GetNamePrefix() const;
         TOptional<FString> GetPageToken() const;
         TOptional<int32> GetLimit() const;
         FString GetLimitString() const;

@@ -401,11 +401,13 @@ namespace Gs2::SeasonRating::Domain
     }
 
     Gs2::SeasonRating::Domain::Iterator::FDescribeNamespacesIteratorPtr FGs2SeasonRatingDomain::Namespaces(
+        const TOptional<FString> NamePrefix
     ) const
     {
         return MakeShared<Gs2::SeasonRating::Domain::Iterator::FDescribeNamespacesIterator>(
             Gs2,
             Client
+            NamePrefix
         );
     }
 

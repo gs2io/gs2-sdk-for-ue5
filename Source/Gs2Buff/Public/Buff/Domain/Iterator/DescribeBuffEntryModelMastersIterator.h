@@ -31,12 +31,14 @@ namespace Gs2::Buff::Domain::Iterator
         const TSharedPtr<Core::Domain::FGs2> Gs2;
         const Gs2::Buff::FGs2BuffRestClientPtr Client;
         const TOptional<FString> NamespaceName;
+        const TOptional<FString> NamePrefix;
 
     public:
         FDescribeBuffEntryModelMastersIterator(
             const TSharedPtr<Core::Domain::FGs2> Gs2,
             const Gs2::Buff::FGs2BuffRestClientPtr Client,
-            const TOptional<FString> NamespaceName
+            const TOptional<FString> NamespaceName,
+            const TOptional<FString> NamePrefix = TOptional<FString>()
         );
 
         FDescribeBuffEntryModelMastersIterator(

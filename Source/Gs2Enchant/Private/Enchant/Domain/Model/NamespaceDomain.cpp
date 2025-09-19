@@ -403,12 +403,14 @@ namespace Gs2::Enchant::Domain::Model
     }
 
     Gs2::Enchant::Domain::Iterator::FDescribeBalanceParameterModelMastersIteratorPtr FNamespaceDomain::BalanceParameterModelMasters(
+        const TOptional<FString> NamePrefix
     ) const
     {
         return MakeShared<Gs2::Enchant::Domain::Iterator::FDescribeBalanceParameterModelMastersIterator>(
             Gs2,
             Client,
-            NamespaceName
+            NamespaceName,
+            NamePrefix
         );
     }
 

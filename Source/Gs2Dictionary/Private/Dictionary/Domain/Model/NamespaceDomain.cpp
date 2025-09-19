@@ -514,12 +514,14 @@ namespace Gs2::Dictionary::Domain::Model
     }
 
     Gs2::Dictionary::Domain::Iterator::FDescribeEntryModelMastersIteratorPtr FNamespaceDomain::EntryModelMasters(
+        const TOptional<FString> NamePrefix
     ) const
     {
         return MakeShared<Gs2::Dictionary::Domain::Iterator::FDescribeEntryModelMastersIterator>(
             Gs2,
             Client,
-            NamespaceName
+            NamespaceName,
+            NamePrefix
         );
     }
 

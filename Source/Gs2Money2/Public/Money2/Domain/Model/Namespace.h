@@ -352,6 +352,7 @@ namespace Gs2::Money2::Domain::Model
         );
 
         Gs2::Money2::Domain::Iterator::FDescribeStoreContentModelMastersIteratorPtr StoreContentModelMasters(
+            const TOptional<FString> NamePrefix = TOptional<FString>()
         ) const;
 
         Gs2::Core::Domain::CallbackID SubscribeStoreContentModelMasters(
@@ -382,6 +383,7 @@ namespace Gs2::Money2::Domain::Model
         );
 
         Gs2::Money2::Domain::Iterator::FDescribeStoreSubscriptionContentModelMastersIteratorPtr StoreSubscriptionContentModelMasters(
+            const TOptional<FString> NamePrefix = TOptional<FString>()
         ) const;
 
         Gs2::Core::Domain::CallbackID SubscribeStoreSubscriptionContentModelMasters(

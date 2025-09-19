@@ -27,6 +27,7 @@ namespace Gs2::Formation::Request
     {
         TOptional<FString> ContextStackValue;
         TOptional<FString> NamespaceNameValue;
+        TOptional<FString> NamePrefixValue;
         TOptional<FString> PageTokenValue;
         TOptional<int32> LimitValue;
         
@@ -40,11 +41,13 @@ namespace Gs2::Formation::Request
 
         TSharedPtr<FDescribeFormModelMastersRequest> WithContextStack(const TOptional<FString> ContextStack);
         TSharedPtr<FDescribeFormModelMastersRequest> WithNamespaceName(const TOptional<FString> NamespaceName);
+        TSharedPtr<FDescribeFormModelMastersRequest> WithNamePrefix(const TOptional<FString> NamePrefix);
         TSharedPtr<FDescribeFormModelMastersRequest> WithPageToken(const TOptional<FString> PageToken);
         TSharedPtr<FDescribeFormModelMastersRequest> WithLimit(const TOptional<int32> Limit);
 
         TOptional<FString> GetContextStack() const;
         TOptional<FString> GetNamespaceName() const;
+        TOptional<FString> GetNamePrefix() const;
         TOptional<FString> GetPageToken() const;
         TOptional<int32> GetLimit() const;
         FString GetLimitString() const;

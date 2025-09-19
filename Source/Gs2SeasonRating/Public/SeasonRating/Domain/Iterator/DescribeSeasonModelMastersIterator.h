@@ -31,12 +31,14 @@ namespace Gs2::SeasonRating::Domain::Iterator
         const TSharedPtr<Core::Domain::FGs2> Gs2;
         const Gs2::SeasonRating::FGs2SeasonRatingRestClientPtr Client;
         const TOptional<FString> NamespaceName;
+        const TOptional<FString> NamePrefix;
 
     public:
         FDescribeSeasonModelMastersIterator(
             const TSharedPtr<Core::Domain::FGs2> Gs2,
             const Gs2::SeasonRating::FGs2SeasonRatingRestClientPtr Client,
-            const TOptional<FString> NamespaceName
+            const TOptional<FString> NamespaceName,
+            const TOptional<FString> NamePrefix = TOptional<FString>()
         );
 
         FDescribeSeasonModelMastersIterator(

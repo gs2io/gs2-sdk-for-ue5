@@ -258,6 +258,7 @@ namespace Gs2::SerialKey::Domain::Model
         );
 
         Gs2::SerialKey::Domain::Iterator::FDescribeCampaignModelMastersIteratorPtr CampaignModelMasters(
+            const TOptional<FString> NamePrefix = TOptional<FString>()
         ) const;
 
         Gs2::Core::Domain::CallbackID SubscribeCampaignModelMasters(

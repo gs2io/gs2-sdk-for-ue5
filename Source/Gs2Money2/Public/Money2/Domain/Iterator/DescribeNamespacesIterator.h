@@ -30,11 +30,13 @@ namespace Gs2::Money2::Domain::Iterator
     {
         const TSharedPtr<Core::Domain::FGs2> Gs2;
         const Gs2::Money2::FGs2Money2RestClientPtr Client;
+        const TOptional<FString> NamePrefix;
 
     public:
         FDescribeNamespacesIterator(
             const TSharedPtr<Core::Domain::FGs2> Gs2,
-            const Gs2::Money2::FGs2Money2RestClientPtr Client
+            const Gs2::Money2::FGs2Money2RestClientPtr Client,
+            const TOptional<FString> NamePrefix = TOptional<FString>()
         );
 
         FDescribeNamespacesIterator(

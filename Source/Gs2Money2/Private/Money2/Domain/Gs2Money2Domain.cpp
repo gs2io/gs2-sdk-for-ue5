@@ -406,11 +406,13 @@ namespace Gs2::Money2::Domain
     }
 
     Gs2::Money2::Domain::Iterator::FDescribeNamespacesIteratorPtr FGs2Money2Domain::Namespaces(
+        const TOptional<FString> NamePrefix
     ) const
     {
         return MakeShared<Gs2::Money2::Domain::Iterator::FDescribeNamespacesIterator>(
             Gs2,
             Client
+            NamePrefix
         );
     }
 

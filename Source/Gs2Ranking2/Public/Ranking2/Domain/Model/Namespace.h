@@ -349,6 +349,7 @@ namespace Gs2::Ranking2::Domain::Model
         );
 
         Gs2::Ranking2::Domain::Iterator::FDescribeGlobalRankingModelMastersIteratorPtr GlobalRankingModelMasters(
+            const TOptional<FString> NamePrefix = TOptional<FString>()
         ) const;
 
         Gs2::Core::Domain::CallbackID SubscribeGlobalRankingModelMasters(
@@ -387,6 +388,7 @@ namespace Gs2::Ranking2::Domain::Model
         );
 
         Gs2::Ranking2::Domain::Iterator::FDescribeSubscribeRankingModelMastersIteratorPtr SubscribeRankingModelMasters(
+            const TOptional<FString> NamePrefix = TOptional<FString>()
         ) const;
 
         Gs2::Core::Domain::CallbackID SubscribeSubscribeRankingModelMasters(
@@ -417,6 +419,7 @@ namespace Gs2::Ranking2::Domain::Model
         );
 
         Gs2::Ranking2::Domain::Iterator::FDescribeClusterRankingModelMastersIteratorPtr ClusterRankingModelMasters(
+            const TOptional<FString> NamePrefix = TOptional<FString>()
         ) const;
 
         Gs2::Core::Domain::CallbackID SubscribeClusterRankingModelMasters(

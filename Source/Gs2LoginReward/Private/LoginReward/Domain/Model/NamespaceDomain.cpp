@@ -293,12 +293,14 @@ namespace Gs2::LoginReward::Domain::Model
     }
 
     Gs2::LoginReward::Domain::Iterator::FDescribeBonusModelMastersIteratorPtr FNamespaceDomain::BonusModelMasters(
+        const TOptional<FString> NamePrefix
     ) const
     {
         return MakeShared<Gs2::LoginReward::Domain::Iterator::FDescribeBonusModelMastersIterator>(
             Gs2,
             Client,
-            NamespaceName
+            NamespaceName,
+            NamePrefix
         );
     }
 

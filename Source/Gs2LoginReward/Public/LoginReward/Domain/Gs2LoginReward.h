@@ -299,6 +299,7 @@ namespace Gs2::LoginReward::Domain
         );
 
         Gs2::LoginReward::Domain::Iterator::FDescribeNamespacesIteratorPtr Namespaces(
+            const TOptional<FString> NamePrefix = TOptional<FString>()
         ) const;
 
         Gs2::Core::Domain::CallbackID SubscribeNamespaces(

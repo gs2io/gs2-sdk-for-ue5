@@ -276,13 +276,15 @@ namespace Gs2::Inventory::Domain::Model
     }
 
     Gs2::Inventory::Domain::Iterator::FDescribeBigItemModelMastersIteratorPtr FBigInventoryModelMasterDomain::BigItemModelMasters(
+        const TOptional<FString> NamePrefix
     ) const
     {
         return MakeShared<Gs2::Inventory::Domain::Iterator::FDescribeBigItemModelMastersIterator>(
             Gs2,
             Client,
             NamespaceName,
-            InventoryName
+            InventoryName,
+            NamePrefix
         );
     }
 

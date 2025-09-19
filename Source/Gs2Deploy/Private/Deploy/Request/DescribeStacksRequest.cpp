@@ -19,6 +19,7 @@
 namespace Gs2::Deploy::Request
 {
     FDescribeStacksRequest::FDescribeStacksRequest():
+        NamePrefixValue(TOptional<FString>()),
         PageTokenValue(TOptional<FString>()),
         LimitValue(TOptional<int32>())
     {
@@ -27,6 +28,7 @@ namespace Gs2::Deploy::Request
     FDescribeStacksRequest::FDescribeStacksRequest(
         const FDescribeStacksRequest& From
     ):
+        NamePrefixValue(From.NamePrefixValue),
         PageTokenValue(From.PageTokenValue),
         LimitValue(From.LimitValue)
     {
@@ -37,6 +39,14 @@ namespace Gs2::Deploy::Request
     )
     {
         this->ContextStackValue = ContextStack;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FDescribeStacksRequest> FDescribeStacksRequest::WithNamePrefix(
+        const TOptional<FString> NamePrefix
+    )
+    {
+        this->NamePrefixValue = NamePrefix;
         return SharedThis(this);
     }
 
@@ -59,6 +69,11 @@ namespace Gs2::Deploy::Request
     TOptional<FString> FDescribeStacksRequest::GetContextStack() const
     {
         return ContextStackValue;
+    }
+
+    TOptional<FString> FDescribeStacksRequest::GetNamePrefix() const
+    {
+        return NamePrefixValue;
     }
 
     TOptional<FString> FDescribeStacksRequest::GetPageToken() const
@@ -87,6 +102,15 @@ namespace Gs2::Deploy::Request
         }
         return MakeShared<FDescribeStacksRequest>()
             ->WithContextStack(Data->HasField(ANSI_TO_TCHAR("contextStack")) ? TOptional<FString>(Data->GetStringField(ANSI_TO_TCHAR("contextStack"))) : TOptional<FString>())
+            ->WithNamePrefix(Data->HasField(ANSI_TO_TCHAR("namePrefix")) ? [Data]() -> TOptional<FString>
+              {
+                  FString v("");
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("namePrefix"), v))
+                  {
+                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                  }
+                  return TOptional<FString>();
+              }() : TOptional<FString>())
             ->WithPageToken(Data->HasField(ANSI_TO_TCHAR("pageToken")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
@@ -113,6 +137,10 @@ namespace Gs2::Deploy::Request
         if (ContextStackValue.IsSet())
         {
             JsonRootObject->SetStringField("contextStack", ContextStackValue.GetValue());
+        }
+        if (NamePrefixValue.IsSet())
+        {
+            JsonRootObject->SetStringField("namePrefix", NamePrefixValue.GetValue());
         }
         if (PageTokenValue.IsSet())
         {

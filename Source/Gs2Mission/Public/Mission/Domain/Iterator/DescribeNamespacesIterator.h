@@ -30,11 +30,13 @@ namespace Gs2::Mission::Domain::Iterator
     {
         const TSharedPtr<Core::Domain::FGs2> Gs2;
         const Gs2::Mission::FGs2MissionRestClientPtr Client;
+        const TOptional<FString> NamePrefix;
 
     public:
         FDescribeNamespacesIterator(
             const TSharedPtr<Core::Domain::FGs2> Gs2,
-            const Gs2::Mission::FGs2MissionRestClientPtr Client
+            const Gs2::Mission::FGs2MissionRestClientPtr Client,
+            const TOptional<FString> NamePrefix = TOptional<FString>()
         );
 
         FDescribeNamespacesIterator(

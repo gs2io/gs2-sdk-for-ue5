@@ -310,6 +310,7 @@ namespace Gs2::Script::Domain::Model
         );
 
         Gs2::Script::Domain::Iterator::FDescribeScriptsIteratorPtr Scripts(
+            const TOptional<FString> NamePrefix = TOptional<FString>()
         ) const;
 
         Gs2::Core::Domain::CallbackID SubscribeScripts(

@@ -293,6 +293,7 @@ namespace Gs2::AdReward::Domain
         );
 
         Gs2::AdReward::Domain::Iterator::FDescribeNamespacesIteratorPtr Namespaces(
+            const TOptional<FString> NamePrefix = TOptional<FString>()
         ) const;
 
         Gs2::Core::Domain::CallbackID SubscribeNamespaces(

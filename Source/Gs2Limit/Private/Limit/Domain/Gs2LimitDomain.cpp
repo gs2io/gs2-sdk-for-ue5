@@ -399,11 +399,13 @@ namespace Gs2::Limit::Domain
     }
 
     Gs2::Limit::Domain::Iterator::FDescribeNamespacesIteratorPtr FGs2LimitDomain::Namespaces(
+        const TOptional<FString> NamePrefix
     ) const
     {
         return MakeShared<Gs2::Limit::Domain::Iterator::FDescribeNamespacesIterator>(
             Gs2,
             Client
+            NamePrefix
         );
     }
 

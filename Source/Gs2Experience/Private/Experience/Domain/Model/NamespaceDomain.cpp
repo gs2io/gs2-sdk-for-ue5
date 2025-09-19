@@ -424,12 +424,14 @@ namespace Gs2::Experience::Domain::Model
     }
 
     Gs2::Experience::Domain::Iterator::FDescribeThresholdMastersIteratorPtr FNamespaceDomain::ThresholdMasters(
+        const TOptional<FString> NamePrefix
     ) const
     {
         return MakeShared<Gs2::Experience::Domain::Iterator::FDescribeThresholdMastersIterator>(
             Gs2,
             Client,
-            NamespaceName
+            NamespaceName,
+            NamePrefix
         );
     }
 
@@ -474,12 +476,14 @@ namespace Gs2::Experience::Domain::Model
     }
 
     Gs2::Experience::Domain::Iterator::FDescribeExperienceModelMastersIteratorPtr FNamespaceDomain::ExperienceModelMasters(
+        const TOptional<FString> NamePrefix
     ) const
     {
         return MakeShared<Gs2::Experience::Domain::Iterator::FDescribeExperienceModelMastersIterator>(
             Gs2,
             Client,
-            NamespaceName
+            NamespaceName,
+            NamePrefix
         );
     }
 

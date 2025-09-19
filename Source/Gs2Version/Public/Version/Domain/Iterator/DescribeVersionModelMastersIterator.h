@@ -31,12 +31,14 @@ namespace Gs2::Version::Domain::Iterator
         const TSharedPtr<Core::Domain::FGs2> Gs2;
         const Gs2::Version::FGs2VersionRestClientPtr Client;
         const TOptional<FString> NamespaceName;
+        const TOptional<FString> NamePrefix;
 
     public:
         FDescribeVersionModelMastersIterator(
             const TSharedPtr<Core::Domain::FGs2> Gs2,
             const Gs2::Version::FGs2VersionRestClientPtr Client,
-            const TOptional<FString> NamespaceName
+            const TOptional<FString> NamespaceName,
+            const TOptional<FString> NamePrefix = TOptional<FString>()
         );
 
         FDescribeVersionModelMastersIterator(

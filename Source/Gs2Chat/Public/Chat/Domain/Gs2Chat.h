@@ -310,6 +310,7 @@ namespace Gs2::Chat::Domain
         );
 
         Gs2::Chat::Domain::Iterator::FDescribeNamespacesIteratorPtr Namespaces(
+            const TOptional<FString> NamePrefix = TOptional<FString>()
         ) const;
 
         Gs2::Core::Domain::CallbackID SubscribeNamespaces(

@@ -27,7 +27,6 @@ namespace Gs2::Account::Request
     {
         TOptional<FString> ContextStackValue;
         TOptional<FString> NamespaceNameValue;
-        TOptional<FString> AccessTokenValue;
         TOptional<int32> TypeValue;
         
     public:
@@ -40,12 +39,10 @@ namespace Gs2::Account::Request
 
         TSharedPtr<FGetAuthorizationUrlRequest> WithContextStack(const TOptional<FString> ContextStack);
         TSharedPtr<FGetAuthorizationUrlRequest> WithNamespaceName(const TOptional<FString> NamespaceName);
-        TSharedPtr<FGetAuthorizationUrlRequest> WithAccessToken(const TOptional<FString> AccessToken);
         TSharedPtr<FGetAuthorizationUrlRequest> WithType(const TOptional<int32> Type);
 
         TOptional<FString> GetContextStack() const;
         TOptional<FString> GetNamespaceName() const;
-        TOptional<FString> GetAccessToken() const;
         TOptional<int32> GetType() const;
         FString GetTypeString() const;
 

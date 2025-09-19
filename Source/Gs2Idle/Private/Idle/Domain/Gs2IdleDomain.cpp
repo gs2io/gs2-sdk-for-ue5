@@ -399,11 +399,13 @@ namespace Gs2::Idle::Domain
     }
 
     Gs2::Idle::Domain::Iterator::FDescribeNamespacesIteratorPtr FGs2IdleDomain::Namespaces(
+        const TOptional<FString> NamePrefix
     ) const
     {
         return MakeShared<Gs2::Idle::Domain::Iterator::FDescribeNamespacesIterator>(
             Gs2,
             Client
+            NamePrefix
         );
     }
 

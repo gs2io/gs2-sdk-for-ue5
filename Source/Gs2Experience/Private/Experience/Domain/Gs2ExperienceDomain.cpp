@@ -400,11 +400,13 @@ namespace Gs2::Experience::Domain
     }
 
     Gs2::Experience::Domain::Iterator::FDescribeNamespacesIteratorPtr FGs2ExperienceDomain::Namespaces(
+        const TOptional<FString> NamePrefix
     ) const
     {
         return MakeShared<Gs2::Experience::Domain::Iterator::FDescribeNamespacesIterator>(
             Gs2,
             Client
+            NamePrefix
         );
     }
 

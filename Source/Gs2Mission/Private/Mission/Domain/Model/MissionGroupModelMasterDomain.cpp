@@ -259,13 +259,15 @@ namespace Gs2::Mission::Domain::Model
     }
 
     Gs2::Mission::Domain::Iterator::FDescribeMissionTaskModelMastersIteratorPtr FMissionGroupModelMasterDomain::MissionTaskModelMasters(
+        const TOptional<FString> NamePrefix
     ) const
     {
         return MakeShared<Gs2::Mission::Domain::Iterator::FDescribeMissionTaskModelMastersIterator>(
             Gs2,
             Client,
             NamespaceName,
-            MissionGroupName
+            MissionGroupName,
+            NamePrefix
         );
     }
 

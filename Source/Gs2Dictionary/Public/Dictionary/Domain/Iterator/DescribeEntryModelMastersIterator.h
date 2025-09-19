@@ -31,12 +31,14 @@ namespace Gs2::Dictionary::Domain::Iterator
         const TSharedPtr<Core::Domain::FGs2> Gs2;
         const Gs2::Dictionary::FGs2DictionaryRestClientPtr Client;
         const TOptional<FString> NamespaceName;
+        const TOptional<FString> NamePrefix;
 
     public:
         FDescribeEntryModelMastersIterator(
             const TSharedPtr<Core::Domain::FGs2> Gs2,
             const Gs2::Dictionary::FGs2DictionaryRestClientPtr Client,
-            const TOptional<FString> NamespaceName
+            const TOptional<FString> NamespaceName,
+            const TOptional<FString> NamePrefix = TOptional<FString>()
         );
 
         FDescribeEntryModelMastersIterator(

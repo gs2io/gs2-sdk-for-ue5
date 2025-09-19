@@ -199,6 +199,7 @@ namespace Gs2::Mission::Domain::Model
         );
 
         Gs2::Mission::Domain::Iterator::FDescribeMissionTaskModelMastersIteratorPtr MissionTaskModelMasters(
+            const TOptional<FString> NamePrefix = TOptional<FString>()
         ) const;
 
         Gs2::Core::Domain::CallbackID SubscribeMissionTaskModelMasters(

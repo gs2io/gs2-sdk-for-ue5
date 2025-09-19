@@ -341,6 +341,7 @@ namespace Gs2::Ranking2::Domain
         );
 
         Gs2::Ranking2::Domain::Iterator::FDescribeNamespacesIteratorPtr Namespaces(
+            const TOptional<FString> NamePrefix = TOptional<FString>()
         ) const;
 
         Gs2::Core::Domain::CallbackID SubscribeNamespaces(

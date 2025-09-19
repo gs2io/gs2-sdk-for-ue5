@@ -334,6 +334,7 @@ namespace Gs2::Matchmaking::Domain
         );
 
         Gs2::Matchmaking::Domain::Iterator::FDescribeNamespacesIteratorPtr Namespaces(
+            const TOptional<FString> NamePrefix = TOptional<FString>()
         ) const;
 
         Gs2::Core::Domain::CallbackID SubscribeNamespaces(

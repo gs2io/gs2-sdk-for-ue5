@@ -31,12 +31,14 @@ namespace Gs2::Inventory::Domain::Iterator
         const TSharedPtr<Core::Domain::FGs2> Gs2;
         const Gs2::Inventory::FGs2InventoryRestClientPtr Client;
         const TOptional<FString> NamespaceName;
+        const TOptional<FString> NamePrefix;
 
     public:
         FDescribeBigInventoryModelMastersIterator(
             const TSharedPtr<Core::Domain::FGs2> Gs2,
             const Gs2::Inventory::FGs2InventoryRestClientPtr Client,
-            const TOptional<FString> NamespaceName
+            const TOptional<FString> NamespaceName,
+            const TOptional<FString> NamePrefix = TOptional<FString>()
         );
 
         FDescribeBigInventoryModelMastersIterator(

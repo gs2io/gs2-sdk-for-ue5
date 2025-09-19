@@ -233,6 +233,7 @@ namespace Gs2::LoginReward::Domain::Model
         );
 
         Gs2::LoginReward::Domain::Iterator::FDescribeBonusModelMastersIteratorPtr BonusModelMasters(
+            const TOptional<FString> NamePrefix = TOptional<FString>()
         ) const;
 
         Gs2::Core::Domain::CallbackID SubscribeBonusModelMasters(

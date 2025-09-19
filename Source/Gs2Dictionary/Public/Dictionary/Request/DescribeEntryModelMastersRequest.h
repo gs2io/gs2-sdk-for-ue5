@@ -27,6 +27,7 @@ namespace Gs2::Dictionary::Request
     {
         TOptional<FString> ContextStackValue;
         TOptional<FString> NamespaceNameValue;
+        TOptional<FString> NamePrefixValue;
         TOptional<FString> PageTokenValue;
         TOptional<int32> LimitValue;
         
@@ -40,11 +41,13 @@ namespace Gs2::Dictionary::Request
 
         TSharedPtr<FDescribeEntryModelMastersRequest> WithContextStack(const TOptional<FString> ContextStack);
         TSharedPtr<FDescribeEntryModelMastersRequest> WithNamespaceName(const TOptional<FString> NamespaceName);
+        TSharedPtr<FDescribeEntryModelMastersRequest> WithNamePrefix(const TOptional<FString> NamePrefix);
         TSharedPtr<FDescribeEntryModelMastersRequest> WithPageToken(const TOptional<FString> PageToken);
         TSharedPtr<FDescribeEntryModelMastersRequest> WithLimit(const TOptional<int32> Limit);
 
         TOptional<FString> GetContextStack() const;
         TOptional<FString> GetNamespaceName() const;
+        TOptional<FString> GetNamePrefix() const;
         TOptional<FString> GetPageToken() const;
         TOptional<int32> GetLimit() const;
         FString GetLimitString() const;

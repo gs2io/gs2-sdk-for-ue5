@@ -37,13 +37,15 @@ namespace Gs2::Quest::Domain::Iterator
         const TSharedPtr<Core::Domain::FGs2> Gs2,
         const Gs2::Quest::FGs2QuestRestClientPtr Client,
         const TOptional<FString> NamespaceName,
-        const TOptional<FString> QuestGroupName
+        const TOptional<FString> QuestGroupName,
+        const TOptional<FString> NamePrefix
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
         Client(Client),
         NamespaceName(NamespaceName),
-        QuestGroupName(QuestGroupName)
+        QuestGroupName(QuestGroupName),
+        NamePrefix(NamePrefix)
     {
     }
 
@@ -53,7 +55,8 @@ namespace Gs2::Quest::Domain::Iterator
         Gs2(From.Gs2),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
-        QuestGroupName(From.QuestGroupName)
+        QuestGroupName(From.QuestGroupName),
+        NamePrefix(From.NamePrefix)
     {
     }
 
@@ -104,6 +107,7 @@ namespace Gs2::Quest::Domain::Iterator
 
                 if (Range)
                 {
+                    Range->RemoveAll([this](const Gs2::Quest::Model::FQuestModelMasterPtr& Item) { return Self->NamePrefix && Item->GetNamePrefix() != Self->NamePrefix; });
                     bLast = true;
                     RangeIteratorOpt = Range->CreateIterator();
                     PageToken = TOptional<FString>();
@@ -147,6 +151,7 @@ namespace Gs2::Quest::Domain::Iterator
             }
             if (Range)
             {
+                Range->RemoveAll([this](const Gs2::Quest::Model::FQuestModelMasterPtr& Item) { return Self->NamePrefix && Item->GetNamePrefix() != Self->NamePrefix; });
             }
             RangeIteratorOpt = Range->CreateIterator();
             PageToken = R->GetNextPageToken();

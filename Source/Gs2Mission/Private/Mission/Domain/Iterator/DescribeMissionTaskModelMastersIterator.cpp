@@ -37,12 +37,14 @@ namespace Gs2::Mission::Domain::Iterator
         const TSharedPtr<Core::Domain::FGs2> Gs2,
         const Gs2::Mission::FGs2MissionRestClientPtr Client,
         const TOptional<FString> NamespaceName,
-        const TOptional<FString> MissionGroupName
+        const TOptional<FString> MissionGroupName,
+        const TOptional<FString> NamePrefix
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
         Client(Client),
         NamespaceName(NamespaceName),
+        NamePrefix(NamePrefix),
         MissionGroupName(MissionGroupName)
     {
     }
@@ -53,6 +55,7 @@ namespace Gs2::Mission::Domain::Iterator
         Gs2(From.Gs2),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
+        NamePrefix(From.NamePrefix),
         MissionGroupName(From.MissionGroupName)
     {
     }
@@ -104,6 +107,7 @@ namespace Gs2::Mission::Domain::Iterator
 
                 if (Range)
                 {
+                    Range->RemoveAll([this](const Gs2::Mission::Model::FMissionTaskModelMasterPtr& Item) { return Self->NamePrefix && Item->GetNamePrefix() != Self->NamePrefix; });
                     bLast = true;
                     RangeIteratorOpt = Range->CreateIterator();
                     PageToken = TOptional<FString>();
@@ -147,6 +151,7 @@ namespace Gs2::Mission::Domain::Iterator
             }
             if (Range)
             {
+                Range->RemoveAll([this](const Gs2::Mission::Model::FMissionTaskModelMasterPtr& Item) { return Self->NamePrefix && Item->GetNamePrefix() != Self->NamePrefix; });
             }
             RangeIteratorOpt = Range->CreateIterator();
             PageToken = R->GetNextPageToken();

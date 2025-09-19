@@ -337,6 +337,7 @@ namespace Gs2::Inventory::Domain
         );
 
         Gs2::Inventory::Domain::Iterator::FDescribeNamespacesIteratorPtr Namespaces(
+            const TOptional<FString> NamePrefix = TOptional<FString>()
         ) const;
 
         Gs2::Core::Domain::CallbackID SubscribeNamespaces(

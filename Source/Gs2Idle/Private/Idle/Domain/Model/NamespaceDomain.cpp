@@ -375,12 +375,14 @@ namespace Gs2::Idle::Domain::Model
     }
 
     Gs2::Idle::Domain::Iterator::FDescribeCategoryModelMastersIteratorPtr FNamespaceDomain::CategoryModelMasters(
+        const TOptional<FString> NamePrefix
     ) const
     {
         return MakeShared<Gs2::Idle::Domain::Iterator::FDescribeCategoryModelMastersIterator>(
             Gs2,
             Client,
-            NamespaceName
+            NamespaceName,
+            NamePrefix
         );
     }
 

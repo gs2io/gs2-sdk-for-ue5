@@ -326,12 +326,14 @@ namespace Gs2::Schedule::Domain::Model
     }
 
     Gs2::Schedule::Domain::Iterator::FDescribeEventMastersIteratorPtr FNamespaceDomain::EventMasters(
+        const TOptional<FString> NamePrefix
     ) const
     {
         return MakeShared<Gs2::Schedule::Domain::Iterator::FDescribeEventMastersIterator>(
             Gs2,
             Client,
-            NamespaceName
+            NamespaceName,
+            NamePrefix
         );
     }
 

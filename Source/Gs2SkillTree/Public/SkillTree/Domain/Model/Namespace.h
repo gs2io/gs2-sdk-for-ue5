@@ -249,6 +249,7 @@ namespace Gs2::SkillTree::Domain::Model
         );
 
         Gs2::SkillTree::Domain::Iterator::FDescribeNodeModelMastersIteratorPtr NodeModelMasters(
+            const TOptional<FString> NamePrefix = TOptional<FString>()
         ) const;
 
         Gs2::Core::Domain::CallbackID SubscribeNodeModelMasters(

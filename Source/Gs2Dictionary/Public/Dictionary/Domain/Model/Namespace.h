@@ -339,6 +339,7 @@ namespace Gs2::Dictionary::Domain::Model
         );
 
         Gs2::Dictionary::Domain::Iterator::FDescribeEntryModelMastersIteratorPtr EntryModelMasters(
+            const TOptional<FString> NamePrefix = TOptional<FString>()
         ) const;
 
         Gs2::Core::Domain::CallbackID SubscribeEntryModelMasters(

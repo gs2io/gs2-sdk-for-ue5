@@ -31,12 +31,14 @@ namespace Gs2::Script::Domain::Iterator
         const TSharedPtr<Core::Domain::FGs2> Gs2;
         const Gs2::Script::FGs2ScriptRestClientPtr Client;
         const TOptional<FString> NamespaceName;
+        const TOptional<FString> NamePrefix;
 
     public:
         FDescribeScriptsIterator(
             const TSharedPtr<Core::Domain::FGs2> Gs2,
             const Gs2::Script::FGs2ScriptRestClientPtr Client,
-            const TOptional<FString> NamespaceName
+            const TOptional<FString> NamespaceName,
+            const TOptional<FString> NamePrefix = TOptional<FString>()
         );
 
         FDescribeScriptsIterator(

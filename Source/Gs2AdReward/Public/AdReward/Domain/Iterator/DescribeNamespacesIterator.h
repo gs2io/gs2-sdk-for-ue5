@@ -30,11 +30,13 @@ namespace Gs2::AdReward::Domain::Iterator
     {
         const TSharedPtr<Core::Domain::FGs2> Gs2;
         const Gs2::AdReward::FGs2AdRewardRestClientPtr Client;
+        const TOptional<FString> NamePrefix;
 
     public:
         FDescribeNamespacesIterator(
             const TSharedPtr<Core::Domain::FGs2> Gs2,
-            const Gs2::AdReward::FGs2AdRewardRestClientPtr Client
+            const Gs2::AdReward::FGs2AdRewardRestClientPtr Client,
+            const TOptional<FString> NamePrefix = TOptional<FString>()
         );
 
         FDescribeNamespacesIterator(

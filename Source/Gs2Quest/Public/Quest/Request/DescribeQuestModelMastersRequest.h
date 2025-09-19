@@ -28,6 +28,7 @@ namespace Gs2::Quest::Request
         TOptional<FString> ContextStackValue;
         TOptional<FString> NamespaceNameValue;
         TOptional<FString> QuestGroupNameValue;
+        TOptional<FString> NamePrefixValue;
         TOptional<FString> PageTokenValue;
         TOptional<int32> LimitValue;
         
@@ -42,12 +43,14 @@ namespace Gs2::Quest::Request
         TSharedPtr<FDescribeQuestModelMastersRequest> WithContextStack(const TOptional<FString> ContextStack);
         TSharedPtr<FDescribeQuestModelMastersRequest> WithNamespaceName(const TOptional<FString> NamespaceName);
         TSharedPtr<FDescribeQuestModelMastersRequest> WithQuestGroupName(const TOptional<FString> QuestGroupName);
+        TSharedPtr<FDescribeQuestModelMastersRequest> WithNamePrefix(const TOptional<FString> NamePrefix);
         TSharedPtr<FDescribeQuestModelMastersRequest> WithPageToken(const TOptional<FString> PageToken);
         TSharedPtr<FDescribeQuestModelMastersRequest> WithLimit(const TOptional<int32> Limit);
 
         TOptional<FString> GetContextStack() const;
         TOptional<FString> GetNamespaceName() const;
         TOptional<FString> GetQuestGroupName() const;
+        TOptional<FString> GetNamePrefix() const;
         TOptional<FString> GetPageToken() const;
         TOptional<int32> GetLimit() const;
         FString GetLimitString() const;

@@ -529,12 +529,14 @@ namespace Gs2::Formation::Domain::Model
     }
 
     Gs2::Formation::Domain::Iterator::FDescribePropertyFormModelMastersIteratorPtr FNamespaceDomain::PropertyFormModelMasters(
+        const TOptional<FString> NamePrefix
     ) const
     {
         return MakeShared<Gs2::Formation::Domain::Iterator::FDescribePropertyFormModelMastersIterator>(
             Gs2,
             Client,
-            NamespaceName
+            NamespaceName,
+            NamePrefix
         );
     }
 
@@ -579,12 +581,14 @@ namespace Gs2::Formation::Domain::Model
     }
 
     Gs2::Formation::Domain::Iterator::FDescribeFormModelMastersIteratorPtr FNamespaceDomain::FormModelMasters(
+        const TOptional<FString> NamePrefix
     ) const
     {
         return MakeShared<Gs2::Formation::Domain::Iterator::FDescribeFormModelMastersIterator>(
             Gs2,
             Client,
-            NamespaceName
+            NamespaceName,
+            NamePrefix
         );
     }
 
@@ -629,12 +633,14 @@ namespace Gs2::Formation::Domain::Model
     }
 
     Gs2::Formation::Domain::Iterator::FDescribeMoldModelMastersIteratorPtr FNamespaceDomain::MoldModelMasters(
+        const TOptional<FString> NamePrefix
     ) const
     {
         return MakeShared<Gs2::Formation::Domain::Iterator::FDescribeMoldModelMastersIterator>(
             Gs2,
             Client,
-            NamespaceName
+            NamespaceName,
+            NamePrefix
         );
     }
 

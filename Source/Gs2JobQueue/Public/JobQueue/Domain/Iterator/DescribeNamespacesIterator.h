@@ -30,11 +30,13 @@ namespace Gs2::JobQueue::Domain::Iterator
     {
         const TSharedPtr<Core::Domain::FGs2> Gs2;
         const Gs2::JobQueue::FGs2JobQueueRestClientPtr Client;
+        const TOptional<FString> NamePrefix;
 
     public:
         FDescribeNamespacesIterator(
             const TSharedPtr<Core::Domain::FGs2> Gs2,
-            const Gs2::JobQueue::FGs2JobQueueRestClientPtr Client
+            const Gs2::JobQueue::FGs2JobQueueRestClientPtr Client,
+            const TOptional<FString> NamePrefix = TOptional<FString>()
         );
 
         FDescribeNamespacesIterator(

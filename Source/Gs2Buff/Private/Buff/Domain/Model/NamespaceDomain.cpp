@@ -301,12 +301,14 @@ namespace Gs2::Buff::Domain::Model
     }
 
     Gs2::Buff::Domain::Iterator::FDescribeBuffEntryModelMastersIteratorPtr FNamespaceDomain::BuffEntryModelMasters(
+        const TOptional<FString> NamePrefix
     ) const
     {
         return MakeShared<Gs2::Buff::Domain::Iterator::FDescribeBuffEntryModelMastersIterator>(
             Gs2,
             Client,
-            NamespaceName
+            NamespaceName,
+            NamePrefix
         );
     }
 

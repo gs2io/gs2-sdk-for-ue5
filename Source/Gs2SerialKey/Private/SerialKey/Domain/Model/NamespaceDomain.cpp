@@ -376,12 +376,14 @@ namespace Gs2::SerialKey::Domain::Model
     }
 
     Gs2::SerialKey::Domain::Iterator::FDescribeCampaignModelMastersIteratorPtr FNamespaceDomain::CampaignModelMasters(
+        const TOptional<FString> NamePrefix
     ) const
     {
         return MakeShared<Gs2::SerialKey::Domain::Iterator::FDescribeCampaignModelMastersIterator>(
             Gs2,
             Client,
-            NamespaceName
+            NamespaceName,
+            NamePrefix
         );
     }
 

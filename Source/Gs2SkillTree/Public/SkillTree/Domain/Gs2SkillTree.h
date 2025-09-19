@@ -297,6 +297,7 @@ namespace Gs2::SkillTree::Domain
         );
 
         Gs2::SkillTree::Domain::Iterator::FDescribeNamespacesIteratorPtr Namespaces(
+            const TOptional<FString> NamePrefix = TOptional<FString>()
         ) const;
 
         Gs2::Core::Domain::CallbackID SubscribeNamespaces(

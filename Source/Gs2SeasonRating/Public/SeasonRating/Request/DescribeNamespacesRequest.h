@@ -26,6 +26,7 @@ namespace Gs2::SeasonRating::Request
     class GS2SEASONRATING_API FDescribeNamespacesRequest final : public TSharedFromThis<FDescribeNamespacesRequest>
     {
         TOptional<FString> ContextStackValue;
+        TOptional<FString> NamePrefixValue;
         TOptional<FString> PageTokenValue;
         TOptional<int32> LimitValue;
         
@@ -38,10 +39,12 @@ namespace Gs2::SeasonRating::Request
         ~FDescribeNamespacesRequest() = default;
 
         TSharedPtr<FDescribeNamespacesRequest> WithContextStack(const TOptional<FString> ContextStack);
+        TSharedPtr<FDescribeNamespacesRequest> WithNamePrefix(const TOptional<FString> NamePrefix);
         TSharedPtr<FDescribeNamespacesRequest> WithPageToken(const TOptional<FString> PageToken);
         TSharedPtr<FDescribeNamespacesRequest> WithLimit(const TOptional<int32> Limit);
 
         TOptional<FString> GetContextStack() const;
+        TOptional<FString> GetNamePrefix() const;
         TOptional<FString> GetPageToken() const;
         TOptional<int32> GetLimit() const;
         FString GetLimitString() const;

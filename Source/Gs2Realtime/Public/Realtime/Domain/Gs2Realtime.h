@@ -99,6 +99,7 @@ namespace Gs2::Realtime::Domain
         );
 
         Gs2::Realtime::Domain::Iterator::FDescribeNamespacesIteratorPtr Namespaces(
+            const TOptional<FString> NamePrefix = TOptional<FString>()
         ) const;
 
         Gs2::Core::Domain::CallbackID SubscribeNamespaces(

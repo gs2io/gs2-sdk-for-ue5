@@ -402,11 +402,13 @@ namespace Gs2::Enchant::Domain
     }
 
     Gs2::Enchant::Domain::Iterator::FDescribeNamespacesIteratorPtr FGs2EnchantDomain::Namespaces(
+        const TOptional<FString> NamePrefix
     ) const
     {
         return MakeShared<Gs2::Enchant::Domain::Iterator::FDescribeNamespacesIterator>(
             Gs2,
             Client
+            NamePrefix
         );
     }
 

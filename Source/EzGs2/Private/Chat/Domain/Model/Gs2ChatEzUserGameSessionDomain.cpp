@@ -137,12 +137,14 @@ namespace Gs2::UE5::Chat::Domain::Model
     }
 
     Gs2::UE5::Chat::Domain::Iterator::FEzDescribeSubscribesIteratorPtr FEzUserGameSessionDomain::Subscribes(
+          const TOptional<FString> NamePrefix
     ) const
     {
         return MakeShared<Gs2::UE5::Chat::Domain::Iterator::FEzDescribeSubscribesIterator>(
             Domain,
             GameSession,
-            ConnectionValue
+            ConnectionValue,
+            NamePrefix
         );
     }
 

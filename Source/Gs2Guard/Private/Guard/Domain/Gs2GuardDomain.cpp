@@ -95,11 +95,13 @@ namespace Gs2::Guard::Domain
     }
 
     Gs2::Guard::Domain::Iterator::FDescribeNamespacesIteratorPtr FGs2GuardDomain::Namespaces(
+        const TOptional<FString> NamePrefix
     ) const
     {
         return MakeShared<Gs2::Guard::Domain::Iterator::FDescribeNamespacesIterator>(
             Gs2,
             Client
+            NamePrefix
         );
     }
 

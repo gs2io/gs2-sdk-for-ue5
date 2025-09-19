@@ -257,6 +257,7 @@ namespace Gs2::Limit::Domain::Model
         );
 
         Gs2::Limit::Domain::Iterator::FDescribeLimitModelMastersIteratorPtr LimitModelMasters(
+            const TOptional<FString> NamePrefix = TOptional<FString>()
         ) const;
 
         Gs2::Core::Domain::CallbackID SubscribeLimitModelMasters(

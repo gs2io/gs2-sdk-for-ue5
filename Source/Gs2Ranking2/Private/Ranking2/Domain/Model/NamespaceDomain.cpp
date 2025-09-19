@@ -475,12 +475,14 @@ namespace Gs2::Ranking2::Domain::Model
     }
 
     Gs2::Ranking2::Domain::Iterator::FDescribeGlobalRankingModelMastersIteratorPtr FNamespaceDomain::GlobalRankingModelMasters(
+        const TOptional<FString> NamePrefix
     ) const
     {
         return MakeShared<Gs2::Ranking2::Domain::Iterator::FDescribeGlobalRankingModelMastersIterator>(
             Gs2,
             Client,
-            NamespaceName
+            NamespaceName,
+            NamePrefix
         );
     }
 
@@ -599,12 +601,14 @@ namespace Gs2::Ranking2::Domain::Model
     }
 
     Gs2::Ranking2::Domain::Iterator::FDescribeSubscribeRankingModelMastersIteratorPtr FNamespaceDomain::SubscribeRankingModelMasters(
+        const TOptional<FString> NamePrefix
     ) const
     {
         return MakeShared<Gs2::Ranking2::Domain::Iterator::FDescribeSubscribeRankingModelMastersIterator>(
             Gs2,
             Client,
-            NamespaceName
+            NamespaceName,
+            NamePrefix
         );
     }
 
@@ -699,12 +703,14 @@ namespace Gs2::Ranking2::Domain::Model
     }
 
     Gs2::Ranking2::Domain::Iterator::FDescribeClusterRankingModelMastersIteratorPtr FNamespaceDomain::ClusterRankingModelMasters(
+        const TOptional<FString> NamePrefix
     ) const
     {
         return MakeShared<Gs2::Ranking2::Domain::Iterator::FDescribeClusterRankingModelMastersIterator>(
             Gs2,
             Client,
-            NamespaceName
+            NamespaceName,
+            NamePrefix
         );
     }
 

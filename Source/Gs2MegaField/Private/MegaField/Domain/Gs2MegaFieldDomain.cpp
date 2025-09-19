@@ -103,11 +103,13 @@ namespace Gs2::MegaField::Domain
     }
 
     Gs2::MegaField::Domain::Iterator::FDescribeNamespacesIteratorPtr FGs2MegaFieldDomain::Namespaces(
+        const TOptional<FString> NamePrefix
     ) const
     {
         return MakeShared<Gs2::MegaField::Domain::Iterator::FDescribeNamespacesIterator>(
             Gs2,
             Client
+            NamePrefix
         );
     }
 

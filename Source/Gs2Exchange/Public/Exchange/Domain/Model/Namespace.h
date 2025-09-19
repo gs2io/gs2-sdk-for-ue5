@@ -263,6 +263,7 @@ namespace Gs2::Exchange::Domain::Model
         );
 
         Gs2::Exchange::Domain::Iterator::FDescribeRateModelMastersIteratorPtr RateModelMasters(
+            const TOptional<FString> NamePrefix = TOptional<FString>()
         ) const;
 
         Gs2::Core::Domain::CallbackID SubscribeRateModelMasters(
@@ -319,6 +320,7 @@ namespace Gs2::Exchange::Domain::Model
         );
 
         Gs2::Exchange::Domain::Iterator::FDescribeIncrementalRateModelMastersIteratorPtr IncrementalRateModelMasters(
+            const TOptional<FString> NamePrefix = TOptional<FString>()
         ) const;
 
         Gs2::Core::Domain::CallbackID SubscribeIncrementalRateModelMasters(

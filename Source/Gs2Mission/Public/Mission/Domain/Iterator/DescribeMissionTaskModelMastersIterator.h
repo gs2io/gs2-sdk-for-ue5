@@ -31,6 +31,7 @@ namespace Gs2::Mission::Domain::Iterator
         const TSharedPtr<Core::Domain::FGs2> Gs2;
         const Gs2::Mission::FGs2MissionRestClientPtr Client;
         const TOptional<FString> NamespaceName;
+        const TOptional<FString> NamePrefix;
         const TOptional<FString> MissionGroupName;
 
     public:
@@ -38,7 +39,8 @@ namespace Gs2::Mission::Domain::Iterator
             const TSharedPtr<Core::Domain::FGs2> Gs2,
             const Gs2::Mission::FGs2MissionRestClientPtr Client,
             const TOptional<FString> NamespaceName,
-            const TOptional<FString> MissionGroupName
+            const TOptional<FString> MissionGroupName,
+            const TOptional<FString> NamePrefix = TOptional<FString>()
         );
 
         FDescribeMissionTaskModelMastersIterator(

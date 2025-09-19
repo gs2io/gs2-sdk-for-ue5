@@ -264,6 +264,7 @@ namespace Gs2::Quest::Domain::Model
         );
 
         Gs2::Quest::Domain::Iterator::FDescribeQuestGroupModelMastersIteratorPtr QuestGroupModelMasters(
+            const TOptional<FString> NamePrefix = TOptional<FString>()
         ) const;
 
         Gs2::Core::Domain::CallbackID SubscribeQuestGroupModelMasters(

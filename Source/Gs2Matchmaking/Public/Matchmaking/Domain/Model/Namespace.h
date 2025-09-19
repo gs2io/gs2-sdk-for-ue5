@@ -360,6 +360,7 @@ namespace Gs2::Matchmaking::Domain::Model
         );
 
         Gs2::Matchmaking::Domain::Iterator::FDescribeRatingModelMastersIteratorPtr RatingModelMasters(
+            const TOptional<FString> NamePrefix = TOptional<FString>()
         ) const;
 
         Gs2::Core::Domain::CallbackID SubscribeRatingModelMasters(
@@ -395,6 +396,7 @@ namespace Gs2::Matchmaking::Domain::Model
         );
 
         Gs2::Matchmaking::Domain::Iterator::FDescribeSeasonModelMastersIteratorPtr SeasonModelMasters(
+            const TOptional<FString> NamePrefix = TOptional<FString>()
         ) const;
 
         Gs2::Core::Domain::CallbackID SubscribeSeasonModelMasters(

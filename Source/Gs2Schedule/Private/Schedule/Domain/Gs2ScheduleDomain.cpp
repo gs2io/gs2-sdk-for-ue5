@@ -399,11 +399,13 @@ namespace Gs2::Schedule::Domain
     }
 
     Gs2::Schedule::Domain::Iterator::FDescribeNamespacesIteratorPtr FGs2ScheduleDomain::Namespaces(
+        const TOptional<FString> NamePrefix
     ) const
     {
         return MakeShared<Gs2::Schedule::Domain::Iterator::FDescribeNamespacesIterator>(
             Gs2,
             Client
+            NamePrefix
         );
     }
 

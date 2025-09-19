@@ -31,12 +31,14 @@ namespace Gs2::Showcase::Domain::Iterator
         const TSharedPtr<Core::Domain::FGs2> Gs2;
         const Gs2::Showcase::FGs2ShowcaseRestClientPtr Client;
         const TOptional<FString> NamespaceName;
+        const TOptional<FString> NamePrefix;
 
     public:
         FDescribeSalesItemMastersIterator(
             const TSharedPtr<Core::Domain::FGs2> Gs2,
             const Gs2::Showcase::FGs2ShowcaseRestClientPtr Client,
-            const TOptional<FString> NamespaceName
+            const TOptional<FString> NamespaceName,
+            const TOptional<FString> NamePrefix = TOptional<FString>()
         );
 
         FDescribeSalesItemMastersIterator(

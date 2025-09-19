@@ -588,12 +588,14 @@ namespace Gs2::Money2::Domain::Model
     }
 
     Gs2::Money2::Domain::Iterator::FDescribeStoreContentModelMastersIteratorPtr FNamespaceDomain::StoreContentModelMasters(
+        const TOptional<FString> NamePrefix
     ) const
     {
         return MakeShared<Gs2::Money2::Domain::Iterator::FDescribeStoreContentModelMastersIterator>(
             Gs2,
             Client,
-            NamespaceName
+            NamespaceName,
+            NamePrefix
         );
     }
 
@@ -688,12 +690,14 @@ namespace Gs2::Money2::Domain::Model
     }
 
     Gs2::Money2::Domain::Iterator::FDescribeStoreSubscriptionContentModelMastersIteratorPtr FNamespaceDomain::StoreSubscriptionContentModelMasters(
+        const TOptional<FString> NamePrefix
     ) const
     {
         return MakeShared<Gs2::Money2::Domain::Iterator::FDescribeStoreSubscriptionContentModelMastersIterator>(
             Gs2,
             Client,
-            NamespaceName
+            NamespaceName,
+            NamePrefix
         );
     }
 

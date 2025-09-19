@@ -402,11 +402,13 @@ namespace Gs2::Stamina::Domain
     }
 
     Gs2::Stamina::Domain::Iterator::FDescribeNamespacesIteratorPtr FGs2StaminaDomain::Namespaces(
+        const TOptional<FString> NamePrefix
     ) const
     {
         return MakeShared<Gs2::Stamina::Domain::Iterator::FDescribeNamespacesIterator>(
             Gs2,
             Client
+            NamePrefix
         );
     }
 

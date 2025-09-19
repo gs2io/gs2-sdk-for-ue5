@@ -505,12 +505,14 @@ namespace Gs2::SeasonRating::Domain::Model
     }
 
     Gs2::SeasonRating::Domain::Iterator::FDescribeSeasonModelMastersIteratorPtr FNamespaceDomain::SeasonModelMasters(
+        const TOptional<FString> NamePrefix
     ) const
     {
         return MakeShared<Gs2::SeasonRating::Domain::Iterator::FDescribeSeasonModelMastersIterator>(
             Gs2,
             Client,
-            NamespaceName
+            NamespaceName,
+            NamePrefix
         );
     }
 

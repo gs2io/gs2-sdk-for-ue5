@@ -369,6 +369,32 @@ namespace Gs2::Account::Domain::Model
             Request::FDeleteTakeOverByUserIdRequestPtr Request
         );
 
+        class GS2ACCOUNT_API FGetAuthorizationUrlTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Account::Domain::Model::FAccountDomain>,
+            public TSharedFromThis<FGetAuthorizationUrlTask>
+        {
+            const TSharedPtr<FAccountDomain> Self;
+            const Request::FGetAuthorizationUrlRequestPtr Request;
+        public:
+            explicit FGetAuthorizationUrlTask(
+                const TSharedPtr<FAccountDomain>& Self,
+                const Request::FGetAuthorizationUrlRequestPtr Request
+            );
+
+            FGetAuthorizationUrlTask(
+                const FGetAuthorizationUrlTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Account::Domain::Model::FAccountDomain>> Result
+            ) override;
+        };
+        friend FGetAuthorizationUrlTask;
+
+        TSharedPtr<FAsyncTask<FGetAuthorizationUrlTask>> GetAuthorizationUrl(
+            Request::FGetAuthorizationUrlRequestPtr Request
+        );
+
         class GS2ACCOUNT_API FDeleteDataOwnerTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Account::Domain::Model::FDataOwnerDomain>,
             public TSharedFromThis<FDeleteDataOwnerTask>

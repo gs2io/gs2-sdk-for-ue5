@@ -351,12 +351,14 @@ namespace Gs2::Grade::Domain::Model
     }
 
     Gs2::Grade::Domain::Iterator::FDescribeGradeModelMastersIteratorPtr FNamespaceDomain::GradeModelMasters(
+        const TOptional<FString> NamePrefix
     ) const
     {
         return MakeShared<Gs2::Grade::Domain::Iterator::FDescribeGradeModelMastersIterator>(
             Gs2,
             Client,
-            NamespaceName
+            NamespaceName,
+            NamePrefix
         );
     }
 

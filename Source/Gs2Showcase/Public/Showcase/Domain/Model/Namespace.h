@@ -326,6 +326,7 @@ namespace Gs2::Showcase::Domain::Model
         );
 
         Gs2::Showcase::Domain::Iterator::FDescribeSalesItemMastersIteratorPtr SalesItemMasters(
+            const TOptional<FString> NamePrefix = TOptional<FString>()
         ) const;
 
         Gs2::Core::Domain::CallbackID SubscribeSalesItemMasters(
@@ -341,6 +342,7 @@ namespace Gs2::Showcase::Domain::Model
         );
 
         Gs2::Showcase::Domain::Iterator::FDescribeSalesItemGroupMastersIteratorPtr SalesItemGroupMasters(
+            const TOptional<FString> NamePrefix = TOptional<FString>()
         ) const;
 
         Gs2::Core::Domain::CallbackID SubscribeSalesItemGroupMasters(
@@ -364,6 +366,7 @@ namespace Gs2::Showcase::Domain::Model
         );
 
         Gs2::Showcase::Domain::Iterator::FDescribeShowcaseMastersIteratorPtr ShowcaseMasters(
+            const TOptional<FString> NamePrefix = TOptional<FString>()
         ) const;
 
         Gs2::Core::Domain::CallbackID SubscribeShowcaseMasters(
@@ -379,6 +382,7 @@ namespace Gs2::Showcase::Domain::Model
         );
 
         Gs2::Showcase::Domain::Iterator::FDescribeRandomShowcaseMastersIteratorPtr RandomShowcaseMasters(
+            const TOptional<FString> NamePrefix = TOptional<FString>()
         ) const;
 
         Gs2::Core::Domain::CallbackID SubscribeRandomShowcaseMasters(

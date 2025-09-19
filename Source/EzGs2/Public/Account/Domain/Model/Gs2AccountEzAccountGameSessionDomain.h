@@ -80,29 +80,6 @@ namespace Gs2::UE5::Account::Domain::Model
             int32 Type
         );
 
-        class EZGS2_API FGetAuthorizationUrlTask :
-            public Gs2::Core::Util::TGs2Future<Gs2::UE5::Account::Domain::Model::FEzAccountGameSessionDomain>,
-            public TSharedFromThis<FGetAuthorizationUrlTask>
-        {
-            TSharedPtr<FEzAccountGameSessionDomain> Self;
-            int32 Type;
-
-        public:
-            explicit FGetAuthorizationUrlTask(
-                TSharedPtr<FEzAccountGameSessionDomain> Self,
-                int32 Type
-            );
-
-            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-                TSharedPtr<TSharedPtr<Gs2::UE5::Account::Domain::Model::FEzAccountGameSessionDomain>> Result
-            ) override;
-        };
-        friend FGetAuthorizationUrlTask;
-
-        TSharedPtr<FAsyncTask<FGetAuthorizationUrlTask>> GetAuthorizationUrl(
-            int32 Type
-        );
-
         Gs2::UE5::Account::Domain::Iterator::FEzDescribeTakeOversIteratorPtr TakeOvers(
         ) const;
 

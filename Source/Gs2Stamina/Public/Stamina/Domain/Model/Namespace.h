@@ -356,6 +356,7 @@ namespace Gs2::Stamina::Domain::Model
         );
 
         Gs2::Stamina::Domain::Iterator::FDescribeRecoverIntervalTableMastersIteratorPtr RecoverIntervalTableMasters(
+            const TOptional<FString> NamePrefix = TOptional<FString>()
         ) const;
 
         Gs2::Core::Domain::CallbackID SubscribeRecoverIntervalTableMasters(
@@ -371,6 +372,7 @@ namespace Gs2::Stamina::Domain::Model
         );
 
         Gs2::Stamina::Domain::Iterator::FDescribeRecoverValueTableMastersIteratorPtr RecoverValueTableMasters(
+            const TOptional<FString> NamePrefix = TOptional<FString>()
         ) const;
 
         Gs2::Core::Domain::CallbackID SubscribeRecoverValueTableMasters(
@@ -386,6 +388,7 @@ namespace Gs2::Stamina::Domain::Model
         );
 
         Gs2::Stamina::Domain::Iterator::FDescribeStaminaModelMastersIteratorPtr StaminaModelMasters(
+            const TOptional<FString> NamePrefix = TOptional<FString>()
         ) const;
 
         Gs2::Core::Domain::CallbackID SubscribeStaminaModelMasters(

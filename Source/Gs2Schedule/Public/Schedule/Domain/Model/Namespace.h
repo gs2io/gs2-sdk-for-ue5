@@ -244,6 +244,7 @@ namespace Gs2::Schedule::Domain::Model
         );
 
         Gs2::Schedule::Domain::Iterator::FDescribeEventMastersIteratorPtr EventMasters(
+            const TOptional<FString> NamePrefix = TOptional<FString>()
         ) const;
 
         Gs2::Core::Domain::CallbackID SubscribeEventMasters(

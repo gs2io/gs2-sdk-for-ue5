@@ -20,6 +20,7 @@ namespace Gs2::Chat::Request
 {
     FDescribeSubscribesRequest::FDescribeSubscribesRequest():
         NamespaceNameValue(TOptional<FString>()),
+        NamePrefixValue(TOptional<FString>()),
         AccessTokenValue(TOptional<FString>()),
         PageTokenValue(TOptional<FString>()),
         LimitValue(TOptional<int32>())
@@ -30,6 +31,7 @@ namespace Gs2::Chat::Request
         const FDescribeSubscribesRequest& From
     ):
         NamespaceNameValue(From.NamespaceNameValue),
+        NamePrefixValue(From.NamePrefixValue),
         AccessTokenValue(From.AccessTokenValue),
         PageTokenValue(From.PageTokenValue),
         LimitValue(From.LimitValue)
@@ -49,6 +51,14 @@ namespace Gs2::Chat::Request
     )
     {
         this->NamespaceNameValue = NamespaceName;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FDescribeSubscribesRequest> FDescribeSubscribesRequest::WithNamePrefix(
+        const TOptional<FString> NamePrefix
+    )
+    {
+        this->NamePrefixValue = NamePrefix;
         return SharedThis(this);
     }
 
@@ -86,6 +96,11 @@ namespace Gs2::Chat::Request
         return NamespaceNameValue;
     }
 
+    TOptional<FString> FDescribeSubscribesRequest::GetNamePrefix() const
+    {
+        return NamePrefixValue;
+    }
+
     TOptional<FString> FDescribeSubscribesRequest::GetAccessToken() const
     {
         return AccessTokenValue;
@@ -121,6 +136,15 @@ namespace Gs2::Chat::Request
               {
                   FString v("");
                     if (Data->TryGetStringField(ANSI_TO_TCHAR("namespaceName"), v))
+                  {
+                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                  }
+                  return TOptional<FString>();
+              }() : TOptional<FString>())
+            ->WithNamePrefix(Data->HasField(ANSI_TO_TCHAR("namePrefix")) ? [Data]() -> TOptional<FString>
+              {
+                  FString v("");
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("namePrefix"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
@@ -165,6 +189,10 @@ namespace Gs2::Chat::Request
         if (NamespaceNameValue.IsSet())
         {
             JsonRootObject->SetStringField("namespaceName", NamespaceNameValue.GetValue());
+        }
+        if (NamePrefixValue.IsSet())
+        {
+            JsonRootObject->SetStringField("namePrefix", NamePrefixValue.GetValue());
         }
         if (AccessTokenValue.IsSet())
         {

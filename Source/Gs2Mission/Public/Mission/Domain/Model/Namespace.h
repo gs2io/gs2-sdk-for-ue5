@@ -310,6 +310,7 @@ namespace Gs2::Mission::Domain::Model
         );
 
         Gs2::Mission::Domain::Iterator::FDescribeCounterModelMastersIteratorPtr CounterModelMasters(
+            const TOptional<FString> NamePrefix = TOptional<FString>()
         ) const;
 
         Gs2::Core::Domain::CallbackID SubscribeCounterModelMasters(
@@ -325,6 +326,7 @@ namespace Gs2::Mission::Domain::Model
         );
 
         Gs2::Mission::Domain::Iterator::FDescribeMissionGroupModelMastersIteratorPtr MissionGroupModelMasters(
+            const TOptional<FString> NamePrefix = TOptional<FString>()
         ) const;
 
         Gs2::Core::Domain::CallbackID SubscribeMissionGroupModelMasters(

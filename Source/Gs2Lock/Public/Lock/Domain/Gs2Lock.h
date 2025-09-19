@@ -93,6 +93,7 @@ namespace Gs2::Lock::Domain
         );
 
         Gs2::Lock::Domain::Iterator::FDescribeNamespacesIteratorPtr Namespaces(
+            const TOptional<FString> NamePrefix = TOptional<FString>()
         ) const;
 
         Gs2::Core::Domain::CallbackID SubscribeNamespaces(

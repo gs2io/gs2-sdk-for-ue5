@@ -479,12 +479,14 @@ namespace Gs2::Mission::Domain::Model
     }
 
     Gs2::Mission::Domain::Iterator::FDescribeCounterModelMastersIteratorPtr FNamespaceDomain::CounterModelMasters(
+        const TOptional<FString> NamePrefix
     ) const
     {
         return MakeShared<Gs2::Mission::Domain::Iterator::FDescribeCounterModelMastersIterator>(
             Gs2,
             Client,
-            NamespaceName
+            NamespaceName,
+            NamePrefix
         );
     }
 
@@ -529,12 +531,14 @@ namespace Gs2::Mission::Domain::Model
     }
 
     Gs2::Mission::Domain::Iterator::FDescribeMissionGroupModelMastersIteratorPtr FNamespaceDomain::MissionGroupModelMasters(
+        const TOptional<FString> NamePrefix
     ) const
     {
         return MakeShared<Gs2::Mission::Domain::Iterator::FDescribeMissionGroupModelMastersIterator>(
             Gs2,
             Client,
-            NamespaceName
+            NamespaceName,
+            NamePrefix
         );
     }
 

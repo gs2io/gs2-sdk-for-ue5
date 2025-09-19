@@ -20,6 +20,7 @@ namespace Gs2::Mission::Request
 {
     FDescribeMissionTaskModelMastersRequest::FDescribeMissionTaskModelMastersRequest():
         NamespaceNameValue(TOptional<FString>()),
+        NamePrefixValue(TOptional<FString>()),
         MissionGroupNameValue(TOptional<FString>()),
         PageTokenValue(TOptional<FString>()),
         LimitValue(TOptional<int32>())
@@ -30,6 +31,7 @@ namespace Gs2::Mission::Request
         const FDescribeMissionTaskModelMastersRequest& From
     ):
         NamespaceNameValue(From.NamespaceNameValue),
+        NamePrefixValue(From.NamePrefixValue),
         MissionGroupNameValue(From.MissionGroupNameValue),
         PageTokenValue(From.PageTokenValue),
         LimitValue(From.LimitValue)
@@ -49,6 +51,14 @@ namespace Gs2::Mission::Request
     )
     {
         this->NamespaceNameValue = NamespaceName;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FDescribeMissionTaskModelMastersRequest> FDescribeMissionTaskModelMastersRequest::WithNamePrefix(
+        const TOptional<FString> NamePrefix
+    )
+    {
+        this->NamePrefixValue = NamePrefix;
         return SharedThis(this);
     }
 
@@ -86,6 +96,11 @@ namespace Gs2::Mission::Request
         return NamespaceNameValue;
     }
 
+    TOptional<FString> FDescribeMissionTaskModelMastersRequest::GetNamePrefix() const
+    {
+        return NamePrefixValue;
+    }
+
     TOptional<FString> FDescribeMissionTaskModelMastersRequest::GetMissionGroupName() const
     {
         return MissionGroupNameValue;
@@ -121,6 +136,15 @@ namespace Gs2::Mission::Request
               {
                   FString v("");
                     if (Data->TryGetStringField(ANSI_TO_TCHAR("namespaceName"), v))
+                  {
+                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                  }
+                  return TOptional<FString>();
+              }() : TOptional<FString>())
+            ->WithNamePrefix(Data->HasField(ANSI_TO_TCHAR("namePrefix")) ? [Data]() -> TOptional<FString>
+              {
+                  FString v("");
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("namePrefix"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
@@ -165,6 +189,10 @@ namespace Gs2::Mission::Request
         if (NamespaceNameValue.IsSet())
         {
             JsonRootObject->SetStringField("namespaceName", NamespaceNameValue.GetValue());
+        }
+        if (NamePrefixValue.IsSet())
+        {
+            JsonRootObject->SetStringField("namePrefix", NamePrefixValue.GetValue());
         }
         if (MissionGroupNameValue.IsSet())
         {

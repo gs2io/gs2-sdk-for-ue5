@@ -21,6 +21,7 @@ namespace Gs2::Inventory::Request
     FDescribeBigItemModelMastersRequest::FDescribeBigItemModelMastersRequest():
         NamespaceNameValue(TOptional<FString>()),
         InventoryNameValue(TOptional<FString>()),
+        NamePrefixValue(TOptional<FString>()),
         PageTokenValue(TOptional<FString>()),
         LimitValue(TOptional<int32>())
     {
@@ -31,6 +32,7 @@ namespace Gs2::Inventory::Request
     ):
         NamespaceNameValue(From.NamespaceNameValue),
         InventoryNameValue(From.InventoryNameValue),
+        NamePrefixValue(From.NamePrefixValue),
         PageTokenValue(From.PageTokenValue),
         LimitValue(From.LimitValue)
     {
@@ -57,6 +59,14 @@ namespace Gs2::Inventory::Request
     )
     {
         this->InventoryNameValue = InventoryName;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FDescribeBigItemModelMastersRequest> FDescribeBigItemModelMastersRequest::WithNamePrefix(
+        const TOptional<FString> NamePrefix
+    )
+    {
+        this->NamePrefixValue = NamePrefix;
         return SharedThis(this);
     }
 
@@ -89,6 +99,11 @@ namespace Gs2::Inventory::Request
     TOptional<FString> FDescribeBigItemModelMastersRequest::GetInventoryName() const
     {
         return InventoryNameValue;
+    }
+
+    TOptional<FString> FDescribeBigItemModelMastersRequest::GetNamePrefix() const
+    {
+        return NamePrefixValue;
     }
 
     TOptional<FString> FDescribeBigItemModelMastersRequest::GetPageToken() const
@@ -135,6 +150,15 @@ namespace Gs2::Inventory::Request
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
+            ->WithNamePrefix(Data->HasField(ANSI_TO_TCHAR("namePrefix")) ? [Data]() -> TOptional<FString>
+              {
+                  FString v("");
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("namePrefix"), v))
+                  {
+                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                  }
+                  return TOptional<FString>();
+              }() : TOptional<FString>())
             ->WithPageToken(Data->HasField(ANSI_TO_TCHAR("pageToken")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
@@ -169,6 +193,10 @@ namespace Gs2::Inventory::Request
         if (InventoryNameValue.IsSet())
         {
             JsonRootObject->SetStringField("inventoryName", InventoryNameValue.GetValue());
+        }
+        if (NamePrefixValue.IsSet())
+        {
+            JsonRootObject->SetStringField("namePrefix", NamePrefixValue.GetValue());
         }
         if (PageTokenValue.IsSet())
         {

@@ -399,11 +399,13 @@ namespace Gs2::SkillTree::Domain
     }
 
     Gs2::SkillTree::Domain::Iterator::FDescribeNamespacesIteratorPtr FGs2SkillTreeDomain::Namespaces(
+        const TOptional<FString> NamePrefix
     ) const
     {
         return MakeShared<Gs2::SkillTree::Domain::Iterator::FDescribeNamespacesIterator>(
             Gs2,
             Client
+            NamePrefix
         );
     }
 

@@ -298,6 +298,7 @@ namespace Gs2::SeasonRating::Domain
         );
 
         Gs2::SeasonRating::Domain::Iterator::FDescribeNamespacesIteratorPtr Namespaces(
+            const TOptional<FString> NamePrefix = TOptional<FString>()
         ) const;
 
         Gs2::Core::Domain::CallbackID SubscribeNamespaces(

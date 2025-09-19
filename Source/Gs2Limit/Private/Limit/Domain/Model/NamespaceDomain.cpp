@@ -375,12 +375,14 @@ namespace Gs2::Limit::Domain::Model
     }
 
     Gs2::Limit::Domain::Iterator::FDescribeLimitModelMastersIteratorPtr FNamespaceDomain::LimitModelMasters(
+        const TOptional<FString> NamePrefix
     ) const
     {
         return MakeShared<Gs2::Limit::Domain::Iterator::FDescribeLimitModelMastersIterator>(
             Gs2,
             Client,
-            NamespaceName
+            NamespaceName,
+            NamePrefix
         );
     }
 

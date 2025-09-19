@@ -283,6 +283,7 @@ namespace Gs2::Enchant::Domain::Model
         );
 
         Gs2::Enchant::Domain::Iterator::FDescribeBalanceParameterModelMastersIteratorPtr BalanceParameterModelMasters(
+            const TOptional<FString> NamePrefix = TOptional<FString>()
         ) const;
 
         Gs2::Core::Domain::CallbackID SubscribeBalanceParameterModelMasters(

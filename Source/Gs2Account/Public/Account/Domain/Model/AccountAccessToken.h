@@ -137,32 +137,6 @@ namespace Gs2::Account::Domain::Model
             Request::FDeleteTakeOverRequestPtr Request
         );
 
-        class GS2ACCOUNT_API FGetAuthorizationUrlTask final :
-            public Gs2::Core::Util::TGs2Future<Gs2::Account::Domain::Model::FAccountAccessTokenDomain>,
-            public TSharedFromThis<FGetAuthorizationUrlTask>
-        {
-            const TSharedPtr<FAccountAccessTokenDomain> Self;
-            const Request::FGetAuthorizationUrlRequestPtr Request;
-        public:
-            explicit FGetAuthorizationUrlTask(
-                const TSharedPtr<FAccountAccessTokenDomain>& Self,
-                const Request::FGetAuthorizationUrlRequestPtr Request
-            );
-
-            FGetAuthorizationUrlTask(
-                const FGetAuthorizationUrlTask& From
-            );
-
-            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-                TSharedPtr<TSharedPtr<Gs2::Account::Domain::Model::FAccountAccessTokenDomain>> Result
-            ) override;
-        };
-        friend FGetAuthorizationUrlTask;
-
-        TSharedPtr<FAsyncTask<FGetAuthorizationUrlTask>> GetAuthorizationUrl(
-            Request::FGetAuthorizationUrlRequestPtr Request
-        );
-
         Gs2::Account::Domain::Iterator::FDescribeTakeOversIteratorPtr TakeOvers(
         ) const;
 

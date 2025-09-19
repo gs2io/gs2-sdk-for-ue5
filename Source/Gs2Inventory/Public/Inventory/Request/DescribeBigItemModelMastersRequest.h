@@ -28,6 +28,7 @@ namespace Gs2::Inventory::Request
         TOptional<FString> ContextStackValue;
         TOptional<FString> NamespaceNameValue;
         TOptional<FString> InventoryNameValue;
+        TOptional<FString> NamePrefixValue;
         TOptional<FString> PageTokenValue;
         TOptional<int32> LimitValue;
         
@@ -42,12 +43,14 @@ namespace Gs2::Inventory::Request
         TSharedPtr<FDescribeBigItemModelMastersRequest> WithContextStack(const TOptional<FString> ContextStack);
         TSharedPtr<FDescribeBigItemModelMastersRequest> WithNamespaceName(const TOptional<FString> NamespaceName);
         TSharedPtr<FDescribeBigItemModelMastersRequest> WithInventoryName(const TOptional<FString> InventoryName);
+        TSharedPtr<FDescribeBigItemModelMastersRequest> WithNamePrefix(const TOptional<FString> NamePrefix);
         TSharedPtr<FDescribeBigItemModelMastersRequest> WithPageToken(const TOptional<FString> PageToken);
         TSharedPtr<FDescribeBigItemModelMastersRequest> WithLimit(const TOptional<int32> Limit);
 
         TOptional<FString> GetContextStack() const;
         TOptional<FString> GetNamespaceName() const;
         TOptional<FString> GetInventoryName() const;
+        TOptional<FString> GetNamePrefix() const;
         TOptional<FString> GetPageToken() const;
         TOptional<int32> GetLimit() const;
         FString GetLimitString() const;

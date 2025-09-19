@@ -331,6 +331,7 @@ namespace Gs2::Guild::Domain
         );
 
         Gs2::Guild::Domain::Iterator::FDescribeNamespacesIteratorPtr Namespaces(
+            const TOptional<FString> NamePrefix = TOptional<FString>()
         ) const;
 
         Gs2::Core::Domain::CallbackID SubscribeNamespaces(

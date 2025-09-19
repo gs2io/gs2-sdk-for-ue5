@@ -259,6 +259,7 @@ namespace Gs2::Inbox::Domain::Model
         );
 
         Gs2::Inbox::Domain::Iterator::FDescribeGlobalMessageMastersIteratorPtr GlobalMessageMasters(
+            const TOptional<FString> NamePrefix = TOptional<FString>()
         ) const;
 
         Gs2::Core::Domain::CallbackID SubscribeGlobalMessageMasters(

@@ -36,12 +36,14 @@ namespace Gs2::Chat::Domain::Iterator
     FDescribeRoomsIterator::FDescribeRoomsIterator(
         const TSharedPtr<Core::Domain::FGs2> Gs2,
         const Gs2::Chat::FGs2ChatRestClientPtr Client,
-        const TOptional<FString> NamespaceName
+        const TOptional<FString> NamespaceName,
+        const TOptional<FString> NamePrefix
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
         Client(Client),
-        NamespaceName(NamespaceName)
+        NamespaceName(NamespaceName),
+        NamePrefix(NamePrefix)
     {
     }
 
@@ -50,7 +52,8 @@ namespace Gs2::Chat::Domain::Iterator
     ):
         Gs2(From.Gs2),
         Client(From.Client),
-        NamespaceName(From.NamespaceName)
+        NamespaceName(From.NamespaceName),
+        NamePrefix(From.NamePrefix)
     {
     }
 
@@ -101,6 +104,7 @@ namespace Gs2::Chat::Domain::Iterator
 
                 if (Range)
                 {
+                    Range->RemoveAll([this](const Gs2::Chat::Model::FRoomPtr& Item) { return Self->NamePrefix && Item->GetNamePrefix() != Self->NamePrefix; });
                     bLast = true;
                     RangeIteratorOpt = Range->CreateIterator();
                     PageToken = TOptional<FString>();
@@ -143,6 +147,7 @@ namespace Gs2::Chat::Domain::Iterator
             }
             if (Range)
             {
+                Range->RemoveAll([this](const Gs2::Chat::Model::FRoomPtr& Item) { return Self->NamePrefix && Item->GetNamePrefix() != Self->NamePrefix; });
             }
             RangeIteratorOpt = Range->CreateIterator();
             PageToken = R->GetNextPageToken();

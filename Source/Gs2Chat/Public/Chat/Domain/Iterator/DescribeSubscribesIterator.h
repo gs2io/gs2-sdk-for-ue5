@@ -31,6 +31,7 @@ namespace Gs2::Chat::Domain::Iterator
         const TSharedPtr<Core::Domain::FGs2> Gs2;
         const Gs2::Chat::FGs2ChatRestClientPtr Client;
         const TOptional<FString> NamespaceName;
+        const TOptional<FString> NamePrefix;
         const Gs2::Auth::Model::FAccessTokenPtr AccessToken;
         TOptional<FString> UserId() const { return AccessToken->GetUserId(); }
 
@@ -39,7 +40,8 @@ namespace Gs2::Chat::Domain::Iterator
             const TSharedPtr<Core::Domain::FGs2> Gs2,
             const Gs2::Chat::FGs2ChatRestClientPtr Client,
             const TOptional<FString> NamespaceName,
-            const Gs2::Auth::Model::FAccessTokenPtr AccessToken
+            const Gs2::Auth::Model::FAccessTokenPtr AccessToken,
+            const TOptional<FString> NamePrefix = TOptional<FString>()
         );
 
         FDescribeSubscribesIterator(

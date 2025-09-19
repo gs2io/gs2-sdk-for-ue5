@@ -20,7 +20,6 @@ namespace Gs2::Account::Request
 {
     FGetAuthorizationUrlRequest::FGetAuthorizationUrlRequest():
         NamespaceNameValue(TOptional<FString>()),
-        AccessTokenValue(TOptional<FString>()),
         TypeValue(TOptional<int32>())
     {
     }
@@ -29,7 +28,6 @@ namespace Gs2::Account::Request
         const FGetAuthorizationUrlRequest& From
     ):
         NamespaceNameValue(From.NamespaceNameValue),
-        AccessTokenValue(From.AccessTokenValue),
         TypeValue(From.TypeValue)
     {
     }
@@ -50,14 +48,6 @@ namespace Gs2::Account::Request
         return SharedThis(this);
     }
 
-    TSharedPtr<FGetAuthorizationUrlRequest> FGetAuthorizationUrlRequest::WithAccessToken(
-        const TOptional<FString> AccessToken
-    )
-    {
-        this->AccessTokenValue = AccessToken;
-        return SharedThis(this);
-    }
-
     TSharedPtr<FGetAuthorizationUrlRequest> FGetAuthorizationUrlRequest::WithType(
         const TOptional<int32> Type
     )
@@ -74,11 +64,6 @@ namespace Gs2::Account::Request
     TOptional<FString> FGetAuthorizationUrlRequest::GetNamespaceName() const
     {
         return NamespaceNameValue;
-    }
-
-    TOptional<FString> FGetAuthorizationUrlRequest::GetAccessToken() const
-    {
-        return AccessTokenValue;
     }
 
     TOptional<int32> FGetAuthorizationUrlRequest::GetType() const
@@ -111,15 +96,6 @@ namespace Gs2::Account::Request
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
-            ->WithAccessToken(Data->HasField(ANSI_TO_TCHAR("xGs2AccessToken")) ? [Data]() -> TOptional<FString>
-              {
-                  FString v("");
-                    if (Data->TryGetStringField(ANSI_TO_TCHAR("xGs2AccessToken"), v))
-                  {
-                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
-                  }
-                  return TOptional<FString>();
-              }() : TOptional<FString>())
             ->WithType(Data->HasField(ANSI_TO_TCHAR("type")) ? [Data]() -> TOptional<int32>
               {
                   int32 v;
@@ -141,10 +117,6 @@ namespace Gs2::Account::Request
         if (NamespaceNameValue.IsSet())
         {
             JsonRootObject->SetStringField("namespaceName", NamespaceNameValue.GetValue());
-        }
-        if (AccessTokenValue.IsSet())
-        {
-            JsonRootObject->SetStringField("xGs2AccessToken", AccessTokenValue.GetValue());
         }
         if (TypeValue.IsSet())
         {

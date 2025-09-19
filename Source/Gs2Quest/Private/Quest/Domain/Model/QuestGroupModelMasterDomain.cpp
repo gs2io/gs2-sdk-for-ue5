@@ -257,13 +257,15 @@ namespace Gs2::Quest::Domain::Model
     }
 
     Gs2::Quest::Domain::Iterator::FDescribeQuestModelMastersIteratorPtr FQuestGroupModelMasterDomain::QuestModelMasters(
+        const TOptional<FString> NamePrefix
     ) const
     {
         return MakeShared<Gs2::Quest::Domain::Iterator::FDescribeQuestModelMastersIterator>(
             Gs2,
             Client,
             NamespaceName,
-            QuestGroupName
+            QuestGroupName,
+            NamePrefix
         );
     }
 

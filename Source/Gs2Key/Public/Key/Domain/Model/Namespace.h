@@ -235,6 +235,7 @@ namespace Gs2::Key::Domain::Model
         );
 
         Gs2::Key::Domain::Iterator::FDescribeKeysIteratorPtr Keys(
+            const TOptional<FString> NamePrefix = TOptional<FString>()
         ) const;
 
         Gs2::Core::Domain::CallbackID SubscribeKeys(

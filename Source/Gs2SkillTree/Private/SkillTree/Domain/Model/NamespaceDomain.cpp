@@ -351,12 +351,14 @@ namespace Gs2::SkillTree::Domain::Model
     }
 
     Gs2::SkillTree::Domain::Iterator::FDescribeNodeModelMastersIteratorPtr FNamespaceDomain::NodeModelMasters(
+        const TOptional<FString> NamePrefix
     ) const
     {
         return MakeShared<Gs2::SkillTree::Domain::Iterator::FDescribeNodeModelMastersIterator>(
             Gs2,
             Client,
-            NamespaceName
+            NamespaceName,
+            NamePrefix
         );
     }
 

@@ -328,6 +328,7 @@ namespace Gs2::SeasonRating::Domain::Model
         );
 
         Gs2::SeasonRating::Domain::Iterator::FDescribeSeasonModelMastersIteratorPtr SeasonModelMasters(
+            const TOptional<FString> NamePrefix = TOptional<FString>()
         ) const;
 
         Gs2::Core::Domain::CallbackID SubscribeSeasonModelMasters(

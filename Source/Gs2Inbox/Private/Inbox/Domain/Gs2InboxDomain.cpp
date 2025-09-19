@@ -400,11 +400,13 @@ namespace Gs2::Inbox::Domain
     }
 
     Gs2::Inbox::Domain::Iterator::FDescribeNamespacesIteratorPtr FGs2InboxDomain::Namespaces(
+        const TOptional<FString> NamePrefix
     ) const
     {
         return MakeShared<Gs2::Inbox::Domain::Iterator::FDescribeNamespacesIterator>(
             Gs2,
             Client
+            NamePrefix
         );
     }
 

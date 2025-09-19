@@ -402,11 +402,13 @@ namespace Gs2::Quest::Domain
     }
 
     Gs2::Quest::Domain::Iterator::FDescribeNamespacesIteratorPtr FGs2QuestDomain::Namespaces(
+        const TOptional<FString> NamePrefix
     ) const
     {
         return MakeShared<Gs2::Quest::Domain::Iterator::FDescribeNamespacesIterator>(
             Gs2,
             Client
+            NamePrefix
         );
     }
 

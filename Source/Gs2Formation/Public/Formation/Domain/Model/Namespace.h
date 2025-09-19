@@ -339,6 +339,7 @@ namespace Gs2::Formation::Domain::Model
         );
 
         Gs2::Formation::Domain::Iterator::FDescribePropertyFormModelMastersIteratorPtr PropertyFormModelMasters(
+            const TOptional<FString> NamePrefix = TOptional<FString>()
         ) const;
 
         Gs2::Core::Domain::CallbackID SubscribePropertyFormModelMasters(
@@ -354,6 +355,7 @@ namespace Gs2::Formation::Domain::Model
         );
 
         Gs2::Formation::Domain::Iterator::FDescribeFormModelMastersIteratorPtr FormModelMasters(
+            const TOptional<FString> NamePrefix = TOptional<FString>()
         ) const;
 
         Gs2::Core::Domain::CallbackID SubscribeFormModelMasters(
@@ -369,6 +371,7 @@ namespace Gs2::Formation::Domain::Model
         );
 
         Gs2::Formation::Domain::Iterator::FDescribeMoldModelMastersIteratorPtr MoldModelMasters(
+            const TOptional<FString> NamePrefix = TOptional<FString>()
         ) const;
 
         Gs2::Core::Domain::CallbackID SubscribeMoldModelMasters(

@@ -310,6 +310,7 @@ namespace Gs2::Lottery::Domain::Model
         );
 
         Gs2::Lottery::Domain::Iterator::FDescribePrizeTableMastersIteratorPtr PrizeTableMasters(
+            const TOptional<FString> NamePrefix = TOptional<FString>()
         ) const;
 
         Gs2::Core::Domain::CallbackID SubscribePrizeTableMasters(
@@ -325,6 +326,7 @@ namespace Gs2::Lottery::Domain::Model
         );
 
         Gs2::Lottery::Domain::Iterator::FDescribeLotteryModelMastersIteratorPtr LotteryModelMasters(
+            const TOptional<FString> NamePrefix = TOptional<FString>()
         ) const;
 
         Gs2::Core::Domain::CallbackID SubscribeLotteryModelMasters(

@@ -301,6 +301,7 @@ namespace Gs2::Enhance::Domain
         );
 
         Gs2::Enhance::Domain::Iterator::FDescribeNamespacesIteratorPtr Namespaces(
+            const TOptional<FString> NamePrefix = TOptional<FString>()
         ) const;
 
         Gs2::Core::Domain::CallbackID SubscribeNamespaces(

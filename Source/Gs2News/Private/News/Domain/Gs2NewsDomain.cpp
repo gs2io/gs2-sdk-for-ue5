@@ -101,11 +101,13 @@ namespace Gs2::News::Domain
     }
 
     Gs2::News::Domain::Iterator::FDescribeNamespacesIteratorPtr FGs2NewsDomain::Namespaces(
+        const TOptional<FString> NamePrefix
     ) const
     {
         return MakeShared<Gs2::News::Domain::Iterator::FDescribeNamespacesIterator>(
             Gs2,
             Client
+            NamePrefix
         );
     }
 

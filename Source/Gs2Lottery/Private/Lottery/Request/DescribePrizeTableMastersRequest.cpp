@@ -20,6 +20,7 @@ namespace Gs2::Lottery::Request
 {
     FDescribePrizeTableMastersRequest::FDescribePrizeTableMastersRequest():
         NamespaceNameValue(TOptional<FString>()),
+        NamePrefixValue(TOptional<FString>()),
         PageTokenValue(TOptional<FString>()),
         LimitValue(TOptional<int32>())
     {
@@ -29,6 +30,7 @@ namespace Gs2::Lottery::Request
         const FDescribePrizeTableMastersRequest& From
     ):
         NamespaceNameValue(From.NamespaceNameValue),
+        NamePrefixValue(From.NamePrefixValue),
         PageTokenValue(From.PageTokenValue),
         LimitValue(From.LimitValue)
     {
@@ -47,6 +49,14 @@ namespace Gs2::Lottery::Request
     )
     {
         this->NamespaceNameValue = NamespaceName;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FDescribePrizeTableMastersRequest> FDescribePrizeTableMastersRequest::WithNamePrefix(
+        const TOptional<FString> NamePrefix
+    )
+    {
+        this->NamePrefixValue = NamePrefix;
         return SharedThis(this);
     }
 
@@ -74,6 +84,11 @@ namespace Gs2::Lottery::Request
     TOptional<FString> FDescribePrizeTableMastersRequest::GetNamespaceName() const
     {
         return NamespaceNameValue;
+    }
+
+    TOptional<FString> FDescribePrizeTableMastersRequest::GetNamePrefix() const
+    {
+        return NamePrefixValue;
     }
 
     TOptional<FString> FDescribePrizeTableMastersRequest::GetPageToken() const
@@ -111,6 +126,15 @@ namespace Gs2::Lottery::Request
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
+            ->WithNamePrefix(Data->HasField(ANSI_TO_TCHAR("namePrefix")) ? [Data]() -> TOptional<FString>
+              {
+                  FString v("");
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("namePrefix"), v))
+                  {
+                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                  }
+                  return TOptional<FString>();
+              }() : TOptional<FString>())
             ->WithPageToken(Data->HasField(ANSI_TO_TCHAR("pageToken")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
@@ -141,6 +165,10 @@ namespace Gs2::Lottery::Request
         if (NamespaceNameValue.IsSet())
         {
             JsonRootObject->SetStringField("namespaceName", NamespaceNameValue.GetValue());
+        }
+        if (NamePrefixValue.IsSet())
+        {
+            JsonRootObject->SetStringField("namePrefix", NamePrefixValue.GetValue());
         }
         if (PageTokenValue.IsSet())
         {

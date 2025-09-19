@@ -81,6 +81,29 @@ namespace Gs2::UE5::Account::Domain::Model
             TOptional<FString> KeyId = TOptional<FString>()
         );
 
+        class EZGS2_API FGetAuthorizationUrlTask :
+            public Gs2::Core::Util::TGs2Future<Gs2::UE5::Account::Domain::Model::FEzAccountDomain>,
+            public TSharedFromThis<FGetAuthorizationUrlTask>
+        {
+            TSharedPtr<FEzAccountDomain> Self;
+            int32 Type;
+
+        public:
+            explicit FGetAuthorizationUrlTask(
+                TSharedPtr<FEzAccountDomain> Self,
+                int32 Type
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::UE5::Account::Domain::Model::FEzAccountDomain>> Result
+            ) override;
+        };
+        friend FGetAuthorizationUrlTask;
+
+        TSharedPtr<FAsyncTask<FGetAuthorizationUrlTask>> GetAuthorizationUrl(
+            int32 Type
+        );
+
         Gs2::UE5::Account::Domain::Model::FEzTakeOverDomainPtr TakeOver(
             const int32 Type
         ) const;

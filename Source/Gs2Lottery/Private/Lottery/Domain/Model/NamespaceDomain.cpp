@@ -480,12 +480,14 @@ namespace Gs2::Lottery::Domain::Model
     }
 
     Gs2::Lottery::Domain::Iterator::FDescribePrizeTableMastersIteratorPtr FNamespaceDomain::PrizeTableMasters(
+        const TOptional<FString> NamePrefix
     ) const
     {
         return MakeShared<Gs2::Lottery::Domain::Iterator::FDescribePrizeTableMastersIterator>(
             Gs2,
             Client,
-            NamespaceName
+            NamespaceName,
+            NamePrefix
         );
     }
 
@@ -530,12 +532,14 @@ namespace Gs2::Lottery::Domain::Model
     }
 
     Gs2::Lottery::Domain::Iterator::FDescribeLotteryModelMastersIteratorPtr FNamespaceDomain::LotteryModelMasters(
+        const TOptional<FString> NamePrefix
     ) const
     {
         return MakeShared<Gs2::Lottery::Domain::Iterator::FDescribeLotteryModelMastersIterator>(
             Gs2,
             Client,
-            NamespaceName
+            NamespaceName,
+            NamePrefix
         );
     }
 

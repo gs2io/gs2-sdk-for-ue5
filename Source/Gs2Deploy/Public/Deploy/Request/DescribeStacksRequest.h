@@ -26,6 +26,7 @@ namespace Gs2::Deploy::Request
     class GS2DEPLOY_API FDescribeStacksRequest final : public TSharedFromThis<FDescribeStacksRequest>
     {
         TOptional<FString> ContextStackValue;
+        TOptional<FString> NamePrefixValue;
         TOptional<FString> PageTokenValue;
         TOptional<int32> LimitValue;
         
@@ -38,10 +39,12 @@ namespace Gs2::Deploy::Request
         ~FDescribeStacksRequest() = default;
 
         TSharedPtr<FDescribeStacksRequest> WithContextStack(const TOptional<FString> ContextStack);
+        TSharedPtr<FDescribeStacksRequest> WithNamePrefix(const TOptional<FString> NamePrefix);
         TSharedPtr<FDescribeStacksRequest> WithPageToken(const TOptional<FString> PageToken);
         TSharedPtr<FDescribeStacksRequest> WithLimit(const TOptional<int32> Limit);
 
         TOptional<FString> GetContextStack() const;
+        TOptional<FString> GetNamePrefix() const;
         TOptional<FString> GetPageToken() const;
         TOptional<int32> GetLimit() const;
         FString GetLimitString() const;

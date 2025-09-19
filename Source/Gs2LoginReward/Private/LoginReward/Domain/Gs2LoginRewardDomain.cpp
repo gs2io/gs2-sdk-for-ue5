@@ -400,11 +400,13 @@ namespace Gs2::LoginReward::Domain
     }
 
     Gs2::LoginReward::Domain::Iterator::FDescribeNamespacesIteratorPtr FGs2LoginRewardDomain::Namespaces(
+        const TOptional<FString> NamePrefix
     ) const
     {
         return MakeShared<Gs2::LoginReward::Domain::Iterator::FDescribeNamespacesIterator>(
             Gs2,
             Client
+            NamePrefix
         );
     }
 

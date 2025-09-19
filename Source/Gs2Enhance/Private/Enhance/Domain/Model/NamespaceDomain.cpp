@@ -403,12 +403,14 @@ namespace Gs2::Enhance::Domain::Model
     }
 
     Gs2::Enhance::Domain::Iterator::FDescribeUnleashRateModelMastersIteratorPtr FNamespaceDomain::UnleashRateModelMasters(
+        const TOptional<FString> NamePrefix
     ) const
     {
         return MakeShared<Gs2::Enhance::Domain::Iterator::FDescribeUnleashRateModelMastersIterator>(
             Gs2,
             Client,
-            NamespaceName
+            NamespaceName,
+            NamePrefix
         );
     }
 
@@ -527,12 +529,14 @@ namespace Gs2::Enhance::Domain::Model
     }
 
     Gs2::Enhance::Domain::Iterator::FDescribeRateModelMastersIteratorPtr FNamespaceDomain::RateModelMasters(
+        const TOptional<FString> NamePrefix
     ) const
     {
         return MakeShared<Gs2::Enhance::Domain::Iterator::FDescribeRateModelMastersIterator>(
             Gs2,
             Client,
-            NamespaceName
+            NamespaceName,
+            NamePrefix
         );
     }
 

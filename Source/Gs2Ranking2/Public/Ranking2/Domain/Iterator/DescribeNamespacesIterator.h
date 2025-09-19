@@ -30,11 +30,13 @@ namespace Gs2::Ranking2::Domain::Iterator
     {
         const TSharedPtr<Core::Domain::FGs2> Gs2;
         const Gs2::Ranking2::FGs2Ranking2RestClientPtr Client;
+        const TOptional<FString> NamePrefix;
 
     public:
         FDescribeNamespacesIterator(
             const TSharedPtr<Core::Domain::FGs2> Gs2,
-            const Gs2::Ranking2::FGs2Ranking2RestClientPtr Client
+            const Gs2::Ranking2::FGs2Ranking2RestClientPtr Client,
+            const TOptional<FString> NamePrefix = TOptional<FString>()
         );
 
         FDescribeNamespacesIterator(

@@ -400,11 +400,13 @@ namespace Gs2::Dictionary::Domain
     }
 
     Gs2::Dictionary::Domain::Iterator::FDescribeNamespacesIteratorPtr FGs2DictionaryDomain::Namespaces(
+        const TOptional<FString> NamePrefix
     ) const
     {
         return MakeShared<Gs2::Dictionary::Domain::Iterator::FDescribeNamespacesIterator>(
             Gs2,
             Client
+            NamePrefix
         );
     }
 
