@@ -27,7 +27,7 @@ namespace Gs2::Chat::Request
     {
         TOptional<FString> ContextStackValue;
         TOptional<FString> NamespaceNameValue;
-        TOptional<FString> NamePrefixValue;
+        TOptional<FString> RoomNamePrefixValue;
         TOptional<FString> AccessTokenValue;
         TOptional<FString> PageTokenValue;
         TOptional<int32> LimitValue;
@@ -42,14 +42,14 @@ namespace Gs2::Chat::Request
 
         TSharedPtr<FDescribeSubscribesRequest> WithContextStack(const TOptional<FString> ContextStack);
         TSharedPtr<FDescribeSubscribesRequest> WithNamespaceName(const TOptional<FString> NamespaceName);
-        TSharedPtr<FDescribeSubscribesRequest> WithNamePrefix(const TOptional<FString> NamePrefix);
+        TSharedPtr<FDescribeSubscribesRequest> WithRoomNamePrefix(const TOptional<FString> RoomNamePrefix);
         TSharedPtr<FDescribeSubscribesRequest> WithAccessToken(const TOptional<FString> AccessToken);
         TSharedPtr<FDescribeSubscribesRequest> WithPageToken(const TOptional<FString> PageToken);
         TSharedPtr<FDescribeSubscribesRequest> WithLimit(const TOptional<int32> Limit);
 
         TOptional<FString> GetContextStack() const;
         TOptional<FString> GetNamespaceName() const;
-        TOptional<FString> GetNamePrefix() const;
+        TOptional<FString> GetRoomNamePrefix() const;
         TOptional<FString> GetAccessToken() const;
         TOptional<FString> GetPageToken() const;
         TOptional<int32> GetLimit() const;

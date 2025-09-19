@@ -36,14 +36,12 @@ namespace Gs2::StateMachine::Domain::Iterator
     FDescribeStateMachineMastersIterator::FDescribeStateMachineMastersIterator(
         const TSharedPtr<Core::Domain::FGs2> Gs2,
         const Gs2::StateMachine::FGs2StateMachineRestClientPtr Client,
-        const TOptional<FString> NamespaceName,
-        const TOptional<FString> NamePrefix
+        const TOptional<FString> NamespaceName
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
         Client(Client),
-        NamespaceName(NamespaceName),
-        NamePrefix(NamePrefix)
+        NamespaceName(NamespaceName)
     {
     }
 
@@ -52,8 +50,7 @@ namespace Gs2::StateMachine::Domain::Iterator
     ):
         Gs2(From.Gs2),
         Client(From.Client),
-        NamespaceName(From.NamespaceName),
-        NamePrefix(From.NamePrefix)
+        NamespaceName(From.NamespaceName)
     {
     }
 
@@ -103,7 +100,6 @@ namespace Gs2::StateMachine::Domain::Iterator
 
                 if (Range)
                 {
-                    Range->RemoveAll([this](const Gs2::StateMachine::Model::FStateMachineMasterPtr& Item) { return Self->NamePrefix && Item->GetNamePrefix() != Self->NamePrefix; });
                     bLast = true;
                     RangeIteratorOpt = Range->CreateIterator();
                     PageToken = TOptional<FString>();
@@ -146,7 +142,6 @@ namespace Gs2::StateMachine::Domain::Iterator
             }
             if (Range)
             {
-                Range->RemoveAll([this](const Gs2::StateMachine::Model::FStateMachineMasterPtr& Item) { return Self->NamePrefix && Item->GetNamePrefix() != Self->NamePrefix; });
             }
             RangeIteratorOpt = Range->CreateIterator();
             PageToken = R->GetNextPageToken();

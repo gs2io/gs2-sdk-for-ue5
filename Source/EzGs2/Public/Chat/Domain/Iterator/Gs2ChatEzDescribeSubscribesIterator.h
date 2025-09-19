@@ -31,7 +31,7 @@ namespace Gs2::UE5::Chat::Domain::Iterator
         Gs2::Chat::Domain::Model::FUserAccessTokenDomainPtr Domain;
         Gs2::UE5::Util::IGameSessionPtr GameSession;
         Gs2::UE5::Util::FGs2ConnectionPtr Connection;
-        TOptional<FString> NamePrefix;
+        TOptional<FString> RoomNamePrefix;
 
 	public:
 
@@ -39,17 +39,17 @@ namespace Gs2::UE5::Chat::Domain::Iterator
             Gs2::Chat::Domain::Model::FUserAccessTokenDomainPtr Domain,
             Gs2::UE5::Util::IGameSessionPtr GameSession,
             Gs2::UE5::Util::FGs2ConnectionPtr Connection,
-            TOptional<FString> NamePrefix = TOptional<FString>()
+            TOptional<FString> RoomNamePrefix = TOptional<FString>()
         ) :
             It(
                 Domain->Subscribes(
-                    NamePrefix
+                    RoomNamePrefix
                 )
             ),
             Domain(Domain),
             GameSession(GameSession),
             Connection(Connection),
-            NamePrefix(NamePrefix)
+            RoomNamePrefix(RoomNamePrefix)
         {
         }
 
@@ -60,7 +60,7 @@ namespace Gs2::UE5::Chat::Domain::Iterator
 			Domain(From.Domain),
 			GameSession(From.GameSession),
 			Connection(From.Connection),
-            NamePrefix(From.NamePrefix)
+            RoomNamePrefix(From.RoomNamePrefix)
 		{
 		}
 

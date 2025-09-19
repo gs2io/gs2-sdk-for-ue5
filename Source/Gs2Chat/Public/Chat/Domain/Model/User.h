@@ -110,7 +110,7 @@ namespace Gs2::Chat::Domain::Model
         );
 
         Gs2::Chat::Domain::Iterator::FDescribeSubscribesByUserIdIteratorPtr Subscribes(
-            const TOptional<FString> NamePrefix = TOptional<FString>(),
+            const TOptional<FString> RoomNamePrefix = TOptional<FString>(),
             const TOptional<FString> TimeOffsetToken = TOptional<FString>()
         ) const;
 

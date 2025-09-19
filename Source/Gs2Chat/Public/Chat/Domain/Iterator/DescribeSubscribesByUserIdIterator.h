@@ -31,7 +31,7 @@ namespace Gs2::Chat::Domain::Iterator
         const TSharedPtr<Core::Domain::FGs2> Gs2;
         const Gs2::Chat::FGs2ChatRestClientPtr Client;
         const TOptional<FString> NamespaceName;
-        const TOptional<FString> NamePrefix;
+        const TOptional<FString> RoomNamePrefix;
         const TOptional<FString> UserId;
         const TOptional<FString> TimeOffsetToken;
 
@@ -41,7 +41,7 @@ namespace Gs2::Chat::Domain::Iterator
             const Gs2::Chat::FGs2ChatRestClientPtr Client,
             const TOptional<FString> NamespaceName,
             const TOptional<FString> UserId,
-            const TOptional<FString> NamePrefix = TOptional<FString>(),
+            const TOptional<FString> RoomNamePrefix = TOptional<FString>(),
             const TOptional<FString> TimeOffsetToken = TOptional<FString>()
         );
 

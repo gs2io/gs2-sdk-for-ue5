@@ -228,7 +228,6 @@ namespace Gs2::StateMachine::Domain::Model
         );
 
         Gs2::StateMachine::Domain::Iterator::FDescribeStateMachineMastersIteratorPtr StateMachineMasters(
-            const TOptional<FString> NamePrefix = TOptional<FString>()
         ) const;
 
         Gs2::Core::Domain::CallbackID SubscribeStateMachineMasters(

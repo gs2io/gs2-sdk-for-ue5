@@ -144,7 +144,7 @@ namespace Gs2::Chat::Domain::Model
     }
 
     Gs2::Chat::Domain::Iterator::FDescribeSubscribesIteratorPtr FUserAccessTokenDomain::Subscribes(
-        const TOptional<FString> NamePrefix
+        const TOptional<FString> RoomNamePrefix
     ) const
     {
         return MakeShared<Gs2::Chat::Domain::Iterator::FDescribeSubscribesIterator>(
@@ -152,7 +152,7 @@ namespace Gs2::Chat::Domain::Model
             Client,
             NamespaceName,
             AccessToken,
-            NamePrefix
+            RoomNamePrefix
         );
     }
 

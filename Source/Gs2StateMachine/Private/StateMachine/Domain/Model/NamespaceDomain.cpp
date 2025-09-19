@@ -289,14 +289,12 @@ namespace Gs2::StateMachine::Domain::Model
     }
 
     Gs2::StateMachine::Domain::Iterator::FDescribeStateMachineMastersIteratorPtr FNamespaceDomain::StateMachineMasters(
-        const TOptional<FString> NamePrefix
     ) const
     {
         return MakeShared<Gs2::StateMachine::Domain::Iterator::FDescribeStateMachineMastersIterator>(
             Gs2,
             Client,
-            NamespaceName,
-            NamePrefix
+            NamespaceName
         );
     }
 

@@ -20,7 +20,7 @@ namespace Gs2::Chat::Request
 {
     FDescribeSubscribesRequest::FDescribeSubscribesRequest():
         NamespaceNameValue(TOptional<FString>()),
-        NamePrefixValue(TOptional<FString>()),
+        RoomNamePrefixValue(TOptional<FString>()),
         AccessTokenValue(TOptional<FString>()),
         PageTokenValue(TOptional<FString>()),
         LimitValue(TOptional<int32>())
@@ -31,7 +31,7 @@ namespace Gs2::Chat::Request
         const FDescribeSubscribesRequest& From
     ):
         NamespaceNameValue(From.NamespaceNameValue),
-        NamePrefixValue(From.NamePrefixValue),
+        RoomNamePrefixValue(From.RoomNamePrefixValue),
         AccessTokenValue(From.AccessTokenValue),
         PageTokenValue(From.PageTokenValue),
         LimitValue(From.LimitValue)
@@ -54,11 +54,11 @@ namespace Gs2::Chat::Request
         return SharedThis(this);
     }
 
-    TSharedPtr<FDescribeSubscribesRequest> FDescribeSubscribesRequest::WithNamePrefix(
-        const TOptional<FString> NamePrefix
+    TSharedPtr<FDescribeSubscribesRequest> FDescribeSubscribesRequest::WithRoomNamePrefix(
+        const TOptional<FString> RoomNamePrefix
     )
     {
-        this->NamePrefixValue = NamePrefix;
+        this->RoomNamePrefixValue = RoomNamePrefix;
         return SharedThis(this);
     }
 
@@ -96,9 +96,9 @@ namespace Gs2::Chat::Request
         return NamespaceNameValue;
     }
 
-    TOptional<FString> FDescribeSubscribesRequest::GetNamePrefix() const
+    TOptional<FString> FDescribeSubscribesRequest::GetRoomNamePrefix() const
     {
-        return NamePrefixValue;
+        return RoomNamePrefixValue;
     }
 
     TOptional<FString> FDescribeSubscribesRequest::GetAccessToken() const
@@ -141,10 +141,10 @@ namespace Gs2::Chat::Request
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
-            ->WithNamePrefix(Data->HasField(ANSI_TO_TCHAR("namePrefix")) ? [Data]() -> TOptional<FString>
+            ->WithRoomNamePrefix(Data->HasField(ANSI_TO_TCHAR("roomNamePrefix")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
-                    if (Data->TryGetStringField(ANSI_TO_TCHAR("namePrefix"), v))
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("roomNamePrefix"), v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
@@ -190,9 +190,9 @@ namespace Gs2::Chat::Request
         {
             JsonRootObject->SetStringField("namespaceName", NamespaceNameValue.GetValue());
         }
-        if (NamePrefixValue.IsSet())
+        if (RoomNamePrefixValue.IsSet())
         {
-            JsonRootObject->SetStringField("namePrefix", NamePrefixValue.GetValue());
+            JsonRootObject->SetStringField("roomNamePrefix", RoomNamePrefixValue.GetValue());
         }
         if (AccessTokenValue.IsSet())
         {

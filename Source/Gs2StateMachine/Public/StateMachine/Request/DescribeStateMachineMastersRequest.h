@@ -27,7 +27,6 @@ namespace Gs2::StateMachine::Request
     {
         TOptional<FString> ContextStackValue;
         TOptional<FString> NamespaceNameValue;
-        TOptional<FString> NamePrefixValue;
         TOptional<FString> PageTokenValue;
         TOptional<int32> LimitValue;
         
@@ -41,13 +40,11 @@ namespace Gs2::StateMachine::Request
 
         TSharedPtr<FDescribeStateMachineMastersRequest> WithContextStack(const TOptional<FString> ContextStack);
         TSharedPtr<FDescribeStateMachineMastersRequest> WithNamespaceName(const TOptional<FString> NamespaceName);
-        TSharedPtr<FDescribeStateMachineMastersRequest> WithNamePrefix(const TOptional<FString> NamePrefix);
         TSharedPtr<FDescribeStateMachineMastersRequest> WithPageToken(const TOptional<FString> PageToken);
         TSharedPtr<FDescribeStateMachineMastersRequest> WithLimit(const TOptional<int32> Limit);
 
         TOptional<FString> GetContextStack() const;
         TOptional<FString> GetNamespaceName() const;
-        TOptional<FString> GetNamePrefix() const;
         TOptional<FString> GetPageToken() const;
         TOptional<int32> GetLimit() const;
         FString GetLimitString() const;

@@ -90,7 +90,7 @@ namespace Gs2::UE5::Chat::Domain::Model
         ) const;
 
         Gs2::UE5::Chat::Domain::Iterator::FEzDescribeSubscribesIteratorPtr Subscribes(
-            const TOptional<FString> NamePrefix = TOptional<FString>()
+            const TOptional<FString> RoomNamePrefix = TOptional<FString>()
         ) const;
 
         Gs2::Core::Domain::CallbackID SubscribeSubscribes(TFunction<void()> Callback);

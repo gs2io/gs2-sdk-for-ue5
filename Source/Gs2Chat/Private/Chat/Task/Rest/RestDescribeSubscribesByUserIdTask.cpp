@@ -86,8 +86,8 @@ namespace Gs2::Chat::Task::Rest
             if (this->Request->GetContextStack().IsSet()) {
                 queryStrings.Add("contextStack=" + FGenericPlatformHttp::UrlEncode(*this->Request->GetContextStack().GetValue()));
             }
-            if (this->Request->GetNamePrefix().IsSet()) {
-                queryStrings.Add("namePrefix=" + FGenericPlatformHttp::UrlEncode(this->Request->GetNamePrefix().GetValue()));
+            if (this->Request->GetRoomNamePrefix().IsSet()) {
+                queryStrings.Add("roomNamePrefix=" + FGenericPlatformHttp::UrlEncode(this->Request->GetRoomNamePrefix().GetValue()));
             }
             if (this->Request->GetPageToken().IsSet()) {
                 queryStrings.Add("pageToken=" + FGenericPlatformHttp::UrlEncode(this->Request->GetPageToken().GetValue()));
