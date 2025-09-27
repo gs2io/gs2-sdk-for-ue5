@@ -22,6 +22,7 @@ namespace Gs2::Mission::Model
         EnableAutoRunValue(TOptional<bool>()),
         EnableAtomicCommitValue(TOptional<bool>()),
         TransactionUseDistributorValue(TOptional<bool>()),
+        CommitScriptResultInUseDistributorValue(TOptional<bool>()),
         AcquireActionUseJobQueueValue(TOptional<bool>()),
         DistributorNamespaceIdValue(TOptional<FString>()),
         KeyIdValue(TOptional<FString>()),
@@ -35,6 +36,7 @@ namespace Gs2::Mission::Model
         EnableAutoRunValue(From.EnableAutoRunValue),
         EnableAtomicCommitValue(From.EnableAtomicCommitValue),
         TransactionUseDistributorValue(From.TransactionUseDistributorValue),
+        CommitScriptResultInUseDistributorValue(From.CommitScriptResultInUseDistributorValue),
         AcquireActionUseJobQueueValue(From.AcquireActionUseJobQueueValue),
         DistributorNamespaceIdValue(From.DistributorNamespaceIdValue),
         KeyIdValue(From.KeyIdValue),
@@ -63,6 +65,14 @@ namespace Gs2::Mission::Model
     )
     {
         this->TransactionUseDistributorValue = TransactionUseDistributor;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FTransactionSetting> FTransactionSetting::WithCommitScriptResultInUseDistributor(
+        const TOptional<bool> CommitScriptResultInUseDistributor
+    )
+    {
+        this->CommitScriptResultInUseDistributorValue = CommitScriptResultInUseDistributor;
         return SharedThis(this);
     }
 
@@ -136,6 +146,19 @@ namespace Gs2::Mission::Model
         }
         return FString(TransactionUseDistributorValue.GetValue() ? "true" : "false");
     }
+    TOptional<bool> FTransactionSetting::GetCommitScriptResultInUseDistributor() const
+    {
+        return CommitScriptResultInUseDistributorValue;
+    }
+
+    FString FTransactionSetting::GetCommitScriptResultInUseDistributorString() const
+    {
+        if (!CommitScriptResultInUseDistributorValue.IsSet())
+        {
+            return FString("null");
+        }
+        return FString(CommitScriptResultInUseDistributorValue.GetValue() ? "true" : "false");
+    }
     TOptional<bool> FTransactionSetting::GetAcquireActionUseJobQueue() const
     {
         return AcquireActionUseJobQueueValue;
@@ -195,6 +218,15 @@ namespace Gs2::Mission::Model
                     }
                     return TOptional<bool>();
                 }() : TOptional<bool>())
+            ->WithCommitScriptResultInUseDistributor(Data->HasField(ANSI_TO_TCHAR("commitScriptResultInUseDistributor")) ? [Data]() -> TOptional<bool>
+                {
+                    bool v;
+                    if (Data->TryGetBoolField(ANSI_TO_TCHAR("commitScriptResultInUseDistributor"), v))
+                    {
+                        return TOptional(v);
+                    }
+                    return TOptional<bool>();
+                }() : TOptional<bool>())
             ->WithAcquireActionUseJobQueue(Data->HasField(ANSI_TO_TCHAR("acquireActionUseJobQueue")) ? [Data]() -> TOptional<bool>
                 {
                     bool v;
@@ -247,6 +279,10 @@ namespace Gs2::Mission::Model
         if (TransactionUseDistributorValue.IsSet())
         {
             JsonRootObject->SetBoolField("transactionUseDistributor", TransactionUseDistributorValue.GetValue());
+        }
+        if (CommitScriptResultInUseDistributorValue.IsSet())
+        {
+            JsonRootObject->SetBoolField("commitScriptResultInUseDistributor", CommitScriptResultInUseDistributorValue.GetValue());
         }
         if (AcquireActionUseJobQueueValue.IsSet())
         {

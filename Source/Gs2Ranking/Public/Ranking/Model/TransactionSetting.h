@@ -26,6 +26,7 @@ namespace Gs2::Ranking::Model
         TOptional<bool> EnableAutoRunValue;
         TOptional<bool> EnableAtomicCommitValue;
         TOptional<bool> TransactionUseDistributorValue;
+        TOptional<bool> CommitScriptResultInUseDistributorValue;
         TOptional<bool> AcquireActionUseJobQueueValue;
         TOptional<FString> DistributorNamespaceIdValue;
         TOptional<FString> KeyIdValue;
@@ -41,6 +42,7 @@ namespace Gs2::Ranking::Model
         TSharedPtr<FTransactionSetting> WithEnableAutoRun(const TOptional<bool> EnableAutoRun);
         TSharedPtr<FTransactionSetting> WithEnableAtomicCommit(const TOptional<bool> EnableAtomicCommit);
         TSharedPtr<FTransactionSetting> WithTransactionUseDistributor(const TOptional<bool> TransactionUseDistributor);
+        TSharedPtr<FTransactionSetting> WithCommitScriptResultInUseDistributor(const TOptional<bool> CommitScriptResultInUseDistributor);
         TSharedPtr<FTransactionSetting> WithAcquireActionUseJobQueue(const TOptional<bool> AcquireActionUseJobQueue);
         TSharedPtr<FTransactionSetting> WithDistributorNamespaceId(const TOptional<FString> DistributorNamespaceId);
         TSharedPtr<FTransactionSetting> WithKeyId(const TOptional<FString> KeyId);
@@ -52,6 +54,8 @@ namespace Gs2::Ranking::Model
         FString GetEnableAtomicCommitString() const;
         TOptional<bool> GetTransactionUseDistributor() const;
         FString GetTransactionUseDistributorString() const;
+        TOptional<bool> GetCommitScriptResultInUseDistributor() const;
+        FString GetCommitScriptResultInUseDistributorString() const;
         TOptional<bool> GetAcquireActionUseJobQueue() const;
         FString GetAcquireActionUseJobQueueString() const;
         TOptional<FString> GetDistributorNamespaceId() const;
