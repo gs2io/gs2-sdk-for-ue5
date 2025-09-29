@@ -29,6 +29,7 @@ namespace Gs2::Gateway::Request
         TOptional<FString> NamespaceNameValue;
         TOptional<FString> AccessTokenValue;
         TOptional<bool> AllowConcurrentAccessValue;
+        TOptional<FString> SessionIdValue;
         TOptional<bool> ForceValue;
         TOptional<FString> DuplicationAvoiderValue;
         
@@ -44,6 +45,7 @@ namespace Gs2::Gateway::Request
         TSharedPtr<FSetUserIdRequest> WithNamespaceName(const TOptional<FString> NamespaceName);
         TSharedPtr<FSetUserIdRequest> WithAccessToken(const TOptional<FString> AccessToken);
         TSharedPtr<FSetUserIdRequest> WithAllowConcurrentAccess(const TOptional<bool> AllowConcurrentAccess);
+        TSharedPtr<FSetUserIdRequest> WithSessionId(const TOptional<FString> SessionId);
         TSharedPtr<FSetUserIdRequest> WithForce(const TOptional<bool> Force);
         TSharedPtr<FSetUserIdRequest> WithDuplicationAvoider(const TOptional<FString> DuplicationAvoider);
 
@@ -52,6 +54,7 @@ namespace Gs2::Gateway::Request
         TOptional<FString> GetAccessToken() const;
         TOptional<bool> GetAllowConcurrentAccess() const;
         FString GetAllowConcurrentAccessString() const;
+        TOptional<FString> GetSessionId() const;
         TOptional<bool> GetForce() const;
         FString GetForceString() const;
         TOptional<FString> GetDuplicationAvoider() const;

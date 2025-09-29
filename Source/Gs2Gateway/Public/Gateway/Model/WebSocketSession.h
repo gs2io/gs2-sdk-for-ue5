@@ -27,6 +27,7 @@ namespace Gs2::Gateway::Model
         TOptional<FString> ConnectionIdValue;
         TOptional<FString> NamespaceNameValue;
         TOptional<FString> UserIdValue;
+        TOptional<FString> SessionIdValue;
         TOptional<int64> CreatedAtValue;
         TOptional<int64> UpdatedAtValue;
         TOptional<int64> RevisionValue;
@@ -42,6 +43,7 @@ namespace Gs2::Gateway::Model
         TSharedPtr<FWebSocketSession> WithConnectionId(const TOptional<FString> ConnectionId);
         TSharedPtr<FWebSocketSession> WithNamespaceName(const TOptional<FString> NamespaceName);
         TSharedPtr<FWebSocketSession> WithUserId(const TOptional<FString> UserId);
+        TSharedPtr<FWebSocketSession> WithSessionId(const TOptional<FString> SessionId);
         TSharedPtr<FWebSocketSession> WithCreatedAt(const TOptional<int64> CreatedAt);
         TSharedPtr<FWebSocketSession> WithUpdatedAt(const TOptional<int64> UpdatedAt);
         TSharedPtr<FWebSocketSession> WithRevision(const TOptional<int64> Revision);
@@ -50,6 +52,7 @@ namespace Gs2::Gateway::Model
         TOptional<FString> GetConnectionId() const;
         TOptional<FString> GetNamespaceName() const;
         TOptional<FString> GetUserId() const;
+        TOptional<FString> GetSessionId() const;
         TOptional<int64> GetCreatedAt() const;
         FString GetCreatedAtString() const;
         TOptional<int64> GetUpdatedAt() const;

@@ -22,6 +22,7 @@ namespace Gs2::Gateway::Request
         NamespaceNameValue(TOptional<FString>()),
         AccessTokenValue(TOptional<FString>()),
         AllowConcurrentAccessValue(TOptional<bool>()),
+        SessionIdValue(TOptional<FString>()),
         ForceValue(TOptional<bool>())
     {
     }
@@ -32,6 +33,7 @@ namespace Gs2::Gateway::Request
         NamespaceNameValue(From.NamespaceNameValue),
         AccessTokenValue(From.AccessTokenValue),
         AllowConcurrentAccessValue(From.AllowConcurrentAccessValue),
+        SessionIdValue(From.SessionIdValue),
         ForceValue(From.ForceValue)
     {
     }
@@ -65,6 +67,14 @@ namespace Gs2::Gateway::Request
     )
     {
         this->AllowConcurrentAccessValue = AllowConcurrentAccess;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FSetUserIdRequest> FSetUserIdRequest::WithSessionId(
+        const TOptional<FString> SessionId
+    )
+    {
+        this->SessionIdValue = SessionId;
         return SharedThis(this);
     }
 
@@ -111,6 +121,11 @@ namespace Gs2::Gateway::Request
             return FString("null");
         }
         return FString(AllowConcurrentAccessValue.GetValue() ? "true" : "false");
+    }
+
+    TOptional<FString> FSetUserIdRequest::GetSessionId() const
+    {
+        return SessionIdValue;
     }
 
     TOptional<bool> FSetUserIdRequest::GetForce() const
@@ -166,6 +181,15 @@ namespace Gs2::Gateway::Request
                   }
                   return TOptional<bool>();
               }() : TOptional<bool>())
+            ->WithSessionId(Data->HasField(ANSI_TO_TCHAR("sessionId")) ? [Data]() -> TOptional<FString>
+              {
+                  FString v("");
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("sessionId"), v))
+                  {
+                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                  }
+                  return TOptional<FString>();
+              }() : TOptional<FString>())
             ->WithForce(Data->HasField(ANSI_TO_TCHAR("force")) ? [Data]() -> TOptional<bool>
               {
                   bool v;
@@ -196,6 +220,10 @@ namespace Gs2::Gateway::Request
         if (AllowConcurrentAccessValue.IsSet())
         {
             JsonRootObject->SetBoolField("allowConcurrentAccess", AllowConcurrentAccessValue.GetValue());
+        }
+        if (SessionIdValue.IsSet())
+        {
+            JsonRootObject->SetStringField("sessionId", SessionIdValue.GetValue());
         }
         if (ForceValue.IsSet())
         {

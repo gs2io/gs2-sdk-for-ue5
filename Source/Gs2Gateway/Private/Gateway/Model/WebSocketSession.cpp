@@ -23,6 +23,7 @@ namespace Gs2::Gateway::Model
         ConnectionIdValue(TOptional<FString>()),
         NamespaceNameValue(TOptional<FString>()),
         UserIdValue(TOptional<FString>()),
+        SessionIdValue(TOptional<FString>()),
         CreatedAtValue(TOptional<int64>()),
         UpdatedAtValue(TOptional<int64>()),
         RevisionValue(TOptional<int64>())
@@ -36,6 +37,7 @@ namespace Gs2::Gateway::Model
         ConnectionIdValue(From.ConnectionIdValue),
         NamespaceNameValue(From.NamespaceNameValue),
         UserIdValue(From.UserIdValue),
+        SessionIdValue(From.SessionIdValue),
         CreatedAtValue(From.CreatedAtValue),
         UpdatedAtValue(From.UpdatedAtValue),
         RevisionValue(From.RevisionValue)
@@ -71,6 +73,14 @@ namespace Gs2::Gateway::Model
     )
     {
         this->UserIdValue = UserId;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FWebSocketSession> FWebSocketSession::WithSessionId(
+        const TOptional<FString> SessionId
+    )
+    {
+        this->SessionIdValue = SessionId;
         return SharedThis(this);
     }
 
@@ -112,6 +122,10 @@ namespace Gs2::Gateway::Model
     TOptional<FString> FWebSocketSession::GetUserId() const
     {
         return UserIdValue;
+    }
+    TOptional<FString> FWebSocketSession::GetSessionId() const
+    {
+        return SessionIdValue;
     }
     TOptional<int64> FWebSocketSession::GetCreatedAt() const
     {
@@ -250,6 +264,15 @@ namespace Gs2::Gateway::Model
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
+            ->WithSessionId(Data->HasField(ANSI_TO_TCHAR("sessionId")) ? [Data]() -> TOptional<FString>
+                {
+                    FString v("");
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("sessionId"), v))
+                    {
+                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                    }
+                    return TOptional<FString>();
+                }() : TOptional<FString>())
             ->WithCreatedAt(Data->HasField(ANSI_TO_TCHAR("createdAt")) ? [Data]() -> TOptional<int64>
                 {
                     int64 v;
@@ -297,6 +320,10 @@ namespace Gs2::Gateway::Model
         if (UserIdValue.IsSet())
         {
             JsonRootObject->SetStringField("userId", UserIdValue.GetValue());
+        }
+        if (SessionIdValue.IsSet())
+        {
+            JsonRootObject->SetStringField("sessionId", SessionIdValue.GetValue());
         }
         if (CreatedAtValue.IsSet())
         {
