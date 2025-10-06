@@ -106,6 +106,10 @@ namespace Gs2::Guild::Task::Rest
             {
                 JsonRootObject->SetObjectField("changeMemberNotification", this->Request->GetChangeMemberNotification()->ToJson());
             }
+            if (this->Request->GetChangeMemberNotificationIgnoreChangeMetadata().IsSet())
+            {
+                JsonRootObject->SetBoolField("changeMemberNotificationIgnoreChangeMetadata", this->Request->GetChangeMemberNotificationIgnoreChangeMetadata().GetValue());
+            }
             if (this->Request->GetReceiveRequestNotification() != nullptr && this->Request->GetReceiveRequestNotification().IsValid())
             {
                 JsonRootObject->SetObjectField("receiveRequestNotification", this->Request->GetReceiveRequestNotification()->ToJson());

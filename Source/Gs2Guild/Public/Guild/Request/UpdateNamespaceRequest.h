@@ -37,6 +37,7 @@ namespace Gs2::Guild::Request
         TSharedPtr<Model::FNotificationSetting> JoinNotificationValue;
         TSharedPtr<Model::FNotificationSetting> LeaveNotificationValue;
         TSharedPtr<Model::FNotificationSetting> ChangeMemberNotificationValue;
+        TOptional<bool> ChangeMemberNotificationIgnoreChangeMetadataValue;
         TSharedPtr<Model::FNotificationSetting> ReceiveRequestNotificationValue;
         TSharedPtr<Model::FNotificationSetting> RemoveRequestNotificationValue;
         TSharedPtr<Model::FScriptSetting> CreateGuildScriptValue;
@@ -64,6 +65,7 @@ namespace Gs2::Guild::Request
         TSharedPtr<FUpdateNamespaceRequest> WithJoinNotification(const TSharedPtr<Model::FNotificationSetting> JoinNotification);
         TSharedPtr<FUpdateNamespaceRequest> WithLeaveNotification(const TSharedPtr<Model::FNotificationSetting> LeaveNotification);
         TSharedPtr<FUpdateNamespaceRequest> WithChangeMemberNotification(const TSharedPtr<Model::FNotificationSetting> ChangeMemberNotification);
+        TSharedPtr<FUpdateNamespaceRequest> WithChangeMemberNotificationIgnoreChangeMetadata(const TOptional<bool> ChangeMemberNotificationIgnoreChangeMetadata);
         TSharedPtr<FUpdateNamespaceRequest> WithReceiveRequestNotification(const TSharedPtr<Model::FNotificationSetting> ReceiveRequestNotification);
         TSharedPtr<FUpdateNamespaceRequest> WithRemoveRequestNotification(const TSharedPtr<Model::FNotificationSetting> RemoveRequestNotification);
         TSharedPtr<FUpdateNamespaceRequest> WithCreateGuildScript(const TSharedPtr<Model::FScriptSetting> CreateGuildScript);
@@ -83,6 +85,8 @@ namespace Gs2::Guild::Request
         TSharedPtr<Model::FNotificationSetting> GetJoinNotification() const;
         TSharedPtr<Model::FNotificationSetting> GetLeaveNotification() const;
         TSharedPtr<Model::FNotificationSetting> GetChangeMemberNotification() const;
+        TOptional<bool> GetChangeMemberNotificationIgnoreChangeMetadata() const;
+        FString GetChangeMemberNotificationIgnoreChangeMetadataString() const;
         TSharedPtr<Model::FNotificationSetting> GetReceiveRequestNotification() const;
         TSharedPtr<Model::FNotificationSetting> GetRemoveRequestNotification() const;
         TSharedPtr<Model::FScriptSetting> GetCreateGuildScript() const;

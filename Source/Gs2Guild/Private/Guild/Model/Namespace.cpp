@@ -27,6 +27,7 @@ namespace Gs2::Guild::Model
         JoinNotificationValue(nullptr),
         LeaveNotificationValue(nullptr),
         ChangeMemberNotificationValue(nullptr),
+        ChangeMemberNotificationIgnoreChangeMetadataValue(TOptional<bool>()),
         ReceiveRequestNotificationValue(nullptr),
         RemoveRequestNotificationValue(nullptr),
         CreateGuildScriptValue(nullptr),
@@ -54,6 +55,7 @@ namespace Gs2::Guild::Model
         JoinNotificationValue(From.JoinNotificationValue),
         LeaveNotificationValue(From.LeaveNotificationValue),
         ChangeMemberNotificationValue(From.ChangeMemberNotificationValue),
+        ChangeMemberNotificationIgnoreChangeMetadataValue(From.ChangeMemberNotificationIgnoreChangeMetadataValue),
         ReceiveRequestNotificationValue(From.ReceiveRequestNotificationValue),
         RemoveRequestNotificationValue(From.RemoveRequestNotificationValue),
         CreateGuildScriptValue(From.CreateGuildScriptValue),
@@ -131,6 +133,14 @@ namespace Gs2::Guild::Model
     )
     {
         this->ChangeMemberNotificationValue = ChangeMemberNotification;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FNamespace> FNamespace::WithChangeMemberNotificationIgnoreChangeMetadata(
+        const TOptional<bool> ChangeMemberNotificationIgnoreChangeMetadata
+    )
+    {
+        this->ChangeMemberNotificationIgnoreChangeMetadataValue = ChangeMemberNotificationIgnoreChangeMetadata;
         return SharedThis(this);
     }
 
@@ -268,6 +278,19 @@ namespace Gs2::Guild::Model
     TSharedPtr<FNotificationSetting> FNamespace::GetChangeMemberNotification() const
     {
         return ChangeMemberNotificationValue;
+    }
+    TOptional<bool> FNamespace::GetChangeMemberNotificationIgnoreChangeMetadata() const
+    {
+        return ChangeMemberNotificationIgnoreChangeMetadataValue;
+    }
+
+    FString FNamespace::GetChangeMemberNotificationIgnoreChangeMetadataString() const
+    {
+        if (!ChangeMemberNotificationIgnoreChangeMetadataValue.IsSet())
+        {
+            return FString("null");
+        }
+        return FString(ChangeMemberNotificationIgnoreChangeMetadataValue.GetValue() ? "true" : "false");
     }
     TSharedPtr<FNotificationSetting> FNamespace::GetReceiveRequestNotification() const
     {
@@ -455,6 +478,15 @@ namespace Gs2::Guild::Model
                     }
                     return Model::FNotificationSetting::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("changeMemberNotification")));
                  }() : nullptr)
+            ->WithChangeMemberNotificationIgnoreChangeMetadata(Data->HasField(ANSI_TO_TCHAR("changeMemberNotificationIgnoreChangeMetadata")) ? [Data]() -> TOptional<bool>
+                {
+                    bool v;
+                    if (Data->TryGetBoolField(ANSI_TO_TCHAR("changeMemberNotificationIgnoreChangeMetadata"), v))
+                    {
+                        return TOptional(v);
+                    }
+                    return TOptional<bool>();
+                }() : TOptional<bool>())
             ->WithReceiveRequestNotification(Data->HasField(ANSI_TO_TCHAR("receiveRequestNotification")) ? [Data]() -> Model::FNotificationSettingPtr
                 {
                     if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("receiveRequestNotification")))
@@ -598,6 +630,10 @@ namespace Gs2::Guild::Model
         if (ChangeMemberNotificationValue != nullptr && ChangeMemberNotificationValue.IsValid())
         {
             JsonRootObject->SetObjectField("changeMemberNotification", ChangeMemberNotificationValue->ToJson());
+        }
+        if (ChangeMemberNotificationIgnoreChangeMetadataValue.IsSet())
+        {
+            JsonRootObject->SetBoolField("changeMemberNotificationIgnoreChangeMetadata", ChangeMemberNotificationIgnoreChangeMetadataValue.GetValue());
         }
         if (ReceiveRequestNotificationValue != nullptr && ReceiveRequestNotificationValue.IsValid())
         {

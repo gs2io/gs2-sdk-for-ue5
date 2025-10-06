@@ -35,6 +35,7 @@ namespace Gs2::Guild::Model
         TSharedPtr<FNotificationSetting> JoinNotificationValue;
         TSharedPtr<FNotificationSetting> LeaveNotificationValue;
         TSharedPtr<FNotificationSetting> ChangeMemberNotificationValue;
+        TOptional<bool> ChangeMemberNotificationIgnoreChangeMetadataValue;
         TSharedPtr<FNotificationSetting> ReceiveRequestNotificationValue;
         TSharedPtr<FNotificationSetting> RemoveRequestNotificationValue;
         TSharedPtr<FScriptSetting> CreateGuildScriptValue;
@@ -64,6 +65,7 @@ namespace Gs2::Guild::Model
         TSharedPtr<FNamespace> WithJoinNotification(const TSharedPtr<FNotificationSetting> JoinNotification);
         TSharedPtr<FNamespace> WithLeaveNotification(const TSharedPtr<FNotificationSetting> LeaveNotification);
         TSharedPtr<FNamespace> WithChangeMemberNotification(const TSharedPtr<FNotificationSetting> ChangeMemberNotification);
+        TSharedPtr<FNamespace> WithChangeMemberNotificationIgnoreChangeMetadata(const TOptional<bool> ChangeMemberNotificationIgnoreChangeMetadata);
         TSharedPtr<FNamespace> WithReceiveRequestNotification(const TSharedPtr<FNotificationSetting> ReceiveRequestNotification);
         TSharedPtr<FNamespace> WithRemoveRequestNotification(const TSharedPtr<FNotificationSetting> RemoveRequestNotification);
         TSharedPtr<FNamespace> WithCreateGuildScript(const TSharedPtr<FScriptSetting> CreateGuildScript);
@@ -86,6 +88,8 @@ namespace Gs2::Guild::Model
         TSharedPtr<FNotificationSetting> GetJoinNotification() const;
         TSharedPtr<FNotificationSetting> GetLeaveNotification() const;
         TSharedPtr<FNotificationSetting> GetChangeMemberNotification() const;
+        TOptional<bool> GetChangeMemberNotificationIgnoreChangeMetadata() const;
+        FString GetChangeMemberNotificationIgnoreChangeMetadataString() const;
         TSharedPtr<FNotificationSetting> GetReceiveRequestNotification() const;
         TSharedPtr<FNotificationSetting> GetRemoveRequestNotification() const;
         TSharedPtr<FScriptSetting> GetCreateGuildScript() const;
