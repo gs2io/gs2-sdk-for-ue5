@@ -21,7 +21,8 @@ namespace Gs2::Matchmaking::Model
     FNotificationSetting::FNotificationSetting():
         GatewayNamespaceIdValue(TOptional<FString>()),
         EnableTransferMobileNotificationValue(TOptional<bool>()),
-        SoundValue(TOptional<FString>())
+        SoundValue(TOptional<FString>()),
+        EnableValue(TOptional<FString>())
     {
     }
 
@@ -30,7 +31,8 @@ namespace Gs2::Matchmaking::Model
     ):
         GatewayNamespaceIdValue(From.GatewayNamespaceIdValue),
         EnableTransferMobileNotificationValue(From.EnableTransferMobileNotificationValue),
-        SoundValue(From.SoundValue)
+        SoundValue(From.SoundValue),
+        EnableValue(From.EnableValue)
     {
     }
 
@@ -57,6 +59,14 @@ namespace Gs2::Matchmaking::Model
         this->SoundValue = Sound;
         return SharedThis(this);
     }
+
+    TSharedPtr<FNotificationSetting> FNotificationSetting::WithEnable(
+        const TOptional<FString> Enable
+    )
+    {
+        this->EnableValue = Enable;
+        return SharedThis(this);
+    }
     TOptional<FString> FNotificationSetting::GetGatewayNamespaceId() const
     {
         return GatewayNamespaceIdValue;
@@ -77,6 +87,10 @@ namespace Gs2::Matchmaking::Model
     TOptional<FString> FNotificationSetting::GetSound() const
     {
         return SoundValue;
+    }
+    TOptional<FString> FNotificationSetting::GetEnable() const
+    {
+        return EnableValue;
     }
 
     TSharedPtr<FNotificationSetting> FNotificationSetting::FromJson(const TSharedPtr<FJsonObject> Data)
@@ -111,6 +125,15 @@ namespace Gs2::Matchmaking::Model
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
+                }() : TOptional<FString>())
+            ->WithEnable(Data->HasField(ANSI_TO_TCHAR("enable")) ? [Data]() -> TOptional<FString>
+                {
+                    FString v("");
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("enable"), v))
+                    {
+                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                    }
+                    return TOptional<FString>();
                 }() : TOptional<FString>());
     }
 
@@ -128,6 +151,10 @@ namespace Gs2::Matchmaking::Model
         if (SoundValue.IsSet())
         {
             JsonRootObject->SetStringField("sound", SoundValue.GetValue());
+        }
+        if (EnableValue.IsSet())
+        {
+            JsonRootObject->SetStringField("enable", EnableValue.GetValue());
         }
         return JsonRootObject;
     }

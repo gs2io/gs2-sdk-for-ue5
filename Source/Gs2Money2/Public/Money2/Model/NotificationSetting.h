@@ -26,6 +26,7 @@ namespace Gs2::Money2::Model
         TOptional<FString> GatewayNamespaceIdValue;
         TOptional<bool> EnableTransferMobileNotificationValue;
         TOptional<FString> SoundValue;
+        TOptional<FString> EnableValue;
 
     public:
         FNotificationSetting();
@@ -37,11 +38,13 @@ namespace Gs2::Money2::Model
         TSharedPtr<FNotificationSetting> WithGatewayNamespaceId(const TOptional<FString> GatewayNamespaceId);
         TSharedPtr<FNotificationSetting> WithEnableTransferMobileNotification(const TOptional<bool> EnableTransferMobileNotification);
         TSharedPtr<FNotificationSetting> WithSound(const TOptional<FString> Sound);
+        TSharedPtr<FNotificationSetting> WithEnable(const TOptional<FString> Enable);
 
         TOptional<FString> GetGatewayNamespaceId() const;
         TOptional<bool> GetEnableTransferMobileNotification() const;
         FString GetEnableTransferMobileNotificationString() const;
         TOptional<FString> GetSound() const;
+        TOptional<FString> GetEnable() const;
 
 
         static TSharedPtr<FNotificationSetting> FromJson(const TSharedPtr<FJsonObject> Data);

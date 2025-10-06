@@ -52,11 +52,13 @@ namespace Gs2::UE5::Gateway::Domain::Model
         {
             TSharedPtr<FEzWebSocketSessionGameSessionDomain> Self;
             TOptional<bool> AllowConcurrentAccess;
+            TOptional<FString> SessionId;
 
         public:
             explicit FSetUserIdTask(
                 TSharedPtr<FEzWebSocketSessionGameSessionDomain> Self,
-                TOptional<bool> AllowConcurrentAccess = TOptional<bool>()
+                TOptional<bool> AllowConcurrentAccess = TOptional<bool>(),
+                TOptional<FString> SessionId = TOptional<FString>()
             );
 
             virtual Gs2::Core::Model::FGs2ErrorPtr Action(
@@ -66,7 +68,8 @@ namespace Gs2::UE5::Gateway::Domain::Model
         friend FSetUserIdTask;
 
         TSharedPtr<FAsyncTask<FSetUserIdTask>> SetUserId(
-            TOptional<bool> AllowConcurrentAccess = TOptional<bool>()
+            TOptional<bool> AllowConcurrentAccess = TOptional<bool>(),
+            TOptional<FString> SessionId = TOptional<FString>()
         );
 
         class EZGS2_API FModelTask :

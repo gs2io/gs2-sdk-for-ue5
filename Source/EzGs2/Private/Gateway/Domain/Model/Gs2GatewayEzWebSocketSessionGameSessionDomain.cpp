@@ -53,8 +53,9 @@ namespace Gs2::UE5::Gateway::Domain::Model
 
     FEzWebSocketSessionGameSessionDomain::FSetUserIdTask::FSetUserIdTask(
         TSharedPtr<FEzWebSocketSessionGameSessionDomain> Self,
-        TOptional<bool> AllowConcurrentAccess
-    ): Self(Self), AllowConcurrentAccess(AllowConcurrentAccess)
+        TOptional<bool> AllowConcurrentAccess,
+        TOptional<FString> SessionId
+    ): Self(Self), AllowConcurrentAccess(AllowConcurrentAccess), SessionId(SessionId)
     {
 
     }
@@ -68,6 +69,7 @@ namespace Gs2::UE5::Gateway::Domain::Model
                 const auto Task = Self->Domain->SetUserId(
                     MakeShared<Gs2::Gateway::Request::FSetUserIdRequest>()
                         ->WithAllowConcurrentAccess(AllowConcurrentAccess)
+                        ->WithSessionId(SessionId)
                 );
                 Task->StartSynchronousTask();
                 if (Task->GetTask().IsError())
@@ -96,12 +98,14 @@ namespace Gs2::UE5::Gateway::Domain::Model
     }
 
     TSharedPtr<FAsyncTask<FEzWebSocketSessionGameSessionDomain::FSetUserIdTask>> FEzWebSocketSessionGameSessionDomain::SetUserId(
-        TOptional<bool> AllowConcurrentAccess
+        TOptional<bool> AllowConcurrentAccess,
+        TOptional<FString> SessionId
     )
     {
         return Gs2::Core::Util::New<FAsyncTask<FSetUserIdTask>>(
             this->AsShared(),
-            AllowConcurrentAccess
+            AllowConcurrentAccess,
+            SessionId
         );
     }
 
