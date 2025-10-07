@@ -20,6 +20,7 @@
 #include "Model/Namespace.h"
 #include "Model/WebSocketSession.h"
 #include "Model/FirebaseToken.h"
+#include "Model/SendNotificationEntry.h"
 #include "Model/LogSetting.h"
 #include "Model/TransactionSetting.h"
 
