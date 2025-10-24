@@ -30,10 +30,13 @@
 #include "Distributor/Domain/Model/DistributorModel.h"
 #include "Distributor/Domain/Model/CurrentDistributorMaster.h"
 #include "Distributor/Domain/Model/Distribute.h"
+#include "Distributor/Domain/Model/Expression.h"
 #include "Distributor/Domain/Model/User.h"
 #include "Distributor/Domain/Model/UserAccessToken.h"
 #include "Distributor/Domain/Model/StampSheetResult.h"
 #include "Distributor/Domain/Model/StampSheetResultAccessToken.h"
+#include "Distributor/Domain/Model/TransactionResult.h"
+#include "Distributor/Domain/Model/TransactionResultAccessToken.h"
 
 #include "Core/Domain/Gs2.h"
 #include "Core/Domain/Transaction/JobQueueJobDomainFactory.h"
@@ -98,12 +101,8 @@ namespace Gs2::Distributor::Domain::Model
         {
             return Future->GetTask().Error();
         }
-        const auto RequestModel = Request;
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-        }
         const auto Domain = Self;
         if (ResultModel != nullptr)
         {
@@ -151,25 +150,8 @@ namespace Gs2::Distributor::Domain::Model
         {
             return Future->GetTask().Error();
         }
-        const auto RequestModel = Request;
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-            {
-                const auto ParentKey = FString("distributor:Namespace");
-                const auto Key = Gs2::Distributor::Domain::Model::FNamespaceDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetName()
-                );
-                Self->Gs2->Cache->Put(
-                    Gs2::Distributor::Model::FNamespace::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
-        }
         *Result = ResultModel->GetItem();
         return nullptr;
     }
@@ -209,25 +191,8 @@ namespace Gs2::Distributor::Domain::Model
         {
             return Future->GetTask().Error();
         }
-        const auto RequestModel = Request;
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-            {
-                const auto ParentKey = FString("distributor:Namespace");
-                const auto Key = Gs2::Distributor::Domain::Model::FNamespaceDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetName()
-                );
-                Self->Gs2->Cache->Put(
-                    Gs2::Distributor::Model::FNamespace::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
-        }
         auto Domain = Self;
 
         *Result = Domain;
@@ -269,19 +234,8 @@ namespace Gs2::Distributor::Domain::Model
         {
             return Future->GetTask().Error();
         }
-        const auto RequestModel = Request;
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-            {
-                const auto ParentKey = FString("distributor:Namespace");
-                const auto Key = Gs2::Distributor::Domain::Model::FNamespaceDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetName()
-                );
-                Self->Gs2->Cache->Delete(Gs2::Distributor::Model::FNamespace::TypeName, ParentKey, Key);
-            }
-        }
         auto Domain = Self;
 
         *Result = Domain;
@@ -312,6 +266,8 @@ namespace Gs2::Distributor::Domain::Model
         TSharedPtr<TSharedPtr<Gs2::Distributor::Domain::Model::FNamespaceDomain>> Result
     )
     {
+        Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack);
         const auto Future = Self->Client->SetTransactionDefaultConfig(
             Request
         );
@@ -320,12 +276,8 @@ namespace Gs2::Distributor::Domain::Model
         {
             return Future->GetTask().Error();
         }
-        const auto RequestModel = Request;
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-        }
         const auto Domain = Self;
         *Result = Domain;
         Domain->NewContextStack = ResultModel->GetNewContextStack();
@@ -336,6 +288,49 @@ namespace Gs2::Distributor::Domain::Model
         Request::FSetTransactionDefaultConfigRequestPtr Request
     ) {
         return Gs2::Core::Util::New<FAsyncTask<FSetTransactionDefaultConfigTask>>(this->AsShared(), Request);
+    }
+
+    FNamespaceDomain::FBatchExecuteApiTask::FBatchExecuteApiTask(
+        const TSharedPtr<FNamespaceDomain>& Self,
+        const Request::FBatchExecuteApiRequestPtr Request
+    ): Self(Self), Request(Request)
+    {
+
+    }
+
+    FNamespaceDomain::FBatchExecuteApiTask::FBatchExecuteApiTask(
+        const FBatchExecuteApiTask& From
+    ): TGs2Future(From), Self(From.Self), Request(From.Request)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FNamespaceDomain::FBatchExecuteApiTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::Distributor::Domain::Model::FNamespaceDomain>> Result
+    )
+    {
+        const auto Future = Self->Client->BatchExecuteApi(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
+        const auto Domain = Self;
+        if (ResultModel != nullptr)
+        {
+            Self->Results = Domain->Results = ResultModel->GetResults();
+        }
+        *Result = Domain;
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FNamespaceDomain::FBatchExecuteApiTask>> FNamespaceDomain::BatchExecuteApi(
+        Request::FBatchExecuteApiRequestPtr Request
+    ) {
+        return Gs2::Core::Util::New<FAsyncTask<FBatchExecuteApiTask>>(this->AsShared(), Request);
     }
 
     FNamespaceDomain::FCreateDistributorModelMasterTask::FCreateDistributorModelMasterTask(
@@ -367,29 +362,8 @@ namespace Gs2::Distributor::Domain::Model
         {
             return Future->GetTask().Error();
         }
-        const auto RequestModel = Request;
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::Distributor::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
-                    Self->NamespaceName,
-                    "DistributorModelMaster"
-                );
-                const auto Key = Gs2::Distributor::Domain::Model::FDistributorModelMasterDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetName()
-                );
-                Self->Gs2->Cache->Put(
-                    Gs2::Distributor::Model::FDistributorModelMaster::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
-        }
         auto Domain = MakeShared<Gs2::Distributor::Domain::Model::FDistributorModelMasterDomain>(
             Self->Gs2,
             Self->Service,
@@ -478,12 +452,14 @@ namespace Gs2::Distributor::Domain::Model
     }
 
     Gs2::Distributor::Domain::Iterator::FDescribeDistributorModelMastersIteratorPtr FNamespaceDomain::DistributorModelMasters(
+        const TOptional<FString> NamePrefix
     ) const
     {
         return MakeShared<Gs2::Distributor::Domain::Iterator::FDescribeDistributorModelMastersIterator>(
             Gs2,
             Client,
-            NamespaceName
+            NamespaceName,
+            NamePrefix
         );
     }
 
@@ -548,6 +524,16 @@ namespace Gs2::Distributor::Domain::Model
             Service,
             NamespaceName,
             AccessToken
+        );
+    }
+
+    TSharedPtr<Gs2::Distributor::Domain::Model::FExpressionDomain> FNamespaceDomain::Expression(
+    )
+    {
+        return MakeShared<Gs2::Distributor::Domain::Model::FExpressionDomain>(
+            Gs2,
+            Service,
+            NamespaceName
         );
     }
 

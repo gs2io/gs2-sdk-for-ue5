@@ -167,9 +167,9 @@ namespace Gs2::UE5::Util
                 return MakeShared<Gs2::Core::Model::FUnauthorizedError>(
                     []
                     {
-                        auto Details = MakeShared<TArray<Core::Model::FGs2ErrorDetailPtr>>();
+                        auto Details = MakeShared<TArray<Gs2::Core::Model::FGs2ErrorDetailPtr>>();
                         Details->Add(
-                            MakeShared<Core::Model::FGs2ErrorDetail>(
+                            MakeShared<Gs2::Core::Model::FGs2ErrorDetail>(
                                 "version",
                                 "version.version.check.error.failed",
                                 ""

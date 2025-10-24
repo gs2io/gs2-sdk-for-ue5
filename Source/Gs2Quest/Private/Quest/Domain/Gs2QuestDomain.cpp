@@ -407,7 +407,7 @@ namespace Gs2::Quest::Domain
     {
         return MakeShared<Gs2::Quest::Domain::Iterator::FDescribeNamespacesIterator>(
             Gs2,
-            Client
+            Client,
             NamePrefix
         );
     }

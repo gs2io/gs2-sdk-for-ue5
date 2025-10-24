@@ -82,18 +82,6 @@ namespace Gs2::UE5::Enchant::Domain::Model
         );
     }
 
-    Gs2::UE5::Enchant::Domain::Model::FEzBalanceParameterModelDomainPtr FEzNamespaceDomain::BalanceParameterModel(
-        const FString ParameterName
-    ) const
-    {
-        return MakeShared<Gs2::UE5::Enchant::Domain::Model::FEzBalanceParameterModelDomain>(
-            Domain->BalanceParameterModel(
-                ParameterName
-            ),
-            ConnectionValue
-        );
-    }
-
     Gs2::UE5::Enchant::Domain::Iterator::FEzDescribeRarityParameterModelsIteratorPtr FEzNamespaceDomain::RarityParameterModels(
     ) const
     {
@@ -114,6 +102,18 @@ namespace Gs2::UE5::Enchant::Domain::Model
     {
         Domain->UnsubscribeRarityParameterModels(
             CallbackId
+        );
+    }
+
+    Gs2::UE5::Enchant::Domain::Model::FEzBalanceParameterModelDomainPtr FEzNamespaceDomain::BalanceParameterModel(
+        const FString ParameterName
+    ) const
+    {
+        return MakeShared<Gs2::UE5::Enchant::Domain::Model::FEzBalanceParameterModelDomain>(
+            Domain->BalanceParameterModel(
+                ParameterName
+            ),
+            ConnectionValue
         );
     }
 

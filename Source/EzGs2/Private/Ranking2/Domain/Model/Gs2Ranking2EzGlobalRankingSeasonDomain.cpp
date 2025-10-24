@@ -12,8 +12,6 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
- *
- * deny overwrite
  */
 
 #include "Ranking2/Domain/Model/Gs2Ranking2EzGlobalRankingSeasonDomain.h"
@@ -41,6 +39,11 @@ namespace Gs2::UE5::Ranking2::Domain::Model
         return Domain->Season;
     }
 
+    TOptional<FString> FEzGlobalRankingSeasonDomain::UserId() const
+    {
+        return Domain->UserId;
+    }
+
     FEzGlobalRankingSeasonDomain::FEzGlobalRankingSeasonDomain(
         Gs2::Ranking2::Domain::Model::FGlobalRankingSeasonDomainPtr Domain,
         Gs2::UE5::Util::FGs2ConnectionPtr Connection
@@ -56,16 +59,6 @@ namespace Gs2::UE5::Ranking2::Domain::Model
     {
         return MakeShared<Gs2::UE5::Ranking2::Domain::Model::FEzGlobalRankingScoreDomain>(
             Domain->GlobalRankingScore(
-            ),
-            ConnectionValue
-        );
-    }
-
-    Gs2::UE5::Ranking2::Domain::Model::FEzGlobalRankingDataDomainPtr FEzGlobalRankingSeasonDomain::GlobalRankingData(
-    ) const
-    {
-        return MakeShared<Gs2::UE5::Ranking2::Domain::Model::FEzGlobalRankingDataDomain>(
-            Domain->GlobalRankingData(
             ),
             ConnectionValue
         );

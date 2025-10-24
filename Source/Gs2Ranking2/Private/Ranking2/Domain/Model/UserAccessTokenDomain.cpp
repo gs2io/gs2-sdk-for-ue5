@@ -104,7 +104,7 @@ namespace Gs2::Ranking2::Domain::Model
     }
 
     Gs2::Ranking2::Domain::Iterator::FDescribeSubscribesIteratorPtr FUserAccessTokenDomain::Subscribes(
-        const TOptional<FString> RankingName
+        const FString RankingName
     ) const
     {
         return MakeShared<Gs2::Ranking2::Domain::Iterator::FDescribeSubscribesIterator>(
@@ -117,7 +117,7 @@ namespace Gs2::Ranking2::Domain::Model
     }
 
     Gs2::Core::Domain::CallbackID FUserAccessTokenDomain::SubscribeSubscribes(
-        const TOptional<FString> RankingName,
+        const FString RankingName,
         TFunction<void()> Callback
     )
     {
@@ -134,7 +134,7 @@ namespace Gs2::Ranking2::Domain::Model
     }
 
     void FUserAccessTokenDomain::UnsubscribeSubscribes(
-        const TOptional<FString> RankingName,
+        const FString RankingName,
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {

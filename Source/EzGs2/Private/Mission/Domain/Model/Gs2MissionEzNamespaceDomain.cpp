@@ -59,6 +59,29 @@ namespace Gs2::UE5::Mission::Domain::Model
 
     }
 
+    Gs2::UE5::Mission::Domain::Iterator::FEzDescribeCounterModelsIteratorPtr FEzNamespaceDomain::CounterModels(
+    ) const
+    {
+        return MakeShared<Gs2::UE5::Mission::Domain::Iterator::FEzDescribeCounterModelsIterator>(
+            Domain,
+            ConnectionValue
+        );
+    }
+
+    Gs2::Core::Domain::CallbackID FEzNamespaceDomain::SubscribeCounterModels(TFunction<void()> Callback)
+    {
+        return Domain->SubscribeCounterModels(
+            Callback
+        );
+    }
+
+    void FEzNamespaceDomain::UnsubscribeCounterModels(Gs2::Core::Domain::CallbackID CallbackId)
+    {
+        Domain->UnsubscribeCounterModels(
+            CallbackId
+        );
+    }
+
     Gs2::UE5::Mission::Domain::Iterator::FEzDescribeMissionGroupModelsIteratorPtr FEzNamespaceDomain::MissionGroupModels(
     ) const
     {
@@ -91,29 +114,6 @@ namespace Gs2::UE5::Mission::Domain::Model
                 MissionGroupName
             ),
             ConnectionValue
-        );
-    }
-
-    Gs2::UE5::Mission::Domain::Iterator::FEzDescribeCounterModelsIteratorPtr FEzNamespaceDomain::CounterModels(
-    ) const
-    {
-        return MakeShared<Gs2::UE5::Mission::Domain::Iterator::FEzDescribeCounterModelsIterator>(
-            Domain,
-            ConnectionValue
-        );
-    }
-
-    Gs2::Core::Domain::CallbackID FEzNamespaceDomain::SubscribeCounterModels(TFunction<void()> Callback)
-    {
-        return Domain->SubscribeCounterModels(
-            Callback
-        );
-    }
-
-    void FEzNamespaceDomain::UnsubscribeCounterModels(Gs2::Core::Domain::CallbackID CallbackId)
-    {
-        Domain->UnsubscribeCounterModels(
-            CallbackId
         );
     }
 

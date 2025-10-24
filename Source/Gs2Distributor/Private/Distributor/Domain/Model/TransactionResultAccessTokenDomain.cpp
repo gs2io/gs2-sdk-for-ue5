@@ -12,6 +12,8 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
+ *
+ * deny overwrite
  */
 
 #if defined(_MSC_VER)
@@ -217,6 +219,79 @@ namespace Gs2::Distributor::Domain::Model
 
     TSharedPtr<FAsyncTask<FTransactionResultAccessTokenDomain::FModelTask>> FTransactionResultAccessTokenDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FTransactionResultAccessTokenDomain::FModelTask>>(this->AsShared());
+    }
+
+    FTransactionResultAccessTokenDomain::FModelNoCacheTask::FModelNoCacheTask(
+        const TSharedPtr<FTransactionResultAccessTokenDomain> Self
+    ): Self(Self)
+    {
+
+    }
+
+    FTransactionResultAccessTokenDomain::FModelNoCacheTask::FModelNoCacheTask(
+        const FModelNoCacheTask& From
+    ): TGs2Future(From), Self(From.Self)
+    {
+
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FTransactionResultAccessTokenDomain::FModelNoCacheTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::Distributor::Model::FTransactionResult>> Result
+    )
+    {
+        // ReSharper disable once CppLocalVariableMayBeConst
+        TSharedPtr<Gs2::Distributor::Model::FTransactionResult> Value;
+        auto bCacheHit = Self->Gs2->Cache->TryGet<Gs2::Distributor::Model::FTransactionResult>(
+            Self->ParentKey,
+            Gs2::Distributor::Domain::Model::FTransactionResultDomain::CreateCacheKey(
+                Self->TransactionId
+            ),
+            &Value
+        );
+        if (!bCacheHit) {
+            const auto Future = Self->Get(
+                MakeShared<Gs2::Distributor::Request::FGetTransactionResultRequest>()
+            );
+            Future->StartSynchronousTask();
+            if (Future->GetTask().IsError())
+            {
+                if (Future->GetTask().Error()->Type() != Gs2::Core::Model::FNotFoundError::TypeString)
+                {
+                    return Future->GetTask().Error();
+                }
+
+                const auto Key = Gs2::Distributor::Domain::Model::FTransactionResultDomain::CreateCacheKey(
+                    Self->TransactionId
+                );
+                Self->Gs2->Cache->Put(
+                    Gs2::Distributor::Model::FTransactionResult::TypeName,
+                    Self->ParentKey,
+                    Key,
+                    nullptr,
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+
+                if (Future->GetTask().Error()->Detail(0)->GetComponent() != "transactionResult")
+                {
+                    return Future->GetTask().Error();
+                }
+            }
+            Self->Gs2->Cache->TryGet<Gs2::Distributor::Model::FTransactionResult>(
+                Self->ParentKey,
+                Gs2::Distributor::Domain::Model::FTransactionResultDomain::CreateCacheKey(
+                    Self->TransactionId
+                ),
+                &Value
+            );
+            Future->EnsureCompletion();
+        }
+        *Result = Value;
+
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FTransactionResultAccessTokenDomain::FModelNoCacheTask>> FTransactionResultAccessTokenDomain::ModelNoCache() {
+        return Gs2::Core::Util::New<FAsyncTask<FTransactionResultAccessTokenDomain::FModelNoCacheTask>>(this->AsShared());
     }
 
     Gs2::Core::Domain::CallbackID FTransactionResultAccessTokenDomain::Subscribe(

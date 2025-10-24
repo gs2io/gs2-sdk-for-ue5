@@ -135,16 +135,16 @@ namespace Gs2::Ranking2::Domain::Model
         );
 
         Gs2::Ranking2::Domain::Iterator::FDescribeSubscribesIteratorPtr Subscribes(
-            const TOptional<FString> RankingName = TOptional<FString>()
+            const FString RankingName
         ) const;
 
         Gs2::Core::Domain::CallbackID SubscribeSubscribes(
-            const TOptional<FString> RankingName,
+            const FString RankingName,
             TFunction<void()> Callback
         );
 
         void UnsubscribeSubscribes(
-            const TOptional<FString> RankingName,
+            const FString RankingName,
             Gs2::Core::Domain::CallbackID CallbackID
         );
 

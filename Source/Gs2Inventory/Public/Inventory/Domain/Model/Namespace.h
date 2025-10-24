@@ -352,6 +352,7 @@ namespace Gs2::Inventory::Domain::Model
         );
 
         Gs2::Inventory::Domain::Iterator::FDescribeSimpleInventoryModelMastersIteratorPtr SimpleInventoryModelMasters(
+            const TOptional<FString> NamePrefix = TOptional<FString>()
         ) const;
 
         Gs2::Core::Domain::CallbackID SubscribeSimpleInventoryModelMasters(
@@ -397,6 +398,7 @@ namespace Gs2::Inventory::Domain::Model
         );
 
         Gs2::Inventory::Domain::Iterator::FDescribeBigInventoryModelMastersIteratorPtr BigInventoryModelMasters(
+            const TOptional<FString> NamePrefix = TOptional<FString>()
         ) const;
 
         Gs2::Core::Domain::CallbackID SubscribeBigInventoryModelMasters(
@@ -412,6 +414,7 @@ namespace Gs2::Inventory::Domain::Model
         );
 
         Gs2::Inventory::Domain::Iterator::FDescribeInventoryModelMastersIteratorPtr InventoryModelMasters(
+            const TOptional<FString> NamePrefix = TOptional<FString>()
         ) const;
 
         Gs2::Core::Domain::CallbackID SubscribeInventoryModelMasters(

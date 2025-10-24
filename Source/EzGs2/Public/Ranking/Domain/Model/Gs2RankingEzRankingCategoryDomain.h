@@ -54,10 +54,6 @@ namespace Gs2::UE5::Ranking::Domain::Model
             Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
 
-        Gs2::UE5::Ranking::Domain::Model::FEzSubscribeUserDomainPtr SubscribeUser(
-            const FString TargetUserId
-        ) const;
-
         Gs2::UE5::Ranking::Domain::Iterator::FEzDescribeNearRankingsIteratorPtr NearRankings(
             const int64 Score
         ) const;
@@ -65,6 +61,10 @@ namespace Gs2::UE5::Ranking::Domain::Model
         Gs2::Core::Domain::CallbackID SubscribeNearRankings(TFunction<void()> Callback);
 
         void UnsubscribeNearRankings(Gs2::Core::Domain::CallbackID CallbackId);
+
+        Gs2::UE5::Ranking::Domain::Model::FEzSubscribeUserDomainPtr SubscribeUser(
+            const FString TargetUserId
+        ) const;
 
         Gs2::UE5::Ranking::Domain::Model::FEzRankingDomainPtr Ranking(
             const TOptional<FString> ScorerUserId = TOptional<FString>(),

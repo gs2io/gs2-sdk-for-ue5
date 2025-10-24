@@ -61,6 +61,13 @@ namespace Gs2::UE5::LoginReward::Domain::Model
             Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
 
+        Gs2::UE5::LoginReward::Domain::Iterator::FEzDescribeBonusModelsIteratorPtr BonusModels(
+        ) const;
+
+        Gs2::Core::Domain::CallbackID SubscribeBonusModels(TFunction<void()> Callback);
+
+        void UnsubscribeBonusModels(Gs2::Core::Domain::CallbackID CallbackId);
+
         Gs2::UE5::LoginReward::Domain::Model::FEzUserDomainPtr User(
             const FString UserId
         ) const;
@@ -68,13 +75,6 @@ namespace Gs2::UE5::LoginReward::Domain::Model
         Gs2::UE5::LoginReward::Domain::Model::FEzUserGameSessionDomainPtr Me(
             Gs2::UE5::Util::IGameSessionPtr GameSession
         ) const;
-
-        Gs2::UE5::LoginReward::Domain::Iterator::FEzDescribeBonusModelsIteratorPtr BonusModels(
-        ) const;
-
-        Gs2::Core::Domain::CallbackID SubscribeBonusModels(TFunction<void()> Callback);
-
-        void UnsubscribeBonusModels(Gs2::Core::Domain::CallbackID CallbackId);
 
         Gs2::UE5::LoginReward::Domain::Model::FEzBonusModelDomainPtr BonusModel(
             const FString BonusModelName

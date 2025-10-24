@@ -69,11 +69,6 @@ namespace Gs2::UE5::Enchant::Domain::Model
 
         void UnsubscribeBalanceParameterStatuses(Gs2::Core::Domain::CallbackID CallbackId);
 
-        Gs2::UE5::Enchant::Domain::Model::FEzBalanceParameterStatusGameSessionDomainPtr BalanceParameterStatus(
-            const FString ParameterName,
-            const FString PropertyId
-        ) const;
-
         Gs2::UE5::Enchant::Domain::Iterator::FEzDescribeRarityParameterStatusesIteratorPtr RarityParameterStatuses(
             const TOptional<FString> ParameterName = TOptional<FString>()
         ) const;
@@ -81,6 +76,11 @@ namespace Gs2::UE5::Enchant::Domain::Model
         Gs2::Core::Domain::CallbackID SubscribeRarityParameterStatuses(TFunction<void()> Callback);
 
         void UnsubscribeRarityParameterStatuses(Gs2::Core::Domain::CallbackID CallbackId);
+
+        Gs2::UE5::Enchant::Domain::Model::FEzBalanceParameterStatusGameSessionDomainPtr BalanceParameterStatus(
+            const FString ParameterName,
+            const FString PropertyId
+        ) const;
 
         Gs2::UE5::Enchant::Domain::Model::FEzRarityParameterStatusGameSessionDomainPtr RarityParameterStatus(
             const FString ParameterName,

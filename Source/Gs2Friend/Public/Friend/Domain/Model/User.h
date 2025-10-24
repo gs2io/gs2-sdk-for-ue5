@@ -137,6 +137,7 @@ namespace Gs2::Friend::Domain::Model
         );
 
         Gs2::Friend::Domain::Iterator::FDescribeBlackListByUserIdIteratorPtr BlackListUsers(
+            const TOptional<FString> TimeOffsetToken = TOptional<FString>()
         ) const;
 
         TSharedPtr<Gs2::Friend::Domain::Model::FBlackListDomain> BlackList(
@@ -147,24 +148,27 @@ namespace Gs2::Friend::Domain::Model
         );
 
         Gs2::Friend::Domain::Iterator::FDescribeFriendsByUserIdIteratorPtr Friends(
-            const TOptional<bool> WithProfile
+            const TOptional<bool> WithProfile = TOptional<bool>(),
+            const TOptional<FString> TimeOffsetToken = TOptional<FString>()
         ) const;
 
         Gs2::Core::Domain::CallbackID SubscribeFriends(
             TFunction<void()> Callback,
-            const TOptional<bool> WithProfile
+            const TOptional<bool> WithProfile = TOptional<bool>()
         );
 
         void UnsubscribeFriends(
             Gs2::Core::Domain::CallbackID CallbackID,
-            const TOptional<bool> WithProfile
+            const TOptional<bool> WithProfile = TOptional<bool>()
         );
-        
+
         TSharedPtr<Gs2::Friend::Domain::Model::FFriendDomain> Friend(
             const bool WithProfile
         );
 
         Gs2::Friend::Domain::Iterator::FDescribeSendRequestsByUserIdIteratorPtr SendRequests(
+            const TOptional<bool> WithProfile = TOptional<bool>(),
+            const TOptional<FString> TimeOffsetToken = TOptional<FString>()
         ) const;
 
         Gs2::Core::Domain::CallbackID SubscribeSendRequests(
@@ -180,6 +184,8 @@ namespace Gs2::Friend::Domain::Model
         );
 
         Gs2::Friend::Domain::Iterator::FDescribeReceiveRequestsByUserIdIteratorPtr ReceiveRequests(
+            const TOptional<bool> WithProfile = TOptional<bool>(),
+            const TOptional<FString> TimeOffsetToken = TOptional<FString>()
         ) const;
 
         Gs2::Core::Domain::CallbackID SubscribeReceiveRequests(

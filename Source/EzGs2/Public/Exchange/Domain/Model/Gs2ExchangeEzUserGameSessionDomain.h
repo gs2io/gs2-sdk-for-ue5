@@ -58,9 +58,6 @@ namespace Gs2::UE5::Exchange::Domain::Model
             Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
 
-        Gs2::UE5::Exchange::Domain::Model::FEzExchangeGameSessionDomainPtr Exchange(
-        ) const;
-
         Gs2::UE5::Exchange::Domain::Iterator::FEzDescribeAwaitsIteratorPtr Awaits(
             const TOptional<FString> RateName = TOptional<FString>()
         ) const;
@@ -68,6 +65,9 @@ namespace Gs2::UE5::Exchange::Domain::Model
         Gs2::Core::Domain::CallbackID SubscribeAwaits(TFunction<void()> Callback);
 
         void UnsubscribeAwaits(Gs2::Core::Domain::CallbackID CallbackId);
+
+        Gs2::UE5::Exchange::Domain::Model::FEzExchangeGameSessionDomainPtr Exchange(
+        ) const;
 
         Gs2::UE5::Exchange::Domain::Model::FEzAwaitGameSessionDomainPtr Await(
             const FString AwaitName

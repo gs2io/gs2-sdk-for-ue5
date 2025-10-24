@@ -32,7 +32,6 @@
 #include "Showcase/Model/Gs2ShowcaseEzAcquireActionResult.h"
 #include "Showcase/Model/Gs2ShowcaseEzTransactionResult.h"
 #include "Gs2ShowcaseEzShowcaseDomain.h"
-#include "Gs2ShowcaseEzRandomShowcaseDomain.h"
 #include "Gs2ShowcaseEzUserDomain.h"
 #include "Gs2ShowcaseEzUserDomain.h"
 #include "Gs2ShowcaseEzUserGameSessionDomain.h"
@@ -59,10 +58,6 @@ namespace Gs2::UE5::Showcase::Domain::Model
         );
 
         Gs2::UE5::Showcase::Domain::Model::FEzShowcaseDomainPtr Showcase(
-            const FString ShowcaseName
-        ) const;
-
-        Gs2::UE5::Showcase::Domain::Model::FEzRandomShowcaseDomainPtr RandomShowcase(
             const FString ShowcaseName
         ) const;
 

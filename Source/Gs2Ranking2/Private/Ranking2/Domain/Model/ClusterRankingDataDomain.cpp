@@ -12,8 +12,6 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
- *
- * deny overwrite
  */
 
 #if defined(_MSC_VER)
@@ -33,6 +31,7 @@
 #include "Ranking2/Domain/Model/GlobalRankingReceivedReward.h"
 #include "Ranking2/Domain/Model/GlobalRankingReceivedRewardAccessToken.h"
 #include "Ranking2/Domain/Model/GlobalRankingSeason.h"
+#include "Ranking2/Domain/Model/GlobalRankingSeasonAccessToken.h"
 #include "Ranking2/Domain/Model/GlobalRankingData.h"
 #include "Ranking2/Domain/Model/GlobalRankingDataAccessToken.h"
 #include "Ranking2/Domain/Model/ClusterRankingModel.h"
@@ -42,6 +41,7 @@
 #include "Ranking2/Domain/Model/ClusterRankingReceivedReward.h"
 #include "Ranking2/Domain/Model/ClusterRankingReceivedRewardAccessToken.h"
 #include "Ranking2/Domain/Model/ClusterRankingSeason.h"
+#include "Ranking2/Domain/Model/ClusterRankingSeasonAccessToken.h"
 #include "Ranking2/Domain/Model/ClusterRankingData.h"
 #include "Ranking2/Domain/Model/ClusterRankingDataAccessToken.h"
 #include "Ranking2/Domain/Model/SubscribeRankingModel.h"
@@ -75,7 +75,8 @@ namespace Gs2::Ranking2::Domain::Model
         const TOptional<FString> RankingName,
         const TOptional<FString> ClusterName,
         const TOptional<int64> Season,
-        const TOptional<FString> UserId
+        const TOptional<FString> UserId,
+        const TOptional<FString> ScorerUserId
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
@@ -86,6 +87,7 @@ namespace Gs2::Ranking2::Domain::Model
         ClusterName(ClusterName),
         Season(Season),
         UserId(UserId),
+        ScorerUserId(ScorerUserId),
         ParentKey(Gs2::Ranking2::Domain::Model::FClusterRankingSeasonDomain::CreateCacheParentKey(
             NamespaceName,
             RankingName,
@@ -107,80 +109,10 @@ namespace Gs2::Ranking2::Domain::Model
         ClusterName(From.ClusterName),
         Season(From.Season),
         UserId(From.UserId),
+        ScorerUserId(From.ScorerUserId),
         ParentKey(From.ParentKey)
     {
 
-    }
-
-    FClusterRankingDataDomain::FGetClusterRankingTask::FGetClusterRankingTask(
-        const TSharedPtr<FClusterRankingDataDomain>& Self,
-        const Request::FGetClusterRankingByUserIdRequestPtr Request
-    ): Self(Self), Request(Request)
-    {
-
-    }
-
-    FClusterRankingDataDomain::FGetClusterRankingTask::FGetClusterRankingTask(
-        const FGetClusterRankingTask& From
-    ): TGs2Future(From), Self(From.Self), Request(From.Request)
-    {
-    }
-
-    Gs2::Core::Model::FGs2ErrorPtr FClusterRankingDataDomain::FGetClusterRankingTask::Action(
-        TSharedPtr<TSharedPtr<Gs2::Ranking2::Domain::Model::FClusterRankingDataDomain>> Result
-    )
-    {
-        Request
-            ->WithContextStack(Self->Gs2->DefaultContextStack)
-            ->WithNamespaceName(Self->NamespaceName)
-            ->WithRankingName(Self->RankingName)
-            ->WithClusterName(Self->ClusterName)
-            ->WithSeason(Self->Season)
-            ->WithUserId(Self->UserId);
-        const auto Future = Self->Client->GetClusterRankingByUserId(
-            Request
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            return Future->GetTask().Error();
-        }
-        const auto RequestModel = Request;
-        const auto ResultModel = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::Ranking2::Domain::Model::FClusterRankingSeasonDomain::CreateCacheParentKey(
-                    Self->NamespaceName,
-                    Self->RankingName,
-                    Self->ClusterName,
-                    Self->Season,
-                    "ClusterRankingData"
-                );
-                const auto Key = Gs2::Ranking2::Domain::Model::FClusterRankingDataDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetUserId()
-                );
-                Self->Gs2->Cache->Put(
-                    Gs2::Ranking2::Model::FClusterRankingData::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
-        }
-        auto Domain = Self;
-
-        *Result = Domain;
-        return nullptr;
-    }
-
-    TSharedPtr<FAsyncTask<FClusterRankingDataDomain::FGetClusterRankingTask>> FClusterRankingDataDomain::GetClusterRanking(
-        Request::FGetClusterRankingByUserIdRequestPtr Request
-    ) {
-        return Gs2::Core::Util::New<FAsyncTask<FGetClusterRankingTask>>(this->AsShared(), Request);
     }
 
     FString FClusterRankingDataDomain::CreateCacheParentKey(
@@ -188,7 +120,7 @@ namespace Gs2::Ranking2::Domain::Model
         TOptional<FString> RankingName,
         TOptional<FString> ClusterName,
         TOptional<int64> Season,
-        TOptional<FString> UserId,
+        TOptional<FString> ScorerUserId,
         FString ChildType
     )
     {
@@ -197,16 +129,16 @@ namespace Gs2::Ranking2::Domain::Model
             (RankingName.IsSet() ? *RankingName : "null") + ":" +
             (ClusterName.IsSet() ? *ClusterName : "null") + ":" +
             (Season.IsSet() ? FString::FromInt(*Season) : "null") + ":" +
-            (UserId.IsSet() ? *UserId : "null") + ":" +
+            (ScorerUserId.IsSet() ? *ScorerUserId : "null") + ":" +
             ChildType;
     }
 
     FString FClusterRankingDataDomain::CreateCacheKey(
-        TOptional<FString> UserId
+        TOptional<FString> ScorerUserId
     )
     {
         return FString("") +
-            (UserId.IsSet() ? *UserId : "null");
+            (ScorerUserId.IsSet() ? *ScorerUserId : "null");
     }
 
     FClusterRankingDataDomain::FModelTask::FModelTask(
@@ -232,7 +164,7 @@ namespace Gs2::Ranking2::Domain::Model
         auto bCacheHit = Self->Gs2->Cache->TryGet<Gs2::Ranking2::Model::FClusterRankingData>(
             Self->ParentKey,
             Gs2::Ranking2::Domain::Model::FClusterRankingDataDomain::CreateCacheKey(
-                Self->UserId
+                Self->ScorerUserId
             ),
             &Value
         );
@@ -253,7 +185,7 @@ namespace Gs2::Ranking2::Domain::Model
             Gs2::Ranking2::Model::FClusterRankingData::TypeName,
             ParentKey,
             Gs2::Ranking2::Domain::Model::FClusterRankingDataDomain::CreateCacheKey(
-                UserId
+                ScorerUserId
             ),
             [Callback](TSharedPtr<FGs2Object> obj)
             {
@@ -270,7 +202,7 @@ namespace Gs2::Ranking2::Domain::Model
             Gs2::Ranking2::Model::FClusterRankingData::TypeName,
             ParentKey,
             Gs2::Ranking2::Domain::Model::FClusterRankingDataDomain::CreateCacheKey(
-                UserId
+                ScorerUserId
             ),
             CallbackID
         );

@@ -407,7 +407,7 @@ namespace Gs2::Enchant::Domain
     {
         return MakeShared<Gs2::Enchant::Domain::Iterator::FDescribeNamespacesIterator>(
             Gs2,
-            Client
+            Client,
             NamePrefix
         );
     }

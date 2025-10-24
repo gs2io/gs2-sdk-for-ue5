@@ -80,6 +80,20 @@ namespace Gs2::UE5::Ranking2::Domain::Model
 
         void UnsubscribeGlobalRankingModels(Gs2::Core::Domain::CallbackID CallbackId);
 
+        Gs2::UE5::Ranking2::Domain::Iterator::FEzDescribeClusterRankingModelsIteratorPtr ClusterRankingModels(
+        ) const;
+
+        Gs2::Core::Domain::CallbackID SubscribeClusterRankingModels(TFunction<void()> Callback);
+
+        void UnsubscribeClusterRankingModels(Gs2::Core::Domain::CallbackID CallbackId);
+
+        Gs2::UE5::Ranking2::Domain::Iterator::FEzDescribeSubscribeRankingModelsIteratorPtr SubscribeRankingModels(
+        ) const;
+
+        Gs2::Core::Domain::CallbackID SubscribeSubscribeRankingModels(TFunction<void()> Callback);
+
+        void UnsubscribeSubscribeRankingModels(Gs2::Core::Domain::CallbackID CallbackId);
+
         Gs2::UE5::Ranking2::Domain::Model::FEzGlobalRankingModelDomainPtr GlobalRankingModel(
             const FString RankingName
         ) const;
@@ -92,23 +106,9 @@ namespace Gs2::UE5::Ranking2::Domain::Model
             Gs2::UE5::Util::IGameSessionPtr GameSession
         ) const;
 
-        Gs2::UE5::Ranking2::Domain::Iterator::FEzDescribeSubscribeRankingModelsIteratorPtr SubscribeRankingModels(
-        ) const;
-
-        Gs2::Core::Domain::CallbackID SubscribeSubscribeRankingModels(TFunction<void()> Callback);
-
-        void UnsubscribeSubscribeRankingModels(Gs2::Core::Domain::CallbackID CallbackId);
-
         Gs2::UE5::Ranking2::Domain::Model::FEzSubscribeRankingModelDomainPtr SubscribeRankingModel(
             const FString RankingName
         ) const;
-
-        Gs2::UE5::Ranking2::Domain::Iterator::FEzDescribeClusterRankingModelsIteratorPtr ClusterRankingModels(
-        ) const;
-
-        Gs2::Core::Domain::CallbackID SubscribeClusterRankingModels(TFunction<void()> Callback);
-
-        void UnsubscribeClusterRankingModels(Gs2::Core::Domain::CallbackID CallbackId);
 
         Gs2::UE5::Ranking2::Domain::Model::FEzClusterRankingModelDomainPtr ClusterRankingModel(
             const FString RankingName

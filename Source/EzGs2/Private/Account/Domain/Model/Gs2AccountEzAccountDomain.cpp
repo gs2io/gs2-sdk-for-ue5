@@ -12,6 +12,8 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
+ *
+ * deny overwrite
  */
 
 #include "Account/Domain/Model/Gs2AccountEzAccountDomain.h"
@@ -128,59 +130,6 @@ namespace Gs2::UE5::Account::Domain::Model
             this->AsShared(),
             Password,
             KeyId
-        );
-    }
-
-    FEzAccountDomain::FGetAuthorizationUrlTask::FGetAuthorizationUrlTask(
-        TSharedPtr<FEzAccountDomain> Self,
-        int32 Type
-    ): Self(Self), Type(Type)
-    {
-
-    }
-
-    Gs2::Core::Model::FGs2ErrorPtr FEzAccountDomain::FGetAuthorizationUrlTask::Action(
-        TSharedPtr<TSharedPtr<Gs2::UE5::Account::Domain::Model::FEzAccountDomain>> Result
-    )
-    {
-        const auto Future = Self->ConnectionValue->Run(
-            [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
-                const auto Task = Self->Domain->GetAuthorizationUrl(
-                    MakeShared<Gs2::Account::Request::FGetAuthorizationUrlRequest>()
-                        ->WithType(Type)
-                );
-                Task->StartSynchronousTask();
-                if (Task->GetTask().IsError())
-                {
-                    Task->EnsureCompletion();
-                    return Task->GetTask().Error();
-                }
-                *Result = MakeShared<Gs2::UE5::Account::Domain::Model::FEzAccountDomain>(
-                    Task->GetTask().Result(),
-                    Self->ConnectionValue
-                );
-                Task->EnsureCompletion();
-                return nullptr;
-            },
-            nullptr
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            Future->EnsureCompletion();
-            return Future->GetTask().Error();
-        }
-        Future->EnsureCompletion();
-        return nullptr;
-    }
-
-    TSharedPtr<FAsyncTask<FEzAccountDomain::FGetAuthorizationUrlTask>> FEzAccountDomain::GetAuthorizationUrl(
-        int32 Type
-    )
-    {
-        return Gs2::Core::Util::New<FAsyncTask<FGetAuthorizationUrlTask>>(
-            this->AsShared(),
-            Type
         );
     }
 

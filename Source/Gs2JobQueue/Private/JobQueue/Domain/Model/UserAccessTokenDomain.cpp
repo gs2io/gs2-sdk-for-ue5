@@ -12,8 +12,6 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
- *
- * deny overwrite
  */
 
 #if defined(_MSC_VER)
@@ -35,6 +33,9 @@
 #include "JobQueue/Domain/Model/UserAccessToken.h"
 
 #include "Core/Domain/Gs2.h"
+#include "Core/Domain/Transaction/JobQueueJobDomainFactory.h"
+#include "Core/Domain/Transaction/InternalTransactionDomainFactory.h"
+#include "Core/Domain/Transaction/ManualTransactionAccessTokenDomain.h"
 
 namespace Gs2::JobQueue::Domain::Model
 {
@@ -90,6 +91,7 @@ namespace Gs2::JobQueue::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithAccessToken(Self->AccessToken->GetToken());
         const auto Future = Self->Client->Run(
@@ -100,55 +102,24 @@ namespace Gs2::JobQueue::Domain::Model
         {
             return Future->GetTask().Error();
         }
-        const auto RequestModel = Request;
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+        auto Domain = MakeShared<Gs2::JobQueue::Domain::Model::FJobAccessTokenDomain>(
+            Self->Gs2,
+            Self->Service,
+            Request->GetNamespaceName(),
+            Self->AccessToken,
+            ResultModel->GetItem()->GetName()
+        );
         if (ResultModel != nullptr)
         {
-            if (ResultModel->GetItem() != nullptr)
+            if (ResultModel->GetIsLastJob().IsSet())
             {
-                const auto ParentKey = Gs2::JobQueue::Domain::Model::FUserDomain::CreateCacheParentKey(
-                    Self->NamespaceName,
-                    Self->UserId(),
-                    "Job"
-                );
-                const auto Key = Gs2::JobQueue::Domain::Model::FJobDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetName()
-                );
-                Self->Gs2->Cache->Delete(Gs2::JobQueue::Model::FJob::TypeName, ParentKey, Key);
-            }
-        }
-        if (ResultModel != nullptr)
-        {
-            if (ResultModel->GetItem() != nullptr)
-            {
-                Self->Gs2->JobQueueDomain->JobQueueExecutedEventHandler(
-                    ResultModel->GetItem(),
-                    ResultModel->GetResult()
-                );
-                auto Domain = MakeShared<Gs2::JobQueue::Domain::Model::FJobAccessTokenDomain>(
-                    Self->Gs2,
-                    Self->Service,
-                    Request->GetNamespaceName(),
-                    Self->AccessToken,
-                    ResultModel->GetItem()->GetName()
-                );
                 Domain->IsLastJob = *ResultModel->GetIsLastJob();
-                Domain->Result = ResultModel->GetResult();
-
-                *Result = Domain;
-            }
-            else
-            {
-                Self->IsLastJob = *ResultModel->GetIsLastJob();
-
-                *Result = nullptr;
             }
         }
-        else
-        {
-            *Result = nullptr;
-        }
+
+        *Result = Domain;
         return nullptr;
     }
 

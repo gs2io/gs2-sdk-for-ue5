@@ -410,7 +410,7 @@ namespace Gs2::Formation::Domain
     {
         return MakeShared<Gs2::Formation::Domain::Iterator::FDescribeNamespacesIterator>(
             Gs2,
-            Client
+            Client,
             NamePrefix
         );
     }

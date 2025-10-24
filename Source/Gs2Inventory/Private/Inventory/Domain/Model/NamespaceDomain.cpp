@@ -110,6 +110,7 @@ namespace Gs2::Inventory::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName);
         const auto Future = Self->Client->GetNamespaceStatus(
             Request
@@ -119,12 +120,8 @@ namespace Gs2::Inventory::Domain::Model
         {
             return Future->GetTask().Error();
         }
-        const auto RequestModel = Request;
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-        }
         const auto Domain = Self;
         if (ResultModel != nullptr)
         {
@@ -162,6 +159,7 @@ namespace Gs2::Inventory::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName);
         const auto Future = Self->Client->GetNamespace(
             Request
@@ -171,25 +169,8 @@ namespace Gs2::Inventory::Domain::Model
         {
             return Future->GetTask().Error();
         }
-        const auto RequestModel = Request;
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-            {
-                const auto ParentKey = FString("inventory:Namespace");
-                const auto Key = Gs2::Inventory::Domain::Model::FNamespaceDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetName()
-                );
-                Self->Gs2->Cache->Put(
-                    Gs2::Inventory::Model::FNamespace::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
-        }
         *Result = ResultModel->GetItem();
         return nullptr;
     }
@@ -219,6 +200,7 @@ namespace Gs2::Inventory::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName);
         const auto Future = Self->Client->UpdateNamespace(
             Request
@@ -228,25 +210,8 @@ namespace Gs2::Inventory::Domain::Model
         {
             return Future->GetTask().Error();
         }
-        const auto RequestModel = Request;
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-            {
-                const auto ParentKey = FString("inventory:Namespace");
-                const auto Key = Gs2::Inventory::Domain::Model::FNamespaceDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetName()
-                );
-                Self->Gs2->Cache->Put(
-                    Gs2::Inventory::Model::FNamespace::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
-        }
         auto Domain = Self;
 
         *Result = Domain;
@@ -278,6 +243,7 @@ namespace Gs2::Inventory::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName);
         const auto Future = Self->Client->DeleteNamespace(
             Request
@@ -287,19 +253,8 @@ namespace Gs2::Inventory::Domain::Model
         {
             return Future->GetTask().Error();
         }
-        const auto RequestModel = Request;
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-            {
-                const auto ParentKey = FString("inventory:Namespace");
-                const auto Key = Gs2::Inventory::Domain::Model::FNamespaceDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetName()
-                );
-                Self->Gs2->Cache->Delete(Gs2::Inventory::Model::FNamespace::TypeName, ParentKey, Key);
-            }
-        }
         auto Domain = Self;
 
         *Result = Domain;
@@ -331,6 +286,7 @@ namespace Gs2::Inventory::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName);
         const auto Future = Self->Client->CreateSimpleInventoryModelMaster(
             Request
@@ -340,29 +296,8 @@ namespace Gs2::Inventory::Domain::Model
         {
             return Future->GetTask().Error();
         }
-        const auto RequestModel = Request;
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::Inventory::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
-                    Self->NamespaceName,
-                    "SimpleInventoryModelMaster"
-                );
-                const auto Key = Gs2::Inventory::Domain::Model::FSimpleInventoryModelMasterDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetName()
-                );
-                Self->Gs2->Cache->Put(
-                    Gs2::Inventory::Model::FSimpleInventoryModelMaster::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
-        }
         auto Domain = MakeShared<Gs2::Inventory::Domain::Model::FSimpleInventoryModelMasterDomain>(
             Self->Gs2,
             Self->Service,
@@ -399,6 +334,7 @@ namespace Gs2::Inventory::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName);
         const auto Future = Self->Client->CreateBigInventoryModelMaster(
             Request
@@ -408,29 +344,8 @@ namespace Gs2::Inventory::Domain::Model
         {
             return Future->GetTask().Error();
         }
-        const auto RequestModel = Request;
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::Inventory::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
-                    Self->NamespaceName,
-                    "BigInventoryModelMaster"
-                );
-                const auto Key = Gs2::Inventory::Domain::Model::FBigInventoryModelMasterDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetName()
-                );
-                Self->Gs2->Cache->Put(
-                    Gs2::Inventory::Model::FBigInventoryModelMaster::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
-        }
         auto Domain = MakeShared<Gs2::Inventory::Domain::Model::FBigInventoryModelMasterDomain>(
             Self->Gs2,
             Self->Service,
@@ -467,6 +382,7 @@ namespace Gs2::Inventory::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName);
         const auto Future = Self->Client->CreateInventoryModelMaster(
             Request
@@ -476,29 +392,8 @@ namespace Gs2::Inventory::Domain::Model
         {
             return Future->GetTask().Error();
         }
-        const auto RequestModel = Request;
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::Inventory::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
-                    Self->NamespaceName,
-                    "InventoryModelMaster"
-                );
-                const auto Key = Gs2::Inventory::Domain::Model::FInventoryModelMasterDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetName()
-                );
-                Self->Gs2->Cache->Put(
-                    Gs2::Inventory::Model::FInventoryModelMaster::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
-        }
         auto Domain = MakeShared<Gs2::Inventory::Domain::Model::FInventoryModelMasterDomain>(
             Self->Gs2,
             Self->Service,
@@ -601,12 +496,14 @@ namespace Gs2::Inventory::Domain::Model
     }
 
     Gs2::Inventory::Domain::Iterator::FDescribeSimpleInventoryModelMastersIteratorPtr FNamespaceDomain::SimpleInventoryModelMasters(
+        const TOptional<FString> NamePrefix
     ) const
     {
         return MakeShared<Gs2::Inventory::Domain::Iterator::FDescribeSimpleInventoryModelMastersIterator>(
             Gs2,
             Client,
-            NamespaceName
+            NamespaceName,
+            NamePrefix
         );
     }
 
@@ -751,12 +648,14 @@ namespace Gs2::Inventory::Domain::Model
     }
 
     Gs2::Inventory::Domain::Iterator::FDescribeBigInventoryModelMastersIteratorPtr FNamespaceDomain::BigInventoryModelMasters(
+        const TOptional<FString> NamePrefix
     ) const
     {
         return MakeShared<Gs2::Inventory::Domain::Iterator::FDescribeBigInventoryModelMastersIterator>(
             Gs2,
             Client,
-            NamespaceName
+            NamespaceName,
+            NamePrefix
         );
     }
 
@@ -801,12 +700,14 @@ namespace Gs2::Inventory::Domain::Model
     }
 
     Gs2::Inventory::Domain::Iterator::FDescribeInventoryModelMastersIteratorPtr FNamespaceDomain::InventoryModelMasters(
+        const TOptional<FString> NamePrefix
     ) const
     {
         return MakeShared<Gs2::Inventory::Domain::Iterator::FDescribeInventoryModelMastersIterator>(
             Gs2,
             Client,
-            NamespaceName
+            NamespaceName,
+            NamePrefix
         );
     }
 

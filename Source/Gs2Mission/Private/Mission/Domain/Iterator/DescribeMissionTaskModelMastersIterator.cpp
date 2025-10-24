@@ -107,7 +107,7 @@ namespace Gs2::Mission::Domain::Iterator
 
                 if (Range)
                 {
-                    Range->RemoveAll([this](const Gs2::Mission::Model::FMissionTaskModelMasterPtr& Item) { return Self->NamePrefix && Item->GetNamePrefix() != Self->NamePrefix; });
+                    Range->RemoveAll([this](const Gs2::Mission::Model::FMissionTaskModelMasterPtr& Item) { return Self->NamePrefix && !Item->GetName()->StartsWith(*Self->NamePrefix); });
                     bLast = true;
                     RangeIteratorOpt = Range->CreateIterator();
                     PageToken = TOptional<FString>();
@@ -151,7 +151,7 @@ namespace Gs2::Mission::Domain::Iterator
             }
             if (Range)
             {
-                Range->RemoveAll([this](const Gs2::Mission::Model::FMissionTaskModelMasterPtr& Item) { return Self->NamePrefix && Item->GetNamePrefix() != Self->NamePrefix; });
+                Range->RemoveAll([this](const Gs2::Mission::Model::FMissionTaskModelMasterPtr& Item) { return !Self->NamePrefix && Item->GetName()->StartsWith(*Self->NamePrefix); });
             }
             RangeIteratorOpt = Range->CreateIterator();
             PageToken = R->GetNextPageToken();

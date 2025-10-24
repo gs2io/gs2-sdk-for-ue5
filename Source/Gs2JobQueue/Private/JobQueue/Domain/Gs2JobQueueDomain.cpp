@@ -418,7 +418,7 @@ namespace Gs2::JobQueue::Domain
     {
         return MakeShared<Gs2::JobQueue::Domain::Iterator::FDescribeNamespacesIterator>(
             Gs2,
-            Client
+            Client,
             NamePrefix
         );
     }

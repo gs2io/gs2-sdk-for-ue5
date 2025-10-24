@@ -402,7 +402,7 @@ namespace Gs2::Datastore::Domain
     {
         return MakeShared<Gs2::Datastore::Domain::Iterator::FDescribeNamespacesIterator>(
             Gs2,
-            Client
+            Client,
             NamePrefix
         );
     }

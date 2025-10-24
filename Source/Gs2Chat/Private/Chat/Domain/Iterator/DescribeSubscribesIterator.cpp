@@ -107,7 +107,7 @@ namespace Gs2::Chat::Domain::Iterator
 
                 if (Range)
                 {
-                    Range->RemoveAll([this](const Gs2::Chat::Model::FSubscribePtr& Item) { return Self->RoomNamePrefix && Item->GetRoomNamePrefix() != Self->RoomNamePrefix; });
+                    Range->RemoveAll([this](const Gs2::Chat::Model::FSubscribePtr& Item) { return Self->RoomNamePrefix && !Item->GetRoomName()->StartsWith(*Self->RoomNamePrefix); });
                     bLast = true;
                     RangeIteratorOpt = Range->CreateIterator();
                     PageToken = TOptional<FString>();
@@ -151,7 +151,7 @@ namespace Gs2::Chat::Domain::Iterator
             }
             if (Range)
             {
-                Range->RemoveAll([this](const Gs2::Chat::Model::FSubscribePtr& Item) { return Self->RoomNamePrefix && Item->GetRoomNamePrefix() != Self->RoomNamePrefix; });
+                Range->RemoveAll([this](const Gs2::Chat::Model::FSubscribePtr& Item) { return !Self->RoomNamePrefix && Item->GetRoomName()->StartsWith(*Self->RoomNamePrefix); });
             }
             RangeIteratorOpt = Range->CreateIterator();
             PageToken = R->GetNextPageToken();

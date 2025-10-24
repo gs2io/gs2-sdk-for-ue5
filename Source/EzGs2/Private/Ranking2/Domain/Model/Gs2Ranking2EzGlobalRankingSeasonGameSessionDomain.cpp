@@ -12,6 +12,8 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
+ *
+ * deny overwrite
  */
 
 #include "Ranking2/Domain/Model/Gs2Ranking2EzGlobalRankingSeasonGameSessionDomain.h"
@@ -164,6 +166,54 @@ namespace Gs2::UE5::Ranking2::Domain::Model
         );
     }
 
+    Gs2::UE5::Ranking2::Domain::Iterator::FEzDescribeGlobalRankingsIteratorPtr FEzGlobalRankingSeasonGameSessionDomain::GlobalRankings(
+    ) const
+    {
+        return MakeShared<Gs2::UE5::Ranking2::Domain::Iterator::FEzDescribeGlobalRankingsIterator>(
+            Domain,
+            GameSession,
+            ConnectionValue
+        );
+    }
+
+    Gs2::Core::Domain::CallbackID FEzGlobalRankingSeasonGameSessionDomain::SubscribeGlobalRankings(TFunction<void()> Callback)
+    {
+        return Domain->SubscribeGlobalRankings(
+            Callback
+        );
+    }
+
+    void FEzGlobalRankingSeasonGameSessionDomain::UnsubscribeGlobalRankings(Gs2::Core::Domain::CallbackID CallbackId)
+    {
+        Domain->UnsubscribeGlobalRankings(
+            CallbackId
+        );
+    }
+
+    Gs2::UE5::Ranking2::Domain::Iterator::FEzDescribeGlobalRankingReceivedRewardsIteratorPtr FEzGlobalRankingSeasonGameSessionDomain::GlobalRankingReceivedRewards(
+    ) const
+    {
+        return MakeShared<Gs2::UE5::Ranking2::Domain::Iterator::FEzDescribeGlobalRankingReceivedRewardsIterator>(
+            Domain,
+            GameSession,
+            ConnectionValue
+        );
+    }
+
+    Gs2::Core::Domain::CallbackID FEzGlobalRankingSeasonGameSessionDomain::SubscribeGlobalRankingReceivedRewards(TFunction<void()> Callback)
+    {
+        return Domain->SubscribeGlobalRankingReceivedRewards(
+            Callback
+        );
+    }
+
+    void FEzGlobalRankingSeasonGameSessionDomain::UnsubscribeGlobalRankingReceivedRewards(Gs2::Core::Domain::CallbackID CallbackId)
+    {
+        Domain->UnsubscribeGlobalRankingReceivedRewards(
+            CallbackId
+        );
+    }
+
     Gs2::UE5::Ranking2::Domain::Iterator::FEzDescribeGlobalRankingScoresIteratorPtr FEzGlobalRankingSeasonGameSessionDomain::GlobalRankingScores(
     ) const
     {
@@ -199,32 +249,8 @@ namespace Gs2::UE5::Ranking2::Domain::Model
         );
     }
 
-    Gs2::UE5::Ranking2::Domain::Iterator::FEzDescribeGlobalRankingsIteratorPtr FEzGlobalRankingSeasonGameSessionDomain::GlobalRankings(
-    ) const
-    {
-        return MakeShared<Gs2::UE5::Ranking2::Domain::Iterator::FEzDescribeGlobalRankingsIterator>(
-            Domain,
-            GameSession,
-            ConnectionValue
-        );
-    }
-
-    Gs2::Core::Domain::CallbackID FEzGlobalRankingSeasonGameSessionDomain::SubscribeGlobalRankings(TFunction<void()> Callback)
-    {
-        return Domain->SubscribeGlobalRankings(
-            Callback
-        );
-    }
-
-    void FEzGlobalRankingSeasonGameSessionDomain::UnsubscribeGlobalRankings(Gs2::Core::Domain::CallbackID CallbackId)
-    {
-        Domain->UnsubscribeGlobalRankings(
-            CallbackId
-        );
-    }
-
     Gs2::UE5::Ranking2::Domain::Model::FEzGlobalRankingDataGameSessionDomainPtr FEzGlobalRankingSeasonGameSessionDomain::GlobalRankingData(
-        const FString ScorerUserId
+        const TOptional<FString> ScorerUserId
     ) const
     {
         return MakeShared<Gs2::UE5::Ranking2::Domain::Model::FEzGlobalRankingDataGameSessionDomain>(
@@ -233,30 +259,6 @@ namespace Gs2::UE5::Ranking2::Domain::Model
             ),
             GameSession,
             ConnectionValue
-        );
-    }
-
-    Gs2::UE5::Ranking2::Domain::Iterator::FEzDescribeGlobalRankingReceivedRewardsIteratorPtr FEzGlobalRankingSeasonGameSessionDomain::GlobalRankingReceivedRewards(
-    ) const
-    {
-        return MakeShared<Gs2::UE5::Ranking2::Domain::Iterator::FEzDescribeGlobalRankingReceivedRewardsIterator>(
-            Domain,
-            GameSession,
-            ConnectionValue
-        );
-    }
-
-    Gs2::Core::Domain::CallbackID FEzGlobalRankingSeasonGameSessionDomain::SubscribeGlobalRankingReceivedRewards(TFunction<void()> Callback)
-    {
-        return Domain->SubscribeGlobalRankingReceivedRewards(
-            Callback
-        );
-    }
-
-    void FEzGlobalRankingSeasonGameSessionDomain::UnsubscribeGlobalRankingReceivedRewards(Gs2::Core::Domain::CallbackID CallbackId)
-    {
-        Domain->UnsubscribeGlobalRankingReceivedRewards(
-            CallbackId
         );
     }
 

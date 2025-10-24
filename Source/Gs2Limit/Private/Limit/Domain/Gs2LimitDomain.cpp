@@ -404,7 +404,7 @@ namespace Gs2::Limit::Domain
     {
         return MakeShared<Gs2::Limit::Domain::Iterator::FDescribeNamespacesIterator>(
             Gs2,
-            Client
+            Client,
             NamePrefix
         );
     }

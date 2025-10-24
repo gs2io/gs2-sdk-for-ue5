@@ -82,18 +82,6 @@ namespace Gs2::UE5::Formation::Domain::Model
         );
     }
 
-    Gs2::UE5::Formation::Domain::Model::FEzMoldModelDomainPtr FEzNamespaceDomain::MoldModel(
-        const FString MoldModelName
-    ) const
-    {
-        return MakeShared<Gs2::UE5::Formation::Domain::Model::FEzMoldModelDomain>(
-            Domain->MoldModel(
-                MoldModelName
-            ),
-            ConnectionValue
-        );
-    }
-
     Gs2::UE5::Formation::Domain::Iterator::FEzDescribePropertyFormModelsIteratorPtr FEzNamespaceDomain::PropertyFormModels(
     ) const
     {
@@ -114,6 +102,18 @@ namespace Gs2::UE5::Formation::Domain::Model
     {
         Domain->UnsubscribePropertyFormModels(
             CallbackId
+        );
+    }
+
+    Gs2::UE5::Formation::Domain::Model::FEzMoldModelDomainPtr FEzNamespaceDomain::MoldModel(
+        const FString MoldModelName
+    ) const
+    {
+        return MakeShared<Gs2::UE5::Formation::Domain::Model::FEzMoldModelDomain>(
+            Domain->MoldModel(
+                MoldModelName
+            ),
+            ConnectionValue
         );
     }
 

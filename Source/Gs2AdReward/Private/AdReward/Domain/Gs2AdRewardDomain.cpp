@@ -401,7 +401,7 @@ namespace Gs2::AdReward::Domain
     {
         return MakeShared<Gs2::AdReward::Domain::Iterator::FDescribeNamespacesIterator>(
             Gs2,
-            Client
+            Client,
             NamePrefix
         );
     }

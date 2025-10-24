@@ -90,19 +90,6 @@ namespace Gs2::UE5::Schedule::Domain::Model
         );
     }
 
-    Gs2::UE5::Schedule::Domain::Model::FEzTriggerGameSessionDomainPtr FEzUserGameSessionDomain::Trigger(
-        const FString TriggerName
-    ) const
-    {
-        return MakeShared<Gs2::UE5::Schedule::Domain::Model::FEzTriggerGameSessionDomain>(
-            Domain->Trigger(
-                TriggerName
-            ),
-            GameSession,
-            ConnectionValue
-        );
-    }
-
     Gs2::UE5::Schedule::Domain::Iterator::FEzDescribeEventsIteratorPtr FEzUserGameSessionDomain::Events(
     ) const
     {
@@ -124,6 +111,19 @@ namespace Gs2::UE5::Schedule::Domain::Model
     {
         Domain->UnsubscribeEvents(
             CallbackId
+        );
+    }
+
+    Gs2::UE5::Schedule::Domain::Model::FEzTriggerGameSessionDomainPtr FEzUserGameSessionDomain::Trigger(
+        const FString TriggerName
+    ) const
+    {
+        return MakeShared<Gs2::UE5::Schedule::Domain::Model::FEzTriggerGameSessionDomain>(
+            Domain->Trigger(
+                TriggerName
+            ),
+            GameSession,
+            ConnectionValue
         );
     }
 

@@ -114,6 +114,30 @@ namespace Gs2::UE5::Ranking2::Domain::Model
         );
     }
 
+    Gs2::UE5::Ranking2::Domain::Iterator::FEzDescribeSubscribeRankingsIteratorPtr FEzSubscribeRankingSeasonGameSessionDomain::SubscribeRankings(
+    ) const
+    {
+        return MakeShared<Gs2::UE5::Ranking2::Domain::Iterator::FEzDescribeSubscribeRankingsIterator>(
+            Domain,
+            GameSession,
+            ConnectionValue
+        );
+    }
+
+    Gs2::Core::Domain::CallbackID FEzSubscribeRankingSeasonGameSessionDomain::SubscribeSubscribeRankings(TFunction<void()> Callback)
+    {
+        return Domain->SubscribeSubscribeRankings(
+            Callback
+        );
+    }
+
+    void FEzSubscribeRankingSeasonGameSessionDomain::UnsubscribeSubscribeRankings(Gs2::Core::Domain::CallbackID CallbackId)
+    {
+        Domain->UnsubscribeSubscribeRankings(
+            CallbackId
+        );
+    }
+
     Gs2::UE5::Ranking2::Domain::Iterator::FEzDescribeSubscribeRankingScoresIteratorPtr FEzSubscribeRankingSeasonGameSessionDomain::SubscribeRankingScores(
     ) const
     {
@@ -146,30 +170,6 @@ namespace Gs2::UE5::Ranking2::Domain::Model
             ),
             GameSession,
             ConnectionValue
-        );
-    }
-
-    Gs2::UE5::Ranking2::Domain::Iterator::FEzDescribeSubscribeRankingsIteratorPtr FEzSubscribeRankingSeasonGameSessionDomain::SubscribeRankings(
-    ) const
-    {
-        return MakeShared<Gs2::UE5::Ranking2::Domain::Iterator::FEzDescribeSubscribeRankingsIterator>(
-            Domain,
-            GameSession,
-            ConnectionValue
-        );
-    }
-
-    Gs2::Core::Domain::CallbackID FEzSubscribeRankingSeasonGameSessionDomain::SubscribeSubscribeRankings(TFunction<void()> Callback)
-    {
-        return Domain->SubscribeSubscribeRankings(
-            Callback
-        );
-    }
-
-    void FEzSubscribeRankingSeasonGameSessionDomain::UnsubscribeSubscribeRankings(Gs2::Core::Domain::CallbackID CallbackId)
-    {
-        Domain->UnsubscribeSubscribeRankings(
-            CallbackId
         );
     }
 

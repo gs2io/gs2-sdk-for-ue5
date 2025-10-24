@@ -43,16 +43,4 @@ namespace Gs2::UE5::Ranking2::Domain::Model
     {
 
     }
-
-    Gs2::UE5::Ranking2::Domain::Model::FEzSubscribeDomainPtr FEzUserDomain::Subscribe(
-        const FString RankingName
-    ) const
-    {
-        return MakeShared<Gs2::UE5::Ranking2::Domain::Model::FEzSubscribeDomain>(
-            Domain->Subscribe(
-                RankingName
-            ),
-            ConnectionValue
-        );
-    }
 }

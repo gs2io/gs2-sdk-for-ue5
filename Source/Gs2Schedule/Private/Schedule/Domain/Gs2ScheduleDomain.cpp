@@ -404,7 +404,7 @@ namespace Gs2::Schedule::Domain
     {
         return MakeShared<Gs2::Schedule::Domain::Iterator::FDescribeNamespacesIterator>(
             Gs2,
-            Client
+            Client,
             NamePrefix
         );
     }

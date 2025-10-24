@@ -140,6 +140,32 @@ namespace Gs2::Ranking2::Domain::Model
             const FClusterRankingSeasonAccessTokenDomain& From
         );
 
+        class GS2RANKING2_API FGetClusterRankingTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Ranking2::Domain::Model::FClusterRankingDataAccessTokenDomain>,
+            public TSharedFromThis<FGetClusterRankingTask>
+        {
+            const TSharedPtr<FClusterRankingSeasonAccessTokenDomain> Self;
+            const Request::FGetClusterRankingRequestPtr Request;
+        public:
+            explicit FGetClusterRankingTask(
+                const TSharedPtr<FClusterRankingSeasonAccessTokenDomain>& Self,
+                const Request::FGetClusterRankingRequestPtr Request
+            );
+
+            FGetClusterRankingTask(
+                const FGetClusterRankingTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Ranking2::Domain::Model::FClusterRankingDataAccessTokenDomain>> Result
+            ) override;
+        };
+        friend FGetClusterRankingTask;
+
+        TSharedPtr<FAsyncTask<FGetClusterRankingTask>> GetClusterRanking(
+            Request::FGetClusterRankingRequestPtr Request
+        );
+
         class GS2RANKING2_API FPutClusterRankingScoreTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Ranking2::Domain::Model::FClusterRankingScoreAccessTokenDomain>,
             public TSharedFromThis<FPutClusterRankingScoreTask>
@@ -178,6 +204,7 @@ namespace Gs2::Ranking2::Domain::Model
         );
 
         TSharedPtr<Gs2::Ranking2::Domain::Model::FClusterRankingDataAccessTokenDomain> ClusterRankingData(
+            const TOptional<FString> ScorerUserId = TOptional<FString>()
         );
 
         Gs2::Ranking2::Domain::Iterator::FDescribeClusterRankingReceivedRewardsIteratorPtr ClusterRankingReceivedRewards(
@@ -218,7 +245,7 @@ namespace Gs2::Ranking2::Domain::Model
 
         static FString CreateCacheKey(
             TOptional<FString> ClusterName,
-            TOptional<FString> Season
+            TOptional<int64> Season
         );
 
     };

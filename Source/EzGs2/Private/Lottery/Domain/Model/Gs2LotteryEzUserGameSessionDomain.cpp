@@ -46,19 +46,6 @@ namespace Gs2::UE5::Lottery::Domain::Model
 
     }
 
-    Gs2::UE5::Lottery::Domain::Model::FEzLotteryGameSessionDomainPtr FEzUserGameSessionDomain::Lottery(
-        const FString LotteryName
-    ) const
-    {
-        return MakeShared<Gs2::UE5::Lottery::Domain::Model::FEzLotteryGameSessionDomain>(
-            Domain->Lottery(
-                LotteryName
-            ),
-            GameSession,
-            ConnectionValue
-        );
-    }
-
     Gs2::UE5::Lottery::Domain::Iterator::FEzDescribeBoxesIteratorPtr FEzUserGameSessionDomain::Boxes(
     ) const
     {
@@ -80,6 +67,19 @@ namespace Gs2::UE5::Lottery::Domain::Model
     {
         Domain->UnsubscribeBoxes(
             CallbackId
+        );
+    }
+
+    Gs2::UE5::Lottery::Domain::Model::FEzLotteryGameSessionDomainPtr FEzUserGameSessionDomain::Lottery(
+        const FString LotteryName
+    ) const
+    {
+        return MakeShared<Gs2::UE5::Lottery::Domain::Model::FEzLotteryGameSessionDomain>(
+            Domain->Lottery(
+                LotteryName
+            ),
+            GameSession,
+            ConnectionValue
         );
     }
 

@@ -232,16 +232,16 @@ namespace Gs2::UE5::Guild::Domain::Model
 
         void UnsubscribeReceiveRequests(Gs2::Core::Domain::CallbackID CallbackId);
 
-        Gs2::UE5::Guild::Domain::Model::FEzReceiveMemberRequestGameSessionDomainPtr ReceiveMemberRequest(
-            const FString FromUserId
-        ) const;
-
         Gs2::UE5::Guild::Domain::Iterator::FEzDescribeIgnoreUsersIteratorPtr IgnoreUsers(
         ) const;
 
         Gs2::Core::Domain::CallbackID SubscribeIgnoreUsers(TFunction<void()> Callback);
 
         void UnsubscribeIgnoreUsers(Gs2::Core::Domain::CallbackID CallbackId);
+
+        Gs2::UE5::Guild::Domain::Model::FEzReceiveMemberRequestGameSessionDomainPtr ReceiveMemberRequest(
+            const FString FromUserId
+        ) const;
 
         Gs2::UE5::Guild::Domain::Model::FEzIgnoreUserGameSessionDomainPtr IgnoreUser(
         ) const;

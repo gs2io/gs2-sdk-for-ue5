@@ -404,7 +404,7 @@ namespace Gs2::SkillTree::Domain
     {
         return MakeShared<Gs2::SkillTree::Domain::Iterator::FDescribeNamespacesIterator>(
             Gs2,
-            Client
+            Client,
             NamePrefix
         );
     }

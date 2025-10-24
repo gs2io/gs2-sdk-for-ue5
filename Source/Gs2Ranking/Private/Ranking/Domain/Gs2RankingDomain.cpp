@@ -408,7 +408,7 @@ namespace Gs2::Ranking::Domain
     {
         return MakeShared<Gs2::Ranking::Domain::Iterator::FDescribeNamespacesIterator>(
             Gs2,
-            Client
+            Client,
             NamePrefix
         );
     }

@@ -72,16 +72,16 @@ namespace Gs2::UE5::Enchant::Domain::Model
 
         void UnsubscribeBalanceParameterModels(Gs2::Core::Domain::CallbackID CallbackId);
 
-        Gs2::UE5::Enchant::Domain::Model::FEzBalanceParameterModelDomainPtr BalanceParameterModel(
-            const FString ParameterName
-        ) const;
-
         Gs2::UE5::Enchant::Domain::Iterator::FEzDescribeRarityParameterModelsIteratorPtr RarityParameterModels(
         ) const;
 
         Gs2::Core::Domain::CallbackID SubscribeRarityParameterModels(TFunction<void()> Callback);
 
         void UnsubscribeRarityParameterModels(Gs2::Core::Domain::CallbackID CallbackId);
+
+        Gs2::UE5::Enchant::Domain::Model::FEzBalanceParameterModelDomainPtr BalanceParameterModel(
+            const FString ParameterName
+        ) const;
 
         Gs2::UE5::Enchant::Domain::Model::FEzRarityParameterModelDomainPtr RarityParameterModel(
             const FString ParameterName

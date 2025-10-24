@@ -50,16 +50,4 @@ namespace Gs2::UE5::Showcase::Domain::Model
             ConnectionValue
         );
     }
-
-    Gs2::UE5::Showcase::Domain::Model::FEzRandomShowcaseDomainPtr FEzUserDomain::RandomShowcase(
-        const FString ShowcaseName
-    ) const
-    {
-        return MakeShared<Gs2::UE5::Showcase::Domain::Model::FEzRandomShowcaseDomain>(
-            Domain->RandomShowcase(
-                ShowcaseName
-            ),
-            ConnectionValue
-        );
-    }
 }

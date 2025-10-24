@@ -19,6 +19,8 @@
 namespace Gs2::Distributor::Result
 {
     FIfExpressionByStampTaskResult::FIfExpressionByStampTaskResult():
+        ItemValue(nullptr),
+        ExpressionResultValue(TOptional<bool>()),
         NewContextStackValue(TOptional<FString>())
     {
     }
@@ -26,8 +28,26 @@ namespace Gs2::Distributor::Result
     FIfExpressionByStampTaskResult::FIfExpressionByStampTaskResult(
         const FIfExpressionByStampTaskResult& From
     ):
+        ItemValue(From.ItemValue),
+        ExpressionResultValue(From.ExpressionResultValue),
         NewContextStackValue(From.NewContextStackValue)
     {
+    }
+
+    TSharedPtr<FIfExpressionByStampTaskResult> FIfExpressionByStampTaskResult::WithItem(
+        const TSharedPtr<Model::FTransactionResult> Item
+    )
+    {
+        this->ItemValue = Item;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FIfExpressionByStampTaskResult> FIfExpressionByStampTaskResult::WithExpressionResult(
+        const TOptional<bool> ExpressionResult
+    )
+    {
+        this->ExpressionResultValue = ExpressionResult;
+        return SharedThis(this);
     }
 
     TSharedPtr<FIfExpressionByStampTaskResult> FIfExpressionByStampTaskResult::WithNewContextStack(
@@ -36,6 +56,29 @@ namespace Gs2::Distributor::Result
     {
         this->NewContextStackValue = NewContextStack;
         return SharedThis(this);
+    }
+
+    TSharedPtr<Model::FTransactionResult> FIfExpressionByStampTaskResult::GetItem() const
+    {
+        if (!ItemValue.IsValid())
+        {
+            return nullptr;
+        }
+        return ItemValue;
+    }
+
+    TOptional<bool> FIfExpressionByStampTaskResult::GetExpressionResult() const
+    {
+        return ExpressionResultValue;
+    }
+
+    FString FIfExpressionByStampTaskResult::GetExpressionResultString() const
+    {
+        if (!ExpressionResultValue.IsSet())
+        {
+            return FString("null");
+        }
+        return FString(ExpressionResultValue.GetValue() ? "true" : "false");
     }
 
     TOptional<FString> FIfExpressionByStampTaskResult::GetNewContextStack() const
@@ -49,6 +92,23 @@ namespace Gs2::Distributor::Result
             return nullptr;
         }
         return MakeShared<FIfExpressionByStampTaskResult>()
+            ->WithItem(Data->HasField(ANSI_TO_TCHAR("item")) ? [Data]() -> Model::FTransactionResultPtr
+                 {
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("item")))
+                    {
+                        return nullptr;
+                    }
+                    return Model::FTransactionResult::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("item")));
+                 }() : nullptr)
+            ->WithExpressionResult(Data->HasField(ANSI_TO_TCHAR("expressionResult")) ? [Data]() -> TOptional<bool>
+                {
+                    bool v;
+                    if (Data->TryGetBoolField(ANSI_TO_TCHAR("expressionResult"), v))
+                    {
+                        return TOptional(v);
+                    }
+                    return TOptional<bool>();
+                }() : TOptional<bool>())
             ->WithNewContextStack(Data->HasField(ANSI_TO_TCHAR("newContextStack")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
@@ -63,6 +123,14 @@ namespace Gs2::Distributor::Result
     TSharedPtr<FJsonObject> FIfExpressionByStampTaskResult::ToJson() const
     {
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
+        if (ItemValue != nullptr && ItemValue.IsValid())
+        {
+            JsonRootObject->SetObjectField("item", ItemValue->ToJson());
+        }
+        if (ExpressionResultValue.IsSet())
+        {
+            JsonRootObject->SetBoolField("expressionResult", ExpressionResultValue.GetValue());
+        }
         if (NewContextStackValue.IsSet())
         {
             JsonRootObject->SetStringField("newContextStack", NewContextStackValue.GetValue());

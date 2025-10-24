@@ -92,6 +92,7 @@ namespace Gs2::Script::Domain::Model
             return Future->GetTask().Error();
         }
         const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         const auto Domain = Self;
         if (ResultModel != nullptr)
         {
@@ -140,6 +141,7 @@ namespace Gs2::Script::Domain::Model
             return Future->GetTask().Error();
         }
         const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         *Result = ResultModel->GetItem();
         return nullptr;
     }
@@ -180,6 +182,7 @@ namespace Gs2::Script::Domain::Model
             return Future->GetTask().Error();
         }
         const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         auto Domain = Self;
 
         *Result = Domain;
@@ -222,6 +225,7 @@ namespace Gs2::Script::Domain::Model
             return Future->GetTask().Error();
         }
         const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         auto Domain = Self;
 
         *Result = Domain;
@@ -264,6 +268,7 @@ namespace Gs2::Script::Domain::Model
             return Future->GetTask().Error();
         }
         const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         auto Domain = MakeShared<Gs2::Script::Domain::Model::FScriptDomain>(
             Self->Gs2,
             Self->Service,
@@ -311,6 +316,7 @@ namespace Gs2::Script::Domain::Model
             return Future->GetTask().Error();
         }
         const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         auto Domain = MakeShared<Gs2::Script::Domain::Model::FScriptDomain>(
             Self->Gs2,
             Self->Service,
@@ -355,6 +361,7 @@ namespace Gs2::Script::Domain::Model
             return Future->GetTask().Error();
         }
         const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         const auto Domain = Self;
         if (ResultModel != nullptr)
         {
@@ -415,6 +422,7 @@ namespace Gs2::Script::Domain::Model
             return Future->GetTask().Error();
         }
         const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         const auto Domain = Self;
         if (ResultModel != nullptr)
         {
@@ -447,12 +455,14 @@ namespace Gs2::Script::Domain::Model
     }
 
     Gs2::Script::Domain::Iterator::FDescribeScriptsIteratorPtr FNamespaceDomain::Scripts(
+        const TOptional<FString> NamePrefix
     ) const
     {
         return MakeShared<Gs2::Script::Domain::Iterator::FDescribeScriptsIterator>(
             Gs2,
             Client,
-            NamespaceName
+            NamespaceName,
+            NamePrefix
         );
     }
 

@@ -59,6 +59,29 @@ namespace Gs2::UE5::LoginReward::Domain::Model
 
     }
 
+    Gs2::UE5::LoginReward::Domain::Iterator::FEzDescribeBonusModelsIteratorPtr FEzNamespaceDomain::BonusModels(
+    ) const
+    {
+        return MakeShared<Gs2::UE5::LoginReward::Domain::Iterator::FEzDescribeBonusModelsIterator>(
+            Domain,
+            ConnectionValue
+        );
+    }
+
+    Gs2::Core::Domain::CallbackID FEzNamespaceDomain::SubscribeBonusModels(TFunction<void()> Callback)
+    {
+        return Domain->SubscribeBonusModels(
+            Callback
+        );
+    }
+
+    void FEzNamespaceDomain::UnsubscribeBonusModels(Gs2::Core::Domain::CallbackID CallbackId)
+    {
+        Domain->UnsubscribeBonusModels(
+            CallbackId
+        );
+    }
+
     Gs2::UE5::LoginReward::Domain::Model::FEzUserDomainPtr FEzNamespaceDomain::User(
         const FString UserId
     ) const
@@ -81,29 +104,6 @@ namespace Gs2::UE5::LoginReward::Domain::Model
             ),
             GameSession,
             ConnectionValue
-        );
-    }
-
-    Gs2::UE5::LoginReward::Domain::Iterator::FEzDescribeBonusModelsIteratorPtr FEzNamespaceDomain::BonusModels(
-    ) const
-    {
-        return MakeShared<Gs2::UE5::LoginReward::Domain::Iterator::FEzDescribeBonusModelsIterator>(
-            Domain,
-            ConnectionValue
-        );
-    }
-
-    Gs2::Core::Domain::CallbackID FEzNamespaceDomain::SubscribeBonusModels(TFunction<void()> Callback)
-    {
-        return Domain->SubscribeBonusModels(
-            Callback
-        );
-    }
-
-    void FEzNamespaceDomain::UnsubscribeBonusModels(Gs2::Core::Domain::CallbackID CallbackId)
-    {
-        Domain->UnsubscribeBonusModels(
-            CallbackId
         );
     }
 

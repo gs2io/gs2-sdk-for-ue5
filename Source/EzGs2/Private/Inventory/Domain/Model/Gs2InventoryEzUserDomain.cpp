@@ -55,28 +55,4 @@ namespace Gs2::UE5::Inventory::Domain::Model
             ConnectionValue
         );
     }
-
-    Gs2::UE5::Inventory::Domain::Model::FEzSimpleInventoryDomainPtr FEzUserDomain::SimpleInventory(
-        const FString InventoryName
-    ) const
-    {
-        return MakeShared<Gs2::UE5::Inventory::Domain::Model::FEzSimpleInventoryDomain>(
-            Domain->SimpleInventory(
-                InventoryName
-            ),
-            ConnectionValue
-        );
-    }
-
-    Gs2::UE5::Inventory::Domain::Model::FEzBigInventoryDomainPtr FEzUserDomain::BigInventory(
-        const FString InventoryName
-    ) const
-    {
-        return MakeShared<Gs2::UE5::Inventory::Domain::Model::FEzBigInventoryDomain>(
-            Domain->BigInventory(
-                InventoryName
-            ),
-            ConnectionValue
-        );
-    }
 }

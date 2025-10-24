@@ -85,19 +85,6 @@ namespace Gs2::UE5::Mission::Domain::Model
         );
     }
 
-    Gs2::UE5::Mission::Domain::Model::FEzCompleteGameSessionDomainPtr FEzUserGameSessionDomain::Complete(
-        const FString MissionGroupName
-    ) const
-    {
-        return MakeShared<Gs2::UE5::Mission::Domain::Model::FEzCompleteGameSessionDomain>(
-            Domain->Complete(
-                MissionGroupName
-            ),
-            GameSession,
-            ConnectionValue
-        );
-    }
-
     Gs2::UE5::Mission::Domain::Iterator::FEzDescribeCountersIteratorPtr FEzUserGameSessionDomain::Counters(
     ) const
     {
@@ -119,6 +106,19 @@ namespace Gs2::UE5::Mission::Domain::Model
     {
         Domain->UnsubscribeCounters(
             CallbackId
+        );
+    }
+
+    Gs2::UE5::Mission::Domain::Model::FEzCompleteGameSessionDomainPtr FEzUserGameSessionDomain::Complete(
+        const FString MissionGroupName
+    ) const
+    {
+        return MakeShared<Gs2::UE5::Mission::Domain::Model::FEzCompleteGameSessionDomain>(
+            Domain->Complete(
+                MissionGroupName
+            ),
+            GameSession,
+            ConnectionValue
         );
     }
 

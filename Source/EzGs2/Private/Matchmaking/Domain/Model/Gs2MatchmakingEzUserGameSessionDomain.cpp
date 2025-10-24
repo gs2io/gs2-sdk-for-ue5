@@ -166,6 +166,30 @@ namespace Gs2::UE5::Matchmaking::Domain::Model
         );
     }
 
+    Gs2::UE5::Matchmaking::Domain::Iterator::FEzDescribeRatingsIteratorPtr FEzUserGameSessionDomain::Ratings(
+    ) const
+    {
+        return MakeShared<Gs2::UE5::Matchmaking::Domain::Iterator::FEzDescribeRatingsIterator>(
+            Domain,
+            GameSession,
+            ConnectionValue
+        );
+    }
+
+    Gs2::Core::Domain::CallbackID FEzUserGameSessionDomain::SubscribeRatings(TFunction<void()> Callback)
+    {
+        return Domain->SubscribeRatings(
+            Callback
+        );
+    }
+
+    void FEzUserGameSessionDomain::UnsubscribeRatings(Gs2::Core::Domain::CallbackID CallbackId)
+    {
+        Domain->UnsubscribeRatings(
+            CallbackId
+        );
+    }
+
     Gs2::UE5::Matchmaking::Domain::Model::FEzGatheringGameSessionDomainPtr FEzUserGameSessionDomain::Gathering(
         const FString GatheringName
     ) const
@@ -173,6 +197,19 @@ namespace Gs2::UE5::Matchmaking::Domain::Model
         return MakeShared<Gs2::UE5::Matchmaking::Domain::Model::FEzGatheringGameSessionDomain>(
             Domain->Gathering(
                 GatheringName
+            ),
+            GameSession,
+            ConnectionValue
+        );
+    }
+
+    Gs2::UE5::Matchmaking::Domain::Model::FEzRatingGameSessionDomainPtr FEzUserGameSessionDomain::Rating(
+        const FString RatingName
+    ) const
+    {
+        return MakeShared<Gs2::UE5::Matchmaking::Domain::Model::FEzRatingGameSessionDomain>(
+            Domain->Rating(
+                RatingName
             ),
             GameSession,
             ConnectionValue
@@ -198,37 +235,15 @@ namespace Gs2::UE5::Matchmaking::Domain::Model
         );
     }
 
-    Gs2::UE5::Matchmaking::Domain::Iterator::FEzDescribeRatingsIteratorPtr FEzUserGameSessionDomain::Ratings(
+    Gs2::UE5::Matchmaking::Domain::Model::FEzSeasonGameSessionDomainPtr FEzUserGameSessionDomain::Season(
+        const FString SeasonName,
+        const int64 Season
     ) const
     {
-        return MakeShared<Gs2::UE5::Matchmaking::Domain::Iterator::FEzDescribeRatingsIterator>(
-            Domain,
-            GameSession,
-            ConnectionValue
-        );
-    }
-
-    Gs2::Core::Domain::CallbackID FEzUserGameSessionDomain::SubscribeRatings(TFunction<void()> Callback)
-    {
-        return Domain->SubscribeRatings(
-            Callback
-        );
-    }
-
-    void FEzUserGameSessionDomain::UnsubscribeRatings(Gs2::Core::Domain::CallbackID CallbackId)
-    {
-        Domain->UnsubscribeRatings(
-            CallbackId
-        );
-    }
-
-    Gs2::UE5::Matchmaking::Domain::Model::FEzRatingGameSessionDomainPtr FEzUserGameSessionDomain::Rating(
-        const FString RatingName
-    ) const
-    {
-        return MakeShared<Gs2::UE5::Matchmaking::Domain::Model::FEzRatingGameSessionDomain>(
-            Domain->Rating(
-                RatingName
+        return MakeShared<Gs2::UE5::Matchmaking::Domain::Model::FEzSeasonGameSessionDomain>(
+            Domain->Season(
+                SeasonName,
+                Season
             ),
             GameSession,
             ConnectionValue

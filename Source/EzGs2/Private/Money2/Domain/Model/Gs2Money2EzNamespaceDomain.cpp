@@ -12,6 +12,8 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
+ *
+ * deny overwrite
  */
 
 #include "Money2/Domain/Model/Gs2Money2EzNamespaceDomain.h"
@@ -80,18 +82,6 @@ namespace Gs2::UE5::Money2::Domain::Model
                 GameSession->AccessToken()
             ),
             GameSession,
-            ConnectionValue
-        );
-    }
-
-    Gs2::UE5::Money2::Domain::Model::FEzStoreContentModelDomainPtr FEzNamespaceDomain::StoreContentModel(
-        const FString ContentName
-    ) const
-    {
-        return MakeShared<Gs2::UE5::Money2::Domain::Model::FEzStoreContentModelDomain>(
-            Domain->StoreContentModel(
-                ContentName
-            ),
             ConnectionValue
         );
     }

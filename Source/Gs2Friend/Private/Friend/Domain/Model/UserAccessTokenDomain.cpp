@@ -108,6 +108,7 @@ namespace Gs2::Friend::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithAccessToken(Self->AccessToken->GetToken());
         const auto Future = Self->Client->SendRequest(
@@ -118,30 +119,8 @@ namespace Gs2::Friend::Domain::Model
         {
             return Future->GetTask().Error();
         }
-        const auto RequestModel = Request;
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::Friend::Domain::Model::FUserDomain::CreateCacheParentKey(
-                    Self->NamespaceName,
-                    Self->UserId(),
-                    "SendFriendRequest"
-                );
-                const auto Key = Gs2::Friend::Domain::Model::FSendFriendRequestDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetTargetUserId()
-                );
-                Self->Gs2->Cache->Put(
-                    Gs2::Friend::Model::FFriendRequest::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
-        }
         auto Domain = MakeShared<Gs2::Friend::Domain::Model::FSendFriendRequestAccessTokenDomain>(
             Self->Gs2,
             Self->Service,
@@ -278,13 +257,15 @@ namespace Gs2::Friend::Domain::Model
     }
 
     Gs2::Friend::Domain::Iterator::FDescribeSendRequestsIteratorPtr FUserAccessTokenDomain::SendRequests(
+        const TOptional<bool> WithProfile
     ) const
     {
         return MakeShared<Gs2::Friend::Domain::Iterator::FDescribeSendRequestsIterator>(
             Gs2,
             Client,
             NamespaceName,
-            AccessToken
+            AccessToken,
+            WithProfile
         );
     }
 
@@ -332,13 +313,15 @@ namespace Gs2::Friend::Domain::Model
     }
 
     Gs2::Friend::Domain::Iterator::FDescribeReceiveRequestsIteratorPtr FUserAccessTokenDomain::ReceiveRequests(
+        const TOptional<bool> WithProfile
     ) const
     {
         return MakeShared<Gs2::Friend::Domain::Iterator::FDescribeReceiveRequestsIterator>(
             Gs2,
             Client,
             NamespaceName,
-            AccessToken
+            AccessToken,
+            WithProfile
         );
     }
 

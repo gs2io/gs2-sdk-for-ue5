@@ -105,16 +105,16 @@ namespace Gs2::UE5::Dictionary::Domain::Model
 
         void UnsubscribeEntries(Gs2::Core::Domain::CallbackID CallbackId);
 
-        Gs2::UE5::Dictionary::Domain::Model::FEzEntryGameSessionDomainPtr Entry(
-            const FString EntryModelName
-        ) const;
-
         Gs2::UE5::Dictionary::Domain::Iterator::FEzDescribeLikesIteratorPtr Likes(
         ) const;
 
         Gs2::Core::Domain::CallbackID SubscribeLikes(TFunction<void()> Callback);
 
         void UnsubscribeLikes(Gs2::Core::Domain::CallbackID CallbackId);
+
+        Gs2::UE5::Dictionary::Domain::Model::FEzEntryGameSessionDomainPtr Entry(
+            const FString EntryModelName
+        ) const;
 
         Gs2::UE5::Dictionary::Domain::Model::FEzLikeGameSessionDomainPtr Like(
             const FString EntryModelName

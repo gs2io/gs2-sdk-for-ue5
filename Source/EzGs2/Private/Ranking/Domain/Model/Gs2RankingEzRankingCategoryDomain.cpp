@@ -59,20 +59,8 @@ namespace Gs2::UE5::Ranking::Domain::Model
 
     }
 
-    Gs2::UE5::Ranking::Domain::Model::FEzSubscribeUserDomainPtr FEzRankingCategoryDomain::SubscribeUser(
-        const FString TargetUserId
-    ) const
-    {
-        return MakeShared<Gs2::UE5::Ranking::Domain::Model::FEzSubscribeUserDomain>(
-            Domain->SubscribeUser(
-                TargetUserId
-            ),
-            ConnectionValue
-        );
-    }
-
     Gs2::UE5::Ranking::Domain::Iterator::FEzDescribeNearRankingsIteratorPtr FEzRankingCategoryDomain::NearRankings(
-          const int64 Score
+        const int64 Score
     ) const
     {
         return MakeShared<Gs2::UE5::Ranking::Domain::Iterator::FEzDescribeNearRankingsIterator>(
@@ -93,6 +81,18 @@ namespace Gs2::UE5::Ranking::Domain::Model
     {
         Domain->UnsubscribeNearRankings(
             CallbackId
+        );
+    }
+
+    Gs2::UE5::Ranking::Domain::Model::FEzSubscribeUserDomainPtr FEzRankingCategoryDomain::SubscribeUser(
+        const FString TargetUserId
+    ) const
+    {
+        return MakeShared<Gs2::UE5::Ranking::Domain::Model::FEzSubscribeUserDomain>(
+            Domain->SubscribeUser(
+                TargetUserId
+            ),
+            ConnectionValue
         );
     }
 

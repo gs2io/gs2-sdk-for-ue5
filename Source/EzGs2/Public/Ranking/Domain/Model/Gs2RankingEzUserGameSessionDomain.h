@@ -53,11 +53,6 @@ namespace Gs2::UE5::Ranking::Domain::Model
             Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
 
-        Gs2::UE5::Ranking::Domain::Model::FEzRankingCategoryGameSessionDomainPtr RankingCategory(
-            const FString CategoryName,
-            const TOptional<FString> AdditionalScopeName = TOptional<FString>()
-        ) const;
-
         Gs2::UE5::Ranking::Domain::Iterator::FEzDescribeScoresIteratorPtr Scores(
             const FString CategoryName,
             const FString ScorerUserId
@@ -66,6 +61,11 @@ namespace Gs2::UE5::Ranking::Domain::Model
         Gs2::Core::Domain::CallbackID SubscribeScores(TFunction<void()> Callback);
 
         void UnsubscribeScores(Gs2::Core::Domain::CallbackID CallbackId);
+
+        Gs2::UE5::Ranking::Domain::Model::FEzRankingCategoryGameSessionDomainPtr RankingCategory(
+            const FString CategoryName,
+            const TOptional<FString> AdditionalScopeName = TOptional<FString>()
+        ) const;
 
         Gs2::UE5::Ranking::Domain::Model::FEzScoreGameSessionDomainPtr Score(
             const FString CategoryName,

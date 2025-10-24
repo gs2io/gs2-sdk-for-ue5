@@ -47,7 +47,7 @@ namespace Gs2::UE5::Experience::Domain::Model
     }
 
     Gs2::UE5::Experience::Domain::Iterator::FEzDescribeStatusesIteratorPtr FEzUserGameSessionDomain::Statuses(
-          const TOptional<FString> ExperienceName
+        const TOptional<FString> ExperienceName
     ) const
     {
         return MakeShared<Gs2::UE5::Experience::Domain::Iterator::FEzDescribeStatusesIterator>(

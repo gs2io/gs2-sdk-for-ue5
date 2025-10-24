@@ -27,21 +27,24 @@
 #include "Friend/Model/Gs2FriendEzFriendRequest.h"
 #include "Friend/Model/Gs2FriendEzPublicProfile.h"
 #include "Gs2FriendEzProfileGameSessionDomain.h"
+#include "Gs2FriendEzPublicProfileGameSessionDomain.h"
 #include "Gs2FriendEzBlackListGameSessionDomain.h"
-#include "Friend/Domain/Iterator/Gs2FriendEzDescribeBlackListIterator.h"
 #include "Gs2FriendEzFollowGameSessionDomain.h"
 #include "Gs2FriendEzFriendGameSessionDomain.h"
-#include "Friend/Domain/Iterator/Gs2FriendEzDescribeFriendsIterator.h"
-#include "Gs2FriendEzSendFriendRequestGameSessionDomain.h"
-#include "Friend/Domain/Iterator/Gs2FriendEzDescribeSendRequestsIterator.h"
 #include "Gs2FriendEzReceiveFriendRequestGameSessionDomain.h"
-#include "Friend/Domain/Iterator/Gs2FriendEzDescribeReceiveRequestsIterator.h"
+#include "Gs2FriendEzSendFriendRequestGameSessionDomain.h"
+#include "Friend/Domain/Iterator/Gs2FriendEzDescribeBlackListIterator.h"
 #include "Gs2FriendEzUserGameSessionDomain.h"
+#include "Core/EzTransactionGameSessionDomain.h"
+#include "Friend/Domain/Iterator/Gs2FriendEzDescribeFriendsIterator.h"
+#include "Friend/Domain/Iterator/Gs2FriendEzDescribeReceiveRequestsIterator.h"
+#include "Friend/Domain/Iterator/Gs2FriendEzDescribeSendRequestsIterator.h"
 #include "Util/Net/GameSession.h"
 #include "Util/Net/Gs2Connection.h"
 
 namespace Gs2::UE5::Friend::Domain::Model
 {
+    class FEzSendFriendRequestGameSessionDomain;
 
     class EZGS2_API FEzUserGameSessionDomain final :
         public TSharedFromThis<FEzUserGameSessionDomain>
@@ -61,7 +64,7 @@ namespace Gs2::UE5::Friend::Domain::Model
             Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
 
-        class FSendRequestTask :
+        class EZGS2_API FSendRequestTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::Friend::Domain::Model::FEzSendFriendRequestGameSessionDomain>,
             public TSharedFromThis<FSendRequestTask>
         {
@@ -90,10 +93,6 @@ namespace Gs2::UE5::Friend::Domain::Model
         Gs2::UE5::Friend::Domain::Iterator::FEzDescribeBlackListIteratorPtr BlackListUsers(
         ) const;
 
-        Gs2::Core::Domain::CallbackID SubscribeBlackListUsers(TFunction<void()> Callback);
-
-        void UnsubscribeBlackListUsers(Gs2::Core::Domain::CallbackID CallbackId);
-
         Gs2::UE5::Friend::Domain::Model::FEzBlackListGameSessionDomainPtr BlackList(
         ) const;
 
@@ -105,9 +104,9 @@ namespace Gs2::UE5::Friend::Domain::Model
             const bool WithProfile
         ) const;
 
-        Gs2::Core::Domain::CallbackID SubscribeFriends(TFunction<void()> Callback);
+        Gs2::Core::Domain::CallbackID SubscribeFriends(TFunction<void()> Callback, const bool WithProfile);
 
-        void UnsubscribeFriends(Gs2::Core::Domain::CallbackID CallbackId);
+        void UnsubscribeFriends(Gs2::Core::Domain::CallbackID CallbackId, const bool WithProfile);
 
         Gs2::UE5::Friend::Domain::Model::FEzFriendGameSessionDomainPtr Friend(
             const bool WithProfile

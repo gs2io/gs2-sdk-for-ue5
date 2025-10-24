@@ -406,7 +406,7 @@ namespace Gs2::Chat::Domain
     {
         return MakeShared<Gs2::Chat::Domain::Iterator::FDescribeNamespacesIterator>(
             Gs2,
-            Client
+            Client,
             NamePrefix
         );
     }

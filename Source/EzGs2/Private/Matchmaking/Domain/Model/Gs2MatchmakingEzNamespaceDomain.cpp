@@ -212,6 +212,52 @@ namespace Gs2::UE5::Matchmaking::Domain::Model
         );
     }
 
+    Gs2::UE5::Matchmaking::Domain::Iterator::FEzDescribeRatingModelsIteratorPtr FEzNamespaceDomain::RatingModels(
+    ) const
+    {
+        return MakeShared<Gs2::UE5::Matchmaking::Domain::Iterator::FEzDescribeRatingModelsIterator>(
+            Domain,
+            ConnectionValue
+        );
+    }
+
+    Gs2::Core::Domain::CallbackID FEzNamespaceDomain::SubscribeRatingModels(TFunction<void()> Callback)
+    {
+        return Domain->SubscribeRatingModels(
+            Callback
+        );
+    }
+
+    void FEzNamespaceDomain::UnsubscribeRatingModels(Gs2::Core::Domain::CallbackID CallbackId)
+    {
+        Domain->UnsubscribeRatingModels(
+            CallbackId
+        );
+    }
+
+    Gs2::UE5::Matchmaking::Domain::Iterator::FEzDescribeSeasonModelsIteratorPtr FEzNamespaceDomain::SeasonModels(
+    ) const
+    {
+        return MakeShared<Gs2::UE5::Matchmaking::Domain::Iterator::FEzDescribeSeasonModelsIterator>(
+            Domain,
+            ConnectionValue
+        );
+    }
+
+    Gs2::Core::Domain::CallbackID FEzNamespaceDomain::SubscribeSeasonModels(TFunction<void()> Callback)
+    {
+        return Domain->SubscribeSeasonModels(
+            Callback
+        );
+    }
+
+    void FEzNamespaceDomain::UnsubscribeSeasonModels(Gs2::Core::Domain::CallbackID CallbackId)
+    {
+        Domain->UnsubscribeSeasonModels(
+            CallbackId
+        );
+    }
+
     Gs2::UE5::Matchmaking::Domain::Model::FEzUserDomainPtr FEzNamespaceDomain::User(
         const FString UserId
     ) const
@@ -237,29 +283,6 @@ namespace Gs2::UE5::Matchmaking::Domain::Model
         );
     }
 
-    Gs2::UE5::Matchmaking::Domain::Iterator::FEzDescribeRatingModelsIteratorPtr FEzNamespaceDomain::RatingModels(
-    ) const
-    {
-        return MakeShared<Gs2::UE5::Matchmaking::Domain::Iterator::FEzDescribeRatingModelsIterator>(
-            Domain,
-            ConnectionValue
-        );
-    }
-
-    Gs2::Core::Domain::CallbackID FEzNamespaceDomain::SubscribeRatingModels(TFunction<void()> Callback)
-    {
-        return Domain->SubscribeRatingModels(
-            Callback
-        );
-    }
-
-    void FEzNamespaceDomain::UnsubscribeRatingModels(Gs2::Core::Domain::CallbackID CallbackId)
-    {
-        Domain->UnsubscribeRatingModels(
-            CallbackId
-        );
-    }
-
     Gs2::UE5::Matchmaking::Domain::Model::FEzRatingModelDomainPtr FEzNamespaceDomain::RatingModel(
         const FString RatingName
     ) const
@@ -269,29 +292,6 @@ namespace Gs2::UE5::Matchmaking::Domain::Model
                 RatingName
             ),
             ConnectionValue
-        );
-    }
-
-    Gs2::UE5::Matchmaking::Domain::Iterator::FEzDescribeSeasonModelsIteratorPtr FEzNamespaceDomain::SeasonModels(
-    ) const
-    {
-        return MakeShared<Gs2::UE5::Matchmaking::Domain::Iterator::FEzDescribeSeasonModelsIterator>(
-            Domain,
-            ConnectionValue
-        );
-    }
-
-    Gs2::Core::Domain::CallbackID FEzNamespaceDomain::SubscribeSeasonModels(TFunction<void()> Callback)
-    {
-        return Domain->SubscribeSeasonModels(
-            Callback
-        );
-    }
-
-    void FEzNamespaceDomain::UnsubscribeSeasonModels(Gs2::Core::Domain::CallbackID CallbackId)
-    {
-        Domain->UnsubscribeSeasonModels(
-            CallbackId
         );
     }
 

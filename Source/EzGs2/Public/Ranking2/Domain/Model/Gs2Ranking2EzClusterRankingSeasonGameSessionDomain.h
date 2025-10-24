@@ -12,11 +12,14 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
+ *
+ * deny overwrite
  */
 
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Gs2Ranking2EzClusterRankingDataGameSessionDomain.h"
 #include "Ranking2/Domain/Model/ClusterRankingSeasonAccessToken.h"
 #include "Ranking2/Model/Gs2Ranking2EzGlobalRankingData.h"
 #include "Ranking2/Model/Gs2Ranking2EzGlobalRankingModel.h"
@@ -124,10 +127,6 @@ namespace Gs2::UE5::Ranking2::Domain::Model
 
         void UnsubscribeClusterRankings(Gs2::Core::Domain::CallbackID CallbackId);
 
-        Gs2::UE5::Ranking2::Domain::Model::FEzClusterRankingDataGameSessionDomainPtr ClusterRankingData(
-            const FString ScorerUserId
-        ) const;
-
         Gs2::UE5::Ranking2::Domain::Iterator::FEzDescribeClusterRankingReceivedRewardsIteratorPtr ClusterRankingReceivedRewards(
         ) const;
 
@@ -135,15 +134,19 @@ namespace Gs2::UE5::Ranking2::Domain::Model
 
         void UnsubscribeClusterRankingReceivedRewards(Gs2::Core::Domain::CallbackID CallbackId);
 
-        Gs2::UE5::Ranking2::Domain::Model::FEzClusterRankingReceivedRewardGameSessionDomainPtr ClusterRankingReceivedReward(
-        ) const;
-
         Gs2::UE5::Ranking2::Domain::Iterator::FEzDescribeClusterRankingScoresIteratorPtr ClusterRankingScores(
         ) const;
 
         Gs2::Core::Domain::CallbackID SubscribeClusterRankingScores(TFunction<void()> Callback);
 
         void UnsubscribeClusterRankingScores(Gs2::Core::Domain::CallbackID CallbackId);
+
+        Gs2::UE5::Ranking2::Domain::Model::FEzClusterRankingDataGameSessionDomainPtr ClusterRankingData(
+            const FString ScorerUserId
+        ) const;
+
+        Gs2::UE5::Ranking2::Domain::Model::FEzClusterRankingReceivedRewardGameSessionDomainPtr ClusterRankingReceivedReward(
+        ) const;
 
         Gs2::UE5::Ranking2::Domain::Model::FEzClusterRankingScoreGameSessionDomainPtr ClusterRankingScore(
         ) const;

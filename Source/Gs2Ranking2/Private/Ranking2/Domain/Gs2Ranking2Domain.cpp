@@ -12,8 +12,6 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
- *
- * deny overwrite
  */
 
 #if defined(_MSC_VER)
@@ -102,6 +100,7 @@ namespace Gs2::Ranking2::Domain
             return Future->GetTask().Error();
         }
         const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         auto Domain = MakeShared<Gs2::Ranking2::Domain::Model::FNamespaceDomain>(
             Self->Gs2,
             Self,
@@ -144,6 +143,7 @@ namespace Gs2::Ranking2::Domain
             return Future->GetTask().Error();
         }
         const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         const auto Domain = Self;
         *Result = Domain;
         return nullptr;
@@ -182,6 +182,7 @@ namespace Gs2::Ranking2::Domain
             return Future->GetTask().Error();
         }
         const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         const auto Domain = Self;
         if (ResultModel != nullptr)
         {
@@ -227,6 +228,7 @@ namespace Gs2::Ranking2::Domain
             return Future->GetTask().Error();
         }
         const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         const auto Domain = Self;
         *Result = Domain;
         return nullptr;
@@ -265,6 +267,7 @@ namespace Gs2::Ranking2::Domain
             return Future->GetTask().Error();
         }
         const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         const auto Domain = Self;
         *Result = Domain;
         return nullptr;
@@ -303,6 +306,7 @@ namespace Gs2::Ranking2::Domain
             return Future->GetTask().Error();
         }
         const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         const auto Domain = Self;
         if (ResultModel != nullptr)
         {
@@ -352,6 +356,7 @@ namespace Gs2::Ranking2::Domain
             return Future->GetTask().Error();
         }
         const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         const auto Domain = Self;
         *Result = Domain;
         return nullptr;
@@ -390,6 +395,7 @@ namespace Gs2::Ranking2::Domain
             return Future->GetTask().Error();
         }
         const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         const auto Domain = Self;
         if (ResultModel != nullptr)
         {
@@ -409,11 +415,13 @@ namespace Gs2::Ranking2::Domain
     }
 
     Gs2::Ranking2::Domain::Iterator::FDescribeNamespacesIteratorPtr FGs2Ranking2Domain::Namespaces(
+        const TOptional<FString> NamePrefix
     ) const
     {
         return MakeShared<Gs2::Ranking2::Domain::Iterator::FDescribeNamespacesIterator>(
             Gs2,
-            Client
+            Client,
+            NamePrefix
         );
     }
 

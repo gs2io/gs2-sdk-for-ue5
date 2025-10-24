@@ -328,7 +328,7 @@ namespace Gs2::Ranking2::Domain::Model
     }
 
     Gs2::Ranking2::Domain::Iterator::FDescribeSubscribesByUserIdIteratorPtr FUserDomain::Subscribes(
-        const TOptional<FString> RankingName,
+        const FString RankingName,
         const TOptional<FString> TimeOffsetToken
     ) const
     {

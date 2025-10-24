@@ -285,7 +285,7 @@ namespace Gs2::Deploy::Domain
     {
         return MakeShared<Gs2::Deploy::Domain::Iterator::FDescribeStacksIterator>(
             Gs2,
-            Client
+            Client,
             NamePrefix
         );
     }

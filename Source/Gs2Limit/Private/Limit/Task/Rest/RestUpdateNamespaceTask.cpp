@@ -92,6 +92,10 @@ namespace Gs2::Limit::Task::Rest
             {
                 JsonRootObject->SetObjectField("transactionSetting", this->Request->GetTransactionSetting()->ToJson());
             }
+            if (this->Request->GetCountUpScript() != nullptr && this->Request->GetCountUpScript().IsValid())
+            {
+                JsonRootObject->SetObjectField("countUpScript", this->Request->GetCountUpScript()->ToJson());
+            }
             if (this->Request->GetLogSetting() != nullptr && this->Request->GetLogSetting().IsValid())
             {
                 JsonRootObject->SetObjectField("logSetting", this->Request->GetLogSetting()->ToJson());

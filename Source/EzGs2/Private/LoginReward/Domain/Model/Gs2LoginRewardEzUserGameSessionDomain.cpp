@@ -46,17 +46,6 @@ namespace Gs2::UE5::LoginReward::Domain::Model
 
     }
 
-    Gs2::UE5::LoginReward::Domain::Model::FEzBonusGameSessionDomainPtr FEzUserGameSessionDomain::Bonus(
-    ) const
-    {
-        return MakeShared<Gs2::UE5::LoginReward::Domain::Model::FEzBonusGameSessionDomain>(
-            Domain->Bonus(
-            ),
-            GameSession,
-            ConnectionValue
-        );
-    }
-
     Gs2::UE5::LoginReward::Domain::Iterator::FEzDescribeReceiveStatusesIteratorPtr FEzUserGameSessionDomain::ReceiveStatuses(
     ) const
     {
@@ -78,6 +67,17 @@ namespace Gs2::UE5::LoginReward::Domain::Model
     {
         Domain->UnsubscribeReceiveStatuses(
             CallbackId
+        );
+    }
+
+    Gs2::UE5::LoginReward::Domain::Model::FEzBonusGameSessionDomainPtr FEzUserGameSessionDomain::Bonus(
+    ) const
+    {
+        return MakeShared<Gs2::UE5::LoginReward::Domain::Model::FEzBonusGameSessionDomain>(
+            Domain->Bonus(
+            ),
+            GameSession,
+            ConnectionValue
         );
     }
 

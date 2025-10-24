@@ -12,6 +12,8 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
+ *
+ * deny overwrite
  */
 
 #pragma once
@@ -31,7 +33,6 @@
 #include "Gs2Money2EzUserDomain.h"
 #include "Gs2Money2EzUserDomain.h"
 #include "Gs2Money2EzUserGameSessionDomain.h"
-#include "Gs2Money2EzStoreContentModelDomain.h"
 #include "Gs2Money2EzNamespaceDomain.h"
 #include "Core/EzTransactionDomain.h"
 #include "Util/Net/GameSession.h"
@@ -65,10 +66,6 @@ namespace Gs2::UE5::Money2::Domain::Model
 
         Gs2::UE5::Money2::Domain::Model::FEzUserGameSessionDomainPtr Me(
             Gs2::UE5::Util::IGameSessionPtr GameSession
-        ) const;
-
-        Gs2::UE5::Money2::Domain::Model::FEzStoreContentModelDomainPtr StoreContentModel(
-            const FString ContentName
         ) const;
 
     };

@@ -70,21 +70,8 @@ namespace Gs2::UE5::Formation::Domain::Model
         );
     }
 
-    Gs2::UE5::Formation::Domain::Model::FEzMoldGameSessionDomainPtr FEzUserGameSessionDomain::Mold(
-        const FString MoldModelName
-    ) const
-    {
-        return MakeShared<Gs2::UE5::Formation::Domain::Model::FEzMoldGameSessionDomain>(
-            Domain->Mold(
-                MoldModelName
-            ),
-            GameSession,
-            ConnectionValue
-        );
-    }
-
     Gs2::UE5::Formation::Domain::Iterator::FEzDescribePropertyFormsIteratorPtr FEzUserGameSessionDomain::PropertyForms(
-          const FString PropertyFormModelName
+        const FString PropertyFormModelName
     ) const
     {
         return MakeShared<Gs2::UE5::Formation::Domain::Iterator::FEzDescribePropertyFormsIterator>(
@@ -106,6 +93,19 @@ namespace Gs2::UE5::Formation::Domain::Model
     {
         Domain->UnsubscribePropertyForms(
             CallbackId
+        );
+    }
+
+    Gs2::UE5::Formation::Domain::Model::FEzMoldGameSessionDomainPtr FEzUserGameSessionDomain::Mold(
+        const FString MoldModelName
+    ) const
+    {
+        return MakeShared<Gs2::UE5::Formation::Domain::Model::FEzMoldGameSessionDomain>(
+            Domain->Mold(
+                MoldModelName
+            ),
+            GameSession,
+            ConnectionValue
         );
     }
 

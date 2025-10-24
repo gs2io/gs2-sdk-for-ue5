@@ -107,6 +107,7 @@ namespace Gs2::Friend::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithUserId(Self->UserId);
         const auto Future = Self->Client->SendRequestByUserId(
@@ -117,30 +118,8 @@ namespace Gs2::Friend::Domain::Model
         {
             return Future->GetTask().Error();
         }
-        const auto RequestModel = Request;
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::Friend::Domain::Model::FUserDomain::CreateCacheParentKey(
-                    Self->NamespaceName,
-                    Self->UserId,
-                    "SendFriendRequest"
-                );
-                const auto Key = Gs2::Friend::Domain::Model::FSendFriendRequestDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetTargetUserId()
-                );
-                Self->Gs2->Cache->Put(
-                    Gs2::Friend::Model::FFriendRequest::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
-        }
         auto Domain = MakeShared<Gs2::Friend::Domain::Model::FSendFriendRequestDomain>(
             Self->Gs2,
             Self->Service,
@@ -182,13 +161,15 @@ namespace Gs2::Friend::Domain::Model
     }
 
     Gs2::Friend::Domain::Iterator::FDescribeBlackListByUserIdIteratorPtr FUserDomain::BlackListUsers(
+        const TOptional<FString> TimeOffsetToken
     ) const
     {
         return MakeShared<Gs2::Friend::Domain::Iterator::FDescribeBlackListByUserIdIterator>(
             Gs2,
             Client,
             NamespaceName,
-            UserId
+            UserId,
+            TimeOffsetToken
         );
     }
 
@@ -217,7 +198,8 @@ namespace Gs2::Friend::Domain::Model
     }
 
     Gs2::Friend::Domain::Iterator::FDescribeFriendsByUserIdIteratorPtr FUserDomain::Friends(
-        const TOptional<bool> WithProfile
+        const TOptional<bool> WithProfile,
+        const TOptional<FString> TimeOffsetToken
     ) const
     {
         return MakeShared<Gs2::Friend::Domain::Iterator::FDescribeFriendsByUserIdIterator>(
@@ -225,7 +207,8 @@ namespace Gs2::Friend::Domain::Model
             Client,
             NamespaceName,
             UserId,
-            WithProfile
+            WithProfile,
+            TimeOffsetToken
         );
     }
 
@@ -277,13 +260,17 @@ namespace Gs2::Friend::Domain::Model
     }
 
     Gs2::Friend::Domain::Iterator::FDescribeSendRequestsByUserIdIteratorPtr FUserDomain::SendRequests(
+        const TOptional<bool> WithProfile,
+        const TOptional<FString> TimeOffsetToken
     ) const
     {
         return MakeShared<Gs2::Friend::Domain::Iterator::FDescribeSendRequestsByUserIdIterator>(
             Gs2,
             Client,
             NamespaceName,
-            UserId
+            UserId,
+            WithProfile,
+            TimeOffsetToken
         );
     }
 
@@ -331,13 +318,17 @@ namespace Gs2::Friend::Domain::Model
     }
 
     Gs2::Friend::Domain::Iterator::FDescribeReceiveRequestsByUserIdIteratorPtr FUserDomain::ReceiveRequests(
+        const TOptional<bool> WithProfile,
+        const TOptional<FString> TimeOffsetToken
     ) const
     {
         return MakeShared<Gs2::Friend::Domain::Iterator::FDescribeReceiveRequestsByUserIdIterator>(
             Gs2,
             Client,
             NamespaceName,
-            UserId
+            UserId,
+            WithProfile,
+            TimeOffsetToken
         );
     }
 

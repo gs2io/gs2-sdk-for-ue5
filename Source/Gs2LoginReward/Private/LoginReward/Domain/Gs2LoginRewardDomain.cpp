@@ -405,7 +405,7 @@ namespace Gs2::LoginReward::Domain
     {
         return MakeShared<Gs2::LoginReward::Domain::Iterator::FDescribeNamespacesIterator>(
             Gs2,
-            Client
+            Client,
             NamePrefix
         );
     }

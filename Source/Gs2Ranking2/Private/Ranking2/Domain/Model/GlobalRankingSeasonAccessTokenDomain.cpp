@@ -12,6 +12,8 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
+ *
+ * deny overwrite
  */
 
 #if defined(_MSC_VER)
@@ -317,7 +319,7 @@ namespace Gs2::Ranking2::Domain::Model
     }
 
     TSharedPtr<Gs2::Ranking2::Domain::Model::FGlobalRankingDataAccessTokenDomain> FGlobalRankingSeasonAccessTokenDomain::GlobalRankingData(
-        const FString ScorerUserId
+        const TOptional<FString> ScorerUserId
     )
     {
         return MakeShared<Gs2::Ranking2::Domain::Model::FGlobalRankingDataAccessTokenDomain>(
@@ -327,7 +329,7 @@ namespace Gs2::Ranking2::Domain::Model
             RankingName,
             Season,
             AccessToken,
-            ScorerUserId == TEXT("") ? TOptional<FString>() : TOptional<FString>(ScorerUserId)
+            ScorerUserId
         );
     }
 

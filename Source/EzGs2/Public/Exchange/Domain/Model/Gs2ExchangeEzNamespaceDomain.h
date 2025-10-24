@@ -70,6 +70,13 @@ namespace Gs2::UE5::Exchange::Domain::Model
 
         void UnsubscribeRateModels(Gs2::Core::Domain::CallbackID CallbackId);
 
+        Gs2::UE5::Exchange::Domain::Iterator::FEzDescribeIncrementalRateModelsIteratorPtr IncrementalRateModels(
+        ) const;
+
+        Gs2::Core::Domain::CallbackID SubscribeIncrementalRateModels(TFunction<void()> Callback);
+
+        void UnsubscribeIncrementalRateModels(Gs2::Core::Domain::CallbackID CallbackId);
+
         Gs2::UE5::Exchange::Domain::Model::FEzRateModelDomainPtr RateModel(
             const FString RateName
         ) const;
@@ -77,13 +84,6 @@ namespace Gs2::UE5::Exchange::Domain::Model
         Gs2::UE5::Exchange::Domain::Model::FEzUserGameSessionDomainPtr Me(
             Gs2::UE5::Util::IGameSessionPtr GameSession
         ) const;
-
-        Gs2::UE5::Exchange::Domain::Iterator::FEzDescribeIncrementalRateModelsIteratorPtr IncrementalRateModels(
-        ) const;
-
-        Gs2::Core::Domain::CallbackID SubscribeIncrementalRateModels(TFunction<void()> Callback);
-
-        void UnsubscribeIncrementalRateModels(Gs2::Core::Domain::CallbackID CallbackId);
 
         Gs2::UE5::Exchange::Domain::Model::FEzIncrementalRateModelDomainPtr IncrementalRateModel(
             const FString RateName

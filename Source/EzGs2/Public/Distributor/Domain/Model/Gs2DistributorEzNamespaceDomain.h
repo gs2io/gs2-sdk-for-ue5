@@ -62,6 +62,7 @@ namespace Gs2::UE5::Distributor::Domain::Model
         TOptional<int32> SheetResultCode() const;
         TOptional<FString> SheetResult() const;
         TSharedPtr<TArray<TSharedPtr<Gs2::UE5::Distributor::Model::FEzBatchResultPayload>>> Results() const;
+        TOptional<bool> ExpressionResult() const;
         TOptional<FString> NextPageToken() const;
         TOptional<FString> NamespaceName() const;
 

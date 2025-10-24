@@ -404,7 +404,7 @@ namespace Gs2::Buff::Domain
     {
         return MakeShared<Gs2::Buff::Domain::Iterator::FDescribeNamespacesIterator>(
             Gs2,
-            Client
+            Client,
             NamePrefix
         );
     }

@@ -106,7 +106,7 @@ namespace Gs2::News::Domain
     {
         return MakeShared<Gs2::News::Domain::Iterator::FDescribeNamespacesIterator>(
             Gs2,
-            Client
+            Client,
             NamePrefix
         );
     }

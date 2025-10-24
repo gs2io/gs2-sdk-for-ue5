@@ -84,11 +84,6 @@ namespace Gs2::UE5::Chat::Domain::Model
             TOptional<TArray<FString>> WhiteListUserIds = TOptional<TArray<FString>>()
         );
 
-        Gs2::UE5::Chat::Domain::Model::FEzRoomGameSessionDomainPtr Room(
-            const FString RoomName,
-            const TOptional<FString> Password = TOptional<FString>()
-        ) const;
-
         Gs2::UE5::Chat::Domain::Iterator::FEzDescribeSubscribesIteratorPtr Subscribes(
             const TOptional<FString> RoomNamePrefix = TOptional<FString>()
         ) const;
@@ -96,6 +91,11 @@ namespace Gs2::UE5::Chat::Domain::Model
         Gs2::Core::Domain::CallbackID SubscribeSubscribes(TFunction<void()> Callback);
 
         void UnsubscribeSubscribes(Gs2::Core::Domain::CallbackID CallbackId);
+
+        Gs2::UE5::Chat::Domain::Model::FEzRoomGameSessionDomainPtr Room(
+            const FString RoomName,
+            const TOptional<FString> Password = TOptional<FString>()
+        ) const;
 
         Gs2::UE5::Chat::Domain::Model::FEzSubscribeGameSessionDomainPtr Subscribe(
             const FString RoomName

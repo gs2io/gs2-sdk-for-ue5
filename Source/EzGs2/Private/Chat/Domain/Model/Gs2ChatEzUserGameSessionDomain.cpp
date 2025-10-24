@@ -121,23 +121,8 @@ namespace Gs2::UE5::Chat::Domain::Model
         );
     }
 
-    Gs2::UE5::Chat::Domain::Model::FEzRoomGameSessionDomainPtr FEzUserGameSessionDomain::Room(
-        const FString RoomName,
-        const TOptional<FString> Password
-    ) const
-    {
-        return MakeShared<Gs2::UE5::Chat::Domain::Model::FEzRoomGameSessionDomain>(
-            Domain->Room(
-                RoomName,
-                Password
-            ),
-            GameSession,
-            ConnectionValue
-        );
-    }
-
     Gs2::UE5::Chat::Domain::Iterator::FEzDescribeSubscribesIteratorPtr FEzUserGameSessionDomain::Subscribes(
-          const TOptional<FString> RoomNamePrefix
+        const TOptional<FString> RoomNamePrefix
     ) const
     {
         return MakeShared<Gs2::UE5::Chat::Domain::Iterator::FEzDescribeSubscribesIterator>(
@@ -159,6 +144,21 @@ namespace Gs2::UE5::Chat::Domain::Model
     {
         Domain->UnsubscribeSubscribes(
             CallbackId
+        );
+    }
+
+    Gs2::UE5::Chat::Domain::Model::FEzRoomGameSessionDomainPtr FEzUserGameSessionDomain::Room(
+        const FString RoomName,
+        const TOptional<FString> Password
+    ) const
+    {
+        return MakeShared<Gs2::UE5::Chat::Domain::Model::FEzRoomGameSessionDomain>(
+            Domain->Room(
+                RoomName,
+                Password
+            ),
+            GameSession,
+            ConnectionValue
         );
     }
 

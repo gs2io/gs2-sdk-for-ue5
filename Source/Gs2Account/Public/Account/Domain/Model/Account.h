@@ -12,6 +12,8 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
+ *
+ * deny overwrite
  */
 
 // ReSharper disable CppUnusedIncludeDirective
@@ -390,10 +392,6 @@ namespace Gs2::Account::Domain::Model
             ) override;
         };
         friend FGetAuthorizationUrlTask;
-
-        TSharedPtr<FAsyncTask<FGetAuthorizationUrlTask>> GetAuthorizationUrl(
-            Request::FGetAuthorizationUrlRequestPtr Request
-        );
 
         class GS2ACCOUNT_API FDeleteDataOwnerTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Account::Domain::Model::FDataOwnerDomain>,

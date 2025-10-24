@@ -149,7 +149,7 @@ namespace Gs2::Friend::Domain::Model
         );
 
         Gs2::Friend::Domain::Iterator::FDescribeFriendsIteratorPtr Friends(
-            const TOptional<bool> WithProfile
+            const TOptional<bool> WithProfile = TOptional<bool>()
         ) const;
 
         Gs2::Core::Domain::CallbackID SubscribeFriends(
@@ -167,6 +167,7 @@ namespace Gs2::Friend::Domain::Model
         );
 
         Gs2::Friend::Domain::Iterator::FDescribeSendRequestsIteratorPtr SendRequests(
+            const TOptional<bool> WithProfile = TOptional<bool>()
         ) const;
 
         Gs2::Core::Domain::CallbackID SubscribeSendRequests(
@@ -182,6 +183,7 @@ namespace Gs2::Friend::Domain::Model
         );
 
         Gs2::Friend::Domain::Iterator::FDescribeReceiveRequestsIteratorPtr ReceiveRequests(
+            const TOptional<bool> WithProfile = TOptional<bool>()
         ) const;
 
         Gs2::Core::Domain::CallbackID SubscribeReceiveRequests(

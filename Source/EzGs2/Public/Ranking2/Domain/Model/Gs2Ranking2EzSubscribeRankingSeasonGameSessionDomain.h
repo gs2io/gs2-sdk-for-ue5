@@ -95,6 +95,13 @@ namespace Gs2::UE5::Ranking2::Domain::Model
             TOptional<FString> Metadata = TOptional<FString>()
         );
 
+        Gs2::UE5::Ranking2::Domain::Iterator::FEzDescribeSubscribeRankingsIteratorPtr SubscribeRankings(
+        ) const;
+
+        Gs2::Core::Domain::CallbackID SubscribeSubscribeRankings(TFunction<void()> Callback);
+
+        void UnsubscribeSubscribeRankings(Gs2::Core::Domain::CallbackID CallbackId);
+
         Gs2::UE5::Ranking2::Domain::Iterator::FEzDescribeSubscribeRankingScoresIteratorPtr SubscribeRankingScores(
         ) const;
 
@@ -104,13 +111,6 @@ namespace Gs2::UE5::Ranking2::Domain::Model
 
         Gs2::UE5::Ranking2::Domain::Model::FEzSubscribeRankingScoreGameSessionDomainPtr SubscribeRankingScore(
         ) const;
-
-        Gs2::UE5::Ranking2::Domain::Iterator::FEzDescribeSubscribeRankingsIteratorPtr SubscribeRankings(
-        ) const;
-
-        Gs2::Core::Domain::CallbackID SubscribeSubscribeRankings(TFunction<void()> Callback);
-
-        void UnsubscribeSubscribeRankings(Gs2::Core::Domain::CallbackID CallbackId);
 
         Gs2::UE5::Ranking2::Domain::Model::FEzSubscribeRankingDataGameSessionDomainPtr SubscribeRankingData(
             const FString ScorerUserId

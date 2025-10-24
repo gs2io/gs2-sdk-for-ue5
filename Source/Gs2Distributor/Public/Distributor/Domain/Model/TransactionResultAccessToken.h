@@ -12,6 +12,8 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
+ *
+ * deny overwrite
  */
 
 // ReSharper disable CppUnusedIncludeDirective
@@ -141,6 +143,28 @@ namespace Gs2::Distributor::Domain::Model
         friend FModelTask;
 
         TSharedPtr<FAsyncTask<FModelTask>> Model();
+
+        class GS2DISTRIBUTOR_API FModelNoCacheTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Distributor::Model::FTransactionResult>,
+            public TSharedFromThis<FModelNoCacheTask>
+        {
+            const TSharedPtr<FTransactionResultAccessTokenDomain> Self;
+        public:
+            explicit FModelNoCacheTask(
+                const TSharedPtr<FTransactionResultAccessTokenDomain> Self
+            );
+
+            FModelNoCacheTask(
+                const FModelNoCacheTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Distributor::Model::FTransactionResult>> Result
+            ) override;
+        };
+        friend FModelNoCacheTask;
+
+        TSharedPtr<FAsyncTask<FModelNoCacheTask>> ModelNoCache();
 
         Gs2::Core::Domain::CallbackID Subscribe(
             TFunction<void(Gs2::Distributor::Model::FTransactionResultPtr)> Callback

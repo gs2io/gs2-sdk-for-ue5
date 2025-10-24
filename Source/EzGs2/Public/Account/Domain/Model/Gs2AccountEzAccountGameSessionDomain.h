@@ -87,16 +87,16 @@ namespace Gs2::UE5::Account::Domain::Model
 
         void UnsubscribeTakeOvers(Gs2::Core::Domain::CallbackID CallbackId);
 
-        Gs2::UE5::Account::Domain::Model::FEzTakeOverGameSessionDomainPtr TakeOver(
-            const int32 Type
-        ) const;
-
         Gs2::UE5::Account::Domain::Iterator::FEzDescribePlatformIdsIteratorPtr PlatformIds(
         ) const;
 
         Gs2::Core::Domain::CallbackID SubscribePlatformIds(TFunction<void()> Callback);
 
         void UnsubscribePlatformIds(Gs2::Core::Domain::CallbackID CallbackId);
+
+        Gs2::UE5::Account::Domain::Model::FEzTakeOverGameSessionDomainPtr TakeOver(
+            const int32 Type
+        ) const;
 
         Gs2::UE5::Account::Domain::Model::FEzPlatformIdGameSessionDomainPtr PlatformId(
             const int32 Type,

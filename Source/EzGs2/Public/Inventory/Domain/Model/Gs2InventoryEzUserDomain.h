@@ -34,8 +34,6 @@
 #include "Inventory/Model/Gs2InventoryEzConsumeCount.h"
 #include "Inventory/Model/Gs2InventoryEzAcquireCount.h"
 #include "Gs2InventoryEzInventoryDomain.h"
-#include "Gs2InventoryEzSimpleInventoryDomain.h"
-#include "Gs2InventoryEzBigInventoryDomain.h"
 #include "Gs2InventoryEzUserDomain.h"
 #include "Gs2InventoryEzUserDomain.h"
 #include "Gs2InventoryEzUserGameSessionDomain.h"
@@ -63,14 +61,6 @@ namespace Gs2::UE5::Inventory::Domain::Model
         );
 
         Gs2::UE5::Inventory::Domain::Model::FEzInventoryDomainPtr Inventory(
-            const FString InventoryName
-        ) const;
-
-        Gs2::UE5::Inventory::Domain::Model::FEzSimpleInventoryDomainPtr SimpleInventory(
-            const FString InventoryName
-        ) const;
-
-        Gs2::UE5::Inventory::Domain::Model::FEzBigInventoryDomainPtr BigInventory(
             const FString InventoryName
         ) const;
 

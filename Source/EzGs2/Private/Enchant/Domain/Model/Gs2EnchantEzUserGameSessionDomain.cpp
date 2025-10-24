@@ -47,7 +47,7 @@ namespace Gs2::UE5::Enchant::Domain::Model
     }
 
     Gs2::UE5::Enchant::Domain::Iterator::FEzDescribeBalanceParameterStatusesIteratorPtr FEzUserGameSessionDomain::BalanceParameterStatuses(
-          const TOptional<FString> ParameterName
+        const TOptional<FString> ParameterName
     ) const
     {
         return MakeShared<Gs2::UE5::Enchant::Domain::Iterator::FEzDescribeBalanceParameterStatusesIterator>(
@@ -72,23 +72,8 @@ namespace Gs2::UE5::Enchant::Domain::Model
         );
     }
 
-    Gs2::UE5::Enchant::Domain::Model::FEzBalanceParameterStatusGameSessionDomainPtr FEzUserGameSessionDomain::BalanceParameterStatus(
-        const FString ParameterName,
-        const FString PropertyId
-    ) const
-    {
-        return MakeShared<Gs2::UE5::Enchant::Domain::Model::FEzBalanceParameterStatusGameSessionDomain>(
-            Domain->BalanceParameterStatus(
-                ParameterName,
-                PropertyId
-            ),
-            GameSession,
-            ConnectionValue
-        );
-    }
-
     Gs2::UE5::Enchant::Domain::Iterator::FEzDescribeRarityParameterStatusesIteratorPtr FEzUserGameSessionDomain::RarityParameterStatuses(
-          const TOptional<FString> ParameterName
+        const TOptional<FString> ParameterName
     ) const
     {
         return MakeShared<Gs2::UE5::Enchant::Domain::Iterator::FEzDescribeRarityParameterStatusesIterator>(
@@ -110,6 +95,21 @@ namespace Gs2::UE5::Enchant::Domain::Model
     {
         Domain->UnsubscribeRarityParameterStatuses(
             CallbackId
+        );
+    }
+
+    Gs2::UE5::Enchant::Domain::Model::FEzBalanceParameterStatusGameSessionDomainPtr FEzUserGameSessionDomain::BalanceParameterStatus(
+        const FString ParameterName,
+        const FString PropertyId
+    ) const
+    {
+        return MakeShared<Gs2::UE5::Enchant::Domain::Model::FEzBalanceParameterStatusGameSessionDomain>(
+            Domain->BalanceParameterStatus(
+                ParameterName,
+                PropertyId
+            ),
+            GameSession,
+            ConnectionValue
         );
     }
 

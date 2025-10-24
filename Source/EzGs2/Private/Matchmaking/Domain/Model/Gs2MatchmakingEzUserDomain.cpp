@@ -90,18 +90,4 @@ namespace Gs2::UE5::Matchmaking::Domain::Model
             ConnectionValue
         );
     }
-
-    Gs2::UE5::Matchmaking::Domain::Model::FEzSeasonDomainPtr FEzUserDomain::Season(
-        const FString SeasonName,
-        const int64 Season
-    ) const
-    {
-        return MakeShared<Gs2::UE5::Matchmaking::Domain::Model::FEzSeasonDomain>(
-            Domain->Season(
-                SeasonName,
-                Season
-            ),
-            ConnectionValue
-        );
-    }
 }

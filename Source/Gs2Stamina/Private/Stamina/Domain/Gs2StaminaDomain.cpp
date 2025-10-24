@@ -407,7 +407,7 @@ namespace Gs2::Stamina::Domain
     {
         return MakeShared<Gs2::Stamina::Domain::Iterator::FDescribeNamespacesIterator>(
             Gs2,
-            Client
+            Client,
             NamePrefix
         );
     }

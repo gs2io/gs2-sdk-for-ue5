@@ -82,6 +82,52 @@ namespace Gs2::UE5::Ranking2::Domain::Model
         );
     }
 
+    Gs2::UE5::Ranking2::Domain::Iterator::FEzDescribeClusterRankingModelsIteratorPtr FEzNamespaceDomain::ClusterRankingModels(
+    ) const
+    {
+        return MakeShared<Gs2::UE5::Ranking2::Domain::Iterator::FEzDescribeClusterRankingModelsIterator>(
+            Domain,
+            ConnectionValue
+        );
+    }
+
+    Gs2::Core::Domain::CallbackID FEzNamespaceDomain::SubscribeClusterRankingModels(TFunction<void()> Callback)
+    {
+        return Domain->SubscribeClusterRankingModels(
+            Callback
+        );
+    }
+
+    void FEzNamespaceDomain::UnsubscribeClusterRankingModels(Gs2::Core::Domain::CallbackID CallbackId)
+    {
+        Domain->UnsubscribeClusterRankingModels(
+            CallbackId
+        );
+    }
+
+    Gs2::UE5::Ranking2::Domain::Iterator::FEzDescribeSubscribeRankingModelsIteratorPtr FEzNamespaceDomain::SubscribeRankingModels(
+    ) const
+    {
+        return MakeShared<Gs2::UE5::Ranking2::Domain::Iterator::FEzDescribeSubscribeRankingModelsIterator>(
+            Domain,
+            ConnectionValue
+        );
+    }
+
+    Gs2::Core::Domain::CallbackID FEzNamespaceDomain::SubscribeSubscribeRankingModels(TFunction<void()> Callback)
+    {
+        return Domain->SubscribeSubscribeRankingModels(
+            Callback
+        );
+    }
+
+    void FEzNamespaceDomain::UnsubscribeSubscribeRankingModels(Gs2::Core::Domain::CallbackID CallbackId)
+    {
+        Domain->UnsubscribeSubscribeRankingModels(
+            CallbackId
+        );
+    }
+
     Gs2::UE5::Ranking2::Domain::Model::FEzGlobalRankingModelDomainPtr FEzNamespaceDomain::GlobalRankingModel(
         const FString RankingName
     ) const
@@ -119,29 +165,6 @@ namespace Gs2::UE5::Ranking2::Domain::Model
         );
     }
 
-    Gs2::UE5::Ranking2::Domain::Iterator::FEzDescribeSubscribeRankingModelsIteratorPtr FEzNamespaceDomain::SubscribeRankingModels(
-    ) const
-    {
-        return MakeShared<Gs2::UE5::Ranking2::Domain::Iterator::FEzDescribeSubscribeRankingModelsIterator>(
-            Domain,
-            ConnectionValue
-        );
-    }
-
-    Gs2::Core::Domain::CallbackID FEzNamespaceDomain::SubscribeSubscribeRankingModels(TFunction<void()> Callback)
-    {
-        return Domain->SubscribeSubscribeRankingModels(
-            Callback
-        );
-    }
-
-    void FEzNamespaceDomain::UnsubscribeSubscribeRankingModels(Gs2::Core::Domain::CallbackID CallbackId)
-    {
-        Domain->UnsubscribeSubscribeRankingModels(
-            CallbackId
-        );
-    }
-
     Gs2::UE5::Ranking2::Domain::Model::FEzSubscribeRankingModelDomainPtr FEzNamespaceDomain::SubscribeRankingModel(
         const FString RankingName
     ) const
@@ -151,29 +174,6 @@ namespace Gs2::UE5::Ranking2::Domain::Model
                 RankingName
             ),
             ConnectionValue
-        );
-    }
-
-    Gs2::UE5::Ranking2::Domain::Iterator::FEzDescribeClusterRankingModelsIteratorPtr FEzNamespaceDomain::ClusterRankingModels(
-    ) const
-    {
-        return MakeShared<Gs2::UE5::Ranking2::Domain::Iterator::FEzDescribeClusterRankingModelsIterator>(
-            Domain,
-            ConnectionValue
-        );
-    }
-
-    Gs2::Core::Domain::CallbackID FEzNamespaceDomain::SubscribeClusterRankingModels(TFunction<void()> Callback)
-    {
-        return Domain->SubscribeClusterRankingModels(
-            Callback
-        );
-    }
-
-    void FEzNamespaceDomain::UnsubscribeClusterRankingModels(Gs2::Core::Domain::CallbackID CallbackId)
-    {
-        Domain->UnsubscribeClusterRankingModels(
-            CallbackId
         );
     }
 

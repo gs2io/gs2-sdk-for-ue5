@@ -65,7 +65,7 @@ namespace Gs2::Distributor::Domain::SpeculativeExecutor
         TSharedPtr<TSharedPtr<TFunction<void()>>> Result
     )
     {
-        UE_LOG(Gs2Log, Warning, TEXT("Speculative execution not supported on this action: %s"), ToCStr("Gs2Distributor:AndExpressionByUserId"))
+        UE_LOG(Gs2Log, Warning, TEXT("Speculative execution not supported on this action: %s"), TEXT("Gs2Distributor:AndExpressionByUserId"))
         
         *Result = MakeShared<TFunction<void()>>([&]()
         {

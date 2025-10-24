@@ -402,11 +402,13 @@ namespace Gs2::SerialKey::Domain
     }
 
     Gs2::SerialKey::Domain::Iterator::FDescribeNamespacesIteratorPtr FGs2SerialKeyDomain::Namespaces(
+        const TOptional<FString> NamePrefix
     ) const
     {
         return MakeShared<Gs2::SerialKey::Domain::Iterator::FDescribeNamespacesIterator>(
             Gs2,
-            Client
+            Client,
+            NamePrefix
         );
     }
 

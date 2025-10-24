@@ -409,7 +409,7 @@ namespace Gs2::Guild::Domain
     {
         return MakeShared<Gs2::Guild::Domain::Iterator::FDescribeNamespacesIterator>(
             Gs2,
-            Client
+            Client,
             NamePrefix
         );
     }

@@ -35,7 +35,6 @@
 #include "Gs2MatchmakingEzGatheringDomain.h"
 #include "Gs2MatchmakingEzRatingDomain.h"
 #include "Gs2MatchmakingEzBallotDomain.h"
-#include "Gs2MatchmakingEzSeasonDomain.h"
 #include "Gs2MatchmakingEzUserDomain.h"
 #include "Gs2MatchmakingEzUserDomain.h"
 #include "Gs2MatchmakingEzUserGameSessionDomain.h"
@@ -76,11 +75,6 @@ namespace Gs2::UE5::Matchmaking::Domain::Model
             const FString GatheringName,
             const int32 NumberOfPlayer,
             const FString KeyId
-        ) const;
-
-        Gs2::UE5::Matchmaking::Domain::Model::FEzSeasonDomainPtr Season(
-            const FString SeasonName,
-            const int64 Season
         ) const;
 
     };

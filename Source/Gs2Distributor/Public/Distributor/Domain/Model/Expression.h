@@ -59,6 +59,11 @@ namespace Gs2::Distributor::Domain::Model
         const Gs2::Distributor::FGs2DistributorRestClientPtr Client;
 
         public:
+        TOptional<bool> ExpressionResult;
+        TOptional<bool> GetExpressionResult() const
+        {
+            return ExpressionResult;
+        }
         TOptional<FString> NamespaceName;
     private:
 

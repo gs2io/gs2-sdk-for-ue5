@@ -23,6 +23,7 @@ namespace Gs2::Limit::Model
         NameValue(TOptional<FString>()),
         DescriptionValue(TOptional<FString>()),
         TransactionSettingValue(nullptr),
+        CountUpScriptValue(nullptr),
         LogSettingValue(nullptr),
         CreatedAtValue(TOptional<int64>()),
         UpdatedAtValue(TOptional<int64>()),
@@ -37,6 +38,7 @@ namespace Gs2::Limit::Model
         NameValue(From.NameValue),
         DescriptionValue(From.DescriptionValue),
         TransactionSettingValue(From.TransactionSettingValue),
+        CountUpScriptValue(From.CountUpScriptValue),
         LogSettingValue(From.LogSettingValue),
         CreatedAtValue(From.CreatedAtValue),
         UpdatedAtValue(From.UpdatedAtValue),
@@ -73,6 +75,14 @@ namespace Gs2::Limit::Model
     )
     {
         this->TransactionSettingValue = TransactionSetting;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FNamespace> FNamespace::WithCountUpScript(
+        const TSharedPtr<FScriptSetting> CountUpScript
+    )
+    {
+        this->CountUpScriptValue = CountUpScript;
         return SharedThis(this);
     }
 
@@ -122,6 +132,10 @@ namespace Gs2::Limit::Model
     TSharedPtr<FTransactionSetting> FNamespace::GetTransactionSetting() const
     {
         return TransactionSettingValue;
+    }
+    TSharedPtr<FScriptSetting> FNamespace::GetCountUpScript() const
+    {
+        return CountUpScriptValue;
     }
     TSharedPtr<FLogSetting> FNamespace::GetLogSetting() const
     {
@@ -241,6 +255,14 @@ namespace Gs2::Limit::Model
                     }
                     return Model::FTransactionSetting::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("transactionSetting")));
                  }() : nullptr)
+            ->WithCountUpScript(Data->HasField(ANSI_TO_TCHAR("countUpScript")) ? [Data]() -> Model::FScriptSettingPtr
+                {
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("countUpScript")))
+                    {
+                        return nullptr;
+                    }
+                    return Model::FScriptSetting::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("countUpScript")));
+                 }() : nullptr)
             ->WithLogSetting(Data->HasField(ANSI_TO_TCHAR("logSetting")) ? [Data]() -> Model::FLogSettingPtr
                 {
                     if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("logSetting")))
@@ -296,6 +318,10 @@ namespace Gs2::Limit::Model
         if (TransactionSettingValue != nullptr && TransactionSettingValue.IsValid())
         {
             JsonRootObject->SetObjectField("transactionSetting", TransactionSettingValue->ToJson());
+        }
+        if (CountUpScriptValue != nullptr && CountUpScriptValue.IsValid())
+        {
+            JsonRootObject->SetObjectField("countUpScript", CountUpScriptValue->ToJson());
         }
         if (LogSettingValue != nullptr && LogSettingValue.IsValid())
         {

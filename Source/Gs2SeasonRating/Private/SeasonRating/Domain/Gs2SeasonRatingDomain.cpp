@@ -406,7 +406,7 @@ namespace Gs2::SeasonRating::Domain
     {
         return MakeShared<Gs2::SeasonRating::Domain::Iterator::FDescribeNamespacesIterator>(
             Gs2,
-            Client
+            Client,
             NamePrefix
         );
     }

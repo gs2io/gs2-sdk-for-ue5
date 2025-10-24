@@ -193,19 +193,6 @@ namespace Gs2::UE5::Ranking2::Domain::Model
         );
     }
 
-    Gs2::UE5::Ranking2::Domain::Model::FEzClusterRankingDataGameSessionDomainPtr FEzClusterRankingSeasonGameSessionDomain::ClusterRankingData(
-        const FString ScorerUserId
-    ) const
-    {
-        return MakeShared<Gs2::UE5::Ranking2::Domain::Model::FEzClusterRankingDataGameSessionDomain>(
-            Domain->ClusterRankingData(
-                ScorerUserId
-            ),
-            GameSession,
-            ConnectionValue
-        );
-    }
-
     Gs2::UE5::Ranking2::Domain::Iterator::FEzDescribeClusterRankingReceivedRewardsIteratorPtr FEzClusterRankingSeasonGameSessionDomain::ClusterRankingReceivedRewards(
     ) const
     {
@@ -230,17 +217,6 @@ namespace Gs2::UE5::Ranking2::Domain::Model
         );
     }
 
-    Gs2::UE5::Ranking2::Domain::Model::FEzClusterRankingReceivedRewardGameSessionDomainPtr FEzClusterRankingSeasonGameSessionDomain::ClusterRankingReceivedReward(
-    ) const
-    {
-        return MakeShared<Gs2::UE5::Ranking2::Domain::Model::FEzClusterRankingReceivedRewardGameSessionDomain>(
-            Domain->ClusterRankingReceivedReward(
-            ),
-            GameSession,
-            ConnectionValue
-        );
-    }
-
     Gs2::UE5::Ranking2::Domain::Iterator::FEzDescribeClusterRankingScoresIteratorPtr FEzClusterRankingSeasonGameSessionDomain::ClusterRankingScores(
     ) const
     {
@@ -262,6 +238,30 @@ namespace Gs2::UE5::Ranking2::Domain::Model
     {
         Domain->UnsubscribeClusterRankingScores(
             CallbackId
+        );
+    }
+
+    Gs2::UE5::Ranking2::Domain::Model::FEzClusterRankingDataGameSessionDomainPtr FEzClusterRankingSeasonGameSessionDomain::ClusterRankingData(
+        const FString ScorerUserId
+    ) const
+    {
+        return MakeShared<Gs2::UE5::Ranking2::Domain::Model::FEzClusterRankingDataGameSessionDomain>(
+            Domain->ClusterRankingData(
+                ScorerUserId
+            ),
+            GameSession,
+            ConnectionValue
+        );
+    }
+
+    Gs2::UE5::Ranking2::Domain::Model::FEzClusterRankingReceivedRewardGameSessionDomainPtr FEzClusterRankingSeasonGameSessionDomain::ClusterRankingReceivedReward(
+    ) const
+    {
+        return MakeShared<Gs2::UE5::Ranking2::Domain::Model::FEzClusterRankingReceivedRewardGameSessionDomain>(
+            Domain->ClusterRankingReceivedReward(
+            ),
+            GameSession,
+            ConnectionValue
         );
     }
 

@@ -412,7 +412,7 @@ namespace Gs2::Matchmaking::Domain
     {
         return MakeShared<Gs2::Matchmaking::Domain::Iterator::FDescribeNamespacesIterator>(
             Gs2,
-            Client
+            Client,
             NamePrefix
         );
     }

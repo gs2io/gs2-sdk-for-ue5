@@ -12,11 +12,14 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
+ *
+ * deny overwrite
  */
 
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Gs2Ranking2EzGlobalRankingDataGameSessionDomain.h"
 #include "Ranking2/Domain/Model/GlobalRankingSeasonAccessToken.h"
 #include "Ranking2/Model/Gs2Ranking2EzGlobalRankingData.h"
 #include "Ranking2/Model/Gs2Ranking2EzGlobalRankingModel.h"
@@ -116,6 +119,20 @@ namespace Gs2::UE5::Ranking2::Domain::Model
         TSharedPtr<FAsyncTask<FGetGlobalRankingRankTask>> GetGlobalRankingRank(
         );
 
+        Gs2::UE5::Ranking2::Domain::Iterator::FEzDescribeGlobalRankingsIteratorPtr GlobalRankings(
+        ) const;
+
+        Gs2::Core::Domain::CallbackID SubscribeGlobalRankings(TFunction<void()> Callback);
+
+        void UnsubscribeGlobalRankings(Gs2::Core::Domain::CallbackID CallbackId);
+
+        Gs2::UE5::Ranking2::Domain::Iterator::FEzDescribeGlobalRankingReceivedRewardsIteratorPtr GlobalRankingReceivedRewards(
+        ) const;
+
+        Gs2::Core::Domain::CallbackID SubscribeGlobalRankingReceivedRewards(TFunction<void()> Callback);
+
+        void UnsubscribeGlobalRankingReceivedRewards(Gs2::Core::Domain::CallbackID CallbackId);
+
         Gs2::UE5::Ranking2::Domain::Iterator::FEzDescribeGlobalRankingScoresIteratorPtr GlobalRankingScores(
         ) const;
 
@@ -126,23 +143,9 @@ namespace Gs2::UE5::Ranking2::Domain::Model
         Gs2::UE5::Ranking2::Domain::Model::FEzGlobalRankingScoreGameSessionDomainPtr GlobalRankingScore(
         ) const;
 
-        Gs2::UE5::Ranking2::Domain::Iterator::FEzDescribeGlobalRankingsIteratorPtr GlobalRankings(
-        ) const;
-
-        Gs2::Core::Domain::CallbackID SubscribeGlobalRankings(TFunction<void()> Callback);
-
-        void UnsubscribeGlobalRankings(Gs2::Core::Domain::CallbackID CallbackId);
-
         Gs2::UE5::Ranking2::Domain::Model::FEzGlobalRankingDataGameSessionDomainPtr GlobalRankingData(
-            const FString ScorerUserId
+            const TOptional<FString> ScorerUserId = TOptional<FString>()
         ) const;
-
-        Gs2::UE5::Ranking2::Domain::Iterator::FEzDescribeGlobalRankingReceivedRewardsIteratorPtr GlobalRankingReceivedRewards(
-        ) const;
-
-        Gs2::Core::Domain::CallbackID SubscribeGlobalRankingReceivedRewards(TFunction<void()> Callback);
-
-        void UnsubscribeGlobalRankingReceivedRewards(Gs2::Core::Domain::CallbackID CallbackId);
 
         Gs2::UE5::Ranking2::Domain::Model::FEzGlobalRankingReceivedRewardGameSessionDomainPtr GlobalRankingReceivedReward(
         ) const;

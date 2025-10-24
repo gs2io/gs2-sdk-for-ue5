@@ -82,6 +82,29 @@ namespace Gs2::UE5::Exchange::Domain::Model
         );
     }
 
+    Gs2::UE5::Exchange::Domain::Iterator::FEzDescribeIncrementalRateModelsIteratorPtr FEzNamespaceDomain::IncrementalRateModels(
+    ) const
+    {
+        return MakeShared<Gs2::UE5::Exchange::Domain::Iterator::FEzDescribeIncrementalRateModelsIterator>(
+            Domain,
+            ConnectionValue
+        );
+    }
+
+    Gs2::Core::Domain::CallbackID FEzNamespaceDomain::SubscribeIncrementalRateModels(TFunction<void()> Callback)
+    {
+        return Domain->SubscribeIncrementalRateModels(
+            Callback
+        );
+    }
+
+    void FEzNamespaceDomain::UnsubscribeIncrementalRateModels(Gs2::Core::Domain::CallbackID CallbackId)
+    {
+        Domain->UnsubscribeIncrementalRateModels(
+            CallbackId
+        );
+    }
+
     Gs2::UE5::Exchange::Domain::Model::FEzRateModelDomainPtr FEzNamespaceDomain::RateModel(
         const FString RateName
     ) const
@@ -104,29 +127,6 @@ namespace Gs2::UE5::Exchange::Domain::Model
             ),
             GameSession,
             ConnectionValue
-        );
-    }
-
-    Gs2::UE5::Exchange::Domain::Iterator::FEzDescribeIncrementalRateModelsIteratorPtr FEzNamespaceDomain::IncrementalRateModels(
-    ) const
-    {
-        return MakeShared<Gs2::UE5::Exchange::Domain::Iterator::FEzDescribeIncrementalRateModelsIterator>(
-            Domain,
-            ConnectionValue
-        );
-    }
-
-    Gs2::Core::Domain::CallbackID FEzNamespaceDomain::SubscribeIncrementalRateModels(TFunction<void()> Callback)
-    {
-        return Domain->SubscribeIncrementalRateModels(
-            Callback
-        );
-    }
-
-    void FEzNamespaceDomain::UnsubscribeIncrementalRateModels(Gs2::Core::Domain::CallbackID CallbackId)
-    {
-        Domain->UnsubscribeIncrementalRateModels(
-            CallbackId
         );
     }
 

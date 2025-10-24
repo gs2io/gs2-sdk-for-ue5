@@ -103,7 +103,7 @@ namespace Gs2::Lock::Domain
     {
         return MakeShared<Gs2::Lock::Domain::Iterator::FDescribeNamespacesIterator>(
             Gs2,
-            Client
+            Client,
             NamePrefix
         );
     }

@@ -303,6 +303,7 @@ namespace Gs2::Dictionary::Domain
         );
 
         Gs2::Dictionary::Domain::Iterator::FDescribeNamespacesIteratorPtr Namespaces(
+            const TOptional<FString> NamePrefix = TOptional<FString>()
         ) const;
 
         Gs2::Core::Domain::CallbackID SubscribeNamespaces(

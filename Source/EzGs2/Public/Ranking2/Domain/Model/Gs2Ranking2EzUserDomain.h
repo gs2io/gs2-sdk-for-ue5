@@ -37,7 +37,6 @@
 #include "Ranking2/Model/Gs2Ranking2EzConsumeActionResult.h"
 #include "Ranking2/Model/Gs2Ranking2EzAcquireActionResult.h"
 #include "Ranking2/Model/Gs2Ranking2EzTransactionResult.h"
-#include "Gs2Ranking2EzSubscribeDomain.h"
 #include "Gs2Ranking2EzUserDomain.h"
 #include "Gs2Ranking2EzUserDomain.h"
 #include "Gs2Ranking2EzUserGameSessionDomain.h"
@@ -63,10 +62,6 @@ namespace Gs2::UE5::Ranking2::Domain::Model
             Gs2::Ranking2::Domain::Model::FUserDomainPtr Domain,
             Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
-
-        Gs2::UE5::Ranking2::Domain::Model::FEzSubscribeDomainPtr Subscribe(
-            const FString RankingName
-        ) const;
 
     };
     typedef TSharedPtr<FEzUserDomain> FEzUserDomainPtr;

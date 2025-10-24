@@ -35,6 +35,9 @@
 #include "JobQueue/Domain/Model/UserAccessToken.h"
 
 #include "Core/Domain/Gs2.h"
+#include "Core/Domain/Transaction/JobQueueJobDomainFactory.h"
+#include "Core/Domain/Transaction/InternalTransactionDomainFactory.h"
+#include "Core/Domain/Transaction/ManualTransactionAccessTokenDomain.h"
 
 namespace Gs2::JobQueue::Domain::Model
 {
@@ -83,8 +86,53 @@ namespace Gs2::JobQueue::Domain::Model
 
     }
 
+    FJobAccessTokenDomain::FDeleteTask::FDeleteTask(
+        const TSharedPtr<FJobAccessTokenDomain>& Self,
+        const Request::FDeleteJobRequestPtr Request
+    ): Self(Self), Request(Request)
+    {
+
+    }
+
+    FJobAccessTokenDomain::FDeleteTask::FDeleteTask(
+        const FDeleteTask& From
+    ): TGs2Future(From), Self(From.Self), Request(From.Request)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FJobAccessTokenDomain::FDeleteTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::JobQueue::Domain::Model::FJobAccessTokenDomain>> Result
+    )
+    {
+        Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
+            ->WithNamespaceName(Self->NamespaceName)
+            ->WithAccessToken(Self->AccessToken->GetToken())
+            ->WithJobName(Self->JobName);
+        const auto Future = Self->Client->DeleteJob(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
+        auto Domain = Self;
+
+        *Result = Domain;
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FJobAccessTokenDomain::FDeleteTask>> FJobAccessTokenDomain::Delete(
+        Request::FDeleteJobRequestPtr Request
+    ) {
+        return Gs2::Core::Util::New<FAsyncTask<FDeleteTask>>(this->AsShared(), Request);
+    }
+
     TSharedPtr<Gs2::JobQueue::Domain::Model::FJobResultAccessTokenDomain> FJobAccessTokenDomain::JobResult(
-        const int32 TryNumber
+        const TOptional<int32> TryNumber
     )
     {
         return MakeShared<Gs2::JobQueue::Domain::Model::FJobResultAccessTokenDomain>(

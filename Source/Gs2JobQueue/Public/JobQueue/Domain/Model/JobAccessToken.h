@@ -99,8 +99,34 @@ namespace Gs2::JobQueue::Domain::Model
             const FJobAccessTokenDomain& From
         );
 
+        class GS2JOBQUEUE_API FDeleteTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::JobQueue::Domain::Model::FJobAccessTokenDomain>,
+            public TSharedFromThis<FDeleteTask>
+        {
+            const TSharedPtr<FJobAccessTokenDomain> Self;
+            const Request::FDeleteJobRequestPtr Request;
+        public:
+            explicit FDeleteTask(
+                const TSharedPtr<FJobAccessTokenDomain>& Self,
+                const Request::FDeleteJobRequestPtr Request
+            );
+
+            FDeleteTask(
+                const FDeleteTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::JobQueue::Domain::Model::FJobAccessTokenDomain>> Result
+            ) override;
+        };
+        friend FDeleteTask;
+
+        TSharedPtr<FAsyncTask<FDeleteTask>> Delete(
+            Request::FDeleteJobRequestPtr Request
+        );
+
         TSharedPtr<Gs2::JobQueue::Domain::Model::FJobResultAccessTokenDomain> JobResult(
-            const int32 TryNumber = 0
+            const TOptional<int32> TryNumber = TOptional<int32>()
         );
 
         static FString CreateCacheParentKey(

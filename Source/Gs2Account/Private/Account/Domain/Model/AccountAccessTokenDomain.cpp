@@ -129,56 +129,6 @@ namespace Gs2::Account::Domain::Model
         return Gs2::Core::Util::New<FAsyncTask<FDeleteTakeOverTask>>(this->AsShared(), Request);
     }
 
-    FAccountAccessTokenDomain::FGetAuthorizationUrlTask::FGetAuthorizationUrlTask(
-        const TSharedPtr<FAccountAccessTokenDomain>& Self,
-        const Request::FGetAuthorizationUrlRequestPtr Request
-    ): Self(Self), Request(Request)
-    {
-
-    }
-
-    FAccountAccessTokenDomain::FGetAuthorizationUrlTask::FGetAuthorizationUrlTask(
-        const FGetAuthorizationUrlTask& From
-    ): TGs2Future(From), Self(From.Self), Request(From.Request)
-    {
-    }
-
-    Gs2::Core::Model::FGs2ErrorPtr FAccountAccessTokenDomain::FGetAuthorizationUrlTask::Action(
-        TSharedPtr<TSharedPtr<Gs2::Account::Domain::Model::FAccountAccessTokenDomain>> Result
-    )
-    {
-        Request
-            ->WithContextStack(Self->Gs2->DefaultContextStack)
-            ->WithNamespaceName(Self->NamespaceName)
-            ->WithAccessToken(Self->AccessToken->GetToken());
-        const auto Future = Self->Client->GetAuthorizationUrl(
-            Request
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            return Future->GetTask().Error();
-        }
-        const auto ResultModel = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        const auto Domain = Self;
-        if (ResultModel != nullptr)
-        {
-            if (ResultModel->GetAuthorizationUrl().IsSet())
-            {
-                Self->AuthorizationUrl = Domain->AuthorizationUrl = ResultModel->GetAuthorizationUrl();
-            }
-        }
-        *Result = Domain;
-        return nullptr;
-    }
-
-    TSharedPtr<FAsyncTask<FAccountAccessTokenDomain::FGetAuthorizationUrlTask>> FAccountAccessTokenDomain::GetAuthorizationUrl(
-        Request::FGetAuthorizationUrlRequestPtr Request
-    ) {
-        return Gs2::Core::Util::New<FAsyncTask<FGetAuthorizationUrlTask>>(this->AsShared(), Request);
-    }
-
     Gs2::Account::Domain::Iterator::FDescribeTakeOversIteratorPtr FAccountAccessTokenDomain::TakeOvers(
     ) const
     {

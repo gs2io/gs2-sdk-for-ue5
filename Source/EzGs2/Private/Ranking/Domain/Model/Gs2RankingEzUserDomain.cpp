@@ -44,20 +44,6 @@ namespace Gs2::UE5::Ranking::Domain::Model
 
     }
 
-    Gs2::UE5::Ranking::Domain::Model::FEzRankingCategoryDomainPtr FEzUserDomain::RankingCategory(
-        const FString CategoryName,
-        const TOptional<FString> AdditionalScopeName
-    ) const
-    {
-        return MakeShared<Gs2::UE5::Ranking::Domain::Model::FEzRankingCategoryDomain>(
-            Domain->RankingCategory(
-                CategoryName,
-                AdditionalScopeName
-            ),
-            ConnectionValue
-        );
-    }
-
     Gs2::UE5::Ranking::Domain::Model::FEzScoreDomainPtr FEzUserDomain::Score(
         const FString CategoryName,
         const FString ScorerUserId,

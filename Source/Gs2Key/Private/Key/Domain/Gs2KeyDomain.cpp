@@ -102,7 +102,7 @@ namespace Gs2::Key::Domain
     {
         return MakeShared<Gs2::Key::Domain::Iterator::FDescribeNamespacesIterator>(
             Gs2,
-            Client
+            Client,
             NamePrefix
         );
     }

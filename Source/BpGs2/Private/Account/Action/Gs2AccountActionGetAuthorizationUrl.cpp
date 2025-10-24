@@ -50,24 +50,24 @@ void UGs2AccountGetAuthorizationUrlAsyncFunction::Activate()
         return;
     }
 
-    auto Future = Account.Value->GetAuthorizationUrl(
-        Type
-    );
-    Future->GetTask().OnSuccessDelegate().BindLambda([&](auto Result)
-    {
-        FGs2AccountGetAuthorizationUrl ReturnUrl;
-        // ReturnUrl.Value = Result->AuthorizationUrl();
-        const FGs2Error ReturnError;
-        OnError.Broadcast(ReturnUrl, ReturnError);
-        SetReadyToDestroy();
-    });
-    Future->GetTask().OnErrorDelegate().BindLambda([&](auto Error)
-    {
-        FGs2AccountGetAuthorizationUrl ReturnUrl;
-        FGs2Error ReturnError;
-        ReturnError.Value = Error;
-        OnError.Broadcast(ReturnUrl, ReturnError);
-        SetReadyToDestroy();
-    });
-    Future->StartBackgroundTask();
+    // auto Future = Account.Value->GetAuthorizationUrl(
+    //     Type
+    // );
+    // Future->GetTask().OnSuccessDelegate().BindLambda([&](auto Result)
+    // {
+    //     FGs2AccountGetAuthorizationUrl ReturnUrl;
+    //     ReturnUrl.Value = Result->AuthorizationUrl();
+    //     const FGs2Error ReturnError;
+    //     OnError.Broadcast(ReturnUrl, ReturnError);
+    //     SetReadyToDestroy();
+    // });
+    // Future->GetTask().OnErrorDelegate().BindLambda([&](auto Error)
+    // {
+    //     FGs2AccountGetAuthorizationUrl ReturnUrl;
+    //     FGs2Error ReturnError;
+    //     ReturnError.Value = Error;
+    //     OnError.Broadcast(ReturnUrl, ReturnError);
+    //     SetReadyToDestroy();
+    // });
+    // Future->StartBackgroundTask();
 }

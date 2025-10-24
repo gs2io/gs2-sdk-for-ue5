@@ -45,10 +45,13 @@ namespace Gs2::Distributor::Domain::Model
     class FDistributorModelDomain;
     class FCurrentDistributorMasterDomain;
     class FDistributeDomain;
+    class FExpressionDomain;
     class FUserDomain;
     class FUserAccessTokenDomain;
     class FStampSheetResultDomain;
     class FStampSheetResultAccessTokenDomain;
+    class FTransactionResultDomain;
+    class FTransactionResultAccessTokenDomain;
 
     class GS2DISTRIBUTOR_API FNamespaceDomain:
         public TSharedFromThis<FNamespaceDomain>
@@ -68,6 +71,8 @@ namespace Gs2::Distributor::Domain::Model
         TSharedPtr<TArray<FString>> TaskResults;
         TOptional<int32> SheetResultCode;
         TOptional<FString> SheetResult;
+        TSharedPtr<TArray<TSharedPtr<Gs2::Distributor::Model::FBatchResultPayload>>> Results;
+        TOptional<bool> ExpressionResult;
         TOptional<FString> NextPageToken;
         TOptional<FString> NewContextStack;
         TOptional<FString> GetStatus() const
@@ -109,6 +114,14 @@ namespace Gs2::Distributor::Domain::Model
         TOptional<FString> GetSheetResult() const
         {
             return SheetResult;
+        }
+        TSharedPtr<TArray<TSharedPtr<Gs2::Distributor::Model::FBatchResultPayload>>> GetResults() const
+        {
+            return Results;
+        }
+        TOptional<bool> GetExpressionResult() const
+        {
+            return ExpressionResult;
         }
         TOptional<FString> GetNextPageToken() const
         {
@@ -266,6 +279,32 @@ namespace Gs2::Distributor::Domain::Model
             Request::FSetTransactionDefaultConfigRequestPtr Request
         );
 
+        class GS2DISTRIBUTOR_API FBatchExecuteApiTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Distributor::Domain::Model::FNamespaceDomain>,
+            public TSharedFromThis<FBatchExecuteApiTask>
+        {
+            const TSharedPtr<FNamespaceDomain> Self;
+            const Request::FBatchExecuteApiRequestPtr Request;
+        public:
+            explicit FBatchExecuteApiTask(
+                const TSharedPtr<FNamespaceDomain>& Self,
+                const Request::FBatchExecuteApiRequestPtr Request
+            );
+
+            FBatchExecuteApiTask(
+                const FBatchExecuteApiTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Distributor::Domain::Model::FNamespaceDomain>> Result
+            ) override;
+        };
+        friend FBatchExecuteApiTask;
+
+        TSharedPtr<FAsyncTask<FBatchExecuteApiTask>> BatchExecuteApi(
+            Request::FBatchExecuteApiRequestPtr Request
+        );
+
         class GS2DISTRIBUTOR_API FCreateDistributorModelMasterTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Distributor::Domain::Model::FDistributorModelMasterDomain>,
             public TSharedFromThis<FCreateDistributorModelMasterTask>
@@ -314,6 +353,7 @@ namespace Gs2::Distributor::Domain::Model
         );
 
         Gs2::Distributor::Domain::Iterator::FDescribeDistributorModelMastersIteratorPtr DistributorModelMasters(
+            const TOptional<FString> NamePrefix = TOptional<FString>()
         ) const;
 
         Gs2::Core::Domain::CallbackID SubscribeDistributorModelMasters(
@@ -334,6 +374,9 @@ namespace Gs2::Distributor::Domain::Model
 
         TSharedPtr<Gs2::Distributor::Domain::Model::FUserAccessTokenDomain> AccessToken(
             Gs2::Auth::Model::FAccessTokenPtr AccessToken
+        );
+
+        TSharedPtr<Gs2::Distributor::Domain::Model::FExpressionDomain> Expression(
         );
 
         static FString CreateCacheParentKey(

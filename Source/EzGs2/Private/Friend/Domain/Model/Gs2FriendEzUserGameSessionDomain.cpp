@@ -159,6 +159,22 @@ namespace Gs2::UE5::Friend::Domain::Model
         );
     }
 
+    Gs2::Core::Domain::CallbackID FEzUserGameSessionDomain::SubscribeFriends(TFunction<void()> Callback, const bool WithProfile)
+    {
+        return Domain->SubscribeFriends(
+            Callback,
+            WithProfile
+        );
+    }
+
+    void FEzUserGameSessionDomain::UnsubscribeFriends(Gs2::Core::Domain::CallbackID CallbackId, const bool WithProfile)
+    {
+        Domain->UnsubscribeFriends(
+        CallbackId,
+        WithProfile
+        );
+    }
+
     Gs2::UE5::Friend::Domain::Model::FEzFriendGameSessionDomainPtr FEzUserGameSessionDomain::Friend(
         const bool WithProfile
     ) const

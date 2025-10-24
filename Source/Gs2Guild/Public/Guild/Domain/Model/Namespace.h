@@ -36,6 +36,8 @@
 #include "Guild/Domain/Iterator/DescribeReceiveRequestsByGuildNameIterator.h"
 #include "Guild/Domain/Iterator/DescribeSendRequestsIterator.h"
 #include "Guild/Domain/Iterator/DescribeSendRequestsByUserIdIterator.h"
+#include "Guild/Domain/Iterator/DescribeIgnoreUsersIterator.h"
+#include "Guild/Domain/Iterator/DescribeIgnoreUsersByGuildNameIterator.h"
 
 namespace Gs2::Core::Domain
 {
@@ -59,10 +61,12 @@ namespace Gs2::Guild::Domain::Model
     class FGuildDomain;
     class FJoinedGuildDomain;
     class FJoinedGuildAccessTokenDomain;
+    class FLastGuildMasterActivityDomain;
     class FCurrentGuildMasterDomain;
     class FReceiveMemberRequestDomain;
     class FSendMemberRequestDomain;
     class FSendMemberRequestAccessTokenDomain;
+    class FIgnoreUserDomain;
 
     class GS2GUILD_API FNamespaceDomain:
         public TSharedFromThis<FNamespaceDomain>
@@ -264,6 +268,7 @@ namespace Gs2::Guild::Domain::Model
         );
 
         Gs2::Guild::Domain::Iterator::FDescribeGuildModelMastersIteratorPtr GuildModelMasters(
+            const TOptional<FString> NamePrefix = TOptional<FString>()
         ) const;
 
         Gs2::Core::Domain::CallbackID SubscribeGuildModelMasters(

@@ -435,19 +435,6 @@ namespace Gs2::UE5::Guild::Domain::Model
         );
     }
 
-    Gs2::UE5::Guild::Domain::Model::FEzReceiveMemberRequestGameSessionDomainPtr FEzGuildGameSessionDomain::ReceiveMemberRequest(
-        const FString FromUserId
-    ) const
-    {
-        return MakeShared<Gs2::UE5::Guild::Domain::Model::FEzReceiveMemberRequestGameSessionDomain>(
-            Domain->ReceiveMemberRequest(
-                FromUserId
-            ),
-            GameSession,
-            ConnectionValue
-        );
-    }
-
     Gs2::UE5::Guild::Domain::Iterator::FEzDescribeIgnoreUsersIteratorPtr FEzGuildGameSessionDomain::IgnoreUsers(
     ) const
     {
@@ -469,6 +456,19 @@ namespace Gs2::UE5::Guild::Domain::Model
     {
         Domain->UnsubscribeIgnoreUsers(
             CallbackId
+        );
+    }
+
+    Gs2::UE5::Guild::Domain::Model::FEzReceiveMemberRequestGameSessionDomainPtr FEzGuildGameSessionDomain::ReceiveMemberRequest(
+        const FString FromUserId
+    ) const
+    {
+        return MakeShared<Gs2::UE5::Guild::Domain::Model::FEzReceiveMemberRequestGameSessionDomain>(
+            Domain->ReceiveMemberRequest(
+                FromUserId
+            ),
+            GameSession,
+            ConnectionValue
         );
     }
 

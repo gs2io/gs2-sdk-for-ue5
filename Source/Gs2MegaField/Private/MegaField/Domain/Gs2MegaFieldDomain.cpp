@@ -108,7 +108,7 @@ namespace Gs2::MegaField::Domain
     {
         return MakeShared<Gs2::MegaField::Domain::Iterator::FDescribeNamespacesIterator>(
             Gs2,
-            Client
+            Client,
             NamePrefix
         );
     }

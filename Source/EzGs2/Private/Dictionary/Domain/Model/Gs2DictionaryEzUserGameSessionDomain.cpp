@@ -202,19 +202,6 @@ namespace Gs2::UE5::Dictionary::Domain::Model
         );
     }
 
-    Gs2::UE5::Dictionary::Domain::Model::FEzEntryGameSessionDomainPtr FEzUserGameSessionDomain::Entry(
-        const FString EntryModelName
-    ) const
-    {
-        return MakeShared<Gs2::UE5::Dictionary::Domain::Model::FEzEntryGameSessionDomain>(
-            Domain->Entry(
-                EntryModelName
-            ),
-            GameSession,
-            ConnectionValue
-        );
-    }
-
     Gs2::UE5::Dictionary::Domain::Iterator::FEzDescribeLikesIteratorPtr FEzUserGameSessionDomain::Likes(
     ) const
     {
@@ -236,6 +223,19 @@ namespace Gs2::UE5::Dictionary::Domain::Model
     {
         Domain->UnsubscribeLikes(
             CallbackId
+        );
+    }
+
+    Gs2::UE5::Dictionary::Domain::Model::FEzEntryGameSessionDomainPtr FEzUserGameSessionDomain::Entry(
+        const FString EntryModelName
+    ) const
+    {
+        return MakeShared<Gs2::UE5::Dictionary::Domain::Model::FEzEntryGameSessionDomain>(
+            Domain->Entry(
+                EntryModelName
+            ),
+            GameSession,
+            ConnectionValue
         );
     }
 

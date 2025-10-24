@@ -46,19 +46,8 @@ namespace Gs2::UE5::Exchange::Domain::Model
 
     }
 
-    Gs2::UE5::Exchange::Domain::Model::FEzExchangeGameSessionDomainPtr FEzUserGameSessionDomain::Exchange(
-    ) const
-    {
-        return MakeShared<Gs2::UE5::Exchange::Domain::Model::FEzExchangeGameSessionDomain>(
-            Domain->Exchange(
-            ),
-            GameSession,
-            ConnectionValue
-        );
-    }
-
     Gs2::UE5::Exchange::Domain::Iterator::FEzDescribeAwaitsIteratorPtr FEzUserGameSessionDomain::Awaits(
-          const TOptional<FString> RateName
+        const TOptional<FString> RateName
     ) const
     {
         return MakeShared<Gs2::UE5::Exchange::Domain::Iterator::FEzDescribeAwaitsIterator>(
@@ -80,6 +69,17 @@ namespace Gs2::UE5::Exchange::Domain::Model
     {
         Domain->UnsubscribeAwaits(
             CallbackId
+        );
+    }
+
+    Gs2::UE5::Exchange::Domain::Model::FEzExchangeGameSessionDomainPtr FEzUserGameSessionDomain::Exchange(
+    ) const
+    {
+        return MakeShared<Gs2::UE5::Exchange::Domain::Model::FEzExchangeGameSessionDomain>(
+            Domain->Exchange(
+            ),
+            GameSession,
+            ConnectionValue
         );
     }
 

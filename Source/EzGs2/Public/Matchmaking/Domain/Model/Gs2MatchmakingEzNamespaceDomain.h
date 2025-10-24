@@ -127,6 +127,20 @@ namespace Gs2::UE5::Matchmaking::Domain::Model
             TOptional<FString> KeyId = TOptional<FString>()
         );
 
+        Gs2::UE5::Matchmaking::Domain::Iterator::FEzDescribeRatingModelsIteratorPtr RatingModels(
+        ) const;
+
+        Gs2::Core::Domain::CallbackID SubscribeRatingModels(TFunction<void()> Callback);
+
+        void UnsubscribeRatingModels(Gs2::Core::Domain::CallbackID CallbackId);
+
+        Gs2::UE5::Matchmaking::Domain::Iterator::FEzDescribeSeasonModelsIteratorPtr SeasonModels(
+        ) const;
+
+        Gs2::Core::Domain::CallbackID SubscribeSeasonModels(TFunction<void()> Callback);
+
+        void UnsubscribeSeasonModels(Gs2::Core::Domain::CallbackID CallbackId);
+
         Gs2::UE5::Matchmaking::Domain::Model::FEzUserDomainPtr User(
             const FString UserId
         ) const;
@@ -135,23 +149,9 @@ namespace Gs2::UE5::Matchmaking::Domain::Model
             Gs2::UE5::Util::IGameSessionPtr GameSession
         ) const;
 
-        Gs2::UE5::Matchmaking::Domain::Iterator::FEzDescribeRatingModelsIteratorPtr RatingModels(
-        ) const;
-
-        Gs2::Core::Domain::CallbackID SubscribeRatingModels(TFunction<void()> Callback);
-
-        void UnsubscribeRatingModels(Gs2::Core::Domain::CallbackID CallbackId);
-
         Gs2::UE5::Matchmaking::Domain::Model::FEzRatingModelDomainPtr RatingModel(
             const FString RatingName
         ) const;
-
-        Gs2::UE5::Matchmaking::Domain::Iterator::FEzDescribeSeasonModelsIteratorPtr SeasonModels(
-        ) const;
-
-        Gs2::Core::Domain::CallbackID SubscribeSeasonModels(TFunction<void()> Callback);
-
-        void UnsubscribeSeasonModels(Gs2::Core::Domain::CallbackID CallbackId);
 
         Gs2::UE5::Matchmaking::Domain::Model::FEzSeasonModelDomainPtr SeasonModel(
             const FString SeasonName

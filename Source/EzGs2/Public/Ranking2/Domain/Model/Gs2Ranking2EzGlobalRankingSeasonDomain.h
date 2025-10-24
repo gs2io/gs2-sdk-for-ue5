@@ -12,8 +12,6 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
- *
- * deny overwrite
  */
 
 #pragma once
@@ -40,7 +38,6 @@
 #include "Ranking2/Model/Gs2Ranking2EzAcquireActionResult.h"
 #include "Ranking2/Model/Gs2Ranking2EzTransactionResult.h"
 #include "Gs2Ranking2EzGlobalRankingScoreDomain.h"
-#include "Gs2Ranking2EzGlobalRankingDataDomain.h"
 #include "Gs2Ranking2EzGlobalRankingReceivedRewardDomain.h"
 #include "Gs2Ranking2EzGlobalRankingSeasonDomain.h"
 #include "Core/EzTransactionDomain.h"
@@ -61,6 +58,7 @@ namespace Gs2::UE5::Ranking2::Domain::Model
         TOptional<FString> NamespaceName() const;
         TOptional<FString> RankingName() const;
         TOptional<int64> Season() const;
+        TOptional<FString> UserId() const;
 
         FEzGlobalRankingSeasonDomain(
             Gs2::Ranking2::Domain::Model::FGlobalRankingSeasonDomainPtr Domain,
@@ -68,9 +66,6 @@ namespace Gs2::UE5::Ranking2::Domain::Model
         );
 
         Gs2::UE5::Ranking2::Domain::Model::FEzGlobalRankingScoreDomainPtr GlobalRankingScore(
-        ) const;
-
-        Gs2::UE5::Ranking2::Domain::Model::FEzGlobalRankingDataDomainPtr GlobalRankingData(
         ) const;
 
         Gs2::UE5::Ranking2::Domain::Model::FEzGlobalRankingReceivedRewardDomainPtr GlobalRankingReceivedReward(

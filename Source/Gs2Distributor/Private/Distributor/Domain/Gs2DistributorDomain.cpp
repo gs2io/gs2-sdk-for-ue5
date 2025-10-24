@@ -32,9 +32,11 @@
 #include "Distributor/Domain/Model/DistributorModel.h"
 #include "Distributor/Domain/Model/CurrentDistributorMaster.h"
 #include "Distributor/Domain/Model/Distribute.h"
+#include "Distributor/Domain/Model/Expression.h"
 #include "Distributor/Domain/Model/User.h"
 #include "Distributor/Domain/Model/UserAccessToken.h"
 #include "Distributor/Domain/Model/StampSheetResult.h"
+#include "Distributor/Domain/Model/TransactionResult.h"
 #include "Core/Domain/Transaction/AutoTransactionAccessTokenDomain.h"
 #include "Core/Domain/Transaction/AutoTransactionDomain.h"
 #include "Core/Domain/Transaction/InternalTransactionDomainFactory.h"
@@ -49,6 +51,8 @@ namespace Gs2::Distributor::Domain
     ):
         CompletedStampSheets(MakeShared<TArray<Gs2::Distributor::Model::FAutoRunStampSheetNotificationPtr>>()),
         CompletedStampSheetsMutex(MakeShared<FCriticalSection>()),
+        CompletedTransactions(MakeShared<TArray<Gs2::Distributor::Model::FAutoRunTransactionNotificationPtr>>()),
+        CompletedTransactionsMutex(MakeShared<FCriticalSection>()),
         Gs2(Gs2),
         Client(MakeShared<Gs2::Distributor::FGs2DistributorRestClient>(Gs2->RestSession)),
         ParentKey("distributor")
@@ -60,6 +64,8 @@ namespace Gs2::Distributor::Domain
     ):
         CompletedStampSheets(From.CompletedStampSheets),
         CompletedStampSheetsMutex(From.CompletedStampSheetsMutex),
+        CompletedTransactions(From.CompletedTransactions),
+        CompletedTransactionsMutex(From.CompletedTransactionsMutex),
         AutoRunStampSheetNotificationEvent(From.AutoRunStampSheetNotificationEvent),
         Gs2(From.Gs2),
         Client(From.Client),
@@ -94,25 +100,8 @@ namespace Gs2::Distributor::Domain
         {
             return Future->GetTask().Error();
         }
-        const auto RequestModel = Request;
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-            {
-                const auto ParentKey = FString("distributor:Namespace");
-                const auto Key = Gs2::Distributor::Domain::Model::FNamespaceDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetName()
-                );
-                Self->Gs2->Cache->Put(
-                    Gs2::Distributor::Model::FNamespace::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
-        }
         auto Domain = MakeShared<Gs2::Distributor::Domain::Model::FNamespaceDomain>(
             Self->Gs2,
             Self,
@@ -129,11 +118,13 @@ namespace Gs2::Distributor::Domain
     }
 
     Gs2::Distributor::Domain::Iterator::FDescribeNamespacesIteratorPtr FGs2DistributorDomain::Namespaces(
+        const TOptional<FString> NamePrefix
     ) const
     {
         return MakeShared<Gs2::Distributor::Domain::Iterator::FDescribeNamespacesIterator>(
             Gs2,
-            Client
+            Client,
+            NamePrefix
         );
     }
 
@@ -210,11 +201,31 @@ namespace Gs2::Distributor::Domain
             }
             CompletedStampSheetsMutex->Unlock();
         }
+        if (Action == "AutoRunTransactionNotification") {
+            TSharedPtr<FJsonObject> PayloadJson;
+            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Payload);
+                !FJsonSerializer::Deserialize(JsonReader, PayloadJson))
+            {
+                return;
+            }
+            CompletedTransactionsMutex->Lock();
+            {
+                const auto Notification = Gs2::Distributor::Model::FAutoRunTransactionNotification::FromJson(PayloadJson);
+                CompletedTransactions->Add(Notification);
+                AutoRunTransactionNotificationEvent.Broadcast(Notification);
+            }
+            CompletedTransactionsMutex->Unlock();
+        }
     }
 
     FAutoRunStampSheetNotificationEvent& FGs2DistributorDomain::OnAutoRunStampSheetNotification()
     {
         return AutoRunStampSheetNotificationEvent;
+    }
+
+    FAutoRunTransactionNotificationEvent& FGs2DistributorDomain::OnAutoRunTransactionNotification()
+    {
+        return AutoRunTransactionNotificationEvent;
     }
 
     FGs2DistributorDomain::FDispatchTask::FDispatchTask(
@@ -267,12 +278,55 @@ namespace Gs2::Distributor::Domain
                         }
                         Future->EnsureCompletion();
                     }
+                }
+            }
+            Self->CompletedStampSheetsMutex->Unlock();
+        }
+        if (Self->CompletedTransactionsMutex->TryLock())
+        {
+            TArray CopiedCompletedTransactionsTemp(*Self->CompletedTransactions);
+            {
+                if (CopiedCompletedTransactionsTemp.Num() == 0)
+                {
+                    return nullptr;
+                }
+                Self->CompletedTransactions->Reset();
+
+                for (auto i=0; i<CopiedCompletedTransactionsTemp.Num(); i++)
+                {
+                    auto CompletedTransaction = CopiedCompletedTransactionsTemp[i];
+                    if (!CompletedTransaction->GetTransactionId().IsSet())
+                    {
+                        continue;
+                    }
+                    {
+                        const auto Future = Self->Gs2->Distributor->Namespace(
+                            *CompletedTransaction->GetNamespaceName()
+                        )->AccessToken(
+                            AccessToken
+                        )->TransactionResult(
+                            *CompletedTransaction->GetTransactionId()
+                        )->ModelNoCache();
+                        Future->StartSynchronousTask();
+                        if (Future->GetTask().IsError())
+                        {
+                            if (Future->GetTask().Error()->Type() == Gs2::Core::Model::FNotFoundError::TypeString)
+                            {
+                                Self->CompletedTransactions->Add(CompletedTransaction);
+                            }
+                            else
+                            {
+                                return Future->GetTask().Error();
+                            }
+                        }
+                        Future->EnsureCompletion();
+                    }
                     {
                         const auto Future = Gs2::Core::Domain::Internal::FTransactionDomainFactory::ToTransaction(
                             Self->Gs2,
                             AccessToken,
                             true,
-                            *CompletedStampSheet->GetTransactionId(),
+                            *CompletedTransaction->GetTransactionId(),
                             FString(""),
                             FString(""),
                             false,
@@ -283,7 +337,7 @@ namespace Gs2::Distributor::Domain
                         {
                             if (Future->GetTask().Error()->Type() == Gs2::Core::Model::FNotFoundError::TypeString)
                             {
-                                Self->CompletedStampSheets->Add(CompletedStampSheet);
+                                Self->CompletedTransactions->Add(CompletedTransaction);
                             }
                             else
                             {
@@ -294,7 +348,7 @@ namespace Gs2::Distributor::Domain
                     }
                 }
             }
-            Self->CompletedStampSheetsMutex->Unlock();
+            Self->CompletedTransactionsMutex->Unlock();
         }
         return nullptr;
     }
@@ -387,6 +441,75 @@ namespace Gs2::Distributor::Domain
                 }
             }
             Self->CompletedStampSheetsMutex->Unlock();
+        }
+        if (Self->CompletedTransactionsMutex->TryLock())
+        {
+            TArray CopiedCompletedTransactionsTemp(*Self->CompletedTransactions);
+            {
+                if (CopiedCompletedTransactionsTemp.Num() == 0)
+                {
+                    return nullptr;
+                }
+                
+                Self->CompletedTransactions->Reset();
+
+                for (auto i=0; i<CopiedCompletedTransactionsTemp.Num(); i++)
+                {
+                    auto CompletedTransaction = CopiedCompletedTransactionsTemp[i];
+                    if (!CompletedTransaction->GetTransactionId().IsSet())
+                    {
+                        continue;
+                    }
+                    {
+                        const auto Future = Self->Gs2->Distributor->Namespace(
+                            *CompletedTransaction->GetNamespaceName()
+                        )->User(
+                            *CompletedTransaction->GetUserId()
+                        )->TransactionResult(
+                            *CompletedTransaction->GetTransactionId()
+                        )->ModelNoCache();
+                        Future->StartSynchronousTask();
+                        if (Future->GetTask().IsError())
+                        {
+                            if (Future->GetTask().Error()->IsChildOf(Gs2::Core::Model::FNotFoundError::Class))
+                            {
+                                Self->CompletedTransactions->Add(CompletedTransaction);
+                            }
+                            else
+                            {
+                                return Future->GetTask().Error();
+                            }
+                        }
+                        Future->EnsureCompletion();
+                    }
+                    {
+                        const auto Future = Gs2::Core::Domain::Internal::FTransactionDomainFactory::ToTransaction(
+                            Self->Gs2,
+                            *CompletedTransaction->GetUserId(),
+                            true,
+                            *CompletedTransaction->GetTransactionId(),
+                            FString(""),
+                            FString(""),
+                            false,
+                            nullptr
+                        )->Wait();
+                        Future->StartSynchronousTask();
+                        if (Future->GetTask().IsError())
+                        {
+                            if (Future->GetTask().Error()->IsChildOf(Gs2::Core::Model::FNotFoundError::Class))
+                            {
+                                Self->CompletedTransactions->Add(CompletedTransaction);
+                            }
+                            else
+                            {
+                                return Future->GetTask().Error();
+                            }
+                        }
+                        Future->EnsureCompletion();
+                    }
+                }
+            }
+            Self->CompletedTransactionsMutex->Unlock();
         }
         return nullptr;
     }

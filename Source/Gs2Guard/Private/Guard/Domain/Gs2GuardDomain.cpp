@@ -100,7 +100,7 @@ namespace Gs2::Guard::Domain
     {
         return MakeShared<Gs2::Guard::Domain::Iterator::FDescribeNamespacesIterator>(
             Gs2,
-            Client
+            Client,
             NamePrefix
         );
     }

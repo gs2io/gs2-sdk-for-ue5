@@ -402,7 +402,7 @@ namespace Gs2::StateMachine::Domain
     {
         return MakeShared<Gs2::StateMachine::Domain::Iterator::FDescribeNamespacesIterator>(
             Gs2,
-            Client
+            Client,
             NamePrefix
         );
     }

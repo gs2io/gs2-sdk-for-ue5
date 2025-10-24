@@ -405,7 +405,7 @@ namespace Gs2::Dictionary::Domain
     {
         return MakeShared<Gs2::Dictionary::Domain::Iterator::FDescribeNamespacesIterator>(
             Gs2,
-            Client
+            Client,
             NamePrefix
         );
     }

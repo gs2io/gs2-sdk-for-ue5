@@ -52,7 +52,7 @@ namespace Gs2::UE5::Grade::Domain::Model
     }
 
     Gs2::UE5::Grade::Domain::Iterator::FEzDescribeStatusesIteratorPtr FEzUserGameSessionDomain::Statuses(
-          const TOptional<FString> GradeName
+        const TOptional<FString> GradeName
     ) const
     {
         return MakeShared<Gs2::UE5::Grade::Domain::Iterator::FEzDescribeStatusesIterator>(

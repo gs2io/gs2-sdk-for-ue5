@@ -46,24 +46,9 @@ namespace Gs2::UE5::Ranking::Domain::Model
 
     }
 
-    Gs2::UE5::Ranking::Domain::Model::FEzRankingCategoryGameSessionDomainPtr FEzUserGameSessionDomain::RankingCategory(
-        const FString CategoryName,
-        const TOptional<FString> AdditionalScopeName
-    ) const
-    {
-        return MakeShared<Gs2::UE5::Ranking::Domain::Model::FEzRankingCategoryGameSessionDomain>(
-            Domain->RankingCategory(
-                CategoryName,
-                AdditionalScopeName
-            ),
-            GameSession,
-            ConnectionValue
-        );
-    }
-
     Gs2::UE5::Ranking::Domain::Iterator::FEzDescribeScoresIteratorPtr FEzUserGameSessionDomain::Scores(
-          const FString CategoryName,
-          const FString ScorerUserId
+        const FString CategoryName,
+        const FString ScorerUserId
     ) const
     {
         return MakeShared<Gs2::UE5::Ranking::Domain::Iterator::FEzDescribeScoresIterator>(
@@ -86,6 +71,21 @@ namespace Gs2::UE5::Ranking::Domain::Model
     {
         Domain->UnsubscribeScores(
             CallbackId
+        );
+    }
+
+    Gs2::UE5::Ranking::Domain::Model::FEzRankingCategoryGameSessionDomainPtr FEzUserGameSessionDomain::RankingCategory(
+        const FString CategoryName,
+        const TOptional<FString> AdditionalScopeName
+    ) const
+    {
+        return MakeShared<Gs2::UE5::Ranking::Domain::Model::FEzRankingCategoryGameSessionDomain>(
+            Domain->RankingCategory(
+                CategoryName,
+                AdditionalScopeName
+            ),
+            GameSession,
+            ConnectionValue
         );
     }
 

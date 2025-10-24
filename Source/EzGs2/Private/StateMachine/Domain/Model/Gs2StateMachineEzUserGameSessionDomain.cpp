@@ -47,7 +47,7 @@ namespace Gs2::UE5::StateMachine::Domain::Model
     }
 
     Gs2::UE5::StateMachine::Domain::Iterator::FEzDescribeStatusesIteratorPtr FEzUserGameSessionDomain::Statuses(
-          const TOptional<FString> Status
+        const TOptional<FString> Status
     ) const
     {
         return MakeShared<Gs2::UE5::StateMachine::Domain::Iterator::FEzDescribeStatusesIterator>(

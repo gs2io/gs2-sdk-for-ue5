@@ -101,7 +101,7 @@ namespace Gs2::Realtime::Domain
     {
         return MakeShared<Gs2::Realtime::Domain::Iterator::FDescribeNamespacesIterator>(
             Gs2,
-            Client
+            Client,
             NamePrefix
         );
     }

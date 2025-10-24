@@ -17,11 +17,14 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "../Model/TransactionResult.h"
 
 namespace Gs2::Distributor::Result
 {
     class GS2DISTRIBUTOR_API FIfExpressionByStampTaskResult final : public TSharedFromThis<FIfExpressionByStampTaskResult>
     {
+        TSharedPtr<Model::FTransactionResult> ItemValue;
+        TOptional<bool> ExpressionResultValue;
         TOptional<FString> NewContextStackValue;
         
     public:
@@ -32,8 +35,13 @@ namespace Gs2::Distributor::Result
         );
         ~FIfExpressionByStampTaskResult() = default;
 
+        TSharedPtr<FIfExpressionByStampTaskResult> WithItem(const TSharedPtr<Model::FTransactionResult> Item);
+        TSharedPtr<FIfExpressionByStampTaskResult> WithExpressionResult(const TOptional<bool> ExpressionResult);
         TSharedPtr<FIfExpressionByStampTaskResult> WithNewContextStack(const TOptional<FString> NewContextStack);
 
+        TSharedPtr<Model::FTransactionResult> GetItem() const;
+        TOptional<bool> GetExpressionResult() const;
+        FString GetExpressionResultString() const;
         TOptional<FString> GetNewContextStack() const;
 
         static TSharedPtr<FIfExpressionByStampTaskResult> FromJson(const TSharedPtr<FJsonObject> Data);

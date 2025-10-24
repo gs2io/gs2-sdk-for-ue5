@@ -154,19 +154,6 @@ namespace Gs2::UE5::Account::Domain::Model
         );
     }
 
-    Gs2::UE5::Account::Domain::Model::FEzTakeOverGameSessionDomainPtr FEzAccountGameSessionDomain::TakeOver(
-        const int32 Type
-    ) const
-    {
-        return MakeShared<Gs2::UE5::Account::Domain::Model::FEzTakeOverGameSessionDomain>(
-            Domain->TakeOver(
-                Type
-            ),
-            GameSession,
-            ConnectionValue
-        );
-    }
-
     Gs2::UE5::Account::Domain::Iterator::FEzDescribePlatformIdsIteratorPtr FEzAccountGameSessionDomain::PlatformIds(
     ) const
     {
@@ -188,6 +175,19 @@ namespace Gs2::UE5::Account::Domain::Model
     {
         Domain->UnsubscribePlatformIds(
             CallbackId
+        );
+    }
+
+    Gs2::UE5::Account::Domain::Model::FEzTakeOverGameSessionDomainPtr FEzAccountGameSessionDomain::TakeOver(
+        const int32 Type
+    ) const
+    {
+        return MakeShared<Gs2::UE5::Account::Domain::Model::FEzTakeOverGameSessionDomain>(
+            Domain->TakeOver(
+                Type
+            ),
+            GameSession,
+            ConnectionValue
         );
     }
 

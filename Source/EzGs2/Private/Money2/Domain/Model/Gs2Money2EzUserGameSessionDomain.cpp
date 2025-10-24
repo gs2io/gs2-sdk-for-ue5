@@ -193,19 +193,6 @@ namespace Gs2::UE5::Money2::Domain::Model
         );
     }
 
-    Gs2::UE5::Money2::Domain::Model::FEzWalletGameSessionDomainPtr FEzUserGameSessionDomain::Wallet(
-        const int32 Slot
-    ) const
-    {
-        return MakeShared<Gs2::UE5::Money2::Domain::Model::FEzWalletGameSessionDomain>(
-            Domain->Wallet(
-                Slot
-            ),
-            GameSession,
-            ConnectionValue
-        );
-    }
-
     Gs2::UE5::Money2::Domain::Iterator::FEzDescribeSubscriptionStatusesIteratorPtr FEzUserGameSessionDomain::SubscriptionStatuses(
     ) const
     {
@@ -227,6 +214,19 @@ namespace Gs2::UE5::Money2::Domain::Model
     {
         Domain->UnsubscribeSubscriptionStatuses(
             CallbackId
+        );
+    }
+
+    Gs2::UE5::Money2::Domain::Model::FEzWalletGameSessionDomainPtr FEzUserGameSessionDomain::Wallet(
+        const int32 Slot
+    ) const
+    {
+        return MakeShared<Gs2::UE5::Money2::Domain::Model::FEzWalletGameSessionDomain>(
+            Domain->Wallet(
+                Slot
+            ),
+            GameSession,
+            ConnectionValue
         );
     }
 

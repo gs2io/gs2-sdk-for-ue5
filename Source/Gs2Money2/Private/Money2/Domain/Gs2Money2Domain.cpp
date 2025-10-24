@@ -411,7 +411,7 @@ namespace Gs2::Money2::Domain
     {
         return MakeShared<Gs2::Money2::Domain::Iterator::FDescribeNamespacesIterator>(
             Gs2,
-            Client
+            Client,
             NamePrefix
         );
     }

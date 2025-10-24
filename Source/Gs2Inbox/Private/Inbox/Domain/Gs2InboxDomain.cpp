@@ -405,7 +405,7 @@ namespace Gs2::Inbox::Domain
     {
         return MakeShared<Gs2::Inbox::Domain::Iterator::FDescribeNamespacesIterator>(
             Gs2,
-            Client
+            Client,
             NamePrefix
         );
     }
