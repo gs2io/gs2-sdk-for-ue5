@@ -1,7 +1,7 @@
 {
 	"FileVersion": 3,
 	"Version": 1,
-	"VersionName": "2025.10.3",
+	"VersionName": "2025.10.4",
 	"FriendlyName": "GS2 Plugin",
 	"Description": "Plugin for Game Server Services",
 	"Category": "Online Service",
@@ -18,247 +18,248 @@
 		{
 			"Name": "Gs2Core",
 			"Type": "Runtime",
-			"LoadingPhase": "PostEngineInit"
-		},
-		{
-			"Name": "Gs2Account",
-			"Type": "Runtime",
-			"LoadingPhase": "PostEngineInit"
-		},
-		{
-			"Name": "Gs2AdReward",
-			"Type": "Runtime",
-			"LoadingPhase": "PostEngineInit"
-		},
-		{
-			"Name": "Gs2Auth",
-			"Type": "Runtime",
-			"LoadingPhase": "PostEngineInit"
-		},
-		{
-			"Name": "Gs2Buff",
-			"Type": "Runtime",
-			"LoadingPhase": "PostEngineInit"
-		},
-		{
-			"Name": "Gs2Chat",
-			"Type": "Runtime",
-			"LoadingPhase": "PostEngineInit"
-		},
-		{
-			"Name": "Gs2Datastore",
-			"Type": "Runtime",
-			"LoadingPhase": "PostEngineInit"
-		},
-		{
-			"Name": "Gs2Deploy",
-			"Type": "Runtime",
-			"LoadingPhase": "PostEngineInit"
-		},
-		{
-			"Name": "Gs2Dictionary",
-			"Type": "Runtime",
-			"LoadingPhase": "PostEngineInit"
+			"LoadingPhase": "PostConfigInit"
 		},
 		{
 			"Name": "Gs2Distributor",
 			"Type": "Runtime",
-			"LoadingPhase": "PostEngineInit"
-		},
-		{
-			"Name": "Gs2Enchant",
-			"Type": "Runtime",
-			"LoadingPhase": "PostEngineInit"
-		},
-		{
-			"Name": "Gs2Enhance",
-			"Type": "Runtime",
-			"LoadingPhase": "PostEngineInit"
-		},
-		{
-			"Name": "Gs2Exchange",
-			"Type": "Runtime",
-			"LoadingPhase": "PostEngineInit"
-		},
-		{
-			"Name": "Gs2Experience",
-			"Type": "Runtime",
-			"LoadingPhase": "PostEngineInit"
-		},
-		{
-			"Name": "Gs2Formation",
-			"Type": "Runtime",
-			"LoadingPhase": "PostEngineInit"
-		},
-		{
-			"Name": "Gs2Friend",
-			"Type": "Runtime",
-			"LoadingPhase": "PostEngineInit"
-		},
-		{
-			"Name": "Gs2Gateway",
-			"Type": "Runtime",
-			"LoadingPhase": "PostEngineInit"
-		},
-		{
-			"Name": "Gs2Grade",
-			"Type": "Runtime",
-			"LoadingPhase": "PostEngineInit"
-		},
-		{
-			"Name": "Gs2Identifier",
-			"Type": "Runtime",
-			"LoadingPhase": "PostEngineInit"
-		},
-		{
-			"Name": "Gs2Idle",
-			"Type": "Runtime",
-			"LoadingPhase": "PostEngineInit"
-		},
-		{
-			"Name": "Gs2Inbox",
-			"Type": "Runtime",
-			"LoadingPhase": "PostEngineInit"
-		},
-		{
-			"Name": "Gs2Inventory",
-			"Type": "Runtime",
-			"LoadingPhase": "PostEngineInit"
+			"LoadingPhase": "PreDefault"
 		},
 		{
 			"Name": "Gs2JobQueue",
 			"Type": "Runtime",
-			"LoadingPhase": "PostEngineInit"
+			"LoadingPhase": "PreDefault"
+		},
+		{
+			"Name": "Gs2Auth",
+			"Type": "Runtime",
+			"LoadingPhase": "PreDefault"
+		},
+		{
+			"Name": "Gs2Account",
+			"Type": "Runtime",
+			"LoadingPhase": "Default"
+		},
+		{
+			"Name": "Gs2AdReward",
+			"Type": "Runtime",
+			"LoadingPhase": "Default"
+		},
+		{
+			"Name": "Gs2Buff",
+			"Type": "Runtime",
+			"LoadingPhase": "Default"
+		},
+		{
+			"Name": "Gs2Chat",
+			"Type": "Runtime",
+			"LoadingPhase": "Default"
+		},
+		{
+			"Name": "Gs2Datastore",
+			"Type": "Runtime",
+			"LoadingPhase": "Default"
+		},
+		{
+			"Name": "Gs2Deploy",
+			"Type": "Runtime",
+			"LoadingPhase": "Default"
+		},
+		{
+			"Name": "Gs2Dictionary",
+			"Type": "Runtime",
+			"LoadingPhase": "Default"
+		},
+
+		{
+			"Name": "Gs2Enchant",
+			"Type": "Runtime",
+			"LoadingPhase": "Default"
+		},
+		{
+			"Name": "Gs2Enhance",
+			"Type": "Runtime",
+			"LoadingPhase": "Default"
+		},
+		{
+			"Name": "Gs2Exchange",
+			"Type": "Runtime",
+			"LoadingPhase": "Default"
+		},
+		{
+			"Name": "Gs2Experience",
+			"Type": "Runtime",
+			"LoadingPhase": "Default"
+		},
+		{
+			"Name": "Gs2Formation",
+			"Type": "Runtime",
+			"LoadingPhase": "Default"
+		},
+		{
+			"Name": "Gs2Friend",
+			"Type": "Runtime",
+			"LoadingPhase": "Default"
+		},
+		{
+			"Name": "Gs2Gateway",
+			"Type": "Runtime",
+			"LoadingPhase": "Default"
+		},
+		{
+			"Name": "Gs2Grade",
+			"Type": "Runtime",
+			"LoadingPhase": "Default"
+		},
+		{
+			"Name": "Gs2Identifier",
+			"Type": "Runtime",
+			"LoadingPhase": "Default"
+		},
+		{
+			"Name": "Gs2Idle",
+			"Type": "Runtime",
+			"LoadingPhase": "Default"
+		},
+		{
+			"Name": "Gs2Inbox",
+			"Type": "Runtime",
+			"LoadingPhase": "Default"
+		},
+		{
+			"Name": "Gs2Inventory",
+			"Type": "Runtime",
+			"LoadingPhase": "Default"
 		},
 		{
 			"Name": "Gs2Key",
 			"Type": "Runtime",
-			"LoadingPhase": "PostEngineInit"
+			"LoadingPhase": "Default"
 		},
 		{
 			"Name": "Gs2Limit",
 			"Type": "Runtime",
-			"LoadingPhase": "PostEngineInit"
+			"LoadingPhase": "Default"
 		},
 		{
 			"Name": "Gs2LoginReward",
 			"Type": "Runtime",
-			"LoadingPhase": "PostEngineInit"
+			"LoadingPhase": "Default"
 		},
 		{
 			"Name": "Gs2Lock",
 			"Type": "Runtime",
-			"LoadingPhase": "PostEngineInit"
+			"LoadingPhase": "Default"
 		},
 		{
 			"Name": "Gs2Lottery",
 			"Type": "Runtime",
-			"LoadingPhase": "PostEngineInit"
+			"LoadingPhase": "Default"
 		},
 		{
 			"Name": "Gs2Matchmaking",
 			"Type": "Runtime",
-			"LoadingPhase": "PostEngineInit"
+			"LoadingPhase": "Default"
 		},
 		{
 			"Name": "Gs2MegaField",
 			"Type": "Runtime",
-			"LoadingPhase": "PostEngineInit"
+			"LoadingPhase": "Default"
 		},
 		{
 			"Name": "Gs2Mission",
 			"Type": "Runtime",
-			"LoadingPhase": "PostEngineInit"
+			"LoadingPhase": "Default"
 		},
 		{
 			"Name": "Gs2Money",
 			"Type": "Runtime",
-			"LoadingPhase": "PostEngineInit"
+			"LoadingPhase": "Default"
 		},
 		{
 			"Name": "Gs2Money2",
 			"Type": "Runtime",
-			"LoadingPhase": "PostEngineInit"
+			"LoadingPhase": "Default"
 		},
 		{
 			"Name": "Gs2News",
 			"Type": "Runtime",
-			"LoadingPhase": "PostEngineInit"
+			"LoadingPhase": "Default"
 		},
 		{
 			"Name": "Gs2Quest",
 			"Type": "Runtime",
-			"LoadingPhase": "PostEngineInit"
+			"LoadingPhase": "Default"
 		},
 		{
 			"Name": "Gs2Ranking",
 			"Type": "Runtime",
-			"LoadingPhase": "PostEngineInit"
+			"LoadingPhase": "Default"
 		},
 		{
 			"Name": "Gs2Ranking2",
 			"Type": "Runtime",
-			"LoadingPhase": "PostEngineInit"
+			"LoadingPhase": "Default"
 		},
 		{
 			"Name": "Gs2Realtime",
 			"Type": "Runtime",
-			"LoadingPhase": "PostEngineInit"
+			"LoadingPhase": "Default"
 		},
 		{
 			"Name": "Gs2Schedule",
 			"Type": "Runtime",
-			"LoadingPhase": "PostEngineInit"
+			"LoadingPhase": "Default"
 		},
 		{
 			"Name": "Gs2Script",
 			"Type": "Runtime",
-			"LoadingPhase": "PostEngineInit"
+			"LoadingPhase": "Default"
 		},
 		{
 			"Name": "Gs2SeasonRating",
 			"Type": "Runtime",
-			"LoadingPhase": "PostEngineInit"
+			"LoadingPhase": "Default"
 		},
 		{
 			"Name": "Gs2SerialKey",
 			"Type": "Runtime",
-			"LoadingPhase": "PostEngineInit"
+			"LoadingPhase": "Default"
 		},
 		{
 			"Name": "Gs2Showcase",
 			"Type": "Runtime",
-			"LoadingPhase": "PostEngineInit"
+			"LoadingPhase": "Default"
 		},
 		{
 			"Name": "Gs2SkillTree",
 			"Type": "Runtime",
-			"LoadingPhase": "PostEngineInit"
+			"LoadingPhase": "Default"
 		},
 		{
 			"Name": "Gs2Stamina",
 			"Type": "Runtime",
-			"LoadingPhase": "PostEngineInit"
+			"LoadingPhase": "Default"
 		},
 		{
 			"Name": "Gs2StateMachine",
 			"Type": "Runtime",
-			"LoadingPhase": "PostEngineInit"
+			"LoadingPhase": "Default"
 		},
 		{
 			"Name": "Gs2Version",
 			"Type": "Runtime",
-			"LoadingPhase": "PostEngineInit"
+			"LoadingPhase": "Default"
 		},
 		{
 			"Name": "Gs2Domain",
 			"Type": "Runtime",
-			"LoadingPhase": "PostEngineInit"
+			"LoadingPhase": "PostDefault"
 		},
 		{
 			"Name": "EzGs2",
 			"Type": "Runtime",
-			"LoadingPhase": "PostEngineInit"
+			"LoadingPhase": "PostDefault"
 		},
 		{
 			"Name": "BpGs2",

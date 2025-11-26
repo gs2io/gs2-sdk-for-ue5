@@ -23,7 +23,7 @@
 
 namespace Gs2::Core::Model
 {
-    class GS2ACCOUNT_API FResultMetadata final : public FGs2Object, public TSharedFromThis<FResultMetadata>
+    class GS2CORE_API FResultMetadata final : public FGs2Object, public TSharedFromThis<FResultMetadata>
     {
         FString UncommittedValue;
 

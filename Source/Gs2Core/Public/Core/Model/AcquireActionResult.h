@@ -21,7 +21,7 @@
 
 namespace Gs2::Core::Model
 {
-    class GS2ACCOUNT_API FAcquireActionResult final : public FGs2Object, public TSharedFromThis<FAcquireActionResult>
+    class GS2CORE_API FAcquireActionResult final : public FGs2Object, public TSharedFromThis<FAcquireActionResult>
     {
         TOptional<FString> ActionValue;
         TOptional<FString> AcquireRequestValue;

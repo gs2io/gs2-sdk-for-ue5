@@ -16,12 +16,10 @@ public class Gs2Datastore : ModuleRules
 			"WebSockets",
 			"Json",
 			"JsonUtilities",
-			"Gs2Core",
-			"Gs2Auth",
 		});
 		PublicDependencyModuleNames.AddRange(new string[] {
-			"Core",
-			"Gs2Core"
+			"Gs2Core",
+			"Gs2Auth",
 		});
 	}
 }

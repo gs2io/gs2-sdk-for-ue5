@@ -21,7 +21,7 @@
 
 namespace Gs2::Core::Model
 {
-    class GS2ACCOUNT_API FVerifyActionResult final : public FGs2Object, public TSharedFromThis<FVerifyActionResult>
+    class GS2CORE_API FVerifyActionResult final : public FGs2Object, public TSharedFromThis<FVerifyActionResult>
     {
         TOptional<FString> ActionValue;
         TOptional<FString> VerifyRequestValue;
