@@ -30,6 +30,7 @@ namespace Gs2::Account::Request
         TOptional<FString> UserIdValue;
         TOptional<int32> TypeValue;
         TOptional<FString> UserIdentifierValue;
+        TOptional<bool> DontResolveDataOwnerValue;
         TOptional<FString> TimeOffsetTokenValue;
         
     public:
@@ -45,6 +46,7 @@ namespace Gs2::Account::Request
         TSharedPtr<FFindPlatformIdByUserIdRequest> WithUserId(const TOptional<FString> UserId);
         TSharedPtr<FFindPlatformIdByUserIdRequest> WithType(const TOptional<int32> Type);
         TSharedPtr<FFindPlatformIdByUserIdRequest> WithUserIdentifier(const TOptional<FString> UserIdentifier);
+        TSharedPtr<FFindPlatformIdByUserIdRequest> WithDontResolveDataOwner(const TOptional<bool> DontResolveDataOwner);
         TSharedPtr<FFindPlatformIdByUserIdRequest> WithTimeOffsetToken(const TOptional<FString> TimeOffsetToken);
 
         TOptional<FString> GetContextStack() const;
@@ -53,6 +55,8 @@ namespace Gs2::Account::Request
         TOptional<int32> GetType() const;
         FString GetTypeString() const;
         TOptional<FString> GetUserIdentifier() const;
+        TOptional<bool> GetDontResolveDataOwner() const;
+        FString GetDontResolveDataOwnerString() const;
         TOptional<FString> GetTimeOffsetToken() const;
 
         static TSharedPtr<FFindPlatformIdByUserIdRequest> FromJson(const TSharedPtr<FJsonObject> Data);

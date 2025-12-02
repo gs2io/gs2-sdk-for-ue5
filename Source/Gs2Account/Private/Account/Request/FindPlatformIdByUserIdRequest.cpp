@@ -23,6 +23,7 @@ namespace Gs2::Account::Request
         UserIdValue(TOptional<FString>()),
         TypeValue(TOptional<int32>()),
         UserIdentifierValue(TOptional<FString>()),
+        DontResolveDataOwnerValue(TOptional<bool>()),
         TimeOffsetTokenValue(TOptional<FString>())
     {
     }
@@ -34,6 +35,7 @@ namespace Gs2::Account::Request
         UserIdValue(From.UserIdValue),
         TypeValue(From.TypeValue),
         UserIdentifierValue(From.UserIdentifierValue),
+        DontResolveDataOwnerValue(From.DontResolveDataOwnerValue),
         TimeOffsetTokenValue(From.TimeOffsetTokenValue)
     {
     }
@@ -78,6 +80,14 @@ namespace Gs2::Account::Request
         return SharedThis(this);
     }
 
+    TSharedPtr<FFindPlatformIdByUserIdRequest> FFindPlatformIdByUserIdRequest::WithDontResolveDataOwner(
+        const TOptional<bool> DontResolveDataOwner
+    )
+    {
+        this->DontResolveDataOwnerValue = DontResolveDataOwner;
+        return SharedThis(this);
+    }
+
     TSharedPtr<FFindPlatformIdByUserIdRequest> FFindPlatformIdByUserIdRequest::WithTimeOffsetToken(
         const TOptional<FString> TimeOffsetToken
     )
@@ -118,6 +128,20 @@ namespace Gs2::Account::Request
     TOptional<FString> FFindPlatformIdByUserIdRequest::GetUserIdentifier() const
     {
         return UserIdentifierValue;
+    }
+
+    TOptional<bool> FFindPlatformIdByUserIdRequest::GetDontResolveDataOwner() const
+    {
+        return DontResolveDataOwnerValue;
+    }
+
+    FString FFindPlatformIdByUserIdRequest::GetDontResolveDataOwnerString() const
+    {
+        if (!DontResolveDataOwnerValue.IsSet())
+        {
+            return FString("null");
+        }
+        return FString(DontResolveDataOwnerValue.GetValue() ? "true" : "false");
     }
 
     TOptional<FString> FFindPlatformIdByUserIdRequest::GetTimeOffsetToken() const
@@ -168,6 +192,15 @@ namespace Gs2::Account::Request
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
+            ->WithDontResolveDataOwner(Data->HasField(ANSI_TO_TCHAR("dontResolveDataOwner")) ? [Data]() -> TOptional<bool>
+              {
+                  bool v;
+                    if (Data->TryGetBoolField(ANSI_TO_TCHAR("dontResolveDataOwner"), v))
+                  {
+                        return TOptional(v);
+                  }
+                  return TOptional<bool>();
+              }() : TOptional<bool>())
             ->WithTimeOffsetToken(Data->HasField(ANSI_TO_TCHAR("timeOffsetToken")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
@@ -201,6 +234,10 @@ namespace Gs2::Account::Request
         if (UserIdentifierValue.IsSet())
         {
             JsonRootObject->SetStringField("userIdentifier", UserIdentifierValue.GetValue());
+        }
+        if (DontResolveDataOwnerValue.IsSet())
+        {
+            JsonRootObject->SetBoolField("dontResolveDataOwner", DontResolveDataOwnerValue.GetValue());
         }
         if (TimeOffsetTokenValue.IsSet())
         {
