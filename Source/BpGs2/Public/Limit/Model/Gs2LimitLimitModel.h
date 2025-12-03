@@ -48,6 +48,10 @@ struct FGs2LimitLimitModelValue
     FString ResetDayOfWeek = "";
     UPROPERTY(Category = Gs2, BlueprintReadOnly)
     int32 ResetHour = 0;
+    UPROPERTY(Category = Gs2, BlueprintReadOnly)
+    int64 AnchorTimestamp = 0;
+    UPROPERTY(Category = Gs2, BlueprintReadOnly)
+    int32 Days = 0;
 };
 
 inline FGs2LimitLimitModelValue EzLimitModelToFGs2LimitLimitModelValue(
@@ -66,6 +70,8 @@ inline FGs2LimitLimitModelValue EzLimitModelToFGs2LimitLimitModelValue(
     Value.ResetDayOfMonth = Model->GetResetDayOfMonth() ? *Model->GetResetDayOfMonth() : 0;
     Value.ResetDayOfWeek = Model->GetResetDayOfWeek() ? *Model->GetResetDayOfWeek() : "";
     Value.ResetHour = Model->GetResetHour() ? *Model->GetResetHour() : 0;
+    Value.AnchorTimestamp = Model->GetAnchorTimestamp() ? *Model->GetAnchorTimestamp() : 0;
+    Value.Days = Model->GetDays() ? *Model->GetDays() : 0;
     return Value;
 }
 
@@ -80,7 +86,9 @@ inline Gs2::UE5::Limit::Model::FEzLimitModelPtr FGs2LimitLimitModelValueToEzLimi
         ->WithResetType(Model.ResetType)
         ->WithResetDayOfMonth(Model.ResetDayOfMonth)
         ->WithResetDayOfWeek(Model.ResetDayOfWeek)
-        ->WithResetHour(Model.ResetHour);
+        ->WithResetHour(Model.ResetHour)
+        ->WithAnchorTimestamp(Model.AnchorTimestamp)
+        ->WithDays(Model.Days);
 }
 
 UCLASS()

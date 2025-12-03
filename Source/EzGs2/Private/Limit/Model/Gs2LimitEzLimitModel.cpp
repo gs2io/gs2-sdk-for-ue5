@@ -74,6 +74,22 @@ namespace Gs2::UE5::Limit::Model
         this->ResetHourValue = ResetHour;
         return SharedThis(this);
     }
+
+    TSharedPtr<FEzLimitModel> FEzLimitModel::WithAnchorTimestamp(
+        const TOptional<int64> AnchorTimestamp
+    )
+    {
+        this->AnchorTimestampValue = AnchorTimestamp;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FEzLimitModel> FEzLimitModel::WithDays(
+        const TOptional<int32> Days
+    )
+    {
+        this->DaysValue = Days;
+        return SharedThis(this);
+    }
     TOptional<FString> FEzLimitModel::GetLimitModelId() const
     {
         return LimitModelIdValue;
@@ -120,6 +136,32 @@ namespace Gs2::UE5::Limit::Model
         }
         return FString::Printf(TEXT("%d"), ResetHourValue.GetValue());
     }
+    TOptional<int64> FEzLimitModel::GetAnchorTimestamp() const
+    {
+        return AnchorTimestampValue;
+    }
+
+    FString FEzLimitModel::GetAnchorTimestampString() const
+    {
+        if (!AnchorTimestampValue.IsSet())
+        {
+            return FString("null");
+        }
+        return FString::Printf(TEXT("%lld"), AnchorTimestampValue.GetValue());
+    }
+    TOptional<int32> FEzLimitModel::GetDays() const
+    {
+        return DaysValue;
+    }
+
+    FString FEzLimitModel::GetDaysString() const
+    {
+        if (!DaysValue.IsSet())
+        {
+            return FString("null");
+        }
+        return FString::Printf(TEXT("%d"), DaysValue.GetValue());
+    }
 
     Gs2::Limit::Model::FLimitModelPtr FEzLimitModel::ToModel() const
     {
@@ -130,7 +172,9 @@ namespace Gs2::UE5::Limit::Model
             ->WithResetType(ResetTypeValue)
             ->WithResetDayOfMonth(ResetDayOfMonthValue)
             ->WithResetDayOfWeek(ResetDayOfWeekValue)
-            ->WithResetHour(ResetHourValue);
+            ->WithResetHour(ResetHourValue)
+            ->WithAnchorTimestamp(AnchorTimestampValue)
+            ->WithDays(DaysValue);
     }
 
     TSharedPtr<FEzLimitModel> FEzLimitModel::FromModel(const Gs2::Limit::Model::FLimitModelPtr Model)
@@ -146,6 +190,8 @@ namespace Gs2::UE5::Limit::Model
             ->WithResetType(Model->GetResetType())
             ->WithResetDayOfMonth(Model->GetResetDayOfMonth())
             ->WithResetDayOfWeek(Model->GetResetDayOfWeek())
-            ->WithResetHour(Model->GetResetHour());
+            ->WithResetHour(Model->GetResetHour())
+            ->WithAnchorTimestamp(Model->GetAnchorTimestamp())
+            ->WithDays(Model->GetDays());
     }
 }

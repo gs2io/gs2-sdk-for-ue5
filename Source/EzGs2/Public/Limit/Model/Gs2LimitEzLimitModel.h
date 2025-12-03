@@ -30,6 +30,8 @@ namespace Gs2::UE5::Limit::Model
         TOptional<int32> ResetDayOfMonthValue;
         TOptional<FString> ResetDayOfWeekValue;
         TOptional<int32> ResetHourValue;
+        TOptional<int64> AnchorTimestampValue;
+        TOptional<int32> DaysValue;
 
 	public:
         TSharedPtr<FEzLimitModel> WithLimitModelId(const TOptional<FString> LimitModelId);
@@ -39,6 +41,8 @@ namespace Gs2::UE5::Limit::Model
         TSharedPtr<FEzLimitModel> WithResetDayOfMonth(const TOptional<int32> ResetDayOfMonth);
         TSharedPtr<FEzLimitModel> WithResetDayOfWeek(const TOptional<FString> ResetDayOfWeek);
         TSharedPtr<FEzLimitModel> WithResetHour(const TOptional<int32> ResetHour);
+        TSharedPtr<FEzLimitModel> WithAnchorTimestamp(const TOptional<int64> AnchorTimestamp);
+        TSharedPtr<FEzLimitModel> WithDays(const TOptional<int32> Days);
 
         TOptional<FString> GetLimitModelId() const;
 
@@ -55,6 +59,12 @@ namespace Gs2::UE5::Limit::Model
 
         TOptional<int32> GetResetHour() const;
         FString GetResetHourString() const;
+
+        TOptional<int64> GetAnchorTimestamp() const;
+        FString GetAnchorTimestampString() const;
+
+        TOptional<int32> GetDays() const;
+        FString GetDaysString() const;
 
         Gs2::Limit::Model::FLimitModelPtr ToModel() const;
         static TSharedPtr<FEzLimitModel> FromModel(Gs2::Limit::Model::FLimitModelPtr Model);
