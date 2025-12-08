@@ -27,11 +27,27 @@ namespace Gs2::UE5::Mission::Model
         return SharedThis(this);
     }
 
+    TSharedPtr<FEzTargetCounterModel> FEzTargetCounterModel::WithScopeType(
+        const TOptional<FString> ScopeType
+    )
+    {
+        this->ScopeTypeValue = ScopeType;
+        return SharedThis(this);
+    }
+
     TSharedPtr<FEzTargetCounterModel> FEzTargetCounterModel::WithResetType(
         const TOptional<FString> ResetType
     )
     {
         this->ResetTypeValue = ResetType;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FEzTargetCounterModel> FEzTargetCounterModel::WithConditionName(
+        const TOptional<FString> ConditionName
+    )
+    {
+        this->ConditionNameValue = ConditionName;
         return SharedThis(this);
     }
 
@@ -46,9 +62,17 @@ namespace Gs2::UE5::Mission::Model
     {
         return CounterNameValue;
     }
+    TOptional<FString> FEzTargetCounterModel::GetScopeType() const
+    {
+        return ScopeTypeValue;
+    }
     TOptional<FString> FEzTargetCounterModel::GetResetType() const
     {
         return ResetTypeValue;
+    }
+    TOptional<FString> FEzTargetCounterModel::GetConditionName() const
+    {
+        return ConditionNameValue;
     }
     TOptional<int64> FEzTargetCounterModel::GetValue() const
     {
@@ -68,7 +92,9 @@ namespace Gs2::UE5::Mission::Model
     {
         return MakeShared<Gs2::Mission::Model::FTargetCounterModel>()
             ->WithCounterName(CounterNameValue)
+            ->WithScopeType(ScopeTypeValue)
             ->WithResetType(ResetTypeValue)
+            ->WithConditionName(ConditionNameValue)
             ->WithValue(ValueValue);
     }
 
@@ -80,7 +106,9 @@ namespace Gs2::UE5::Mission::Model
         }
         return MakeShared<FEzTargetCounterModel>()
             ->WithCounterName(Model->GetCounterName())
+            ->WithScopeType(Model->GetScopeType())
             ->WithResetType(Model->GetResetType())
+            ->WithConditionName(Model->GetConditionName())
             ->WithValue(Model->GetValue());
     }
 }

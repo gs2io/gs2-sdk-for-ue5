@@ -24,17 +24,25 @@ namespace Gs2::UE5::Mission::Model
 	class EZGS2_API FEzTargetCounterModel final : public TSharedFromThis<FEzTargetCounterModel>
 	{
         TOptional<FString> CounterNameValue;
+        TOptional<FString> ScopeTypeValue;
         TOptional<FString> ResetTypeValue;
+        TOptional<FString> ConditionNameValue;
         TOptional<int64> ValueValue;
 
 	public:
         TSharedPtr<FEzTargetCounterModel> WithCounterName(const TOptional<FString> CounterName);
+        TSharedPtr<FEzTargetCounterModel> WithScopeType(const TOptional<FString> ScopeType);
         TSharedPtr<FEzTargetCounterModel> WithResetType(const TOptional<FString> ResetType);
+        TSharedPtr<FEzTargetCounterModel> WithConditionName(const TOptional<FString> ConditionName);
         TSharedPtr<FEzTargetCounterModel> WithValue(const TOptional<int64> Value);
 
         TOptional<FString> GetCounterName() const;
 
+        TOptional<FString> GetScopeType() const;
+
         TOptional<FString> GetResetType() const;
+
+        TOptional<FString> GetConditionName() const;
 
         TOptional<int64> GetValue() const;
         FString GetValueString() const;

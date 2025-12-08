@@ -19,6 +19,7 @@
 #include "CoreMinimal.h"
 
 #include "Mission/Model/Gs2MissionEzCounterScopeModel.h"
+#include "Mission/Model/Gs2MissionVerifyAction.h"
 #include "Gs2MissionCounterScopeModel.generated.h"
 
 USTRUCT(BlueprintType)
@@ -31,13 +32,19 @@ struct FGs2MissionCounterScopeModel
     UPROPERTY(Category = Gs2, BlueprintReadWrite)
     FString ResetType = "";
     UPROPERTY(Category = Gs2, BlueprintReadWrite)
-    FString ConditionName = "";
-    UPROPERTY(Category = Gs2, BlueprintReadWrite)
     int32 ResetDayOfMonth = 0;
     UPROPERTY(Category = Gs2, BlueprintReadWrite)
     FString ResetDayOfWeek = "";
     UPROPERTY(Category = Gs2, BlueprintReadWrite)
     int32 ResetHour = 0;
+    UPROPERTY(Category = Gs2, BlueprintReadWrite)
+    FString ConditionName = "";
+    UPROPERTY(Category = Gs2, BlueprintReadWrite)
+    FGs2MissionVerifyAction Condition = FGs2MissionVerifyAction();
+    UPROPERTY(Category = Gs2, BlueprintReadWrite)
+    int64 AnchorTimestamp = 0;
+    UPROPERTY(Category = Gs2, BlueprintReadWrite)
+    int32 Days = 0;
 };
 
 inline FGs2MissionCounterScopeModel EzCounterScopeModelToFGs2MissionCounterScopeModel(
@@ -47,10 +54,13 @@ inline FGs2MissionCounterScopeModel EzCounterScopeModelToFGs2MissionCounterScope
     FGs2MissionCounterScopeModel Value;
     Value.ScopeType = Model->GetScopeType() ? *Model->GetScopeType() : "";
     Value.ResetType = Model->GetResetType() ? *Model->GetResetType() : "";
-    Value.ConditionName = Model->GetConditionName() ? *Model->GetConditionName() : "";
     Value.ResetDayOfMonth = Model->GetResetDayOfMonth() ? *Model->GetResetDayOfMonth() : 0;
     Value.ResetDayOfWeek = Model->GetResetDayOfWeek() ? *Model->GetResetDayOfWeek() : "";
     Value.ResetHour = Model->GetResetHour() ? *Model->GetResetHour() : 0;
+    Value.ConditionName = Model->GetConditionName() ? *Model->GetConditionName() : "";
+    Value.Condition = Model->GetCondition() ? EzVerifyActionToFGs2MissionVerifyAction(Model->GetCondition()) : FGs2MissionVerifyAction();
+    Value.AnchorTimestamp = Model->GetAnchorTimestamp() ? *Model->GetAnchorTimestamp() : 0;
+    Value.Days = Model->GetDays() ? *Model->GetDays() : 0;
     return Value;
 }
 
@@ -61,8 +71,11 @@ inline Gs2::UE5::Mission::Model::FEzCounterScopeModelPtr FGs2MissionCounterScope
     return MakeShared<Gs2::UE5::Mission::Model::FEzCounterScopeModel>()
         ->WithScopeType(Model.ScopeType)
         ->WithResetType(Model.ResetType)
-        ->WithConditionName(Model.ConditionName)
         ->WithResetDayOfMonth(Model.ResetDayOfMonth)
         ->WithResetDayOfWeek(Model.ResetDayOfWeek)
-        ->WithResetHour(Model.ResetHour);
+        ->WithResetHour(Model.ResetHour)
+        ->WithConditionName(Model.ConditionName)
+        ->WithCondition(FGs2MissionVerifyActionToEzVerifyAction(Model.Condition))
+        ->WithAnchorTimestamp(Model.AnchorTimestamp)
+        ->WithDays(Model.Days);
 }

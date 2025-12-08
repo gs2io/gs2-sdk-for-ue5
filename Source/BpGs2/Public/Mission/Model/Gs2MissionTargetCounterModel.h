@@ -29,7 +29,11 @@ struct FGs2MissionTargetCounterModel
     UPROPERTY(Category = Gs2, BlueprintReadWrite)
     FString CounterName = "";
     UPROPERTY(Category = Gs2, BlueprintReadWrite)
+    FString ScopeType = "";
+    UPROPERTY(Category = Gs2, BlueprintReadWrite)
     FString ResetType = "";
+    UPROPERTY(Category = Gs2, BlueprintReadWrite)
+    FString ConditionName = "";
     UPROPERTY(Category = Gs2, BlueprintReadWrite)
     int64 Value = 0;
 };
@@ -40,7 +44,9 @@ inline FGs2MissionTargetCounterModel EzTargetCounterModelToFGs2MissionTargetCoun
 {
     FGs2MissionTargetCounterModel Value;
     Value.CounterName = Model->GetCounterName() ? *Model->GetCounterName() : "";
+    Value.ScopeType = Model->GetScopeType() ? *Model->GetScopeType() : "";
     Value.ResetType = Model->GetResetType() ? *Model->GetResetType() : "";
+    Value.ConditionName = Model->GetConditionName() ? *Model->GetConditionName() : "";
     Value.Value = Model->GetValue() ? *Model->GetValue() : 0;
     return Value;
 }
@@ -51,6 +57,8 @@ inline Gs2::UE5::Mission::Model::FEzTargetCounterModelPtr FGs2MissionTargetCount
 {
     return MakeShared<Gs2::UE5::Mission::Model::FEzTargetCounterModel>()
         ->WithCounterName(Model.CounterName)
+        ->WithScopeType(Model.ScopeType)
         ->WithResetType(Model.ResetType)
+        ->WithConditionName(Model.ConditionName)
         ->WithValue(Model.Value);
 }

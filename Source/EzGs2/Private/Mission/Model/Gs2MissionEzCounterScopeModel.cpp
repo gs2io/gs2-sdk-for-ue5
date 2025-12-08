@@ -35,14 +35,6 @@ namespace Gs2::UE5::Mission::Model
         return SharedThis(this);
     }
 
-    TSharedPtr<FEzCounterScopeModel> FEzCounterScopeModel::WithConditionName(
-        const TOptional<FString> ConditionName
-    )
-    {
-        this->ConditionNameValue = ConditionName;
-        return SharedThis(this);
-    }
-
     TSharedPtr<FEzCounterScopeModel> FEzCounterScopeModel::WithResetDayOfMonth(
         const TOptional<int32> ResetDayOfMonth
     )
@@ -66,6 +58,38 @@ namespace Gs2::UE5::Mission::Model
         this->ResetHourValue = ResetHour;
         return SharedThis(this);
     }
+
+    TSharedPtr<FEzCounterScopeModel> FEzCounterScopeModel::WithConditionName(
+        const TOptional<FString> ConditionName
+    )
+    {
+        this->ConditionNameValue = ConditionName;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FEzCounterScopeModel> FEzCounterScopeModel::WithCondition(
+        const TSharedPtr<Gs2::UE5::Mission::Model::FEzVerifyAction> Condition
+    )
+    {
+        this->ConditionValue = Condition;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FEzCounterScopeModel> FEzCounterScopeModel::WithAnchorTimestamp(
+        const TOptional<int64> AnchorTimestamp
+    )
+    {
+        this->AnchorTimestampValue = AnchorTimestamp;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FEzCounterScopeModel> FEzCounterScopeModel::WithDays(
+        const TOptional<int32> Days
+    )
+    {
+        this->DaysValue = Days;
+        return SharedThis(this);
+    }
     TOptional<FString> FEzCounterScopeModel::GetScopeType() const
     {
         return ScopeTypeValue;
@@ -73,10 +97,6 @@ namespace Gs2::UE5::Mission::Model
     TOptional<FString> FEzCounterScopeModel::GetResetType() const
     {
         return ResetTypeValue;
-    }
-    TOptional<FString> FEzCounterScopeModel::GetConditionName() const
-    {
-        return ConditionNameValue;
     }
     TOptional<int32> FEzCounterScopeModel::GetResetDayOfMonth() const
     {
@@ -108,16 +128,53 @@ namespace Gs2::UE5::Mission::Model
         }
         return FString::Printf(TEXT("%d"), ResetHourValue.GetValue());
     }
+    TOptional<FString> FEzCounterScopeModel::GetConditionName() const
+    {
+        return ConditionNameValue;
+    }
+    TSharedPtr<Gs2::UE5::Mission::Model::FEzVerifyAction> FEzCounterScopeModel::GetCondition() const
+    {
+        return ConditionValue;
+    }
+    TOptional<int64> FEzCounterScopeModel::GetAnchorTimestamp() const
+    {
+        return AnchorTimestampValue;
+    }
+
+    FString FEzCounterScopeModel::GetAnchorTimestampString() const
+    {
+        if (!AnchorTimestampValue.IsSet())
+        {
+            return FString("null");
+        }
+        return FString::Printf(TEXT("%lld"), AnchorTimestampValue.GetValue());
+    }
+    TOptional<int32> FEzCounterScopeModel::GetDays() const
+    {
+        return DaysValue;
+    }
+
+    FString FEzCounterScopeModel::GetDaysString() const
+    {
+        if (!DaysValue.IsSet())
+        {
+            return FString("null");
+        }
+        return FString::Printf(TEXT("%d"), DaysValue.GetValue());
+    }
 
     Gs2::Mission::Model::FCounterScopeModelPtr FEzCounterScopeModel::ToModel() const
     {
         return MakeShared<Gs2::Mission::Model::FCounterScopeModel>()
             ->WithScopeType(ScopeTypeValue)
             ->WithResetType(ResetTypeValue)
-            ->WithConditionName(ConditionNameValue)
             ->WithResetDayOfMonth(ResetDayOfMonthValue)
             ->WithResetDayOfWeek(ResetDayOfWeekValue)
-            ->WithResetHour(ResetHourValue);
+            ->WithResetHour(ResetHourValue)
+            ->WithConditionName(ConditionNameValue)
+            ->WithCondition(ConditionValue == nullptr ? nullptr : ConditionValue->ToModel())
+            ->WithAnchorTimestamp(AnchorTimestampValue)
+            ->WithDays(DaysValue);
     }
 
     TSharedPtr<FEzCounterScopeModel> FEzCounterScopeModel::FromModel(const Gs2::Mission::Model::FCounterScopeModelPtr Model)
@@ -129,9 +186,12 @@ namespace Gs2::UE5::Mission::Model
         return MakeShared<FEzCounterScopeModel>()
             ->WithScopeType(Model->GetScopeType())
             ->WithResetType(Model->GetResetType())
-            ->WithConditionName(Model->GetConditionName())
             ->WithResetDayOfMonth(Model->GetResetDayOfMonth())
             ->WithResetDayOfWeek(Model->GetResetDayOfWeek())
-            ->WithResetHour(Model->GetResetHour());
+            ->WithResetHour(Model->GetResetHour())
+            ->WithConditionName(Model->GetConditionName())
+            ->WithCondition(Model->GetCondition() != nullptr ? Gs2::UE5::Mission::Model::FEzVerifyAction::FromModel(Model->GetCondition()) : nullptr)
+            ->WithAnchorTimestamp(Model->GetAnchorTimestamp())
+            ->WithDays(Model->GetDays());
     }
 }

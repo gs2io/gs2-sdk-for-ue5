@@ -19,6 +19,14 @@
 namespace Gs2::UE5::Mission::Model
 {
 
+    TSharedPtr<FEzScopedValue> FEzScopedValue::WithScopeType(
+        const TOptional<FString> ScopeType
+    )
+    {
+        this->ScopeTypeValue = ScopeType;
+        return SharedThis(this);
+    }
+
     TSharedPtr<FEzScopedValue> FEzScopedValue::WithResetType(
         const TOptional<FString> ResetType
     )
@@ -41,6 +49,10 @@ namespace Gs2::UE5::Mission::Model
     {
         this->ValueValue = Value;
         return SharedThis(this);
+    }
+    TOptional<FString> FEzScopedValue::GetScopeType() const
+    {
+        return ScopeTypeValue;
     }
     TOptional<FString> FEzScopedValue::GetResetType() const
     {
@@ -67,6 +79,7 @@ namespace Gs2::UE5::Mission::Model
     Gs2::Mission::Model::FScopedValuePtr FEzScopedValue::ToModel() const
     {
         return MakeShared<Gs2::Mission::Model::FScopedValue>()
+            ->WithScopeType(ScopeTypeValue)
             ->WithResetType(ResetTypeValue)
             ->WithConditionName(ConditionNameValue)
             ->WithValue(ValueValue);
@@ -79,6 +92,7 @@ namespace Gs2::UE5::Mission::Model
             return nullptr;
         }
         return MakeShared<FEzScopedValue>()
+            ->WithScopeType(Model->GetScopeType())
             ->WithResetType(Model->GetResetType())
             ->WithConditionName(Model->GetConditionName())
             ->WithValue(Model->GetValue());

@@ -18,6 +18,7 @@
 
 #include "CoreMinimal.h"
 #include "Mission/Model/CounterScopeModel.h"
+#include "Gs2MissionEzVerifyAction.h"
 
 namespace Gs2::UE5::Mission::Model
 {
@@ -25,24 +26,28 @@ namespace Gs2::UE5::Mission::Model
 	{
         TOptional<FString> ScopeTypeValue;
         TOptional<FString> ResetTypeValue;
-        TOptional<FString> ConditionNameValue;
         TOptional<int32> ResetDayOfMonthValue;
         TOptional<FString> ResetDayOfWeekValue;
         TOptional<int32> ResetHourValue;
+        TOptional<FString> ConditionNameValue;
+        TSharedPtr<Gs2::UE5::Mission::Model::FEzVerifyAction> ConditionValue;
+        TOptional<int64> AnchorTimestampValue;
+        TOptional<int32> DaysValue;
 
 	public:
         TSharedPtr<FEzCounterScopeModel> WithScopeType(const TOptional<FString> ScopeType);
         TSharedPtr<FEzCounterScopeModel> WithResetType(const TOptional<FString> ResetType);
-        TSharedPtr<FEzCounterScopeModel> WithConditionName(const TOptional<FString> ConditionName);
         TSharedPtr<FEzCounterScopeModel> WithResetDayOfMonth(const TOptional<int32> ResetDayOfMonth);
         TSharedPtr<FEzCounterScopeModel> WithResetDayOfWeek(const TOptional<FString> ResetDayOfWeek);
         TSharedPtr<FEzCounterScopeModel> WithResetHour(const TOptional<int32> ResetHour);
+        TSharedPtr<FEzCounterScopeModel> WithConditionName(const TOptional<FString> ConditionName);
+        TSharedPtr<FEzCounterScopeModel> WithCondition(const TSharedPtr<Gs2::UE5::Mission::Model::FEzVerifyAction> Condition);
+        TSharedPtr<FEzCounterScopeModel> WithAnchorTimestamp(const TOptional<int64> AnchorTimestamp);
+        TSharedPtr<FEzCounterScopeModel> WithDays(const TOptional<int32> Days);
 
         TOptional<FString> GetScopeType() const;
 
         TOptional<FString> GetResetType() const;
-
-        TOptional<FString> GetConditionName() const;
 
         TOptional<int32> GetResetDayOfMonth() const;
         FString GetResetDayOfMonthString() const;
@@ -51,6 +56,16 @@ namespace Gs2::UE5::Mission::Model
 
         TOptional<int32> GetResetHour() const;
         FString GetResetHourString() const;
+
+        TOptional<FString> GetConditionName() const;
+
+        TSharedPtr<Gs2::UE5::Mission::Model::FEzVerifyAction> GetCondition() const;
+
+        TOptional<int64> GetAnchorTimestamp() const;
+        FString GetAnchorTimestampString() const;
+
+        TOptional<int32> GetDays() const;
+        FString GetDaysString() const;
 
         Gs2::Mission::Model::FCounterScopeModelPtr ToModel() const;
         static TSharedPtr<FEzCounterScopeModel> FromModel(Gs2::Mission::Model::FCounterScopeModelPtr Model);

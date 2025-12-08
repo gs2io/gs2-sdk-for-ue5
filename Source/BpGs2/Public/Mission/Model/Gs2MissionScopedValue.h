@@ -27,6 +27,8 @@ struct FGs2MissionScopedValue
     GENERATED_BODY()
 
     UPROPERTY(Category = Gs2, BlueprintReadWrite)
+    FString ScopeType = "";
+    UPROPERTY(Category = Gs2, BlueprintReadWrite)
     FString ResetType = "";
     UPROPERTY(Category = Gs2, BlueprintReadWrite)
     FString ConditionName = "";
@@ -39,6 +41,7 @@ inline FGs2MissionScopedValue EzScopedValueToFGs2MissionScopedValue(
 )
 {
     FGs2MissionScopedValue Value;
+    Value.ScopeType = Model->GetScopeType() ? *Model->GetScopeType() : "";
     Value.ResetType = Model->GetResetType() ? *Model->GetResetType() : "";
     Value.ConditionName = Model->GetConditionName() ? *Model->GetConditionName() : "";
     Value.Value = Model->GetValue() ? *Model->GetValue() : 0;
@@ -50,6 +53,7 @@ inline Gs2::UE5::Mission::Model::FEzScopedValuePtr FGs2MissionScopedValueToEzSco
 )
 {
     return MakeShared<Gs2::UE5::Mission::Model::FEzScopedValue>()
+        ->WithScopeType(Model.ScopeType)
         ->WithResetType(Model.ResetType)
         ->WithConditionName(Model.ConditionName)
         ->WithValue(Model.Value);
