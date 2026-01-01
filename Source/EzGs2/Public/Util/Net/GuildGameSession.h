@@ -4,6 +4,8 @@
 #include "Auth/Model/Gs2AuthEzAccessToken.h"
 #include "Util/Authentication/IGuildAuthenticator.h"
 
+extern template class GS2CORE_API Gs2::Core::Util::TGs2Future<void>;
+
 namespace Gs2::UE5::Util
 {
 	class IAuthenticator;

@@ -21,6 +21,8 @@
 #include "Util/Net/GameSession.h"
 #include "Util/Net/Gs2Connection.h"
 
+extern template class GS2CORE_API Gs2::Core::Util::TGs2Future<void>;
+
 namespace Gs2::UE5::Util
 {
     class IAuthenticator;

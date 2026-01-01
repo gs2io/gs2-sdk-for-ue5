@@ -4,6 +4,8 @@
 #include "Core/Net/WebSocket/Gs2WebSocketSession.h"
 #include "Core/Util/Gs2Future.h"
 
+extern template class GS2CORE_API Gs2::Core::Util::TGs2Future<void>;
+
 namespace Gs2::UE5::Util
 {
 	class FGameSession;
