@@ -17,7 +17,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Enhance/Domain/Model/RateModel.h"
+#include "Enhance/Domain/Model/UnleashRateModel.h"
 #include "Enhance/Model/Gs2EnhanceEzRateModel.h"
 #include "Enhance/Model/Gs2EnhanceEzUnleashRateModel.h"
 #include "Enhance/Model/Gs2EnhanceEzUnleashRateEntryModel.h"
@@ -28,8 +28,8 @@
 #include "Enhance/Model/Gs2EnhanceEzConsumeActionResult.h"
 #include "Enhance/Model/Gs2EnhanceEzAcquireActionResult.h"
 #include "Enhance/Model/Gs2EnhanceEzTransactionResult.h"
-#include "Gs2EnhanceEzRateModelDomain.h"
-#include "Enhance/Domain/Iterator/Gs2EnhanceEzDescribeRateModelsIterator.h"
+#include "Gs2EnhanceEzUnleashRateModelDomain.h"
+#include "Enhance/Domain/Iterator/Gs2EnhanceEzDescribeUnleashRateModelsIterator.h"
 #include "Core/EzTransactionDomain.h"
 #include "Util/Net/GameSession.h"
 #include "Util/Net/Gs2Connection.h"
@@ -37,43 +37,43 @@
 namespace Gs2::UE5::Enhance::Domain::Model
 {
 
-    class EZGS2_API FEzRateModelDomain final :
-        public TSharedFromThis<FEzRateModelDomain>
+    class EZGS2_API FEzUnleashRateModelDomain final :
+        public TSharedFromThis<FEzUnleashRateModelDomain>
     {
-        Gs2::Enhance::Domain::Model::FRateModelDomainPtr Domain;
+        Gs2::Enhance::Domain::Model::FUnleashRateModelDomainPtr Domain;
         Gs2::UE5::Util::FGs2ConnectionPtr ConnectionValue;
 
         public:
         TOptional<FString> NamespaceName() const;
         TOptional<FString> RateName() const;
 
-        FEzRateModelDomain(
-            Gs2::Enhance::Domain::Model::FRateModelDomainPtr Domain,
+        FEzUnleashRateModelDomain(
+            Gs2::Enhance::Domain::Model::FUnleashRateModelDomainPtr Domain,
             Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
 
         class EZGS2_API FModelTask :
-            public Gs2::Core::Util::TGs2Future<Gs2::UE5::Enhance::Model::FEzRateModel>,
+            public Gs2::Core::Util::TGs2Future<Gs2::UE5::Enhance::Model::FEzUnleashRateModel>,
             public TSharedFromThis<FModelTask>
         {
-            TSharedPtr<FEzRateModelDomain> Self;
+            TSharedPtr<FEzUnleashRateModelDomain> Self;
 
         public:
             explicit FModelTask(
-                TSharedPtr<FEzRateModelDomain> Self
+                TSharedPtr<FEzUnleashRateModelDomain> Self
             );
 
             virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-                TSharedPtr<Gs2::UE5::Enhance::Model::FEzRateModelPtr> Result
+                TSharedPtr<Gs2::UE5::Enhance::Model::FEzUnleashRateModelPtr> Result
             ) override;
         };
 
         TSharedPtr<FAsyncTask<FModelTask>> Model();
 
-        Gs2::Core::Domain::CallbackID Subscribe(TFunction<void(Gs2::UE5::Enhance::Model::FEzRateModelPtr)> Callback);
+        Gs2::Core::Domain::CallbackID Subscribe(TFunction<void(Gs2::UE5::Enhance::Model::FEzUnleashRateModelPtr)> Callback);
 
         void Unsubscribe(Gs2::Core::Domain::CallbackID CallbackId);
 
     };
-    typedef TSharedPtr<FEzRateModelDomain> FEzRateModelDomainPtr;
+    typedef TSharedPtr<FEzUnleashRateModelDomain> FEzUnleashRateModelDomainPtr;
 }

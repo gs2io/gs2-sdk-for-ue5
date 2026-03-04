@@ -19,6 +19,8 @@
 #include "CoreMinimal.h"
 #include "Enhance/Domain/Model/UserAccessToken.h"
 #include "Enhance/Model/Gs2EnhanceEzRateModel.h"
+#include "Enhance/Model/Gs2EnhanceEzUnleashRateModel.h"
+#include "Enhance/Model/Gs2EnhanceEzUnleashRateEntryModel.h"
 #include "Enhance/Model/Gs2EnhanceEzProgress.h"
 #include "Enhance/Model/Gs2EnhanceEzConfig.h"
 #include "Enhance/Model/Gs2EnhanceEzMaterial.h"

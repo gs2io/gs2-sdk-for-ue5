@@ -14,15 +14,8 @@
  * permissions and limitations under the License.
  */
 
+#include "Enhance/Domain/Iterator/Gs2EnhanceEzDescribeUnleashRateModelsIterator.h"
 
-#include "Core/Util/Gs2Future.h"
-
-
-namespace Gs2::Core::Util
+namespace Gs2::UE5::Enhance::Domain::Iterator
 {
-
-	TArray<TSharedPtr<FAsyncTaskBase>> RunningTasks;
-
-	template class GS2CORE_API TGs2Future<void>;
-
 }

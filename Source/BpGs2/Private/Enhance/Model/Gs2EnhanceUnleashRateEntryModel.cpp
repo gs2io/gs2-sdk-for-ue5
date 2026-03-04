@@ -14,15 +14,4 @@
  * permissions and limitations under the License.
  */
 
-
-#include "Core/Util/Gs2Future.h"
-
-
-namespace Gs2::Core::Util
-{
-
-	TArray<TSharedPtr<FAsyncTaskBase>> RunningTasks;
-
-	template class GS2CORE_API TGs2Future<void>;
-
-}
+#include "Enhance/Model/Gs2EnhanceUnleashRateEntryModel.h"

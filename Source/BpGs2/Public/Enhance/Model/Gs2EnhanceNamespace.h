@@ -34,6 +34,12 @@ class BPGS2_API UGs2EnhanceNamespaceFunctionLibrary : public UBlueprintFunctionL
 {
     GENERATED_BODY()
 
+    UFUNCTION(BlueprintCallable, DisplayName="Gs2::Enhance::UnleashRateModel", Category="Game Server Services|GS2-Enhance|Namespace|UnleashRateModel", meta=(WorldContext="WorldContextObject"))
+    static UPARAM(DisplayName="UnleashRateModel") FGs2EnhanceUnleashRateModel UnleashRateModel(
+        FGs2EnhanceNamespace Namespace,
+        FString RateName
+    );
+
     UFUNCTION(BlueprintCallable, DisplayName="Gs2::Enhance::RateModel", Category="Game Server Services|GS2-Enhance|Namespace|RateModel", meta=(WorldContext="WorldContextObject"))
     static UPARAM(DisplayName="RateModel") FGs2EnhanceRateModel RateModel(
         FGs2EnhanceNamespace Namespace,

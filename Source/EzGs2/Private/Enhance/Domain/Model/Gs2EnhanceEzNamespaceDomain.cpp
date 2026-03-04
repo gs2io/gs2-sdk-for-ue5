@@ -82,6 +82,41 @@ namespace Gs2::UE5::Enhance::Domain::Model
         );
     }
 
+    Gs2::UE5::Enhance::Domain::Iterator::FEzDescribeUnleashRateModelsIteratorPtr FEzNamespaceDomain::UnleashRateModels(
+    ) const
+    {
+        return MakeShared<Gs2::UE5::Enhance::Domain::Iterator::FEzDescribeUnleashRateModelsIterator>(
+            Domain,
+            ConnectionValue
+        );
+    }
+
+    Gs2::Core::Domain::CallbackID FEzNamespaceDomain::SubscribeUnleashRateModels(TFunction<void()> Callback)
+    {
+        return Domain->SubscribeUnleashRateModels(
+            Callback
+        );
+    }
+
+    void FEzNamespaceDomain::UnsubscribeUnleashRateModels(Gs2::Core::Domain::CallbackID CallbackId)
+    {
+        Domain->UnsubscribeUnleashRateModels(
+            CallbackId
+        );
+    }
+
+    Gs2::UE5::Enhance::Domain::Model::FEzUnleashRateModelDomainPtr FEzNamespaceDomain::UnleashRateModel(
+        const FString RateName
+    ) const
+    {
+        return MakeShared<Gs2::UE5::Enhance::Domain::Model::FEzUnleashRateModelDomain>(
+            Domain->UnleashRateModel(
+                RateName
+            ),
+            ConnectionValue
+        );
+    }
+
     Gs2::UE5::Enhance::Domain::Model::FEzRateModelDomainPtr FEzNamespaceDomain::RateModel(
         const FString RateName
     ) const

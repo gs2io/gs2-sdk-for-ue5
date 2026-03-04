@@ -16,11 +16,33 @@
 
 #include "Enhance/Model/Gs2EnhanceNamespace.h"
 #include "Enhance/Domain/EzGs2Enhance.h"
+#include "Enhance/Model/Gs2EnhanceUnleashRateModel.h"
 #include "Enhance/Model/Gs2EnhanceRateModel.h"
 #include "Core/Model/Gs2AccessToken.h"
+#include "Enhance/Model/Gs2EnhanceUnleashRateModel.h"
 #include "Enhance/Model/Gs2EnhanceRateModel.h"
 #include "Enhance/Model/Gs2EnhanceUser.h"
 #include "Core/BpGs2Constant.h"
+
+FGs2EnhanceUnleashRateModel UGs2EnhanceNamespaceFunctionLibrary::UnleashRateModel(
+    FGs2EnhanceNamespace Namespace,
+    FString RateName
+)
+{
+    FGs2EnhanceUnleashRateModel Return;
+    if (Namespace.Value == nullptr) {
+        UE_LOG(BpGs2Log, Error, TEXT("[UGs2EnhanceNamespaceFunctionLibrary::UnleashRateModel] Namespace parameter specification is missing."))
+        return Return;
+    }
+    if (RateName == "") {
+        UE_LOG(BpGs2Log, Error, TEXT("[UGs2EnhanceNamespaceFunctionLibrary::UnleashRateModel] RateName parameter specification is missing."))
+        return Return;
+    }
+    Return.Value = Namespace.Value->UnleashRateModel(
+        RateName
+    );
+    return Return;
+}
 
 FGs2EnhanceRateModel UGs2EnhanceNamespaceFunctionLibrary::RateModel(
     FGs2EnhanceNamespace Namespace,

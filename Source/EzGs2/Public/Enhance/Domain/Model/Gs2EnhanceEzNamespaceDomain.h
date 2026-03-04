@@ -19,6 +19,8 @@
 #include "CoreMinimal.h"
 #include "Enhance/Domain/Model/Namespace.h"
 #include "Enhance/Model/Gs2EnhanceEzRateModel.h"
+#include "Enhance/Model/Gs2EnhanceEzUnleashRateModel.h"
+#include "Enhance/Model/Gs2EnhanceEzUnleashRateEntryModel.h"
 #include "Enhance/Model/Gs2EnhanceEzProgress.h"
 #include "Enhance/Model/Gs2EnhanceEzConfig.h"
 #include "Enhance/Model/Gs2EnhanceEzMaterial.h"
@@ -26,6 +28,8 @@
 #include "Enhance/Model/Gs2EnhanceEzConsumeActionResult.h"
 #include "Enhance/Model/Gs2EnhanceEzAcquireActionResult.h"
 #include "Enhance/Model/Gs2EnhanceEzTransactionResult.h"
+#include "Gs2EnhanceEzUnleashRateModelDomain.h"
+#include "Enhance/Domain/Iterator/Gs2EnhanceEzDescribeUnleashRateModelsIterator.h"
 #include "Gs2EnhanceEzRateModelDomain.h"
 #include "Enhance/Domain/Iterator/Gs2EnhanceEzDescribeRateModelsIterator.h"
 #include "Gs2EnhanceEzUserDomain.h"
@@ -64,6 +68,17 @@ namespace Gs2::UE5::Enhance::Domain::Model
         Gs2::Core::Domain::CallbackID SubscribeRateModels(TFunction<void()> Callback);
 
         void UnsubscribeRateModels(Gs2::Core::Domain::CallbackID CallbackId);
+
+        Gs2::UE5::Enhance::Domain::Iterator::FEzDescribeUnleashRateModelsIteratorPtr UnleashRateModels(
+        ) const;
+
+        Gs2::Core::Domain::CallbackID SubscribeUnleashRateModels(TFunction<void()> Callback);
+
+        void UnsubscribeUnleashRateModels(Gs2::Core::Domain::CallbackID CallbackId);
+
+        Gs2::UE5::Enhance::Domain::Model::FEzUnleashRateModelDomainPtr UnleashRateModel(
+            const FString RateName
+        ) const;
 
         Gs2::UE5::Enhance::Domain::Model::FEzRateModelDomainPtr RateModel(
             const FString RateName
