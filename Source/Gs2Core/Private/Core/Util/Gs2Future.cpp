@@ -23,6 +23,10 @@ namespace Gs2::Core::Util
 
 	TArray<TSharedPtr<FAsyncTaskBase>> RunningTasks;
 
+#if PLATFORM_WINDOWS
+	template class TGs2Future<void>;
+#else
 	template class GS2CORE_API TGs2Future<void>;
+#endif
 
 }
