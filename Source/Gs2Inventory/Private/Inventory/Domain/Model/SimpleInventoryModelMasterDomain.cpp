@@ -169,6 +169,19 @@ namespace Gs2::Inventory::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+        if (ResultModel->GetItem() != nullptr)
+        {
+            const auto Key = Gs2::Inventory::Domain::Model::FSimpleInventoryModelMasterDomain::CreateCacheKey(
+                ResultModel->GetItem()->GetName()
+            );
+            Self->Gs2->Cache->Put(
+                Gs2::Inventory::Model::FSimpleInventoryModelMaster::TypeName,
+                Self->ParentKey,
+                Key,
+                ResultModel->GetItem(),
+                FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+            );
+        }
         auto Domain = Self;
 
         *Result = Domain;
@@ -213,6 +226,21 @@ namespace Gs2::Inventory::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+        if (ResultModel->GetItem() != nullptr)
+        {
+            const auto Key = Gs2::Inventory::Domain::Model::FSimpleInventoryModelMasterDomain::CreateCacheKey(
+                ResultModel->GetItem()->GetName()
+            );
+            Self->Gs2->Cache->Delete(
+                Gs2::Inventory::Model::FSimpleInventoryModelMaster::TypeName,
+                Self->ParentKey,
+                Key
+            );
+        }
+        Self->Gs2->Cache->ClearListCache(
+            Gs2::Inventory::Model::FSimpleInventoryModelMaster::TypeName,
+            Self->ParentKey
+        );
         auto Domain = Self;
 
         *Result = Domain;
@@ -257,6 +285,19 @@ namespace Gs2::Inventory::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+        if (ResultModel->GetItem() != nullptr)
+        {
+            const auto Key = Gs2::Inventory::Domain::Model::FSimpleItemModelMasterDomain::CreateCacheKey(
+                ResultModel->GetItem()->GetName()
+            );
+            Self->Gs2->Cache->Put(
+                Gs2::Inventory::Model::FSimpleItemModelMaster::TypeName,
+                Self->ParentKey,
+                Key,
+                ResultModel->GetItem(),
+                FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+            );
+        }
         auto Domain = MakeShared<Gs2::Inventory::Domain::Model::FSimpleItemModelMasterDomain>(
             Self->Gs2,
             Self->Service,
@@ -406,13 +447,10 @@ namespace Gs2::Inventory::Domain::Model
                     return Future->GetTask().Error();
                 }
             }
-            Self->Gs2->Cache->TryGet<Gs2::Inventory::Model::FSimpleInventoryModelMaster>(
-                Self->ParentKey,
-                Gs2::Inventory::Domain::Model::FSimpleInventoryModelMasterDomain::CreateCacheKey(
-                    Self->InventoryName
-                ),
-                &Value
-            );
+            else
+            {
+                Value = Future->GetTask().Result();
+            }
             Future->EnsureCompletion();
         }
         *Result = Value;

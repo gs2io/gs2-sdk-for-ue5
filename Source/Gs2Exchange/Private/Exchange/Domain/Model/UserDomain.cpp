@@ -108,6 +108,19 @@ namespace Gs2::Exchange::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+        if (ResultModel->GetItem() != nullptr)
+        {
+            const auto Key = Gs2::Exchange::Domain::Model::FAwaitDomain::CreateCacheKey(
+                ResultModel->GetItem()->GetName()
+            );
+            Self->Gs2->Cache->Put(
+                Gs2::Exchange::Model::FAwait::TypeName,
+                Self->ParentKey,
+                Key,
+                ResultModel->GetItem(),
+                FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+            );
+        }
         auto Domain = MakeShared<Gs2::Exchange::Domain::Model::FAwaitDomain>(
             Self->Gs2,
             Self->Service,

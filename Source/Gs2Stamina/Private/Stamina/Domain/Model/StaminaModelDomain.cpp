@@ -192,13 +192,10 @@ namespace Gs2::Stamina::Domain::Model
                     return Future->GetTask().Error();
                 }
             }
-            Self->Gs2->Cache->TryGet<Gs2::Stamina::Model::FStaminaModel>(
-                Self->ParentKey,
-                Gs2::Stamina::Domain::Model::FStaminaModelDomain::CreateCacheKey(
-                    Self->StaminaName
-                ),
-                &Value
-            );
+            else
+            {
+                Value = Future->GetTask().Result();
+            }
             Future->EnsureCompletion();
         }
         *Result = Value;

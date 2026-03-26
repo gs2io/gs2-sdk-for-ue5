@@ -151,6 +151,21 @@ namespace Gs2::JobQueue::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+        if (ResultModel->GetItem() != nullptr)
+        {
+            const auto Key = Gs2::JobQueue::Domain::Model::FJobDomain::CreateCacheKey(
+                ResultModel->GetItem()->GetName()
+            );
+            Self->Gs2->Cache->Delete(
+                Gs2::JobQueue::Model::FJob::TypeName,
+                Self->ParentKey,
+                Key
+            );
+        }
+        Self->Gs2->Cache->ClearListCache(
+            Gs2::JobQueue::Model::FJob::TypeName,
+            Self->ParentKey
+        );
         auto Domain = Self;
 
         *Result = Domain;
@@ -254,13 +269,10 @@ namespace Gs2::JobQueue::Domain::Model
                     return Future->GetTask().Error();
                 }
             }
-            Self->Gs2->Cache->TryGet<Gs2::JobQueue::Model::FJob>(
-                Self->ParentKey,
-                Gs2::JobQueue::Domain::Model::FJobDomain::CreateCacheKey(
-                    Self->JobName
-                ),
-                &Value
-            );
+            else
+            {
+                Value = Future->GetTask().Result();
+            }
             Future->EnsureCompletion();
         }
         *Result = Value;

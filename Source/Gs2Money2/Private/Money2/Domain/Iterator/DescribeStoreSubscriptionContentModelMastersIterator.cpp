@@ -146,7 +146,7 @@ namespace Gs2::Money2::Domain::Iterator
             }
             if (Range)
             {
-                Range->RemoveAll([this](const Gs2::Money2::Model::FStoreSubscriptionContentModelMasterPtr& Item) { return !Self->NamePrefix && Item->GetName()->StartsWith(*Self->NamePrefix); });
+                Range->RemoveAll([this](const Gs2::Money2::Model::FStoreSubscriptionContentModelMasterPtr& Item) { return Self->NamePrefix.IsSet() && !Item->GetName()->StartsWith(*Self->NamePrefix); });
             }
             RangeIteratorOpt = Range->CreateIterator();
             PageToken = R->GetNextPageToken();

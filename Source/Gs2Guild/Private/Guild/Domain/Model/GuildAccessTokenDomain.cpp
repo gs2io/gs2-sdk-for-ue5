@@ -57,7 +57,8 @@ namespace Gs2::Guild::Domain::Model
         const Guild::Domain::FGs2GuildDomainPtr& Service,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> GuildModelName,
-        const Gs2::Auth::Model::FAccessTokenPtr& AccessToken
+        const Gs2::Auth::Model::FAccessTokenPtr& AccessToken,
+        const TOptional<FString> GuildName
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
@@ -66,6 +67,7 @@ namespace Gs2::Guild::Domain::Model
         NamespaceName(NamespaceName),
         GuildModelName(GuildModelName),
         AccessToken(AccessToken),
+        GuildNameValue(GuildName.IsSet() ? GuildName : AccessToken->GetUserId()),
         ParentKey(Gs2::Guild::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
             NamespaceName,
             "Guild"
@@ -82,6 +84,7 @@ namespace Gs2::Guild::Domain::Model
         NamespaceName(From.NamespaceName),
         GuildModelName(From.GuildModelName),
         AccessToken(From.AccessToken),
+        GuildNameValue(From.GuildNameValue),
         ParentKey(From.ParentKey)
     {
 
@@ -109,6 +112,7 @@ namespace Gs2::Guild::Domain::Model
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithGuildModelName(Self->GuildModelName)
+            ->WithGuildName(Self->GuildName())
             ->WithAccessToken(Self->AccessToken->GetToken());
         const auto Future = Self->Client->GetGuild(
             Request
@@ -896,7 +900,7 @@ namespace Gs2::Guild::Domain::Model
             Self->ParentKey,
             Gs2::Guild::Domain::Model::FGuildDomain::CreateCacheKey(
                 Self->GuildModelName,
-                Self->AccessToken->GetUserId()
+                Self->GuildName()
             ),
             &Value
         );
@@ -929,14 +933,23 @@ namespace Gs2::Guild::Domain::Model
                     return Future->GetTask().Error();
                 }
             }
-            Self->Gs2->Cache->TryGet<Gs2::Guild::Model::FGuild>(
-                Self->ParentKey,
-                Gs2::Guild::Domain::Model::FGuildDomain::CreateCacheKey(
-                    Self->GuildModelName,
-                    Self->AccessToken->GetUserId()
-                ),
-                &Value
-            );
+            else
+            {
+                Value = Future->GetTask().Result();
+                if (Value.IsValid())
+                {
+                    Self->Gs2->Cache->Put(
+                        Gs2::Guild::Model::FGuild::TypeName,
+                        Self->ParentKey,
+                        FGuildDomain::CreateCacheKey(
+                            Self->GuildModelName,
+                            Self->GuildName()
+                        ),
+                        Value,
+                        FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                    );
+                }
+            }
             Future->EnsureCompletion();
         }
         *Result = Value;

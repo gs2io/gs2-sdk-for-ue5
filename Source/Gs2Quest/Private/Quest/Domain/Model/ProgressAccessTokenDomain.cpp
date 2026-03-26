@@ -158,10 +158,10 @@ namespace Gs2::Quest::Domain::Model
             Self->Gs2,
             Self->AccessToken,
             ResultModel->GetAutoRunStampSheet().IsSet() ? *ResultModel->GetAutoRunStampSheet() : false,
-            *ResultModel->GetTransactionId(),
-            *ResultModel->GetStampSheet(),
-            *ResultModel->GetStampSheetEncryptionKeyId(),
-            *ResultModel->GetAtomicCommit(),
+            ResultModel->GetTransactionId().IsSet() ? *ResultModel->GetTransactionId() : FString(),
+            ResultModel->GetStampSheet().IsSet() ? *ResultModel->GetStampSheet() : FString(),
+            ResultModel->GetStampSheetEncryptionKeyId().IsSet() ? *ResultModel->GetStampSheetEncryptionKeyId() : FString(),
+            ResultModel->GetAtomicCommit().IsSet() ? *ResultModel->GetAtomicCommit() : false,
             ResultModel->GetTransactionResult()
         );
         const auto Future3 = Transaction->Wait(true);
@@ -213,6 +213,20 @@ namespace Gs2::Quest::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+        if (ResultModel->GetItem() != nullptr)
+        {
+            const auto Key = Gs2::Quest::Domain::Model::FProgressDomain::CreateCacheKey(
+            );
+            Self->Gs2->Cache->Delete(
+                Gs2::Quest::Model::FProgress::TypeName,
+                Self->ParentKey,
+                Key
+            );
+        }
+        Self->Gs2->Cache->ClearListCache(
+            Gs2::Quest::Model::FProgress::TypeName,
+            Self->ParentKey
+        );
         auto Domain = Self;
 
         *Result = Domain;
@@ -296,12 +310,10 @@ namespace Gs2::Quest::Domain::Model
                     return Future->GetTask().Error();
                 }
             }
-            Self->Gs2->Cache->TryGet<Gs2::Quest::Model::FProgress>(
-                Self->ParentKey,
-                Gs2::Quest::Domain::Model::FProgressDomain::CreateCacheKey(
-                ),
-                &Value
-            );
+            else
+            {
+                Value = Future->GetTask().Result();
+            }
             Future->EnsureCompletion();
         }
         *Result = Value;

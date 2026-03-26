@@ -12,6 +12,8 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
+ *
+ * deny overwrite
  */
 
 #if defined(_MSC_VER)
@@ -167,6 +169,33 @@ namespace Gs2::Friend::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+        if (ResultModel->GetItem() != nullptr)
+        {
+            const auto Key = Gs2::Friend::Domain::Model::FSendFriendRequestDomain::CreateCacheKey(
+                ResultModel->GetItem()->GetTargetUserId()
+            );
+            Self->Gs2->Cache->Delete(
+                Gs2::Friend::Model::FFriendRequest::TypeName,
+                Self->ParentKey,
+                Key
+            );
+        }
+        Self->Gs2->Cache->ClearListCache(
+            Gs2::Friend::Model::FFriendRequest::TypeName,
+            Self->ParentKey
+        );
+        for (const FString& Suffix : {FString("True"), FString("False")})
+        {
+            const auto SendParentKey = Gs2::Friend::Domain::Model::FUserDomain::CreateCacheParentKey(
+                Self->NamespaceName,
+                Self->UserId(),
+                FString("SendFriendRequest:") + Suffix
+            );
+            Self->Gs2->Cache->ClearListCache(
+                Gs2::Friend::Model::FSendFriendRequest::TypeName,
+                SendParentKey
+            );
+        }
         auto Domain = MakeShared<Gs2::Friend::Domain::Model::FSendFriendRequestAccessTokenDomain>(
             Self->Gs2,
             Self->Service,
@@ -227,11 +256,31 @@ namespace Gs2::Friend::Domain::Model
     {
         // ReSharper disable once CppLocalVariableMayBeConst
         TSharedPtr<Gs2::Friend::Model::FFriendRequest> Value;
+
+        // First try to find FSendFriendRequest (cached by iterator with WithProfile)
+        const auto CacheKey = Gs2::Friend::Domain::Model::FSendFriendRequestDomain::CreateCacheKey(Self->TargetUserId);
+        for (const FString& Suffix : {FString("True"), FString("False")})
+        {
+            TSharedPtr<Gs2::Friend::Model::FSendFriendRequest> SendValue;
+            const auto SendParentKey = Gs2::Friend::Domain::Model::FUserDomain::CreateCacheParentKey(
+                Self->NamespaceName,
+                Self->UserId(),
+                FString("SendFriendRequest:") + Suffix
+            );
+            if (Self->Gs2->Cache->TryGet<Gs2::Friend::Model::FSendFriendRequest>(SendParentKey, CacheKey, &SendValue) && SendValue != nullptr)
+            {
+                Value = MakeShared<Gs2::Friend::Model::FFriendRequest>()
+                    ->WithUserId(SendValue->GetUserId())
+                    ->WithTargetUserId(SendValue->GetTargetUserId())
+                    ->WithPublicProfile(SendValue->GetPublicProfile());
+                *Result = Value;
+                return nullptr;
+            }
+        }
+
         auto bCacheHit = Self->Gs2->Cache->TryGet<Gs2::Friend::Model::FFriendRequest>(
             Self->ParentKey,
-            Gs2::Friend::Domain::Model::FSendFriendRequestDomain::CreateCacheKey(
-                Self->TargetUserId
-            ),
+            CacheKey,
             &Value
         );
         if (!bCacheHit) {
@@ -262,13 +311,10 @@ namespace Gs2::Friend::Domain::Model
                     return Future->GetTask().Error();
                 }
             }
-            Self->Gs2->Cache->TryGet<Gs2::Friend::Model::FFriendRequest>(
-                Self->ParentKey,
-                Gs2::Friend::Domain::Model::FSendFriendRequestDomain::CreateCacheKey(
-                    Self->TargetUserId
-                ),
-                &Value
-            );
+            else
+            {
+                Value = Future->GetTask().Result();
+            }
             Future->EnsureCompletion();
         }
         *Result = Value;

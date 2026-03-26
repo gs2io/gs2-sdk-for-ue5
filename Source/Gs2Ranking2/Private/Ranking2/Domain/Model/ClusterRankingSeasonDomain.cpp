@@ -147,6 +147,26 @@ namespace Gs2::Ranking2::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+        if (ResultModel->GetItem() != nullptr)
+        {
+            const auto ParentKey = Gs2::Ranking2::Domain::Model::FClusterRankingSeasonDomain::CreateCacheParentKey(
+                Request->GetNamespaceName(),
+                ResultModel->GetItem()->GetRankingName(),
+                ResultModel->GetItem()->GetClusterName(),
+                ResultModel->GetItem()->GetSeason(),
+                TEXT("ClusterRankingData")
+            );
+            const auto Key = Gs2::Ranking2::Domain::Model::FClusterRankingDataDomain::CreateCacheKey(
+                ResultModel->GetItem()->GetUserId()
+            );
+            Self->Gs2->Cache->Put(
+                Gs2::Ranking2::Model::FClusterRankingData::TypeName,
+                ParentKey,
+                Key,
+                ResultModel->GetItem(),
+                FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+            );
+        }
         auto Domain = MakeShared<Gs2::Ranking2::Domain::Model::FClusterRankingDataDomain>(
             Self->Gs2,
             Self->Service,

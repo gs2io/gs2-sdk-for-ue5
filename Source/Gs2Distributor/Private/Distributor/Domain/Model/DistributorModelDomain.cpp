@@ -193,13 +193,10 @@ namespace Gs2::Distributor::Domain::Model
                     return Future->GetTask().Error();
                 }
             }
-            Self->Gs2->Cache->TryGet<Gs2::Distributor::Model::FDistributorModel>(
-                Self->ParentKey,
-                Gs2::Distributor::Domain::Model::FDistributorModelDomain::CreateCacheKey(
-                    Self->DistributorName
-                ),
-                &Value
-            );
+            else
+            {
+                Value = Future->GetTask().Result();
+            }
             Future->EnsureCompletion();
         }
         *Result = Value;

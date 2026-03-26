@@ -219,13 +219,10 @@ namespace Gs2::Inventory::Domain::Model
                     return Future->GetTask().Error();
                 }
             }
-            Self->Gs2->Cache->TryGet<Gs2::Inventory::Model::FBigItemModel>(
-                Self->ParentKey,
-                Gs2::Inventory::Domain::Model::FBigItemModelDomain::CreateCacheKey(
-                    Self->ItemName
-                ),
-                &Value
-            );
+            else
+            {
+                Value = Future->GetTask().Result();
+            }
             Future->EnsureCompletion();
         }
         *Result = Value;

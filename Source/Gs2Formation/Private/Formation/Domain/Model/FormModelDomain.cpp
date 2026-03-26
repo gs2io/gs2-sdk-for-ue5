@@ -194,12 +194,10 @@ namespace Gs2::Formation::Domain::Model
                     return Future->GetTask().Error();
                 }
             }
-            Self->Gs2->Cache->TryGet<Gs2::Formation::Model::FFormModel>(
-                Self->ParentKey,
-                Gs2::Formation::Domain::Model::FFormModelDomain::CreateCacheKey(
-                ),
-                &Value
-            );
+            else
+            {
+                Value = Future->GetTask().Result();
+            }
             Future->EnsureCompletion();
         }
         *Result = Value;

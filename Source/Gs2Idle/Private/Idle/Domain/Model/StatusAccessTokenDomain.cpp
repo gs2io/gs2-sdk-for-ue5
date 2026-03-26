@@ -156,7 +156,23 @@ namespace Gs2::Idle::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
-        *Result = ResultModel->GetItems();
+        const auto Items = ResultModel->GetItems();
+        if (Items != nullptr)
+        {
+            const auto UserId = Self->AccessToken->GetUserId().IsSet() ? *Self->AccessToken->GetUserId() : FString();
+            for (const auto& Item : *Items)
+            {
+                if (!Item.IsValid() || !Item->GetRequest().IsSet())
+                {
+                    continue;
+                }
+                auto RequestString = Item->GetRequest().GetValue();
+                RequestString = RequestString.Replace(TEXT("#{userId}"), *UserId);
+                RequestString = RequestString.Replace(TEXT("{userId}"), *UserId);
+                Item->WithRequest(RequestString);
+            }
+        }
+        *Result = Items;
         return nullptr;
     }
 
@@ -204,10 +220,10 @@ namespace Gs2::Idle::Domain::Model
             Self->Gs2,
             Self->AccessToken,
             ResultModel->GetAutoRunStampSheet().IsSet() ? *ResultModel->GetAutoRunStampSheet() : false,
-            *ResultModel->GetTransactionId(),
-            *ResultModel->GetStampSheet(),
-            *ResultModel->GetStampSheetEncryptionKeyId(),
-            *ResultModel->GetAtomicCommit(),
+            ResultModel->GetTransactionId().IsSet() ? *ResultModel->GetTransactionId() : FString(),
+            ResultModel->GetStampSheet().IsSet() ? *ResultModel->GetStampSheet() : FString(),
+            ResultModel->GetStampSheetEncryptionKeyId().IsSet() ? *ResultModel->GetStampSheetEncryptionKeyId() : FString(),
+            ResultModel->GetAtomicCommit().IsSet() ? *ResultModel->GetAtomicCommit() : false,
             ResultModel->GetTransactionResult()
         );
         const auto Future3 = Transaction->Wait(true);
@@ -349,13 +365,10 @@ namespace Gs2::Idle::Domain::Model
                     return Future->GetTask().Error();
                 }
             }
-            Self->Gs2->Cache->TryGet<Gs2::Idle::Model::FStatus>(
-                Self->ParentKey,
-                Gs2::Idle::Domain::Model::FStatusDomain::CreateCacheKey(
-                    Self->CategoryName
-                ),
-                &Value
-            );
+            else
+            {
+                Value = Future->GetTask().Result();
+            }
             Future->EnsureCompletion();
         }
         *Result = Value;

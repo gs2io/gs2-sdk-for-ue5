@@ -197,13 +197,10 @@ namespace Gs2::SerialKey::Domain::Model
                     return Future->GetTask().Error();
                 }
             }
-            Self->Gs2->Cache->TryGet<Gs2::SerialKey::Model::FIssueJob>(
-                Self->ParentKey,
-                Gs2::SerialKey::Domain::Model::FIssueJobDomain::CreateCacheKey(
-                    Self->IssueJobName
-                ),
-                &Value
-            );
+            else
+            {
+                Value = Future->GetTask().Result();
+            }
             Future->EnsureCompletion();
         }
         *Result = Value;

@@ -238,12 +238,21 @@ namespace Gs2::Matchmaking::Domain::Model
                     return Future->GetTask().Error();
                 }
             }
-            Self->Gs2->Cache->TryGet<Gs2::Matchmaking::Model::FJoinedSeasonGathering>(
-                Self->ParentKey,
-                Gs2::Matchmaking::Domain::Model::FJoinedSeasonGatheringDomain::CreateCacheKey(
-                ),
-                &Value
-            );
+            else
+            {
+                Value = Future->GetTask().Result();
+                if (Value.IsValid())
+                {
+                    Self->Gs2->Cache->Put(
+                        Gs2::Matchmaking::Model::FJoinedSeasonGathering::TypeName,
+                        Self->ParentKey,
+                        FJoinedSeasonGatheringDomain::CreateCacheKey(
+                        ),
+                        Value,
+                        FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                    );
+                }
+            }
             Future->EnsureCompletion();
         }
         *Result = Value;

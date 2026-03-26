@@ -202,13 +202,10 @@ namespace Gs2::Matchmaking::Domain::Model
                     return Future->GetTask().Error();
                 }
             }
-            Self->Gs2->Cache->TryGet<Gs2::Matchmaking::Model::FSeasonModel>(
-                Self->ParentKey,
-                Gs2::Matchmaking::Domain::Model::FSeasonModelDomain::CreateCacheKey(
-                    Self->SeasonName
-                ),
-                &Value
-            );
+            else
+            {
+                Value = Future->GetTask().Result();
+            }
             Future->EnsureCompletion();
         }
         *Result = Value;

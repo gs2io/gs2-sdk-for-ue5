@@ -12,6 +12,8 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
+ *
+ * deny overwrite
  */
 
 #if defined(_MSC_VER)
@@ -23,6 +25,7 @@
 #endif
 
 #include "Friend/Domain/Model/BlackList.h"
+#include "Friend/Domain/Model/BlackListEntry.h"
 #include "Friend/Domain/Model/Namespace.h"
 #include "Friend/Domain/Model/User.h"
 #include "Friend/Domain/Model/UserAccessToken.h"
@@ -119,6 +122,22 @@ namespace Gs2::Friend::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+        if (ResultModel->GetItem() != nullptr)
+        {
+            const auto Key = Gs2::Friend::Domain::Model::FBlackListDomain::CreateCacheKey(
+            );
+            Self->Gs2->Cache->Put(
+                Gs2::Friend::Model::FBlackList::TypeName,
+                Self->ParentKey,
+                Key,
+                ResultModel->GetItem(),
+                FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+            );
+        }
+        Self->Gs2->Cache->ClearListCache(
+            Gs2::Friend::Model::FBlackListEntry::TypeName,
+            Self->ParentKey
+        );
         auto Domain = Self;
 
         *Result = Domain;
@@ -163,6 +182,22 @@ namespace Gs2::Friend::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+        if (ResultModel->GetItem() != nullptr)
+        {
+            const auto Key = Gs2::Friend::Domain::Model::FBlackListDomain::CreateCacheKey(
+            );
+            Self->Gs2->Cache->Put(
+                Gs2::Friend::Model::FBlackList::TypeName,
+                Self->ParentKey,
+                Key,
+                ResultModel->GetItem(),
+                FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+            );
+        }
+        Self->Gs2->Cache->ClearListCache(
+            Gs2::Friend::Model::FBlackListEntry::TypeName,
+            Self->ParentKey
+        );
         auto Domain = Self;
 
         *Result = Domain;

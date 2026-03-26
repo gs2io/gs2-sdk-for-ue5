@@ -202,13 +202,10 @@ namespace Gs2::Mission::Domain::Model
                     return Future->GetTask().Error();
                 }
             }
-            Self->Gs2->Cache->TryGet<Gs2::Mission::Model::FMissionTaskModel>(
-                Self->ParentKey,
-                Gs2::Mission::Domain::Model::FMissionTaskModelDomain::CreateCacheKey(
-                    Self->MissionTaskName
-                ),
-                &Value
-            );
+            else
+            {
+                Value = Future->GetTask().Result();
+            }
             Future->EnsureCompletion();
         }
         *Result = Value;

@@ -206,13 +206,10 @@ namespace Gs2::Money2::Domain::Model
                     return Future->GetTask().Error();
                 }
             }
-            Self->Gs2->Cache->TryGet<Gs2::Money2::Model::FSubscriptionStatus>(
-                Self->ParentKey,
-                Gs2::Money2::Domain::Model::FSubscriptionStatusDomain::CreateCacheKey(
-                    Self->ContentName
-                ),
-                &Value
-            );
+            else
+            {
+                Value = Future->GetTask().Result();
+            }
             Future->EnsureCompletion();
         }
         *Result = Value;

@@ -221,13 +221,10 @@ namespace Gs2::Showcase::Domain::Model
                     return Future->GetTask().Error();
                 }
             }
-            Self->Gs2->Cache->TryGet<Gs2::Showcase::Model::FShowcase>(
-                Self->ParentKey,
-                Gs2::Showcase::Domain::Model::FShowcaseDomain::CreateCacheKey(
-                    Self->ShowcaseName
-                ),
-                &Value
-            );
+            else
+            {
+                Value = Future->GetTask().Result();
+            }
             Future->EnsureCompletion();
         }
         *Result = Value;

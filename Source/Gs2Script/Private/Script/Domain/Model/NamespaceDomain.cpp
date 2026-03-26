@@ -183,6 +183,19 @@ namespace Gs2::Script::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+        if (ResultModel->GetItem() != nullptr)
+        {
+            const auto Key = Gs2::Script::Domain::Model::FNamespaceDomain::CreateCacheKey(
+                ResultModel->GetItem()->GetName()
+            );
+            Self->Gs2->Cache->Put(
+                Gs2::Script::Model::FNamespace::TypeName,
+                "script:Namespace",
+                Key,
+                ResultModel->GetItem(),
+                FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+            );
+        }
         auto Domain = Self;
 
         *Result = Domain;
@@ -580,13 +593,22 @@ namespace Gs2::Script::Domain::Model
                     return Future->GetTask().Error();
                 }
             }
-            Self->Gs2->Cache->TryGet<Gs2::Script::Model::FNamespace>(
-                ParentKey,
-                Gs2::Script::Domain::Model::FNamespaceDomain::CreateCacheKey(
-                    Self->NamespaceName
-                ),
-                &Value
-            );
+            else
+            {
+                Value = Future->GetTask().Result();
+                if (Value.IsValid())
+                {
+                    Self->Gs2->Cache->Put(
+                        Gs2::Script::Model::FNamespace::TypeName,
+                        ParentKey,
+                        FNamespaceDomain::CreateCacheKey(
+                            Self->NamespaceName
+                        ),
+                        Value,
+                        FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                    );
+                }
+            }
             Future->EnsureCompletion();
         }
         *Result = Value;

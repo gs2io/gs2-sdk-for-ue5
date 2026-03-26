@@ -12,6 +12,8 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
+ *
+ * deny overwrite
  */
 
 #include "Identifier/Model/User.h"
@@ -176,9 +178,13 @@ namespace Gs2::Identifier::Model
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithName(Data->HasField(ANSI_TO_TCHAR("name")) ? [Data]() -> TOptional<FString>
+            ->WithName((Data->HasField(ANSI_TO_TCHAR("userName")) || Data->HasField(ANSI_TO_TCHAR("name"))) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("userName"), v))
+                    {
+                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                    }
                     if (Data->TryGetStringField(ANSI_TO_TCHAR("name"), v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -232,7 +238,7 @@ namespace Gs2::Identifier::Model
         }
         if (NameValue.IsSet())
         {
-            JsonRootObject->SetStringField("name", NameValue.GetValue());
+            JsonRootObject->SetStringField("userName", NameValue.GetValue());
         }
         if (DescriptionValue.IsSet())
         {

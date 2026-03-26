@@ -329,7 +329,7 @@ namespace Gs2::Ranking2::Domain::Model
             RankingName,
             Season,
             AccessToken,
-            ScorerUserId
+            ScorerUserId.IsSet() ? ScorerUserId : AccessToken->GetUserId()
         );
     }
 

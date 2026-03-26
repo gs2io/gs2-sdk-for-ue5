@@ -203,12 +203,10 @@ namespace Gs2::Guild::Domain::Model
                     return Future->GetTask().Error();
                 }
             }
-            Self->Gs2->Cache->TryGet<Gs2::Guild::Model::FLastGuildMasterActivity>(
-                Self->ParentKey,
-                Gs2::Guild::Domain::Model::FLastGuildMasterActivityDomain::CreateCacheKey(
-                ),
-                &Value
-            );
+            else
+            {
+                Value = Future->GetTask().Result();
+            }
             Future->EnsureCompletion();
         }
         *Result = Value;

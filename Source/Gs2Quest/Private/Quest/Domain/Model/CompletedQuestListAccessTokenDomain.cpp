@@ -201,13 +201,10 @@ namespace Gs2::Quest::Domain::Model
                     return Future->GetTask().Error();
                 }
             }
-            Self->Gs2->Cache->TryGet<Gs2::Quest::Model::FCompletedQuestList>(
-                Self->ParentKey,
-                Gs2::Quest::Domain::Model::FCompletedQuestListDomain::CreateCacheKey(
-                    Self->QuestGroupName
-                ),
-                &Value
-            );
+            else
+            {
+                Value = Future->GetTask().Result();
+            }
             Future->EnsureCompletion();
         }
         *Result = Value;

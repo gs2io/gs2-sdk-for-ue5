@@ -147,6 +147,19 @@ namespace Gs2::Schedule::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+        if (ResultModel->GetItem() != nullptr)
+        {
+            const auto Key = Gs2::Schedule::Domain::Model::FEventMasterDomain::CreateCacheKey(
+                ResultModel->GetItem()->GetName()
+            );
+            Self->Gs2->Cache->Put(
+                Gs2::Schedule::Model::FEventMaster::TypeName,
+                Self->ParentKey,
+                Key,
+                ResultModel->GetItem(),
+                FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+            );
+        }
         auto Domain = Self;
 
         *Result = Domain;
@@ -191,6 +204,21 @@ namespace Gs2::Schedule::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+        if (ResultModel->GetItem() != nullptr)
+        {
+            const auto Key = Gs2::Schedule::Domain::Model::FEventMasterDomain::CreateCacheKey(
+                ResultModel->GetItem()->GetName()
+            );
+            Self->Gs2->Cache->Delete(
+                Gs2::Schedule::Model::FEventMaster::TypeName,
+                Self->ParentKey,
+                Key
+            );
+        }
+        Self->Gs2->Cache->ClearListCache(
+            Gs2::Schedule::Model::FEventMaster::TypeName,
+            Self->ParentKey
+        );
         auto Domain = Self;
 
         *Result = Domain;
@@ -278,13 +306,10 @@ namespace Gs2::Schedule::Domain::Model
                     return Future->GetTask().Error();
                 }
             }
-            Self->Gs2->Cache->TryGet<Gs2::Schedule::Model::FEventMaster>(
-                Self->ParentKey,
-                Gs2::Schedule::Domain::Model::FEventMasterDomain::CreateCacheKey(
-                    Self->EventName
-                ),
-                &Value
-            );
+            else
+            {
+                Value = Future->GetTask().Result();
+            }
             Future->EnsureCompletion();
         }
         *Result = Value;

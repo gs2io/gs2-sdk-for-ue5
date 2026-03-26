@@ -211,14 +211,10 @@ namespace Gs2::Enchant::Domain::Model
                     return Future->GetTask().Error();
                 }
             }
-            Self->Gs2->Cache->TryGet<Gs2::Enchant::Model::FBalanceParameterStatus>(
-                Self->ParentKey,
-                Gs2::Enchant::Domain::Model::FBalanceParameterStatusDomain::CreateCacheKey(
-                    Self->ParameterName,
-                    Self->PropertyId
-                ),
-                &Value
-            );
+            else
+            {
+                Value = Future->GetTask().Result();
+            }
             Future->EnsureCompletion();
         }
         *Result = Value;

@@ -141,8 +141,7 @@ namespace Gs2::Account::Domain::Iterator
                     Gs2::Account::Model::FPlatformId::TypeName,
                     ListParentKey,
                     Gs2::Account::Domain::Model::FPlatformIdDomain::CreateCacheKey(
-                        FString::FromInt(*Item->GetType()),
-                        *Item->GetUserIdentifier()
+                        *Item->GetType()
                     ),
                     Item,
                     FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)

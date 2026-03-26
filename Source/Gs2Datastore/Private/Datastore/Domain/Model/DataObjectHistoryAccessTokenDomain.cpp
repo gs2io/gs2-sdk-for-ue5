@@ -203,13 +203,10 @@ namespace Gs2::Datastore::Domain::Model
                     return Future->GetTask().Error();
                 }
             }
-            Self->Gs2->Cache->TryGet<Gs2::Datastore::Model::FDataObjectHistory>(
-                Self->ParentKey,
-                Gs2::Datastore::Domain::Model::FDataObjectHistoryDomain::CreateCacheKey(
-                    Self->Generation
-                ),
-                &Value
-            );
+            else
+            {
+                Value = Future->GetTask().Result();
+            }
             Future->EnsureCompletion();
         }
         *Result = Value;

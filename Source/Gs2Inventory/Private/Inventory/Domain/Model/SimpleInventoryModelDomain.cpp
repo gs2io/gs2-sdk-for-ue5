@@ -266,13 +266,10 @@ namespace Gs2::Inventory::Domain::Model
                     return Future->GetTask().Error();
                 }
             }
-            Self->Gs2->Cache->TryGet<Gs2::Inventory::Model::FSimpleInventoryModel>(
-                Self->ParentKey,
-                Gs2::Inventory::Domain::Model::FSimpleInventoryModelDomain::CreateCacheKey(
-                    Self->InventoryName
-                ),
-                &Value
-            );
+            else
+            {
+                Value = Future->GetTask().Result();
+            }
             Future->EnsureCompletion();
         }
         *Result = Value;

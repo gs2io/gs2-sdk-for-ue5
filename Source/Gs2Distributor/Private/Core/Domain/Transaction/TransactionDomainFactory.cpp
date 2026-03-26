@@ -59,7 +59,7 @@ namespace Gs2::Core::Domain
 				TransactionResult
 			);
 		};
-		if (bAutoRun) {
+		if (bAutoRun && !TransactionId.IsEmpty()) {
 			return MakeShared<FAutoTransactionAccessTokenDomain>(
 				GS2,
 				NewJobQueueDomain,
@@ -116,7 +116,7 @@ namespace Gs2::Core::Domain
 				TransactionResult
 			);
 		};
-		if (bAutoRun) {
+		if (bAutoRun && !TransactionId.IsEmpty()) {
 			return MakeShared<FAutoTransactionDomain>(
 				GS2,
 				NewJobQueueDomain,

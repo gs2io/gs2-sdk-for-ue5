@@ -100,6 +100,18 @@ namespace Gs2::SkillTree::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+        if (ResultModel->GetItem() != nullptr)
+        {
+            const auto Key = Gs2::SkillTree::Domain::Model::FCurrentTreeMasterDomain::CreateCacheKey(
+            );
+            Self->Gs2->Cache->Put(
+                Gs2::SkillTree::Model::FCurrentTreeMaster::TypeName,
+                Self->ParentKey,
+                Key,
+                ResultModel->GetItem(),
+                FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+            );
+        }
         auto Domain = Self;
 
         *Result = Domain;
@@ -237,6 +249,18 @@ namespace Gs2::SkillTree::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+        if (ResultModel->GetItem() != nullptr)
+        {
+            const auto Key = Gs2::SkillTree::Domain::Model::FCurrentTreeMasterDomain::CreateCacheKey(
+            );
+            Self->Gs2->Cache->Put(
+                Gs2::SkillTree::Model::FCurrentTreeMaster::TypeName,
+                Self->ParentKey,
+                Key,
+                ResultModel->GetItem(),
+                FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+            );
+        }
         auto Domain = Self;
 
         *Result = Domain;
@@ -280,6 +304,18 @@ namespace Gs2::SkillTree::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+        if (ResultModel->GetItem() != nullptr)
+        {
+            const auto Key = Gs2::SkillTree::Domain::Model::FCurrentTreeMasterDomain::CreateCacheKey(
+            );
+            Self->Gs2->Cache->Put(
+                Gs2::SkillTree::Model::FCurrentTreeMaster::TypeName,
+                Self->ParentKey,
+                Key,
+                ResultModel->GetItem(),
+                FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+            );
+        }
         auto Domain = Self;
 
         *Result = Domain;
@@ -361,12 +397,10 @@ namespace Gs2::SkillTree::Domain::Model
                     return Future->GetTask().Error();
                 }
             }
-            Self->Gs2->Cache->TryGet<Gs2::SkillTree::Model::FCurrentTreeMaster>(
-                Self->ParentKey,
-                Gs2::SkillTree::Domain::Model::FCurrentTreeMasterDomain::CreateCacheKey(
-                ),
-                &Value
-            );
+            else
+            {
+                Value = Future->GetTask().Result();
+            }
             Future->EnsureCompletion();
         }
         *Result = Value;

@@ -195,10 +195,10 @@ namespace Gs2::Ranking2::Domain::Model
             Self->Gs2,
             Self->AccessToken,
             ResultModel->GetAutoRunStampSheet().IsSet() ? *ResultModel->GetAutoRunStampSheet() : false,
-            *ResultModel->GetTransactionId(),
-            *ResultModel->GetStampSheet(),
-            *ResultModel->GetStampSheetEncryptionKeyId(),
-            *ResultModel->GetAtomicCommit(),
+            ResultModel->GetTransactionId().IsSet() ? *ResultModel->GetTransactionId() : FString(),
+            ResultModel->GetStampSheet().IsSet() ? *ResultModel->GetStampSheet() : FString(),
+            ResultModel->GetStampSheetEncryptionKeyId().IsSet() ? *ResultModel->GetStampSheetEncryptionKeyId() : FString(),
+            ResultModel->GetAtomicCommit().IsSet() ? *ResultModel->GetAtomicCommit() : false,
             ResultModel->GetTransactionResult()
         );
         const auto Future3 = Transaction->Wait(true);
@@ -344,14 +344,23 @@ namespace Gs2::Ranking2::Domain::Model
                     return Future->GetTask().Error();
                 }
             }
-            Self->Gs2->Cache->TryGet<Gs2::Ranking2::Model::FGlobalRankingReceivedReward>(
-                Self->ParentKey,
-                Gs2::Ranking2::Domain::Model::FGlobalRankingReceivedRewardDomain::CreateCacheKey(
-                    Self->Season,
-                    Self->UserId()
-                ),
-                &Value
-            );
+            else
+            {
+                Value = Future->GetTask().Result();
+                if (Value.IsValid())
+                {
+                    Self->Gs2->Cache->Put(
+                        Gs2::Ranking2::Model::FGlobalRankingReceivedReward::TypeName,
+                        Self->ParentKey,
+                        FGlobalRankingReceivedRewardDomain::CreateCacheKey(
+                            Self->Season,
+                            Self->UserId()
+                        ),
+                        Value,
+                        FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                    );
+                }
+            }
             Future->EnsureCompletion();
         }
         *Result = Value;

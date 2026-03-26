@@ -309,14 +309,23 @@ namespace Gs2::Guild::Domain::Model
                     return Future->GetTask().Error();
                 }
             }
-            Self->Gs2->Cache->TryGet<Gs2::Guild::Model::FJoinedGuild>(
-                Self->ParentKey,
-                Gs2::Guild::Domain::Model::FJoinedGuildDomain::CreateCacheKey(
-                    Self->GuildModelName,
-                    Self->GuildName
-                ),
-                &Value
-            );
+            else
+            {
+                Value = Future->GetTask().Result();
+                if (Value.IsValid())
+                {
+                    Self->Gs2->Cache->Put(
+                        Gs2::Guild::Model::FJoinedGuild::TypeName,
+                        Self->ParentKey,
+                        FJoinedGuildDomain::CreateCacheKey(
+                            Self->GuildModelName,
+                            Self->GuildName
+                        ),
+                        Value,
+                        FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                    );
+                }
+            }
             Future->EnsureCompletion();
         }
         *Result = Value;

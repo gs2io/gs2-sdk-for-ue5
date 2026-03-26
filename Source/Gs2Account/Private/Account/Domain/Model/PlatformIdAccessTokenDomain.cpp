@@ -174,8 +174,7 @@ namespace Gs2::Account::Domain::Model
                     "PlatformId"
                 );
                 const auto Key = Gs2::Account::Domain::Model::FPlatformIdDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetType().IsSet() ? FString::FromInt(*ResultModel->GetItem()->GetType()) : TOptional<FString>(),
-                    ResultModel->GetItem()->GetUserIdentifier()
+                    ResultModel->GetItem()->GetType()
                 );
                 Self->Gs2->Cache->Put(
                     Gs2::Account::Model::FPlatformId::TypeName,
@@ -289,8 +288,7 @@ namespace Gs2::Account::Domain::Model
                     "PlatformId"
                 );
                 const auto Key = Gs2::Account::Domain::Model::FPlatformIdDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetType().IsSet() ? FString::FromInt(*ResultModel->GetItem()->GetType()) : TOptional<FString>(),
-                    ResultModel->GetItem()->GetUserIdentifier()
+                    ResultModel->GetItem()->GetType()
                 );
                 Self->Gs2->Cache->Delete(Gs2::Account::Model::FPlatformId::TypeName, ParentKey, Key);
             }
@@ -356,8 +354,7 @@ namespace Gs2::Account::Domain::Model
         auto bCacheHit = Self->Gs2->Cache->TryGet<Gs2::Account::Model::FPlatformId>(
             Self->ParentKey,
             Gs2::Account::Domain::Model::FPlatformIdDomain::CreateCacheKey(
-                Self->Type.IsSet() ? FString::FromInt(*Self->Type) : TOptional<FString>(),
-                Self->UserIdentifier
+                Self->Type
             ),
             &Value
         );
@@ -374,8 +371,7 @@ namespace Gs2::Account::Domain::Model
                 }
 
                 const auto Key = Gs2::Account::Domain::Model::FPlatformIdDomain::CreateCacheKey(
-                    Self->Type.IsSet() ? FString::FromInt(*Self->Type) : TOptional<FString>(),
-                    Self->UserIdentifier
+                    Self->Type
                 );
                 Self->Gs2->Cache->Put(
                     Gs2::Account::Model::FPlatformId::TypeName,
@@ -393,8 +389,7 @@ namespace Gs2::Account::Domain::Model
             Self->Gs2->Cache->TryGet<Gs2::Account::Model::FPlatformId>(
                 Self->ParentKey,
                 Gs2::Account::Domain::Model::FPlatformIdDomain::CreateCacheKey(
-                    Self->Type.IsSet() ? FString::FromInt(*Self->Type) : TOptional<FString>(),
-                    Self->UserIdentifier
+                    Self->Type
                 ),
                 &Value
             );
@@ -417,8 +412,7 @@ namespace Gs2::Account::Domain::Model
             Gs2::Account::Model::FPlatformId::TypeName,
             ParentKey,
             Gs2::Account::Domain::Model::FPlatformIdDomain::CreateCacheKey(
-                Type.IsSet() ? FString::FromInt(*Type) : TOptional<FString>(),
-                UserIdentifier
+                Type
             ),
             [Callback](TSharedPtr<FGs2Object> obj)
             {
@@ -435,8 +429,7 @@ namespace Gs2::Account::Domain::Model
             Gs2::Account::Model::FPlatformId::TypeName,
             ParentKey,
             Gs2::Account::Domain::Model::FPlatformIdDomain::CreateCacheKey(
-                Type.IsSet() ? FString::FromInt(*Type) : TOptional<FString>(),
-                UserIdentifier
+                Type
             ),
             CallbackID
         );

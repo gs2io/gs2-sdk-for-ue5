@@ -200,12 +200,10 @@ namespace Gs2::Friend::Domain::Model
                     return Future->GetTask().Error();
                 }
             }
-            Self->Gs2->Cache->TryGet<Gs2::Friend::Model::FPublicProfile>(
-                Self->ParentKey,
-                Gs2::Friend::Domain::Model::FPublicProfileDomain::CreateCacheKey(
-                ),
-                &Value
-            );
+            else
+            {
+                Value = Future->GetTask().Result();
+            }
             Future->EnsureCompletion();
         }
         *Result = Value;

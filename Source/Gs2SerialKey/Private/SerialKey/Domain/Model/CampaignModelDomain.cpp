@@ -147,6 +147,19 @@ namespace Gs2::SerialKey::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+        if (ResultModel->GetItem() != nullptr)
+        {
+            const auto Key = Gs2::SerialKey::Domain::Model::FIssueJobDomain::CreateCacheKey(
+                ResultModel->GetItem()->GetName()
+            );
+            Self->Gs2->Cache->Put(
+                Gs2::SerialKey::Model::FIssueJob::TypeName,
+                Self->ParentKey,
+                Key,
+                ResultModel->GetItem(),
+                FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+            );
+        }
         auto Domain = MakeShared<Gs2::SerialKey::Domain::Model::FIssueJobDomain>(
             Self->Gs2,
             Self->Service,
@@ -294,13 +307,10 @@ namespace Gs2::SerialKey::Domain::Model
                     return Future->GetTask().Error();
                 }
             }
-            Self->Gs2->Cache->TryGet<Gs2::SerialKey::Model::FCampaignModel>(
-                Self->ParentKey,
-                Gs2::SerialKey::Domain::Model::FCampaignModelDomain::CreateCacheKey(
-                    Self->CampaignModelName
-                ),
-                &Value
-            );
+            else
+            {
+                Value = Future->GetTask().Result();
+            }
             Future->EnsureCompletion();
         }
         *Result = Value;

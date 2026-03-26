@@ -12,6 +12,8 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
+ *
+ * deny overwrite
  */
 
 #if defined(_MSC_VER)
@@ -35,6 +37,75 @@
 #include "Core/Domain/Transaction/JobQueueJobDomainFactory.h"
 #include "Core/Domain/Transaction/InternalTransactionDomainFactory.h"
 #include "Core/Domain/Transaction/ManualTransactionDomain.h"
+#include "Serialization/JsonSerializer.h"
+
+namespace
+{
+    TOptional<FString> ExtractTransactionIdFromReceipt(
+        const TOptional<FString>& Receipt
+    )
+    {
+        if (!Receipt.IsSet())
+        {
+            return TOptional<FString>();
+        }
+
+        TSharedPtr<FJsonObject> ReceiptJson;
+        if (!FJsonSerializer::Deserialize(TJsonReaderFactory<>::Create(*Receipt), ReceiptJson) || ReceiptJson == nullptr)
+        {
+            return TOptional<FString>();
+        }
+
+        FString TransactionId;
+        if (ReceiptJson->TryGetStringField(TEXT("TransactionID"), TransactionId) ||
+            ReceiptJson->TryGetStringField(TEXT("transactionId"), TransactionId))
+        {
+            return TOptional<FString>(TransactionId);
+        }
+
+        FString Payload;
+        if (ReceiptJson->TryGetStringField(TEXT("Payload"), Payload))
+        {
+            TSharedPtr<FJsonObject> PayloadJson;
+            if (FJsonSerializer::Deserialize(TJsonReaderFactory<>::Create(Payload), PayloadJson) && PayloadJson != nullptr)
+            {
+                FString PurchaseJsonText;
+                if (PayloadJson->TryGetStringField(TEXT("json"), PurchaseJsonText))
+                {
+                    TSharedPtr<FJsonObject> PurchaseJson;
+                    if (FJsonSerializer::Deserialize(TJsonReaderFactory<>::Create(PurchaseJsonText), PurchaseJson) && PurchaseJson != nullptr)
+                    {
+                        FString OrderId;
+                        if (PurchaseJson->TryGetStringField(TEXT("orderId"), OrderId))
+                        {
+                            return TOptional<FString>(OrderId);
+                        }
+                    }
+                }
+            }
+        }
+
+        return TOptional<FString>();
+    }
+
+    Gs2::Money::Model::FReceiptPtr BuildReceiptFromRequest(
+        const TOptional<FString>& UserId,
+        const TOptional<FString>& ContentsId,
+        const TOptional<FString>& TransactionId
+    )
+    {
+        if (!UserId.IsSet() || !TransactionId.IsSet())
+        {
+            return nullptr;
+        }
+
+        return MakeShared<Gs2::Money::Model::FReceipt>()
+            ->WithUserId(UserId)
+            ->WithContentsId(ContentsId)
+            ->WithTransactionId(TransactionId);
+    }
+
+}
 
 namespace Gs2::Money::Domain::Model
 {
@@ -103,15 +174,45 @@ namespace Gs2::Money::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
-        auto Domain = MakeShared<Gs2::Money::Domain::Model::FReceiptDomain>(
-            Self->Gs2,
-            Self->Service,
-            Request->GetNamespaceName(),
-            ResultModel->GetItem()->GetUserId(),
-            ResultModel->GetItem()->GetTransactionId()
-        );
+        auto Item = ResultModel == nullptr ? nullptr : ResultModel->GetItem();
+        if (Item == nullptr)
+        {
+            Item = BuildReceiptFromRequest(
+                Self->UserId,
+                Request->GetContentsId(),
+                ExtractTransactionIdFromReceipt(Request->GetReceipt())
+            );
+        }
+        if (Item != nullptr && Item->GetTransactionId().IsSet())
+        {
+            const auto Key = Gs2::Money::Domain::Model::FReceiptDomain::CreateCacheKey(
+                Item->GetTransactionId()
+            );
+            Self->Gs2->Cache->Put(
+                Gs2::Money::Model::FReceipt::TypeName,
+                Self->ParentKey,
+                Key,
+                Item,
+                FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+            );
+        }
 
-        *Result = Domain;
+        if (Item != nullptr && Item->GetUserId().IsSet() && Item->GetTransactionId().IsSet())
+        {
+            auto Domain = MakeShared<Gs2::Money::Domain::Model::FReceiptDomain>(
+                Self->Gs2,
+                Self->Service,
+                Request->GetNamespaceName(),
+                Item->GetUserId(),
+                Item->GetTransactionId()
+            );
+
+            *Result = Domain;
+        }
+        else
+        {
+            *Result = nullptr;
+        }
         return nullptr;
     }
 
@@ -153,15 +254,45 @@ namespace Gs2::Money::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
-        auto Domain = MakeShared<Gs2::Money::Domain::Model::FReceiptDomain>(
-            Self->Gs2,
-            Self->Service,
-            Request->GetNamespaceName(),
-            ResultModel->GetItem()->GetUserId(),
-            ResultModel->GetItem()->GetTransactionId()
-        );
+        auto Item = ResultModel == nullptr ? nullptr : ResultModel->GetItem();
+        if (Item == nullptr)
+        {
+            Item = BuildReceiptFromRequest(
+                Self->UserId,
+                TOptional<FString>(),
+                ExtractTransactionIdFromReceipt(Request->GetReceipt())
+            );
+        }
+        if (Item != nullptr && Item->GetTransactionId().IsSet())
+        {
+            const auto Key = Gs2::Money::Domain::Model::FReceiptDomain::CreateCacheKey(
+                Item->GetTransactionId()
+            );
+            Self->Gs2->Cache->Put(
+                Gs2::Money::Model::FReceipt::TypeName,
+                Self->ParentKey,
+                Key,
+                Item,
+                FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+            );
+        }
 
-        *Result = Domain;
+        if (Item != nullptr && Item->GetUserId().IsSet() && Item->GetTransactionId().IsSet())
+        {
+            auto Domain = MakeShared<Gs2::Money::Domain::Model::FReceiptDomain>(
+                Self->Gs2,
+                Self->Service,
+                Request->GetNamespaceName(),
+                Item->GetUserId(),
+                Item->GetTransactionId()
+            );
+
+            *Result = Domain;
+        }
+        else
+        {
+            *Result = nullptr;
+        }
         return nullptr;
     }
 

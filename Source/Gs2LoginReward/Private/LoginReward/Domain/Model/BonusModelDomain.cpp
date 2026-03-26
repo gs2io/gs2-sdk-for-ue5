@@ -191,13 +191,10 @@ namespace Gs2::LoginReward::Domain::Model
                     return Future->GetTask().Error();
                 }
             }
-            Self->Gs2->Cache->TryGet<Gs2::LoginReward::Model::FBonusModel>(
-                Self->ParentKey,
-                Gs2::LoginReward::Domain::Model::FBonusModelDomain::CreateCacheKey(
-                    Self->BonusModelName
-                ),
-                &Value
-            );
+            else
+            {
+                Value = Future->GetTask().Result();
+            }
             Future->EnsureCompletion();
         }
         *Result = Value;

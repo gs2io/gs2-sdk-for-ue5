@@ -189,13 +189,10 @@ namespace Gs2::SkillTree::Domain::Model
                     return Future->GetTask().Error();
                 }
             }
-            Self->Gs2->Cache->TryGet<Gs2::SkillTree::Model::FNodeModel>(
-                Self->ParentKey,
-                Gs2::SkillTree::Domain::Model::FNodeModelDomain::CreateCacheKey(
-                    Self->NodeModelName
-                ),
-                &Value
-            );
+            else
+            {
+                Value = Future->GetTask().Result();
+            }
             Future->EnsureCompletion();
         }
         *Result = Value;

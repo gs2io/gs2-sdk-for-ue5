@@ -12,6 +12,8 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
+ *
+ * deny overwrite
  */
 
 #if defined(_MSC_VER)
@@ -116,6 +118,46 @@ namespace Gs2::Mission::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+        if (ResultModel->GetItem() != nullptr)
+        {
+            const auto Key = Gs2::Mission::Domain::Model::FCounterDomain::CreateCacheKey(
+                ResultModel->GetItem()->GetName()
+            );
+            Self->Gs2->Cache->Put(
+                Gs2::Mission::Model::FCounter::TypeName,
+                Self->ParentKey,
+                Key,
+                ResultModel->GetItem(),
+                FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+            );
+        }
+        if (ResultModel->GetChangedCompletes() != nullptr)
+        {
+            const auto CompleteParentKey = Gs2::Mission::Domain::Model::FUserDomain::CreateCacheParentKey(
+                Self->NamespaceName,
+                Self->UserId(),
+                "Complete"
+            );
+            for (const auto& ChangedComplete : *ResultModel->GetChangedCompletes())
+            {
+                if (ChangedComplete == nullptr) continue;
+                Self->Gs2->Cache->Put(
+                    Gs2::Mission::Model::FComplete::TypeName,
+                    CompleteParentKey,
+                    Gs2::Mission::Domain::Model::FCompleteDomain::CreateCacheKey(
+                        ChangedComplete->GetMissionGroupName()
+                    ),
+                    ChangedComplete,
+                    ChangedComplete->GetNextResetAt().IsSet() && *ChangedComplete->GetNextResetAt() != 0
+                        ? FDateTime::FromUnixTimestamp(*ChangedComplete->GetNextResetAt() / 1000)
+                        : FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+            }
+            Self->Gs2->Cache->ClearListCache(
+                Gs2::Mission::Model::FComplete::TypeName,
+                CompleteParentKey
+            );
+        }
         auto Domain = Self;
 
         *Result = Domain;
@@ -204,6 +246,19 @@ namespace Gs2::Mission::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+        if (ResultModel->GetItem() != nullptr)
+        {
+            const auto Key = Gs2::Mission::Domain::Model::FCounterDomain::CreateCacheKey(
+                ResultModel->GetItem()->GetName()
+            );
+            Self->Gs2->Cache->Put(
+                Gs2::Mission::Model::FCounter::TypeName,
+                Self->ParentKey,
+                Key,
+                ResultModel->GetItem(),
+                FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+            );
+        }
         auto Domain = Self;
 
         *Result = Domain;
@@ -249,6 +304,19 @@ namespace Gs2::Mission::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+        if (ResultModel->GetItem() != nullptr)
+        {
+            const auto Key = Gs2::Mission::Domain::Model::FCounterDomain::CreateCacheKey(
+                ResultModel->GetItem()->GetName()
+            );
+            Self->Gs2->Cache->Put(
+                Gs2::Mission::Model::FCounter::TypeName,
+                Self->ParentKey,
+                Key,
+                ResultModel->GetItem(),
+                FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+            );
+        }
         auto Domain = Self;
 
         *Result = Domain;
@@ -294,6 +362,21 @@ namespace Gs2::Mission::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+        if (ResultModel->GetItem() != nullptr)
+        {
+            const auto Key = Gs2::Mission::Domain::Model::FCounterDomain::CreateCacheKey(
+                ResultModel->GetItem()->GetName()
+            );
+            Self->Gs2->Cache->Delete(
+                Gs2::Mission::Model::FCounter::TypeName,
+                Self->ParentKey,
+                Key
+            );
+        }
+        Self->Gs2->Cache->ClearListCache(
+            Gs2::Mission::Model::FCounter::TypeName,
+            Self->ParentKey
+        );
         auto Domain = Self;
 
         *Result = Domain;
@@ -383,13 +466,10 @@ namespace Gs2::Mission::Domain::Model
                     return Future->GetTask().Error();
                 }
             }
-            Self->Gs2->Cache->TryGet<Gs2::Mission::Model::FCounter>(
-                Self->ParentKey,
-                Gs2::Mission::Domain::Model::FCounterDomain::CreateCacheKey(
-                    Self->CounterName
-                ),
-                &Value
-            );
+            else
+            {
+                Value = Future->GetTask().Result();
+            }
             Future->EnsureCompletion();
         }
         *Result = Value;

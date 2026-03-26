@@ -190,13 +190,10 @@ namespace Gs2::Experience::Domain::Model
                     return Future->GetTask().Error();
                 }
             }
-            Self->Gs2->Cache->TryGet<Gs2::Experience::Model::FExperienceModel>(
-                Self->ParentKey,
-                Gs2::Experience::Domain::Model::FExperienceModelDomain::CreateCacheKey(
-                    Self->ExperienceName
-                ),
-                &Value
-            );
+            else
+            {
+                Value = Future->GetTask().Result();
+            }
             Future->EnsureCompletion();
         }
         *Result = Value;

@@ -229,16 +229,10 @@ namespace Gs2::SeasonRating::Domain::Model
                     return Future->GetTask().Error();
                 }
             }
-            Self->Gs2->Cache->TryGet<Gs2::SeasonRating::Model::FBallot>(
-                Self->ParentKey,
-                Gs2::SeasonRating::Domain::Model::FBallotDomain::CreateCacheKey(
-                    Self->SeasonName,
-                    Self->SessionName,
-                    Self->NumberOfPlayer,
-                    Self->KeyId
-                ),
-                &Value
-            );
+            else
+            {
+                Value = Future->GetTask().Result();
+            }
             Future->EnsureCompletion();
         }
         *Result = Value;

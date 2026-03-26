@@ -24,6 +24,11 @@ namespace Gs2::UE5::Core::Domain
 		TSharedPtr<TSharedPtr<FEzTransactionGameSessionDomain>> Result
 	)
 	{
+        if (!Self->Domain.IsValid())
+        {
+            *Result = Self;
+            return nullptr;
+        }
         const auto Future = Self->ConnectionValue->Run(
             [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
                 const auto Task = Self->Domain->Wait(All);

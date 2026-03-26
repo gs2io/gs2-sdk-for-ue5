@@ -12,6 +12,8 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
+ *
+ * deny overwrite
  */
 
 #if defined(_MSC_VER)
@@ -649,6 +651,7 @@ namespace Gs2::JobQueue::Domain
             {
                 if (Self->CopiedCompletedJobs->Num() == 0)
                 {
+                    Self->CopiedCompletedJobsMutex->Unlock();
                     return nullptr;
                 }
 
@@ -747,8 +750,10 @@ namespace Gs2::JobQueue::Domain
             {
                 if (Self->CopiedCompletedJobs->Num() == 0)
                 {
+                    Self->CopiedCompletedJobsMutex->Unlock();
                     return nullptr;
                 }
+                Self->CopiedCompletedJobs->Reset();
 
                 const auto Client = MakeShared<Gs2::JobQueue::FGs2JobQueueRestClient>(
                     Self->Gs2->RestSession
@@ -756,11 +761,18 @@ namespace Gs2::JobQueue::Domain
                 for (auto CompletedJob : CopiedCopiedCompletedJobsTemp)
                 {
                     if (!CompletedJob.IsValid()) continue;
+                    if (CompletedJob->GetUserId().IsSet() && *CompletedJob->GetUserId() != UserId)
+                    {
+                        Self->CopiedCompletedJobs->Add(CompletedJob);
+                        continue;
+                    }
+                    const auto TargetUserId = CompletedJob->GetUserId().IsSet() ? *CompletedJob->GetUserId() : UserId;
+                    auto bKeepPending = false;
                     {
                         auto Future = Self->Namespace(
                             *CompletedJob->GetNamespaceName()
                         )->User(
-                            UserId
+                            TargetUserId
                         )->Job(
                             *CompletedJob->GetJobName()
                         )->JobResult()->ModelNoCache();
@@ -769,14 +781,17 @@ namespace Gs2::JobQueue::Domain
                         {
                             if (Future->GetTask().Error()->Type() == Gs2::Core::Model::FNotFoundError::TypeString)
                             {
+                                bKeepPending = true;
                             }
                             else
                             {
+                                Self->CopiedCompletedJobsMutex->Unlock();
                                 return Future->GetTask().Error();
                             }
                         }
                         Future->EnsureCompletion();
                     }
+                    if (!bKeepPending)
                     {
                         const auto AutoRun = Gs2::Core::Domain::FJobQueueJobDomainFactory::ToTransaction(
                             Self->Gs2,
@@ -791,7 +806,7 @@ namespace Gs2::JobQueue::Domain
                             {
                                 return nullptr;
                             },
-                            UserId,
+                            TargetUserId,
                             true,
                             *CompletedJob->GetNamespaceName(),
                             *CompletedJob->GetJobName()
@@ -802,17 +817,21 @@ namespace Gs2::JobQueue::Domain
                         {
                             if (Future->GetTask().Error()->Type() == Gs2::Core::Model::FNotFoundError::TypeString)
                             {
+                                bKeepPending = true;
                             }
                             else
                             {
+                                Self->CopiedCompletedJobsMutex->Unlock();
                                 return Future->GetTask().Error();
                             }
                         }
                         Future->EnsureCompletion();
                     }
+                    if (bKeepPending)
+                    {
+                        Self->CopiedCompletedJobs->Add(CompletedJob);
+                    }
                 }
-
-                Self->CopiedCompletedJobs->Reset();
             }
             Self->CopiedCompletedJobsMutex->Unlock();
         }

@@ -168,6 +168,21 @@ namespace Gs2::Guild::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+        if (ResultModel->GetItem() != nullptr)
+        {
+            const auto Key = Gs2::Guild::Domain::Model::FReceiveMemberRequestDomain::CreateCacheKey(
+                ResultModel->GetItem()->GetUserId()
+            );
+            Self->Gs2->Cache->Delete(
+                Gs2::Guild::Model::FReceiveMemberRequest::TypeName,
+                Self->ParentKey,
+                Key
+            );
+        }
+        Self->Gs2->Cache->ClearListCache(
+            Gs2::Guild::Model::FReceiveMemberRequest::TypeName,
+            Self->ParentKey
+        );
         auto Domain = Self;
 
         *Result = Domain;
@@ -214,6 +229,21 @@ namespace Gs2::Guild::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+        if (ResultModel->GetItem() != nullptr)
+        {
+            const auto Key = Gs2::Guild::Domain::Model::FReceiveMemberRequestDomain::CreateCacheKey(
+                ResultModel->GetItem()->GetUserId()
+            );
+            Self->Gs2->Cache->Delete(
+                Gs2::Guild::Model::FReceiveMemberRequest::TypeName,
+                Self->ParentKey,
+                Key
+            );
+        }
+        Self->Gs2->Cache->ClearListCache(
+            Gs2::Guild::Model::FReceiveMemberRequest::TypeName,
+            Self->ParentKey
+        );
         auto Domain = Self;
 
         *Result = Domain;
@@ -305,13 +335,10 @@ namespace Gs2::Guild::Domain::Model
                     return Future->GetTask().Error();
                 }
             }
-            Self->Gs2->Cache->TryGet<Gs2::Guild::Model::FReceiveMemberRequest>(
-                Self->ParentKey,
-                Gs2::Guild::Domain::Model::FReceiveMemberRequestDomain::CreateCacheKey(
-                    Self->FromUserId
-                ),
-                &Value
-            );
+            else
+            {
+                Value = Future->GetTask().Result();
+            }
             Future->EnsureCompletion();
         }
         *Result = Value;

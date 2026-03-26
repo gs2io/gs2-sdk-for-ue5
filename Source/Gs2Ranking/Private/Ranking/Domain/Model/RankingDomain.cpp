@@ -232,14 +232,10 @@ namespace Gs2::Ranking::Domain::Model
                     return Future->GetTask().Error();
                 }
             }
-            Self->Gs2->Cache->TryGet<Gs2::Ranking::Model::FRanking>(
-                ParentKey,
-                Gs2::Ranking::Domain::Model::FRankingDomain::CreateCacheKey(
-                    Self->ScorerUserId,
-                    Self->Index
-                ),
-                &Value
-            );
+            else
+            {
+                Value = Future->GetTask().Result();
+            }
             Future->EnsureCompletion();
         }
         *Result = Value;

@@ -198,13 +198,10 @@ namespace Gs2::MegaField::Domain::Model
                     return Future->GetTask().Error();
                 }
             }
-            Self->Gs2->Cache->TryGet<Gs2::MegaField::Model::FLayerModel>(
-                Self->ParentKey,
-                Gs2::MegaField::Domain::Model::FLayerModelDomain::CreateCacheKey(
-                    Self->LayerModelName
-                ),
-                &Value
-            );
+            else
+            {
+                Value = Future->GetTask().Result();
+            }
             Future->EnsureCompletion();
         }
         *Result = Value;

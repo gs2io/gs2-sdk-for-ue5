@@ -12,6 +12,8 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
+ *
+ * deny overwrite
  */
 
 #if defined(_MSC_VER)
@@ -155,14 +157,26 @@ namespace Gs2::Enhance::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+        Self->Gs2->Cache->Delete(
+            Gs2::Enhance::Model::FProgress::TypeName,
+            Self->ParentKey,
+            Gs2::Enhance::Domain::Model::FProgressDomain::CreateCacheKey()
+        );
+        const auto HasTransactionId = ResultModel->GetTransactionId().IsSet() && !ResultModel->GetTransactionId()->IsEmpty();
+        const auto HasStampSheet = ResultModel->GetStampSheet().IsSet() && !ResultModel->GetStampSheet()->IsEmpty();
+        if (!HasTransactionId && !HasStampSheet)
+        {
+            *Result = nullptr;
+            return nullptr;
+        }
         const auto Transaction = Gs2::Core::Domain::Internal::FTransactionDomainFactory::ToTransaction(
             Self->Gs2,
             Self->AccessToken,
             ResultModel->GetAutoRunStampSheet().IsSet() ? *ResultModel->GetAutoRunStampSheet() : false,
-            *ResultModel->GetTransactionId(),
-            *ResultModel->GetStampSheet(),
-            *ResultModel->GetStampSheetEncryptionKeyId(),
-            *ResultModel->GetAtomicCommit(),
+            ResultModel->GetTransactionId().IsSet() ? *ResultModel->GetTransactionId() : FString(),
+            ResultModel->GetStampSheet().IsSet() ? *ResultModel->GetStampSheet() : FString(),
+            ResultModel->GetStampSheetEncryptionKeyId().IsSet() ? *ResultModel->GetStampSheetEncryptionKeyId() : FString(),
+            ResultModel->GetAtomicCommit().IsSet() ? *ResultModel->GetAtomicCommit() : false,
             ResultModel->GetTransactionResult()
         );
         const auto Future3 = Transaction->Wait(true);
@@ -215,14 +229,23 @@ namespace Gs2::Enhance::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+        Self->AcquireExperience = ResultModel->GetAcquireExperience();
+        Self->BonusRate = ResultModel->GetBonusRate();
+        const auto HasTransactionId = ResultModel->GetTransactionId().IsSet() && !ResultModel->GetTransactionId()->IsEmpty();
+        const auto HasStampSheet = ResultModel->GetStampSheet().IsSet() && !ResultModel->GetStampSheet()->IsEmpty();
+        if (!HasTransactionId && !HasStampSheet)
+        {
+            *Result = nullptr;
+            return nullptr;
+        }
         const auto Transaction = Gs2::Core::Domain::Internal::FTransactionDomainFactory::ToTransaction(
             Self->Gs2,
             Self->AccessToken,
             ResultModel->GetAutoRunStampSheet().IsSet() ? *ResultModel->GetAutoRunStampSheet() : false,
-            *ResultModel->GetTransactionId(),
-            *ResultModel->GetStampSheet(),
-            *ResultModel->GetStampSheetEncryptionKeyId(),
-            *ResultModel->GetAtomicCommit(),
+            ResultModel->GetTransactionId().IsSet() ? *ResultModel->GetTransactionId() : FString(),
+            ResultModel->GetStampSheet().IsSet() ? *ResultModel->GetStampSheet() : FString(),
+            ResultModel->GetStampSheetEncryptionKeyId().IsSet() ? *ResultModel->GetStampSheetEncryptionKeyId() : FString(),
+            ResultModel->GetAtomicCommit().IsSet() ? *ResultModel->GetAtomicCommit() : false,
             ResultModel->GetTransactionResult()
         );
         const auto Future3 = Transaction->Wait(true);
@@ -274,6 +297,20 @@ namespace Gs2::Enhance::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+        if (ResultModel->GetItem() != nullptr)
+        {
+            const auto Key = Gs2::Enhance::Domain::Model::FProgressDomain::CreateCacheKey(
+            );
+            Self->Gs2->Cache->Delete(
+                Gs2::Enhance::Model::FProgress::TypeName,
+                Self->ParentKey,
+                Key
+            );
+        }
+        Self->Gs2->Cache->ClearListCache(
+            Gs2::Enhance::Model::FProgress::TypeName,
+            Self->ParentKey
+        );
         auto Domain = Self;
 
         *Result = Domain;
@@ -357,12 +394,20 @@ namespace Gs2::Enhance::Domain::Model
                     return Future->GetTask().Error();
                 }
             }
-            Self->Gs2->Cache->TryGet<Gs2::Enhance::Model::FProgress>(
-                Self->ParentKey,
-                Gs2::Enhance::Domain::Model::FProgressDomain::CreateCacheKey(
-                ),
-                &Value
-            );
+            else
+            {
+                Value = Future->GetTask().Result();
+                if (Value.IsValid())
+                {
+                    Self->Gs2->Cache->Put(
+                        Gs2::Enhance::Model::FProgress::TypeName,
+                        Self->ParentKey,
+                        Gs2::Enhance::Domain::Model::FProgressDomain::CreateCacheKey(),
+                        Value,
+                        FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                    );
+                }
+            }
             Future->EnsureCompletion();
         }
         *Result = Value;
@@ -409,4 +454,3 @@ namespace Gs2::Enhance::Domain::Model
 #elif defined(__clang__)
 #pragma clang diagnostic pop
 #endif
-

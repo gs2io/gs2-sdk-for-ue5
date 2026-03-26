@@ -17,13 +17,13 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "../Model/FriendRequest.h"
+#include "../Model/SendFriendRequest.h"
 
 namespace Gs2::Friend::Result
 {
     class GS2FRIEND_API FDescribeSendRequestsResult final : public TSharedFromThis<FDescribeSendRequestsResult>
     {
-        TSharedPtr<TArray<TSharedPtr<Model::FFriendRequest>>> ItemsValue;
+        TSharedPtr<TArray<TSharedPtr<Model::FSendFriendRequest>>> ItemsValue;
         TOptional<FString> NextPageTokenValue;
         
     public:
@@ -34,10 +34,10 @@ namespace Gs2::Friend::Result
         );
         ~FDescribeSendRequestsResult() = default;
 
-        TSharedPtr<FDescribeSendRequestsResult> WithItems(const TSharedPtr<TArray<TSharedPtr<Model::FFriendRequest>>> Items);
+        TSharedPtr<FDescribeSendRequestsResult> WithItems(const TSharedPtr<TArray<TSharedPtr<Model::FSendFriendRequest>>> Items);
         TSharedPtr<FDescribeSendRequestsResult> WithNextPageToken(const TOptional<FString> NextPageToken);
 
-        TSharedPtr<TArray<TSharedPtr<Model::FFriendRequest>>> GetItems() const;
+        TSharedPtr<TArray<TSharedPtr<Model::FSendFriendRequest>>> GetItems() const;
         TOptional<FString> GetNextPageToken() const;
 
         static TSharedPtr<FDescribeSendRequestsResult> FromJson(const TSharedPtr<FJsonObject> Data);

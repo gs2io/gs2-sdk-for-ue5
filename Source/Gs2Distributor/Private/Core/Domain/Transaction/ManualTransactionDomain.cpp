@@ -35,7 +35,9 @@ namespace Gs2::Core::Domain
 				));
 			}
 
-			if (ResultJson->HasField(ANSI_TO_TCHAR("autoRunStampSheet"))) {
+			const auto HasTransactionId = ResultJson->HasField(ANSI_TO_TCHAR("transactionId")) && !ResultJson->GetStringField(ANSI_TO_TCHAR("transactionId")).IsEmpty();
+			const auto HasStampSheet = ResultJson->HasField(ANSI_TO_TCHAR("stampSheet")) && !ResultJson->GetStringField(ANSI_TO_TCHAR("stampSheet")).IsEmpty();
+			if (ResultJson->HasField(ANSI_TO_TCHAR("autoRunStampSheet")) && (HasTransactionId || HasStampSheet)) {
 				NextTransactions->Add(NewTransactionDomain(
 					ResultJson->HasField(ANSI_TO_TCHAR("autoRunStampSheet")) && ResultJson->GetBoolField(ANSI_TO_TCHAR("autoRunStampSheet")),
 					ResultJson->HasField(ANSI_TO_TCHAR("transactionId")) ? ResultJson->GetStringField(ANSI_TO_TCHAR("transactionId")) : FString(""),

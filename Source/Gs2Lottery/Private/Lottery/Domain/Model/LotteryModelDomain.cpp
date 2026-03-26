@@ -196,13 +196,10 @@ namespace Gs2::Lottery::Domain::Model
                     return Future->GetTask().Error();
                 }
             }
-            Self->Gs2->Cache->TryGet<Gs2::Lottery::Model::FLotteryModel>(
-                Self->ParentKey,
-                Gs2::Lottery::Domain::Model::FLotteryModelDomain::CreateCacheKey(
-                    Self->LotteryName
-                ),
-                &Value
-            );
+            else
+            {
+                Value = Future->GetTask().Result();
+            }
             Future->EnsureCompletion();
         }
         *Result = Value;

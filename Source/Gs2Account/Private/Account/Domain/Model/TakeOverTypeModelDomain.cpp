@@ -193,13 +193,10 @@ namespace Gs2::Account::Domain::Model
                     return Future->GetTask().Error();
                 }
             }
-            Self->Gs2->Cache->TryGet<Gs2::Account::Model::FTakeOverTypeModel>(
-                Self->ParentKey,
-                Gs2::Account::Domain::Model::FTakeOverTypeModelDomain::CreateCacheKey(
-                    Self->Type
-                ),
-                &Value
-            );
+            else
+            {
+                Value = Future->GetTask().Result();
+            }
             Future->EnsureCompletion();
         }
         *Result = Value;

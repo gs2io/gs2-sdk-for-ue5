@@ -195,13 +195,10 @@ namespace Gs2::Mission::Domain::Model
                     return Future->GetTask().Error();
                 }
             }
-            Self->Gs2->Cache->TryGet<Gs2::Mission::Model::FCounterModel>(
-                Self->ParentKey,
-                Gs2::Mission::Domain::Model::FCounterModelDomain::CreateCacheKey(
-                    Self->CounterName
-                ),
-                &Value
-            );
+            else
+            {
+                Value = Future->GetTask().Result();
+            }
             Future->EnsureCompletion();
         }
         *Result = Value;

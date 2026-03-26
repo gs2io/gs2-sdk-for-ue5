@@ -113,6 +113,19 @@ namespace Gs2::Money2::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+        if (ResultModel->GetItem() != nullptr)
+        {
+            const auto Key = Gs2::Money2::Domain::Model::FEventDomain::CreateCacheKey(
+                ResultModel->GetItem()->GetTransactionId()
+            );
+            Self->Gs2->Cache->Put(
+                Gs2::Money2::Model::FEvent::TypeName,
+                Self->ParentKey,
+                Key,
+                ResultModel->GetItem(),
+                FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+            );
+        }
         auto Domain = MakeShared<Gs2::Money2::Domain::Model::FEventDomain>(
             Self->Gs2,
             Self->Service,
@@ -163,6 +176,19 @@ namespace Gs2::Money2::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+        if (ResultModel->GetItem() != nullptr)
+        {
+            const auto Key = Gs2::Money2::Domain::Model::FSubscriptionStatusDomain::CreateCacheKey(
+                ResultModel->GetItem()->GetContentName()
+            );
+            Self->Gs2->Cache->Put(
+                Gs2::Money2::Model::FSubscriptionStatus::TypeName,
+                Self->ParentKey,
+                Key,
+                ResultModel->GetItem(),
+                FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+            );
+        }
         auto Domain = MakeShared<Gs2::Money2::Domain::Model::FSubscriptionStatusDomain>(
             Self->Gs2,
             Self->Service,
@@ -213,6 +239,19 @@ namespace Gs2::Money2::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+        if (ResultModel->GetItem() != nullptr)
+        {
+            const auto Key = Gs2::Money2::Domain::Model::FSubscriptionStatusDomain::CreateCacheKey(
+                ResultModel->GetItem()->GetContentName()
+            );
+            Self->Gs2->Cache->Put(
+                Gs2::Money2::Model::FSubscriptionStatus::TypeName,
+                Self->ParentKey,
+                Key,
+                ResultModel->GetItem(),
+                FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+            );
+        }
         auto Domain = MakeShared<Gs2::Money2::Domain::Model::FSubscriptionStatusDomain>(
             Self->Gs2,
             Self->Service,

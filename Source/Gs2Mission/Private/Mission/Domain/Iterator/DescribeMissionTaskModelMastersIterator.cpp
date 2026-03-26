@@ -151,7 +151,7 @@ namespace Gs2::Mission::Domain::Iterator
             }
             if (Range)
             {
-                Range->RemoveAll([this](const Gs2::Mission::Model::FMissionTaskModelMasterPtr& Item) { return !Self->NamePrefix && Item->GetName()->StartsWith(*Self->NamePrefix); });
+                Range->RemoveAll([this](const Gs2::Mission::Model::FMissionTaskModelMasterPtr& Item) { return Self->NamePrefix.IsSet() && !Item->GetName()->StartsWith(*Self->NamePrefix); });
             }
             RangeIteratorOpt = Range->CreateIterator();
             PageToken = R->GetNextPageToken();

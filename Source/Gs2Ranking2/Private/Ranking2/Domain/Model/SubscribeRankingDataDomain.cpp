@@ -147,6 +147,21 @@ namespace Gs2::Ranking2::Domain::Model
             return Future->GetTask().Error();
         }
         const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
+        if (ResultModel->GetItem() != nullptr)
+        {
+            const auto Key = Gs2::Ranking2::Domain::Model::FSubscribeRankingDataDomain::CreateCacheKey(
+                ResultModel->GetItem()->GetRankingName(),
+                ResultModel->GetItem()->GetScorerUserId()
+            );
+            Self->Gs2->Cache->Put(
+                Gs2::Ranking2::Model::FSubscribeRankingData::TypeName,
+                Self->ParentKey,
+                Key,
+                ResultModel->GetItem(),
+                FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+            );
+        }
         auto Domain = Self;
 
         *Result = Domain;

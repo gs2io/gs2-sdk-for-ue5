@@ -247,13 +247,10 @@ namespace Gs2::Lottery::Domain::Model
                     return Future->GetTask().Error();
                 }
             }
-            Self->Gs2->Cache->TryGet<Gs2::Lottery::Model::FPrizeLimit>(
-                Self->ParentKey,
-                Gs2::Lottery::Domain::Model::FPrizeLimitDomain::CreateCacheKey(
-                    Self->PrizeId
-                ),
-                &Value
-            );
+            else
+            {
+                Value = Future->GetTask().Result();
+            }
             Future->EnsureCompletion();
         }
         *Result = Value;

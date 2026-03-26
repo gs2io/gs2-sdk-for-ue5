@@ -281,13 +281,14 @@ namespace Gs2::Experience::Model
                  }() : nullptr)
             ->WithAcquireActionRates(Data->HasField(ANSI_TO_TCHAR("acquireActionRates")) ? [Data]() -> TSharedPtr<TArray<Model::FAcquireActionRatePtr>>
                 {
-                    auto v = MakeShared<TArray<Model::FAcquireActionRatePtr>>();
-                    if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("acquireActionRates")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("acquireActionRates")))
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("acquireActionRates")) || !Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("acquireActionRates")))
                     {
-                        for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("acquireActionRates")))
-                        {
-                            v->Add(Model::FAcquireActionRate::FromJson(JsonObjectValue->AsObject()));
-                        }
+                        return nullptr;
+                    }
+                    auto v = MakeShared<TArray<Model::FAcquireActionRatePtr>>();
+                    for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("acquireActionRates")))
+                    {
+                        v->Add(Model::FAcquireActionRate::FromJson(JsonObjectValue->AsObject()));
                     }
                     return v;
                  }() : MakeShared<TArray<Model::FAcquireActionRatePtr>>());

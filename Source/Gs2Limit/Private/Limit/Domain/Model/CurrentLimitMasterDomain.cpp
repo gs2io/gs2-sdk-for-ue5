@@ -100,6 +100,18 @@ namespace Gs2::Limit::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+        if (ResultModel->GetItem() != nullptr)
+        {
+            const auto Key = Gs2::Limit::Domain::Model::FCurrentLimitMasterDomain::CreateCacheKey(
+            );
+            Self->Gs2->Cache->Put(
+                Gs2::Limit::Model::FCurrentLimitMaster::TypeName,
+                Self->ParentKey,
+                Key,
+                ResultModel->GetItem(),
+                FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+            );
+        }
         auto Domain = Self;
 
         *Result = Domain;
@@ -237,6 +249,18 @@ namespace Gs2::Limit::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+        if (ResultModel->GetItem() != nullptr)
+        {
+            const auto Key = Gs2::Limit::Domain::Model::FCurrentLimitMasterDomain::CreateCacheKey(
+            );
+            Self->Gs2->Cache->Put(
+                Gs2::Limit::Model::FCurrentLimitMaster::TypeName,
+                Self->ParentKey,
+                Key,
+                ResultModel->GetItem(),
+                FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+            );
+        }
         auto Domain = Self;
 
         *Result = Domain;
@@ -280,6 +304,18 @@ namespace Gs2::Limit::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+        if (ResultModel->GetItem() != nullptr)
+        {
+            const auto Key = Gs2::Limit::Domain::Model::FCurrentLimitMasterDomain::CreateCacheKey(
+            );
+            Self->Gs2->Cache->Put(
+                Gs2::Limit::Model::FCurrentLimitMaster::TypeName,
+                Self->ParentKey,
+                Key,
+                ResultModel->GetItem(),
+                FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+            );
+        }
         auto Domain = Self;
 
         *Result = Domain;
@@ -361,12 +397,10 @@ namespace Gs2::Limit::Domain::Model
                     return Future->GetTask().Error();
                 }
             }
-            Self->Gs2->Cache->TryGet<Gs2::Limit::Model::FCurrentLimitMaster>(
-                Self->ParentKey,
-                Gs2::Limit::Domain::Model::FCurrentLimitMasterDomain::CreateCacheKey(
-                ),
-                &Value
-            );
+            else
+            {
+                Value = Future->GetTask().Result();
+            }
             Future->EnsureCompletion();
         }
         *Result = Value;

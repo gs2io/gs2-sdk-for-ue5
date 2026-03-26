@@ -172,10 +172,10 @@ namespace Gs2::Showcase::Domain::Model
             Self->Gs2,
             *Self->UserId,
             ResultModel->GetAutoRunStampSheet().IsSet() ? *ResultModel->GetAutoRunStampSheet() : false,
-            *ResultModel->GetTransactionId(),
-            *ResultModel->GetStampSheet(),
-            *ResultModel->GetStampSheetEncryptionKeyId(),
-            *ResultModel->GetAtomicCommit(),
+            ResultModel->GetTransactionId().IsSet() ? *ResultModel->GetTransactionId() : FString(),
+            ResultModel->GetStampSheet().IsSet() ? *ResultModel->GetStampSheet() : FString(),
+            ResultModel->GetStampSheetEncryptionKeyId().IsSet() ? *ResultModel->GetStampSheetEncryptionKeyId() : FString(),
+            ResultModel->GetAtomicCommit().IsSet() ? *ResultModel->GetAtomicCommit() : false,
             ResultModel->GetTransactionResult()
         );
         const auto Future3 = Transaction->Wait(true);
@@ -273,13 +273,10 @@ namespace Gs2::Showcase::Domain::Model
                     return Future->GetTask().Error();
                 }
             }
-            Self->Gs2->Cache->TryGet<Gs2::Showcase::Model::FRandomDisplayItem>(
-                Self->ParentKey,
-                Gs2::Showcase::Domain::Model::FRandomDisplayItemDomain::CreateCacheKey(
-                    Self->DisplayItemName
-                ),
-                &Value
-            );
+            else
+            {
+                Value = Future->GetTask().Result();
+            }
             Future->EnsureCompletion();
         }
         *Result = Value;

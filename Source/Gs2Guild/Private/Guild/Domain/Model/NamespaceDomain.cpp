@@ -196,6 +196,19 @@ namespace Gs2::Guild::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+        if (ResultModel->GetItem() != nullptr)
+        {
+            const auto Key = Gs2::Guild::Domain::Model::FNamespaceDomain::CreateCacheKey(
+                ResultModel->GetItem()->GetName()
+            );
+            Self->Gs2->Cache->Put(
+                Gs2::Guild::Model::FNamespace::TypeName,
+                "guild:Namespace",
+                Key,
+                ResultModel->GetItem(),
+                FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+            );
+        }
         auto Domain = Self;
 
         *Result = Domain;
@@ -451,7 +464,8 @@ namespace Gs2::Guild::Domain::Model
 
     TSharedPtr<Gs2::Guild::Domain::Model::FGuildAccessTokenDomain> FNamespaceDomain::GuildAccessToken(
         const FString GuildModelName,
-        Gs2::Auth::Model::FAccessTokenPtr AccessToken
+        Gs2::Auth::Model::FAccessTokenPtr AccessToken,
+        const TOptional<FString> GuildName
     )
     {
         return MakeShared<Gs2::Guild::Domain::Model::FGuildAccessTokenDomain>(
@@ -459,7 +473,8 @@ namespace Gs2::Guild::Domain::Model
             Service,
             NamespaceName,
             GuildModelName == TEXT("") ? TOptional<FString>() : TOptional<FString>(GuildModelName),
-            AccessToken
+            AccessToken,
+            GuildName
         );
     }
 
@@ -537,13 +552,22 @@ namespace Gs2::Guild::Domain::Model
                     return Future->GetTask().Error();
                 }
             }
-            Self->Gs2->Cache->TryGet<Gs2::Guild::Model::FNamespace>(
-                ParentKey,
-                Gs2::Guild::Domain::Model::FNamespaceDomain::CreateCacheKey(
-                    Self->NamespaceName
-                ),
-                &Value
-            );
+            else
+            {
+                Value = Future->GetTask().Result();
+                if (Value.IsValid())
+                {
+                    Self->Gs2->Cache->Put(
+                        Gs2::Guild::Model::FNamespace::TypeName,
+                        ParentKey,
+                        FNamespaceDomain::CreateCacheKey(
+                            Self->NamespaceName
+                        ),
+                        Value,
+                        FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                    );
+                }
+            }
             Future->EnsureCompletion();
         }
         *Result = Value;

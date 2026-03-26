@@ -189,13 +189,10 @@ namespace Gs2::Limit::Domain::Model
                     return Future->GetTask().Error();
                 }
             }
-            Self->Gs2->Cache->TryGet<Gs2::Limit::Model::FLimitModel>(
-                Self->ParentKey,
-                Gs2::Limit::Domain::Model::FLimitModelDomain::CreateCacheKey(
-                    Self->LimitName
-                ),
-                &Value
-            );
+            else
+            {
+                Value = Future->GetTask().Result();
+            }
             Future->EnsureCompletion();
         }
         *Result = Value;

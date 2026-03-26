@@ -204,13 +204,10 @@ namespace Gs2::Money2::Domain::Model
                     return Future->GetTask().Error();
                 }
             }
-            Self->Gs2->Cache->TryGet<Gs2::Money2::Model::FEvent>(
-                Self->ParentKey,
-                Gs2::Money2::Domain::Model::FEventDomain::CreateCacheKey(
-                    Self->TransactionId
-                ),
-                &Value
-            );
+            else
+            {
+                Value = Future->GetTask().Result();
+            }
             Future->EnsureCompletion();
         }
         *Result = Value;

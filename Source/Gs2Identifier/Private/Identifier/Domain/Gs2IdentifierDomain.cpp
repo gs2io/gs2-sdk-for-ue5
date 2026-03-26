@@ -12,6 +12,8 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
+ *
+ * deny overwrite
  */
 
 #if defined(_MSC_VER)
@@ -83,10 +85,35 @@ namespace Gs2::Identifier::Domain
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+        auto UserName = Request->GetName();
+        if (ResultModel->GetItem() != nullptr && ResultModel->GetItem()->GetName().IsSet())
+        {
+            UserName = ResultModel->GetItem()->GetName();
+        }
+        if (ResultModel->GetItem() != nullptr && !ResultModel->GetItem()->GetName().IsSet() && UserName.IsSet())
+        {
+            ResultModel->GetItem()->WithName(UserName);
+        }
+        if (ResultModel->GetItem() != nullptr)
+        {
+            Self->Gs2->Cache->Put(
+                Gs2::Identifier::Model::FUser::TypeName,
+                "identifier:User",
+                Gs2::Identifier::Domain::Model::FUserDomain::CreateCacheKey(
+                    UserName
+                ),
+                ResultModel->GetItem(),
+                FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+            );
+        }
+        Self->Gs2->Cache->ClearListCache(
+            Gs2::Identifier::Model::FUser::TypeName,
+            "identifier:User"
+        );
         auto Domain = MakeShared<Gs2::Identifier::Domain::Model::FUserDomain>(
             Self->Gs2,
             Self,
-            ResultModel->GetItem()->GetName()
+            UserName
         );
         *Result = Domain;
         return nullptr;

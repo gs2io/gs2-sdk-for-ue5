@@ -171,6 +171,21 @@ namespace Gs2::Ranking::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+        if (ResultModel->GetItem() != nullptr)
+        {
+            const auto Key = Gs2::Ranking::Domain::Model::FSubscribeUserDomain::CreateCacheKey(
+                ResultModel->GetItem()->GetTargetUserId()
+            );
+            Self->Gs2->Cache->Delete(
+                Gs2::Ranking::Model::FSubscribeUser::TypeName,
+                Self->ParentKey,
+                Key
+            );
+        }
+        Self->Gs2->Cache->ClearListCache(
+            Gs2::Ranking::Model::FSubscribeUser::TypeName,
+            Self->ParentKey
+        );
         auto Domain = Self;
 
         *Result = Domain;
@@ -264,13 +279,10 @@ namespace Gs2::Ranking::Domain::Model
                     return Future->GetTask().Error();
                 }
             }
-            Self->Gs2->Cache->TryGet<Gs2::Ranking::Model::FSubscribeUser>(
-                Self->ParentKey,
-                Gs2::Ranking::Domain::Model::FSubscribeUserDomain::CreateCacheKey(
-                    Self->TargetUserId
-                ),
-                &Value
-            );
+            else
+            {
+                Value = Future->GetTask().Result();
+            }
             Future->EnsureCompletion();
         }
         *Result = Value;

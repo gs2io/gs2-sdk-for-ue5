@@ -300,15 +300,19 @@ namespace Gs2::Ranking2::Domain::Model
     {
         // ReSharper disable once CppLocalVariableMayBeConst
         TSharedPtr<Gs2::Ranking2::Model::FClusterRankingScore> Value;
-        auto bCacheHit = Self->Gs2->Cache->TryGet<Gs2::Ranking2::Model::FClusterRankingScore>(
-            Self->ParentKey,
-            Gs2::Ranking2::Domain::Model::FClusterRankingScoreDomain::CreateCacheKey(
-                Self->ClusterName,
-                Self->Season,
-                Self->UserId
-            ),
-            &Value
-        );
+        auto bCacheHit = false;
+        if (Self->Season.IsSet())
+        {
+            bCacheHit = Self->Gs2->Cache->TryGet<Gs2::Ranking2::Model::FClusterRankingScore>(
+                Self->ParentKey,
+                Gs2::Ranking2::Domain::Model::FClusterRankingScoreDomain::CreateCacheKey(
+                    Self->ClusterName,
+                    Self->Season,
+                    Self->UserId
+                ),
+                &Value
+            );
+        }
         if (!bCacheHit) {
             const auto Future = Self->Get(
                 MakeShared<Gs2::Ranking2::Request::FGetClusterRankingScoreByUserIdRequest>()
@@ -326,28 +330,40 @@ namespace Gs2::Ranking2::Domain::Model
                     Self->Season,
                     Self->UserId
                 );
-                Self->Gs2->Cache->Put(
-                    Gs2::Ranking2::Model::FClusterRankingScore::TypeName,
-                    Self->ParentKey,
-                    Key,
-                    nullptr,
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
+                if (Self->Season.IsSet())
+                {
+                    Self->Gs2->Cache->Put(
+                        Gs2::Ranking2::Model::FClusterRankingScore::TypeName,
+                        Self->ParentKey,
+                        Key,
+                        nullptr,
+                        FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                    );
+                }
 
                 if (Future->GetTask().Error()->Detail(0)->GetComponent() != "clusterRankingScore")
                 {
                     return Future->GetTask().Error();
                 }
             }
-            Self->Gs2->Cache->TryGet<Gs2::Ranking2::Model::FClusterRankingScore>(
-                Self->ParentKey,
-                Gs2::Ranking2::Domain::Model::FClusterRankingScoreDomain::CreateCacheKey(
-                    Self->ClusterName,
-                    Self->Season,
-                    Self->UserId
-                ),
-                &Value
-            );
+            else
+            {
+                Value = Future->GetTask().Result();
+                if (Self->Season.IsSet() && Value.IsValid())
+                {
+                    Self->Gs2->Cache->Put(
+                        Gs2::Ranking2::Model::FClusterRankingScore::TypeName,
+                        Self->ParentKey,
+                        FClusterRankingScoreDomain::CreateCacheKey(
+                            Self->ClusterName,
+                            Self->Season,
+                            Self->UserId
+                        ),
+                        Value,
+                        FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                    );
+                }
+            }
             Future->EnsureCompletion();
         }
         *Result = Value;

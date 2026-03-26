@@ -245,13 +245,10 @@ namespace Gs2::News::Domain::Model
                     return Future->GetTask().Error();
                 }
             }
-            Self->Gs2->Cache->TryGet<Gs2::News::Model::FProgress>(
-                Self->ParentKey,
-                Gs2::News::Domain::Model::FProgressDomain::CreateCacheKey(
-                    Self->UploadToken
-                ),
-                &Value
-            );
+            else
+            {
+                Value = Future->GetTask().Result();
+            }
             Future->EnsureCompletion();
         }
         *Result = Value;

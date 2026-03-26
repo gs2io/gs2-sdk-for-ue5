@@ -12,6 +12,8 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
+ *
+ * deny overwrite
  */
 
 // ReSharper disable CppUnusedIncludeDirective
@@ -51,7 +53,7 @@ namespace Gs2::Friend::Domain::Iterator
         class FIterator;
 
         class GS2FRIEND_API FIteratorNextTask :
-            public Gs2::Core::Util::TGs2Future<Gs2::Friend::Model::FFriendRequest>
+            public Gs2::Core::Util::TGs2Future<Gs2::Friend::Model::FReceiveFriendRequest>
         {
         private:
             FIterator& Iterator;
@@ -61,7 +63,7 @@ namespace Gs2::Friend::Domain::Iterator
                 Iterator(Iterator)
             {}
 
-            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::Friend::Model::FFriendRequest>> Result) override;
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::Friend::Model::FReceiveFriendRequest>> Result) override;
 
             static TSharedPtr<FAsyncTask<FIteratorNextTask>> Issue(FIterator& Iterator)
             {
@@ -72,8 +74,8 @@ namespace Gs2::Friend::Domain::Iterator
         class GS2FRIEND_API FIterator
         {
             TSharedRef<FDescribeReceiveRequestsIterator> Self;
-            TSharedPtr<TArray<Gs2::Friend::Model::FFriendRequestPtr>> Range;
-            TOptional<TArray<Gs2::Friend::Model::FFriendRequestPtr>::TIterator> RangeIteratorOpt;
+            TSharedPtr<TArray<Gs2::Friend::Model::FReceiveFriendRequestPtr>> Range;
+            TOptional<TArray<Gs2::Friend::Model::FReceiveFriendRequestPtr>::TIterator> RangeIteratorOpt;
             Gs2::Core::Model::FGs2ErrorPtr ErrorValue;
             bool bLast;
             bool bEnd;
@@ -157,7 +159,7 @@ namespace Gs2::Friend::Domain::Iterator
                 return FIteratorNextTask::Issue(*this);
             }
 
-            Gs2::Friend::Model::FFriendRequestPtr& Current()
+            Gs2::Friend::Model::FReceiveFriendRequestPtr& Current()
             {
                 return **RangeIteratorOpt;
             }

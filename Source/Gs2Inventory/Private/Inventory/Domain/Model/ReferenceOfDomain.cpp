@@ -526,13 +526,23 @@ namespace Gs2::Inventory::Domain::Model
                     return Future->GetTask().Error();
                 }
             }
-            Self->Gs2->Cache->TryGet<Gs2::Inventory::Model::FReferenceOf>(
-                ParentKey,
-                Gs2::Inventory::Domain::Model::FReferenceOfDomain::CreateCacheKey(
-                    Self->ReferenceOf
-                ),
-                &Value
-            );
+            else
+            {
+                const auto ResultRef = Future->GetTask().Result();
+                if (ResultRef.IsValid())
+                {
+                    Value = MakeShared<Gs2::Inventory::Model::FReferenceOf>()->WithName(*ResultRef);
+                    Self->Gs2->Cache->Put(
+                        Inventory::Model::FReferenceOf::TypeName,
+                        ParentKey,
+                        FReferenceOfDomain::CreateCacheKey(
+                            Self->ReferenceOf
+                        ),
+                        Value,
+                        FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                    );
+                }
+            }
             Future->EnsureCompletion();
         }
         if (Value.IsValid())

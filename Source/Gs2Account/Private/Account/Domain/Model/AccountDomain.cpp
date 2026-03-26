@@ -42,6 +42,7 @@
 #include "Core/Domain/Transaction/JobQueueJobDomainFactory.h"
 #include "Core/Domain/Transaction/InternalTransactionDomainFactory.h"
 #include "Core/Domain/Transaction/ManualTransactionDomain.h"
+#include "Account/Error/BannedInfinityError.h"
 
 namespace Gs2::Account::Domain::Model
 {
@@ -110,6 +111,19 @@ namespace Gs2::Account::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+        if (ResultModel->GetItem() != nullptr)
+        {
+            const auto Key = Gs2::Account::Domain::Model::FAccountDomain::CreateCacheKey(
+                ResultModel->GetItem()->GetUserId()
+            );
+            Self->Gs2->Cache->Put(
+                Gs2::Account::Model::FAccount::TypeName,
+                Self->ParentKey,
+                Key,
+                ResultModel->GetItem(),
+                FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+            );
+        }
         auto Domain = Self;
 
         *Result = Domain;
@@ -154,6 +168,19 @@ namespace Gs2::Account::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+        if (ResultModel->GetItem() != nullptr)
+        {
+            const auto Key = Gs2::Account::Domain::Model::FAccountDomain::CreateCacheKey(
+                ResultModel->GetItem()->GetUserId()
+            );
+            Self->Gs2->Cache->Put(
+                Gs2::Account::Model::FAccount::TypeName,
+                Self->ParentKey,
+                Key,
+                ResultModel->GetItem(),
+                FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+            );
+        }
         auto Domain = Self;
 
         *Result = Domain;
@@ -198,6 +225,19 @@ namespace Gs2::Account::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+        if (ResultModel->GetItem() != nullptr)
+        {
+            const auto Key = Gs2::Account::Domain::Model::FAccountDomain::CreateCacheKey(
+                ResultModel->GetItem()->GetUserId()
+            );
+            Self->Gs2->Cache->Put(
+                Gs2::Account::Model::FAccount::TypeName,
+                Self->ParentKey,
+                Key,
+                ResultModel->GetItem(),
+                FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+            );
+        }
         auto Domain = Self;
 
         *Result = Domain;
@@ -242,6 +282,19 @@ namespace Gs2::Account::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+        if (ResultModel->GetItem() != nullptr)
+        {
+            const auto Key = Gs2::Account::Domain::Model::FAccountDomain::CreateCacheKey(
+                ResultModel->GetItem()->GetUserId()
+            );
+            Self->Gs2->Cache->Put(
+                Gs2::Account::Model::FAccount::TypeName,
+                Self->ParentKey,
+                Key,
+                ResultModel->GetItem(),
+                FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+            );
+        }
         auto Domain = Self;
 
         *Result = Domain;
@@ -328,6 +381,21 @@ namespace Gs2::Account::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+        if (ResultModel->GetItem() != nullptr)
+        {
+            const auto Key = Gs2::Account::Domain::Model::FAccountDomain::CreateCacheKey(
+                ResultModel->GetItem()->GetUserId()
+            );
+            Self->Gs2->Cache->Delete(
+                Gs2::Account::Model::FAccount::TypeName,
+                Self->ParentKey,
+                Key
+            );
+        }
+        Self->Gs2->Cache->ClearListCache(
+            Gs2::Account::Model::FAccount::TypeName,
+            Self->ParentKey
+        );
         auto Domain = Self;
 
         *Result = Domain;
@@ -368,13 +436,45 @@ namespace Gs2::Account::Domain::Model
         Future->StartSynchronousTask();
         if (Future->GetTask().IsError())
         {
+            if (Future->GetTask().Error()->Type() == Gs2::Account::Error::FBannedInfinityError::TypeString)
+            {
+                TSharedPtr<Gs2::Account::Model::FAccount> CachedAccount;
+                Self->Gs2->Cache->TryGet<Gs2::Account::Model::FAccount>(
+                    Self->ParentKey,
+                    Gs2::Account::Domain::Model::FAccountDomain::CreateCacheKey(Self->UserId),
+                    &CachedAccount
+                );
+                if (CachedAccount != nullptr)
+                {
+                    Self->BanStatuses = CachedAccount->GetBanStatuses();
+                }
+                *Result = Self;
+                return nullptr;
+            }
             return Future->GetTask().Error();
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+        if (ResultModel->GetItem() != nullptr)
+        {
+            const auto Key = Gs2::Account::Domain::Model::FAccountDomain::CreateCacheKey(
+                ResultModel->GetItem()->GetUserId()
+            );
+            Self->Gs2->Cache->Put(
+                Gs2::Account::Model::FAccount::TypeName,
+                Self->ParentKey,
+                Key,
+                ResultModel->GetItem(),
+                FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+            );
+        }
         auto Domain = Self;
         if (ResultModel != nullptr)
         {
+            if (ResultModel->GetBanStatuses() != nullptr)
+            {
+                Domain->BanStatuses = ResultModel->GetBanStatuses();
+            }
             if (ResultModel->GetBody().IsSet())
             {
                 Domain->Body = *ResultModel->GetBody();
@@ -382,10 +482,6 @@ namespace Gs2::Account::Domain::Model
             if (ResultModel->GetSignature().IsSet())
             {
                 Domain->Signature = *ResultModel->GetSignature();
-            }
-            if (ResultModel->GetBanStatuses() != nullptr)
-            {
-                Domain->BanStatuses = ResultModel->GetBanStatuses();
             }
         }
 
@@ -431,6 +527,19 @@ namespace Gs2::Account::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+        if (ResultModel->GetItem() != nullptr)
+        {
+            const auto Key = Gs2::Account::Domain::Model::FTakeOverDomain::CreateCacheKey(
+                ResultModel->GetItem()->GetType()
+            );
+            Self->Gs2->Cache->Put(
+                Gs2::Account::Model::FTakeOver::TypeName,
+                Self->ParentKey,
+                Key,
+                ResultModel->GetItem(),
+                FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+            );
+        }
         auto Domain = MakeShared<Gs2::Account::Domain::Model::FTakeOverDomain>(
             Self->Gs2,
             Self->Service,
@@ -480,6 +589,21 @@ namespace Gs2::Account::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+        if (ResultModel->GetItem() != nullptr)
+        {
+            const auto Key = Gs2::Account::Domain::Model::FTakeOverDomain::CreateCacheKey(
+                ResultModel->GetItem()->GetType()
+            );
+            Self->Gs2->Cache->Delete(
+                Gs2::Account::Model::FTakeOver::TypeName,
+                Self->ParentKey,
+                Key
+            );
+        }
+        Self->Gs2->Cache->ClearListCache(
+            Gs2::Account::Model::FTakeOver::TypeName,
+            Self->ParentKey
+        );
         auto Domain = MakeShared<Gs2::Account::Domain::Model::FTakeOverDomain>(
             Self->Gs2,
             Self->Service,
@@ -530,6 +654,21 @@ namespace Gs2::Account::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+        if (ResultModel->GetItem() != nullptr)
+        {
+            const auto Key = Gs2::Account::Domain::Model::FTakeOverDomain::CreateCacheKey(
+                ResultModel->GetItem()->GetType()
+            );
+            Self->Gs2->Cache->Delete(
+                Gs2::Account::Model::FTakeOver::TypeName,
+                Self->ParentKey,
+                Key
+            );
+        }
+        Self->Gs2->Cache->ClearListCache(
+            Gs2::Account::Model::FTakeOver::TypeName,
+            Self->ParentKey
+        );
         auto Domain = MakeShared<Gs2::Account::Domain::Model::FTakeOverDomain>(
             Self->Gs2,
             Self->Service,
@@ -546,6 +685,55 @@ namespace Gs2::Account::Domain::Model
         Request::FDeleteTakeOverByUserIdRequestPtr Request
     ) {
         return Gs2::Core::Util::New<FAsyncTask<FDeleteTakeOverTask>>(this->AsShared(), Request);
+    }
+
+    FAccountDomain::FGetAuthorizationUrlTask::FGetAuthorizationUrlTask(
+        const TSharedPtr<FAccountDomain>& Self,
+        const Request::FGetAuthorizationUrlRequestPtr Request
+    ): Self(Self), Request(Request)
+    {
+
+    }
+
+    FAccountDomain::FGetAuthorizationUrlTask::FGetAuthorizationUrlTask(
+        const FGetAuthorizationUrlTask& From
+    ): TGs2Future(From), Self(From.Self), Request(From.Request)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FAccountDomain::FGetAuthorizationUrlTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::Account::Domain::Model::FAccountDomain>> Result
+    )
+    {
+        Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
+            ->WithNamespaceName(Self->NamespaceName);
+        const auto Future = Self->Client->GetAuthorizationUrl(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
+        const auto Domain = Self;
+        if (ResultModel != nullptr)
+        {
+            if (ResultModel->GetAuthorizationUrl().IsSet())
+            {
+                Self->AuthorizationUrl = Domain->AuthorizationUrl = ResultModel->GetAuthorizationUrl();
+            }
+        }
+        *Result = Domain;
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FAccountDomain::FGetAuthorizationUrlTask>> FAccountDomain::GetAuthorizationUrl(
+        Request::FGetAuthorizationUrlRequestPtr Request
+    ) {
+        return Gs2::Core::Util::New<FAsyncTask<FGetAuthorizationUrlTask>>(this->AsShared(), Request);
     }
 
     FAccountDomain::FDeleteDataOwnerTask::FDeleteDataOwnerTask(
@@ -568,8 +756,7 @@ namespace Gs2::Account::Domain::Model
     {
         Request
             ->WithContextStack(Self->Gs2->DefaultContextStack)
-            ->WithNamespaceName(Self->NamespaceName)
-            ->WithUserId(Self->UserId);
+            ->WithNamespaceName(Self->NamespaceName);
         const auto Future = Self->Client->DeleteDataOwnerByUserId(
             Request
         );
@@ -580,6 +767,20 @@ namespace Gs2::Account::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+        if (ResultModel->GetItem() != nullptr)
+        {
+            const auto Key = Gs2::Account::Domain::Model::FDataOwnerDomain::CreateCacheKey(
+            );
+            Self->Gs2->Cache->Delete(
+                Gs2::Account::Model::FDataOwner::TypeName,
+                Self->ParentKey,
+                Key
+            );
+        }
+        Self->Gs2->Cache->ClearListCache(
+            Gs2::Account::Model::FDataOwner::TypeName,
+            Self->ParentKey
+        );
         auto Domain = MakeShared<Gs2::Account::Domain::Model::FDataOwnerDomain>(
             Self->Gs2,
             Self->Service,
@@ -629,6 +830,21 @@ namespace Gs2::Account::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+        if (ResultModel->GetItem() != nullptr)
+        {
+            const auto Key = Gs2::Account::Domain::Model::FPlatformIdDomain::CreateCacheKey(
+                ResultModel->GetItem()->GetType()
+            );
+            Self->Gs2->Cache->Delete(
+                Gs2::Account::Model::FPlatformId::TypeName,
+                Self->ParentKey,
+                Key
+            );
+        }
+        Self->Gs2->Cache->ClearListCache(
+            Gs2::Account::Model::FPlatformId::TypeName,
+            Self->ParentKey
+        );
         auto Domain = MakeShared<Gs2::Account::Domain::Model::FPlatformIdDomain>(
             Self->Gs2,
             Self->Service,
@@ -848,13 +1064,10 @@ namespace Gs2::Account::Domain::Model
                     return Future->GetTask().Error();
                 }
             }
-            Self->Gs2->Cache->TryGet<Gs2::Account::Model::FAccount>(
-                Self->ParentKey,
-                Gs2::Account::Domain::Model::FAccountDomain::CreateCacheKey(
-                    Self->UserId
-                ),
-                &Value
-            );
+            else
+            {
+                Value = Future->GetTask().Result();
+            }
             Future->EnsureCompletion();
         }
         *Result = Value;

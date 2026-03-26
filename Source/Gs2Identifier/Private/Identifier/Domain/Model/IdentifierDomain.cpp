@@ -230,13 +230,22 @@ namespace Gs2::Identifier::Domain::Model
                     return Future->GetTask().Error();
                 }
             }
-            Self->Gs2->Cache->TryGet<Gs2::Identifier::Model::FIdentifier>(
-                Self->ParentKey,
-                Gs2::Identifier::Domain::Model::FIdentifierDomain::CreateCacheKey(
-                    Self->ClientId
-                ),
-                &Value
-            );
+            else
+            {
+                Value = Future->GetTask().Result();
+                if (Value.IsValid())
+                {
+                    Self->Gs2->Cache->Put(
+                        Gs2::Identifier::Model::FIdentifier::TypeName,
+                        Self->ParentKey,
+                        FIdentifierDomain::CreateCacheKey(
+                            Self->ClientId
+                        ),
+                        Value,
+                        FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                    );
+                }
+            }
             Future->EnsureCompletion();
         }
         *Result = Value;

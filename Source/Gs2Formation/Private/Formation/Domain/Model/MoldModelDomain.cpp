@@ -208,13 +208,10 @@ namespace Gs2::Formation::Domain::Model
                     return Future->GetTask().Error();
                 }
             }
-            Self->Gs2->Cache->TryGet<Gs2::Formation::Model::FMoldModel>(
-                Self->ParentKey,
-                Gs2::Formation::Domain::Model::FMoldModelDomain::CreateCacheKey(
-                    Self->MoldModelName
-                ),
-                &Value
-            );
+            else
+            {
+                Value = Future->GetTask().Result();
+            }
             Future->EnsureCompletion();
         }
         *Result = Value;

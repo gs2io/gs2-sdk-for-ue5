@@ -225,13 +225,22 @@ namespace Gs2::JobQueue::Domain::Model
                     return Future->GetTask().Error();
                 }
             }
-            Self->Gs2->Cache->TryGet<Gs2::JobQueue::Model::FJobResult>(
-                Self->ParentKey,
-                Gs2::JobQueue::Domain::Model::FJobResultDomain::CreateCacheKey(
-                    Self->TryNumber.IsSet() ? FString::FromInt(*Self->TryNumber) : TOptional<FString>()
-                ),
-                &Value
-            );
+            else
+            {
+                Value = Future->GetTask().Result();
+                if (Value.IsValid())
+                {
+                    Self->Gs2->Cache->Put(
+                        Gs2::JobQueue::Model::FJobResult::TypeName,
+                        Self->ParentKey,
+                        FJobResultDomain::CreateCacheKey(
+                            Self->TryNumber.IsSet() ? FString::FromInt(*Self->TryNumber) : TOptional<FString>()
+                        ),
+                        Value,
+                        FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                    );
+                }
+            }
             Future->EnsureCompletion();
         }
         *Result = Value;
@@ -287,13 +296,22 @@ namespace Gs2::JobQueue::Domain::Model
                 return Future->GetTask().Error();
             }
         }
-        Self->Gs2->Cache->TryGet<Gs2::JobQueue::Model::FJobResult>(
-            Self->ParentKey,
-            Gs2::JobQueue::Domain::Model::FJobResultDomain::CreateCacheKey(
-                Self->TryNumber.IsSet() ? FString::FromInt(*Self->TryNumber) : TOptional<FString>()
-            ),
-            &Value
-        );
+        else
+        {
+            Value = Future->GetTask().Result();
+            if (Value.IsValid())
+            {
+                Self->Gs2->Cache->Put(
+                    Gs2::JobQueue::Model::FJobResult::TypeName,
+                    Self->ParentKey,
+                    FJobResultDomain::CreateCacheKey(
+                        Self->TryNumber.IsSet() ? FString::FromInt(*Self->TryNumber) : TOptional<FString>()
+                    ),
+                    Value,
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+            }
+        }
         Future->EnsureCompletion();
         return nullptr;
     }

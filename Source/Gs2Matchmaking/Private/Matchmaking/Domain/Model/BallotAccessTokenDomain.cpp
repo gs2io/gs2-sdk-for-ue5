@@ -135,6 +135,11 @@ namespace Gs2::Matchmaking::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+        if (ResultModel != nullptr)
+        {
+            Self->Body = *ResultModel->GetBody();
+            Self->Signature = *ResultModel->GetSignature();
+        }
         *Result = ResultModel->GetItem();
         return nullptr;
     }
@@ -209,7 +214,7 @@ namespace Gs2::Matchmaking::Domain::Model
             ),
             &Value
         );
-        if (!bCacheHit) {
+        if (!bCacheHit || !Self->Body.IsSet() || !Self->Signature.IsSet()) {
             const auto Future = Self->Get(
                 MakeShared<Gs2::Matchmaking::Request::FGetBallotRequest>()
             );
@@ -240,16 +245,10 @@ namespace Gs2::Matchmaking::Domain::Model
                     return Future->GetTask().Error();
                 }
             }
-            Self->Gs2->Cache->TryGet<Gs2::Matchmaking::Model::FBallot>(
-                Self->ParentKey,
-                Gs2::Matchmaking::Domain::Model::FBallotDomain::CreateCacheKey(
-                    Self->RatingName,
-                    Self->GatheringName,
-                    Self->NumberOfPlayer,
-                    Self->KeyId
-                ),
-                &Value
-            );
+            else
+            {
+                Value = Future->GetTask().Result();
+            }
             Future->EnsureCompletion();
         }
         *Result = Value;
@@ -304,4 +303,3 @@ namespace Gs2::Matchmaking::Domain::Model
 #elif defined(__clang__)
 #pragma clang diagnostic pop
 #endif
-

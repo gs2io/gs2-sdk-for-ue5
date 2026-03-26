@@ -230,15 +230,10 @@ namespace Gs2::Ranking::Domain::Model
                     return Future->GetTask().Error();
                 }
             }
-            Self->Gs2->Cache->TryGet<Gs2::Ranking::Model::FScore>(
-                ParentKey,
-                Gs2::Ranking::Domain::Model::FScoreDomain::CreateCacheKey(
-                    Self->CategoryName,
-                    Self->ScorerUserId,
-                    Self->UniqueId ? *Self->UniqueId : "0"
-                ),
-                &Value
-            );
+            else
+            {
+                Value = Future->GetTask().Result();
+            }
             Future->EnsureCompletion();
         }
         *Result = Value;

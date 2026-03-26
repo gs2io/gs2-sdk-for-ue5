@@ -193,13 +193,10 @@ namespace Gs2::Enhance::Domain::Model
                     return Future->GetTask().Error();
                 }
             }
-            Self->Gs2->Cache->TryGet<Gs2::Enhance::Model::FUnleashRateModel>(
-                Self->ParentKey,
-                Gs2::Enhance::Domain::Model::FUnleashRateModelDomain::CreateCacheKey(
-                    Self->RateName
-                ),
-                &Value
-            );
+            else
+            {
+                Value = Future->GetTask().Result();
+            }
             Future->EnsureCompletion();
         }
         *Result = Value;

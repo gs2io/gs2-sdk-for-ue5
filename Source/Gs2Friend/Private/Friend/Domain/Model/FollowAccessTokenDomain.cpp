@@ -123,6 +123,19 @@ namespace Gs2::Friend::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+        if (ResultModel->GetItem() != nullptr)
+        {
+            const auto Key = Gs2::Friend::Domain::Model::FFollowUserDomain::CreateCacheKey(
+                ResultModel->GetItem()->GetUserId()
+            );
+            Self->Gs2->Cache->Put(
+                Gs2::Friend::Model::FFollowUser::TypeName,
+                Self->ParentKey,
+                Key,
+                ResultModel->GetItem(),
+                FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+            );
+        }
         auto Domain = MakeShared<Gs2::Friend::Domain::Model::FFollowUserAccessTokenDomain>(
             Self->Gs2,
             Self->Service,

@@ -108,19 +108,6 @@ namespace Gs2::Matchmaking::Domain::Iterator
                 "SeasonGathering"
             );
 
-            if (!RangeIteratorOpt)
-            {
-                Range = Self->Gs2->Cache->TryGetList<Gs2::Matchmaking::Model::FSeasonGathering>(ListParentKey);
-
-                if (Range)
-                {
-                    bLast = true;
-                    RangeIteratorOpt = Range->CreateIterator();
-                    bEnd = !static_cast<bool>(*RangeIteratorOpt) && bLast;
-                    return *this;
-                }
-            }
-
             const auto Future = Self->Client->DoSeasonMatchmakingByUserId(
                 MakeShared<Gs2::Matchmaking::Request::FDoSeasonMatchmakingByUserIdRequest>()
                     ->WithNamespaceName(Self->NamespaceName)

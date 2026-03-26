@@ -97,6 +97,18 @@ namespace Gs2::Identifier::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+        if (ResultModel->GetItem() != nullptr)
+        {
+            const auto Key = Gs2::Identifier::Domain::Model::FPasswordDomain::CreateCacheKey(
+            );
+            Self->Gs2->Cache->Put(
+                Gs2::Identifier::Model::FPassword::TypeName,
+                Self->ParentKey,
+                Key,
+                ResultModel->GetItem(),
+                FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+            );
+        }
         auto Domain = Self;
 
         *Result = Domain;
@@ -181,6 +193,18 @@ namespace Gs2::Identifier::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+        if (ResultModel->GetItem() != nullptr)
+        {
+            const auto Key = Gs2::Identifier::Domain::Model::FPasswordDomain::CreateCacheKey(
+            );
+            Self->Gs2->Cache->Put(
+                Gs2::Identifier::Model::FPassword::TypeName,
+                Self->ParentKey,
+                Key,
+                ResultModel->GetItem(),
+                FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+            );
+        }
         auto Domain = Self;
         if (ResultModel != nullptr)
         {
@@ -231,6 +255,18 @@ namespace Gs2::Identifier::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+        if (ResultModel->GetItem() != nullptr)
+        {
+            const auto Key = Gs2::Identifier::Domain::Model::FPasswordDomain::CreateCacheKey(
+            );
+            Self->Gs2->Cache->Put(
+                Gs2::Identifier::Model::FPassword::TypeName,
+                Self->ParentKey,
+                Key,
+                ResultModel->GetItem(),
+                FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+            );
+        }
         auto Domain = Self;
 
         *Result = Domain;
@@ -274,6 +310,18 @@ namespace Gs2::Identifier::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+        if (ResultModel->GetItem() != nullptr)
+        {
+            const auto Key = Gs2::Identifier::Domain::Model::FPasswordDomain::CreateCacheKey(
+            );
+            Self->Gs2->Cache->Put(
+                Gs2::Identifier::Model::FPassword::TypeName,
+                Self->ParentKey,
+                Key,
+                ResultModel->GetItem(),
+                FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+            );
+        }
         auto Domain = Self;
 
         *Result = Domain;
@@ -317,6 +365,20 @@ namespace Gs2::Identifier::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+        if (ResultModel->GetItem() != nullptr)
+        {
+            const auto Key = Gs2::Identifier::Domain::Model::FPasswordDomain::CreateCacheKey(
+            );
+            Self->Gs2->Cache->Delete(
+                Gs2::Identifier::Model::FPassword::TypeName,
+                Self->ParentKey,
+                Key
+            );
+        }
+        Self->Gs2->Cache->ClearListCache(
+            Gs2::Identifier::Model::FPassword::TypeName,
+            Self->ParentKey
+        );
         auto Domain = Self;
 
         *Result = Domain;
@@ -398,12 +460,10 @@ namespace Gs2::Identifier::Domain::Model
                     return Future->GetTask().Error();
                 }
             }
-            Self->Gs2->Cache->TryGet<Gs2::Identifier::Model::FPassword>(
-                Self->ParentKey,
-                Gs2::Identifier::Domain::Model::FPasswordDomain::CreateCacheKey(
-                ),
-                &Value
-            );
+            else
+            {
+                Value = Future->GetTask().Result();
+            }
             Future->EnsureCompletion();
         }
         *Result = Value;

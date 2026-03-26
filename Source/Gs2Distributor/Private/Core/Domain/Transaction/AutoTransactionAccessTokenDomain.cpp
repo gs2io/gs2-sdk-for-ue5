@@ -27,38 +27,31 @@ namespace Gs2::Core::Domain
 		Gs2::Distributor::Model::FStampSheetResultPtr Result
 	)
 	{
-		auto bSkipCallback = false;
 		if (Handled.Contains(TransactionId)) {
 			// TODO: expire handled
-			bSkipCallback = true;
+			return nullptr;
 		}
-		else {
-			Handled.Add(this->TransactionId, FDateTime::Now() + FTimespan::FromMinutes(3));
-		}
+		Handled.Add(this->TransactionId, FDateTime::Now() + FTimespan::FromMinutes(3));
             
 		if (Result->GetTaskRequests().IsValid()) {
 			for (auto i = 0; i < Result->GetTaskRequests()->Num(); i++) {
 				const auto StampTask = (*Result->GetTaskRequests())[i];
 				if (i < Result->GetTaskResults()->Num()) {
-					if (!bSkipCallback) {
-						Gs2->TransactionConfiguration->StampTaskEventHandler(
-							*StampTask->GetAction(),
-							*StampTask->GetRequest(),
-							(*Result->GetTaskResults())[i]
-						);
-					}
+					Gs2->TransactionConfiguration->StampTaskEventHandler(
+						*StampTask->GetAction(),
+						*StampTask->GetRequest(),
+						(*Result->GetTaskResults())[i]
+					);
 				}
 			}
 		}
 
 		if (!Result->GetSheetResult()->IsEmpty()) {
-			if (!bSkipCallback) {
-				Gs2->TransactionConfiguration->StampSheetEventHandler(
-					*Result->GetSheetRequest()->GetAction(),
-					*Result->GetSheetRequest()->GetRequest(),
-					*Result->GetSheetResult()
-				);
-			}
+			Gs2->TransactionConfiguration->StampSheetEventHandler(
+				*Result->GetSheetRequest()->GetAction(),
+				*Result->GetSheetRequest()->GetRequest(),
+				*Result->GetSheetResult()
+			);
 
 			TSharedPtr<FJsonObject> ResultModelJson;
 			if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(*Result->GetSheetResult());
@@ -74,7 +67,9 @@ namespace Gs2::Core::Domain
 				));
 			}
 
-			if (ResultModelJson->HasField(ANSI_TO_TCHAR("autoRunStampSheet"))) {
+			const auto HasTransactionId = ResultModelJson->HasField(ANSI_TO_TCHAR("transactionId")) && !ResultModelJson->GetStringField(ANSI_TO_TCHAR("transactionId")).IsEmpty();
+			const auto HasStampSheet = ResultModelJson->HasField(ANSI_TO_TCHAR("stampSheet")) && !ResultModelJson->GetStringField(ANSI_TO_TCHAR("stampSheet")).IsEmpty();
+			if (ResultModelJson->HasField(ANSI_TO_TCHAR("autoRunStampSheet")) && (HasTransactionId || HasStampSheet)) {
 				NextTransactions->Add(NewTransactionDomain(
 					ResultModelJson->HasField(ANSI_TO_TCHAR("autoRunStampSheet")) && ResultModelJson->GetBoolField(ANSI_TO_TCHAR("autoRunStampSheet")),
 					ResultModelJson->HasField(ANSI_TO_TCHAR("transactionId")) ? ResultModelJson->GetStringField(ANSI_TO_TCHAR("transactionId")) : FString(""),
@@ -172,6 +167,19 @@ namespace Gs2::Core::Domain
 		Future->StartSynchronousTask();
 		if (Future->GetTask().IsError())
 		{
+			if (Future->GetTask().Error()->Type() == Gs2::Core::Model::FNotFoundError::TypeString)
+			{
+				// Stamp sheet results can lag briefly after the transaction has been accepted.
+				FPlatformProcess::Sleep(0.01f);
+
+				const auto Future2 = Gs2->Distributor->Dispatch(AccessToken);
+				Future2->StartSynchronousTask();
+				if (Future2->GetTask().IsError())
+				{
+					return Future2->GetTask().Error();
+				}
+				goto RETRY;
+			}
 			return Future->GetTask().Error();
 		}
 		auto FutureResult = Future->GetTask().Result();

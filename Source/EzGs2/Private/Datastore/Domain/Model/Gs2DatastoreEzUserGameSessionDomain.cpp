@@ -271,18 +271,10 @@ namespace Gs2::UE5::Datastore::Domain::Model
                         Task->EnsureCompletion();
                         return Task->GetTask().Error();
                     }
-                    Url = *Task->GetTask().Result()->GetUploadUrl();
+                    const auto PrepareUploadResult = Task->GetTask().Result();
+                    Url = *PrepareUploadResult->GetUploadUrl();
+                    DataObjectName = PrepareUploadResult->DataObjectName.IsSet() ? *PrepareUploadResult->DataObjectName : "";
                     Task->EnsureCompletion();
-
-                    const auto Task2 = Task->GetTask().Result()->Model();
-                    Task2->StartSynchronousTask();
-                    if (Task2->GetTask().IsError())
-                    {
-                        Task2->EnsureCompletion();
-                        return Task2->GetTask().Error();
-                    }
-                    DataObjectName = *Task2->GetTask().Result()->GetName();
-                    Task2->EnsureCompletion();
                 }
                 {
                     auto Processing = true;

@@ -250,13 +250,10 @@ namespace Gs2::Lottery::Domain::Model
                     return Future->GetTask().Error();
                 }
             }
-            Self->Gs2->Cache->TryGet<Gs2::Lottery::Model::FPrizeTable>(
-                Self->ParentKey,
-                Gs2::Lottery::Domain::Model::FPrizeTableDomain::CreateCacheKey(
-                    Self->PrizeTableName
-                ),
-                &Value
-            );
+            else
+            {
+                Value = Future->GetTask().Result();
+            }
             Future->EnsureCompletion();
         }
         *Result = Value;

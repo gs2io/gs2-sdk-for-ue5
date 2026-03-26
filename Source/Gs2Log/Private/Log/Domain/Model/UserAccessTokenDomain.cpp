@@ -108,6 +108,19 @@ namespace Gs2::Log::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+        if (ResultModel->GetItem() != nullptr)
+        {
+            const auto Key = Gs2::Log::Domain::Model::FInGameLogDomain::CreateCacheKey(
+                ResultModel->GetItem()->GetRequestId()
+            );
+            Self->Gs2->Cache->Put(
+                Gs2::Log::Model::FInGameLog::TypeName,
+                Self->ParentKey,
+                Key,
+                ResultModel->GetItem(),
+                FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+            );
+        }
         auto Domain = MakeShared<Gs2::Log::Domain::Model::FInGameLogAccessTokenDomain>(
             Self->Gs2,
             Self->Service,

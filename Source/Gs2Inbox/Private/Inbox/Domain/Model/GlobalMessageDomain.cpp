@@ -191,13 +191,10 @@ namespace Gs2::Inbox::Domain::Model
                     return Future->GetTask().Error();
                 }
             }
-            Self->Gs2->Cache->TryGet<Gs2::Inbox::Model::FGlobalMessage>(
-                Self->ParentKey,
-                Gs2::Inbox::Domain::Model::FGlobalMessageDomain::CreateCacheKey(
-                    Self->GlobalMessageName
-                ),
-                &Value
-            );
+            else
+            {
+                Value = Future->GetTask().Result();
+            }
             Future->EnsureCompletion();
         }
         *Result = Value;

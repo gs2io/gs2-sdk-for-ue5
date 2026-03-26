@@ -198,13 +198,10 @@ namespace Gs2::Money2::Domain::Model
                     return Future->GetTask().Error();
                 }
             }
-            Self->Gs2->Cache->TryGet<Gs2::Money2::Model::FStoreContentModel>(
-                Self->ParentKey,
-                Gs2::Money2::Domain::Model::FStoreContentModelDomain::CreateCacheKey(
-                    Self->ContentName
-                ),
-                &Value
-            );
+            else
+            {
+                Value = Future->GetTask().Result();
+            }
             Future->EnsureCompletion();
         }
         *Result = Value;

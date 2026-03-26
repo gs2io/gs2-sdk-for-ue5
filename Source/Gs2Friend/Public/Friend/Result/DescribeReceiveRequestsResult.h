@@ -12,18 +12,20 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
+ *
+ * deny overwrite
  */
 
 #pragma once
 
 #include "CoreMinimal.h"
-#include "../Model/FriendRequest.h"
+#include "../Model/ReceiveFriendRequest.h"
 
 namespace Gs2::Friend::Result
 {
     class GS2FRIEND_API FDescribeReceiveRequestsResult final : public TSharedFromThis<FDescribeReceiveRequestsResult>
     {
-        TSharedPtr<TArray<TSharedPtr<Model::FFriendRequest>>> ItemsValue;
+        TSharedPtr<TArray<TSharedPtr<Model::FReceiveFriendRequest>>> ItemsValue;
         TOptional<FString> NextPageTokenValue;
         
     public:
@@ -34,10 +36,10 @@ namespace Gs2::Friend::Result
         );
         ~FDescribeReceiveRequestsResult() = default;
 
-        TSharedPtr<FDescribeReceiveRequestsResult> WithItems(const TSharedPtr<TArray<TSharedPtr<Model::FFriendRequest>>> Items);
+        TSharedPtr<FDescribeReceiveRequestsResult> WithItems(const TSharedPtr<TArray<TSharedPtr<Model::FReceiveFriendRequest>>> Items);
         TSharedPtr<FDescribeReceiveRequestsResult> WithNextPageToken(const TOptional<FString> NextPageToken);
 
-        TSharedPtr<TArray<TSharedPtr<Model::FFriendRequest>>> GetItems() const;
+        TSharedPtr<TArray<TSharedPtr<Model::FReceiveFriendRequest>>> GetItems() const;
         TOptional<FString> GetNextPageToken() const;
 
         static TSharedPtr<FDescribeReceiveRequestsResult> FromJson(const TSharedPtr<FJsonObject> Data);

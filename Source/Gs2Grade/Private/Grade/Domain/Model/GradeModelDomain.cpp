@@ -189,13 +189,10 @@ namespace Gs2::Grade::Domain::Model
                     return Future->GetTask().Error();
                 }
             }
-            Self->Gs2->Cache->TryGet<Gs2::Grade::Model::FGradeModel>(
-                Self->ParentKey,
-                Gs2::Grade::Domain::Model::FGradeModelDomain::CreateCacheKey(
-                    Self->GradeName
-                ),
-                &Value
-            );
+            else
+            {
+                Value = Future->GetTask().Result();
+            }
             Future->EnsureCompletion();
         }
         *Result = Value;

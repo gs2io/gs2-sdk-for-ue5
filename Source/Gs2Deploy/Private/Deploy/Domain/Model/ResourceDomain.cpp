@@ -185,13 +185,10 @@ namespace Gs2::Deploy::Domain::Model
                     return Future->GetTask().Error();
                 }
             }
-            Self->Gs2->Cache->TryGet<Gs2::Deploy::Model::FResource>(
-                Self->ParentKey,
-                Gs2::Deploy::Domain::Model::FResourceDomain::CreateCacheKey(
-                    Self->ResourceName
-                ),
-                &Value
-            );
+            else
+            {
+                Value = Future->GetTask().Result();
+            }
             Future->EnsureCompletion();
         }
         *Result = Value;

@@ -190,13 +190,10 @@ namespace Gs2::Dictionary::Domain::Model
                     return Future->GetTask().Error();
                 }
             }
-            Self->Gs2->Cache->TryGet<Gs2::Dictionary::Model::FEntryModel>(
-                Self->ParentKey,
-                Gs2::Dictionary::Domain::Model::FEntryModelDomain::CreateCacheKey(
-                    Self->EntryModelName
-                ),
-                &Value
-            );
+            else
+            {
+                Value = Future->GetTask().Result();
+            }
             Future->EnsureCompletion();
         }
         *Result = Value;

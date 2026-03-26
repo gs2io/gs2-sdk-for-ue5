@@ -146,7 +146,7 @@ namespace Gs2::Buff::Domain::Iterator
             }
             if (Range)
             {
-                Range->RemoveAll([this](const Gs2::Buff::Model::FBuffEntryModelMasterPtr& Item) { return !Self->NamePrefix && Item->GetName()->StartsWith(*Self->NamePrefix); });
+                Range->RemoveAll([this](const Gs2::Buff::Model::FBuffEntryModelMasterPtr& Item) { return Self->NamePrefix.IsSet() && !Item->GetName()->StartsWith(*Self->NamePrefix); });
             }
             RangeIteratorOpt = Range->CreateIterator();
             PageToken = R->GetNextPageToken();

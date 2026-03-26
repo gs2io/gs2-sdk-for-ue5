@@ -156,6 +156,21 @@ namespace Gs2::Quest::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+        if (ResultModel->GetItem() != nullptr)
+        {
+            const auto Key = Gs2::Quest::Domain::Model::FCompletedQuestListDomain::CreateCacheKey(
+                ResultModel->GetItem()->GetQuestGroupName()
+            );
+            Self->Gs2->Cache->Delete(
+                Gs2::Quest::Model::FCompletedQuestList::TypeName,
+                Self->ParentKey,
+                Key
+            );
+        }
+        Self->Gs2->Cache->ClearListCache(
+            Gs2::Quest::Model::FCompletedQuestList::TypeName,
+            Self->ParentKey
+        );
         auto Domain = Self;
 
         *Result = Domain;
@@ -245,13 +260,10 @@ namespace Gs2::Quest::Domain::Model
                     return Future->GetTask().Error();
                 }
             }
-            Self->Gs2->Cache->TryGet<Gs2::Quest::Model::FCompletedQuestList>(
-                Self->ParentKey,
-                Gs2::Quest::Domain::Model::FCompletedQuestListDomain::CreateCacheKey(
-                    Self->QuestGroupName
-                ),
-                &Value
-            );
+            else
+            {
+                Value = Future->GetTask().Result();
+            }
             Future->EnsureCompletion();
         }
         *Result = Value;

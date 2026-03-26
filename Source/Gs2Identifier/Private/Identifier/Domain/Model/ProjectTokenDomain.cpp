@@ -146,6 +146,18 @@ namespace Gs2::Identifier::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+        if (ResultModel->GetItem() != nullptr)
+        {
+            const auto Key = Gs2::Identifier::Domain::Model::FProjectTokenDomain::CreateCacheKey(
+            );
+            Self->Gs2->Cache->Put(
+                Gs2::Identifier::Model::FProjectToken::TypeName,
+                Self->ParentKey,
+                Key,
+                ResultModel->GetItem(),
+                FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+            );
+        }
         auto Domain = Self;
 
         *Result = Domain;

@@ -161,13 +161,52 @@ namespace Gs2::Ranking2::Domain::Model
     {
         // ReSharper disable once CppLocalVariableMayBeConst
         TSharedPtr<Gs2::Ranking2::Model::FClusterRankingData> Value;
-        auto bCacheHit = Self->Gs2->Cache->TryGet<Gs2::Ranking2::Model::FClusterRankingData>(
-            Self->ParentKey,
-            Gs2::Ranking2::Domain::Model::FClusterRankingDataDomain::CreateCacheKey(
-                Self->ScorerUserId
-            ),
-            &Value
+        const auto bUseCache = Self->Season.IsSet();
+        if (bUseCache)
+        {
+            const auto bCacheHit = Self->Gs2->Cache->TryGet<Gs2::Ranking2::Model::FClusterRankingData>(
+                Self->ParentKey,
+                Gs2::Ranking2::Domain::Model::FClusterRankingDataDomain::CreateCacheKey(
+                    Self->ScorerUserId
+                ),
+                &Value
+            );
+            if (bCacheHit)
+            {
+                *Result = Value;
+                return nullptr;
+            }
+        }
+
+        const auto Future = Self->Client->GetClusterRankingByUserId(
+            MakeShared<Gs2::Ranking2::Request::FGetClusterRankingByUserIdRequest>()
+                ->WithContextStack(Self->Gs2->DefaultContextStack)
+                ->WithNamespaceName(Self->NamespaceName)
+                ->WithRankingName(Self->RankingName)
+                ->WithClusterName(Self->ClusterName)
+                ->WithUserId(Self->UserId)
+                ->WithSeason(Self->Season)
         );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
+        Value = ResultModel->GetItem();
+        if (bUseCache && Value.IsValid())
+        {
+            Self->Gs2->Cache->Put(
+                Gs2::Ranking2::Model::FClusterRankingData::TypeName,
+                Self->ParentKey,
+                Gs2::Ranking2::Domain::Model::FClusterRankingDataDomain::CreateCacheKey(
+                    Self->ScorerUserId
+                ),
+                Value,
+                FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+            );
+        }
         *Result = Value;
 
         return nullptr;

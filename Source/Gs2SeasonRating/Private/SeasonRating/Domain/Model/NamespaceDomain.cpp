@@ -189,6 +189,19 @@ namespace Gs2::SeasonRating::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+        if (ResultModel->GetItem() != nullptr)
+        {
+            const auto Key = Gs2::SeasonRating::Domain::Model::FNamespaceDomain::CreateCacheKey(
+                ResultModel->GetItem()->GetName()
+            );
+            Self->Gs2->Cache->Put(
+                Gs2::SeasonRating::Model::FNamespace::TypeName,
+                Self->ParentKey,
+                Key,
+                ResultModel->GetItem(),
+                FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+            );
+        }
         auto Domain = Self;
 
         *Result = Domain;
@@ -232,6 +245,21 @@ namespace Gs2::SeasonRating::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+        if (ResultModel->GetItem() != nullptr)
+        {
+            const auto Key = Gs2::SeasonRating::Domain::Model::FNamespaceDomain::CreateCacheKey(
+                ResultModel->GetItem()->GetName()
+            );
+            Self->Gs2->Cache->Delete(
+                Gs2::SeasonRating::Model::FNamespace::TypeName,
+                Self->ParentKey,
+                Key
+            );
+        }
+        Self->Gs2->Cache->ClearListCache(
+            Gs2::SeasonRating::Model::FNamespace::TypeName,
+            Self->ParentKey
+        );
         auto Domain = Self;
 
         *Result = Domain;
@@ -275,6 +303,19 @@ namespace Gs2::SeasonRating::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+        if (ResultModel->GetItem() != nullptr)
+        {
+            const auto Key = Gs2::SeasonRating::Domain::Model::FSeasonModelMasterDomain::CreateCacheKey(
+                ResultModel->GetItem()->GetName()
+            );
+            Self->Gs2->Cache->Put(
+                Gs2::SeasonRating::Model::FSeasonModelMaster::TypeName,
+                Self->ParentKey,
+                Key,
+                ResultModel->GetItem(),
+                FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+            );
+        }
         auto Domain = MakeShared<Gs2::SeasonRating::Domain::Model::FSeasonModelMasterDomain>(
             Self->Gs2,
             Self->Service,
@@ -323,6 +364,19 @@ namespace Gs2::SeasonRating::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+        if (ResultModel->GetItem() != nullptr)
+        {
+            const auto Key = Gs2::SeasonRating::Domain::Model::FMatchSessionDomain::CreateCacheKey(
+                ResultModel->GetItem()->GetName()
+            );
+            Self->Gs2->Cache->Put(
+                Gs2::SeasonRating::Model::FMatchSession::TypeName,
+                Self->ParentKey,
+                Key,
+                ResultModel->GetItem(),
+                FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+            );
+        }
         auto Domain = MakeShared<Gs2::SeasonRating::Domain::Model::FMatchSessionDomain>(
             Self->Gs2,
             Self->Service,
@@ -371,6 +425,20 @@ namespace Gs2::SeasonRating::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+        if (ResultModel->GetItem() != nullptr)
+        {
+            const auto Key = Gs2::SeasonRating::Domain::Model::FVoteDomain::CreateCacheKey(
+                ResultModel->GetItem()->GetSeasonName(),
+                ResultModel->GetItem()->GetSessionName()
+            );
+            Self->Gs2->Cache->Put(
+                Gs2::SeasonRating::Model::FVote::TypeName,
+                Self->ParentKey,
+                Key,
+                ResultModel->GetItem(),
+                FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+            );
+        }
         auto Domain = MakeShared<Gs2::SeasonRating::Domain::Model::FBallotDomain>(
             Self->Gs2,
             Self->Service,
@@ -423,6 +491,20 @@ namespace Gs2::SeasonRating::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+        if (ResultModel->GetItem() != nullptr)
+        {
+            const auto Key = Gs2::SeasonRating::Domain::Model::FVoteDomain::CreateCacheKey(
+                ResultModel->GetItem()->GetSeasonName(),
+                ResultModel->GetItem()->GetSessionName()
+            );
+            Self->Gs2->Cache->Put(
+                Gs2::SeasonRating::Model::FVote::TypeName,
+                Self->ParentKey,
+                Key,
+                ResultModel->GetItem(),
+                FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+            );
+        }
         auto Domain = MakeShared<Gs2::SeasonRating::Domain::Model::FBallotDomain>(
             Self->Gs2,
             Self->Service,
@@ -718,13 +800,10 @@ namespace Gs2::SeasonRating::Domain::Model
                     return Future->GetTask().Error();
                 }
             }
-            Self->Gs2->Cache->TryGet<Gs2::SeasonRating::Model::FNamespace>(
-                ParentKey,
-                Gs2::SeasonRating::Domain::Model::FNamespaceDomain::CreateCacheKey(
-                    Self->NamespaceName
-                ),
-                &Value
-            );
+            else
+            {
+                Value = Future->GetTask().Result();
+            }
             Future->EnsureCompletion();
         }
         *Result = Value;

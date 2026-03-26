@@ -12,6 +12,8 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
+ *
+ * deny overwrite
  */
 
 #if defined(_MSC_VER)
@@ -104,6 +106,23 @@ namespace Gs2::Datastore::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+        if (ResultModel->GetItem() != nullptr)
+        {
+            const auto Key = Gs2::Datastore::Domain::Model::FDataObjectDomain::CreateCacheKey(
+                ResultModel->GetItem()->GetName()
+            );
+            Self->Gs2->Cache->Put(
+                Gs2::Datastore::Model::FDataObject::TypeName,
+                Gs2::Datastore::Domain::Model::FUserDomain::CreateCacheParentKey(
+                    Self->NamespaceName,
+                    Self->AccessToken->GetUserId(),
+                    "DataObject"
+                ),
+                Key,
+                ResultModel->GetItem(),
+                FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+            );
+        }
         auto Domain = MakeShared<Gs2::Datastore::Domain::Model::FDataObjectAccessTokenDomain>(
             Self->Gs2,
             Self->Service,
@@ -161,6 +180,23 @@ namespace Gs2::Datastore::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+        if (ResultModel->GetItem() != nullptr)
+        {
+            const auto Key = Gs2::Datastore::Domain::Model::FDataObjectDomain::CreateCacheKey(
+                ResultModel->GetItem()->GetName()
+            );
+            Self->Gs2->Cache->Put(
+                Gs2::Datastore::Model::FDataObject::TypeName,
+                Gs2::Datastore::Domain::Model::FUserDomain::CreateCacheParentKey(
+                    Self->NamespaceName,
+                    Self->AccessToken->GetUserId(),
+                    "DataObject"
+                ),
+                Key,
+                ResultModel->GetItem(),
+                FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+            );
+        }
         auto Domain = MakeShared<Gs2::Datastore::Domain::Model::FDataObjectAccessTokenDomain>(
             Self->Gs2,
             Self->Service,
@@ -222,6 +258,23 @@ namespace Gs2::Datastore::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+        if (ResultModel->GetItem() != nullptr)
+        {
+            const auto Key = Gs2::Datastore::Domain::Model::FDataObjectDomain::CreateCacheKey(
+                ResultModel->GetItem()->GetName()
+            );
+            Self->Gs2->Cache->Put(
+                Gs2::Datastore::Model::FDataObject::TypeName,
+                Gs2::Datastore::Domain::Model::FUserDomain::CreateCacheParentKey(
+                    Self->NamespaceName,
+                    Self->AccessToken->GetUserId(),
+                    "DataObject"
+                ),
+                Key,
+                ResultModel->GetItem(),
+                FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+            );
+        }
         auto Domain = MakeShared<Gs2::Datastore::Domain::Model::FDataObjectAccessTokenDomain>(
             Self->Gs2,
             Self->Service,

@@ -12,7 +12,7 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
-*
+ *
  * deny overwrite
  */
 
@@ -217,7 +217,7 @@ namespace Gs2::Matchmaking::Domain::Model
             ),
             &Value
         );
-        if (!bCacheHit) {
+        if (!bCacheHit || !Self->Body.IsSet() || !Self->Signature.IsSet()) {
             const auto Future = Self->Get(
                 MakeShared<Gs2::Matchmaking::Request::FGetBallotByUserIdRequest>()
             );
@@ -248,16 +248,29 @@ namespace Gs2::Matchmaking::Domain::Model
                     return Future->GetTask().Error();
                 }
             }
-            Self->Gs2->Cache->TryGet<Gs2::Matchmaking::Model::FBallot>(
-                Self->ParentKey,
-                Gs2::Matchmaking::Domain::Model::FBallotDomain::CreateCacheKey(
-                    Self->RatingName,
-                    Self->GatheringName,
-                    Self->NumberOfPlayer,
-                    Self->KeyId
-                ),
-                &Value
-            );
+            else
+            {
+                Value = MakeShared<Gs2::Matchmaking::Model::FBallot>()
+                    ->WithUserId(Self->UserId)
+                    ->WithRatingName(Self->RatingName)
+                    ->WithGatheringName(Self->GatheringName)
+                    ->WithNumberOfPlayer(Self->NumberOfPlayer);
+                if (Value.IsValid())
+                {
+                    Self->Gs2->Cache->Put(
+                        Gs2::Matchmaking::Model::FBallot::TypeName,
+                        Self->ParentKey,
+                        FBallotDomain::CreateCacheKey(
+                            Self->RatingName,
+                            Self->GatheringName,
+                            Self->NumberOfPlayer,
+                            Self->KeyId
+                        ),
+                        Value,
+                        FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                    );
+                }
+            }
             Future->EnsureCompletion();
         }
         *Result = Value;

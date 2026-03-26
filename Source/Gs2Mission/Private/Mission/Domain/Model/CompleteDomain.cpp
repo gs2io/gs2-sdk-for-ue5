@@ -119,10 +119,10 @@ namespace Gs2::Mission::Domain::Model
             Self->Gs2,
             *Self->UserId,
             ResultModel->GetAutoRunStampSheet().IsSet() ? *ResultModel->GetAutoRunStampSheet() : false,
-            *ResultModel->GetTransactionId(),
-            *ResultModel->GetStampSheet(),
-            *ResultModel->GetStampSheetEncryptionKeyId(),
-            *ResultModel->GetAtomicCommit(),
+            ResultModel->GetTransactionId().IsSet() ? *ResultModel->GetTransactionId() : FString(),
+            ResultModel->GetStampSheet().IsSet() ? *ResultModel->GetStampSheet() : FString(),
+            ResultModel->GetStampSheetEncryptionKeyId().IsSet() ? *ResultModel->GetStampSheetEncryptionKeyId() : FString(),
+            ResultModel->GetAtomicCommit().IsSet() ? *ResultModel->GetAtomicCommit() : false,
             ResultModel->GetTransactionResult()
         );
         const auto Future3 = Transaction->Wait(true);
@@ -178,10 +178,10 @@ namespace Gs2::Mission::Domain::Model
             Self->Gs2,
             *Self->UserId,
             ResultModel->GetAutoRunStampSheet().IsSet() ? *ResultModel->GetAutoRunStampSheet() : false,
-            *ResultModel->GetTransactionId(),
-            *ResultModel->GetStampSheet(),
-            *ResultModel->GetStampSheetEncryptionKeyId(),
-            *ResultModel->GetAtomicCommit(),
+            ResultModel->GetTransactionId().IsSet() ? *ResultModel->GetTransactionId() : FString(),
+            ResultModel->GetStampSheet().IsSet() ? *ResultModel->GetStampSheet() : FString(),
+            ResultModel->GetStampSheetEncryptionKeyId().IsSet() ? *ResultModel->GetStampSheetEncryptionKeyId() : FString(),
+            ResultModel->GetAtomicCommit().IsSet() ? *ResultModel->GetAtomicCommit() : false,
             ResultModel->GetTransactionResult()
         );
         const auto Future3 = Transaction->Wait(true);
@@ -233,6 +233,19 @@ namespace Gs2::Mission::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+        if (ResultModel->GetItem() != nullptr)
+        {
+            const auto Key = Gs2::Mission::Domain::Model::FCompleteDomain::CreateCacheKey(
+                ResultModel->GetItem()->GetMissionGroupName()
+            );
+            Self->Gs2->Cache->Put(
+                Gs2::Mission::Model::FComplete::TypeName,
+                Self->ParentKey,
+                Key,
+                ResultModel->GetItem(),
+                ResultModel->GetItem()->GetNextResetAt().IsSet() && *ResultModel->GetItem()->GetNextResetAt() != 0 ? FDateTime::FromUnixTimestamp(*ResultModel->GetItem()->GetNextResetAt() / 1000) : FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+            );
+        }
         auto Domain = Self;
 
         *Result = Domain;
@@ -278,6 +291,19 @@ namespace Gs2::Mission::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+        if (ResultModel->GetItem() != nullptr)
+        {
+            const auto Key = Gs2::Mission::Domain::Model::FCompleteDomain::CreateCacheKey(
+                ResultModel->GetItem()->GetMissionGroupName()
+            );
+            Self->Gs2->Cache->Put(
+                Gs2::Mission::Model::FComplete::TypeName,
+                Self->ParentKey,
+                Key,
+                ResultModel->GetItem(),
+                ResultModel->GetItem()->GetNextResetAt().IsSet() && *ResultModel->GetItem()->GetNextResetAt() != 0 ? FDateTime::FromUnixTimestamp(*ResultModel->GetItem()->GetNextResetAt() / 1000) : FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+            );
+        }
         auto Domain = Self;
 
         *Result = Domain;
@@ -323,6 +349,19 @@ namespace Gs2::Mission::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+        if (ResultModel->GetItem() != nullptr)
+        {
+            const auto Key = Gs2::Mission::Domain::Model::FCompleteDomain::CreateCacheKey(
+                ResultModel->GetItem()->GetMissionGroupName()
+            );
+            Self->Gs2->Cache->Put(
+                Gs2::Mission::Model::FComplete::TypeName,
+                Self->ParentKey,
+                Key,
+                ResultModel->GetItem(),
+                ResultModel->GetItem()->GetNextResetAt().IsSet() && *ResultModel->GetItem()->GetNextResetAt() != 0 ? FDateTime::FromUnixTimestamp(*ResultModel->GetItem()->GetNextResetAt() / 1000) : FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+            );
+        }
         auto Domain = Self;
 
         *Result = Domain;
@@ -411,6 +450,19 @@ namespace Gs2::Mission::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+        if (ResultModel->GetItem() != nullptr)
+        {
+            const auto Key = Gs2::Mission::Domain::Model::FCompleteDomain::CreateCacheKey(
+                ResultModel->GetItem()->GetMissionGroupName()
+            );
+            Self->Gs2->Cache->Put(
+                Gs2::Mission::Model::FComplete::TypeName,
+                Self->ParentKey,
+                Key,
+                ResultModel->GetItem(),
+                ResultModel->GetItem()->GetNextResetAt().IsSet() && *ResultModel->GetItem()->GetNextResetAt() != 0 ? FDateTime::FromUnixTimestamp(*ResultModel->GetItem()->GetNextResetAt() / 1000) : FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+            );
+        }
         auto Domain = Self;
 
         *Result = Domain;
@@ -456,6 +508,21 @@ namespace Gs2::Mission::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+        if (ResultModel->GetItem() != nullptr)
+        {
+            const auto Key = Gs2::Mission::Domain::Model::FCompleteDomain::CreateCacheKey(
+                ResultModel->GetItem()->GetMissionGroupName()
+            );
+            Self->Gs2->Cache->Delete(
+                Gs2::Mission::Model::FComplete::TypeName,
+                Self->ParentKey,
+                Key
+            );
+        }
+        Self->Gs2->Cache->ClearListCache(
+            Gs2::Mission::Model::FComplete::TypeName,
+            Self->ParentKey
+        );
         auto Domain = Self;
 
         *Result = Domain;
@@ -501,6 +568,19 @@ namespace Gs2::Mission::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+        if (ResultModel->GetItem() != nullptr)
+        {
+            const auto Key = Gs2::Mission::Domain::Model::FCompleteDomain::CreateCacheKey(
+                ResultModel->GetItem()->GetMissionGroupName()
+            );
+            Self->Gs2->Cache->Put(
+                Gs2::Mission::Model::FComplete::TypeName,
+                Self->ParentKey,
+                Key,
+                ResultModel->GetItem(),
+                ResultModel->GetItem()->GetNextResetAt().IsSet() && *ResultModel->GetItem()->GetNextResetAt() != 0 ? FDateTime::FromUnixTimestamp(*ResultModel->GetItem()->GetNextResetAt() / 1000) : FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+            );
+        }
         auto Domain = Self;
 
         *Result = Domain;
@@ -590,13 +670,10 @@ namespace Gs2::Mission::Domain::Model
                     return Future->GetTask().Error();
                 }
             }
-            Self->Gs2->Cache->TryGet<Gs2::Mission::Model::FComplete>(
-                Self->ParentKey,
-                Gs2::Mission::Domain::Model::FCompleteDomain::CreateCacheKey(
-                    Self->MissionGroupName
-                ),
-                &Value
-            );
+            else
+            {
+                Value = Future->GetTask().Result();
+            }
             Future->EnsureCompletion();
         }
         *Result = Value;

@@ -108,6 +108,19 @@ namespace Gs2::Account::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+        if (ResultModel->GetItem() != nullptr)
+        {
+            const auto Key = Gs2::Account::Domain::Model::FTakeOverTypeModelMasterDomain::CreateCacheKey(
+                ResultModel->GetItem()->GetType()
+            );
+            Self->Gs2->Cache->Put(
+                Gs2::Account::Model::FTakeOverTypeModelMaster::TypeName,
+                Self->ParentKey,
+                Key,
+                ResultModel->GetItem(),
+                FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+            );
+        }
         auto Domain = Self;
 
         *Result = Domain;
@@ -194,6 +207,19 @@ namespace Gs2::Account::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+        if (ResultModel->GetItem() != nullptr)
+        {
+            const auto Key = Gs2::Account::Domain::Model::FTakeOverTypeModelMasterDomain::CreateCacheKey(
+                ResultModel->GetItem()->GetType()
+            );
+            Self->Gs2->Cache->Put(
+                Gs2::Account::Model::FTakeOverTypeModelMaster::TypeName,
+                Self->ParentKey,
+                Key,
+                ResultModel->GetItem(),
+                FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+            );
+        }
         auto Domain = Self;
 
         *Result = Domain;
@@ -238,6 +264,21 @@ namespace Gs2::Account::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+        if (ResultModel->GetItem() != nullptr)
+        {
+            const auto Key = Gs2::Account::Domain::Model::FTakeOverTypeModelMasterDomain::CreateCacheKey(
+                ResultModel->GetItem()->GetType()
+            );
+            Self->Gs2->Cache->Delete(
+                Gs2::Account::Model::FTakeOverTypeModelMaster::TypeName,
+                Self->ParentKey,
+                Key
+            );
+        }
+        Self->Gs2->Cache->ClearListCache(
+            Gs2::Account::Model::FTakeOverTypeModelMaster::TypeName,
+            Self->ParentKey
+        );
         auto Domain = Self;
 
         *Result = Domain;
@@ -325,13 +366,10 @@ namespace Gs2::Account::Domain::Model
                     return Future->GetTask().Error();
                 }
             }
-            Self->Gs2->Cache->TryGet<Gs2::Account::Model::FTakeOverTypeModelMaster>(
-                Self->ParentKey,
-                Gs2::Account::Domain::Model::FTakeOverTypeModelMasterDomain::CreateCacheKey(
-                    Self->Type
-                ),
-                &Value
-            );
+            else
+            {
+                Value = Future->GetTask().Result();
+            }
             Future->EnsureCompletion();
         }
         *Result = Value;

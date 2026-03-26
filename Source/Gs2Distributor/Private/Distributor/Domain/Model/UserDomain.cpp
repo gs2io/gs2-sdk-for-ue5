@@ -108,6 +108,19 @@ namespace Gs2::Distributor::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+        if (ResultModel->GetItem() != nullptr)
+        {
+            const auto Key = Gs2::Distributor::Domain::Model::FTransactionResultDomain::CreateCacheKey(
+                ResultModel->GetItem()->GetTransactionId()
+            );
+            Self->Gs2->Cache->Put(
+                Gs2::Distributor::Model::FTransactionResult::TypeName,
+                Self->ParentKey,
+                Key,
+                ResultModel->GetItem(),
+                FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+            );
+        }
         auto Domain = MakeShared<Gs2::Distributor::Domain::Model::FTransactionResultDomain>(
             Self->Gs2,
             Self->Service,

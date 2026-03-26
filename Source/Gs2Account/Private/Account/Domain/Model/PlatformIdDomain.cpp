@@ -34,6 +34,9 @@
 #include "Account/Domain/Model/PlatformIdAccessToken.h"
 #include "Account/Domain/Model/DataOwner.h"
 #include "Account/Domain/Model/DataOwnerAccessToken.h"
+#include "Account/Domain/Model/TakeOverTypeModel.h"
+#include "Account/Domain/Model/TakeOverTypeModelMaster.h"
+#include "Account/Domain/Model/CurrentModelMaster.h"
 
 #include "Core/Domain/Gs2.h"
 #include "Core/Domain/Transaction/JobQueueJobDomainFactory.h"
@@ -82,52 +85,6 @@ namespace Gs2::Account::Domain::Model
 
     }
 
-    FPlatformIdDomain::FGetTask::FGetTask(
-        const TSharedPtr<FPlatformIdDomain>& Self,
-        const Request::FGetPlatformIdByUserIdRequestPtr Request
-    ): Self(Self), Request(Request)
-    {
-
-    }
-
-    FPlatformIdDomain::FGetTask::FGetTask(
-        const FGetTask& From
-    ): TGs2Future(From), Self(From.Self), Request(From.Request)
-    {
-    }
-
-    Gs2::Core::Model::FGs2ErrorPtr FPlatformIdDomain::FGetTask::Action(
-        TSharedPtr<TSharedPtr<Gs2::Account::Model::FPlatformId>> Result
-    )
-    {
-        Request
-            ->WithContextStack(Self->Gs2->DefaultContextStack)
-            ->WithNamespaceName(Self->NamespaceName)
-            ->WithUserId(Self->UserId)
-            ->WithType(Self->Type);
-        const auto Future = Self->Client->GetPlatformIdByUserId(
-            Request
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            return Future->GetTask().Error();
-        }
-        const auto RequestModel = Request;
-        const auto ResultModel = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            *Result = ResultModel->GetItem();
-        }
-        return nullptr;
-    }
-
-    TSharedPtr<FAsyncTask<FPlatformIdDomain::FGetTask>> FPlatformIdDomain::Get(
-        Request::FGetPlatformIdByUserIdRequestPtr Request
-    ) {
-        return Gs2::Core::Util::New<FAsyncTask<FGetTask>>(this->AsShared(), Request);
-    }
-
     FPlatformIdDomain::FCreateTask::FCreateTask(
         const TSharedPtr<FPlatformIdDomain>& Self,
         const Request::FCreatePlatformIdByUserIdRequestPtr Request
@@ -160,30 +117,20 @@ namespace Gs2::Account::Domain::Model
         {
             return Future->GetTask().Error();
         }
-        const auto RequestModel = Request;
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::Account::Domain::Model::FAccountDomain::CreateCacheParentKey(
-                    Self->NamespaceName,
-                    Self->UserId,
-                    "PlatformId"
-                );
-                const auto Key = Gs2::Account::Domain::Model::FPlatformIdDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetType().IsSet() ? FString::FromInt(*ResultModel->GetItem()->GetType()) : TOptional<FString>(),
-                    ResultModel->GetItem()->GetUserIdentifier()
-                );
-                Self->Gs2->Cache->Put(
-                    Gs2::Account::Model::FPlatformId::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
+        if (ResultModel->GetItem() != nullptr)
+        {
+            const auto Key = Gs2::Account::Domain::Model::FPlatformIdDomain::CreateCacheKey(
+                ResultModel->GetItem()->GetType()
+            );
+            Self->Gs2->Cache->Put(
+                Gs2::Account::Model::FPlatformId::TypeName,
+                Self->ParentKey,
+                Key,
+                ResultModel->GetItem(),
+                FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+            );
         }
         auto Domain = Self;
 
@@ -195,6 +142,49 @@ namespace Gs2::Account::Domain::Model
         Request::FCreatePlatformIdByUserIdRequestPtr Request
     ) {
         return Gs2::Core::Util::New<FAsyncTask<FCreateTask>>(this->AsShared(), Request);
+    }
+
+    FPlatformIdDomain::FGetTask::FGetTask(
+        const TSharedPtr<FPlatformIdDomain>& Self,
+        const Request::FGetPlatformIdByUserIdRequestPtr Request
+    ): Self(Self), Request(Request)
+    {
+
+    }
+
+    FPlatformIdDomain::FGetTask::FGetTask(
+        const FGetTask& From
+    ): TGs2Future(From), Self(From.Self), Request(From.Request)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FPlatformIdDomain::FGetTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::Account::Model::FPlatformId>> Result
+    )
+    {
+        Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
+            ->WithNamespaceName(Self->NamespaceName)
+            ->WithUserId(Self->UserId)
+            ->WithType(Self->Type);
+        const auto Future = Self->Client->GetPlatformIdByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
+        *Result = ResultModel->GetItem();
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FPlatformIdDomain::FGetTask>> FPlatformIdDomain::Get(
+        Request::FGetPlatformIdByUserIdRequestPtr Request
+    ) {
+        return Gs2::Core::Util::New<FAsyncTask<FGetTask>>(this->AsShared(), Request);
     }
 
     FPlatformIdDomain::FFindTask::FFindTask(
@@ -247,27 +237,21 @@ namespace Gs2::Account::Domain::Model
     FString FPlatformIdDomain::CreateCacheParentKey(
         TOptional<FString> NamespaceName,
         TOptional<FString> UserId,
-        TOptional<FString> Type,
-        TOptional<FString> UserIdentifier,
         FString ChildType
     )
     {
         return FString("") +
             (NamespaceName.IsSet() ? *NamespaceName : "null") + ":" +
             (UserId.IsSet() ? *UserId : "null") + ":" +
-            (Type.IsSet() ? *Type : "null") + ":" +
-            (UserIdentifier.IsSet() ? *UserIdentifier : "null") + ":" +
             ChildType;
     }
 
     FString FPlatformIdDomain::CreateCacheKey(
-        TOptional<FString> Type,
-        TOptional<FString> UserIdentifier
+        TOptional<int32> Type
     )
     {
         return FString("") +
-            (Type.IsSet() ? *Type : "null") + ":" + 
-            (UserIdentifier.IsSet() ? *UserIdentifier : "null");
+            (Type.IsSet() ? FString::FromInt(*Type) : "null");
     }
 
     FPlatformIdDomain::FModelTask::FModelTask(
@@ -293,8 +277,7 @@ namespace Gs2::Account::Domain::Model
         auto bCacheHit = Self->Gs2->Cache->TryGet<Gs2::Account::Model::FPlatformId>(
             Self->ParentKey,
             Gs2::Account::Domain::Model::FPlatformIdDomain::CreateCacheKey(
-                Self->Type.IsSet() ? FString::FromInt(*Self->Type) : TOptional<FString>(),
-                Self->UserIdentifier
+                Self->Type
             ),
             &Value
         );
@@ -311,8 +294,7 @@ namespace Gs2::Account::Domain::Model
                 }
 
                 const auto Key = Gs2::Account::Domain::Model::FPlatformIdDomain::CreateCacheKey(
-                    Self->Type.IsSet() ? FString::FromInt(*Self->Type) : TOptional<FString>(),
-                    Self->UserIdentifier
+                    Self->Type
                 );
                 Self->Gs2->Cache->Put(
                     Gs2::Account::Model::FPlatformId::TypeName,
@@ -330,8 +312,7 @@ namespace Gs2::Account::Domain::Model
             Self->Gs2->Cache->TryGet<Gs2::Account::Model::FPlatformId>(
                 Self->ParentKey,
                 Gs2::Account::Domain::Model::FPlatformIdDomain::CreateCacheKey(
-                    Self->Type.IsSet() ? FString::FromInt(*Self->Type) : TOptional<FString>(),
-                    Self->UserIdentifier
+                    Self->Type
                 ),
                 &Value
             );
@@ -354,8 +335,7 @@ namespace Gs2::Account::Domain::Model
             Gs2::Account::Model::FPlatformId::TypeName,
             ParentKey,
             Gs2::Account::Domain::Model::FPlatformIdDomain::CreateCacheKey(
-                Type.IsSet() ? FString::FromInt(*Type) : TOptional<FString>(),
-                UserIdentifier
+                Type
             ),
             [Callback](TSharedPtr<FGs2Object> obj)
             {
@@ -372,8 +352,7 @@ namespace Gs2::Account::Domain::Model
             Gs2::Account::Model::FPlatformId::TypeName,
             ParentKey,
             Gs2::Account::Domain::Model::FPlatformIdDomain::CreateCacheKey(
-                Type.IsSet() ? FString::FromInt(*Type) : TOptional<FString>(),
-                UserIdentifier
+                Type
             ),
             CallbackID
         );

@@ -110,6 +110,7 @@ namespace Gs2::Account::Domain::Model
             return Future->GetTask().Error();
         }
         const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
         *Result = ResultModel->GetItem();
         return nullptr;
     }
@@ -164,6 +165,19 @@ namespace Gs2::Account::Domain::Model
             return Future->GetTask().Error();
         }
         const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
+        if (ResultModel->GetItem() != nullptr)
+        {
+            const auto Key = Gs2::Account::Domain::Model::FDataOwnerDomain::CreateCacheKey(
+            );
+            Self->Gs2->Cache->Put(
+                Gs2::Account::Model::FDataOwner::TypeName,
+                Self->ParentKey,
+                Key,
+                ResultModel->GetItem(),
+                FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+            );
+        }
         auto Domain = Self;
 
         *Result = Domain;
@@ -247,12 +261,21 @@ namespace Gs2::Account::Domain::Model
                     return Future->GetTask().Error();
                 }
             }
-            Self->Gs2->Cache->TryGet<Gs2::Account::Model::FDataOwner>(
-                Self->ParentKey,
-                Gs2::Account::Domain::Model::FDataOwnerDomain::CreateCacheKey(
-                ),
-                &Value
-            );
+            else
+            {
+                Value = Future->GetTask().Result();
+                if (Value.IsValid())
+                {
+                    Self->Gs2->Cache->Put(
+                        Gs2::Account::Model::FDataOwner::TypeName,
+                        Self->ParentKey,
+                        FDataOwnerDomain::CreateCacheKey(
+                        ),
+                        Value,
+                        FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                    );
+                }
+            }
             Future->EnsureCompletion();
         }
         *Result = Value;

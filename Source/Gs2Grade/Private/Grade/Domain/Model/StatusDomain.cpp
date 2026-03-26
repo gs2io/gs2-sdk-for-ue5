@@ -157,6 +157,20 @@ namespace Gs2::Grade::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+        if (ResultModel->GetItem() != nullptr)
+        {
+            const auto Key = Gs2::Grade::Domain::Model::FStatusDomain::CreateCacheKey(
+                ResultModel->GetItem()->GetGradeName(),
+                ResultModel->GetItem()->GetPropertyId()
+            );
+            Self->Gs2->Cache->Put(
+                Gs2::Grade::Model::FStatus::TypeName,
+                Self->ParentKey,
+                Key,
+                ResultModel->GetItem(),
+                FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+            );
+        }
         auto Domain = Self;
         if (ResultModel != nullptr)
         {
@@ -210,6 +224,20 @@ namespace Gs2::Grade::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+        if (ResultModel->GetItem() != nullptr)
+        {
+            const auto Key = Gs2::Grade::Domain::Model::FStatusDomain::CreateCacheKey(
+                ResultModel->GetItem()->GetGradeName(),
+                ResultModel->GetItem()->GetPropertyId()
+            );
+            Self->Gs2->Cache->Put(
+                Gs2::Grade::Model::FStatus::TypeName,
+                Self->ParentKey,
+                Key,
+                ResultModel->GetItem(),
+                FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+            );
+        }
         auto Domain = Self;
         if (ResultModel != nullptr)
         {
@@ -263,6 +291,20 @@ namespace Gs2::Grade::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+        if (ResultModel->GetItem() != nullptr)
+        {
+            const auto Key = Gs2::Grade::Domain::Model::FStatusDomain::CreateCacheKey(
+                ResultModel->GetItem()->GetGradeName(),
+                ResultModel->GetItem()->GetPropertyId()
+            );
+            Self->Gs2->Cache->Put(
+                Gs2::Grade::Model::FStatus::TypeName,
+                Self->ParentKey,
+                Key,
+                ResultModel->GetItem(),
+                FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+            );
+        }
         auto Domain = Self;
         if (ResultModel != nullptr)
         {
@@ -316,6 +358,20 @@ namespace Gs2::Grade::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+        if (ResultModel->GetItem() != nullptr)
+        {
+            const auto Key = Gs2::Grade::Domain::Model::FStatusDomain::CreateCacheKey(
+                ResultModel->GetItem()->GetGradeName(),
+                ResultModel->GetItem()->GetPropertyId()
+            );
+            Self->Gs2->Cache->Put(
+                Gs2::Grade::Model::FStatus::TypeName,
+                Self->ParentKey,
+                Key,
+                ResultModel->GetItem(),
+                FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+            );
+        }
         auto Domain = Self;
         if (ResultModel != nullptr)
         {
@@ -369,6 +425,22 @@ namespace Gs2::Grade::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+        if (ResultModel->GetItem() != nullptr)
+        {
+            const auto Key = Gs2::Grade::Domain::Model::FStatusDomain::CreateCacheKey(
+                ResultModel->GetItem()->GetGradeName(),
+                ResultModel->GetItem()->GetPropertyId()
+            );
+            Self->Gs2->Cache->Delete(
+                Gs2::Grade::Model::FStatus::TypeName,
+                Self->ParentKey,
+                Key
+            );
+        }
+        Self->Gs2->Cache->ClearListCache(
+            Gs2::Grade::Model::FStatus::TypeName,
+            Self->ParentKey
+        );
         auto Domain = Self;
 
         *Result = Domain;
@@ -415,6 +487,20 @@ namespace Gs2::Grade::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+        if (ResultModel->GetItem() != nullptr)
+        {
+            const auto Key = Gs2::Grade::Domain::Model::FStatusDomain::CreateCacheKey(
+                ResultModel->GetItem()->GetGradeName(),
+                ResultModel->GetItem()->GetPropertyId()
+            );
+            Self->Gs2->Cache->Put(
+                Gs2::Grade::Model::FStatus::TypeName,
+                Self->ParentKey,
+                Key,
+                ResultModel->GetItem(),
+                FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+            );
+        }
         auto Domain = Self;
 
         *Result = Domain;
@@ -510,10 +596,10 @@ namespace Gs2::Grade::Domain::Model
             Self->Gs2,
             *Self->UserId,
             ResultModel->GetAutoRunStampSheet().IsSet() ? *ResultModel->GetAutoRunStampSheet() : false,
-            *ResultModel->GetTransactionId(),
-            *ResultModel->GetStampSheet(),
-            *ResultModel->GetStampSheetEncryptionKeyId(),
-            *ResultModel->GetAtomicCommit(),
+            ResultModel->GetTransactionId().IsSet() ? *ResultModel->GetTransactionId() : FString(),
+            ResultModel->GetStampSheet().IsSet() ? *ResultModel->GetStampSheet() : FString(),
+            ResultModel->GetStampSheetEncryptionKeyId().IsSet() ? *ResultModel->GetStampSheetEncryptionKeyId() : FString(),
+            ResultModel->GetAtomicCommit().IsSet() ? *ResultModel->GetAtomicCommit() : false,
             ResultModel->GetTransactionResult()
         );
         const auto Future3 = Transaction->Wait(true);
@@ -615,14 +701,10 @@ namespace Gs2::Grade::Domain::Model
                     return Future->GetTask().Error();
                 }
             }
-            Self->Gs2->Cache->TryGet<Gs2::Grade::Model::FStatus>(
-                Self->ParentKey,
-                Gs2::Grade::Domain::Model::FStatusDomain::CreateCacheKey(
-                    Self->GradeName,
-                    Self->PropertyId
-                ),
-                &Value
-            );
+            else
+            {
+                Value = Future->GetTask().Result();
+            }
             Future->EnsureCompletion();
         }
         *Result = Value;

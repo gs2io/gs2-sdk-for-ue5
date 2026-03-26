@@ -34,6 +34,7 @@ namespace Gs2::UE5::Util
 		virtual ~FGuildGameSession() override {};
 		
 		virtual Gs2::Auth::Model::FAccessTokenPtr AccessToken() override;
+		const FString& GetGuildName() const { return GuildName; }
 		void SetAccessToken( TSharedPtr<Gs2::Auth::Model::FAccessToken> AccessToken );
 	
 		class EZGS2_API FRefreshTask final :

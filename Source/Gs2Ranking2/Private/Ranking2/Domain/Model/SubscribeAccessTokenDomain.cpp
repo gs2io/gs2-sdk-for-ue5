@@ -138,6 +138,25 @@ namespace Gs2::Ranking2::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+        if (ResultModel->GetItem() != nullptr)
+        {
+            const auto ParentKey = Gs2::Ranking2::Domain::Model::FSubscribeDomain::CreateCacheParentKey(
+                Request->GetNamespaceName(),
+                Self->AccessToken->GetUserId(),
+                ResultModel->GetItem()->GetRankingName(),
+                "SubscribeUser"
+            );
+            const auto Key = Gs2::Ranking2::Domain::Model::FSubscribeUserDomain::CreateCacheKey(
+                ResultModel->GetItem()->GetTargetUserId()
+            );
+            Self->Gs2->Cache->Put(
+                Gs2::Ranking2::Model::FSubscribeUser::TypeName,
+                ParentKey,
+                Key,
+                ResultModel->GetItem(),
+                FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+            );
+        }
         auto Domain = MakeShared<Gs2::Ranking2::Domain::Model::FSubscribeUserAccessTokenDomain>(
             Self->Gs2,
             Self->Service,
@@ -266,4 +285,3 @@ namespace Gs2::Ranking2::Domain::Model
 #elif defined(__clang__)
 #pragma clang diagnostic pop
 #endif
-

@@ -202,13 +202,22 @@ namespace Gs2::Distributor::Domain::Model
                     return Future->GetTask().Error();
                 }
             }
-            Self->Gs2->Cache->TryGet<Gs2::Distributor::Model::FTransactionResult>(
-                Self->ParentKey,
-                Gs2::Distributor::Domain::Model::FTransactionResultDomain::CreateCacheKey(
-                    Self->TransactionId
-                ),
-                &Value
-            );
+            else
+            {
+                Value = Future->GetTask().Result();
+                if (Value.IsValid())
+                {
+                    Self->Gs2->Cache->Put(
+                        Gs2::Distributor::Model::FTransactionResult::TypeName,
+                        Self->ParentKey,
+                        FTransactionResultDomain::CreateCacheKey(
+                            Self->TransactionId
+                        ),
+                        Value,
+                        FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                    );
+                }
+            }
             Future->EnsureCompletion();
         }
         *Result = Value;
@@ -292,13 +301,22 @@ namespace Gs2::Distributor::Domain::Model
                     return Future->GetTask().Error();
                 }
             }
-            Self->Gs2->Cache->TryGet<Gs2::Distributor::Model::FTransactionResult>(
-                Self->ParentKey,
-                Gs2::Distributor::Domain::Model::FTransactionResultDomain::CreateCacheKey(
-                    Self->TransactionId
-                ),
-                &Value
-            );
+            else
+            {
+                Value = Future->GetTask().Result();
+                if (Value.IsValid())
+                {
+                    Self->Gs2->Cache->Put(
+                        Gs2::Distributor::Model::FTransactionResult::TypeName,
+                        Self->ParentKey,
+                        FTransactionResultDomain::CreateCacheKey(
+                            Self->TransactionId
+                        ),
+                        Value,
+                        FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                    );
+                }
+            }
             Future->EnsureCompletion();
         }
         *Result = Value;

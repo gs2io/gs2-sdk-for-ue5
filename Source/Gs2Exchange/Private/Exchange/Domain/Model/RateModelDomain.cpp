@@ -193,13 +193,10 @@ namespace Gs2::Exchange::Domain::Model
                     return Future->GetTask().Error();
                 }
             }
-            Self->Gs2->Cache->TryGet<Gs2::Exchange::Model::FRateModel>(
-                Self->ParentKey,
-                Gs2::Exchange::Domain::Model::FRateModelDomain::CreateCacheKey(
-                    Self->RateName
-                ),
-                &Value
-            );
+            else
+            {
+                Value = Future->GetTask().Result();
+            }
             Future->EnsureCompletion();
         }
         *Result = Value;

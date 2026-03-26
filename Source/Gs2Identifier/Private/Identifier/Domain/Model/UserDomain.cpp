@@ -95,6 +95,32 @@ namespace Gs2::Identifier::Domain::Model
             return Future->GetTask().Error();
         }
         const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
+        auto UserName = Self->UserName;
+        if (ResultModel->GetItem() != nullptr && ResultModel->GetItem()->GetName().IsSet())
+        {
+            UserName = ResultModel->GetItem()->GetName();
+        }
+        if (ResultModel->GetItem() != nullptr && !ResultModel->GetItem()->GetName().IsSet() && UserName.IsSet())
+        {
+            ResultModel->GetItem()->WithName(UserName);
+        }
+        if (ResultModel->GetItem() != nullptr)
+        {
+            Self->Gs2->Cache->Put(
+                Gs2::Identifier::Model::FUser::TypeName,
+                Self->ParentKey,
+                Gs2::Identifier::Domain::Model::FUserDomain::CreateCacheKey(
+                    UserName
+                ),
+                ResultModel->GetItem(),
+                FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+            );
+        }
+        Self->Gs2->Cache->ClearListCache(
+            Gs2::Identifier::Model::FUser::TypeName,
+            Self->ParentKey
+        );
         auto Domain = Self;
 
         *Result = Domain;
@@ -177,6 +203,21 @@ namespace Gs2::Identifier::Domain::Model
             return Future->GetTask().Error();
         }
         const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
+        if (Self->UserName.IsSet())
+        {
+            Self->Gs2->Cache->Delete(
+                Gs2::Identifier::Model::FUser::TypeName,
+                Self->ParentKey,
+                Gs2::Identifier::Domain::Model::FUserDomain::CreateCacheKey(
+                    Self->UserName
+                )
+            );
+        }
+        Self->Gs2->Cache->ClearListCache(
+            Gs2::Identifier::Model::FUser::TypeName,
+            Self->ParentKey
+        );
         auto Domain = Self;
 
         *Result = Domain;
@@ -384,13 +425,20 @@ namespace Gs2::Identifier::Domain::Model
                     return Future->GetTask().Error();
                 }
             }
-            Self->Gs2->Cache->TryGet<Gs2::Identifier::Model::FUser>(
-                ParentKey,
-                Gs2::Identifier::Domain::Model::FUserDomain::CreateCacheKey(
-                    Self->UserName
-                ),
-                &Value
-            );
+            else
+            {
+                Value = Future->GetTask().Result();
+                if (Value.IsValid())
+                {
+                    Self->Gs2->Cache->Put(
+                        Gs2::Identifier::Model::FUser::TypeName,
+                        ParentKey,
+                        FUserDomain::CreateCacheKey(Self->UserName),
+                        Value,
+                        FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                    );
+                }
+            }
             Future->EnsureCompletion();
         }
         *Result = Value;

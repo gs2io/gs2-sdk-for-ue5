@@ -17,6 +17,7 @@
 #include "Core/Gs2Domain.h"
 
 #include "Account/Domain/EzGs2Account.h"
+#include "AdReward/Domain/EzGs2AdReward.h"
 #include "Auth/Domain/EzGs2Auth.h"
 #include "Buff/Domain/EzGs2Buff.h"
 #include "Chat/Domain/EzGs2Chat.h"
@@ -63,6 +64,7 @@ namespace Gs2::UE5::Core::Domain
     void FGs2Domain::Initialize()
     {
         Account = MakeShared<Gs2::UE5::Account::Domain::FEzGs2Account>(Super->Account, Connection);
+        AdReward = MakeShared<Gs2::UE5::AdReward::Domain::FEzGs2AdReward>(Super->AdReward, Connection);
         Auth = MakeShared<Gs2::UE5::Auth::Domain::FEzGs2Auth>(Super->Auth, Connection);
         Buff = MakeShared<Gs2::UE5::Buff::Domain::FEzGs2Buff>(Super->Buff, Connection);
         Chat = MakeShared<Gs2::UE5::Chat::Domain::FEzGs2Chat>(Super->Chat, Connection);

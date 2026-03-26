@@ -193,13 +193,10 @@ namespace Gs2::Chat::Domain::Model
                     return Future->GetTask().Error();
                 }
             }
-            Self->Gs2->Cache->TryGet<Gs2::Chat::Model::FCategoryModel>(
-                Self->ParentKey,
-                Gs2::Chat::Domain::Model::FCategoryModelDomain::CreateCacheKey(
-                    Self->Category
-                ),
-                &Value
-            );
+            else
+            {
+                Value = Future->GetTask().Result();
+            }
             Future->EnsureCompletion();
         }
         *Result = Value;

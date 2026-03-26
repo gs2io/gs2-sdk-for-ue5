@@ -159,6 +159,19 @@ namespace Gs2::Lottery::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+        if (ResultModel->GetItem() != nullptr)
+        {
+            const auto Key = Gs2::Lottery::Domain::Model::FBoxItemsDomain::CreateCacheKey(
+                ResultModel->GetItem()->GetPrizeTableName()
+            );
+            Self->Gs2->Cache->Put(
+                Gs2::Lottery::Model::FBoxItems::TypeName,
+                Self->ParentKey,
+                Key,
+                ResultModel->GetItem(),
+                FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+            );
+        }
         auto Domain = Self;
 
         *Result = Domain;
@@ -248,13 +261,10 @@ namespace Gs2::Lottery::Domain::Model
                     return Future->GetTask().Error();
                 }
             }
-            Self->Gs2->Cache->TryGet<Gs2::Lottery::Model::FBoxItems>(
-                Self->ParentKey,
-                Gs2::Lottery::Domain::Model::FBoxItemsDomain::CreateCacheKey(
-                    Self->PrizeTableName
-                ),
-                &Value
-            );
+            else
+            {
+                Value = Future->GetTask().Result();
+            }
             Future->EnsureCompletion();
         }
         *Result = Value;

@@ -245,13 +245,10 @@ namespace Gs2::MegaField::Domain::Model
                     return Future->GetTask().Error();
                 }
             }
-            Self->Gs2->Cache->TryGet<Gs2::MegaField::Model::FAreaModel>(
-                Self->ParentKey,
-                Gs2::MegaField::Domain::Model::FAreaModelDomain::CreateCacheKey(
-                    Self->AreaModelName
-                ),
-                &Value
-            );
+            else
+            {
+                Value = Future->GetTask().Result();
+            }
             Future->EnsureCompletion();
         }
         *Result = Value;

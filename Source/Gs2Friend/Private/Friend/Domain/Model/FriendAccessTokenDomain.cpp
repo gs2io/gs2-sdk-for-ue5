@@ -12,6 +12,8 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
+ *
+ * deny overwrite
  */
 
 #if defined(_MSC_VER)
@@ -123,6 +125,19 @@ namespace Gs2::Friend::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+        if (ResultModel->GetItem() != nullptr)
+        {
+            const auto Key = Gs2::Friend::Domain::Model::FFriendUserDomain::CreateCacheKey(
+                ResultModel->GetItem()->GetUserId()
+            );
+            Self->Gs2->Cache->Put(
+                Gs2::Friend::Model::FFriendUser::TypeName,
+                Self->ParentKey,
+                Key,
+                ResultModel->GetItem(),
+                FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+            );
+        }
         auto Domain = MakeShared<Gs2::Friend::Domain::Model::FFriendUserAccessTokenDomain>(
             Self->Gs2,
             Self->Service,
@@ -160,6 +175,54 @@ namespace Gs2::Friend::Domain::Model
         TSharedPtr<TSharedPtr<Gs2::Friend::Domain::Model::FFriendUserAccessTokenDomain>> Result
     )
     {
+        auto ClearFriendCache = [Self = Self](
+            const TOptional<FString>& CacheUserId,
+            const TOptional<FString>& FriendUserId
+        )
+        {
+            const auto Key = Gs2::Friend::Domain::Model::FFriendUserDomain::CreateCacheKey(
+                FriendUserId
+            );
+            Self->Gs2->Cache->Delete(
+                Gs2::Friend::Model::FFriendUser::TypeName,
+                Gs2::Friend::Domain::Model::FFriendDomain::CreateCacheParentKey(
+                    Self->NamespaceName,
+                    CacheUserId,
+                    TOptional<FString>("False"),
+                    "FriendUser"
+                ),
+                Key
+            );
+            Self->Gs2->Cache->Delete(
+                Gs2::Friend::Model::FFriendUser::TypeName,
+                Gs2::Friend::Domain::Model::FFriendDomain::CreateCacheParentKey(
+                    Self->NamespaceName,
+                    CacheUserId,
+                    TOptional<FString>("True"),
+                    "FriendUser"
+                ),
+                Key
+            );
+            Self->Gs2->Cache->ClearListCache(
+                Gs2::Friend::Model::FFriendUser::TypeName,
+                Gs2::Friend::Domain::Model::FFriendDomain::CreateCacheParentKey(
+                    Self->NamespaceName,
+                    CacheUserId,
+                    TOptional<FString>("False"),
+                    "FriendUser"
+                )
+            );
+            Self->Gs2->Cache->ClearListCache(
+                Gs2::Friend::Model::FFriendUser::TypeName,
+                Gs2::Friend::Domain::Model::FFriendDomain::CreateCacheParentKey(
+                    Self->NamespaceName,
+                    CacheUserId,
+                    TOptional<FString>("True"),
+                    "FriendUser"
+                )
+            );
+        };
+
         Request
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
@@ -174,6 +237,17 @@ namespace Gs2::Friend::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+        if (ResultModel->GetItem() != nullptr)
+        {
+            ClearFriendCache(
+                Self->UserId(),
+                ResultModel->GetItem()->GetUserId()
+            );
+            ClearFriendCache(
+                ResultModel->GetItem()->GetUserId(),
+                Self->UserId()
+            );
+        }
         auto Domain = MakeShared<Gs2::Friend::Domain::Model::FFriendUserAccessTokenDomain>(
             Self->Gs2,
             Self->Service,
@@ -302,4 +376,3 @@ namespace Gs2::Friend::Domain::Model
 #elif defined(__clang__)
 #pragma clang diagnostic pop
 #endif
-

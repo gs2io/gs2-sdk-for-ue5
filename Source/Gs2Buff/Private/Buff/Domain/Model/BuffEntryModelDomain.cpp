@@ -189,13 +189,10 @@ namespace Gs2::Buff::Domain::Model
                     return Future->GetTask().Error();
                 }
             }
-            Self->Gs2->Cache->TryGet<Gs2::Buff::Model::FBuffEntryModel>(
-                Self->ParentKey,
-                Gs2::Buff::Domain::Model::FBuffEntryModelDomain::CreateCacheKey(
-                    Self->BuffEntryName
-                ),
-                &Value
-            );
+            else
+            {
+                Value = Future->GetTask().Result();
+            }
             Future->EnsureCompletion();
         }
         *Result = Value;

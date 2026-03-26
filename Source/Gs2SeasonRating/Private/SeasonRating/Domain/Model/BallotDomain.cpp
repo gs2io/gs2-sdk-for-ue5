@@ -12,7 +12,7 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
-*
+ *
  * deny overwrite
  */
 
@@ -207,6 +207,30 @@ namespace Gs2::SeasonRating::Domain::Model
             &Value
         );
         if (!bCacheHit) {
+            if (!Self->UserId.IsSet())
+            {
+                Value = MakeShared<Gs2::SeasonRating::Model::FBallot>()
+                    ->WithSeasonName(Self->SeasonName)
+                    ->WithSessionName(Self->SessionName)
+                    ->WithNumberOfPlayer(Self->NumberOfPlayer);
+                if (Value.IsValid())
+                {
+                    Self->Gs2->Cache->Put(
+                        Gs2::SeasonRating::Model::FBallot::TypeName,
+                        Self->ParentKey,
+                        Gs2::SeasonRating::Domain::Model::FBallotDomain::CreateCacheKey(
+                            Self->SeasonName,
+                            Self->SessionName,
+                            Self->NumberOfPlayer,
+                            Self->KeyId
+                        ),
+                        Value,
+                        FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                    );
+                }
+                *Result = Value;
+                return nullptr;
+            }
             const auto Future = Self->Get(
                 MakeShared<Gs2::SeasonRating::Request::FGetBallotByUserIdRequest>()
             );
@@ -237,16 +261,29 @@ namespace Gs2::SeasonRating::Domain::Model
                     return Future->GetTask().Error();
                 }
             }
-            Self->Gs2->Cache->TryGet<Gs2::SeasonRating::Model::FBallot>(
-                Self->ParentKey,
-                Gs2::SeasonRating::Domain::Model::FBallotDomain::CreateCacheKey(
-                    Self->SeasonName,
-                    Self->SessionName,
-                    Self->NumberOfPlayer,
-                    Self->KeyId
-                ),
-                &Value
-            );
+            else
+            {
+                Value = MakeShared<Gs2::SeasonRating::Model::FBallot>()
+                    ->WithUserId(Self->UserId)
+                    ->WithSeasonName(Self->SeasonName)
+                    ->WithSessionName(Self->SessionName)
+                    ->WithNumberOfPlayer(Self->NumberOfPlayer);
+                if (Value.IsValid())
+                {
+                    Self->Gs2->Cache->Put(
+                        Gs2::SeasonRating::Model::FBallot::TypeName,
+                        Self->ParentKey,
+                        FBallotDomain::CreateCacheKey(
+                            Self->SeasonName,
+                            Self->SessionName,
+                            Self->NumberOfPlayer,
+                            Self->KeyId
+                        ),
+                        Value,
+                        FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                    );
+                }
+            }
             Future->EnsureCompletion();
         }
         *Result = Value;

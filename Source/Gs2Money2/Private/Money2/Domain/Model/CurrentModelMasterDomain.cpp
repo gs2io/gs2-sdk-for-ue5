@@ -109,6 +109,18 @@ namespace Gs2::Money2::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+        if (ResultModel->GetItem() != nullptr)
+        {
+            const auto Key = Gs2::Money2::Domain::Model::FCurrentModelMasterDomain::CreateCacheKey(
+            );
+            Self->Gs2->Cache->Put(
+                Gs2::Money2::Model::FCurrentModelMaster::TypeName,
+                Self->ParentKey,
+                Key,
+                ResultModel->GetItem(),
+                FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+            );
+        }
         auto Domain = Self;
 
         *Result = Domain;
@@ -246,6 +258,18 @@ namespace Gs2::Money2::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+        if (ResultModel->GetItem() != nullptr)
+        {
+            const auto Key = Gs2::Money2::Domain::Model::FCurrentModelMasterDomain::CreateCacheKey(
+            );
+            Self->Gs2->Cache->Put(
+                Gs2::Money2::Model::FCurrentModelMaster::TypeName,
+                Self->ParentKey,
+                Key,
+                ResultModel->GetItem(),
+                FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+            );
+        }
         auto Domain = Self;
 
         *Result = Domain;
@@ -289,6 +313,18 @@ namespace Gs2::Money2::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+        if (ResultModel->GetItem() != nullptr)
+        {
+            const auto Key = Gs2::Money2::Domain::Model::FCurrentModelMasterDomain::CreateCacheKey(
+            );
+            Self->Gs2->Cache->Put(
+                Gs2::Money2::Model::FCurrentModelMaster::TypeName,
+                Self->ParentKey,
+                Key,
+                ResultModel->GetItem(),
+                FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+            );
+        }
         auto Domain = Self;
 
         *Result = Domain;
@@ -370,12 +406,10 @@ namespace Gs2::Money2::Domain::Model
                     return Future->GetTask().Error();
                 }
             }
-            Self->Gs2->Cache->TryGet<Gs2::Money2::Model::FCurrentModelMaster>(
-                Self->ParentKey,
-                Gs2::Money2::Domain::Model::FCurrentModelMasterDomain::CreateCacheKey(
-                ),
-                &Value
-            );
+            else
+            {
+                Value = Future->GetTask().Result();
+            }
             Future->EnsureCompletion();
         }
         *Result = Value;

@@ -210,13 +210,10 @@ namespace Gs2::Matchmaking::Domain::Model
                     return Future->GetTask().Error();
                 }
             }
-            Self->Gs2->Cache->TryGet<Gs2::Matchmaking::Model::FRating>(
-                Self->ParentKey,
-                Gs2::Matchmaking::Domain::Model::FRatingDomain::CreateCacheKey(
-                    Self->RatingName
-                ),
-                &Value
-            );
+            else
+            {
+                Value = Future->GetTask().Result();
+            }
             Future->EnsureCompletion();
         }
         *Result = Value;

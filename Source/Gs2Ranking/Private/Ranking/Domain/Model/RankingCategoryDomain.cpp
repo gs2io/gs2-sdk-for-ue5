@@ -12,6 +12,8 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
+ * 
+ * deny overwrite
  */
 
 #if defined(_MSC_VER)
@@ -120,6 +122,18 @@ namespace Gs2::Ranking::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+        if (ResultModel->GetItem() != nullptr)
+        {
+            const auto Key = Gs2::Ranking::Domain::Model::FSubscribeDomain::CreateCacheKey(
+            );
+            Self->Gs2->Cache->Put(
+                Gs2::Ranking::Model::FSubscribe::TypeName,
+                Self->ParentKey,
+                Key,
+                ResultModel->GetItem(),
+                FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+            );
+        }
         auto Domain = MakeShared<Gs2::Ranking::Domain::Model::FSubscribeUserDomain>(
             Self->Gs2,
             Self->Service,
@@ -173,6 +187,21 @@ namespace Gs2::Ranking::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+        if (ResultModel->GetItem() != nullptr)
+        {
+            const auto Key = Gs2::Ranking::Domain::Model::FScoreDomain::CreateCacheKey(
+                Request->GetCategoryName(),
+                ResultModel->GetItem()->GetScorerUserId(),
+                Self->AdditionalScopeName
+            );
+            Self->Gs2->Cache->Put(
+                Gs2::Ranking::Model::FRanking::TypeName,
+                Self->ParentKey,
+                Key,
+                ResultModel->GetItem(),
+                FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+            );
+        }
         auto Domain = MakeShared<Gs2::Ranking::Domain::Model::FScoreDomain>(
             Self->Gs2,
             Self->Service,

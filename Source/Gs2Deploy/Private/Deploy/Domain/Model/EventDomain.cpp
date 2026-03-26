@@ -185,13 +185,10 @@ namespace Gs2::Deploy::Domain::Model
                     return Future->GetTask().Error();
                 }
             }
-            Self->Gs2->Cache->TryGet<Gs2::Deploy::Model::FEvent>(
-                Self->ParentKey,
-                Gs2::Deploy::Domain::Model::FEventDomain::CreateCacheKey(
-                    Self->EventName
-                ),
-                &Value
-            );
+            else
+            {
+                Value = Future->GetTask().Result();
+            }
             Future->EnsureCompletion();
         }
         *Result = Value;

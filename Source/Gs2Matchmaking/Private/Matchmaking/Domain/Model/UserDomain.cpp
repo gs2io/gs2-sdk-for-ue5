@@ -117,6 +117,19 @@ namespace Gs2::Matchmaking::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+        if (ResultModel->GetItem() != nullptr)
+        {
+            const auto Key = Gs2::Matchmaking::Domain::Model::FGatheringDomain::CreateCacheKey(
+                ResultModel->GetItem()->GetName()
+            );
+            Self->Gs2->Cache->Put(
+                Gs2::Matchmaking::Model::FGathering::TypeName,
+                Self->ParentKey,
+                Key,
+                ResultModel->GetItem(),
+                ResultModel->GetItem()->GetExpiresAt().IsSet() && *ResultModel->GetItem()->GetExpiresAt() != 0 ? FDateTime::FromUnixTimestamp(*ResultModel->GetItem()->GetExpiresAt() / 1000) : FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+            );
+        }
         auto Domain = MakeShared<Gs2::Matchmaking::Domain::Model::FGatheringDomain>(
             Self->Gs2,
             Self->Service,
@@ -166,6 +179,21 @@ namespace Gs2::Matchmaking::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+        if (ResultModel->GetItem() != nullptr)
+        {
+            const auto Key = Gs2::Matchmaking::Domain::Model::FGatheringDomain::CreateCacheKey(
+                ResultModel->GetItem()->GetName()
+            );
+            Self->Gs2->Cache->Delete(
+                Gs2::Matchmaking::Model::FGathering::TypeName,
+                Self->ParentKey,
+                Key
+            );
+        }
+        Self->Gs2->Cache->ClearListCache(
+            Gs2::Matchmaking::Model::FGathering::TypeName,
+            Self->ParentKey
+        );
         auto Domain = MakeShared<Gs2::Matchmaking::Domain::Model::FGatheringDomain>(
             Self->Gs2,
             Self->Service,

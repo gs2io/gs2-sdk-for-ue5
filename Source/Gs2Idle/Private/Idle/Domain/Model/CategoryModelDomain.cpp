@@ -208,13 +208,22 @@ namespace Gs2::Idle::Domain::Model
                     return Future->GetTask().Error();
                 }
             }
-            Self->Gs2->Cache->TryGet<Gs2::Idle::Model::FCategoryModel>(
-                Self->ParentKey,
-                Gs2::Idle::Domain::Model::FCategoryModelDomain::CreateCacheKey(
-                    Self->CategoryName
-                ),
-                &Value
-            );
+            else
+            {
+                Value = Future->GetTask().Result();
+                if (Value.IsValid())
+                {
+                    Self->Gs2->Cache->Put(
+                        Gs2::Idle::Model::FCategoryModel::TypeName,
+                        Self->ParentKey,
+                        FCategoryModelDomain::CreateCacheKey(
+                            Self->CategoryName
+                        ),
+                        Value,
+                        FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                    );
+                }
+            }
             Future->EnsureCompletion();
         }
         *Result = Value;

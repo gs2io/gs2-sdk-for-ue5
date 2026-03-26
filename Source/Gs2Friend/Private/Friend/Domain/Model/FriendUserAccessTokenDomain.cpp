@@ -340,13 +340,22 @@ namespace Gs2::Friend::Domain::Model
                     return Future->GetTask().Error();
                 }
             }
-            Self->Gs2->Cache->TryGet<Gs2::Friend::Model::FFriendUser>(
-                Self->ParentKey,
-                Gs2::Friend::Domain::Model::FFriendUserDomain::CreateCacheKey(
-                    Self->TargetUserId
-                ),
-                &Value
-            );
+            else
+            {
+                Value = Future->GetTask().Result();
+                if (Value.IsValid())
+                {
+                    Self->Gs2->Cache->Put(
+                        Gs2::Friend::Model::FFriendUser::TypeName,
+                        Self->ParentKey,
+                        FFriendUserDomain::CreateCacheKey(
+                            Self->TargetUserId
+                        ),
+                        Value,
+                        FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                    );
+                }
+            }
             Future->EnsureCompletion();
         }
         *Result = Value;

@@ -12,6 +12,8 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
+ *
+ * deny overwrite
  */
 
 #if defined(_MSC_VER)
@@ -141,6 +143,21 @@ namespace Gs2::Ranking2::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+        if (ResultModel->GetItem() != nullptr)
+        {
+            const auto Key = Gs2::Ranking2::Domain::Model::FSubscribeRankingScoreDomain::CreateCacheKey(
+                ResultModel->GetItem()->GetRankingName(),
+                ResultModel->GetItem()->GetSeason(),
+                ResultModel->GetItem()->GetUserId()
+            );
+            Self->Gs2->Cache->Put(
+                Gs2::Ranking2::Model::FSubscribeRankingScore::TypeName,
+                Self->ParentKey,
+                Key,
+                ResultModel->GetItem(),
+                FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+            );
+        }
         auto Domain = MakeShared<Gs2::Ranking2::Domain::Model::FSubscribeRankingScoreAccessTokenDomain>(
             Self->Gs2,
             Self->Service,
@@ -168,7 +185,8 @@ namespace Gs2::Ranking2::Domain::Model
             Client,
             NamespaceName,
             AccessToken,
-            RankingName
+            RankingName,
+            Season
         );
     }
 

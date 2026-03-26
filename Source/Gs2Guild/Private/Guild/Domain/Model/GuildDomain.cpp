@@ -245,6 +245,27 @@ namespace Gs2::Guild::Domain::Model
             return Future->GetTask().Error();
         }
         const auto ResultModel = Future->GetTask().Result();
+        if (ResultModel != nullptr) {
+            
+            if (ResultModel->GetItem() != nullptr)
+            {
+                const auto ParentKey = Gs2::Guild::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                    Self->NamespaceName,
+                    "Guild"
+                );
+                const auto Key = Gs2::Guild::Domain::Model::FGuildDomain::CreateCacheKey(
+                    ResultModel->GetItem()->GetGuildModelName(),
+                    ResultModel->GetItem()->GetName()
+                );
+                Self->Gs2->Cache->Put(
+                    Gs2::Guild::Model::FGuild::TypeName,
+                    ParentKey,
+                    Key,
+                    ResultModel->GetItem(),
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+            }
+        }
         auto Domain = Self;
 
         *Result = Domain;
@@ -760,14 +781,23 @@ namespace Gs2::Guild::Domain::Model
                     return Future->GetTask().Error();
                 }
             }
-            Self->Gs2->Cache->TryGet<Gs2::Guild::Model::FGuild>(
-                Self->ParentKey,
-                Gs2::Guild::Domain::Model::FGuildDomain::CreateCacheKey(
-                    Self->GuildModelName,
-                    Self->GuildName
-                ),
-                &Value
-            );
+            else
+            {
+                Value = Future->GetTask().Result();
+                if (Value.IsValid())
+                {
+                    Self->Gs2->Cache->Put(
+                        Gs2::Guild::Model::FGuild::TypeName,
+                        Self->ParentKey,
+                        FGuildDomain::CreateCacheKey(
+                            Self->GuildModelName,
+                            Self->GuildName
+                        ),
+                        Value,
+                        FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                    );
+                }
+            }
             Future->EnsureCompletion();
         }
         *Result = Value;

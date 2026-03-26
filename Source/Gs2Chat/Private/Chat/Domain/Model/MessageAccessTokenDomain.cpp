@@ -212,13 +212,10 @@ namespace Gs2::Chat::Domain::Model
                     return Future->GetTask().Error();
                 }
             }
-            Self->Gs2->Cache->TryGet<Gs2::Chat::Model::FMessage>(
-                Self->ParentKey,
-                Gs2::Chat::Domain::Model::FMessageDomain::CreateCacheKey(
-                    Self->MessageName
-                ),
-                &Value
-            );
+            else
+            {
+                Value = Future->GetTask().Result();
+            }
             Future->EnsureCompletion();
         }
         *Result = Value;

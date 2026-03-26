@@ -379,68 +379,82 @@ namespace Gs2::Distributor::Domain
             {
                 if (CopiedCompletedStampSheetsTemp.Num() == 0)
                 {
-                    return nullptr;
+                    Self->CompletedStampSheetsMutex->Unlock();
                 }
-                
-                Self->CompletedStampSheets->Reset();
-
-                for (auto i=0; i<CopiedCompletedStampSheetsTemp.Num(); i++)
+                else
                 {
-                    auto CompletedStampSheet = CopiedCompletedStampSheetsTemp[i];
-                    if (!CompletedStampSheet->GetTransactionId().IsSet())
+                    Self->CompletedStampSheets->Reset();
+    
+                    for (auto i=0; i<CopiedCompletedStampSheetsTemp.Num(); i++)
                     {
-                        continue;
-                    }
-                    {
-                        const auto Future = Self->Gs2->Distributor->Namespace(
-                            *CompletedStampSheet->GetNamespaceName()
-                        )->User(
-                            *CompletedStampSheet->GetUserId()
-                        )->StampSheetResult(
-                            *CompletedStampSheet->GetTransactionId()
-                        )->ModelNoCache();
-                        Future->StartSynchronousTask();
-                        if (Future->GetTask().IsError())
+                        auto CompletedStampSheet = CopiedCompletedStampSheetsTemp[i];
+                        if (!CompletedStampSheet.IsValid())
                         {
-                            if (Future->GetTask().Error()->IsChildOf(Gs2::Core::Model::FNotFoundError::Class))
-                            {
-                                Self->CompletedStampSheets->Add(CompletedStampSheet);
-                            }
-                            else
-                            {
-                                return Future->GetTask().Error();
-                            }
+                            continue;
                         }
-                        Future->EnsureCompletion();
-                    }
-                    {
-                        const auto Future = Gs2::Core::Domain::Internal::FTransactionDomainFactory::ToTransaction(
-                            Self->Gs2,
-                            *CompletedStampSheet->GetUserId(),
-                            true,
-                            *CompletedStampSheet->GetTransactionId(),
-                            FString(""),
-                            FString(""),
-                            false,
-                            nullptr
-                        )->Wait();
-                        Future->StartSynchronousTask();
-                        if (Future->GetTask().IsError())
+                        if (CompletedStampSheet->GetUserId().IsSet() && *CompletedStampSheet->GetUserId() != UserId)
                         {
-                            if (Future->GetTask().Error()->IsChildOf(Gs2::Core::Model::FNotFoundError::Class))
-                            {
-                                Self->CompletedStampSheets->Add(CompletedStampSheet);
-                            }
-                            else
-                            {
-                                return Future->GetTask().Error();
-                            }
+                            Self->CompletedStampSheets->Add(CompletedStampSheet);
+                            continue;
                         }
-                        Future->EnsureCompletion();
+                        if (!CompletedStampSheet->GetTransactionId().IsSet())
+                        {
+                            continue;
+                        }
+                        const auto TargetUserId = CompletedStampSheet->GetUserId().IsSet() ? *CompletedStampSheet->GetUserId() : UserId;
+                        {
+                            const auto Future = Self->Gs2->Distributor->Namespace(
+                                *CompletedStampSheet->GetNamespaceName()
+                            )->User(
+                                TargetUserId
+                            )->StampSheetResult(
+                                *CompletedStampSheet->GetTransactionId()
+                            )->ModelNoCache();
+                            Future->StartSynchronousTask();
+                            if (Future->GetTask().IsError())
+                            {
+                                if (Future->GetTask().Error()->IsChildOf(Gs2::Core::Model::FNotFoundError::Class))
+                                {
+                                    Self->CompletedStampSheets->Add(CompletedStampSheet);
+                                }
+                                else
+                                {
+                                    Self->CompletedStampSheetsMutex->Unlock();
+                                    return Future->GetTask().Error();
+                                }
+                            }
+                            Future->EnsureCompletion();
+                        }
+                        {
+                            const auto Future = Gs2::Core::Domain::Internal::FTransactionDomainFactory::ToTransaction(
+                                Self->Gs2,
+                                TargetUserId,
+                                true,
+                                *CompletedStampSheet->GetTransactionId(),
+                                FString(""),
+                                FString(""),
+                                false,
+                                nullptr
+                            )->Wait();
+                            Future->StartSynchronousTask();
+                            if (Future->GetTask().IsError())
+                            {
+                                if (Future->GetTask().Error()->IsChildOf(Gs2::Core::Model::FNotFoundError::Class))
+                                {
+                                    Self->CompletedStampSheets->Add(CompletedStampSheet);
+                                }
+                                else
+                                {
+                                    Self->CompletedStampSheetsMutex->Unlock();
+                                    return Future->GetTask().Error();
+                                }
+                            }
+                            Future->EnsureCompletion();
+                        }
                     }
+                    Self->CompletedStampSheetsMutex->Unlock();
                 }
             }
-            Self->CompletedStampSheetsMutex->Unlock();
         }
         if (Self->CompletedTransactionsMutex->TryLock())
         {
@@ -448,6 +462,7 @@ namespace Gs2::Distributor::Domain
             {
                 if (CopiedCompletedTransactionsTemp.Num() == 0)
                 {
+                    Self->CompletedTransactionsMutex->Unlock();
                     return nullptr;
                 }
                 
@@ -456,36 +471,47 @@ namespace Gs2::Distributor::Domain
                 for (auto i=0; i<CopiedCompletedTransactionsTemp.Num(); i++)
                 {
                     auto CompletedTransaction = CopiedCompletedTransactionsTemp[i];
+                    if (!CompletedTransaction.IsValid())
+                    {
+                        continue;
+                    }
+                    if (CompletedTransaction->GetUserId().IsSet() && *CompletedTransaction->GetUserId() != UserId)
+                    {
+                        Self->CompletedTransactions->Add(CompletedTransaction);
+                        continue;
+                    }
                     if (!CompletedTransaction->GetTransactionId().IsSet())
                     {
                         continue;
                     }
+                    const auto TargetUserId = CompletedTransaction->GetUserId().IsSet() ? *CompletedTransaction->GetUserId() : UserId;
                     {
                         const auto Future = Self->Gs2->Distributor->Namespace(
                             *CompletedTransaction->GetNamespaceName()
                         )->User(
-                            *CompletedTransaction->GetUserId()
+                            TargetUserId
                         )->TransactionResult(
                             *CompletedTransaction->GetTransactionId()
                         )->ModelNoCache();
                         Future->StartSynchronousTask();
                         if (Future->GetTask().IsError())
                         {
-                            if (Future->GetTask().Error()->IsChildOf(Gs2::Core::Model::FNotFoundError::Class))
-                            {
-                                Self->CompletedTransactions->Add(CompletedTransaction);
+                                if (Future->GetTask().Error()->IsChildOf(Gs2::Core::Model::FNotFoundError::Class))
+                                {
+                                    Self->CompletedTransactions->Add(CompletedTransaction);
+                                }
+                                else
+                                {
+                                    Self->CompletedTransactionsMutex->Unlock();
+                                    return Future->GetTask().Error();
+                                }
                             }
-                            else
-                            {
-                                return Future->GetTask().Error();
-                            }
-                        }
                         Future->EnsureCompletion();
                     }
                     {
                         const auto Future = Gs2::Core::Domain::Internal::FTransactionDomainFactory::ToTransaction(
                             Self->Gs2,
-                            *CompletedTransaction->GetUserId(),
+                            TargetUserId,
                             true,
                             *CompletedTransaction->GetTransactionId(),
                             FString(""),
@@ -496,15 +522,16 @@ namespace Gs2::Distributor::Domain
                         Future->StartSynchronousTask();
                         if (Future->GetTask().IsError())
                         {
-                            if (Future->GetTask().Error()->IsChildOf(Gs2::Core::Model::FNotFoundError::Class))
-                            {
-                                Self->CompletedTransactions->Add(CompletedTransaction);
+                                if (Future->GetTask().Error()->IsChildOf(Gs2::Core::Model::FNotFoundError::Class))
+                                {
+                                    Self->CompletedTransactions->Add(CompletedTransaction);
+                                }
+                                else
+                                {
+                                    Self->CompletedTransactionsMutex->Unlock();
+                                    return Future->GetTask().Error();
+                                }
                             }
-                            else
-                            {
-                                return Future->GetTask().Error();
-                            }
-                        }
                         Future->EnsureCompletion();
                     }
                 }

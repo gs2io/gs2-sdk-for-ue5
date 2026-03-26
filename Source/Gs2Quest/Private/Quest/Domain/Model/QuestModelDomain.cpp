@@ -200,13 +200,10 @@ namespace Gs2::Quest::Domain::Model
                     return Future->GetTask().Error();
                 }
             }
-            Self->Gs2->Cache->TryGet<Gs2::Quest::Model::FQuestModel>(
-                Self->ParentKey,
-                Gs2::Quest::Domain::Model::FQuestModelDomain::CreateCacheKey(
-                    Self->QuestName
-                ),
-                &Value
-            );
+            else
+            {
+                Value = Future->GetTask().Result();
+            }
             Future->EnsureCompletion();
         }
         *Result = Value;

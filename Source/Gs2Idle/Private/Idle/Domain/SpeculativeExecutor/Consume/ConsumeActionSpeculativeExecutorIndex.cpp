@@ -62,8 +62,16 @@ namespace Gs2::Idle::Domain::SpeculativeExecutor
     )
     {
         auto NewConsumeAction = ConsumeAction->WithAction(ConsumeAction->GetAction()->Replace(TEXT("{region}"), ToCStr(Domain->RestSession->RegionName())));
-        NewConsumeAction = ConsumeAction->WithAction(NewConsumeAction->GetAction()->Replace(TEXT("{ownerId}"), ToCStr(Domain->RestSession->OwnerId())));
-        NewConsumeAction = ConsumeAction->WithAction(NewConsumeAction->GetAction()->Replace(TEXT("{userId}"), ToCStr(AccessToken->GetUserId().IsSet() ? *AccessToken->GetUserId() : "")));
+        NewConsumeAction = NewConsumeAction->WithAction(NewConsumeAction->GetAction()->Replace(TEXT("{ownerId}"), ToCStr(Domain->RestSession->OwnerId())));
+        NewConsumeAction = NewConsumeAction->WithAction(NewConsumeAction->GetAction()->Replace(TEXT("{userId}"), ToCStr(AccessToken->GetUserId().IsSet() ? *AccessToken->GetUserId() : "")));
+        if (NewConsumeAction->GetRequest().IsSet())
+        {
+            auto Request = NewConsumeAction->GetRequest().GetValue().Replace(TEXT("{region}"), ToCStr(Domain->RestSession->RegionName()));
+            Request = Request.Replace(TEXT("{ownerId}"), ToCStr(Domain->RestSession->OwnerId()));
+            Request = Request.Replace(TEXT("#{userId}"), ToCStr(AccessToken->GetUserId().IsSet() ? *AccessToken->GetUserId() : ""));
+            Request = Request.Replace(TEXT("{userId}"), ToCStr(AccessToken->GetUserId().IsSet() ? *AccessToken->GetUserId() : ""));
+            NewConsumeAction = NewConsumeAction->WithRequest(Request);
+        }
         if (FDecreaseMaximumIdleMinutesByUserIdSpeculativeExecutor::Action() == NewConsumeAction->GetAction()) {
             TSharedPtr<FJsonObject> RequestModelJson;
             if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(NewConsumeAction->GetRequest().IsSet() ? *NewConsumeAction->GetRequest() : "{}");

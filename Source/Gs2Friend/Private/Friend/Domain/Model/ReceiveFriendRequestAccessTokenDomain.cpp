@@ -12,6 +12,8 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
+ *
+ * deny overwrite
  */
 
 #if defined(_MSC_VER)
@@ -167,6 +169,55 @@ namespace Gs2::Friend::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+        if (ResultModel->GetItem() != nullptr)
+        {
+            const auto Key = Gs2::Friend::Domain::Model::FReceiveFriendRequestDomain::CreateCacheKey(
+                ResultModel->GetItem()->GetUserId()
+            );
+            Self->Gs2->Cache->Delete(
+                Gs2::Friend::Model::FFriendRequest::TypeName,
+                Self->ParentKey,
+                Key
+            );
+            const auto SenderUserId = ResultModel->GetItem()->GetUserId();
+            const auto SenderParentKey = Gs2::Friend::Domain::Model::FUserDomain::CreateCacheParentKey(
+                Self->NamespaceName,
+                SenderUserId,
+                "SendFriendRequest"
+            );
+            Self->Gs2->Cache->ClearListCache(
+                Gs2::Friend::Model::FFriendRequest::TypeName,
+                SenderParentKey
+            );
+            for (const FString& Suffix : {FString("True"), FString("False")})
+            {
+                const auto SendParentKey = Gs2::Friend::Domain::Model::FUserDomain::CreateCacheParentKey(
+                    Self->NamespaceName,
+                    SenderUserId,
+                    FString("SendFriendRequest:") + Suffix
+                );
+                Self->Gs2->Cache->ClearListCache(
+                    Gs2::Friend::Model::FSendFriendRequest::TypeName,
+                    SendParentKey
+                );
+            }
+        }
+        Self->Gs2->Cache->ClearListCache(
+            Gs2::Friend::Model::FFriendRequest::TypeName,
+            Self->ParentKey
+        );
+        for (const FString& Suffix : {FString("True"), FString("False")})
+        {
+            const auto ReceiveParentKey = Gs2::Friend::Domain::Model::FUserDomain::CreateCacheParentKey(
+                Self->NamespaceName,
+                Self->UserId(),
+                FString("ReceiveFriendRequest:") + Suffix
+            );
+            Self->Gs2->Cache->ClearListCache(
+                Gs2::Friend::Model::FReceiveFriendRequest::TypeName,
+                ReceiveParentKey
+            );
+        }
         auto Domain = MakeShared<Gs2::Friend::Domain::Model::FReceiveFriendRequestAccessTokenDomain>(
             Self->Gs2,
             Self->Service,
@@ -218,6 +269,55 @@ namespace Gs2::Friend::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+        if (ResultModel->GetItem() != nullptr)
+        {
+            const auto Key = Gs2::Friend::Domain::Model::FReceiveFriendRequestDomain::CreateCacheKey(
+                ResultModel->GetItem()->GetUserId()
+            );
+            Self->Gs2->Cache->Delete(
+                Gs2::Friend::Model::FFriendRequest::TypeName,
+                Self->ParentKey,
+                Key
+            );
+            const auto SenderUserId = ResultModel->GetItem()->GetUserId();
+            const auto SenderParentKey = Gs2::Friend::Domain::Model::FUserDomain::CreateCacheParentKey(
+                Self->NamespaceName,
+                SenderUserId,
+                "SendFriendRequest"
+            );
+            Self->Gs2->Cache->ClearListCache(
+                Gs2::Friend::Model::FFriendRequest::TypeName,
+                SenderParentKey
+            );
+            for (const FString& Suffix : {FString("True"), FString("False")})
+            {
+                const auto SendParentKey = Gs2::Friend::Domain::Model::FUserDomain::CreateCacheParentKey(
+                    Self->NamespaceName,
+                    SenderUserId,
+                    FString("SendFriendRequest:") + Suffix
+                );
+                Self->Gs2->Cache->ClearListCache(
+                    Gs2::Friend::Model::FSendFriendRequest::TypeName,
+                    SendParentKey
+                );
+            }
+        }
+        Self->Gs2->Cache->ClearListCache(
+            Gs2::Friend::Model::FFriendRequest::TypeName,
+            Self->ParentKey
+        );
+        for (const FString& Suffix : {FString("True"), FString("False")})
+        {
+            const auto ReceiveParentKey = Gs2::Friend::Domain::Model::FUserDomain::CreateCacheParentKey(
+                Self->NamespaceName,
+                Self->UserId(),
+                FString("ReceiveFriendRequest:") + Suffix
+            );
+            Self->Gs2->Cache->ClearListCache(
+                Gs2::Friend::Model::FReceiveFriendRequest::TypeName,
+                ReceiveParentKey
+            );
+        }
         auto Domain = MakeShared<Gs2::Friend::Domain::Model::FReceiveFriendRequestAccessTokenDomain>(
             Self->Gs2,
             Self->Service,
@@ -278,11 +378,31 @@ namespace Gs2::Friend::Domain::Model
     {
         // ReSharper disable once CppLocalVariableMayBeConst
         TSharedPtr<Gs2::Friend::Model::FFriendRequest> Value;
+
+        // First try to find FReceiveFriendRequest (cached by iterator with WithProfile)
+        const auto CacheKey = Gs2::Friend::Domain::Model::FReceiveFriendRequestDomain::CreateCacheKey(Self->FromUserId);
+        for (const FString& Suffix : {FString("True"), FString("False")})
+        {
+            TSharedPtr<Gs2::Friend::Model::FReceiveFriendRequest> ReceiveValue;
+            const auto ReceiveParentKey = Gs2::Friend::Domain::Model::FUserDomain::CreateCacheParentKey(
+                Self->NamespaceName,
+                Self->UserId(),
+                FString("ReceiveFriendRequest:") + Suffix
+            );
+            if (Self->Gs2->Cache->TryGet<Gs2::Friend::Model::FReceiveFriendRequest>(ReceiveParentKey, CacheKey, &ReceiveValue) && ReceiveValue != nullptr)
+            {
+                Value = MakeShared<Gs2::Friend::Model::FFriendRequest>()
+                    ->WithUserId(ReceiveValue->GetUserId())
+                    ->WithTargetUserId(ReceiveValue->GetTargetUserId())
+                    ->WithPublicProfile(ReceiveValue->GetPublicProfile());
+                *Result = Value;
+                return nullptr;
+            }
+        }
+
         auto bCacheHit = Self->Gs2->Cache->TryGet<Gs2::Friend::Model::FFriendRequest>(
             Self->ParentKey,
-            Gs2::Friend::Domain::Model::FReceiveFriendRequestDomain::CreateCacheKey(
-                Self->FromUserId
-            ),
+            CacheKey,
             &Value
         );
         if (!bCacheHit) {
@@ -313,13 +433,10 @@ namespace Gs2::Friend::Domain::Model
                     return Future->GetTask().Error();
                 }
             }
-            Self->Gs2->Cache->TryGet<Gs2::Friend::Model::FFriendRequest>(
-                Self->ParentKey,
-                Gs2::Friend::Domain::Model::FReceiveFriendRequestDomain::CreateCacheKey(
-                    Self->FromUserId
-                ),
-                &Value
-            );
+            else
+            {
+                Value = Future->GetTask().Result();
+            }
             Future->EnsureCompletion();
         }
         *Result = Value;

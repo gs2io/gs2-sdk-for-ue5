@@ -61,8 +61,16 @@ namespace Gs2::Idle::Domain::SpeculativeExecutor
     )
     {
         auto NewVerifyAction = VerifyAction->WithAction(VerifyAction->GetAction()->Replace(TEXT("{region}"), ToCStr(Domain->RestSession->RegionName())));
-        NewVerifyAction = VerifyAction->WithAction(NewVerifyAction->GetAction()->Replace(TEXT("{ownerId}"), ToCStr(Domain->RestSession->OwnerId())));
-        NewVerifyAction = VerifyAction->WithAction(NewVerifyAction->GetAction()->Replace(TEXT("{userId}"), ToCStr(AccessToken->GetUserId().IsSet() ? *AccessToken->GetUserId() : "")));
+        NewVerifyAction = NewVerifyAction->WithAction(NewVerifyAction->GetAction()->Replace(TEXT("{ownerId}"), ToCStr(Domain->RestSession->OwnerId())));
+        NewVerifyAction = NewVerifyAction->WithAction(NewVerifyAction->GetAction()->Replace(TEXT("{userId}"), ToCStr(AccessToken->GetUserId().IsSet() ? *AccessToken->GetUserId() : "")));
+        if (NewVerifyAction->GetRequest().IsSet())
+        {
+            auto Request = NewVerifyAction->GetRequest().GetValue().Replace(TEXT("{region}"), ToCStr(Domain->RestSession->RegionName()));
+            Request = Request.Replace(TEXT("{ownerId}"), ToCStr(Domain->RestSession->OwnerId()));
+            Request = Request.Replace(TEXT("#{userId}"), ToCStr(AccessToken->GetUserId().IsSet() ? *AccessToken->GetUserId() : ""));
+            Request = Request.Replace(TEXT("{userId}"), ToCStr(AccessToken->GetUserId().IsSet() ? *AccessToken->GetUserId() : ""));
+            NewVerifyAction = NewVerifyAction->WithRequest(Request);
+        }
         return nullptr;
     }
 

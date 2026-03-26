@@ -154,6 +154,19 @@ namespace Gs2::Schedule::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+        if (ResultModel->GetItem() != nullptr)
+        {
+            const auto Key = Gs2::Schedule::Domain::Model::FEventDomain::CreateCacheKey(
+                ResultModel->GetItem()->GetName()
+            );
+            Self->Gs2->Cache->Put(
+                Gs2::Schedule::Model::FEvent::TypeName,
+                Self->ParentKey,
+                Key,
+                ResultModel->GetItem(),
+                FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+            );
+        }
         auto Domain = Self;
         if (ResultModel != nullptr)
         {
@@ -262,13 +275,10 @@ namespace Gs2::Schedule::Domain::Model
                     return Future->GetTask().Error();
                 }
             }
-            Self->Gs2->Cache->TryGet<Gs2::Schedule::Model::FEvent>(
-                Self->ParentKey,
-                Gs2::Schedule::Domain::Model::FEventDomain::CreateCacheKey(
-                    Self->EventName
-                ),
-                &Value
-            );
+            else
+            {
+                Value = Future->GetTask().Result();
+            }
             Future->EnsureCompletion();
         }
         *Result = Value;

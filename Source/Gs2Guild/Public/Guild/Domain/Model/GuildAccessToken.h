@@ -82,7 +82,8 @@ namespace Gs2::Guild::Domain::Model
         TOptional<FString> NamespaceName;
         TOptional<FString> GuildModelName;
         Gs2::Auth::Model::FAccessTokenPtr AccessToken;
-        TOptional<FString> GuildName() const { return AccessToken->GetUserId(); }
+        TOptional<FString> GuildNameValue;
+        TOptional<FString> GuildName() const { return GuildNameValue; }
     private:
 
         FString ParentKey;
@@ -94,7 +95,8 @@ namespace Gs2::Guild::Domain::Model
             const Guild::Domain::FGs2GuildDomainPtr& Service,
             const TOptional<FString> NamespaceName,
             const TOptional<FString> GuildModelName,
-            const Gs2::Auth::Model::FAccessTokenPtr& AccessToken
+            const Gs2::Auth::Model::FAccessTokenPtr& AccessToken,
+            const TOptional<FString> GuildName = TOptional<FString>()
             // ReSharper disable once CppMemberInitializersOrder
         );
 

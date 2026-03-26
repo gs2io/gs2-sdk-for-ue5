@@ -1015,14 +1015,24 @@ namespace Gs2::Inventory::Domain::Model
                     return Future->GetTask().Error();
                 }
             }
-            Self->Gs2->Cache->TryGet<Gs2::Inventory::Model::FItemSetEntry>(
-                Self->ParentKey,
-                Gs2::Inventory::Domain::Model::FItemSetDomain::CreateCacheKey(
-                    Self->ItemName,
-                    TOptional<FString>()
-                ),
-                &Value
-            );
+            else
+            {
+                const auto ResultItemSets = Future->GetTask().Result();
+                if (ResultItemSets.IsValid())
+                {
+                    Value = MakeShared<Gs2::Inventory::Model::FItemSetEntry>(*ResultItemSets);
+                    Self->Gs2->Cache->Put(
+                        Gs2::Inventory::Model::FItemSetEntry::TypeName,
+                        Self->ParentKey,
+                        FItemSetDomain::CreateCacheKey(
+                            Self->ItemName,
+                            TOptional<FString>()
+                        ),
+                        Value,
+                        FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                    );
+                }
+            }
             Future->EnsureCompletion();
         }
         if (Value != nullptr)

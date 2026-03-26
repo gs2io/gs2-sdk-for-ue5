@@ -189,6 +189,19 @@ namespace Gs2::LoginReward::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+        if (ResultModel->GetItem() != nullptr)
+        {
+            const auto Key = Gs2::LoginReward::Domain::Model::FNamespaceDomain::CreateCacheKey(
+                ResultModel->GetItem()->GetName()
+            );
+            Self->Gs2->Cache->Put(
+                Gs2::LoginReward::Model::FNamespace::TypeName,
+                Self->ParentKey,
+                Key,
+                ResultModel->GetItem(),
+                FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+            );
+        }
         auto Domain = Self;
 
         *Result = Domain;
@@ -232,6 +245,21 @@ namespace Gs2::LoginReward::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+        if (ResultModel->GetItem() != nullptr)
+        {
+            const auto Key = Gs2::LoginReward::Domain::Model::FNamespaceDomain::CreateCacheKey(
+                ResultModel->GetItem()->GetName()
+            );
+            Self->Gs2->Cache->Delete(
+                Gs2::LoginReward::Model::FNamespace::TypeName,
+                Self->ParentKey,
+                Key
+            );
+        }
+        Self->Gs2->Cache->ClearListCache(
+            Gs2::LoginReward::Model::FNamespace::TypeName,
+            Self->ParentKey
+        );
         auto Domain = Self;
 
         *Result = Domain;
@@ -275,6 +303,29 @@ namespace Gs2::LoginReward::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+        if (ResultModel->GetItem() != nullptr)
+        {
+            const auto Key = Gs2::LoginReward::Domain::Model::FBonusModelMasterDomain::CreateCacheKey(
+                ResultModel->GetItem()->GetName()
+            );
+            Self->Gs2->Cache->Put(
+                Gs2::LoginReward::Model::FBonusModelMaster::TypeName,
+                Gs2::LoginReward::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                    Self->NamespaceName,
+                    "BonusModelMaster"
+                ),
+                Key,
+                ResultModel->GetItem(),
+                FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+            );
+        }
+        Self->Gs2->Cache->ClearListCache(
+            Gs2::LoginReward::Model::FBonusModelMaster::TypeName,
+            Gs2::LoginReward::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                Self->NamespaceName,
+                "BonusModelMaster"
+            )
+        );
         auto Domain = MakeShared<Gs2::LoginReward::Domain::Model::FBonusModelMasterDomain>(
             Self->Gs2,
             Self->Service,
@@ -502,13 +553,10 @@ namespace Gs2::LoginReward::Domain::Model
                     return Future->GetTask().Error();
                 }
             }
-            Self->Gs2->Cache->TryGet<Gs2::LoginReward::Model::FNamespace>(
-                ParentKey,
-                Gs2::LoginReward::Domain::Model::FNamespaceDomain::CreateCacheKey(
-                    Self->NamespaceName
-                ),
-                &Value
-            );
+            else
+            {
+                Value = Future->GetTask().Result();
+            }
             Future->EnsureCompletion();
         }
         *Result = Value;
@@ -557,4 +605,3 @@ namespace Gs2::LoginReward::Domain::Model
 #elif defined(__clang__)
 #pragma clang diagnostic pop
 #endif
-

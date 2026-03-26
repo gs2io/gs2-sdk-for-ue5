@@ -12,9 +12,12 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
+ *
+ * deny overwrite
  */
 
 #include "Friend/Result/DescribeSendRequestsByUserIdResult.h"
+#include "Friend/Model/SendFriendRequest.h"
 
 namespace Gs2::Friend::Result
 {
@@ -33,7 +36,7 @@ namespace Gs2::Friend::Result
     }
 
     TSharedPtr<FDescribeSendRequestsByUserIdResult> FDescribeSendRequestsByUserIdResult::WithItems(
-        const TSharedPtr<TArray<TSharedPtr<Model::FFriendRequest>>> Items
+        const TSharedPtr<TArray<TSharedPtr<Model::FSendFriendRequest>>> Items
     )
     {
         this->ItemsValue = Items;
@@ -48,7 +51,7 @@ namespace Gs2::Friend::Result
         return SharedThis(this);
     }
 
-    TSharedPtr<TArray<TSharedPtr<Model::FFriendRequest>>> FDescribeSendRequestsByUserIdResult::GetItems() const
+    TSharedPtr<TArray<TSharedPtr<Model::FSendFriendRequest>>> FDescribeSendRequestsByUserIdResult::GetItems() const
     {
         if (!ItemsValue.IsValid())
         {
@@ -68,18 +71,18 @@ namespace Gs2::Friend::Result
             return nullptr;
         }
         return MakeShared<FDescribeSendRequestsByUserIdResult>()
-            ->WithItems(Data->HasField(ANSI_TO_TCHAR("items")) ? [Data]() -> TSharedPtr<TArray<Model::FFriendRequestPtr>>
+            ->WithItems(Data->HasField(ANSI_TO_TCHAR("items")) ? [Data]() -> TSharedPtr<TArray<Model::FSendFriendRequestPtr>>
                  {
-                    auto v = MakeShared<TArray<Model::FFriendRequestPtr>>();
+                    auto v = MakeShared<TArray<Model::FSendFriendRequestPtr>>();
                     if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("items")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("items")))
                     {
                         for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("items")))
                         {
-                            v->Add(Model::FFriendRequest::FromJson(JsonObjectValue->AsObject()));
+                            v->Add(Model::FSendFriendRequest::FromJson(JsonObjectValue->AsObject()));
                         }
                     }
                     return v;
-                 }() : MakeShared<TArray<Model::FFriendRequestPtr>>())
+                 }() : MakeShared<TArray<Model::FSendFriendRequestPtr>>())
             ->WithNextPageToken(Data->HasField(ANSI_TO_TCHAR("nextPageToken")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");

@@ -44,6 +44,10 @@ namespace Gs2::Core::Domain
 			);
 		}
             
+		if (!Result || !Result->GetResult().IsSet())
+		{
+			return nullptr;
+		}
 		TSharedPtr<FJsonObject> ResultModelJson;
 		if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(*Result->GetResult());
 			!FJsonSerializer::Deserialize(JsonReader, ResultModelJson))

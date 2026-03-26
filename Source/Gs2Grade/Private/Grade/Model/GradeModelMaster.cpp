@@ -297,13 +297,14 @@ namespace Gs2::Grade::Model
                 }() : TOptional<FString>())
             ->WithDefaultGrades(Data->HasField(ANSI_TO_TCHAR("defaultGrades")) ? [Data]() -> TSharedPtr<TArray<Model::FDefaultGradeModelPtr>>
                 {
-                    auto v = MakeShared<TArray<Model::FDefaultGradeModelPtr>>();
-                    if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("defaultGrades")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("defaultGrades")))
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("defaultGrades")) || !Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("defaultGrades")))
                     {
-                        for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("defaultGrades")))
-                        {
-                            v->Add(Model::FDefaultGradeModel::FromJson(JsonObjectValue->AsObject()));
-                        }
+                        return nullptr;
+                    }
+                    auto v = MakeShared<TArray<Model::FDefaultGradeModelPtr>>();
+                    for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("defaultGrades")))
+                    {
+                        v->Add(Model::FDefaultGradeModel::FromJson(JsonObjectValue->AsObject()));
                     }
                     return v;
                  }() : MakeShared<TArray<Model::FDefaultGradeModelPtr>>())
@@ -318,25 +319,27 @@ namespace Gs2::Grade::Model
                 }() : TOptional<FString>())
             ->WithGradeEntries(Data->HasField(ANSI_TO_TCHAR("gradeEntries")) ? [Data]() -> TSharedPtr<TArray<Model::FGradeEntryModelPtr>>
                 {
-                    auto v = MakeShared<TArray<Model::FGradeEntryModelPtr>>();
-                    if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("gradeEntries")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("gradeEntries")))
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("gradeEntries")) || !Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("gradeEntries")))
                     {
-                        for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("gradeEntries")))
-                        {
-                            v->Add(Model::FGradeEntryModel::FromJson(JsonObjectValue->AsObject()));
-                        }
+                        return nullptr;
+                    }
+                    auto v = MakeShared<TArray<Model::FGradeEntryModelPtr>>();
+                    for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("gradeEntries")))
+                    {
+                        v->Add(Model::FGradeEntryModel::FromJson(JsonObjectValue->AsObject()));
                     }
                     return v;
                  }() : MakeShared<TArray<Model::FGradeEntryModelPtr>>())
             ->WithAcquireActionRates(Data->HasField(ANSI_TO_TCHAR("acquireActionRates")) ? [Data]() -> TSharedPtr<TArray<Model::FAcquireActionRatePtr>>
                 {
-                    auto v = MakeShared<TArray<Model::FAcquireActionRatePtr>>();
-                    if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("acquireActionRates")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("acquireActionRates")))
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("acquireActionRates")) || !Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("acquireActionRates")))
                     {
-                        for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("acquireActionRates")))
-                        {
-                            v->Add(Model::FAcquireActionRate::FromJson(JsonObjectValue->AsObject()));
-                        }
+                        return nullptr;
+                    }
+                    auto v = MakeShared<TArray<Model::FAcquireActionRatePtr>>();
+                    for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("acquireActionRates")))
+                    {
+                        v->Add(Model::FAcquireActionRate::FromJson(JsonObjectValue->AsObject()));
                     }
                     return v;
                  }() : MakeShared<TArray<Model::FAcquireActionRatePtr>>())

@@ -100,6 +100,18 @@ namespace Gs2::Buff::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+        if (ResultModel->GetItem() != nullptr)
+        {
+            const auto Key = Gs2::Buff::Domain::Model::FCurrentBuffMasterDomain::CreateCacheKey(
+            );
+            Self->Gs2->Cache->Put(
+                Gs2::Buff::Model::FCurrentBuffMaster::TypeName,
+                Self->ParentKey,
+                Key,
+                ResultModel->GetItem(),
+                FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+            );
+        }
         auto Domain = Self;
 
         *Result = Domain;
@@ -237,6 +249,18 @@ namespace Gs2::Buff::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+        if (ResultModel->GetItem() != nullptr)
+        {
+            const auto Key = Gs2::Buff::Domain::Model::FCurrentBuffMasterDomain::CreateCacheKey(
+            );
+            Self->Gs2->Cache->Put(
+                Gs2::Buff::Model::FCurrentBuffMaster::TypeName,
+                Self->ParentKey,
+                Key,
+                ResultModel->GetItem(),
+                FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+            );
+        }
         auto Domain = Self;
 
         *Result = Domain;
@@ -280,6 +304,18 @@ namespace Gs2::Buff::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+        if (ResultModel->GetItem() != nullptr)
+        {
+            const auto Key = Gs2::Buff::Domain::Model::FCurrentBuffMasterDomain::CreateCacheKey(
+            );
+            Self->Gs2->Cache->Put(
+                Gs2::Buff::Model::FCurrentBuffMaster::TypeName,
+                Self->ParentKey,
+                Key,
+                ResultModel->GetItem(),
+                FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+            );
+        }
         auto Domain = Self;
 
         *Result = Domain;
@@ -361,12 +397,10 @@ namespace Gs2::Buff::Domain::Model
                     return Future->GetTask().Error();
                 }
             }
-            Self->Gs2->Cache->TryGet<Gs2::Buff::Model::FCurrentBuffMaster>(
-                Self->ParentKey,
-                Gs2::Buff::Domain::Model::FCurrentBuffMasterDomain::CreateCacheKey(
-                ),
-                &Value
-            );
+            else
+            {
+                Value = Future->GetTask().Result();
+            }
             Future->EnsureCompletion();
         }
         *Result = Value;

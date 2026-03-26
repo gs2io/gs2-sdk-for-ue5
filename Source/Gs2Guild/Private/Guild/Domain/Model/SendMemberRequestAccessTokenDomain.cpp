@@ -232,13 +232,22 @@ namespace Gs2::Guild::Domain::Model
                     return Future->GetTask().Error();
                 }
             }
-            Self->Gs2->Cache->TryGet<Gs2::Guild::Model::FSendMemberRequest>(
-                Self->ParentKey,
-                Gs2::Guild::Domain::Model::FSendMemberRequestDomain::CreateCacheKey(
-                    Self->GuildName
-                ),
-                &Value
-            );
+            else
+            {
+                Value = Future->GetTask().Result();
+                if (Value.IsValid())
+                {
+                    Self->Gs2->Cache->Put(
+                        Gs2::Guild::Model::FSendMemberRequest::TypeName,
+                        Self->ParentKey,
+                        FSendMemberRequestDomain::CreateCacheKey(
+                            Self->GuildName
+                        ),
+                        Value,
+                        FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                    );
+                }
+            }
             Future->EnsureCompletion();
         }
         *Result = Value;

@@ -315,13 +315,22 @@ namespace Gs2::SerialKey::Domain::Model
                     return Future->GetTask().Error();
                 }
             }
-            Self->Gs2->Cache->TryGet<Gs2::SerialKey::Model::FSerialKey>(
-                Self->ParentKey,
-                Gs2::SerialKey::Domain::Model::FSerialKeyDomain::CreateCacheKey(
-                    Self->SerialKeyCode
-                ),
-                &Value
-            );
+            else
+            {
+                Value = Future->GetTask().Result();
+                if (Value.IsValid())
+                {
+                    Self->Gs2->Cache->Put(
+                        Gs2::SerialKey::Model::FSerialKey::TypeName,
+                        Self->ParentKey,
+                        FSerialKeyDomain::CreateCacheKey(
+                            Self->SerialKeyCode
+                        ),
+                        Value,
+                        FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                    );
+                }
+            }
             Future->EnsureCompletion();
         }
         *Result = Value;

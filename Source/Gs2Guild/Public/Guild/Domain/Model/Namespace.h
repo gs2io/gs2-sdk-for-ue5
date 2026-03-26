@@ -299,7 +299,8 @@ namespace Gs2::Guild::Domain::Model
 
         TSharedPtr<Gs2::Guild::Domain::Model::FGuildAccessTokenDomain> GuildAccessToken(
             const FString GuildModelName,
-            Gs2::Auth::Model::FAccessTokenPtr AccessToken
+            Gs2::Auth::Model::FAccessTokenPtr AccessToken,
+            const TOptional<FString> GuildName = TOptional<FString>()
         );
 
         static FString CreateCacheParentKey(

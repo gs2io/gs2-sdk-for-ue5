@@ -161,6 +161,22 @@ namespace Gs2::Enchant::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+        if (ResultModel->GetItem() != nullptr)
+        {
+            const auto Key = Gs2::Enchant::Domain::Model::FRarityParameterStatusDomain::CreateCacheKey(
+                ResultModel->GetItem()->GetParameterName(),
+                ResultModel->GetItem()->GetPropertyId()
+            );
+            Self->Gs2->Cache->Delete(
+                Gs2::Enchant::Model::FRarityParameterStatus::TypeName,
+                Self->ParentKey,
+                Key
+            );
+        }
+        Self->Gs2->Cache->ClearListCache(
+            Gs2::Enchant::Model::FRarityParameterStatus::TypeName,
+            Self->ParentKey
+        );
         auto Domain = Self;
 
         *Result = Domain;
@@ -207,6 +223,20 @@ namespace Gs2::Enchant::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+        if (ResultModel->GetItem() != nullptr)
+        {
+            const auto Key = Gs2::Enchant::Domain::Model::FRarityParameterStatusDomain::CreateCacheKey(
+                ResultModel->GetItem()->GetParameterName(),
+                ResultModel->GetItem()->GetPropertyId()
+            );
+            Self->Gs2->Cache->Put(
+                Gs2::Enchant::Model::FRarityParameterStatus::TypeName,
+                Self->ParentKey,
+                Key,
+                ResultModel->GetItem(),
+                FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+            );
+        }
         auto Domain = Self;
 
         *Result = Domain;
@@ -253,6 +283,20 @@ namespace Gs2::Enchant::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+        if (ResultModel->GetItem() != nullptr)
+        {
+            const auto Key = Gs2::Enchant::Domain::Model::FRarityParameterStatusDomain::CreateCacheKey(
+                ResultModel->GetItem()->GetParameterName(),
+                ResultModel->GetItem()->GetPropertyId()
+            );
+            Self->Gs2->Cache->Put(
+                Gs2::Enchant::Model::FRarityParameterStatus::TypeName,
+                Self->ParentKey,
+                Key,
+                ResultModel->GetItem(),
+                FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+            );
+        }
         auto Domain = Self;
 
         *Result = Domain;
@@ -299,6 +343,20 @@ namespace Gs2::Enchant::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+        if (ResultModel->GetItem() != nullptr)
+        {
+            const auto Key = Gs2::Enchant::Domain::Model::FRarityParameterStatusDomain::CreateCacheKey(
+                ResultModel->GetItem()->GetParameterName(),
+                ResultModel->GetItem()->GetPropertyId()
+            );
+            Self->Gs2->Cache->Put(
+                Gs2::Enchant::Model::FRarityParameterStatus::TypeName,
+                Self->ParentKey,
+                Key,
+                ResultModel->GetItem(),
+                FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+            );
+        }
         auto Domain = Self;
 
         *Result = Domain;
@@ -345,6 +403,20 @@ namespace Gs2::Enchant::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+        if (ResultModel->GetItem() != nullptr)
+        {
+            const auto Key = Gs2::Enchant::Domain::Model::FRarityParameterStatusDomain::CreateCacheKey(
+                ResultModel->GetItem()->GetParameterName(),
+                ResultModel->GetItem()->GetPropertyId()
+            );
+            Self->Gs2->Cache->Put(
+                Gs2::Enchant::Model::FRarityParameterStatus::TypeName,
+                Self->ParentKey,
+                Key,
+                ResultModel->GetItem(),
+                FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+            );
+        }
         auto Domain = Self;
 
         *Result = Domain;
@@ -440,14 +512,10 @@ namespace Gs2::Enchant::Domain::Model
                     return Future->GetTask().Error();
                 }
             }
-            Self->Gs2->Cache->TryGet<Gs2::Enchant::Model::FRarityParameterStatus>(
-                Self->ParentKey,
-                Gs2::Enchant::Domain::Model::FRarityParameterStatusDomain::CreateCacheKey(
-                    Self->ParameterName,
-                    Self->PropertyId
-                ),
-                &Value
-            );
+            else
+            {
+                Value = Future->GetTask().Result();
+            }
             Future->EnsureCompletion();
         }
         *Result = Value;

@@ -12,6 +12,8 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
+ *
+ * deny overwrite
  */
 
 #if defined(_MSC_VER)
@@ -104,22 +106,57 @@ namespace Gs2::JobQueue::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
-        auto Domain = MakeShared<Gs2::JobQueue::Domain::Model::FJobAccessTokenDomain>(
-            Self->Gs2,
-            Self->Service,
-            Request->GetNamespaceName(),
-            Self->AccessToken,
-            ResultModel->GetItem()->GetName()
+        if (ResultModel != nullptr)
+        {
+            if (ResultModel->GetItem() != nullptr)
+            {
+                const auto Key = Gs2::JobQueue::Domain::Model::FJobDomain::CreateCacheKey(
+                    ResultModel->GetItem()->GetName()
+                );
+                Self->Gs2->Cache->Delete(
+                    Gs2::JobQueue::Model::FJob::TypeName,
+                    Self->ParentKey,
+                    Key
+                );
+            }
+        }
+        Self->Gs2->Cache->ClearListCache(
+            Gs2::JobQueue::Model::FJob::TypeName,
+            Self->ParentKey
         );
         if (ResultModel != nullptr)
         {
-            if (ResultModel->GetIsLastJob().IsSet())
+            if (ResultModel->GetItem() != nullptr)
             {
-                Domain->IsLastJob = *ResultModel->GetIsLastJob();
+                auto Domain = MakeShared<Gs2::JobQueue::Domain::Model::FJobAccessTokenDomain>(
+                    Self->Gs2,
+                    Self->Service,
+                    Request->GetNamespaceName(),
+                    Self->AccessToken,
+                    ResultModel->GetItem()->GetName()
+                );
+                if (ResultModel->GetIsLastJob().IsSet())
+                {
+                    Domain->IsLastJob = *ResultModel->GetIsLastJob();
+                }
+                Domain->Result = ResultModel->GetResult();
+
+                *Result = Domain;
+            }
+            else
+            {
+                if (ResultModel->GetIsLastJob().IsSet())
+                {
+                    Self->IsLastJob = *ResultModel->GetIsLastJob();
+                }
+
+                *Result = nullptr;
             }
         }
-
-        *Result = Domain;
+        else
+        {
+            *Result = nullptr;
+        }
         return nullptr;
     }
 

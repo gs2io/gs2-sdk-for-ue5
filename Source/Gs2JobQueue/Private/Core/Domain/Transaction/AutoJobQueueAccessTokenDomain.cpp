@@ -55,6 +55,17 @@ namespace Gs2::Core::Domain
 				Gs2::JobQueue::Result::FPushByUserIdResult::FromJson(ResultModelJson)
 			));
 		}
+
+		if (ResultModelJson->HasField(ANSI_TO_TCHAR("autoRunStampSheet"))) {
+			NextTransactions->Add(NewTransactionDomain(
+				ResultModelJson->HasField(ANSI_TO_TCHAR("autoRunStampSheet")) && ResultModelJson->GetBoolField(ANSI_TO_TCHAR("autoRunStampSheet")),
+				ResultModelJson->HasField(ANSI_TO_TCHAR("transactionId")) ? ResultModelJson->GetStringField(ANSI_TO_TCHAR("transactionId")) : FString(""),
+				ResultModelJson->HasField(ANSI_TO_TCHAR("stampSheet")) ? ResultModelJson->GetStringField(ANSI_TO_TCHAR("stampSheet")) : FString(""),
+				ResultModelJson->HasField(ANSI_TO_TCHAR("stampSheetEncryptionKeyId")) ? ResultModelJson->GetStringField(ANSI_TO_TCHAR("stampSheetEncryptionKeyId")) : FString(""),
+				ResultModelJson->HasField(ANSI_TO_TCHAR("atomicCommit")) ? ResultModelJson->GetBoolField(ANSI_TO_TCHAR("atomicCommit")) : false,
+				ResultModelJson->HasField(ANSI_TO_TCHAR("transactionResult")) ? Gs2::Core::Model::FTransactionResult::FromJson(ResultModelJson->GetObjectField(ANSI_TO_TCHAR("transactionResult"))) : nullptr
+			));
+		}
 		
 		if (NextTransactions->Num() > 0) {
 			return MakeShared<FTransactionAccessTokenDomain>(

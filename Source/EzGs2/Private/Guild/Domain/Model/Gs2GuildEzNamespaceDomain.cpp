@@ -143,7 +143,8 @@ namespace Gs2::UE5::Guild::Domain::Model
         return MakeShared<Gs2::UE5::Guild::Domain::Model::FEzGuildGameSessionDomain>(
             Domain->GuildAccessToken(
                 GuildModelName,
-                GuildGameSession->AccessToken()
+                GuildGameSession->AccessToken(),
+                GuildGameSession->GetGuildName()
             ),
             GuildGameSession,
             ConnectionValue

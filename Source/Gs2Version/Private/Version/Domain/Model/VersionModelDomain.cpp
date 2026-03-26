@@ -191,13 +191,10 @@ namespace Gs2::Version::Domain::Model
                     return Future->GetTask().Error();
                 }
             }
-            Self->Gs2->Cache->TryGet<Gs2::Version::Model::FVersionModel>(
-                Self->ParentKey,
-                Gs2::Version::Domain::Model::FVersionModelDomain::CreateCacheKey(
-                    Self->VersionName
-                ),
-                &Value
-            );
+            else
+            {
+                Value = Future->GetTask().Result();
+            }
             Future->EnsureCompletion();
         }
         *Result = Value;

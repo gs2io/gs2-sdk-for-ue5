@@ -992,11 +992,16 @@ namespace Gs2::Core::Domain
                 return;
             }
             ScriptName = ScriptName->Replace(TEXT("execute_"), TEXT(""));
-            
+
             auto Service = FString("");
             auto Method = FString("");
             ScriptName->Split(FString("_"), &Service, &Method);
-            
+
+            if (!Result)
+            {
+                return;
+            }
+
             if (Service == "account")
             {
                 Account->UpdateCacheFromJobResult(Method, Job, Result);
