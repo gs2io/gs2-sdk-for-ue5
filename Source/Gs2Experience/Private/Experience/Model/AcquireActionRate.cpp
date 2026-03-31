@@ -95,7 +95,7 @@ namespace Gs2::Experience::Model
                     FString v("");
                     if (Data->TryGetStringField(ANSI_TO_TCHAR("name"), v))
                     {
-                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                        return TOptional(v);
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
@@ -104,33 +104,31 @@ namespace Gs2::Experience::Model
                     FString v("");
                     if (Data->TryGetStringField(ANSI_TO_TCHAR("mode"), v))
                     {
-                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                        return TOptional(v);
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
             ->WithRates(Data->HasField(ANSI_TO_TCHAR("rates")) ? [Data]() -> TSharedPtr<TArray<double>>
                 {
-                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("rates")) || !Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("rates")))
-                    {
-                        return nullptr;
-                    }
                     auto v = MakeShared<TArray<double>>();
-                    for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("rates")))
+                    if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("rates")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("rates")))
                     {
-                        v->Add(JsonObjectValue->AsNumber());
+                        for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("rates")))
+                        {
+                            v->Add(JsonObjectValue->AsNumber());
+                        }
                     }
                     return v;
                  }() : MakeShared<TArray<double>>())
             ->WithBigRates(Data->HasField(ANSI_TO_TCHAR("bigRates")) ? [Data]() -> TSharedPtr<TArray<FString>>
                 {
-                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("bigRates")) || !Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("bigRates")))
-                    {
-                        return nullptr;
-                    }
                     auto v = MakeShared<TArray<FString>>();
-                    for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("bigRates")))
+                    if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("bigRates")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("bigRates")))
                     {
-                        v->Add(JsonObjectValue->AsString());
+                        for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("bigRates")))
+                        {
+                            v->Add(JsonObjectValue->AsString());
+                        }
                     }
                     return v;
                  }() : MakeShared<TArray<FString>>());

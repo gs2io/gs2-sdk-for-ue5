@@ -155,7 +155,7 @@ namespace Gs2::Lottery::Model
                     FString v("");
                     if (Data->TryGetStringField(ANSI_TO_TCHAR("prizeId"), v))
                     {
-                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                        return TOptional(v);
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
@@ -164,7 +164,7 @@ namespace Gs2::Lottery::Model
                     FString v("");
                     if (Data->TryGetStringField(ANSI_TO_TCHAR("type"), v))
                     {
-                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                        return TOptional(v);
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
@@ -194,7 +194,7 @@ namespace Gs2::Lottery::Model
                     FString v("");
                     if (Data->TryGetStringField(ANSI_TO_TCHAR("limitFailOverPrizeId"), v))
                     {
-                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                        return TOptional(v);
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
@@ -203,7 +203,7 @@ namespace Gs2::Lottery::Model
                     FString v("");
                     if (Data->TryGetStringField(ANSI_TO_TCHAR("prizeTableName"), v))
                     {
-                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                        return TOptional(v);
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())

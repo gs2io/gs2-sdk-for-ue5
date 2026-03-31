@@ -278,7 +278,7 @@ namespace Gs2::Stamina::Request
                   FString v("");
                     if (Data->TryGetStringField(ANSI_TO_TCHAR("namespaceName"), v))
                   {
-                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                        return TOptional(v);
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
@@ -287,7 +287,7 @@ namespace Gs2::Stamina::Request
                   FString v("");
                     if (Data->TryGetStringField(ANSI_TO_TCHAR("staminaName"), v))
                   {
-                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                        return TOptional(v);
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
@@ -296,7 +296,7 @@ namespace Gs2::Stamina::Request
                   FString v("");
                     if (Data->TryGetStringField(ANSI_TO_TCHAR("description"), v))
                   {
-                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                        return TOptional(v);
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
@@ -305,7 +305,7 @@ namespace Gs2::Stamina::Request
                   FString v("");
                     if (Data->TryGetStringField(ANSI_TO_TCHAR("metadata"), v))
                   {
-                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                        return TOptional(v);
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
@@ -359,7 +359,7 @@ namespace Gs2::Stamina::Request
                   FString v("");
                     if (Data->TryGetStringField(ANSI_TO_TCHAR("maxStaminaTableName"), v))
                   {
-                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                        return TOptional(v);
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
@@ -368,7 +368,7 @@ namespace Gs2::Stamina::Request
                   FString v("");
                     if (Data->TryGetStringField(ANSI_TO_TCHAR("recoverIntervalTableName"), v))
                   {
-                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                        return TOptional(v);
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
@@ -377,7 +377,7 @@ namespace Gs2::Stamina::Request
                   FString v("");
                     if (Data->TryGetStringField(ANSI_TO_TCHAR("recoverValueTableName"), v))
                   {
-                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                        return TOptional(v);
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>());

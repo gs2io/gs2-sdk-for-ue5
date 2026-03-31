@@ -329,7 +329,7 @@ namespace Gs2::LoginReward::Model
                     FString v("");
                     if (Data->TryGetStringField(ANSI_TO_TCHAR("bonusModelId"), v))
                     {
-                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                        return TOptional(v);
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
@@ -338,7 +338,7 @@ namespace Gs2::LoginReward::Model
                     FString v("");
                     if (Data->TryGetStringField(ANSI_TO_TCHAR("name"), v))
                     {
-                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                        return TOptional(v);
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
@@ -347,7 +347,7 @@ namespace Gs2::LoginReward::Model
                     FString v("");
                     if (Data->TryGetStringField(ANSI_TO_TCHAR("description"), v))
                     {
-                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                        return TOptional(v);
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
@@ -356,7 +356,7 @@ namespace Gs2::LoginReward::Model
                     FString v("");
                     if (Data->TryGetStringField(ANSI_TO_TCHAR("metadata"), v))
                     {
-                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                        return TOptional(v);
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
@@ -365,7 +365,7 @@ namespace Gs2::LoginReward::Model
                     FString v("");
                     if (Data->TryGetStringField(ANSI_TO_TCHAR("mode"), v))
                     {
-                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                        return TOptional(v);
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
@@ -374,7 +374,7 @@ namespace Gs2::LoginReward::Model
                     FString v("");
                     if (Data->TryGetStringField(ANSI_TO_TCHAR("periodEventId"), v))
                     {
-                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                        return TOptional(v);
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
@@ -392,7 +392,7 @@ namespace Gs2::LoginReward::Model
                     FString v("");
                     if (Data->TryGetStringField(ANSI_TO_TCHAR("repeat"), v))
                     {
-                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                        return TOptional(v);
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
@@ -413,36 +413,34 @@ namespace Gs2::LoginReward::Model
                     FString v("");
                     if (Data->TryGetStringField(ANSI_TO_TCHAR("missedReceiveRelief"), v))
                     {
-                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                        return TOptional(v);
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
             ->WithMissedReceiveReliefVerifyActions(Data->HasField(ANSI_TO_TCHAR("missedReceiveReliefVerifyActions")) ? [Data]() -> TSharedPtr<TArray<Model::FVerifyActionPtr>>
                 {
-                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("missedReceiveReliefVerifyActions")) || !Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("missedReceiveReliefVerifyActions")))
-                    {
-                        return nullptr;
-                    }
                     auto v = MakeShared<TArray<Model::FVerifyActionPtr>>();
-                    for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("missedReceiveReliefVerifyActions")))
+                    if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("missedReceiveReliefVerifyActions")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("missedReceiveReliefVerifyActions")))
                     {
-                        v->Add(Model::FVerifyAction::FromJson(JsonObjectValue->AsObject()));
+                        for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("missedReceiveReliefVerifyActions")))
+                        {
+                            v->Add(Model::FVerifyAction::FromJson(JsonObjectValue->AsObject()));
+                        }
                     }
                     return v;
-                 }() : nullptr)
+                 }() : MakeShared<TArray<Model::FVerifyActionPtr>>())
             ->WithMissedReceiveReliefConsumeActions(Data->HasField(ANSI_TO_TCHAR("missedReceiveReliefConsumeActions")) ? [Data]() -> TSharedPtr<TArray<Model::FConsumeActionPtr>>
                 {
-                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("missedReceiveReliefConsumeActions")) || !Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("missedReceiveReliefConsumeActions")))
-                    {
-                        return nullptr;
-                    }
                     auto v = MakeShared<TArray<Model::FConsumeActionPtr>>();
-                    for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("missedReceiveReliefConsumeActions")))
+                    if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("missedReceiveReliefConsumeActions")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("missedReceiveReliefConsumeActions")))
                     {
-                        v->Add(Model::FConsumeAction::FromJson(JsonObjectValue->AsObject()));
+                        for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("missedReceiveReliefConsumeActions")))
+                        {
+                            v->Add(Model::FConsumeAction::FromJson(JsonObjectValue->AsObject()));
+                        }
                     }
                     return v;
-                 }() : nullptr)
+                 }() : MakeShared<TArray<Model::FConsumeActionPtr>>())
             ->WithCreatedAt(Data->HasField(ANSI_TO_TCHAR("createdAt")) ? [Data]() -> TOptional<int64>
                 {
                     int64 v;

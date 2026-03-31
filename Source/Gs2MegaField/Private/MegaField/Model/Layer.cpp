@@ -205,7 +205,7 @@ namespace Gs2::MegaField::Model
                     FString v("");
                     if (Data->TryGetStringField(ANSI_TO_TCHAR("layerId"), v))
                     {
-                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                        return TOptional(v);
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
@@ -214,7 +214,7 @@ namespace Gs2::MegaField::Model
                     FString v("");
                     if (Data->TryGetStringField(ANSI_TO_TCHAR("areaModelName"), v))
                     {
-                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                        return TOptional(v);
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
@@ -223,7 +223,7 @@ namespace Gs2::MegaField::Model
                     FString v("");
                     if (Data->TryGetStringField(ANSI_TO_TCHAR("layerModelName"), v))
                     {
-                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                        return TOptional(v);
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())

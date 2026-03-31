@@ -170,7 +170,7 @@ namespace Gs2::Showcase::Request
                   FString v("");
                     if (Data->TryGetStringField(ANSI_TO_TCHAR("name"), v))
                   {
-                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                        return TOptional(v);
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
@@ -179,7 +179,7 @@ namespace Gs2::Showcase::Request
                   FString v("");
                     if (Data->TryGetStringField(ANSI_TO_TCHAR("description"), v))
                   {
-                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                        return TOptional(v);
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
@@ -204,7 +204,7 @@ namespace Gs2::Showcase::Request
                   FString v("");
                     if (Data->TryGetStringField(ANSI_TO_TCHAR("queueNamespaceId"), v))
                   {
-                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                        return TOptional(v);
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
@@ -213,7 +213,7 @@ namespace Gs2::Showcase::Request
                   FString v("");
                     if (Data->TryGetStringField(ANSI_TO_TCHAR("keyId"), v))
                   {
-                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                        return TOptional(v);
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())

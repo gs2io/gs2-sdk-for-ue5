@@ -322,7 +322,7 @@ namespace Gs2::Experience::Model
                     FString v("");
                     if (Data->TryGetStringField(ANSI_TO_TCHAR("statusId"), v))
                     {
-                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                        return TOptional(v);
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
@@ -331,7 +331,7 @@ namespace Gs2::Experience::Model
                     FString v("");
                     if (Data->TryGetStringField(ANSI_TO_TCHAR("experienceName"), v))
                     {
-                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                        return TOptional(v);
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
@@ -340,7 +340,7 @@ namespace Gs2::Experience::Model
                     FString v("");
                     if (Data->TryGetStringField(ANSI_TO_TCHAR("userId"), v))
                     {
-                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                        return TOptional(v);
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
@@ -349,7 +349,7 @@ namespace Gs2::Experience::Model
                     FString v("");
                     if (Data->TryGetStringField(ANSI_TO_TCHAR("propertyId"), v))
                     {
-                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                        return TOptional(v);
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())

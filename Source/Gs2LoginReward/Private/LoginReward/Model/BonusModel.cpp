@@ -246,7 +246,7 @@ namespace Gs2::LoginReward::Model
                     FString v("");
                     if (Data->TryGetStringField(ANSI_TO_TCHAR("bonusModelId"), v))
                     {
-                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                        return TOptional(v);
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
@@ -255,7 +255,7 @@ namespace Gs2::LoginReward::Model
                     FString v("");
                     if (Data->TryGetStringField(ANSI_TO_TCHAR("name"), v))
                     {
-                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                        return TOptional(v);
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
@@ -264,7 +264,7 @@ namespace Gs2::LoginReward::Model
                     FString v("");
                     if (Data->TryGetStringField(ANSI_TO_TCHAR("metadata"), v))
                     {
-                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                        return TOptional(v);
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
@@ -273,7 +273,7 @@ namespace Gs2::LoginReward::Model
                     FString v("");
                     if (Data->TryGetStringField(ANSI_TO_TCHAR("mode"), v))
                     {
-                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                        return TOptional(v);
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
@@ -282,7 +282,7 @@ namespace Gs2::LoginReward::Model
                     FString v("");
                     if (Data->TryGetStringField(ANSI_TO_TCHAR("periodEventId"), v))
                     {
-                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                        return TOptional(v);
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
@@ -300,7 +300,7 @@ namespace Gs2::LoginReward::Model
                     FString v("");
                     if (Data->TryGetStringField(ANSI_TO_TCHAR("repeat"), v))
                     {
-                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                        return TOptional(v);
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
@@ -321,7 +321,7 @@ namespace Gs2::LoginReward::Model
                     FString v("");
                     if (Data->TryGetStringField(ANSI_TO_TCHAR("missedReceiveRelief"), v))
                     {
-                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                        return TOptional(v);
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())

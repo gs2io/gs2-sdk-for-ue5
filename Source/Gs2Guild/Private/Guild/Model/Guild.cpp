@@ -427,7 +427,7 @@ namespace Gs2::Guild::Model
                     FString v("");
                     if (Data->TryGetStringField(ANSI_TO_TCHAR("guildId"), v))
                     {
-                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                        return TOptional(v);
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
@@ -436,7 +436,7 @@ namespace Gs2::Guild::Model
                     FString v("");
                     if (Data->TryGetStringField(ANSI_TO_TCHAR("guildModelName"), v))
                     {
-                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                        return TOptional(v);
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
@@ -445,7 +445,7 @@ namespace Gs2::Guild::Model
                     FString v("");
                     if (Data->TryGetStringField(ANSI_TO_TCHAR("name"), v))
                     {
-                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                        return TOptional(v);
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
@@ -454,7 +454,7 @@ namespace Gs2::Guild::Model
                     FString v("");
                     if (Data->TryGetStringField(ANSI_TO_TCHAR("displayName"), v))
                     {
-                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                        return TOptional(v);
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
@@ -508,7 +508,7 @@ namespace Gs2::Guild::Model
                     FString v("");
                     if (Data->TryGetStringField(ANSI_TO_TCHAR("metadata"), v))
                     {
-                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                        return TOptional(v);
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
@@ -517,7 +517,7 @@ namespace Gs2::Guild::Model
                     FString v("");
                     if (Data->TryGetStringField(ANSI_TO_TCHAR("joinPolicy"), v))
                     {
-                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                        return TOptional(v);
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
@@ -538,7 +538,7 @@ namespace Gs2::Guild::Model
                     FString v("");
                     if (Data->TryGetStringField(ANSI_TO_TCHAR("guildMemberDefaultRole"), v))
                     {
-                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                        return TOptional(v);
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())

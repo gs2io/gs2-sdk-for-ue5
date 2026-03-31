@@ -292,7 +292,7 @@ namespace Gs2::Enhance::Model
                     FString v("");
                     if (Data->TryGetStringField(ANSI_TO_TCHAR("rateModelId"), v))
                     {
-                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                        return TOptional(v);
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
@@ -301,7 +301,7 @@ namespace Gs2::Enhance::Model
                     FString v("");
                     if (Data->TryGetStringField(ANSI_TO_TCHAR("name"), v))
                     {
-                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                        return TOptional(v);
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
@@ -310,7 +310,7 @@ namespace Gs2::Enhance::Model
                     FString v("");
                     if (Data->TryGetStringField(ANSI_TO_TCHAR("description"), v))
                     {
-                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                        return TOptional(v);
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
@@ -319,7 +319,7 @@ namespace Gs2::Enhance::Model
                     FString v("");
                     if (Data->TryGetStringField(ANSI_TO_TCHAR("metadata"), v))
                     {
-                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                        return TOptional(v);
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
@@ -328,7 +328,7 @@ namespace Gs2::Enhance::Model
                     FString v("");
                     if (Data->TryGetStringField(ANSI_TO_TCHAR("targetInventoryModelId"), v))
                     {
-                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                        return TOptional(v);
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
@@ -337,7 +337,7 @@ namespace Gs2::Enhance::Model
                     FString v("");
                     if (Data->TryGetStringField(ANSI_TO_TCHAR("acquireExperienceSuffix"), v))
                     {
-                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                        return TOptional(v);
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
@@ -346,7 +346,7 @@ namespace Gs2::Enhance::Model
                     FString v("");
                     if (Data->TryGetStringField(ANSI_TO_TCHAR("materialInventoryModelId"), v))
                     {
-                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                        return TOptional(v);
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
@@ -367,7 +367,7 @@ namespace Gs2::Enhance::Model
                     FString v("");
                     if (Data->TryGetStringField(ANSI_TO_TCHAR("experienceModelId"), v))
                     {
-                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                        return TOptional(v);
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())

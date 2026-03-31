@@ -305,7 +305,7 @@ namespace Gs2::Experience::Model
                     FString v("");
                     if (Data->TryGetStringField(ANSI_TO_TCHAR("experienceModelId"), v))
                     {
-                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                        return TOptional(v);
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
@@ -314,7 +314,7 @@ namespace Gs2::Experience::Model
                     FString v("");
                     if (Data->TryGetStringField(ANSI_TO_TCHAR("name"), v))
                     {
-                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                        return TOptional(v);
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
@@ -323,7 +323,7 @@ namespace Gs2::Experience::Model
                     FString v("");
                     if (Data->TryGetStringField(ANSI_TO_TCHAR("description"), v))
                     {
-                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                        return TOptional(v);
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
@@ -332,7 +332,7 @@ namespace Gs2::Experience::Model
                     FString v("");
                     if (Data->TryGetStringField(ANSI_TO_TCHAR("metadata"), v))
                     {
-                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                        return TOptional(v);
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
@@ -368,20 +368,19 @@ namespace Gs2::Experience::Model
                     FString v("");
                     if (Data->TryGetStringField(ANSI_TO_TCHAR("rankThresholdName"), v))
                     {
-                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                        return TOptional(v);
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
             ->WithAcquireActionRates(Data->HasField(ANSI_TO_TCHAR("acquireActionRates")) ? [Data]() -> TSharedPtr<TArray<Model::FAcquireActionRatePtr>>
                 {
-                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("acquireActionRates")) || !Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("acquireActionRates")))
-                    {
-                        return nullptr;
-                    }
                     auto v = MakeShared<TArray<Model::FAcquireActionRatePtr>>();
-                    for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("acquireActionRates")))
+                    if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("acquireActionRates")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("acquireActionRates")))
                     {
-                        v->Add(Model::FAcquireActionRate::FromJson(JsonObjectValue->AsObject()));
+                        for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("acquireActionRates")))
+                        {
+                            v->Add(Model::FAcquireActionRate::FromJson(JsonObjectValue->AsObject()));
+                        }
                     }
                     return v;
                  }() : MakeShared<TArray<Model::FAcquireActionRatePtr>>())

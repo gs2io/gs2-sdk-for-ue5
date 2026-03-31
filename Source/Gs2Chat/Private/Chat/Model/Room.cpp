@@ -236,7 +236,7 @@ namespace Gs2::Chat::Model
                     FString v("");
                     if (Data->TryGetStringField(ANSI_TO_TCHAR("roomId"), v))
                     {
-                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                        return TOptional(v);
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
@@ -245,7 +245,7 @@ namespace Gs2::Chat::Model
                     FString v("");
                     if (Data->TryGetStringField(ANSI_TO_TCHAR("name"), v))
                     {
-                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                        return TOptional(v);
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
@@ -254,7 +254,7 @@ namespace Gs2::Chat::Model
                     FString v("");
                     if (Data->TryGetStringField(ANSI_TO_TCHAR("userId"), v))
                     {
-                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                        return TOptional(v);
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
@@ -263,7 +263,7 @@ namespace Gs2::Chat::Model
                     FString v("");
                     if (Data->TryGetStringField(ANSI_TO_TCHAR("metadata"), v))
                     {
-                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                        return TOptional(v);
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
@@ -272,7 +272,7 @@ namespace Gs2::Chat::Model
                     FString v("");
                     if (Data->TryGetStringField(ANSI_TO_TCHAR("password"), v))
                     {
-                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                        return TOptional(v);
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())

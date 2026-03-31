@@ -141,7 +141,7 @@ namespace Gs2::SerialKey::Request
                   FString v("");
                     if (Data->TryGetStringField(ANSI_TO_TCHAR("namespaceName"), v))
                   {
-                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                        return TOptional(v);
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
@@ -150,7 +150,7 @@ namespace Gs2::SerialKey::Request
                   FString v("");
                     if (Data->TryGetStringField(ANSI_TO_TCHAR("xGs2AccessToken"), v))
                   {
-                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                        return TOptional(v);
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
@@ -159,7 +159,7 @@ namespace Gs2::SerialKey::Request
                   FString v("");
                     if (Data->TryGetStringField(ANSI_TO_TCHAR("code"), v))
                   {
-                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                        return TOptional(v);
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
@@ -168,7 +168,7 @@ namespace Gs2::SerialKey::Request
                   FString v("");
                     if (Data->TryGetStringField(ANSI_TO_TCHAR("campaignModelName"), v))
                   {
-                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                        return TOptional(v);
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
@@ -177,7 +177,7 @@ namespace Gs2::SerialKey::Request
                   FString v("");
                     if (Data->TryGetStringField(ANSI_TO_TCHAR("verifyType"), v))
                   {
-                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                        return TOptional(v);
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())

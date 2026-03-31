@@ -165,7 +165,7 @@ namespace Gs2::Account::Model
                     FString v("");
                     if (Data->TryGetStringField(ANSI_TO_TCHAR("configurationPath"), v))
                     {
-                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                        return TOptional(v);
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
@@ -174,7 +174,7 @@ namespace Gs2::Account::Model
                     FString v("");
                     if (Data->TryGetStringField(ANSI_TO_TCHAR("clientId"), v))
                     {
-                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                        return TOptional(v);
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
@@ -183,7 +183,7 @@ namespace Gs2::Account::Model
                     FString v("");
                     if (Data->TryGetStringField(ANSI_TO_TCHAR("clientSecret"), v))
                     {
-                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                        return TOptional(v);
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
@@ -192,7 +192,7 @@ namespace Gs2::Account::Model
                     FString v("");
                     if (Data->TryGetStringField(ANSI_TO_TCHAR("appleTeamId"), v))
                     {
-                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                        return TOptional(v);
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
@@ -201,7 +201,7 @@ namespace Gs2::Account::Model
                     FString v("");
                     if (Data->TryGetStringField(ANSI_TO_TCHAR("appleKeyId"), v))
                     {
-                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                        return TOptional(v);
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
@@ -210,7 +210,7 @@ namespace Gs2::Account::Model
                     FString v("");
                     if (Data->TryGetStringField(ANSI_TO_TCHAR("applePrivateKeyPem"), v))
                     {
-                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                        return TOptional(v);
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
@@ -219,7 +219,7 @@ namespace Gs2::Account::Model
                     FString v("");
                     if (Data->TryGetStringField(ANSI_TO_TCHAR("doneEndpointUrl"), v))
                     {
-                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                        return TOptional(v);
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())

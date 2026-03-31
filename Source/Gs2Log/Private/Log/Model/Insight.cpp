@@ -213,7 +213,7 @@ namespace Gs2::Log::Model
                     FString v("");
                     if (Data->TryGetStringField(ANSI_TO_TCHAR("insightId"), v))
                     {
-                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                        return TOptional(v);
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
@@ -222,7 +222,7 @@ namespace Gs2::Log::Model
                     FString v("");
                     if (Data->TryGetStringField(ANSI_TO_TCHAR("name"), v))
                     {
-                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                        return TOptional(v);
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
@@ -231,7 +231,7 @@ namespace Gs2::Log::Model
                     FString v("");
                     if (Data->TryGetStringField(ANSI_TO_TCHAR("taskId"), v))
                     {
-                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                        return TOptional(v);
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
@@ -240,7 +240,7 @@ namespace Gs2::Log::Model
                     FString v("");
                     if (Data->TryGetStringField(ANSI_TO_TCHAR("host"), v))
                     {
-                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                        return TOptional(v);
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
@@ -249,7 +249,7 @@ namespace Gs2::Log::Model
                     FString v("");
                     if (Data->TryGetStringField(ANSI_TO_TCHAR("password"), v))
                     {
-                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                        return TOptional(v);
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
@@ -258,7 +258,7 @@ namespace Gs2::Log::Model
                     FString v("");
                     if (Data->TryGetStringField(ANSI_TO_TCHAR("status"), v))
                     {
-                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                        return TOptional(v);
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())

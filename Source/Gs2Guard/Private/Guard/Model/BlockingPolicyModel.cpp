@@ -247,7 +247,7 @@ namespace Gs2::Guard::Model
                     FString v("");
                     if (Data->TryGetStringField(ANSI_TO_TCHAR("defaultRestriction"), v))
                     {
-                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                        return TOptional(v);
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
@@ -256,7 +256,7 @@ namespace Gs2::Guard::Model
                     FString v("");
                     if (Data->TryGetStringField(ANSI_TO_TCHAR("locationDetection"), v))
                     {
-                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                        return TOptional(v);
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
@@ -277,7 +277,7 @@ namespace Gs2::Guard::Model
                     FString v("");
                     if (Data->TryGetStringField(ANSI_TO_TCHAR("locationRestriction"), v))
                     {
-                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                        return TOptional(v);
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
@@ -286,7 +286,7 @@ namespace Gs2::Guard::Model
                     FString v("");
                     if (Data->TryGetStringField(ANSI_TO_TCHAR("anonymousIpDetection"), v))
                     {
-                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                        return TOptional(v);
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
@@ -295,7 +295,7 @@ namespace Gs2::Guard::Model
                     FString v("");
                     if (Data->TryGetStringField(ANSI_TO_TCHAR("anonymousIpRestriction"), v))
                     {
-                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                        return TOptional(v);
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
@@ -304,7 +304,7 @@ namespace Gs2::Guard::Model
                     FString v("");
                     if (Data->TryGetStringField(ANSI_TO_TCHAR("hostingProviderIpDetection"), v))
                     {
-                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                        return TOptional(v);
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
@@ -313,7 +313,7 @@ namespace Gs2::Guard::Model
                     FString v("");
                     if (Data->TryGetStringField(ANSI_TO_TCHAR("hostingProviderIpRestriction"), v))
                     {
-                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                        return TOptional(v);
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
@@ -322,7 +322,7 @@ namespace Gs2::Guard::Model
                     FString v("");
                     if (Data->TryGetStringField(ANSI_TO_TCHAR("reputationIpDetection"), v))
                     {
-                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                        return TOptional(v);
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
@@ -331,7 +331,7 @@ namespace Gs2::Guard::Model
                     FString v("");
                     if (Data->TryGetStringField(ANSI_TO_TCHAR("reputationIpRestriction"), v))
                     {
-                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                        return TOptional(v);
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
@@ -340,7 +340,7 @@ namespace Gs2::Guard::Model
                     FString v("");
                     if (Data->TryGetStringField(ANSI_TO_TCHAR("ipAddressesDetection"), v))
                     {
-                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                        return TOptional(v);
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
@@ -361,7 +361,7 @@ namespace Gs2::Guard::Model
                     FString v("");
                     if (Data->TryGetStringField(ANSI_TO_TCHAR("ipAddressRestriction"), v))
                     {
-                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                        return TOptional(v);
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>());

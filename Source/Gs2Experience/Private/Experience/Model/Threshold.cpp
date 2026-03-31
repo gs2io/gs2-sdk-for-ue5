@@ -67,20 +67,19 @@ namespace Gs2::Experience::Model
                     FString v("");
                     if (Data->TryGetStringField(ANSI_TO_TCHAR("metadata"), v))
                     {
-                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                        return TOptional(v);
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
             ->WithValues(Data->HasField(ANSI_TO_TCHAR("values")) ? [Data]() -> TSharedPtr<TArray<int64>>
                 {
-                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("values")) || !Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("values")))
-                    {
-                        return nullptr;
-                    }
                     auto v = MakeShared<TArray<int64>>();
-                    for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("values")))
+                    if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("values")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("values")))
                     {
-                        v->Add(JsonObjectValue->AsNumber());
+                        for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("values")))
+                        {
+                            v->Add(JsonObjectValue->AsNumber());
+                        }
                     }
                     return v;
                  }() : MakeShared<TArray<int64>>());

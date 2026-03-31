@@ -100,7 +100,7 @@ namespace Gs2::News::Result
                     FString v("");
                     if (Data->TryGetStringField(ANSI_TO_TCHAR("contentHash"), v))
                     {
-                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                        return TOptional(v);
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
@@ -109,7 +109,7 @@ namespace Gs2::News::Result
                     FString v("");
                     if (Data->TryGetStringField(ANSI_TO_TCHAR("templateHash"), v))
                     {
-                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                        return TOptional(v);
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>());

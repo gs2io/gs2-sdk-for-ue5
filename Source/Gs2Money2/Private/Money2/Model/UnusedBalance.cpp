@@ -180,7 +180,7 @@ namespace Gs2::Money2::Model
                     FString v("");
                     if (Data->TryGetStringField(ANSI_TO_TCHAR("unusedBalanceId"), v))
                     {
-                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                        return TOptional(v);
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
@@ -189,7 +189,7 @@ namespace Gs2::Money2::Model
                     FString v("");
                     if (Data->TryGetStringField(ANSI_TO_TCHAR("currency"), v))
                     {
-                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                        return TOptional(v);
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())

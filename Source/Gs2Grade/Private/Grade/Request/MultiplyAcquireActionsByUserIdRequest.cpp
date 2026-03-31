@@ -175,7 +175,7 @@ namespace Gs2::Grade::Request
                   FString v("");
                     if (Data->TryGetStringField(ANSI_TO_TCHAR("namespaceName"), v))
                   {
-                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                        return TOptional(v);
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
@@ -184,7 +184,7 @@ namespace Gs2::Grade::Request
                   FString v("");
                     if (Data->TryGetStringField(ANSI_TO_TCHAR("userId"), v))
                   {
-                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                        return TOptional(v);
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
@@ -193,7 +193,7 @@ namespace Gs2::Grade::Request
                   FString v("");
                     if (Data->TryGetStringField(ANSI_TO_TCHAR("gradeName"), v))
                   {
-                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                        return TOptional(v);
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
@@ -202,7 +202,7 @@ namespace Gs2::Grade::Request
                   FString v("");
                     if (Data->TryGetStringField(ANSI_TO_TCHAR("propertyId"), v))
                   {
-                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                        return TOptional(v);
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
@@ -211,7 +211,7 @@ namespace Gs2::Grade::Request
                   FString v("");
                     if (Data->TryGetStringField(ANSI_TO_TCHAR("rateName"), v))
                   {
-                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                        return TOptional(v);
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
@@ -232,7 +232,7 @@ namespace Gs2::Grade::Request
                   FString v("");
                     if (Data->TryGetStringField(ANSI_TO_TCHAR("timeOffsetToken"), v))
                   {
-                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                        return TOptional(v);
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())

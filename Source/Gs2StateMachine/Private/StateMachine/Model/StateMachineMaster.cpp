@@ -217,7 +217,7 @@ namespace Gs2::StateMachine::Model
                     FString v("");
                     if (Data->TryGetStringField(ANSI_TO_TCHAR("stateMachineId"), v))
                     {
-                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                        return TOptional(v);
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
@@ -226,7 +226,7 @@ namespace Gs2::StateMachine::Model
                     FString v("");
                     if (Data->TryGetStringField(ANSI_TO_TCHAR("mainStateMachineName"), v))
                     {
-                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                        return TOptional(v);
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
@@ -235,7 +235,7 @@ namespace Gs2::StateMachine::Model
                     FString v("");
                     if (Data->TryGetStringField(ANSI_TO_TCHAR("payload"), v))
                     {
-                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                        return TOptional(v);
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())

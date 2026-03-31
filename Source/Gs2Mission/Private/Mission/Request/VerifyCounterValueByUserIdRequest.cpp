@@ -234,7 +234,7 @@ namespace Gs2::Mission::Request
                   FString v("");
                     if (Data->TryGetStringField(ANSI_TO_TCHAR("namespaceName"), v))
                   {
-                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                        return TOptional(v);
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
@@ -243,7 +243,7 @@ namespace Gs2::Mission::Request
                   FString v("");
                     if (Data->TryGetStringField(ANSI_TO_TCHAR("userId"), v))
                   {
-                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                        return TOptional(v);
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
@@ -252,7 +252,7 @@ namespace Gs2::Mission::Request
                   FString v("");
                     if (Data->TryGetStringField(ANSI_TO_TCHAR("counterName"), v))
                   {
-                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                        return TOptional(v);
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
@@ -261,7 +261,7 @@ namespace Gs2::Mission::Request
                   FString v("");
                     if (Data->TryGetStringField(ANSI_TO_TCHAR("verifyType"), v))
                   {
-                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                        return TOptional(v);
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
@@ -270,7 +270,7 @@ namespace Gs2::Mission::Request
                   FString v("");
                     if (Data->TryGetStringField(ANSI_TO_TCHAR("scopeType"), v))
                   {
-                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                        return TOptional(v);
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
@@ -279,7 +279,7 @@ namespace Gs2::Mission::Request
                   FString v("");
                     if (Data->TryGetStringField(ANSI_TO_TCHAR("resetType"), v))
                   {
-                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                        return TOptional(v);
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
@@ -288,7 +288,7 @@ namespace Gs2::Mission::Request
                   FString v("");
                     if (Data->TryGetStringField(ANSI_TO_TCHAR("conditionName"), v))
                   {
-                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                        return TOptional(v);
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
@@ -315,7 +315,7 @@ namespace Gs2::Mission::Request
                   FString v("");
                     if (Data->TryGetStringField(ANSI_TO_TCHAR("timeOffsetToken"), v))
                   {
-                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                        return TOptional(v);
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())

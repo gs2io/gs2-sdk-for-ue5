@@ -12,6 +12,8 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
+ * 
+ * deny overwrite
  */
 
 #pragma once
@@ -25,9 +27,9 @@ namespace Gs2::Friend::Result
     {
         TSharedPtr<TArray<TSharedPtr<Model::FSendFriendRequest>>> ItemsValue;
         TOptional<FString> NextPageTokenValue;
-        
+
     public:
-        
+
         FDescribeSendRequestsResult();
         FDescribeSendRequestsResult(
             const FDescribeSendRequestsResult& From

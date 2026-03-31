@@ -128,7 +128,7 @@ namespace Gs2::Deploy::Request
                   FString v("");
                     if (Data->TryGetStringField(ANSI_TO_TCHAR("stackName"), v))
                   {
-                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                        return TOptional(v);
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
@@ -137,7 +137,7 @@ namespace Gs2::Deploy::Request
                   FString v("");
                     if (Data->TryGetStringField(ANSI_TO_TCHAR("description"), v))
                   {
-                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                        return TOptional(v);
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
@@ -146,7 +146,7 @@ namespace Gs2::Deploy::Request
                   FString v("");
                     if (Data->TryGetStringField(ANSI_TO_TCHAR("mode"), v))
                   {
-                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                        return TOptional(v);
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
@@ -155,7 +155,7 @@ namespace Gs2::Deploy::Request
                   FString v("");
                     if (Data->TryGetStringField(ANSI_TO_TCHAR("template"), v))
                   {
-                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                        return TOptional(v);
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
@@ -164,7 +164,7 @@ namespace Gs2::Deploy::Request
                   FString v("");
                     if (Data->TryGetStringField(ANSI_TO_TCHAR("uploadToken"), v))
                   {
-                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                        return TOptional(v);
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>());

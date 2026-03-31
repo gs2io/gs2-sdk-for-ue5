@@ -332,7 +332,7 @@ namespace Gs2::Log::Model
                     FString v("");
                     if (Data->TryGetStringField(ANSI_TO_TCHAR("namespaceId"), v))
                     {
-                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                        return TOptional(v);
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
@@ -341,7 +341,7 @@ namespace Gs2::Log::Model
                     FString v("");
                     if (Data->TryGetStringField(ANSI_TO_TCHAR("name"), v))
                     {
-                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                        return TOptional(v);
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
@@ -350,7 +350,7 @@ namespace Gs2::Log::Model
                     FString v("");
                     if (Data->TryGetStringField(ANSI_TO_TCHAR("description"), v))
                     {
-                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                        return TOptional(v);
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
@@ -359,7 +359,7 @@ namespace Gs2::Log::Model
                     FString v("");
                     if (Data->TryGetStringField(ANSI_TO_TCHAR("type"), v))
                     {
-                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                        return TOptional(v);
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
@@ -368,7 +368,7 @@ namespace Gs2::Log::Model
                     FString v("");
                     if (Data->TryGetStringField(ANSI_TO_TCHAR("gcpCredentialJson"), v))
                     {
-                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                        return TOptional(v);
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
@@ -377,7 +377,7 @@ namespace Gs2::Log::Model
                     FString v("");
                     if (Data->TryGetStringField(ANSI_TO_TCHAR("bigQueryDatasetName"), v))
                     {
-                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                        return TOptional(v);
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
@@ -395,7 +395,7 @@ namespace Gs2::Log::Model
                     FString v("");
                     if (Data->TryGetStringField(ANSI_TO_TCHAR("awsRegion"), v))
                     {
-                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                        return TOptional(v);
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
@@ -404,7 +404,7 @@ namespace Gs2::Log::Model
                     FString v("");
                     if (Data->TryGetStringField(ANSI_TO_TCHAR("awsAccessKeyId"), v))
                     {
-                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                        return TOptional(v);
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
@@ -413,7 +413,7 @@ namespace Gs2::Log::Model
                     FString v("");
                     if (Data->TryGetStringField(ANSI_TO_TCHAR("awsSecretAccessKey"), v))
                     {
-                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                        return TOptional(v);
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
@@ -422,7 +422,7 @@ namespace Gs2::Log::Model
                     FString v("");
                     if (Data->TryGetStringField(ANSI_TO_TCHAR("firehoseStreamName"), v))
                     {
-                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                        return TOptional(v);
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
@@ -431,7 +431,7 @@ namespace Gs2::Log::Model
                     FString v("");
                     if (Data->TryGetStringField(ANSI_TO_TCHAR("firehoseCompressData"), v))
                     {
-                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                        return TOptional(v);
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
@@ -440,7 +440,7 @@ namespace Gs2::Log::Model
                     FString v("");
                     if (Data->TryGetStringField(ANSI_TO_TCHAR("status"), v))
                     {
-                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                        return TOptional(v);
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())

@@ -67,7 +67,7 @@ namespace Gs2::Exchange::Model
                     FString v("");
                     if (Data->TryGetStringField(ANSI_TO_TCHAR("key"), v))
                     {
-                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                        return TOptional(v);
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
@@ -76,7 +76,7 @@ namespace Gs2::Exchange::Model
                     FString v("");
                     if (Data->TryGetStringField(ANSI_TO_TCHAR("value"), v))
                     {
-                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                        return TOptional(v);
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>());

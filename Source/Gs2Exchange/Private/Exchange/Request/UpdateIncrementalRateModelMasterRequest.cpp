@@ -268,7 +268,7 @@ namespace Gs2::Exchange::Request
                   FString v("");
                     if (Data->TryGetStringField(ANSI_TO_TCHAR("namespaceName"), v))
                   {
-                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                        return TOptional(v);
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
@@ -277,7 +277,7 @@ namespace Gs2::Exchange::Request
                   FString v("");
                     if (Data->TryGetStringField(ANSI_TO_TCHAR("rateName"), v))
                   {
-                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                        return TOptional(v);
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
@@ -286,7 +286,7 @@ namespace Gs2::Exchange::Request
                   FString v("");
                     if (Data->TryGetStringField(ANSI_TO_TCHAR("description"), v))
                   {
-                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                        return TOptional(v);
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
@@ -295,7 +295,7 @@ namespace Gs2::Exchange::Request
                   FString v("");
                     if (Data->TryGetStringField(ANSI_TO_TCHAR("metadata"), v))
                   {
-                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                        return TOptional(v);
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
@@ -312,7 +312,7 @@ namespace Gs2::Exchange::Request
                   FString v("");
                     if (Data->TryGetStringField(ANSI_TO_TCHAR("calculateType"), v))
                   {
-                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                        return TOptional(v);
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
@@ -339,7 +339,7 @@ namespace Gs2::Exchange::Request
                   FString v("");
                     if (Data->TryGetStringField(ANSI_TO_TCHAR("calculateScriptId"), v))
                   {
-                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                        return TOptional(v);
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
@@ -348,7 +348,7 @@ namespace Gs2::Exchange::Request
                   FString v("");
                     if (Data->TryGetStringField(ANSI_TO_TCHAR("exchangeCountId"), v))
                   {
-                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                        return TOptional(v);
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())

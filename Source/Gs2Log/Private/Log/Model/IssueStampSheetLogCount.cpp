@@ -118,7 +118,7 @@ namespace Gs2::Log::Model
                     FString v("");
                     if (Data->TryGetStringField(ANSI_TO_TCHAR("service"), v))
                     {
-                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                        return TOptional(v);
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
@@ -127,7 +127,7 @@ namespace Gs2::Log::Model
                     FString v("");
                     if (Data->TryGetStringField(ANSI_TO_TCHAR("method"), v))
                     {
-                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                        return TOptional(v);
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
@@ -136,7 +136,7 @@ namespace Gs2::Log::Model
                     FString v("");
                     if (Data->TryGetStringField(ANSI_TO_TCHAR("userId"), v))
                     {
-                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                        return TOptional(v);
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
@@ -145,7 +145,7 @@ namespace Gs2::Log::Model
                     FString v("");
                     if (Data->TryGetStringField(ANSI_TO_TCHAR("action"), v))
                     {
-                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                        return TOptional(v);
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())

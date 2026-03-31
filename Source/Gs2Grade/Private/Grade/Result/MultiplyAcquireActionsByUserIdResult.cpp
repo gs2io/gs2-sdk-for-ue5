@@ -197,7 +197,7 @@ namespace Gs2::Grade::Result
                     FString v("");
                     if (Data->TryGetStringField(ANSI_TO_TCHAR("transactionId"), v))
                     {
-                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                        return TOptional(v);
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
@@ -206,7 +206,7 @@ namespace Gs2::Grade::Result
                     FString v("");
                     if (Data->TryGetStringField(ANSI_TO_TCHAR("stampSheet"), v))
                     {
-                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                        return TOptional(v);
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
@@ -215,7 +215,7 @@ namespace Gs2::Grade::Result
                     FString v("");
                     if (Data->TryGetStringField(ANSI_TO_TCHAR("stampSheetEncryptionKeyId"), v))
                     {
-                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                        return TOptional(v);
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
@@ -242,7 +242,7 @@ namespace Gs2::Grade::Result
                     FString v("");
                     if (Data->TryGetStringField(ANSI_TO_TCHAR("transaction"), v))
                     {
-                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                        return TOptional(v);
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
