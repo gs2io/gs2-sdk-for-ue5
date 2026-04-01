@@ -241,6 +241,26 @@ namespace Gs2::UE5::Datastore::Domain::Model
 
         TSharedPtr<FAsyncTask<FDownloadTask>> Download(
         );
+
+        class FDownloadOwnTask :
+            public Gs2::Core::Util::TGs2Future<TArray<uint8>>,
+            public TSharedFromThis<FDownloadOwnTask>
+        {
+            TSharedPtr<FEzDataObjectGameSessionDomain> Self;
+
+        public:
+            explicit FDownloadOwnTask(
+                TSharedPtr<FEzDataObjectGameSessionDomain> Self
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<TArray<uint8>>> Result
+            ) override;
+        };
+        friend FDownloadOwnTask;
+
+        TSharedPtr<FAsyncTask<FDownloadOwnTask>> DownloadOwn(
+        );
     };
     typedef TSharedPtr<FEzDataObjectGameSessionDomain> FEzDataObjectGameSessionDomainPtr;
 }

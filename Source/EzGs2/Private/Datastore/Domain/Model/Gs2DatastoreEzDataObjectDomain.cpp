@@ -281,4 +281,98 @@ namespace Gs2::UE5::Datastore::Domain::Model
             this->AsShared()
         );
     }
+
+    FEzDataObjectDomain::FDownloadByUserIdAndDataObjectNameTask::FDownloadByUserIdAndDataObjectNameTask(
+        TSharedPtr<FEzDataObjectDomain> Self
+    ): Self(Self)
+    {
+
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FEzDataObjectDomain::FDownloadByUserIdAndDataObjectNameTask::Action(
+        TSharedPtr<TSharedPtr<TArray<uint8>>> Result
+    )
+    {
+        const auto Future = Self->ConnectionValue->Run(
+            [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
+                FString Url("");
+                {
+                    const auto Task = Self->Domain->PrepareDownloadByUserIdAndDataObjectName(
+                        MakeShared<Gs2::Datastore::Request::FPrepareDownloadByUserIdAndDataObjectNameRequest>()
+                    );
+                    Task->StartSynchronousTask();
+                    if (Task->GetTask().IsError())
+                    {
+                        Task->EnsureCompletion();
+                        return Task->GetTask().Error();
+                    }
+                    Url = *Task->GetTask().Result()->FileUrl;
+                    Task->EnsureCompletion();
+                }
+                {
+                    auto Processing = true;
+                    int32 ResponseCode;
+                    TArray<uint8> ResponseBody;
+                    {
+                        const auto request = FHttpModule::Get().CreateRequest();
+                        request->OnProcessRequestComplete().BindLambda(
+                            [&Processing, &ResponseCode, &ResponseBody](FHttpRequestPtr _, FHttpResponsePtr Response, bool Successful)
+                            {
+                                if (Successful) {
+                                    ResponseCode = Response->GetResponseCode();
+                                    ResponseBody = Response->GetContent();
+                                } else {
+                                    ResponseCode = 999;
+                                }
+                                Processing = false;
+                            }
+                        );
+                        request->SetURL(Url);
+                        request->SetVerb(TEXT("GET"));
+                        request->ProcessRequest();
+                    }
+
+                    if (FPlatformTLS::GetCurrentThreadId() == GGameThreadId)
+                    {
+                        FHttpModule::Get().GetHttpManager().Flush(EHttpFlushReason::FullFlush);
+                    }
+                    else
+                    {
+                        while (Processing)
+                        {
+                            FPlatformProcess::Sleep(0.01f);
+                        }
+                    }
+
+                    if (ResponseCode / 100 != 2)
+                    {
+                        const auto Details = MakeShared<TArray<TSharedPtr<Gs2::Core::Model::FGs2ErrorDetail>>>();
+                        return MakeShared<Gs2::Core::Model::FUnknownError>(Details);
+                    }
+
+                    const auto Value = MakeShared<TArray<uint8>>();
+                    Value->Append(ResponseBody);
+                    *Result = Value;
+                }
+                return nullptr;
+            },
+            nullptr
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            Future->EnsureCompletion();
+            return Future->GetTask().Error();
+        }
+        Future->EnsureCompletion();
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FEzDataObjectDomain::FDownloadByUserIdAndDataObjectNameTask>> FEzDataObjectDomain::DownloadByUserIdAndDataObjectName(
+    )
+    {
+        return Gs2::Core::Util::New<FAsyncTask<FDownloadByUserIdAndDataObjectNameTask>>(
+            this->AsShared()
+        );
+    }
 }
