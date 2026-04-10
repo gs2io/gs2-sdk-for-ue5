@@ -39,6 +39,7 @@ namespace Gs2::Log::Domain::Iterator
         const TOptional<int64> End;
         const TOptional<bool> LongTerm;
         const TOptional<FString> TimeOffsetToken;
+        TFunction<void(TOptional<int64>)> OnTotalCount;
 
     public:
         FQueryInGameLogIterator(
@@ -50,7 +51,8 @@ namespace Gs2::Log::Domain::Iterator
             const TOptional<int64> Begin = TOptional<int64>(),
             const TOptional<int64> End = TOptional<int64>(),
             const TOptional<bool> LongTerm = TOptional<bool>(),
-            const TOptional<FString> TimeOffsetToken = TOptional<FString>()
+            const TOptional<FString> TimeOffsetToken = TOptional<FString>(),
+            TFunction<void(TOptional<int64>)> OnTotalCount = nullptr
         );
 
         FQueryInGameLogIterator(

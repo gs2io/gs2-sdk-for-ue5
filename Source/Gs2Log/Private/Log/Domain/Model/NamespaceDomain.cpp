@@ -1056,6 +1056,7 @@ namespace Gs2::Log::Domain::Model
         const TOptional<FString> TimeOffsetToken
     ) const
     {
+        auto* Self = const_cast<FNamespaceDomain*>(this);
         return MakeShared<Gs2::Log::Domain::Iterator::FQueryInGameLogIterator>(
             Gs2,
             Client,
@@ -1065,7 +1066,8 @@ namespace Gs2::Log::Domain::Model
             Begin,
             End,
             LongTerm,
-            TimeOffsetToken
+            TimeOffsetToken,
+            [Self](TOptional<int64> Count) { Self->TotalCount = Count; }
         );
     }
 

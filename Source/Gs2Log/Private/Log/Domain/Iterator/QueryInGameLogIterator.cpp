@@ -44,7 +44,8 @@ namespace Gs2::Log::Domain::Iterator
         const TOptional<int64> Begin,
         const TOptional<int64> End,
         const TOptional<bool> LongTerm,
-        const TOptional<FString> TimeOffsetToken
+        const TOptional<FString> TimeOffsetToken,
+        TFunction<void(TOptional<int64>)> OnTotalCount
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
@@ -55,7 +56,8 @@ namespace Gs2::Log::Domain::Iterator
         Begin(Begin),
         End(End),
         LongTerm(LongTerm),
-        TimeOffsetToken(TimeOffsetToken)
+        TimeOffsetToken(TimeOffsetToken),
+        OnTotalCount(MoveTemp(OnTotalCount))
     {
     }
 
@@ -70,7 +72,8 @@ namespace Gs2::Log::Domain::Iterator
         Begin(From.Begin),
         End(From.End),
         LongTerm(From.LongTerm),
-        TimeOffsetToken(From.TimeOffsetToken)
+        TimeOffsetToken(From.TimeOffsetToken),
+        OnTotalCount(From.OnTotalCount)
     {
     }
 
@@ -117,12 +120,31 @@ namespace Gs2::Log::Domain::Iterator
 
             if (!RangeIteratorOpt)
             {
-                Range = Self->Gs2->Cache->TryGetList<Gs2::Log::Model::FInGameLog>(ListParentKey);
+                Range = Self->UserId.IsSet() ? Self->Gs2->Cache->TryGetList<Gs2::Log::Model::FInGameLog>(ListParentKey) : nullptr;
 
                 if (Range)
                 {
                     Range->RemoveAll([this](const Gs2::Log::Model::FInGameLogPtr& Item) { return Self->Begin && *Item->GetTimestamp() < *Self->Begin; });
                     Range->RemoveAll([this](const Gs2::Log::Model::FInGameLogPtr& Item) { return Self->End && *Item->GetTimestamp() > *Self->End; });
+                    Range->RemoveAll([this](const Gs2::Log::Model::FInGameLogPtr& Item)
+                    {
+                        if (!Self->Tags || Self->Tags->Num() == 0) return false;
+                        if (!Item->GetTags()) return true;
+                        for (const auto& RequiredTag : *Self->Tags)
+                        {
+                            bool bFound = false;
+                            for (const auto& ItemTag : *Item->GetTags())
+                            {
+                                if (ItemTag->GetKey() == RequiredTag->GetKey() && ItemTag->GetValue() == RequiredTag->GetValue())
+                                {
+                                    bFound = true;
+                                    break;
+                                }
+                            }
+                            if (!bFound) return true;
+                        }
+                        return false;
+                    });
                     bLast = true;
                     RangeIteratorOpt = Range->CreateIterator();
                     PageToken = TOptional<FString>();
@@ -135,6 +157,7 @@ namespace Gs2::Log::Domain::Iterator
                 MakeShared<Gs2::Log::Request::FQueryInGameLogRequest>()
                     ->WithNamespaceName(Self->NamespaceName)
                     ->WithUserId(Self->UserId)
+                    ->WithTags(Self->Tags)
                     ->WithBegin(Self->Begin)
                     ->WithEnd(Self->End)
                     ->WithLongTerm(Self->LongTerm)
@@ -154,6 +177,10 @@ namespace Gs2::Log::Domain::Iterator
             }
             const auto R = Future->GetTask().Result();
             Future->EnsureCompletion();
+            if (Self->OnTotalCount)
+            {
+                Self->OnTotalCount(R->GetTotalCount());
+            }
             Range = R->GetItems();
             for (auto Item : *R->GetItems())
             {
@@ -171,11 +198,30 @@ namespace Gs2::Log::Domain::Iterator
             {
                 Range->RemoveAll([this](const Gs2::Log::Model::FInGameLogPtr& Item) { return Self->Begin && *Item->GetTimestamp() < *Self->Begin; });
                 Range->RemoveAll([this](const Gs2::Log::Model::FInGameLogPtr& Item) { return Self->End && *Item->GetTimestamp() > *Self->End; });
+                Range->RemoveAll([this](const Gs2::Log::Model::FInGameLogPtr& Item)
+                {
+                    if (!Self->Tags || Self->Tags->Num() == 0) return false;
+                    if (!Item->GetTags()) return true;
+                    for (const auto& RequiredTag : *Self->Tags)
+                    {
+                        bool bFound = false;
+                        for (const auto& ItemTag : *Item->GetTags())
+                        {
+                            if (ItemTag->GetKey() == RequiredTag->GetKey() && ItemTag->GetValue() == RequiredTag->GetValue())
+                            {
+                                bFound = true;
+                                break;
+                            }
+                        }
+                        if (!bFound) return true;
+                    }
+                    return false;
+                });
             }
             RangeIteratorOpt = Range->CreateIterator();
             PageToken = R->GetNextPageToken();
             bLast = !PageToken.IsSet();
-            if (bLast) {
+            if (bLast && Self->UserId.IsSet()) {
                 Self->Gs2->Cache->SetListCached(
                     Gs2::Log::Model::FInGameLog::TypeName,
                     ListParentKey
