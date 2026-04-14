@@ -310,22 +310,12 @@ namespace Gs2::LoginReward::Domain::Model
             );
             Self->Gs2->Cache->Put(
                 Gs2::LoginReward::Model::FBonusModelMaster::TypeName,
-                Gs2::LoginReward::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
-                    Self->NamespaceName,
-                    "BonusModelMaster"
-                ),
+                Self->ParentKey,
                 Key,
                 ResultModel->GetItem(),
                 FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
             );
         }
-        Self->Gs2->Cache->ClearListCache(
-            Gs2::LoginReward::Model::FBonusModelMaster::TypeName,
-            Gs2::LoginReward::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
-                Self->NamespaceName,
-                "BonusModelMaster"
-            )
-        );
         auto Domain = MakeShared<Gs2::LoginReward::Domain::Model::FBonusModelMasterDomain>(
             Self->Gs2,
             Self->Service,
@@ -605,3 +595,4 @@ namespace Gs2::LoginReward::Domain::Model
 #elif defined(__clang__)
 #pragma clang diagnostic pop
 #endif
+

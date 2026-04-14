@@ -29,6 +29,19 @@
 #include "Model/InGameLog.h"
 #include "Model/AccessLogWithTelemetry.h"
 #include "Model/Insight.h"
+#include "Model/FacetModel.h"
+#include "Model/Dashboard.h"
+#include "Model/AggregationConfig.h"
+#include "Model/Facet.h"
+#include "Model/FacetValueCount.h"
+#include "Model/Label.h"
+#include "Model/LogEntry.h"
+#include "Model/NumericRange.h"
+#include "Model/TimeseriesMetadata.h"
+#include "Model/TimeseriesPoint.h"
+#include "Model/TimeseriesValue.h"
+#include "Model/Trace.h"
+#include "Model/MetricModel.h"
 #include "Model/InGameLogTag.h"
 
 // DescribeNamespaces
@@ -168,6 +181,120 @@
 #include "Result/DeleteInsightResult.h"
 #include "Task/Rest/DeleteInsightTask.h"
 #include "Task/WebSocket/DeleteInsightTask.h"
+
+// DescribeFacetModels
+#include "Request/DescribeFacetModelsRequest.h"
+#include "Result/DescribeFacetModelsResult.h"
+#include "Task/Rest/DescribeFacetModelsTask.h"
+#include "Task/WebSocket/DescribeFacetModelsTask.h"
+
+// CreateFacetModel
+#include "Request/CreateFacetModelRequest.h"
+#include "Result/CreateFacetModelResult.h"
+#include "Task/Rest/CreateFacetModelTask.h"
+#include "Task/WebSocket/CreateFacetModelTask.h"
+
+// GetFacetModel
+#include "Request/GetFacetModelRequest.h"
+#include "Result/GetFacetModelResult.h"
+#include "Task/Rest/GetFacetModelTask.h"
+#include "Task/WebSocket/GetFacetModelTask.h"
+
+// UpdateFacetModel
+#include "Request/UpdateFacetModelRequest.h"
+#include "Result/UpdateFacetModelResult.h"
+#include "Task/Rest/UpdateFacetModelTask.h"
+#include "Task/WebSocket/UpdateFacetModelTask.h"
+
+// DeleteFacetModel
+#include "Request/DeleteFacetModelRequest.h"
+#include "Result/DeleteFacetModelResult.h"
+#include "Task/Rest/DeleteFacetModelTask.h"
+#include "Task/WebSocket/DeleteFacetModelTask.h"
+
+// DescribeDashboards
+#include "Request/DescribeDashboardsRequest.h"
+#include "Result/DescribeDashboardsResult.h"
+#include "Task/Rest/DescribeDashboardsTask.h"
+#include "Task/WebSocket/DescribeDashboardsTask.h"
+
+// CreateDashboard
+#include "Request/CreateDashboardRequest.h"
+#include "Result/CreateDashboardResult.h"
+#include "Task/Rest/CreateDashboardTask.h"
+#include "Task/WebSocket/CreateDashboardTask.h"
+
+// GetDashboard
+#include "Request/GetDashboardRequest.h"
+#include "Result/GetDashboardResult.h"
+#include "Task/Rest/GetDashboardTask.h"
+#include "Task/WebSocket/GetDashboardTask.h"
+
+// UpdateDashboard
+#include "Request/UpdateDashboardRequest.h"
+#include "Result/UpdateDashboardResult.h"
+#include "Task/Rest/UpdateDashboardTask.h"
+#include "Task/WebSocket/UpdateDashboardTask.h"
+
+// DuplicateDashboard
+#include "Request/DuplicateDashboardRequest.h"
+#include "Result/DuplicateDashboardResult.h"
+#include "Task/Rest/DuplicateDashboardTask.h"
+#include "Task/WebSocket/DuplicateDashboardTask.h"
+
+// DeleteDashboard
+#include "Request/DeleteDashboardRequest.h"
+#include "Result/DeleteDashboardResult.h"
+#include "Task/Rest/DeleteDashboardTask.h"
+#include "Task/WebSocket/DeleteDashboardTask.h"
+
+// QueryLog
+#include "Request/QueryLogRequest.h"
+#include "Result/QueryLogResult.h"
+#include "Task/Rest/QueryLogTask.h"
+#include "Task/WebSocket/QueryLogTask.h"
+
+// GetLog
+#include "Request/GetLogRequest.h"
+#include "Result/GetLogResult.h"
+#include "Task/Rest/GetLogTask.h"
+#include "Task/WebSocket/GetLogTask.h"
+
+// QueryFacets
+#include "Request/QueryFacetsRequest.h"
+#include "Result/QueryFacetsResult.h"
+#include "Task/Rest/QueryFacetsTask.h"
+#include "Task/WebSocket/QueryFacetsTask.h"
+
+// QueryTimeseries
+#include "Request/QueryTimeseriesRequest.h"
+#include "Result/QueryTimeseriesResult.h"
+#include "Task/Rest/QueryTimeseriesTask.h"
+#include "Task/WebSocket/QueryTimeseriesTask.h"
+
+// GetTrace
+#include "Request/GetTraceRequest.h"
+#include "Result/GetTraceResult.h"
+#include "Task/Rest/GetTraceTask.h"
+#include "Task/WebSocket/GetTraceTask.h"
+
+// QueryMetricsTimeseries
+#include "Request/QueryMetricsTimeseriesRequest.h"
+#include "Result/QueryMetricsTimeseriesResult.h"
+#include "Task/Rest/QueryMetricsTimeseriesTask.h"
+#include "Task/WebSocket/QueryMetricsTimeseriesTask.h"
+
+// DescribeMetrics
+#include "Request/DescribeMetricsRequest.h"
+#include "Result/DescribeMetricsResult.h"
+#include "Task/Rest/DescribeMetricsTask.h"
+#include "Task/WebSocket/DescribeMetricsTask.h"
+
+// DescribeLabelValues
+#include "Request/DescribeLabelValuesRequest.h"
+#include "Result/DescribeLabelValuesResult.h"
+#include "Task/Rest/DescribeLabelValuesTask.h"
+#include "Task/WebSocket/DescribeLabelValuesTask.h"
 
 // Client
 #include "Gs2LogRestClient.h"

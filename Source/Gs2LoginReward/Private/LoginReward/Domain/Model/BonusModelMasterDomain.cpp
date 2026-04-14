@@ -161,10 +161,6 @@ namespace Gs2::LoginReward::Domain::Model
                 FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
             );
         }
-        Self->Gs2->Cache->ClearListCache(
-            Gs2::LoginReward::Model::FBonusModelMaster::TypeName,
-            Self->ParentKey
-        );
         auto Domain = Self;
 
         *Result = Domain;
@@ -363,3 +359,4 @@ namespace Gs2::LoginReward::Domain::Model
 #elif defined(__clang__)
 #pragma clang diagnostic pop
 #endif
+

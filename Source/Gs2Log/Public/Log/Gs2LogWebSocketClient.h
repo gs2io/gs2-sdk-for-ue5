@@ -64,6 +64,44 @@
 #include "Task/WebSocket/GetInsightTask.h"
 #include "Request/DeleteInsightRequest.h"
 #include "Task/WebSocket/DeleteInsightTask.h"
+#include "Request/DescribeFacetModelsRequest.h"
+#include "Task/WebSocket/DescribeFacetModelsTask.h"
+#include "Request/CreateFacetModelRequest.h"
+#include "Task/WebSocket/CreateFacetModelTask.h"
+#include "Request/GetFacetModelRequest.h"
+#include "Task/WebSocket/GetFacetModelTask.h"
+#include "Request/UpdateFacetModelRequest.h"
+#include "Task/WebSocket/UpdateFacetModelTask.h"
+#include "Request/DeleteFacetModelRequest.h"
+#include "Task/WebSocket/DeleteFacetModelTask.h"
+#include "Request/DescribeDashboardsRequest.h"
+#include "Task/WebSocket/DescribeDashboardsTask.h"
+#include "Request/CreateDashboardRequest.h"
+#include "Task/WebSocket/CreateDashboardTask.h"
+#include "Request/GetDashboardRequest.h"
+#include "Task/WebSocket/GetDashboardTask.h"
+#include "Request/UpdateDashboardRequest.h"
+#include "Task/WebSocket/UpdateDashboardTask.h"
+#include "Request/DuplicateDashboardRequest.h"
+#include "Task/WebSocket/DuplicateDashboardTask.h"
+#include "Request/DeleteDashboardRequest.h"
+#include "Task/WebSocket/DeleteDashboardTask.h"
+#include "Request/QueryLogRequest.h"
+#include "Task/WebSocket/QueryLogTask.h"
+#include "Request/GetLogRequest.h"
+#include "Task/WebSocket/GetLogTask.h"
+#include "Request/QueryFacetsRequest.h"
+#include "Task/WebSocket/QueryFacetsTask.h"
+#include "Request/QueryTimeseriesRequest.h"
+#include "Task/WebSocket/QueryTimeseriesTask.h"
+#include "Request/GetTraceRequest.h"
+#include "Task/WebSocket/GetTraceTask.h"
+#include "Request/QueryMetricsTimeseriesRequest.h"
+#include "Task/WebSocket/QueryMetricsTimeseriesTask.h"
+#include "Request/DescribeMetricsRequest.h"
+#include "Task/WebSocket/DescribeMetricsTask.h"
+#include "Request/DescribeLabelValuesRequest.h"
+#include "Task/WebSocket/DescribeLabelValuesTask.h"
 
 namespace Gs2::Log
 {
@@ -166,6 +204,82 @@ namespace Gs2::Log
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FDeleteInsightTask>> DeleteInsight(
             const Request::FDeleteInsightRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FDescribeFacetModelsTask>> DescribeFacetModels(
+            const Request::FDescribeFacetModelsRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FCreateFacetModelTask>> CreateFacetModel(
+            const Request::FCreateFacetModelRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FGetFacetModelTask>> GetFacetModel(
+            const Request::FGetFacetModelRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FUpdateFacetModelTask>> UpdateFacetModel(
+            const Request::FUpdateFacetModelRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FDeleteFacetModelTask>> DeleteFacetModel(
+            const Request::FDeleteFacetModelRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FDescribeDashboardsTask>> DescribeDashboards(
+            const Request::FDescribeDashboardsRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FCreateDashboardTask>> CreateDashboard(
+            const Request::FCreateDashboardRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FGetDashboardTask>> GetDashboard(
+            const Request::FGetDashboardRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FUpdateDashboardTask>> UpdateDashboard(
+            const Request::FUpdateDashboardRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FDuplicateDashboardTask>> DuplicateDashboard(
+            const Request::FDuplicateDashboardRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FDeleteDashboardTask>> DeleteDashboard(
+            const Request::FDeleteDashboardRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FQueryLogTask>> QueryLog(
+            const Request::FQueryLogRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FGetLogTask>> GetLog(
+            const Request::FGetLogRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FQueryFacetsTask>> QueryFacets(
+            const Request::FQueryFacetsRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FQueryTimeseriesTask>> QueryTimeseries(
+            const Request::FQueryTimeseriesRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FGetTraceTask>> GetTrace(
+            const Request::FGetTraceRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FQueryMetricsTimeseriesTask>> QueryMetricsTimeseries(
+            const Request::FQueryMetricsTimeseriesRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FDescribeMetricsTask>> DescribeMetrics(
+            const Request::FDescribeMetricsRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FDescribeLabelValuesTask>> DescribeLabelValues(
+            const Request::FDescribeLabelValuesRequestPtr Request
         ) const;
     };
     typedef TSharedPtr<FGs2LogWebSocketClient, ESPMode::ThreadSafe> FGs2LogWebSocketClientPtr;

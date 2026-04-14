@@ -132,6 +132,19 @@ namespace Gs2::Freeze::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+        if (ResultModel->GetItem() != nullptr)
+        {
+            const auto Key = Gs2::Freeze::Domain::Model::FStageDomain::CreateCacheKey(
+                ResultModel->GetItem()->GetName()
+            );
+            Self->Gs2->Cache->Put(
+                Gs2::Freeze::Model::FStage::TypeName,
+                Self->ParentKey,
+                Key,
+                ResultModel->GetItem(),
+                FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+            );
+        }
         auto Domain = Self;
 
         *Result = Domain;
@@ -175,6 +188,19 @@ namespace Gs2::Freeze::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+        if (ResultModel->GetItem() != nullptr)
+        {
+            const auto Key = Gs2::Freeze::Domain::Model::FStageDomain::CreateCacheKey(
+                ResultModel->GetItem()->GetName()
+            );
+            Self->Gs2->Cache->Put(
+                Gs2::Freeze::Model::FStage::TypeName,
+                Self->ParentKey,
+                Key,
+                ResultModel->GetItem(),
+                FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+            );
+        }
         auto Domain = Self;
 
         *Result = Domain;
@@ -311,13 +337,10 @@ namespace Gs2::Freeze::Domain::Model
                     return Future->GetTask().Error();
                 }
             }
-            Self->Gs2->Cache->TryGet<Gs2::Freeze::Model::FStage>(
-                ParentKey,
-                Gs2::Freeze::Domain::Model::FStageDomain::CreateCacheKey(
-                    Self->StageName
-                ),
-                &Value
-            );
+            else
+            {
+                Value = Future->GetTask().Result();
+            }
             Future->EnsureCompletion();
         }
         *Result = Value;

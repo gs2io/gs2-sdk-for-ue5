@@ -64,16 +64,8 @@ namespace Gs2::Idle::Domain::SpeculativeExecutor
     )
     {
         auto NewAcquireAction = AcquireAction->WithAction(AcquireAction->GetAction()->Replace(TEXT("{region}"), ToCStr(Domain->RestSession->RegionName())));
-        NewAcquireAction = NewAcquireAction->WithAction(NewAcquireAction->GetAction()->Replace(TEXT("{ownerId}"), ToCStr(Domain->RestSession->OwnerId())));
-        NewAcquireAction = NewAcquireAction->WithAction(NewAcquireAction->GetAction()->Replace(TEXT("{userId}"), ToCStr(AccessToken->GetUserId().IsSet() ? *AccessToken->GetUserId() : "")));
-        if (NewAcquireAction->GetRequest().IsSet())
-        {
-            auto Request = NewAcquireAction->GetRequest().GetValue().Replace(TEXT("{region}"), ToCStr(Domain->RestSession->RegionName()));
-            Request = Request.Replace(TEXT("{ownerId}"), ToCStr(Domain->RestSession->OwnerId()));
-            Request = Request.Replace(TEXT("#{userId}"), ToCStr(AccessToken->GetUserId().IsSet() ? *AccessToken->GetUserId() : ""));
-            Request = Request.Replace(TEXT("{userId}"), ToCStr(AccessToken->GetUserId().IsSet() ? *AccessToken->GetUserId() : ""));
-            NewAcquireAction = NewAcquireAction->WithRequest(Request);
-        }
+        NewAcquireAction = AcquireAction->WithAction(NewAcquireAction->GetAction()->Replace(TEXT("{ownerId}"), ToCStr(Domain->RestSession->OwnerId())));
+        NewAcquireAction = AcquireAction->WithAction(NewAcquireAction->GetAction()->Replace(TEXT("{userId}"), ToCStr(AccessToken->GetUserId().IsSet() ? *AccessToken->GetUserId() : "")));
         if (FIncreaseMaximumIdleMinutesByUserIdSpeculativeExecutor::Action() == NewAcquireAction->GetAction()) {
             TSharedPtr<FJsonObject> RequestModelJson;
             if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(NewAcquireAction->GetRequest().IsSet() ? *NewAcquireAction->GetRequest() : "{}");

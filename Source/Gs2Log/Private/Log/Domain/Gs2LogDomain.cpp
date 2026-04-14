@@ -35,6 +35,10 @@
 #include "Log/Domain/Model/User.h"
 #include "Log/Domain/Model/UserAccessToken.h"
 #include "Log/Domain/Model/Insight.h"
+#include "Log/Domain/Model/FacetModel.h"
+#include "Log/Domain/Model/Dashboard.h"
+#include "Log/Domain/Model/LogEntry.h"
+#include "Log/Domain/Model/MetricModel.h"
 #include "Core/Domain/Gs2.h"
 
 namespace Gs2::Log::Domain
@@ -142,6 +146,101 @@ namespace Gs2::Log::Domain
             Gs2,
             AsShared(),
             NamespaceName == TEXT("") ? TOptional<FString>() : TOptional<FString>(NamespaceName)
+        );
+    }
+
+    Gs2::Log::Domain::Iterator::FQueryLogIteratorPtr FGs2LogDomain::Log(
+        const FString NamespaceName,
+        const TOptional<int64> Begin,
+        const TOptional<int64> End,
+        const TOptional<FString> Query
+    ) const
+    {
+        return MakeShared<Gs2::Log::Domain::Iterator::FQueryLogIterator>(
+            Gs2,
+            Client,
+            NamespaceName,
+            Begin,
+            End,
+            Query
+        );
+    }
+
+    Gs2::Core::Domain::CallbackID FGs2LogDomain::SubscribeLog(
+    TFunction<void()> Callback
+    )
+    {
+        return Gs2->Cache->ListSubscribe(
+            Gs2::Log::Model::FLogEntry::TypeName,
+            "log:LogEntry",
+            Callback
+        );
+    }
+
+    void FGs2LogDomain::UnsubscribeLog(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Gs2->Cache->ListUnsubscribe(
+            Gs2::Log::Model::FLogEntry::TypeName,
+            "log:LogEntry",
+            CallbackID
+        );
+    }
+
+    Gs2::Log::Domain::Iterator::FQueryTimeseriesIteratorPtr FGs2LogDomain::Timeseries(
+        const FString NamespaceName,
+        const TSharedPtr<Gs2::Log::Model::FAggregationConfig> Aggregation,
+        const TOptional<int64> Begin,
+        const TOptional<int64> End,
+        const TOptional<FString> Query,
+        const TOptional<TArray<FString>> GroupBy,
+        const TOptional<int32> Interval,
+        const TOptional<int32> SeriesLimit
+    ) const
+    {
+        return MakeShared<Gs2::Log::Domain::Iterator::FQueryTimeseriesIterator>(
+            Gs2,
+            Client,
+            NamespaceName,
+            Aggregation,
+            Begin,
+            End,
+            Query,
+            GroupBy,
+            Interval,
+            SeriesLimit
+        );
+    }
+
+    Gs2::Core::Domain::CallbackID FGs2LogDomain::SubscribeTimeseries(
+    TFunction<void()> Callback
+    )
+    {
+        return Gs2->Cache->ListSubscribe(
+            Gs2::Log::Model::FTimeseriesPoint::TypeName,
+            "log:TimeseriesPoint",
+            Callback
+        );
+    }
+
+    void FGs2LogDomain::UnsubscribeTimeseries(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Gs2->Cache->ListUnsubscribe(
+            Gs2::Log::Model::FTimeseriesPoint::TypeName,
+            "log:TimeseriesPoint",
+            CallbackID
+        );
+    }
+
+    TSharedPtr<Gs2::Log::Domain::Model::FLogEntryDomain> FGs2LogDomain::LogEntry(
+    )
+    {
+        return MakeShared<Gs2::Log::Domain::Model::FLogEntryDomain>(
+            Gs2,
+            AsShared()
         );
     }
 

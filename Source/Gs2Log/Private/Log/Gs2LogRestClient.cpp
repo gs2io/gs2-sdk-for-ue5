@@ -225,4 +225,175 @@ namespace Gs2::Log
             Request
         );
     }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FDescribeFacetModelsTask>> FGs2LogRestClient::DescribeFacetModels(
+        const Request::FDescribeFacetModelsRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FDescribeFacetModelsTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FCreateFacetModelTask>> FGs2LogRestClient::CreateFacetModel(
+        const Request::FCreateFacetModelRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FCreateFacetModelTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FGetFacetModelTask>> FGs2LogRestClient::GetFacetModel(
+        const Request::FGetFacetModelRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FGetFacetModelTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FUpdateFacetModelTask>> FGs2LogRestClient::UpdateFacetModel(
+        const Request::FUpdateFacetModelRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FUpdateFacetModelTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FDeleteFacetModelTask>> FGs2LogRestClient::DeleteFacetModel(
+        const Request::FDeleteFacetModelRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FDeleteFacetModelTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FDescribeDashboardsTask>> FGs2LogRestClient::DescribeDashboards(
+        const Request::FDescribeDashboardsRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FDescribeDashboardsTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FCreateDashboardTask>> FGs2LogRestClient::CreateDashboard(
+        const Request::FCreateDashboardRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FCreateDashboardTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FGetDashboardTask>> FGs2LogRestClient::GetDashboard(
+        const Request::FGetDashboardRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FGetDashboardTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FUpdateDashboardTask>> FGs2LogRestClient::UpdateDashboard(
+        const Request::FUpdateDashboardRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FUpdateDashboardTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FDuplicateDashboardTask>> FGs2LogRestClient::DuplicateDashboard(
+        const Request::FDuplicateDashboardRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FDuplicateDashboardTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FDeleteDashboardTask>> FGs2LogRestClient::DeleteDashboard(
+        const Request::FDeleteDashboardRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FDeleteDashboardTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FQueryLogTask>> FGs2LogRestClient::QueryLog(
+        const Request::FQueryLogRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FQueryLogTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FGetLogTask>> FGs2LogRestClient::GetLog(
+        const Request::FGetLogRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FGetLogTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FQueryFacetsTask>> FGs2LogRestClient::QueryFacets(
+        const Request::FQueryFacetsRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FQueryFacetsTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FQueryTimeseriesTask>> FGs2LogRestClient::QueryTimeseries(
+        const Request::FQueryTimeseriesRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FQueryTimeseriesTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FGetTraceTask>> FGs2LogRestClient::GetTrace(
+        const Request::FGetTraceRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FGetTraceTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FQueryMetricsTimeseriesTask>> FGs2LogRestClient::QueryMetricsTimeseries(
+        const Request::FQueryMetricsTimeseriesRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FQueryMetricsTimeseriesTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FDescribeMetricsTask>> FGs2LogRestClient::DescribeMetrics(
+        const Request::FDescribeMetricsRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FDescribeMetricsTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FDescribeLabelValuesTask>> FGs2LogRestClient::DescribeLabelValues(
+        const Request::FDescribeLabelValuesRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FDescribeLabelValuesTask>>(
+            Session,
+            Request
+        );
+    }
 }

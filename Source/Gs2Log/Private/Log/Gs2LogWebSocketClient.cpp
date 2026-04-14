@@ -225,4 +225,175 @@ namespace Gs2::Log
             Request
         );
     }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FDescribeFacetModelsTask>> FGs2LogWebSocketClient::DescribeFacetModels(
+        const Request::FDescribeFacetModelsRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FDescribeFacetModelsTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FCreateFacetModelTask>> FGs2LogWebSocketClient::CreateFacetModel(
+        const Request::FCreateFacetModelRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FCreateFacetModelTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FGetFacetModelTask>> FGs2LogWebSocketClient::GetFacetModel(
+        const Request::FGetFacetModelRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FGetFacetModelTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FUpdateFacetModelTask>> FGs2LogWebSocketClient::UpdateFacetModel(
+        const Request::FUpdateFacetModelRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FUpdateFacetModelTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FDeleteFacetModelTask>> FGs2LogWebSocketClient::DeleteFacetModel(
+        const Request::FDeleteFacetModelRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FDeleteFacetModelTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FDescribeDashboardsTask>> FGs2LogWebSocketClient::DescribeDashboards(
+        const Request::FDescribeDashboardsRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FDescribeDashboardsTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FCreateDashboardTask>> FGs2LogWebSocketClient::CreateDashboard(
+        const Request::FCreateDashboardRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FCreateDashboardTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FGetDashboardTask>> FGs2LogWebSocketClient::GetDashboard(
+        const Request::FGetDashboardRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FGetDashboardTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FUpdateDashboardTask>> FGs2LogWebSocketClient::UpdateDashboard(
+        const Request::FUpdateDashboardRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FUpdateDashboardTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FDuplicateDashboardTask>> FGs2LogWebSocketClient::DuplicateDashboard(
+        const Request::FDuplicateDashboardRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FDuplicateDashboardTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FDeleteDashboardTask>> FGs2LogWebSocketClient::DeleteDashboard(
+        const Request::FDeleteDashboardRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FDeleteDashboardTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FQueryLogTask>> FGs2LogWebSocketClient::QueryLog(
+        const Request::FQueryLogRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FQueryLogTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FGetLogTask>> FGs2LogWebSocketClient::GetLog(
+        const Request::FGetLogRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FGetLogTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FQueryFacetsTask>> FGs2LogWebSocketClient::QueryFacets(
+        const Request::FQueryFacetsRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FQueryFacetsTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FQueryTimeseriesTask>> FGs2LogWebSocketClient::QueryTimeseries(
+        const Request::FQueryTimeseriesRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FQueryTimeseriesTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FGetTraceTask>> FGs2LogWebSocketClient::GetTrace(
+        const Request::FGetTraceRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FGetTraceTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FQueryMetricsTimeseriesTask>> FGs2LogWebSocketClient::QueryMetricsTimeseries(
+        const Request::FQueryMetricsTimeseriesRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FQueryMetricsTimeseriesTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FDescribeMetricsTask>> FGs2LogWebSocketClient::DescribeMetrics(
+        const Request::FDescribeMetricsRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FDescribeMetricsTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FDescribeLabelValuesTask>> FGs2LogWebSocketClient::DescribeLabelValues(
+        const Request::FDescribeLabelValuesRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FDescribeLabelValuesTask>>(
+            Session,
+            Request
+        );
+    }
 }

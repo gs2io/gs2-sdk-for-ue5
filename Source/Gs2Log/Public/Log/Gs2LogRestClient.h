@@ -64,6 +64,44 @@
 #include "Task/Rest/GetInsightTask.h"
 #include "Request/DeleteInsightRequest.h"
 #include "Task/Rest/DeleteInsightTask.h"
+#include "Request/DescribeFacetModelsRequest.h"
+#include "Task/Rest/DescribeFacetModelsTask.h"
+#include "Request/CreateFacetModelRequest.h"
+#include "Task/Rest/CreateFacetModelTask.h"
+#include "Request/GetFacetModelRequest.h"
+#include "Task/Rest/GetFacetModelTask.h"
+#include "Request/UpdateFacetModelRequest.h"
+#include "Task/Rest/UpdateFacetModelTask.h"
+#include "Request/DeleteFacetModelRequest.h"
+#include "Task/Rest/DeleteFacetModelTask.h"
+#include "Request/DescribeDashboardsRequest.h"
+#include "Task/Rest/DescribeDashboardsTask.h"
+#include "Request/CreateDashboardRequest.h"
+#include "Task/Rest/CreateDashboardTask.h"
+#include "Request/GetDashboardRequest.h"
+#include "Task/Rest/GetDashboardTask.h"
+#include "Request/UpdateDashboardRequest.h"
+#include "Task/Rest/UpdateDashboardTask.h"
+#include "Request/DuplicateDashboardRequest.h"
+#include "Task/Rest/DuplicateDashboardTask.h"
+#include "Request/DeleteDashboardRequest.h"
+#include "Task/Rest/DeleteDashboardTask.h"
+#include "Request/QueryLogRequest.h"
+#include "Task/Rest/QueryLogTask.h"
+#include "Request/GetLogRequest.h"
+#include "Task/Rest/GetLogTask.h"
+#include "Request/QueryFacetsRequest.h"
+#include "Task/Rest/QueryFacetsTask.h"
+#include "Request/QueryTimeseriesRequest.h"
+#include "Task/Rest/QueryTimeseriesTask.h"
+#include "Request/GetTraceRequest.h"
+#include "Task/Rest/GetTraceTask.h"
+#include "Request/QueryMetricsTimeseriesRequest.h"
+#include "Task/Rest/QueryMetricsTimeseriesTask.h"
+#include "Request/DescribeMetricsRequest.h"
+#include "Task/Rest/DescribeMetricsTask.h"
+#include "Request/DescribeLabelValuesRequest.h"
+#include "Task/Rest/DescribeLabelValuesTask.h"
 
 namespace Gs2::Log
 {
@@ -166,6 +204,82 @@ namespace Gs2::Log
 
         TSharedPtr<FAsyncTask<Task::Rest::FDeleteInsightTask>> DeleteInsight(
             const Request::FDeleteInsightRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FDescribeFacetModelsTask>> DescribeFacetModels(
+            const Request::FDescribeFacetModelsRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FCreateFacetModelTask>> CreateFacetModel(
+            const Request::FCreateFacetModelRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FGetFacetModelTask>> GetFacetModel(
+            const Request::FGetFacetModelRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FUpdateFacetModelTask>> UpdateFacetModel(
+            const Request::FUpdateFacetModelRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FDeleteFacetModelTask>> DeleteFacetModel(
+            const Request::FDeleteFacetModelRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FDescribeDashboardsTask>> DescribeDashboards(
+            const Request::FDescribeDashboardsRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FCreateDashboardTask>> CreateDashboard(
+            const Request::FCreateDashboardRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FGetDashboardTask>> GetDashboard(
+            const Request::FGetDashboardRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FUpdateDashboardTask>> UpdateDashboard(
+            const Request::FUpdateDashboardRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FDuplicateDashboardTask>> DuplicateDashboard(
+            const Request::FDuplicateDashboardRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FDeleteDashboardTask>> DeleteDashboard(
+            const Request::FDeleteDashboardRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FQueryLogTask>> QueryLog(
+            const Request::FQueryLogRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FGetLogTask>> GetLog(
+            const Request::FGetLogRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FQueryFacetsTask>> QueryFacets(
+            const Request::FQueryFacetsRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FQueryTimeseriesTask>> QueryTimeseries(
+            const Request::FQueryTimeseriesRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FGetTraceTask>> GetTrace(
+            const Request::FGetTraceRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FQueryMetricsTimeseriesTask>> QueryMetricsTimeseries(
+            const Request::FQueryMetricsTimeseriesRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FDescribeMetricsTask>> DescribeMetrics(
+            const Request::FDescribeMetricsRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FDescribeLabelValuesTask>> DescribeLabelValues(
+            const Request::FDescribeLabelValuesRequestPtr Request
         ) const;
     };
     typedef TSharedPtr<FGs2LogRestClient, ESPMode::ThreadSafe> FGs2LogRestClientPtr;

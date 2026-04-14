@@ -12,6 +12,8 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
+ *
+ * deny overwrite
  */
 
 #if defined(_MSC_VER)
@@ -139,9 +141,9 @@ namespace Gs2::Ranking2::Domain::Model
         Future->EnsureCompletion();
         if (ResultModel->GetItem() != nullptr)
         {
-            const auto ParentKey = Gs2::Ranking2::Domain::Model::FSubscribeDomain::CreateCacheParentKey(
-                Request->GetNamespaceName(),
-                ResultModel->GetItem()->GetUserId(),
+            const auto SubscribeUserParentKey = Gs2::Ranking2::Domain::Model::FSubscribeDomain::CreateCacheParentKey(
+                Self->NamespaceName,
+                Self->UserId,
                 ResultModel->GetItem()->GetRankingName(),
                 "SubscribeUser"
             );
@@ -150,7 +152,7 @@ namespace Gs2::Ranking2::Domain::Model
             );
             Self->Gs2->Cache->Put(
                 Gs2::Ranking2::Model::FSubscribeUser::TypeName,
-                ParentKey,
+                SubscribeUserParentKey,
                 Key,
                 ResultModel->GetItem(),
                 FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
@@ -284,3 +286,4 @@ namespace Gs2::Ranking2::Domain::Model
 #elif defined(__clang__)
 #pragma clang diagnostic pop
 #endif
+

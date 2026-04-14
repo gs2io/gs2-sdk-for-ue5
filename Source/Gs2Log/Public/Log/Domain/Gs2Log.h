@@ -28,6 +28,9 @@
 #include "Log/Domain/Model/User.h"
 #include "Log/Domain/Model/UserAccessToken.h"
 #include "Log/Domain/Model/Insight.h"
+#include "Log/Domain/Model/FacetModel.h"
+#include "Log/Domain/Model/Dashboard.h"
+#include "Log/Domain/Model/LogEntry.h"
 
 // Iterator
 #include "Log/Domain/Iterator/DescribeNamespacesIterator.h"
@@ -42,6 +45,12 @@
 #include "Log/Domain/Iterator/QueryInGameLogIterator.h"
 #include "Log/Domain/Iterator/QueryAccessLogWithTelemetryIterator.h"
 #include "Log/Domain/Iterator/DescribeInsightsIterator.h"
+#include "Log/Domain/Iterator/DescribeFacetModelsIterator.h"
+#include "Log/Domain/Iterator/DescribeDashboardsIterator.h"
+#include "Log/Domain/Iterator/QueryLogIterator.h"
+#include "Log/Domain/Iterator/QueryTimeseriesIterator.h"
+#include "Log/Domain/Iterator/DescribeMetricsIterator.h"
+#include "Log/Domain/Iterator/DescribeLabelValuesIterator.h"
 
 // Notification
 
@@ -115,6 +124,43 @@ namespace Gs2::Log::Domain
 
         TSharedPtr<Gs2::Log::Domain::Model::FNamespaceDomain> Namespace(
             const FString NamespaceName
+        );
+
+        Gs2::Log::Domain::Iterator::FQueryLogIteratorPtr Log(
+            const FString NamespaceName,
+            const TOptional<int64> Begin = TOptional<int64>(),
+            const TOptional<int64> End = TOptional<int64>(),
+            const TOptional<FString> Query = TOptional<FString>()
+        ) const;
+
+        Gs2::Core::Domain::CallbackID SubscribeLog(
+            TFunction<void()> Callback
+        );
+
+        void UnsubscribeLog(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
+
+        Gs2::Log::Domain::Iterator::FQueryTimeseriesIteratorPtr Timeseries(
+            const FString NamespaceName,
+            const TSharedPtr<Gs2::Log::Model::FAggregationConfig> Aggregation,
+            const TOptional<int64> Begin = TOptional<int64>(),
+            const TOptional<int64> End = TOptional<int64>(),
+            const TOptional<FString> Query = TOptional<FString>(),
+            const TOptional<TArray<FString>> GroupBy = TOptional<TArray<FString>>(),
+            const TOptional<int32> Interval = TOptional<int32>(),
+            const TOptional<int32> SeriesLimit = TOptional<int32>()
+        ) const;
+
+        Gs2::Core::Domain::CallbackID SubscribeTimeseries(
+            TFunction<void()> Callback
+        );
+
+        void UnsubscribeTimeseries(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
+
+        TSharedPtr<Gs2::Log::Domain::Model::FLogEntryDomain> LogEntry(
         );
 
         void UpdateCacheFromStampSheet(

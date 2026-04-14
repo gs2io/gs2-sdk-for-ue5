@@ -35,6 +35,10 @@
 #include "Log/Domain/Model/User.h"
 #include "Log/Domain/Model/UserAccessToken.h"
 #include "Log/Domain/Model/Insight.h"
+#include "Log/Domain/Model/FacetModel.h"
+#include "Log/Domain/Model/Dashboard.h"
+#include "Log/Domain/Model/LogEntry.h"
+#include "Log/Domain/Model/MetricModel.h"
 
 #include "Core/Domain/Gs2.h"
 #include "Core/Domain/Transaction/JobQueueJobDomainFactory.h"

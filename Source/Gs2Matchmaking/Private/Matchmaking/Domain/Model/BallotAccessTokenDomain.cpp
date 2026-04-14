@@ -135,11 +135,6 @@ namespace Gs2::Matchmaking::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
-        if (ResultModel != nullptr)
-        {
-            Self->Body = *ResultModel->GetBody();
-            Self->Signature = *ResultModel->GetSignature();
-        }
         *Result = ResultModel->GetItem();
         return nullptr;
     }
@@ -214,7 +209,7 @@ namespace Gs2::Matchmaking::Domain::Model
             ),
             &Value
         );
-        if (!bCacheHit || !Self->Body.IsSet() || !Self->Signature.IsSet()) {
+        if (!bCacheHit) {
             const auto Future = Self->Get(
                 MakeShared<Gs2::Matchmaking::Request::FGetBallotRequest>()
             );
@@ -303,3 +298,4 @@ namespace Gs2::Matchmaking::Domain::Model
 #elif defined(__clang__)
 #pragma clang diagnostic pop
 #endif
+

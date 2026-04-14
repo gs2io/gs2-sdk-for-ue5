@@ -32,6 +32,12 @@
 #include "Log/Domain/Iterator/QueryInGameLogIterator.h"
 #include "Log/Domain/Iterator/QueryAccessLogWithTelemetryIterator.h"
 #include "Log/Domain/Iterator/DescribeInsightsIterator.h"
+#include "Log/Domain/Iterator/DescribeFacetModelsIterator.h"
+#include "Log/Domain/Iterator/DescribeDashboardsIterator.h"
+#include "Log/Domain/Iterator/QueryLogIterator.h"
+#include "Log/Domain/Iterator/QueryTimeseriesIterator.h"
+#include "Log/Domain/Iterator/DescribeMetricsIterator.h"
+#include "Log/Domain/Iterator/DescribeLabelValuesIterator.h"
 
 namespace Gs2::Core::Domain
 {
@@ -58,6 +64,10 @@ namespace Gs2::Log::Domain::Model
     class FUserDomain;
     class FUserAccessTokenDomain;
     class FInsightDomain;
+    class FFacetModelDomain;
+    class FDashboardDomain;
+    class FLogEntryDomain;
+    class FMetricModelDomain;
 
     class GS2LOG_API FLogDomain:
         public TSharedFromThis<FLogDomain>

@@ -150,20 +150,17 @@ namespace Gs2::Ranking2::Domain::Iterator
             const auto R = Future->GetTask().Result();
             Future->EnsureCompletion();
             Range = R->GetItems();
-            if (bUseCache)
+            for (auto Item : *R->GetItems())
             {
-                for (auto Item : *R->GetItems())
-                {
-                    Self->Gs2->Cache->Put(
-                        Gs2::Ranking2::Model::FClusterRankingData::TypeName,
-                        ListParentKey,
-                        Gs2::Ranking2::Domain::Model::FClusterRankingDataDomain::CreateCacheKey(
-                            Item->GetUserId()
-                        ),
-                        Item,
-                        FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                    );
-                }
+                Self->Gs2->Cache->Put(
+                    Gs2::Ranking2::Model::FClusterRankingData::TypeName,
+                    ListParentKey,
+                    Gs2::Ranking2::Domain::Model::FClusterRankingDataDomain::CreateCacheKey(
+                        Item->GetUserId()
+                    ),
+                    Item,
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
             }
             if (Range)
             {

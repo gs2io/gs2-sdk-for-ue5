@@ -104,16 +104,15 @@ namespace Gs2::Ranking2::Domain::Iterator
 
         if (!RangeIteratorOpt || (!*RangeIteratorOpt && !bLast))
         {
-            const auto bUseCache = Self->Season.IsSet();
             const auto ListParentKey = Gs2::Ranking2::Domain::Model::FClusterRankingSeasonDomain::CreateCacheParentKey(
                 Self->NamespaceName,
                 Self->RankingName,
                 Self->ClusterName,
                 Self->Season,
-                TEXT("ClusterRankingScore")
+                "ClusterRankingScore"
             );
 
-            if (!RangeIteratorOpt && bUseCache)
+            if (!RangeIteratorOpt)
             {
                 Range = Self->Gs2->Cache->TryGetList<Gs2::Ranking2::Model::FClusterRankingScore>(ListParentKey);
 
@@ -151,22 +150,19 @@ namespace Gs2::Ranking2::Domain::Iterator
             const auto R = Future->GetTask().Result();
             Future->EnsureCompletion();
             Range = R->GetItems();
-            if (bUseCache)
+            for (auto Item : *R->GetItems())
             {
-                for (auto Item : *R->GetItems())
-                {
-                    Self->Gs2->Cache->Put(
-                        Gs2::Ranking2::Model::FClusterRankingScore::TypeName,
-                        ListParentKey,
-                        Gs2::Ranking2::Domain::Model::FClusterRankingScoreDomain::CreateCacheKey(
-                            Item->GetClusterName(),
-                            Item->GetSeason(),
-                            Item->GetUserId()
-                        ),
-                        Item,
-                        FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                    );
-                }
+                Self->Gs2->Cache->Put(
+                    Gs2::Ranking2::Model::FClusterRankingScore::TypeName,
+                    ListParentKey,
+                    Gs2::Ranking2::Domain::Model::FClusterRankingScoreDomain::CreateCacheKey(
+                        Item->GetClusterName(),
+                        Item->GetSeason(),
+                        Item->GetUserId()
+                    ),
+                    Item,
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
             }
             if (Range)
             {
@@ -174,7 +170,7 @@ namespace Gs2::Ranking2::Domain::Iterator
             RangeIteratorOpt = Range->CreateIterator();
             PageToken = R->GetNextPageToken();
             bLast = !PageToken.IsSet();
-            if (bUseCache && bLast) {
+            if (bLast) {
                 Self->Gs2->Cache->SetListCached(
                     Gs2::Ranking2::Model::FClusterRankingScore::TypeName,
                     ListParentKey

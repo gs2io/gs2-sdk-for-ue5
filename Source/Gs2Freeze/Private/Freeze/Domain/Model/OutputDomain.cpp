@@ -183,13 +183,10 @@ namespace Gs2::Freeze::Domain::Model
                     return Future->GetTask().Error();
                 }
             }
-            Self->Gs2->Cache->TryGet<Gs2::Freeze::Model::FOutput>(
-                Self->ParentKey,
-                Gs2::Freeze::Domain::Model::FOutputDomain::CreateCacheKey(
-                    Self->OutputName
-                ),
-                &Value
-            );
+            else
+            {
+                Value = Future->GetTask().Result();
+            }
             Future->EnsureCompletion();
         }
         *Result = Value;
