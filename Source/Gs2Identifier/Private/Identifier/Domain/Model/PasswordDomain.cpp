@@ -375,10 +375,6 @@ namespace Gs2::Identifier::Domain::Model
                 Key
             );
         }
-        Self->Gs2->Cache->ClearListCache(
-            Gs2::Identifier::Model::FPassword::TypeName,
-            Self->ParentKey
-        );
         auto Domain = Self;
 
         *Result = Domain;

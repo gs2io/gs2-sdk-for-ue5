@@ -108,6 +108,7 @@ namespace Gs2::Enchant::Domain::Iterator
 
             const auto Future = Self->Client->DescribeRarityParameterModels(
                 MakeShared<Gs2::Enchant::Request::FDescribeRarityParameterModelsRequest>()
+                    ->WithContextStack(Self->Gs2->DefaultContextStack)
                     ->WithNamespaceName(Self->NamespaceName)
             );
             Future->StartSynchronousTask();

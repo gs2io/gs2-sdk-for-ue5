@@ -108,6 +108,7 @@ namespace Gs2::Limit::Domain::Iterator
 
             const auto Future = Self->Client->DescribeLimitModels(
                 MakeShared<Gs2::Limit::Request::FDescribeLimitModelsRequest>()
+                    ->WithContextStack(Self->Gs2->DefaultContextStack)
                     ->WithNamespaceName(Self->NamespaceName)
             );
             Future->StartSynchronousTask();

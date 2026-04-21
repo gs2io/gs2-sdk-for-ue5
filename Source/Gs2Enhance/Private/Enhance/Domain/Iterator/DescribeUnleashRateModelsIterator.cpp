@@ -108,6 +108,7 @@ namespace Gs2::Enhance::Domain::Iterator
 
             const auto Future = Self->Client->DescribeUnleashRateModels(
                 MakeShared<Gs2::Enhance::Request::FDescribeUnleashRateModelsRequest>()
+                    ->WithContextStack(Self->Gs2->DefaultContextStack)
                     ->WithNamespaceName(Self->NamespaceName)
             );
             Future->StartSynchronousTask();

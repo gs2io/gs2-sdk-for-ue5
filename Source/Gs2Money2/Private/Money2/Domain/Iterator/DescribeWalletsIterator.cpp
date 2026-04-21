@@ -114,6 +114,7 @@ namespace Gs2::Money2::Domain::Iterator
 
             const auto Future = Self->Client->DescribeWallets(
                 MakeShared<Gs2::Money2::Request::FDescribeWalletsRequest>()
+                    ->WithContextStack(Self->Gs2->DefaultContextStack)
                     ->WithNamespaceName(Self->NamespaceName)
                     ->WithAccessToken(Self->AccessToken == nullptr ? TOptional<FString>() : Self->AccessToken->GetToken())
                     ->WithPageToken(PageToken)

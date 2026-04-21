@@ -275,10 +275,6 @@ namespace Gs2::Account::Domain::Model
                 Key
             );
         }
-        Self->Gs2->Cache->ClearListCache(
-            Gs2::Account::Model::FTakeOverTypeModelMaster::TypeName,
-            Self->ParentKey
-        );
         auto Domain = Self;
 
         *Result = Domain;

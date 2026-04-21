@@ -117,6 +117,7 @@ namespace Gs2::Money::Domain::Iterator
 
             const auto Future = Self->Client->DescribeWalletsByUserId(
                 MakeShared<Gs2::Money::Request::FDescribeWalletsByUserIdRequest>()
+                    ->WithContextStack(Self->Gs2->DefaultContextStack)
                     ->WithNamespaceName(Self->NamespaceName)
                     ->WithUserId(Self->UserId)
                     ->WithPageToken(PageToken)

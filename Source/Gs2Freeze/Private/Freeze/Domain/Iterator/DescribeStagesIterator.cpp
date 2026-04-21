@@ -101,6 +101,7 @@ namespace Gs2::Freeze::Domain::Iterator
 
             const auto Future = Self->Client->DescribeStages(
                 MakeShared<Gs2::Freeze::Request::FDescribeStagesRequest>()
+                    ->WithContextStack(Self->Gs2->DefaultContextStack)
             );
             Future->StartSynchronousTask();
             if (Future->GetTask().IsError())

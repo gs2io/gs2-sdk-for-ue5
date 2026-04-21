@@ -254,10 +254,6 @@ namespace Gs2::Idle::Domain::Model
                 Key
             );
         }
-        Self->Gs2->Cache->ClearListCache(
-            Gs2::Idle::Model::FNamespace::TypeName,
-            Self->ParentKey
-        );
         auto Domain = Self;
 
         *Result = Domain;

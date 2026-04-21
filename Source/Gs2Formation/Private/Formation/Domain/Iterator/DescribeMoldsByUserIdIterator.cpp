@@ -117,6 +117,7 @@ namespace Gs2::Formation::Domain::Iterator
 
             const auto Future = Self->Client->DescribeMoldsByUserId(
                 MakeShared<Gs2::Formation::Request::FDescribeMoldsByUserIdRequest>()
+                    ->WithContextStack(Self->Gs2->DefaultContextStack)
                     ->WithNamespaceName(Self->NamespaceName)
                     ->WithUserId(Self->UserId)
                     ->WithPageToken(PageToken)

@@ -120,6 +120,7 @@ namespace Gs2::Inventory::Domain::Iterator
 
             const auto Future = Self->Client->DescribeReferenceOfByUserId(
                 MakeShared<Gs2::Inventory::Request::FDescribeReferenceOfByUserIdRequest>()
+                    ->WithContextStack(Self->Gs2->DefaultContextStack)
                     ->WithNamespaceName(Self->NamespaceName)
                     ->WithInventoryName(Self->InventoryName)
                     ->WithUserId(Self->UserId)

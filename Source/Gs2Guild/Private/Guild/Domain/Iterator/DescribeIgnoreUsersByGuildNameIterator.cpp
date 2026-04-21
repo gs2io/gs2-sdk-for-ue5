@@ -118,6 +118,7 @@ namespace Gs2::Guild::Domain::Iterator
 
             const auto Future = Self->Client->DescribeIgnoreUsersByGuildName(
                 MakeShared<Gs2::Guild::Request::FDescribeIgnoreUsersByGuildNameRequest>()
+                    ->WithContextStack(Self->Gs2->DefaultContextStack)
                     ->WithNamespaceName(Self->NamespaceName)
                     ->WithGuildModelName(Self->GuildModelName)
                     ->WithGuildName(Self->GuildName)

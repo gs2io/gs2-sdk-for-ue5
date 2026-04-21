@@ -254,10 +254,6 @@ namespace Gs2::Grade::Domain::Model
                 Key
             );
         }
-        Self->Gs2->Cache->ClearListCache(
-            Gs2::Grade::Model::FNamespace::TypeName,
-            Self->ParentKey
-        );
         auto Domain = Self;
 
         *Result = Domain;

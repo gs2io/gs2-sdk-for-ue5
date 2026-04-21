@@ -110,6 +110,7 @@ namespace Gs2::Log::Domain::Iterator
 
             const auto Future = Self->Client->DescribeInsights(
                 MakeShared<Gs2::Log::Request::FDescribeInsightsRequest>()
+                    ->WithContextStack(Self->Gs2->DefaultContextStack)
                     ->WithNamespaceName(Self->NamespaceName)
                     ->WithPageToken(PageToken)
                     ->WithLimit(FetchSize)

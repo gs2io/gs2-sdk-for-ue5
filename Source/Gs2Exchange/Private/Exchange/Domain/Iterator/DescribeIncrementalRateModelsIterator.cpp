@@ -108,6 +108,7 @@ namespace Gs2::Exchange::Domain::Iterator
 
             const auto Future = Self->Client->DescribeIncrementalRateModels(
                 MakeShared<Gs2::Exchange::Request::FDescribeIncrementalRateModelsRequest>()
+                    ->WithContextStack(Self->Gs2->DefaultContextStack)
                     ->WithNamespaceName(Self->NamespaceName)
             );
             Future->StartSynchronousTask();

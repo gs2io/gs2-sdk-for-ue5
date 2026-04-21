@@ -117,6 +117,7 @@ namespace Gs2::Inventory::Domain::Iterator
 
             const auto Future = Self->Client->DescribeReferenceOf(
                 MakeShared<Gs2::Inventory::Request::FDescribeReferenceOfRequest>()
+                    ->WithContextStack(Self->Gs2->DefaultContextStack)
                     ->WithNamespaceName(Self->NamespaceName)
                     ->WithInventoryName(Self->InventoryName)
                     ->WithAccessToken(Self->AccessToken == nullptr ? TOptional<FString>() : Self->AccessToken->GetToken())

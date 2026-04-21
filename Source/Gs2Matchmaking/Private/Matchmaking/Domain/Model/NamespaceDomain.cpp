@@ -267,10 +267,6 @@ namespace Gs2::Matchmaking::Domain::Model
                 Key
             );
         }
-        Self->Gs2->Cache->ClearListCache(
-            Gs2::Matchmaking::Model::FNamespace::TypeName,
-            Self->ParentKey
-        );
         auto Domain = Self;
 
         *Result = Domain;

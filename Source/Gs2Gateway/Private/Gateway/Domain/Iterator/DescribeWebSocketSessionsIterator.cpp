@@ -114,6 +114,7 @@ namespace Gs2::Gateway::Domain::Iterator
 
             const auto Future = Self->Client->DescribeWebSocketSessions(
                 MakeShared<Gs2::Gateway::Request::FDescribeWebSocketSessionsRequest>()
+                    ->WithContextStack(Self->Gs2->DefaultContextStack)
                     ->WithNamespaceName(Self->NamespaceName)
                     ->WithAccessToken(Self->AccessToken == nullptr ? TOptional<FString>() : Self->AccessToken->GetToken())
                     ->WithPageToken(PageToken)

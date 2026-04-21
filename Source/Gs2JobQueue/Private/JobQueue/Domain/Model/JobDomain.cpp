@@ -162,10 +162,6 @@ namespace Gs2::JobQueue::Domain::Model
                 Key
             );
         }
-        Self->Gs2->Cache->ClearListCache(
-            Gs2::JobQueue::Model::FJob::TypeName,
-            Self->ParentKey
-        );
         auto Domain = Self;
 
         *Result = Domain;

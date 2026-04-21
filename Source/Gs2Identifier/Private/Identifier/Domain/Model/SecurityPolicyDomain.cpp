@@ -202,10 +202,6 @@ namespace Gs2::Identifier::Domain::Model
                 Key
             );
         }
-        Self->Gs2->Cache->ClearListCache(
-            Gs2::Identifier::Model::FSecurityPolicy::TypeName,
-            Self->ParentKey
-        );
         auto Domain = Self;
 
         *Result = Domain;

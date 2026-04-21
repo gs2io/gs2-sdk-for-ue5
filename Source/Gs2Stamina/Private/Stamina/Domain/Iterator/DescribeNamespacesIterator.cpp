@@ -107,6 +107,7 @@ namespace Gs2::Stamina::Domain::Iterator
 
             const auto Future = Self->Client->DescribeNamespaces(
                 MakeShared<Gs2::Stamina::Request::FDescribeNamespacesRequest>()
+                    ->WithContextStack(Self->Gs2->DefaultContextStack)
                     ->WithPageToken(PageToken)
                     ->WithLimit(FetchSize)
             );

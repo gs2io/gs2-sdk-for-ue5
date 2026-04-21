@@ -114,6 +114,7 @@ namespace Gs2::Lottery::Domain::Iterator
 
             const auto Future = Self->Client->DescribePrizeTableMasters(
                 MakeShared<Gs2::Lottery::Request::FDescribePrizeTableMastersRequest>()
+                    ->WithContextStack(Self->Gs2->DefaultContextStack)
                     ->WithNamespaceName(Self->NamespaceName)
                     ->WithPageToken(PageToken)
                     ->WithLimit(FetchSize)

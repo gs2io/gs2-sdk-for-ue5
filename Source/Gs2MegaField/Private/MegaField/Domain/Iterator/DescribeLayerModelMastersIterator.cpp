@@ -114,6 +114,7 @@ namespace Gs2::MegaField::Domain::Iterator
 
             const auto Future = Self->Client->DescribeLayerModelMasters(
                 MakeShared<Gs2::MegaField::Request::FDescribeLayerModelMastersRequest>()
+                    ->WithContextStack(Self->Gs2->DefaultContextStack)
                     ->WithNamespaceName(Self->NamespaceName)
                     ->WithAreaModelName(Self->AreaModelName)
                     ->WithPageToken(PageToken)

@@ -107,6 +107,7 @@ namespace Gs2::Money::Domain::Iterator
 
             const auto Future = Self->Client->DescribeNamespaces(
                 MakeShared<Gs2::Money::Request::FDescribeNamespacesRequest>()
+                    ->WithContextStack(Self->Gs2->DefaultContextStack)
                     ->WithPageToken(PageToken)
                     ->WithLimit(FetchSize)
             );

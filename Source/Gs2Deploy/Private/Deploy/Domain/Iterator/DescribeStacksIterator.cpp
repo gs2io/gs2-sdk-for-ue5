@@ -107,6 +107,7 @@ namespace Gs2::Deploy::Domain::Iterator
 
             const auto Future = Self->Client->DescribeStacks(
                 MakeShared<Gs2::Deploy::Request::FDescribeStacksRequest>()
+                    ->WithContextStack(Self->Gs2->DefaultContextStack)
                     ->WithPageToken(PageToken)
                     ->WithLimit(FetchSize)
             );

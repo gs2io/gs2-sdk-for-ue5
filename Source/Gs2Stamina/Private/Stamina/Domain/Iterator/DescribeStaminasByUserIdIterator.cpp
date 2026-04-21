@@ -117,6 +117,7 @@ namespace Gs2::Stamina::Domain::Iterator
 
             const auto Future = Self->Client->DescribeStaminasByUserId(
                 MakeShared<Gs2::Stamina::Request::FDescribeStaminasByUserIdRequest>()
+                    ->WithContextStack(Self->Gs2->DefaultContextStack)
                     ->WithNamespaceName(Self->NamespaceName)
                     ->WithUserId(Self->UserId)
                     ->WithPageToken(PageToken)

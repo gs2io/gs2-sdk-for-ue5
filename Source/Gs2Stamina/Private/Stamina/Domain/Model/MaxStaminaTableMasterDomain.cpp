@@ -217,10 +217,6 @@ namespace Gs2::Stamina::Domain::Model
                 Key
             );
         }
-        Self->Gs2->Cache->ClearListCache(
-            Gs2::Stamina::Model::FMaxStaminaTableMaster::TypeName,
-            Self->ParentKey
-        );
         auto Domain = Self;
 
         *Result = Domain;

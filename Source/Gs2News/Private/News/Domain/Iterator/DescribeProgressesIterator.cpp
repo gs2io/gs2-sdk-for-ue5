@@ -110,6 +110,7 @@ namespace Gs2::News::Domain::Iterator
 
             const auto Future = Self->Client->DescribeProgresses(
                 MakeShared<Gs2::News::Request::FDescribeProgressesRequest>()
+                    ->WithContextStack(Self->Gs2->DefaultContextStack)
                     ->WithNamespaceName(Self->NamespaceName)
                     ->WithPageToken(PageToken)
                     ->WithLimit(FetchSize)

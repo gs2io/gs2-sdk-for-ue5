@@ -173,10 +173,6 @@ namespace Gs2::Enchant::Domain::Model
                 Key
             );
         }
-        Self->Gs2->Cache->ClearListCache(
-            Gs2::Enchant::Model::FRarityParameterStatus::TypeName,
-            Self->ParentKey
-        );
         auto Domain = Self;
 
         *Result = Domain;

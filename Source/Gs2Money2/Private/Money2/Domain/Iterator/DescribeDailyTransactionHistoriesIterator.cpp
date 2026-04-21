@@ -122,6 +122,7 @@ namespace Gs2::Money2::Domain::Iterator
 
             const auto Future = Self->Client->DescribeDailyTransactionHistories(
                 MakeShared<Gs2::Money2::Request::FDescribeDailyTransactionHistoriesRequest>()
+                    ->WithContextStack(Self->Gs2->DefaultContextStack)
                     ->WithNamespaceName(Self->NamespaceName)
                     ->WithYear(Self->Year)
                     ->WithPageToken(PageToken)

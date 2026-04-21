@@ -282,10 +282,6 @@ namespace Gs2::Ranking2::Domain::Model
                 Key
             );
         }
-        Self->Gs2->Cache->ClearListCache(
-            Gs2::Ranking2::Model::FNamespace::TypeName,
-            Self->ParentKey
-        );
         auto Domain = Self;
 
         *Result = Domain;

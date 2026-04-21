@@ -114,6 +114,7 @@ namespace Gs2::Ranking2::Domain::Iterator
 
             const auto Future = Self->Client->DescribeSubscribeRankingModelMasters(
                 MakeShared<Gs2::Ranking2::Request::FDescribeSubscribeRankingModelMastersRequest>()
+                    ->WithContextStack(Self->Gs2->DefaultContextStack)
                     ->WithNamespaceName(Self->NamespaceName)
                     ->WithPageToken(PageToken)
                     ->WithLimit(FetchSize)

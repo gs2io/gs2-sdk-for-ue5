@@ -118,6 +118,7 @@ namespace Gs2::Limit::Domain::Iterator
 
             const auto Future = Self->Client->DescribeCounters(
                 MakeShared<Gs2::Limit::Request::FDescribeCountersRequest>()
+                    ->WithContextStack(Self->Gs2->DefaultContextStack)
                     ->WithNamespaceName(Self->NamespaceName)
                     ->WithAccessToken(Self->AccessToken == nullptr ? TOptional<FString>() : Self->AccessToken->GetToken())
                     ->WithPageToken(PageToken)

@@ -118,6 +118,7 @@ namespace Gs2::Enchant::Domain::Iterator
 
             const auto Future = Self->Client->DescribeRarityParameterStatuses(
                 MakeShared<Gs2::Enchant::Request::FDescribeRarityParameterStatusesRequest>()
+                    ->WithContextStack(Self->Gs2->DefaultContextStack)
                     ->WithNamespaceName(Self->NamespaceName)
                     ->WithAccessToken(Self->AccessToken == nullptr ? TOptional<FString>() : Self->AccessToken->GetToken())
                     ->WithPageToken(PageToken)

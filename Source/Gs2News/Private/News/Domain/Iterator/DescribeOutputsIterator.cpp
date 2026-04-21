@@ -114,6 +114,7 @@ namespace Gs2::News::Domain::Iterator
 
             const auto Future = Self->Client->DescribeOutputs(
                 MakeShared<Gs2::News::Request::FDescribeOutputsRequest>()
+                    ->WithContextStack(Self->Gs2->DefaultContextStack)
                     ->WithNamespaceName(Self->NamespaceName)
                     ->WithUploadToken(Self->UploadToken)
                     ->WithPageToken(PageToken)

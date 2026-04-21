@@ -214,10 +214,6 @@ namespace Gs2::SkillTree::Domain::Model
                 Key
             );
         }
-        Self->Gs2->Cache->ClearListCache(
-            Gs2::SkillTree::Model::FNodeModelMaster::TypeName,
-            Self->ParentKey
-        );
         auto Domain = Self;
 
         *Result = Domain;

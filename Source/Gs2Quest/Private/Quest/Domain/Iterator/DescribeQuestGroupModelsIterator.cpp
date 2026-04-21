@@ -108,6 +108,7 @@ namespace Gs2::Quest::Domain::Iterator
 
             const auto Future = Self->Client->DescribeQuestGroupModels(
                 MakeShared<Gs2::Quest::Request::FDescribeQuestGroupModelsRequest>()
+                    ->WithContextStack(Self->Gs2->DefaultContextStack)
                     ->WithNamespaceName(Self->NamespaceName)
             );
             Future->StartSynchronousTask();

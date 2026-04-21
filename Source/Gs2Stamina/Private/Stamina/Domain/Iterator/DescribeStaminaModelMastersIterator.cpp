@@ -114,6 +114,7 @@ namespace Gs2::Stamina::Domain::Iterator
 
             const auto Future = Self->Client->DescribeStaminaModelMasters(
                 MakeShared<Gs2::Stamina::Request::FDescribeStaminaModelMastersRequest>()
+                    ->WithContextStack(Self->Gs2->DefaultContextStack)
                     ->WithNamespaceName(Self->NamespaceName)
                     ->WithPageToken(PageToken)
                     ->WithLimit(FetchSize)

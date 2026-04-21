@@ -110,6 +110,7 @@ namespace Gs2::Identifier::Domain::Iterator
 
             const auto Future = Self->Client->DescribeIdentifiers(
                 MakeShared<Gs2::Identifier::Request::FDescribeIdentifiersRequest>()
+                    ->WithContextStack(Self->Gs2->DefaultContextStack)
                     ->WithUserName(Self->UserName)
                     ->WithPageToken(PageToken)
                     ->WithLimit(FetchSize)

@@ -218,10 +218,6 @@ namespace Gs2::Enchant::Domain::Model
                 Key
             );
         }
-        Self->Gs2->Cache->ClearListCache(
-            Gs2::Enchant::Model::FBalanceParameterModelMaster::TypeName,
-            Self->ParentKey
-        );
         auto Domain = Self;
 
         *Result = Domain;

@@ -114,6 +114,7 @@ namespace Gs2::Stamina::Domain::Iterator
 
             const auto Future = Self->Client->DescribeRecoverIntervalTableMasters(
                 MakeShared<Gs2::Stamina::Request::FDescribeRecoverIntervalTableMastersRequest>()
+                    ->WithContextStack(Self->Gs2->DefaultContextStack)
                     ->WithNamespaceName(Self->NamespaceName)
                     ->WithPageToken(PageToken)
                     ->WithLimit(FetchSize)

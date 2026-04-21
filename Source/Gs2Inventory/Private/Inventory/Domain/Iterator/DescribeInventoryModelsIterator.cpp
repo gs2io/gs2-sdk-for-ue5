@@ -108,6 +108,7 @@ namespace Gs2::Inventory::Domain::Iterator
 
             const auto Future = Self->Client->DescribeInventoryModels(
                 MakeShared<Gs2::Inventory::Request::FDescribeInventoryModelsRequest>()
+                    ->WithContextStack(Self->Gs2->DefaultContextStack)
                     ->WithNamespaceName(Self->NamespaceName)
             );
             Future->StartSynchronousTask();

@@ -114,6 +114,7 @@ namespace Gs2::SkillTree::Domain::Iterator
 
             const auto Future = Self->Client->DescribeNodeModelMasters(
                 MakeShared<Gs2::SkillTree::Request::FDescribeNodeModelMastersRequest>()
+                    ->WithContextStack(Self->Gs2->DefaultContextStack)
                     ->WithNamespaceName(Self->NamespaceName)
                     ->WithPageToken(PageToken)
                     ->WithLimit(FetchSize)

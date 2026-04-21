@@ -108,6 +108,7 @@ namespace Gs2::LoginReward::Domain::Iterator
 
             const auto Future = Self->Client->DescribeBonusModels(
                 MakeShared<Gs2::LoginReward::Request::FDescribeBonusModelsRequest>()
+                    ->WithContextStack(Self->Gs2->DefaultContextStack)
                     ->WithNamespaceName(Self->NamespaceName)
             );
             Future->StartSynchronousTask();

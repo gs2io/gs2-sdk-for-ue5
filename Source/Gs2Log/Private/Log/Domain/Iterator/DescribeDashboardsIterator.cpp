@@ -114,6 +114,7 @@ namespace Gs2::Log::Domain::Iterator
 
             const auto Future = Self->Client->DescribeDashboards(
                 MakeShared<Gs2::Log::Request::FDescribeDashboardsRequest>()
+                    ->WithContextStack(Self->Gs2->DefaultContextStack)
                     ->WithNamespaceName(Self->NamespaceName)
                     ->WithPageToken(PageToken)
                     ->WithLimit(FetchSize)

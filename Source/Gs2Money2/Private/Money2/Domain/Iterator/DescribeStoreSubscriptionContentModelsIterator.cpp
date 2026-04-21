@@ -108,6 +108,7 @@ namespace Gs2::Money2::Domain::Iterator
 
             const auto Future = Self->Client->DescribeStoreSubscriptionContentModels(
                 MakeShared<Gs2::Money2::Request::FDescribeStoreSubscriptionContentModelsRequest>()
+                    ->WithContextStack(Self->Gs2->DefaultContextStack)
                     ->WithNamespaceName(Self->NamespaceName)
             );
             Future->StartSynchronousTask();

@@ -108,6 +108,7 @@ namespace Gs2::Distributor::Domain::Iterator
 
             const auto Future = Self->Client->DescribeDistributorModels(
                 MakeShared<Gs2::Distributor::Request::FDescribeDistributorModelsRequest>()
+                    ->WithContextStack(Self->Gs2->DefaultContextStack)
                     ->WithNamespaceName(Self->NamespaceName)
             );
             Future->StartSynchronousTask();

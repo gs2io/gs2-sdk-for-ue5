@@ -114,6 +114,7 @@ namespace Gs2::Inventory::Domain::Iterator
 
             const auto Future = Self->Client->DescribeSimpleInventoryModelMasters(
                 MakeShared<Gs2::Inventory::Request::FDescribeSimpleInventoryModelMastersRequest>()
+                    ->WithContextStack(Self->Gs2->DefaultContextStack)
                     ->WithNamespaceName(Self->NamespaceName)
                     ->WithPageToken(PageToken)
                     ->WithLimit(FetchSize)

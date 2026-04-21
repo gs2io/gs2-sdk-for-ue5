@@ -114,6 +114,7 @@ namespace Gs2::SerialKey::Domain::Iterator
 
             const auto Future = Self->Client->DescribeCampaignModelMasters(
                 MakeShared<Gs2::SerialKey::Request::FDescribeCampaignModelMastersRequest>()
+                    ->WithContextStack(Self->Gs2->DefaultContextStack)
                     ->WithNamespaceName(Self->NamespaceName)
                     ->WithPageToken(PageToken)
                     ->WithLimit(FetchSize)

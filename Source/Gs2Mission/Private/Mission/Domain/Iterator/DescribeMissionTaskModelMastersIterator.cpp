@@ -118,6 +118,7 @@ namespace Gs2::Mission::Domain::Iterator
 
             const auto Future = Self->Client->DescribeMissionTaskModelMasters(
                 MakeShared<Gs2::Mission::Request::FDescribeMissionTaskModelMastersRequest>()
+                    ->WithContextStack(Self->Gs2->DefaultContextStack)
                     ->WithNamespaceName(Self->NamespaceName)
                     ->WithMissionGroupName(Self->MissionGroupName)
                     ->WithPageToken(PageToken)

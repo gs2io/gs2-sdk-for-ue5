@@ -129,6 +129,7 @@ namespace Gs2::Money::Domain::Iterator
 
             const auto Future = Self->Client->DescribeReceipts(
                 MakeShared<Gs2::Money::Request::FDescribeReceiptsRequest>()
+                    ->WithContextStack(Self->Gs2->DefaultContextStack)
                     ->WithNamespaceName(Self->NamespaceName)
                     ->WithUserId(Self->UserId)
                     ->WithBegin(Self->Begin)

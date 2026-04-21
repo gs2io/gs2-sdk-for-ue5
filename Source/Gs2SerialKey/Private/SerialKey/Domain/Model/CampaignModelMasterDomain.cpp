@@ -215,10 +215,6 @@ namespace Gs2::SerialKey::Domain::Model
                 Key
             );
         }
-        Self->Gs2->Cache->ClearListCache(
-            Gs2::SerialKey::Model::FCampaignModelMaster::TypeName,
-            Self->ParentKey
-        );
         auto Domain = Self;
 
         *Result = Domain;

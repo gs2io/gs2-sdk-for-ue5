@@ -103,6 +103,7 @@ namespace Gs2::Identifier::Domain::Iterator
 
             const auto Future = Self->Client->DescribeCommonSecurityPolicies(
                 MakeShared<Gs2::Identifier::Request::FDescribeCommonSecurityPoliciesRequest>()
+                    ->WithContextStack(Self->Gs2->DefaultContextStack)
                     ->WithPageToken(PageToken)
                     ->WithLimit(FetchSize)
             );

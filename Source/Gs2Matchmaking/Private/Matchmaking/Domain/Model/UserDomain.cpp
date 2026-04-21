@@ -190,10 +190,6 @@ namespace Gs2::Matchmaking::Domain::Model
                 Key
             );
         }
-        Self->Gs2->Cache->ClearListCache(
-            Gs2::Matchmaking::Model::FGathering::TypeName,
-            Self->ParentKey
-        );
         auto Domain = MakeShared<Gs2::Matchmaking::Domain::Model::FGatheringDomain>(
             Self->Gs2,
             Self->Service,

@@ -114,6 +114,7 @@ namespace Gs2::Quest::Domain::Iterator
 
             const auto Future = Self->Client->DescribeQuestGroupModelMasters(
                 MakeShared<Gs2::Quest::Request::FDescribeQuestGroupModelMastersRequest>()
+                    ->WithContextStack(Self->Gs2->DefaultContextStack)
                     ->WithNamespaceName(Self->NamespaceName)
                     ->WithPageToken(PageToken)
                     ->WithLimit(FetchSize)

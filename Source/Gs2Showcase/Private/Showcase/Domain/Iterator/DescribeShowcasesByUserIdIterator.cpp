@@ -115,6 +115,7 @@ namespace Gs2::Showcase::Domain::Iterator
 
             const auto Future = Self->Client->DescribeShowcasesByUserId(
                 MakeShared<Gs2::Showcase::Request::FDescribeShowcasesByUserIdRequest>()
+                    ->WithContextStack(Self->Gs2->DefaultContextStack)
                     ->WithNamespaceName(Self->NamespaceName)
                     ->WithUserId(Self->UserId)
             );

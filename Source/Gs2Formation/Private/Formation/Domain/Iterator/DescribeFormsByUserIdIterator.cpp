@@ -121,6 +121,7 @@ namespace Gs2::Formation::Domain::Iterator
 
             const auto Future = Self->Client->DescribeFormsByUserId(
                 MakeShared<Gs2::Formation::Request::FDescribeFormsByUserIdRequest>()
+                    ->WithContextStack(Self->Gs2->DefaultContextStack)
                     ->WithNamespaceName(Self->NamespaceName)
                     ->WithMoldModelName(Self->MoldModelName)
                     ->WithUserId(Self->UserId)

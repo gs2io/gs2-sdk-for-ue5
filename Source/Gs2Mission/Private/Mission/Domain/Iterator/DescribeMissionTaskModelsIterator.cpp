@@ -112,6 +112,7 @@ namespace Gs2::Mission::Domain::Iterator
 
             const auto Future = Self->Client->DescribeMissionTaskModels(
                 MakeShared<Gs2::Mission::Request::FDescribeMissionTaskModelsRequest>()
+                    ->WithContextStack(Self->Gs2->DefaultContextStack)
                     ->WithNamespaceName(Self->NamespaceName)
                     ->WithMissionGroupName(Self->MissionGroupName)
             );

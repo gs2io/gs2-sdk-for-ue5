@@ -114,6 +114,7 @@ namespace Gs2::Dictionary::Domain::Iterator
 
             const auto Future = Self->Client->DescribeEntries(
                 MakeShared<Gs2::Dictionary::Request::FDescribeEntriesRequest>()
+                    ->WithContextStack(Self->Gs2->DefaultContextStack)
                     ->WithNamespaceName(Self->NamespaceName)
                     ->WithAccessToken(Self->AccessToken == nullptr ? TOptional<FString>() : Self->AccessToken->GetToken())
                     ->WithPageToken(PageToken)

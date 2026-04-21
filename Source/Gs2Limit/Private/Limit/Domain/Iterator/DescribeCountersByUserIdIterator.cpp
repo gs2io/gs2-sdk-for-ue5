@@ -121,6 +121,7 @@ namespace Gs2::Limit::Domain::Iterator
 
             const auto Future = Self->Client->DescribeCountersByUserId(
                 MakeShared<Gs2::Limit::Request::FDescribeCountersByUserIdRequest>()
+                    ->WithContextStack(Self->Gs2->DefaultContextStack)
                     ->WithNamespaceName(Self->NamespaceName)
                     ->WithUserId(Self->UserId)
                     ->WithPageToken(PageToken)

@@ -377,25 +377,27 @@ namespace Gs2::Account::Domain::Model
         Future->StartSynchronousTask();
         if (Future->GetTask().IsError())
         {
-            return Future->GetTask().Error();
+            if (!Future->GetTask().Error()->IsChildOf(Gs2::Core::Model::FNotFoundError::Class))
+            {
+                return Future->GetTask().Error();
+            }
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
-        if (ResultModel->GetItem() != nullptr)
+        if (ResultModel != nullptr)
         {
-            const auto Key = Gs2::Account::Domain::Model::FAccountDomain::CreateCacheKey(
-                ResultModel->GetItem()->GetUserId()
-            );
-            Self->Gs2->Cache->Delete(
-                Gs2::Account::Model::FAccount::TypeName,
-                Self->ParentKey,
-                Key
-            );
+            if (ResultModel->GetItem() != nullptr)
+            {
+                const auto Key = Gs2::Account::Domain::Model::FAccountDomain::CreateCacheKey(
+                    ResultModel->GetItem()->GetUserId()
+                );
+                Self->Gs2->Cache->Delete(
+                    Gs2::Account::Model::FAccount::TypeName,
+                    Self->ParentKey,
+                    Key
+                );
+            }
         }
-        Self->Gs2->Cache->ClearListCache(
-            Gs2::Account::Model::FAccount::TypeName,
-            Self->ParentKey
-        );
         auto Domain = Self;
 
         *Result = Domain;
@@ -544,8 +546,8 @@ namespace Gs2::Account::Domain::Model
             Self->Gs2,
             Self->Service,
             Request->GetNamespaceName(),
-            ResultModel->GetItem()->GetUserId(),
-            ResultModel->GetItem()->GetType()
+            ResultModel->GetItem() != nullptr ? ResultModel->GetItem()->GetUserId() : TOptional<FString>(),
+            ResultModel->GetItem() != nullptr ? ResultModel->GetItem()->GetType() : TOptional<int32>()
         );
 
         *Result = Domain;
@@ -585,31 +587,37 @@ namespace Gs2::Account::Domain::Model
         Future->StartSynchronousTask();
         if (Future->GetTask().IsError())
         {
-            return Future->GetTask().Error();
+            if (!Future->GetTask().Error()->IsChildOf(Gs2::Core::Model::FNotFoundError::Class))
+            {
+                return Future->GetTask().Error();
+            }
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
-        if (ResultModel->GetItem() != nullptr)
+        if (ResultModel != nullptr)
         {
-            const auto Key = Gs2::Account::Domain::Model::FTakeOverDomain::CreateCacheKey(
-                ResultModel->GetItem()->GetType()
-            );
-            Self->Gs2->Cache->Delete(
+            if (ResultModel->GetItem() != nullptr)
+            {
+                const auto Key = Gs2::Account::Domain::Model::FTakeOverDomain::CreateCacheKey(
+                    ResultModel->GetItem()->GetType()
+                );
+                Self->Gs2->Cache->Delete(
+                    Gs2::Account::Model::FTakeOver::TypeName,
+                    Self->ParentKey,
+                    Key
+                );
+            }
+            Self->Gs2->Cache->ClearListCache(
                 Gs2::Account::Model::FTakeOver::TypeName,
-                Self->ParentKey,
-                Key
+                Self->ParentKey
             );
         }
-        Self->Gs2->Cache->ClearListCache(
-            Gs2::Account::Model::FTakeOver::TypeName,
-            Self->ParentKey
-        );
         auto Domain = MakeShared<Gs2::Account::Domain::Model::FTakeOverDomain>(
             Self->Gs2,
             Self->Service,
             Request->GetNamespaceName(),
-            ResultModel->GetItem()->GetUserId(),
-            ResultModel->GetItem()->GetType()
+            ResultModel != nullptr && ResultModel->GetItem() != nullptr ? ResultModel->GetItem()->GetUserId() : TOptional<FString>(),
+            ResultModel != nullptr && ResultModel->GetItem() != nullptr ? ResultModel->GetItem()->GetType() : TOptional<int32>()
         );
 
         *Result = Domain;
@@ -650,31 +658,37 @@ namespace Gs2::Account::Domain::Model
         Future->StartSynchronousTask();
         if (Future->GetTask().IsError())
         {
-            return Future->GetTask().Error();
+            if (!Future->GetTask().Error()->IsChildOf(Gs2::Core::Model::FNotFoundError::Class))
+            {
+                return Future->GetTask().Error();
+            }
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
-        if (ResultModel->GetItem() != nullptr)
+        if (ResultModel != nullptr)
         {
-            const auto Key = Gs2::Account::Domain::Model::FTakeOverDomain::CreateCacheKey(
-                ResultModel->GetItem()->GetType()
-            );
-            Self->Gs2->Cache->Delete(
+            if (ResultModel->GetItem() != nullptr)
+            {
+                const auto Key = Gs2::Account::Domain::Model::FTakeOverDomain::CreateCacheKey(
+                    ResultModel->GetItem()->GetType()
+                );
+                Self->Gs2->Cache->Delete(
+                    Gs2::Account::Model::FTakeOver::TypeName,
+                    Self->ParentKey,
+                    Key
+                );
+            }
+            Self->Gs2->Cache->ClearListCache(
                 Gs2::Account::Model::FTakeOver::TypeName,
-                Self->ParentKey,
-                Key
+                Self->ParentKey
             );
         }
-        Self->Gs2->Cache->ClearListCache(
-            Gs2::Account::Model::FTakeOver::TypeName,
-            Self->ParentKey
-        );
         auto Domain = MakeShared<Gs2::Account::Domain::Model::FTakeOverDomain>(
             Self->Gs2,
             Self->Service,
             Request->GetNamespaceName(),
-            ResultModel->GetItem()->GetUserId(),
-            ResultModel->GetItem()->GetType()
+            ResultModel != nullptr && ResultModel->GetItem() != nullptr ? ResultModel->GetItem()->GetUserId() : TOptional<FString>(),
+            ResultModel != nullptr && ResultModel->GetItem() != nullptr ? ResultModel->GetItem()->GetType() : TOptional<int32>()
         );
 
         *Result = Domain;
@@ -763,29 +777,31 @@ namespace Gs2::Account::Domain::Model
         Future->StartSynchronousTask();
         if (Future->GetTask().IsError())
         {
-            return Future->GetTask().Error();
+            if (!Future->GetTask().Error()->IsChildOf(Gs2::Core::Model::FNotFoundError::Class))
+            {
+                return Future->GetTask().Error();
+            }
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
-        if (ResultModel->GetItem() != nullptr)
+        if (ResultModel != nullptr)
         {
-            const auto Key = Gs2::Account::Domain::Model::FDataOwnerDomain::CreateCacheKey(
-            );
-            Self->Gs2->Cache->Delete(
-                Gs2::Account::Model::FDataOwner::TypeName,
-                Self->ParentKey,
-                Key
-            );
+            if (ResultModel->GetItem() != nullptr)
+            {
+                const auto Key = Gs2::Account::Domain::Model::FDataOwnerDomain::CreateCacheKey(
+                );
+                Self->Gs2->Cache->Delete(
+                    Gs2::Account::Model::FDataOwner::TypeName,
+                    Self->ParentKey,
+                    Key
+                );
+            }
         }
-        Self->Gs2->Cache->ClearListCache(
-            Gs2::Account::Model::FDataOwner::TypeName,
-            Self->ParentKey
-        );
         auto Domain = MakeShared<Gs2::Account::Domain::Model::FDataOwnerDomain>(
             Self->Gs2,
             Self->Service,
             Request->GetNamespaceName(),
-            ResultModel->GetItem()->GetUserId()
+            ResultModel != nullptr && ResultModel->GetItem() != nullptr ? ResultModel->GetItem()->GetUserId() : TOptional<FString>()
         );
 
         *Result = Domain;
@@ -826,32 +842,38 @@ namespace Gs2::Account::Domain::Model
         Future->StartSynchronousTask();
         if (Future->GetTask().IsError())
         {
-            return Future->GetTask().Error();
+            if (!Future->GetTask().Error()->IsChildOf(Gs2::Core::Model::FNotFoundError::Class))
+            {
+                return Future->GetTask().Error();
+            }
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
-        if (ResultModel->GetItem() != nullptr)
+        if (ResultModel != nullptr)
         {
-            const auto Key = Gs2::Account::Domain::Model::FPlatformIdDomain::CreateCacheKey(
-                ResultModel->GetItem()->GetType()
-            );
-            Self->Gs2->Cache->Delete(
+            if (ResultModel->GetItem() != nullptr)
+            {
+                const auto Key = Gs2::Account::Domain::Model::FPlatformIdDomain::CreateCacheKey(
+                    ResultModel->GetItem()->GetType()
+                );
+                Self->Gs2->Cache->Delete(
+                    Gs2::Account::Model::FPlatformId::TypeName,
+                    Self->ParentKey,
+                    Key
+                );
+            }
+            Self->Gs2->Cache->ClearListCache(
                 Gs2::Account::Model::FPlatformId::TypeName,
-                Self->ParentKey,
-                Key
+                Self->ParentKey
             );
         }
-        Self->Gs2->Cache->ClearListCache(
-            Gs2::Account::Model::FPlatformId::TypeName,
-            Self->ParentKey
-        );
         auto Domain = MakeShared<Gs2::Account::Domain::Model::FPlatformIdDomain>(
             Self->Gs2,
             Self->Service,
             Request->GetNamespaceName(),
-            ResultModel->GetItem()->GetUserId(),
-            ResultModel->GetItem()->GetType(),
-            ResultModel->GetItem()->GetUserIdentifier()
+            ResultModel != nullptr && ResultModel->GetItem() != nullptr ? ResultModel->GetItem()->GetUserId() : TOptional<FString>(),
+            ResultModel != nullptr && ResultModel->GetItem() != nullptr ? ResultModel->GetItem()->GetType() : TOptional<int32>(),
+            ResultModel != nullptr && ResultModel->GetItem() != nullptr ? ResultModel->GetItem()->GetUserIdentifier() : TOptional<FString>()
         );
 
         *Result = Domain;

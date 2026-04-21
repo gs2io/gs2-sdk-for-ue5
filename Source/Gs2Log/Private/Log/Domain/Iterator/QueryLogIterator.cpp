@@ -122,6 +122,7 @@ namespace Gs2::Log::Domain::Iterator
                     ->WithNamespaceName(Self->NamespaceName)
                     ->WithBegin(Self->Begin)
                     ->WithEnd(Self->End)
+                    ->WithQuery(Self->Query)
                     ->WithPageToken(PageToken)
                     ->WithLimit(FetchSize)
             );

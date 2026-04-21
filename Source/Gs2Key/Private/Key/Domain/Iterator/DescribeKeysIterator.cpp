@@ -114,6 +114,7 @@ namespace Gs2::Key::Domain::Iterator
 
             const auto Future = Self->Client->DescribeKeys(
                 MakeShared<Gs2::Key::Request::FDescribeKeysRequest>()
+                    ->WithContextStack(Self->Gs2->DefaultContextStack)
                     ->WithNamespaceName(Self->NamespaceName)
                     ->WithPageToken(PageToken)
                     ->WithLimit(FetchSize)

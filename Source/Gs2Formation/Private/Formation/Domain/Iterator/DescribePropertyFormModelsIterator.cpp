@@ -108,6 +108,7 @@ namespace Gs2::Formation::Domain::Iterator
 
             const auto Future = Self->Client->DescribePropertyFormModels(
                 MakeShared<Gs2::Formation::Request::FDescribePropertyFormModelsRequest>()
+                    ->WithContextStack(Self->Gs2->DefaultContextStack)
                     ->WithNamespaceName(Self->NamespaceName)
             );
             Future->StartSynchronousTask();

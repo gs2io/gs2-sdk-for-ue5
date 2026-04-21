@@ -369,10 +369,6 @@ namespace Gs2::Inventory::Domain::Model
                 Key
             );
         }
-        Self->Gs2->Cache->ClearListCache(
-            Gs2::Inventory::Model::FBigItem::TypeName,
-            Self->ParentKey
-        );
         auto Domain = Self;
 
         *Result = Domain;

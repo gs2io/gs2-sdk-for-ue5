@@ -112,6 +112,7 @@ namespace Gs2::Quest::Domain::Iterator
 
             const auto Future = Self->Client->DescribeQuestModels(
                 MakeShared<Gs2::Quest::Request::FDescribeQuestModelsRequest>()
+                    ->WithContextStack(Self->Gs2->DefaultContextStack)
                     ->WithNamespaceName(Self->NamespaceName)
                     ->WithQuestGroupName(Self->QuestGroupName)
             );

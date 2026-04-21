@@ -115,6 +115,7 @@ namespace Gs2::Chat::Domain::Iterator
 
             const auto Future = Self->Client->DescribeRooms(
                 MakeShared<Gs2::Chat::Request::FDescribeRoomsRequest>()
+                    ->WithContextStack(Self->Gs2->DefaultContextStack)
                     ->WithNamespaceName(Self->NamespaceName)
                     ->WithPageToken(PageToken)
                     ->WithLimit(FetchSize)

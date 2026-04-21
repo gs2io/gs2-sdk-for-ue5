@@ -114,6 +114,7 @@ namespace Gs2::Exchange::Domain::Iterator
 
             const auto Future = Self->Client->DescribeIncrementalRateModelMasters(
                 MakeShared<Gs2::Exchange::Request::FDescribeIncrementalRateModelMastersRequest>()
+                    ->WithContextStack(Self->Gs2->DefaultContextStack)
                     ->WithNamespaceName(Self->NamespaceName)
                     ->WithPageToken(PageToken)
                     ->WithLimit(FetchSize)

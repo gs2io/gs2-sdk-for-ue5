@@ -117,6 +117,7 @@ namespace Gs2::Account::Domain::Iterator
 
             const auto Future = Self->Client->DescribeTakeOversByUserId(
                 MakeShared<Gs2::Account::Request::FDescribeTakeOversByUserIdRequest>()
+                    ->WithContextStack(Self->Gs2->DefaultContextStack)
                     ->WithNamespaceName(Self->NamespaceName)
                     ->WithUserId(Self->UserId)
                     ->WithPageToken(PageToken)

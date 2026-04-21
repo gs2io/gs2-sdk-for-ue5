@@ -116,6 +116,7 @@ namespace Gs2::Showcase::Domain::Iterator
 
             const auto Future = Self->Client->DescribeRandomDisplayItems(
                 MakeShared<Gs2::Showcase::Request::FDescribeRandomDisplayItemsRequest>()
+                    ->WithContextStack(Self->Gs2->DefaultContextStack)
                     ->WithNamespaceName(Self->NamespaceName)
                     ->WithShowcaseName(Self->ShowcaseName)
                     ->WithAccessToken(Self->AccessToken == nullptr ? TOptional<FString>() : Self->AccessToken->GetToken())

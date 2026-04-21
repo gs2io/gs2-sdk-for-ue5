@@ -163,6 +163,7 @@ namespace Gs2::Log::Domain::Iterator
                     ->WithLongTerm(Self->LongTerm)
                     ->WithPageToken(PageToken)
                     ->WithLimit(FetchSize)
+                    ->WithTimeOffsetToken(Self->TimeOffsetToken)
             );
             Future->StartSynchronousTask();
             if (Future->GetTask().IsError())

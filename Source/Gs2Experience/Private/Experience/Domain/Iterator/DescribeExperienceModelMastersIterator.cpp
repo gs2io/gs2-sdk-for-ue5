@@ -114,6 +114,7 @@ namespace Gs2::Experience::Domain::Iterator
 
             const auto Future = Self->Client->DescribeExperienceModelMasters(
                 MakeShared<Gs2::Experience::Request::FDescribeExperienceModelMastersRequest>()
+                    ->WithContextStack(Self->Gs2->DefaultContextStack)
                     ->WithNamespaceName(Self->NamespaceName)
                     ->WithPageToken(PageToken)
                     ->WithLimit(FetchSize)

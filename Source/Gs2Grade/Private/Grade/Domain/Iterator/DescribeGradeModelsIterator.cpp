@@ -108,6 +108,7 @@ namespace Gs2::Grade::Domain::Iterator
 
             const auto Future = Self->Client->DescribeGradeModels(
                 MakeShared<Gs2::Grade::Request::FDescribeGradeModelsRequest>()
+                    ->WithContextStack(Self->Gs2->DefaultContextStack)
                     ->WithNamespaceName(Self->NamespaceName)
             );
             Future->StartSynchronousTask();

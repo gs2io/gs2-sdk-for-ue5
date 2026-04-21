@@ -108,6 +108,7 @@ namespace Gs2::Account::Domain::Iterator
 
             const auto Future = Self->Client->DescribeTakeOverTypeModels(
                 MakeShared<Gs2::Account::Request::FDescribeTakeOverTypeModelsRequest>()
+                    ->WithContextStack(Self->Gs2->DefaultContextStack)
                     ->WithNamespaceName(Self->NamespaceName)
             );
             Future->StartSynchronousTask();

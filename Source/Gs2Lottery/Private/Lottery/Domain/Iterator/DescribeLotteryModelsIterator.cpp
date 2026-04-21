@@ -108,6 +108,7 @@ namespace Gs2::Lottery::Domain::Iterator
 
             const auto Future = Self->Client->DescribeLotteryModels(
                 MakeShared<Gs2::Lottery::Request::FDescribeLotteryModelsRequest>()
+                    ->WithContextStack(Self->Gs2->DefaultContextStack)
                     ->WithNamespaceName(Self->NamespaceName)
             );
             Future->StartSynchronousTask();

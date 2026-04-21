@@ -108,6 +108,7 @@ namespace Gs2::SeasonRating::Domain::Iterator
 
             const auto Future = Self->Client->DescribeSeasonModels(
                 MakeShared<Gs2::SeasonRating::Request::FDescribeSeasonModelsRequest>()
+                    ->WithContextStack(Self->Gs2->DefaultContextStack)
                     ->WithNamespaceName(Self->NamespaceName)
             );
             Future->StartSynchronousTask();

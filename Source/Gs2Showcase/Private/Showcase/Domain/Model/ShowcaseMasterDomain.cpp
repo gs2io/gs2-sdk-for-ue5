@@ -224,10 +224,6 @@ namespace Gs2::Showcase::Domain::Model
                 Key
             );
         }
-        Self->Gs2->Cache->ClearListCache(
-            Gs2::Showcase::Model::FShowcaseMaster::TypeName,
-            Self->ParentKey
-        );
         auto Domain = Self;
 
         *Result = Domain;

@@ -108,6 +108,7 @@ namespace Gs2::Experience::Domain::Iterator
 
             const auto Future = Self->Client->DescribeExperienceModels(
                 MakeShared<Gs2::Experience::Request::FDescribeExperienceModelsRequest>()
+                    ->WithContextStack(Self->Gs2->DefaultContextStack)
                     ->WithNamespaceName(Self->NamespaceName)
             );
             Future->StartSynchronousTask();

@@ -216,10 +216,6 @@ namespace Gs2::Inbox::Domain::Model
                 Key
             );
         }
-        Self->Gs2->Cache->ClearListCache(
-            Gs2::Inbox::Model::FGlobalMessageMaster::TypeName,
-            Self->ParentKey
-        );
         auto Domain = Self;
 
         *Result = Domain;

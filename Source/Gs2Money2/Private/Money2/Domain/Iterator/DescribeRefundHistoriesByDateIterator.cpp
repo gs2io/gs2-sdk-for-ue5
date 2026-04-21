@@ -122,6 +122,7 @@ namespace Gs2::Money2::Domain::Iterator
 
             const auto Future = Self->Client->DescribeRefundHistoriesByDate(
                 MakeShared<Gs2::Money2::Request::FDescribeRefundHistoriesByDateRequest>()
+                    ->WithContextStack(Self->Gs2->DefaultContextStack)
                     ->WithNamespaceName(Self->NamespaceName)
                     ->WithYear(Self->Year)
                     ->WithMonth(Self->Month)

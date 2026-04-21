@@ -108,6 +108,7 @@ namespace Gs2::SkillTree::Domain::Iterator
 
             const auto Future = Self->Client->DescribeNodeModels(
                 MakeShared<Gs2::SkillTree::Request::FDescribeNodeModelsRequest>()
+                    ->WithContextStack(Self->Gs2->DefaultContextStack)
                     ->WithNamespaceName(Self->NamespaceName)
             );
             Future->StartSynchronousTask();

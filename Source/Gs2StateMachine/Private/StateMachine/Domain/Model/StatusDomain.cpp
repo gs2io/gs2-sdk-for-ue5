@@ -277,10 +277,6 @@ namespace Gs2::StateMachine::Domain::Model
                 Key
             );
         }
-        Self->Gs2->Cache->ClearListCache(
-            Gs2::StateMachine::Model::FStatus::TypeName,
-            Self->ParentKey
-        );
         auto Domain = Self;
 
         *Result = Domain;
@@ -337,10 +333,6 @@ namespace Gs2::StateMachine::Domain::Model
                 Key
             );
         }
-        Self->Gs2->Cache->ClearListCache(
-            Gs2::StateMachine::Model::FStatus::TypeName,
-            Self->ParentKey
-        );
         auto Domain = Self;
 
         *Result = Domain;

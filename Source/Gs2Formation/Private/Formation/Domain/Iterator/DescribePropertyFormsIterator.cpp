@@ -118,6 +118,7 @@ namespace Gs2::Formation::Domain::Iterator
 
             const auto Future = Self->Client->DescribePropertyForms(
                 MakeShared<Gs2::Formation::Request::FDescribePropertyFormsRequest>()
+                    ->WithContextStack(Self->Gs2->DefaultContextStack)
                     ->WithNamespaceName(Self->NamespaceName)
                     ->WithAccessToken(Self->AccessToken == nullptr ? TOptional<FString>() : Self->AccessToken->GetToken())
                     ->WithPropertyFormModelName(Self->PropertyFormModelName)

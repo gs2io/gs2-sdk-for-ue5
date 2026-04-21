@@ -123,6 +123,7 @@ namespace Gs2::Matchmaking::Domain::Iterator
 
             const auto Future = Self->Client->DescribeSeasonGatherings(
                 MakeShared<Gs2::Matchmaking::Request::FDescribeSeasonGatheringsRequest>()
+                    ->WithContextStack(Self->Gs2->DefaultContextStack)
                     ->WithNamespaceName(Self->NamespaceName)
                     ->WithSeasonName(Self->SeasonName)
                     ->WithSeason(Self->Season)

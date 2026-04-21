@@ -112,7 +112,7 @@ namespace Gs2::Matchmaking::Domain::Iterator
             Range = Arr;
             RangeIteratorOpt = Range->CreateIterator();
             MatchmakingContextToken = R->GetMatchmakingContextToken();
-            bLast = !MatchmakingContextToken.IsSet();
+            bLast = R->GetItem() != nullptr || !MatchmakingContextToken.IsSet();
             Self->Gs2->Cache->ClearListCache(
                 Gs2::Matchmaking::Model::FGathering::TypeName,
                 Gs2::Matchmaking::Domain::Model::FUserDomain::CreateCacheParentKey(

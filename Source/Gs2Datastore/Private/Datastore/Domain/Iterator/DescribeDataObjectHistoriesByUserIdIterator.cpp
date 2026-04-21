@@ -121,6 +121,7 @@ namespace Gs2::Datastore::Domain::Iterator
 
             const auto Future = Self->Client->DescribeDataObjectHistoriesByUserId(
                 MakeShared<Gs2::Datastore::Request::FDescribeDataObjectHistoriesByUserIdRequest>()
+                    ->WithContextStack(Self->Gs2->DefaultContextStack)
                     ->WithNamespaceName(Self->NamespaceName)
                     ->WithUserId(Self->UserId)
                     ->WithDataObjectName(Self->DataObjectName)

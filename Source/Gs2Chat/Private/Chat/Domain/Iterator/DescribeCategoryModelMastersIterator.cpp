@@ -110,6 +110,7 @@ namespace Gs2::Chat::Domain::Iterator
 
             const auto Future = Self->Client->DescribeCategoryModelMasters(
                 MakeShared<Gs2::Chat::Request::FDescribeCategoryModelMastersRequest>()
+                    ->WithContextStack(Self->Gs2->DefaultContextStack)
                     ->WithNamespaceName(Self->NamespaceName)
                     ->WithPageToken(PageToken)
                     ->WithLimit(FetchSize)

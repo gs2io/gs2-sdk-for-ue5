@@ -114,6 +114,7 @@ namespace Gs2::Dictionary::Domain::Iterator
 
             const auto Future = Self->Client->DescribeEntryModelMasters(
                 MakeShared<Gs2::Dictionary::Request::FDescribeEntryModelMastersRequest>()
+                    ->WithContextStack(Self->Gs2->DefaultContextStack)
                     ->WithNamespaceName(Self->NamespaceName)
                     ->WithPageToken(PageToken)
                     ->WithLimit(FetchSize)

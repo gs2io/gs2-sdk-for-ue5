@@ -117,6 +117,7 @@ namespace Gs2::JobQueue::Domain::Iterator
 
             const auto Future = Self->Client->DescribeJobsByUserId(
                 MakeShared<Gs2::JobQueue::Request::FDescribeJobsByUserIdRequest>()
+                    ->WithContextStack(Self->Gs2->DefaultContextStack)
                     ->WithNamespaceName(Self->NamespaceName)
                     ->WithUserId(Self->UserId)
                     ->WithPageToken(PageToken)

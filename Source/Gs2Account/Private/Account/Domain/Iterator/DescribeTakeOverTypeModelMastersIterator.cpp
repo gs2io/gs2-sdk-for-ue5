@@ -110,6 +110,7 @@ namespace Gs2::Account::Domain::Iterator
 
             const auto Future = Self->Client->DescribeTakeOverTypeModelMasters(
                 MakeShared<Gs2::Account::Request::FDescribeTakeOverTypeModelMastersRequest>()
+                    ->WithContextStack(Self->Gs2->DefaultContextStack)
                     ->WithNamespaceName(Self->NamespaceName)
                     ->WithPageToken(PageToken)
                     ->WithLimit(FetchSize)

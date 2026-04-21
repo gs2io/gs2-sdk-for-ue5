@@ -114,6 +114,7 @@ namespace Gs2::LoginReward::Domain::Iterator
 
             const auto Future = Self->Client->DescribeReceiveStatuses(
                 MakeShared<Gs2::LoginReward::Request::FDescribeReceiveStatusesRequest>()
+                    ->WithContextStack(Self->Gs2->DefaultContextStack)
                     ->WithNamespaceName(Self->NamespaceName)
                     ->WithAccessToken(Self->AccessToken == nullptr ? TOptional<FString>() : Self->AccessToken->GetToken())
                     ->WithPageToken(PageToken)

@@ -121,6 +121,7 @@ namespace Gs2::Guild::Domain::Iterator
 
             const auto Future = Self->Client->DescribeJoinedGuildsByUserId(
                 MakeShared<Gs2::Guild::Request::FDescribeJoinedGuildsByUserIdRequest>()
+                    ->WithContextStack(Self->Gs2->DefaultContextStack)
                     ->WithNamespaceName(Self->NamespaceName)
                     ->WithUserId(Self->UserId)
                     ->WithPageToken(PageToken)

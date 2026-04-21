@@ -114,6 +114,7 @@ namespace Gs2::Script::Domain::Iterator
 
             const auto Future = Self->Client->DescribeScripts(
                 MakeShared<Gs2::Script::Request::FDescribeScriptsRequest>()
+                    ->WithContextStack(Self->Gs2->DefaultContextStack)
                     ->WithNamespaceName(Self->NamespaceName)
                     ->WithPageToken(PageToken)
                     ->WithLimit(FetchSize)

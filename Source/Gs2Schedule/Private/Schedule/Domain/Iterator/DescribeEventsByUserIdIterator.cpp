@@ -115,6 +115,7 @@ namespace Gs2::Schedule::Domain::Iterator
 
             const auto Future = Self->Client->DescribeEventsByUserId(
                 MakeShared<Gs2::Schedule::Request::FDescribeEventsByUserIdRequest>()
+                    ->WithContextStack(Self->Gs2->DefaultContextStack)
                     ->WithNamespaceName(Self->NamespaceName)
                     ->WithUserId(Self->UserId)
             );

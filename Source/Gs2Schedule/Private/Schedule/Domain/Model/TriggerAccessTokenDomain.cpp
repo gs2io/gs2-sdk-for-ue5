@@ -165,10 +165,6 @@ namespace Gs2::Schedule::Domain::Model
                 Key
             );
         }
-        Self->Gs2->Cache->ClearListCache(
-            Gs2::Schedule::Model::FTrigger::TypeName,
-            Self->ParentKey
-        );
         auto Domain = Self;
 
         *Result = Domain;

@@ -108,6 +108,7 @@ namespace Gs2::Idle::Domain::Iterator
 
             const auto Future = Self->Client->DescribeCategoryModels(
                 MakeShared<Gs2::Idle::Request::FDescribeCategoryModelsRequest>()
+                    ->WithContextStack(Self->Gs2->DefaultContextStack)
                     ->WithNamespaceName(Self->NamespaceName)
             );
             Future->StartSynchronousTask();

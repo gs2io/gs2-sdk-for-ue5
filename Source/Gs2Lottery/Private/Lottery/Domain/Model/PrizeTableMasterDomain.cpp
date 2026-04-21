@@ -221,10 +221,6 @@ namespace Gs2::Lottery::Domain::Model
                 Key
             );
         }
-        Self->Gs2->Cache->ClearListCache(
-            Gs2::Lottery::Model::FPrizeTableMaster::TypeName,
-            Self->ParentKey
-        );
         auto Domain = Self;
 
         *Result = Domain;

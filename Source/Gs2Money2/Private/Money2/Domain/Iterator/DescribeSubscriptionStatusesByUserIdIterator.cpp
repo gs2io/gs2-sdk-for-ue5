@@ -115,6 +115,7 @@ namespace Gs2::Money2::Domain::Iterator
 
             const auto Future = Self->Client->DescribeSubscriptionStatusesByUserId(
                 MakeShared<Gs2::Money2::Request::FDescribeSubscriptionStatusesByUserIdRequest>()
+                    ->WithContextStack(Self->Gs2->DefaultContextStack)
                     ->WithNamespaceName(Self->NamespaceName)
                     ->WithUserId(Self->UserId)
             );

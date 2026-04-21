@@ -121,6 +121,7 @@ namespace Gs2::Exchange::Domain::Iterator
 
             const auto Future = Self->Client->DescribeAwaitsByUserId(
                 MakeShared<Gs2::Exchange::Request::FDescribeAwaitsByUserIdRequest>()
+                    ->WithContextStack(Self->Gs2->DefaultContextStack)
                     ->WithNamespaceName(Self->NamespaceName)
                     ->WithUserId(Self->UserId)
                     ->WithPageToken(PageToken)

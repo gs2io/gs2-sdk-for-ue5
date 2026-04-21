@@ -266,10 +266,6 @@ namespace Gs2::AdReward::Domain::Model
                 Key
             );
         }
-        Self->Gs2->Cache->ClearListCache(
-            Gs2::AdReward::Model::FPoint::TypeName,
-            Self->ParentKey
-        );
         auto Domain = Self;
 
         *Result = Domain;

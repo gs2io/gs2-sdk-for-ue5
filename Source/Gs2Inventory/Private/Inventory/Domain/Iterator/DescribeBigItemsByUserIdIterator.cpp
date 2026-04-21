@@ -121,6 +121,7 @@ namespace Gs2::Inventory::Domain::Iterator
 
             const auto Future = Self->Client->DescribeBigItemsByUserId(
                 MakeShared<Gs2::Inventory::Request::FDescribeBigItemsByUserIdRequest>()
+                    ->WithContextStack(Self->Gs2->DefaultContextStack)
                     ->WithNamespaceName(Self->NamespaceName)
                     ->WithInventoryName(Self->InventoryName)
                     ->WithUserId(Self->UserId)

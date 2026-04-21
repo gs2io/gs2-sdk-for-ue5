@@ -110,6 +110,7 @@ namespace Gs2::StateMachine::Domain::Iterator
 
             const auto Future = Self->Client->DescribeStateMachineMasters(
                 MakeShared<Gs2::StateMachine::Request::FDescribeStateMachineMastersRequest>()
+                    ->WithContextStack(Self->Gs2->DefaultContextStack)
                     ->WithNamespaceName(Self->NamespaceName)
                     ->WithPageToken(PageToken)
                     ->WithLimit(FetchSize)

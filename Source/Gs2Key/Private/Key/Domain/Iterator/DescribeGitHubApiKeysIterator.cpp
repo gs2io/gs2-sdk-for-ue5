@@ -110,6 +110,7 @@ namespace Gs2::Key::Domain::Iterator
 
             const auto Future = Self->Client->DescribeGitHubApiKeys(
                 MakeShared<Gs2::Key::Request::FDescribeGitHubApiKeysRequest>()
+                    ->WithContextStack(Self->Gs2->DefaultContextStack)
                     ->WithNamespaceName(Self->NamespaceName)
                     ->WithPageToken(PageToken)
                     ->WithLimit(FetchSize)

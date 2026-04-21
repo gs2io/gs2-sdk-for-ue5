@@ -118,6 +118,7 @@ namespace Gs2::Inventory::Domain::Iterator
 
             const auto Future = Self->Client->DescribeBigItemModelMasters(
                 MakeShared<Gs2::Inventory::Request::FDescribeBigItemModelMastersRequest>()
+                    ->WithContextStack(Self->Gs2->DefaultContextStack)
                     ->WithNamespaceName(Self->NamespaceName)
                     ->WithInventoryName(Self->InventoryName)
                     ->WithPageToken(PageToken)

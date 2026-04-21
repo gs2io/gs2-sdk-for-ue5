@@ -121,6 +121,7 @@ namespace Gs2::Inbox::Domain::Iterator
 
             const auto Future = Self->Client->DescribeMessagesByUserId(
                 MakeShared<Gs2::Inbox::Request::FDescribeMessagesByUserIdRequest>()
+                    ->WithContextStack(Self->Gs2->DefaultContextStack)
                     ->WithNamespaceName(Self->NamespaceName)
                     ->WithUserId(Self->UserId)
                     ->WithPageToken(PageToken)

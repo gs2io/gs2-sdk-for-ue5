@@ -110,6 +110,7 @@ namespace Gs2::Realtime::Domain::Iterator
 
             const auto Future = Self->Client->DescribeRooms(
                 MakeShared<Gs2::Realtime::Request::FDescribeRoomsRequest>()
+                    ->WithContextStack(Self->Gs2->DefaultContextStack)
                     ->WithNamespaceName(Self->NamespaceName)
                     ->WithPageToken(PageToken)
                     ->WithLimit(FetchSize)

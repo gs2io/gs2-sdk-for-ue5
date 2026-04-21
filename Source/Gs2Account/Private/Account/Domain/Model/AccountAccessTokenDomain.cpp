@@ -107,21 +107,29 @@ namespace Gs2::Account::Domain::Model
         Future->StartSynchronousTask();
         if (Future->GetTask().IsError())
         {
-            return Future->GetTask().Error();
+            if (!Future->GetTask().Error()->IsChildOf(Gs2::Core::Model::FNotFoundError::Class))
+            {
+                return Future->GetTask().Error();
+            }
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
-        if (ResultModel->GetItem() != nullptr)
+        if (ResultModel != nullptr)
         {
-            const auto Key = Gs2::Account::Domain::Model::FTakeOverDomain::CreateCacheKey(
-                ResultModel->GetItem()->GetType()
-            );
-            Self->Gs2->Cache->Put(
+            if (ResultModel->GetItem() != nullptr)
+            {
+                const auto Key = Gs2::Account::Domain::Model::FTakeOverDomain::CreateCacheKey(
+                    ResultModel->GetItem()->GetType()
+                );
+                Self->Gs2->Cache->Delete(
+                    Gs2::Account::Model::FTakeOver::TypeName,
+                    Self->ParentKey,
+                    Key
+                );
+            }
+            Self->Gs2->Cache->ClearListCache(
                 Gs2::Account::Model::FTakeOver::TypeName,
-                Self->ParentKey,
-                Key,
-                ResultModel->GetItem(),
-                FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                Self->ParentKey
             );
         }
         auto Domain = MakeShared<Gs2::Account::Domain::Model::FTakeOverAccessTokenDomain>(
@@ -129,7 +137,7 @@ namespace Gs2::Account::Domain::Model
             Self->Service,
             Request->GetNamespaceName(),
             Self->AccessToken,
-            ResultModel->GetItem()->GetType()
+            ResultModel != nullptr && ResultModel->GetItem() != nullptr ? ResultModel->GetItem()->GetType() : TOptional<int32>()
         );
 
         *Result = Domain;

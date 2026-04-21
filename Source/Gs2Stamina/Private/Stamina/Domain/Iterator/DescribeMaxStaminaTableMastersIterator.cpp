@@ -110,6 +110,7 @@ namespace Gs2::Stamina::Domain::Iterator
 
             const auto Future = Self->Client->DescribeMaxStaminaTableMasters(
                 MakeShared<Gs2::Stamina::Request::FDescribeMaxStaminaTableMastersRequest>()
+                    ->WithContextStack(Self->Gs2->DefaultContextStack)
                     ->WithNamespaceName(Self->NamespaceName)
                     ->WithPageToken(PageToken)
                     ->WithLimit(FetchSize)

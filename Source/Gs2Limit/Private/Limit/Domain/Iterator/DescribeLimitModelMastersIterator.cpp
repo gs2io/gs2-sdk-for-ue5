@@ -114,6 +114,7 @@ namespace Gs2::Limit::Domain::Iterator
 
             const auto Future = Self->Client->DescribeLimitModelMasters(
                 MakeShared<Gs2::Limit::Request::FDescribeLimitModelMastersRequest>()
+                    ->WithContextStack(Self->Gs2->DefaultContextStack)
                     ->WithNamespaceName(Self->NamespaceName)
                     ->WithPageToken(PageToken)
                     ->WithLimit(FetchSize)

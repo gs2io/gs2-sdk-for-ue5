@@ -114,6 +114,7 @@ namespace Gs2::Schedule::Domain::Iterator
 
             const auto Future = Self->Client->DescribeEventMasters(
                 MakeShared<Gs2::Schedule::Request::FDescribeEventMastersRequest>()
+                    ->WithContextStack(Self->Gs2->DefaultContextStack)
                     ->WithNamespaceName(Self->NamespaceName)
                     ->WithPageToken(PageToken)
                     ->WithLimit(FetchSize)

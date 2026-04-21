@@ -117,6 +117,7 @@ namespace Gs2::Quest::Domain::Iterator
 
             const auto Future = Self->Client->DescribeCompletedQuestListsByUserId(
                 MakeShared<Gs2::Quest::Request::FDescribeCompletedQuestListsByUserIdRequest>()
+                    ->WithContextStack(Self->Gs2->DefaultContextStack)
                     ->WithNamespaceName(Self->NamespaceName)
                     ->WithUserId(Self->UserId)
                     ->WithPageToken(PageToken)

@@ -114,6 +114,7 @@ namespace Gs2::Version::Domain::Iterator
 
             const auto Future = Self->Client->DescribeAcceptVersions(
                 MakeShared<Gs2::Version::Request::FDescribeAcceptVersionsRequest>()
+                    ->WithContextStack(Self->Gs2->DefaultContextStack)
                     ->WithNamespaceName(Self->NamespaceName)
                     ->WithAccessToken(Self->AccessToken == nullptr ? TOptional<FString>() : Self->AccessToken->GetToken())
                     ->WithPageToken(PageToken)

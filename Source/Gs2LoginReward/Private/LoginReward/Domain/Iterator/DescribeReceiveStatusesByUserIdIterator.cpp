@@ -117,6 +117,7 @@ namespace Gs2::LoginReward::Domain::Iterator
 
             const auto Future = Self->Client->DescribeReceiveStatusesByUserId(
                 MakeShared<Gs2::LoginReward::Request::FDescribeReceiveStatusesByUserIdRequest>()
+                    ->WithContextStack(Self->Gs2->DefaultContextStack)
                     ->WithNamespaceName(Self->NamespaceName)
                     ->WithUserId(Self->UserId)
                     ->WithPageToken(PageToken)

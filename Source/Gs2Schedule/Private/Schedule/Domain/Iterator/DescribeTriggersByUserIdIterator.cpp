@@ -117,6 +117,7 @@ namespace Gs2::Schedule::Domain::Iterator
 
             const auto Future = Self->Client->DescribeTriggersByUserId(
                 MakeShared<Gs2::Schedule::Request::FDescribeTriggersByUserIdRequest>()
+                    ->WithContextStack(Self->Gs2->DefaultContextStack)
                     ->WithNamespaceName(Self->NamespaceName)
                     ->WithUserId(Self->UserId)
                     ->WithPageToken(PageToken)

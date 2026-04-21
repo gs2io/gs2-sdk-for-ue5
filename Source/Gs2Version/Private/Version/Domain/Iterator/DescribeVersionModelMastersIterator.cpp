@@ -114,6 +114,7 @@ namespace Gs2::Version::Domain::Iterator
 
             const auto Future = Self->Client->DescribeVersionModelMasters(
                 MakeShared<Gs2::Version::Request::FDescribeVersionModelMastersRequest>()
+                    ->WithContextStack(Self->Gs2->DefaultContextStack)
                     ->WithNamespaceName(Self->NamespaceName)
                     ->WithPageToken(PageToken)
                     ->WithLimit(FetchSize)

@@ -114,6 +114,7 @@ namespace Gs2::Idle::Domain::Iterator
 
             const auto Future = Self->Client->DescribeStatuses(
                 MakeShared<Gs2::Idle::Request::FDescribeStatusesRequest>()
+                    ->WithContextStack(Self->Gs2->DefaultContextStack)
                     ->WithNamespaceName(Self->NamespaceName)
                     ->WithAccessToken(Self->AccessToken == nullptr ? TOptional<FString>() : Self->AccessToken->GetToken())
                     ->WithPageToken(PageToken)

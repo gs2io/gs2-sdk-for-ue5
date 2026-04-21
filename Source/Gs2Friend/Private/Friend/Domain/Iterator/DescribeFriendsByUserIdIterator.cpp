@@ -121,6 +121,7 @@ namespace Gs2::Friend::Domain::Iterator
 
             const auto Future = Self->Client->DescribeFriendsByUserId(
                 MakeShared<Gs2::Friend::Request::FDescribeFriendsByUserIdRequest>()
+                    ->WithContextStack(Self->Gs2->DefaultContextStack)
                     ->WithNamespaceName(Self->NamespaceName)
                     ->WithUserId(Self->UserId)
                     ->WithWithProfile(Self->WithProfile)

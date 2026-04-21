@@ -110,6 +110,7 @@ namespace Gs2::Freeze::Domain::Iterator
 
             const auto Future = Self->Client->DescribeOutputs(
                 MakeShared<Gs2::Freeze::Request::FDescribeOutputsRequest>()
+                    ->WithContextStack(Self->Gs2->DefaultContextStack)
                     ->WithStageName(Self->StageName)
                     ->WithPageToken(PageToken)
                     ->WithLimit(FetchSize)

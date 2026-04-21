@@ -110,6 +110,7 @@ namespace Gs2::SeasonRating::Domain::Iterator
 
             const auto Future = Self->Client->DescribeMatchSessions(
                 MakeShared<Gs2::SeasonRating::Request::FDescribeMatchSessionsRequest>()
+                    ->WithContextStack(Self->Gs2->DefaultContextStack)
                     ->WithNamespaceName(Self->NamespaceName)
                     ->WithPageToken(PageToken)
                     ->WithLimit(FetchSize)

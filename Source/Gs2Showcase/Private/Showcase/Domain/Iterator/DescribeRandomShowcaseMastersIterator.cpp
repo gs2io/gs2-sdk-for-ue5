@@ -114,6 +114,7 @@ namespace Gs2::Showcase::Domain::Iterator
 
             const auto Future = Self->Client->DescribeRandomShowcaseMasters(
                 MakeShared<Gs2::Showcase::Request::FDescribeRandomShowcaseMastersRequest>()
+                    ->WithContextStack(Self->Gs2->DefaultContextStack)
                     ->WithNamespaceName(Self->NamespaceName)
                     ->WithPageToken(PageToken)
                     ->WithLimit(FetchSize)

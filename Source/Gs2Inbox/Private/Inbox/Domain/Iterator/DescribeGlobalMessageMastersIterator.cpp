@@ -114,6 +114,7 @@ namespace Gs2::Inbox::Domain::Iterator
 
             const auto Future = Self->Client->DescribeGlobalMessageMasters(
                 MakeShared<Gs2::Inbox::Request::FDescribeGlobalMessageMastersRequest>()
+                    ->WithContextStack(Self->Gs2->DefaultContextStack)
                     ->WithNamespaceName(Self->NamespaceName)
                     ->WithPageToken(PageToken)
                     ->WithLimit(FetchSize)

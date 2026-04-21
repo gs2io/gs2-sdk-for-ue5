@@ -108,6 +108,7 @@ namespace Gs2::MegaField::Domain::Iterator
 
             const auto Future = Self->Client->DescribeAreaModels(
                 MakeShared<Gs2::MegaField::Request::FDescribeAreaModelsRequest>()
+                    ->WithContextStack(Self->Gs2->DefaultContextStack)
                     ->WithNamespaceName(Self->NamespaceName)
             );
             Future->StartSynchronousTask();

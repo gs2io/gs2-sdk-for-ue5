@@ -114,6 +114,7 @@ namespace Gs2::Enchant::Domain::Iterator
 
             const auto Future = Self->Client->DescribeBalanceParameterModelMasters(
                 MakeShared<Gs2::Enchant::Request::FDescribeBalanceParameterModelMastersRequest>()
+                    ->WithContextStack(Self->Gs2->DefaultContextStack)
                     ->WithNamespaceName(Self->NamespaceName)
                     ->WithPageToken(PageToken)
                     ->WithLimit(FetchSize)

@@ -114,6 +114,7 @@ namespace Gs2::Formation::Domain::Iterator
 
             const auto Future = Self->Client->DescribeFormModelMasters(
                 MakeShared<Gs2::Formation::Request::FDescribeFormModelMastersRequest>()
+                    ->WithContextStack(Self->Gs2->DefaultContextStack)
                     ->WithNamespaceName(Self->NamespaceName)
                     ->WithPageToken(PageToken)
                     ->WithLimit(FetchSize)

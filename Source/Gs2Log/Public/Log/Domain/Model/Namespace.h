@@ -34,6 +34,12 @@
 #include "Log/Domain/Iterator/QueryInGameLogIterator.h"
 #include "Log/Domain/Iterator/QueryAccessLogWithTelemetryIterator.h"
 #include "Log/Domain/Iterator/DescribeInsightsIterator.h"
+#include "Log/Domain/Iterator/DescribeFacetModelsIterator.h"
+#include "Log/Domain/Iterator/DescribeDashboardsIterator.h"
+#include "Log/Domain/Iterator/QueryLogIterator.h"
+#include "Log/Domain/Iterator/QueryTimeseriesIterator.h"
+#include "Log/Domain/Iterator/DescribeMetricsIterator.h"
+#include "Log/Domain/Iterator/DescribeLabelValuesIterator.h"
 
 namespace Gs2::Core::Domain
 {
@@ -60,6 +66,12 @@ namespace Gs2::Log::Domain::Model
     class FUserDomain;
     class FUserAccessTokenDomain;
     class FInsightDomain;
+    class FFacetModelDomain;
+    class FDashboardDomain;
+    class FLogEntryDomain;
+    class FMetricModelDomain;
+    class FTimeseriesPointDomain;
+    typedef TSharedPtr<FTimeseriesPointDomain> FTimeseriesPointDomainPtr;
 
     class GS2LOG_API FNamespaceDomain:
         public TSharedFromThis<FNamespaceDomain>
@@ -235,6 +247,58 @@ namespace Gs2::Log::Domain::Model
 
         TSharedPtr<FAsyncTask<FCreateInsightTask>> CreateInsight(
             Request::FCreateInsightRequestPtr Request
+        );
+
+        class GS2LOG_API FCreateDashboardTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Log::Domain::Model::FDashboardDomain>,
+            public TSharedFromThis<FCreateDashboardTask>
+        {
+            const TSharedPtr<FNamespaceDomain> Self;
+            const Request::FCreateDashboardRequestPtr Request;
+        public:
+            explicit FCreateDashboardTask(
+                const TSharedPtr<FNamespaceDomain>& Self,
+                const Request::FCreateDashboardRequestPtr Request
+            );
+
+            FCreateDashboardTask(
+                const FCreateDashboardTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Log::Domain::Model::FDashboardDomain>> Result
+            ) override;
+        };
+        friend FCreateDashboardTask;
+
+        TSharedPtr<FAsyncTask<FCreateDashboardTask>> CreateDashboard(
+            Request::FCreateDashboardRequestPtr Request
+        );
+
+        class GS2LOG_API FMetricsTimeseriesTask final :
+            public Gs2::Core::Util::TGs2Future<TArray<TSharedPtr<Gs2::Log::Domain::Model::FTimeseriesPointDomain>>>,
+            public TSharedFromThis<FMetricsTimeseriesTask>
+        {
+            const TSharedPtr<FNamespaceDomain> Self;
+            const Request::FQueryMetricsTimeseriesRequestPtr Request;
+        public:
+            explicit FMetricsTimeseriesTask(
+                const TSharedPtr<FNamespaceDomain>& Self,
+                const Request::FQueryMetricsTimeseriesRequestPtr Request
+            );
+
+            FMetricsTimeseriesTask(
+                const FMetricsTimeseriesTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<TArray<TSharedPtr<Gs2::Log::Domain::Model::FTimeseriesPointDomain>>>> Result
+            ) override;
+        };
+        friend FMetricsTimeseriesTask;
+
+        TSharedPtr<FAsyncTask<FMetricsTimeseriesTask>> MetricsTimeseries(
+            Request::FQueryMetricsTimeseriesRequestPtr Request
         );
 
         Gs2::Log::Domain::Iterator::FQueryAccessLogIteratorPtr AccessLog(
@@ -424,6 +488,63 @@ namespace Gs2::Log::Domain::Model
 
         TSharedPtr<Gs2::Log::Domain::Model::FUserAccessTokenDomain> AccessToken(
             Gs2::Auth::Model::FAccessTokenPtr AccessToken
+        );
+
+        Gs2::Log::Domain::Iterator::FDescribeFacetModelsIteratorPtr FacetModels(
+            const TOptional<FString> NamePrefix = TOptional<FString>()
+        ) const;
+
+        Gs2::Core::Domain::CallbackID SubscribeFacetModels(
+            TFunction<void()> Callback
+        );
+
+        void UnsubscribeFacetModels(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
+
+        TSharedPtr<Gs2::Log::Domain::Model::FFacetModelDomain> FacetModel(
+            const FString Field
+        );
+
+        Gs2::Log::Domain::Iterator::FDescribeDashboardsIteratorPtr Dashboards(
+            const TOptional<FString> NamePrefix = TOptional<FString>()
+        ) const;
+
+        Gs2::Core::Domain::CallbackID SubscribeDashboards(
+            TFunction<void()> Callback
+        );
+
+        void UnsubscribeDashboards(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
+
+        TSharedPtr<Gs2::Log::Domain::Model::FDashboardDomain> Dashboard(
+            const FString DashboardName
+        );
+
+        Gs2::Log::Domain::Iterator::FDescribeMetricsIteratorPtr Metrics(
+            const TOptional<FString> NamePrefix = TOptional<FString>()
+        ) const;
+
+        Gs2::Core::Domain::CallbackID SubscribeMetrics(
+            TFunction<void()> Callback
+        );
+
+        void UnsubscribeMetrics(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
+
+        Gs2::Log::Domain::Iterator::FDescribeLabelValuesIteratorPtr LabelValues(
+            const FString MetricName,
+            const TOptional<FString> LabelNamePrefix = TOptional<FString>()
+        ) const;
+
+        Gs2::Core::Domain::CallbackID SubscribeLabelValues(
+            TFunction<void()> Callback
+        );
+
+        void UnsubscribeLabelValues(
+            Gs2::Core::Domain::CallbackID CallbackID
         );
 
         static FString CreateCacheParentKey(

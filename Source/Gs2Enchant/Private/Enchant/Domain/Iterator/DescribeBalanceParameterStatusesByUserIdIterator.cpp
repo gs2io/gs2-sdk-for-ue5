@@ -121,6 +121,7 @@ namespace Gs2::Enchant::Domain::Iterator
 
             const auto Future = Self->Client->DescribeBalanceParameterStatusesByUserId(
                 MakeShared<Gs2::Enchant::Request::FDescribeBalanceParameterStatusesByUserIdRequest>()
+                    ->WithContextStack(Self->Gs2->DefaultContextStack)
                     ->WithNamespaceName(Self->NamespaceName)
                     ->WithUserId(Self->UserId)
                     ->WithPageToken(PageToken)

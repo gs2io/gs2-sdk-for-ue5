@@ -108,6 +108,7 @@ namespace Gs2::Version::Domain::Iterator
 
             const auto Future = Self->Client->DescribeVersionModels(
                 MakeShared<Gs2::Version::Request::FDescribeVersionModelsRequest>()
+                    ->WithContextStack(Self->Gs2->DefaultContextStack)
                     ->WithNamespaceName(Self->NamespaceName)
             );
             Future->StartSynchronousTask();

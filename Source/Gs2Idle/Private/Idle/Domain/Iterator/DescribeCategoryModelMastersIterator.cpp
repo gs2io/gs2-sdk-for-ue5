@@ -114,6 +114,7 @@ namespace Gs2::Idle::Domain::Iterator
 
             const auto Future = Self->Client->DescribeCategoryModelMasters(
                 MakeShared<Gs2::Idle::Request::FDescribeCategoryModelMastersRequest>()
+                    ->WithContextStack(Self->Gs2->DefaultContextStack)
                     ->WithNamespaceName(Self->NamespaceName)
                     ->WithPageToken(PageToken)
                     ->WithLimit(FetchSize)

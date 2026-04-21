@@ -114,6 +114,7 @@ namespace Gs2::Grade::Domain::Iterator
 
             const auto Future = Self->Client->DescribeGradeModelMasters(
                 MakeShared<Gs2::Grade::Request::FDescribeGradeModelMastersRequest>()
+                    ->WithContextStack(Self->Gs2->DefaultContextStack)
                     ->WithNamespaceName(Self->NamespaceName)
                     ->WithPageToken(PageToken)
                     ->WithLimit(FetchSize)

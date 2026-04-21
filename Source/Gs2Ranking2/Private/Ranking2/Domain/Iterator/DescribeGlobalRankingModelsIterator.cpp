@@ -108,6 +108,7 @@ namespace Gs2::Ranking2::Domain::Iterator
 
             const auto Future = Self->Client->DescribeGlobalRankingModels(
                 MakeShared<Gs2::Ranking2::Request::FDescribeGlobalRankingModelsRequest>()
+                    ->WithContextStack(Self->Gs2->DefaultContextStack)
                     ->WithNamespaceName(Self->NamespaceName)
             );
             Future->StartSynchronousTask();

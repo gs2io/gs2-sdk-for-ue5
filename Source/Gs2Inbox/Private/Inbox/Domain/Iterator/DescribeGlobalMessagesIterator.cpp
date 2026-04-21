@@ -108,6 +108,7 @@ namespace Gs2::Inbox::Domain::Iterator
 
             const auto Future = Self->Client->DescribeGlobalMessages(
                 MakeShared<Gs2::Inbox::Request::FDescribeGlobalMessagesRequest>()
+                    ->WithContextStack(Self->Gs2->DefaultContextStack)
                     ->WithNamespaceName(Self->NamespaceName)
             );
             Future->StartSynchronousTask();

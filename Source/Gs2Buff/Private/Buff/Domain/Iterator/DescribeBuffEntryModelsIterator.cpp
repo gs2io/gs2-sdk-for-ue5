@@ -108,6 +108,7 @@ namespace Gs2::Buff::Domain::Iterator
 
             const auto Future = Self->Client->DescribeBuffEntryModels(
                 MakeShared<Gs2::Buff::Request::FDescribeBuffEntryModelsRequest>()
+                    ->WithContextStack(Self->Gs2->DefaultContextStack)
                     ->WithNamespaceName(Self->NamespaceName)
             );
             Future->StartSynchronousTask();

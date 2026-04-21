@@ -114,6 +114,7 @@ namespace Gs2::Money2::Domain::Iterator
 
             const auto Future = Self->Client->DescribeStoreSubscriptionContentModelMasters(
                 MakeShared<Gs2::Money2::Request::FDescribeStoreSubscriptionContentModelMastersRequest>()
+                    ->WithContextStack(Self->Gs2->DefaultContextStack)
                     ->WithNamespaceName(Self->NamespaceName)
                     ->WithPageToken(PageToken)
                     ->WithLimit(FetchSize)

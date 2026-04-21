@@ -121,6 +121,7 @@ namespace Gs2::Grade::Domain::Iterator
 
             const auto Future = Self->Client->DescribeStatusesByUserId(
                 MakeShared<Gs2::Grade::Request::FDescribeStatusesByUserIdRequest>()
+                    ->WithContextStack(Self->Gs2->DefaultContextStack)
                     ->WithNamespaceName(Self->NamespaceName)
                     ->WithUserId(Self->UserId)
                     ->WithPageToken(PageToken)

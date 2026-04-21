@@ -118,6 +118,7 @@ namespace Gs2::Datastore::Domain::Iterator
 
             const auto Future = Self->Client->DescribeDataObjects(
                 MakeShared<Gs2::Datastore::Request::FDescribeDataObjectsRequest>()
+                    ->WithContextStack(Self->Gs2->DefaultContextStack)
                     ->WithNamespaceName(Self->NamespaceName)
                     ->WithAccessToken(Self->AccessToken == nullptr ? TOptional<FString>() : Self->AccessToken->GetToken())
                     ->WithPageToken(PageToken)

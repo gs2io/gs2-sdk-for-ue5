@@ -114,6 +114,7 @@ namespace Gs2::Buff::Domain::Iterator
 
             const auto Future = Self->Client->DescribeBuffEntryModelMasters(
                 MakeShared<Gs2::Buff::Request::FDescribeBuffEntryModelMastersRequest>()
+                    ->WithContextStack(Self->Gs2->DefaultContextStack)
                     ->WithNamespaceName(Self->NamespaceName)
                     ->WithPageToken(PageToken)
                     ->WithLimit(FetchSize)

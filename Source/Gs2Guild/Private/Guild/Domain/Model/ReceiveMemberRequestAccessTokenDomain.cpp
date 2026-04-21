@@ -179,10 +179,6 @@ namespace Gs2::Guild::Domain::Model
                 Key
             );
         }
-        Self->Gs2->Cache->ClearListCache(
-            Gs2::Guild::Model::FReceiveMemberRequest::TypeName,
-            Self->ParentKey
-        );
         auto Domain = Self;
 
         *Result = Domain;
@@ -240,10 +236,6 @@ namespace Gs2::Guild::Domain::Model
                 Key
             );
         }
-        Self->Gs2->Cache->ClearListCache(
-            Gs2::Guild::Model::FReceiveMemberRequest::TypeName,
-            Self->ParentKey
-        );
         auto Domain = Self;
 
         *Result = Domain;

@@ -114,6 +114,7 @@ namespace Gs2::SerialKey::Domain::Iterator
 
             const auto Future = Self->Client->DescribeIssueJobs(
                 MakeShared<Gs2::SerialKey::Request::FDescribeIssueJobsRequest>()
+                    ->WithContextStack(Self->Gs2->DefaultContextStack)
                     ->WithNamespaceName(Self->NamespaceName)
                     ->WithCampaignModelName(Self->CampaignModelName)
                     ->WithPageToken(PageToken)

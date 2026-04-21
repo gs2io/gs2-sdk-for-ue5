@@ -12,6 +12,8 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
+ * 
+ * deny overwrite
  */
 
 #if defined(_MSC_VER)
@@ -141,11 +143,16 @@ namespace Gs2::Log::Domain::Iterator
             const auto Future = Self->Client->QueryExecuteStampSheetLog(
                 MakeShared<Gs2::Log::Request::FQueryExecuteStampSheetLogRequest>()
                     ->WithNamespaceName(Self->NamespaceName)
+                    ->WithService(Self->Service)
+                    ->WithMethod(Self->Method)
+                    ->WithUserId(Self->UserId)
+                    ->WithAction(Self->Action)
                     ->WithBegin(Self->Begin)
                     ->WithEnd(Self->End)
                     ->WithLongTerm(Self->LongTerm)
                     ->WithPageToken(PageToken)
                     ->WithLimit(FetchSize)
+                    ->WithTimeOffsetToken(Self->TimeOffsetToken)
             );
             Future->StartSynchronousTask();
             if (Future->GetTask().IsError())

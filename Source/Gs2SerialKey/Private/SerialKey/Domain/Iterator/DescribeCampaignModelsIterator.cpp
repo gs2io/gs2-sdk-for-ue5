@@ -108,6 +108,7 @@ namespace Gs2::SerialKey::Domain::Iterator
 
             const auto Future = Self->Client->DescribeCampaignModels(
                 MakeShared<Gs2::SerialKey::Request::FDescribeCampaignModelsRequest>()
+                    ->WithContextStack(Self->Gs2->DefaultContextStack)
                     ->WithNamespaceName(Self->NamespaceName)
             );
             Future->StartSynchronousTask();

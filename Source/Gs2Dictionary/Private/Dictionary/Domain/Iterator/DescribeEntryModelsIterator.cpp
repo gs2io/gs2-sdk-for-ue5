@@ -108,6 +108,7 @@ namespace Gs2::Dictionary::Domain::Iterator
 
             const auto Future = Self->Client->DescribeEntryModels(
                 MakeShared<Gs2::Dictionary::Request::FDescribeEntryModelsRequest>()
+                    ->WithContextStack(Self->Gs2->DefaultContextStack)
                     ->WithNamespaceName(Self->NamespaceName)
             );
             Future->StartSynchronousTask();

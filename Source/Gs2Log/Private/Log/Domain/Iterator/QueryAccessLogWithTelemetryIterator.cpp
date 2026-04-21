@@ -131,11 +131,13 @@ namespace Gs2::Log::Domain::Iterator
             const auto Future = Self->Client->QueryAccessLogWithTelemetry(
                 MakeShared<Gs2::Log::Request::FQueryAccessLogWithTelemetryRequest>()
                     ->WithNamespaceName(Self->NamespaceName)
+                    ->WithUserId(Self->UserId)
                     ->WithBegin(Self->Begin)
                     ->WithEnd(Self->End)
                     ->WithLongTerm(Self->LongTerm)
                     ->WithPageToken(PageToken)
                     ->WithLimit(FetchSize)
+                    ->WithTimeOffsetToken(Self->TimeOffsetToken)
             );
             Future->StartSynchronousTask();
             if (Future->GetTask().IsError())

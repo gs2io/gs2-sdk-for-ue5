@@ -216,10 +216,6 @@ namespace Gs2::LoginReward::Domain::Model
                 Key
             );
         }
-        Self->Gs2->Cache->ClearListCache(
-            Gs2::LoginReward::Model::FBonusModelMaster::TypeName,
-            Self->ParentKey
-        );
         auto Domain = Self;
 
         *Result = Domain;

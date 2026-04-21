@@ -115,6 +115,7 @@ namespace Gs2::News::Domain::Iterator
 
             const auto Future = Self->Client->DescribeNewsByUserId(
                 MakeShared<Gs2::News::Request::FDescribeNewsByUserIdRequest>()
+                    ->WithContextStack(Self->Gs2->DefaultContextStack)
                     ->WithNamespaceName(Self->NamespaceName)
                     ->WithUserId(Self->UserId)
             );

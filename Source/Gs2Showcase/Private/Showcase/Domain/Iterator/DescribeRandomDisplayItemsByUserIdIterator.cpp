@@ -119,6 +119,7 @@ namespace Gs2::Showcase::Domain::Iterator
 
             const auto Future = Self->Client->DescribeRandomDisplayItemsByUserId(
                 MakeShared<Gs2::Showcase::Request::FDescribeRandomDisplayItemsByUserIdRequest>()
+                    ->WithContextStack(Self->Gs2->DefaultContextStack)
                     ->WithNamespaceName(Self->NamespaceName)
                     ->WithShowcaseName(Self->ShowcaseName)
                     ->WithUserId(Self->UserId)

@@ -114,6 +114,7 @@ namespace Gs2::Distributor::Domain::Iterator
 
             const auto Future = Self->Client->DescribeDistributorModelMasters(
                 MakeShared<Gs2::Distributor::Request::FDescribeDistributorModelMastersRequest>()
+                    ->WithContextStack(Self->Gs2->DefaultContextStack)
                     ->WithNamespaceName(Self->NamespaceName)
                     ->WithPageToken(PageToken)
                     ->WithLimit(FetchSize)

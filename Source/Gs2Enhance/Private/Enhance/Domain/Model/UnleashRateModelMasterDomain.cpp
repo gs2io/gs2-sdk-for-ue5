@@ -218,10 +218,6 @@ namespace Gs2::Enhance::Domain::Model
                 Key
             );
         }
-        Self->Gs2->Cache->ClearListCache(
-            Gs2::Enhance::Model::FUnleashRateModelMaster::TypeName,
-            Self->ParentKey
-        );
         auto Domain = Self;
 
         *Result = Domain;

@@ -112,6 +112,7 @@ namespace Gs2::News::Domain::Iterator
 
             const auto Future = Self->Client->DescribeNews(
                 MakeShared<Gs2::News::Request::FDescribeNewsRequest>()
+                    ->WithContextStack(Self->Gs2->DefaultContextStack)
                     ->WithNamespaceName(Self->NamespaceName)
                     ->WithAccessToken(Self->AccessToken == nullptr ? TOptional<FString>() : Self->AccessToken->GetToken())
             );

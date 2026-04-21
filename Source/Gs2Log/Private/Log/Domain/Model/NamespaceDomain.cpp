@@ -36,6 +36,9 @@
 #include "Log/Domain/Model/User.h"
 #include "Log/Domain/Model/UserAccessToken.h"
 #include "Log/Domain/Model/Insight.h"
+#include "Log/Domain/Model/FacetModel.h"
+#include "Log/Domain/Model/Dashboard.h"
+#include "Log/Domain/Model/TimeseriesPoint.h"
 
 #include "Core/Domain/Gs2.h"
 #include "Core/Domain/Transaction/JobQueueJobDomainFactory.h"
@@ -100,12 +103,8 @@ namespace Gs2::Log::Domain::Model
         {
             return Future->GetTask().Error();
         }
-        const auto RequestModel = Request;
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-        }
         const auto Domain = Self;
         if (ResultModel != nullptr)
         {
@@ -365,6 +364,128 @@ namespace Gs2::Log::Domain::Model
         return Gs2::Core::Util::New<FAsyncTask<FCreateInsightTask>>(this->AsShared(), Request);
     }
 
+    FNamespaceDomain::FCreateDashboardTask::FCreateDashboardTask(
+        const TSharedPtr<FNamespaceDomain>& Self,
+        const Request::FCreateDashboardRequestPtr Request
+    ): Self(Self), Request(Request)
+    {
+
+    }
+
+    FNamespaceDomain::FCreateDashboardTask::FCreateDashboardTask(
+        const FCreateDashboardTask& From
+    ): TGs2Future(From), Self(From.Self), Request(From.Request)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FNamespaceDomain::FCreateDashboardTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::Log::Domain::Model::FDashboardDomain>> Result
+    )
+    {
+        Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
+            ->WithNamespaceName(Self->NamespaceName);
+        const auto Future = Self->Client->CreateDashboard(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
+        if (ResultModel->GetItem() != nullptr)
+        {
+            const auto Key = Gs2::Log::Domain::Model::FDashboardDomain::CreateCacheKey(
+                ResultModel->GetItem()->GetName()
+            );
+            Self->Gs2->Cache->Put(
+                Gs2::Log::Model::FDashboard::TypeName,
+                Self->ParentKey,
+                Key,
+                ResultModel->GetItem(),
+                FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+            );
+        }
+        auto Domain = MakeShared<Gs2::Log::Domain::Model::FDashboardDomain>(
+            Self->Gs2,
+            Self->Service,
+            Request->GetNamespaceName(),
+            ResultModel->GetItem()->GetName()
+        );
+
+        *Result = Domain;
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FNamespaceDomain::FCreateDashboardTask>> FNamespaceDomain::CreateDashboard(
+        Request::FCreateDashboardRequestPtr Request
+    ) {
+        return Gs2::Core::Util::New<FAsyncTask<FCreateDashboardTask>>(this->AsShared(), Request);
+    }
+
+    FNamespaceDomain::FMetricsTimeseriesTask::FMetricsTimeseriesTask(
+        const TSharedPtr<FNamespaceDomain>& Self,
+        const Request::FQueryMetricsTimeseriesRequestPtr Request
+    ): Self(Self), Request(Request)
+    {
+
+    }
+
+    FNamespaceDomain::FMetricsTimeseriesTask::FMetricsTimeseriesTask(
+        const FMetricsTimeseriesTask& From
+    ): TGs2Future(From), Self(From.Self), Request(From.Request)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FNamespaceDomain::FMetricsTimeseriesTask::Action(
+        TSharedPtr<TSharedPtr<TArray<TSharedPtr<Gs2::Log::Domain::Model::FTimeseriesPointDomain>>>> Result
+    )
+    {
+        Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
+            ->WithNamespaceName(Self->NamespaceName);
+        const auto Future = Self->Client->QueryMetricsTimeseries(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
+        auto Domain = MakeShared<TArray<TSharedPtr<Gs2::Log::Domain::Model::FTimeseriesPointDomain>>>();
+        for (auto i=0; i<ResultModel->GetItems()->Num(); i++)
+        {
+            Domain->Add(
+                MakeShared<Gs2::Log::Domain::Model::FTimeseriesPointDomain>(
+                    Self->Gs2,
+                    Self->Service
+                )
+            );
+            const auto ParentKey = "log:TimeseriesPoint";
+            const auto Key = Gs2::Log::Domain::Model::FTimeseriesPointDomain::CreateCacheKey(
+            );
+            Self->Gs2->Cache->Put(
+                Gs2::Log::Model::FTimeseriesPoint::TypeName,
+                ParentKey,
+                Key,
+                (*ResultModel->GetItems())[i],
+                FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+            );
+        }
+        *Result = Domain;
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FNamespaceDomain::FMetricsTimeseriesTask>> FNamespaceDomain::MetricsTimeseries(
+        Request::FQueryMetricsTimeseriesRequestPtr Request
+    ) {
+        return Gs2::Core::Util::New<FAsyncTask<FMetricsTimeseriesTask>>(this->AsShared(), Request);
+    }
+
     Gs2::Log::Domain::Iterator::FQueryAccessLogIteratorPtr FNamespaceDomain::AccessLog(
         const TOptional<FString> Service,
         const TOptional<FString> Method,
@@ -472,8 +593,8 @@ namespace Gs2::Log::Domain::Model
     Gs2::Log::Domain::Iterator::FQueryExecuteStampSheetLogIteratorPtr FNamespaceDomain::ExecuteStampSheetLog(
         const TOptional<FString> Service,
         const TOptional<FString> Method,
-        const TOptional<FString> Action,
         const TOptional<FString> UserId,
+        const TOptional<FString> Action,
         const TOptional<int64> Begin,
         const TOptional<int64> End,
         const TOptional<bool> LongTerm,
@@ -912,6 +1033,186 @@ namespace Gs2::Log::Domain::Model
             Service,
             NamespaceName,
             AccessToken
+        );
+    }
+
+    Gs2::Log::Domain::Iterator::FDescribeFacetModelsIteratorPtr FNamespaceDomain::FacetModels(
+        const TOptional<FString> NamePrefix
+    ) const
+    {
+        return MakeShared<Gs2::Log::Domain::Iterator::FDescribeFacetModelsIterator>(
+            Gs2,
+            Client,
+            NamespaceName,
+            NamePrefix
+        );
+    }
+
+    Gs2::Core::Domain::CallbackID FNamespaceDomain::SubscribeFacetModels(
+    TFunction<void()> Callback
+    )
+    {
+        return Gs2->Cache->ListSubscribe(
+            Gs2::Log::Model::FFacetModel::TypeName,
+            Gs2::Log::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                NamespaceName,
+                "FacetModel"
+            ),
+            Callback
+        );
+    }
+
+    void FNamespaceDomain::UnsubscribeFacetModels(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Gs2->Cache->ListUnsubscribe(
+            Gs2::Log::Model::FFacetModel::TypeName,
+            Gs2::Log::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                NamespaceName,
+                "FacetModel"
+            ),
+            CallbackID
+        );
+    }
+
+    TSharedPtr<Gs2::Log::Domain::Model::FFacetModelDomain> FNamespaceDomain::FacetModel(
+        const FString Field
+    )
+    {
+        return MakeShared<Gs2::Log::Domain::Model::FFacetModelDomain>(
+            Gs2,
+            Service,
+            NamespaceName,
+            Field == TEXT("") ? TOptional<FString>() : TOptional<FString>(Field)
+        );
+    }
+
+    Gs2::Log::Domain::Iterator::FDescribeDashboardsIteratorPtr FNamespaceDomain::Dashboards(
+        const TOptional<FString> NamePrefix
+    ) const
+    {
+        return MakeShared<Gs2::Log::Domain::Iterator::FDescribeDashboardsIterator>(
+            Gs2,
+            Client,
+            NamespaceName,
+            NamePrefix
+        );
+    }
+
+    Gs2::Core::Domain::CallbackID FNamespaceDomain::SubscribeDashboards(
+    TFunction<void()> Callback
+    )
+    {
+        return Gs2->Cache->ListSubscribe(
+            Gs2::Log::Model::FDashboard::TypeName,
+            Gs2::Log::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                NamespaceName,
+                "Dashboard"
+            ),
+            Callback
+        );
+    }
+
+    void FNamespaceDomain::UnsubscribeDashboards(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Gs2->Cache->ListUnsubscribe(
+            Gs2::Log::Model::FDashboard::TypeName,
+            Gs2::Log::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                NamespaceName,
+                "Dashboard"
+            ),
+            CallbackID
+        );
+    }
+
+    TSharedPtr<Gs2::Log::Domain::Model::FDashboardDomain> FNamespaceDomain::Dashboard(
+        const FString DashboardName
+    )
+    {
+        return MakeShared<Gs2::Log::Domain::Model::FDashboardDomain>(
+            Gs2,
+            Service,
+            NamespaceName,
+            DashboardName == TEXT("") ? TOptional<FString>() : TOptional<FString>(DashboardName)
+        );
+    }
+
+    Gs2::Log::Domain::Iterator::FDescribeMetricsIteratorPtr FNamespaceDomain::Metrics(
+        const TOptional<FString> NamePrefix
+    ) const
+    {
+        return MakeShared<Gs2::Log::Domain::Iterator::FDescribeMetricsIterator>(
+            Gs2,
+            Client,
+            NamespaceName,
+            NamePrefix
+        );
+    }
+
+    Gs2::Core::Domain::CallbackID FNamespaceDomain::SubscribeMetrics(
+    TFunction<void()> Callback
+    )
+    {
+        return Gs2->Cache->ListSubscribe(
+            Gs2::Log::Model::FMetricModel::TypeName,
+            Gs2::Log::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                NamespaceName,
+                "MetricModel"
+            ),
+            Callback
+        );
+    }
+
+    void FNamespaceDomain::UnsubscribeMetrics(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Gs2->Cache->ListUnsubscribe(
+            Gs2::Log::Model::FMetricModel::TypeName,
+            Gs2::Log::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                NamespaceName,
+                "MetricModel"
+            ),
+            CallbackID
+        );
+    }
+
+    Gs2::Log::Domain::Iterator::FDescribeLabelValuesIteratorPtr FNamespaceDomain::LabelValues(
+        const FString MetricName,
+        const TOptional<FString> LabelNamePrefix
+    ) const
+    {
+        return MakeShared<Gs2::Log::Domain::Iterator::FDescribeLabelValuesIterator>(
+            Gs2,
+            Client,
+            NamespaceName,
+            MetricName,
+            LabelNamePrefix
+        );
+    }
+
+    Gs2::Core::Domain::CallbackID FNamespaceDomain::SubscribeLabelValues(
+    TFunction<void()> Callback
+    )
+    {
+        return Gs2->Cache->ListSubscribe(
+            Gs2::Log::Model::FLabel::TypeName,
+            "log:Label",
+            Callback
+        );
+    }
+
+    void FNamespaceDomain::UnsubscribeLabelValues(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Gs2->Cache->ListUnsubscribe(
+            Gs2::Log::Model::FLabel::TypeName,
+            "log:Label",
+            CallbackID
         );
     }
 
