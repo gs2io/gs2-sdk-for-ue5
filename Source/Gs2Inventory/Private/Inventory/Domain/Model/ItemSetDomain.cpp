@@ -124,6 +124,7 @@ namespace Gs2::Inventory::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithUserId(Self->UserId)
             ->WithInventoryName(Self->InventoryName)
@@ -321,6 +322,7 @@ namespace Gs2::Inventory::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithUserId(Self->UserId)
             ->WithInventoryName(Self->InventoryName)
@@ -543,6 +545,7 @@ namespace Gs2::Inventory::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithUserId(Self->UserId)
             ->WithInventoryName(Self->InventoryName)
@@ -761,6 +764,7 @@ namespace Gs2::Inventory::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithUserId(Self->UserId)
             ->WithInventoryName(Self->InventoryName)
@@ -972,6 +976,7 @@ namespace Gs2::Inventory::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithUserId(Self->UserId)
             ->WithInventoryName(Self->InventoryName)
@@ -1139,6 +1144,7 @@ namespace Gs2::Inventory::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithUserId(Self->UserId)
             ->WithInventoryName(Self->InventoryName)
@@ -1188,6 +1194,7 @@ namespace Gs2::Inventory::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithUserId(Self->UserId)
             ->WithInventoryName(Self->InventoryName)

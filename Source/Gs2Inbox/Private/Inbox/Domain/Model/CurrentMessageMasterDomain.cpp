@@ -90,7 +90,7 @@ namespace Gs2::Inbox::Domain::Model
     )
     {
         Request
-            ->WithContextStack(Self->Gs2->DefaultContextStack)
+            ->WithContextStack((!Request->GetContextStack().IsSet() || Request->GetContextStack()->IsEmpty()) ? Self->Gs2->DefaultContextStack : Request->GetContextStack())
             ->WithNamespaceName(Self->NamespaceName);
         const auto Future = Self->Client->ExportMaster(
             Request
@@ -145,7 +145,7 @@ namespace Gs2::Inbox::Domain::Model
     )
     {
         Request
-            ->WithContextStack(Self->Gs2->DefaultContextStack)
+            ->WithContextStack((!Request->GetContextStack().IsSet() || Request->GetContextStack()->IsEmpty()) ? Self->Gs2->DefaultContextStack : Request->GetContextStack())
             ->WithNamespaceName(Self->NamespaceName);
         const auto Future = Self->Client->GetCurrentMessageMaster(
             Request
@@ -186,7 +186,7 @@ namespace Gs2::Inbox::Domain::Model
     )
     {
         Request
-            ->WithContextStack(Self->Gs2->DefaultContextStack)
+            ->WithContextStack((!Request->GetContextStack().IsSet() || Request->GetContextStack()->IsEmpty()) ? Self->Gs2->DefaultContextStack : Request->GetContextStack())
             ->WithNamespaceName(Self->NamespaceName);
         const auto Future = Self->Client->PreUpdateCurrentMessageMaster(
             Request
@@ -239,7 +239,7 @@ namespace Gs2::Inbox::Domain::Model
     )
     {
         Request
-            ->WithContextStack(Self->Gs2->DefaultContextStack)
+            ->WithContextStack((!Request->GetContextStack().IsSet() || Request->GetContextStack()->IsEmpty()) ? Self->Gs2->DefaultContextStack : Request->GetContextStack())
             ->WithNamespaceName(Self->NamespaceName);
         const auto Future = Self->Client->UpdateCurrentMessageMaster(
             Request
@@ -294,7 +294,7 @@ namespace Gs2::Inbox::Domain::Model
     )
     {
         Request
-            ->WithContextStack(Self->Gs2->DefaultContextStack)
+            ->WithContextStack((!Request->GetContextStack().IsSet() || Request->GetContextStack()->IsEmpty()) ? Self->Gs2->DefaultContextStack : Request->GetContextStack())
             ->WithNamespaceName(Self->NamespaceName);
         const auto Future = Self->Client->UpdateCurrentMessageMasterFromGitHub(
             Request

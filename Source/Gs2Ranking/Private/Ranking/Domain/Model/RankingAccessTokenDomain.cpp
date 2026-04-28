@@ -115,7 +115,7 @@ namespace Gs2::Ranking::Domain::Model
     )
     {
         Request
-            ->WithContextStack(Self->Gs2->DefaultContextStack)
+            ->WithContextStack((!Request->GetContextStack().IsSet() || Request->GetContextStack()->IsEmpty()) ? Self->Gs2->DefaultContextStack : Request->GetContextStack())
             ->WithNamespaceName(Self->NamespaceName)
             ->WithCategoryName(Self->CategoryName)
             ->WithAccessToken(Self->AccessToken->GetToken())

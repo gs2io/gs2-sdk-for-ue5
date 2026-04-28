@@ -93,7 +93,7 @@ namespace Gs2::Version::Domain::Model
     )
     {
         Request
-            ->WithContextStack(Self->Gs2->DefaultContextStack)
+            ->WithContextStack((!Request->GetContextStack().IsSet() || Request->GetContextStack()->IsEmpty()) ? Self->Gs2->DefaultContextStack : Request->GetContextStack())
             ->WithNamespaceName(Self->NamespaceName)
             ->WithVersionName(Self->VersionName);
         const auto Future = Self->Client->GetVersionModelMaster(
@@ -135,7 +135,7 @@ namespace Gs2::Version::Domain::Model
     )
     {
         Request
-            ->WithContextStack(Self->Gs2->DefaultContextStack)
+            ->WithContextStack((!Request->GetContextStack().IsSet() || Request->GetContextStack()->IsEmpty()) ? Self->Gs2->DefaultContextStack : Request->GetContextStack())
             ->WithNamespaceName(Self->NamespaceName)
             ->WithVersionName(Self->VersionName);
         const auto Future = Self->Client->UpdateVersionModelMaster(
@@ -192,7 +192,7 @@ namespace Gs2::Version::Domain::Model
     )
     {
         Request
-            ->WithContextStack(Self->Gs2->DefaultContextStack)
+            ->WithContextStack((!Request->GetContextStack().IsSet() || Request->GetContextStack()->IsEmpty()) ? Self->Gs2->DefaultContextStack : Request->GetContextStack())
             ->WithNamespaceName(Self->NamespaceName)
             ->WithVersionName(Self->VersionName);
         const auto Future = Self->Client->DeleteVersionModelMaster(

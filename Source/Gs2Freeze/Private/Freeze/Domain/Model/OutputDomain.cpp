@@ -85,7 +85,7 @@ namespace Gs2::Freeze::Domain::Model
     )
     {
         Request
-            ->WithContextStack(Self->Gs2->DefaultContextStack)
+            ->WithContextStack((!Request->GetContextStack().IsSet() || Request->GetContextStack()->IsEmpty()) ? Self->Gs2->DefaultContextStack : Request->GetContextStack())
             ->WithStageName(Self->StageName)
             ->WithOutputName(Self->OutputName);
         const auto Future = Self->Client->GetOutput(

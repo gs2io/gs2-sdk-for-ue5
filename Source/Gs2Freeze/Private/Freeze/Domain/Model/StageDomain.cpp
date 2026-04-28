@@ -79,7 +79,7 @@ namespace Gs2::Freeze::Domain::Model
     )
     {
         Request
-            ->WithContextStack(Self->Gs2->DefaultContextStack)
+            ->WithContextStack((!Request->GetContextStack().IsSet() || Request->GetContextStack()->IsEmpty()) ? Self->Gs2->DefaultContextStack : Request->GetContextStack())
             ->WithStageName(Self->StageName);
         const auto Future = Self->Client->GetStage(
             Request
@@ -120,7 +120,7 @@ namespace Gs2::Freeze::Domain::Model
     )
     {
         Request
-            ->WithContextStack(Self->Gs2->DefaultContextStack)
+            ->WithContextStack((!Request->GetContextStack().IsSet() || Request->GetContextStack()->IsEmpty()) ? Self->Gs2->DefaultContextStack : Request->GetContextStack())
             ->WithStageName(Self->StageName);
         const auto Future = Self->Client->PromoteStage(
             Request
@@ -176,7 +176,7 @@ namespace Gs2::Freeze::Domain::Model
     )
     {
         Request
-            ->WithContextStack(Self->Gs2->DefaultContextStack)
+            ->WithContextStack((!Request->GetContextStack().IsSet() || Request->GetContextStack()->IsEmpty()) ? Self->Gs2->DefaultContextStack : Request->GetContextStack())
             ->WithStageName(Self->StageName);
         const auto Future = Self->Client->RollbackStage(
             Request

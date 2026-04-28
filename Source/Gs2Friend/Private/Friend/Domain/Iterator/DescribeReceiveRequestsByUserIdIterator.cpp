@@ -123,6 +123,7 @@ namespace Gs2::Friend::Domain::Iterator
 
             const auto Future = Self->Client->DescribeReceiveRequestsByUserId(
                 MakeShared<Gs2::Friend::Request::FDescribeReceiveRequestsByUserIdRequest>()
+                    ->WithContextStack(Self->Gs2->DefaultContextStack)
                     ->WithNamespaceName(Self->NamespaceName)
                     ->WithUserId(Self->UserId)
                     ->WithWithProfile(Self->WithProfile)

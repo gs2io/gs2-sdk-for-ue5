@@ -106,6 +106,7 @@ namespace Gs2::Friend::Domain::Iterator
 
             const auto Future = Self->Client->DescribeBlackList(
                 MakeShared<Gs2::Friend::Request::FDescribeBlackListRequest>()
+                    ->WithContextStack(Self->Gs2->DefaultContextStack)
                     ->WithNamespaceName(Self->NamespaceName)
                     ->WithAccessToken(Self->AccessToken == nullptr ? TOptional<FString>() : Self->AccessToken->GetToken())
                     ->WithPageToken(PageToken)

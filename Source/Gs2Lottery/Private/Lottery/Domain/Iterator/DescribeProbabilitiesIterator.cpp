@@ -107,6 +107,7 @@ namespace Gs2::Lottery::Domain::Iterator
 
             const auto Future = Self->Client->DescribeProbabilities(
                 MakeShared<Gs2::Lottery::Request::FDescribeProbabilitiesRequest>()
+                    ->WithContextStack(Self->Gs2->DefaultContextStack)
                     ->WithNamespaceName(Self->NamespaceName)
                     ->WithLotteryName(Self->LotteryName)
                     ->WithAccessToken(Self->AccessToken == nullptr ? TOptional<FString>() : Self->AccessToken->GetToken())

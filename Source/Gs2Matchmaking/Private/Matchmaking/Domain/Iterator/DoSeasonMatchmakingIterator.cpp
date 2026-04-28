@@ -107,6 +107,7 @@ namespace Gs2::Matchmaking::Domain::Iterator
 
             const auto Future = Self->Client->DoSeasonMatchmaking(
                 MakeShared<Gs2::Matchmaking::Request::FDoSeasonMatchmakingRequest>()
+                    ->WithContextStack(Self->Gs2->DefaultContextStack)
                     ->WithNamespaceName(Self->NamespaceName)
                     ->WithSeasonName(Self->SeasonName)
                     ->WithAccessToken(Self->AccessToken == nullptr ? TOptional<FString>() : Self->AccessToken->GetToken())

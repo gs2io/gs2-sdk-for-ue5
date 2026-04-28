@@ -85,7 +85,7 @@ namespace Gs2::Identifier::Domain::Model
     )
     {
         Request
-            ->WithContextStack(Self->Gs2->DefaultContextStack)
+            ->WithContextStack((!Request->GetContextStack().IsSet() || Request->GetContextStack()->IsEmpty()) ? Self->Gs2->DefaultContextStack : Request->GetContextStack())
             ->WithUserName(Self->UserName);
         const auto Future = Self->Client->GetHasSecurityPolicy(
             Request
@@ -148,7 +148,7 @@ namespace Gs2::Identifier::Domain::Model
     )
     {
         Request
-            ->WithContextStack(Self->Gs2->DefaultContextStack)
+            ->WithContextStack((!Request->GetContextStack().IsSet() || Request->GetContextStack()->IsEmpty()) ? Self->Gs2->DefaultContextStack : Request->GetContextStack())
             ->WithUserName(Self->UserName);
         const auto Future = Self->Client->AttachSecurityPolicy(
             Request
@@ -211,7 +211,7 @@ namespace Gs2::Identifier::Domain::Model
     )
     {
         Request
-            ->WithContextStack(Self->Gs2->DefaultContextStack)
+            ->WithContextStack((!Request->GetContextStack().IsSet() || Request->GetContextStack()->IsEmpty()) ? Self->Gs2->DefaultContextStack : Request->GetContextStack())
             ->WithUserName(Self->UserName);
         const auto Future = Self->Client->DetachSecurityPolicy(
             Request

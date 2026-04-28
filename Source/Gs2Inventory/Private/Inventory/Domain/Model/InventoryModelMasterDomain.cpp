@@ -114,7 +114,7 @@ namespace Gs2::Inventory::Domain::Model
     )
     {
         Request
-            ->WithContextStack(Self->Gs2->DefaultContextStack)
+            ->WithContextStack((!Request->GetContextStack().IsSet() || Request->GetContextStack()->IsEmpty()) ? Self->Gs2->DefaultContextStack : Request->GetContextStack())
             ->WithNamespaceName(Self->NamespaceName)
             ->WithInventoryName(Self->InventoryName);
         const auto Future = Self->Client->GetInventoryModelMaster(
@@ -156,7 +156,7 @@ namespace Gs2::Inventory::Domain::Model
     )
     {
         Request
-            ->WithContextStack(Self->Gs2->DefaultContextStack)
+            ->WithContextStack((!Request->GetContextStack().IsSet() || Request->GetContextStack()->IsEmpty()) ? Self->Gs2->DefaultContextStack : Request->GetContextStack())
             ->WithNamespaceName(Self->NamespaceName)
             ->WithInventoryName(Self->InventoryName);
         const auto Future = Self->Client->UpdateInventoryModelMaster(
@@ -213,7 +213,7 @@ namespace Gs2::Inventory::Domain::Model
     )
     {
         Request
-            ->WithContextStack(Self->Gs2->DefaultContextStack)
+            ->WithContextStack((!Request->GetContextStack().IsSet() || Request->GetContextStack()->IsEmpty()) ? Self->Gs2->DefaultContextStack : Request->GetContextStack())
             ->WithNamespaceName(Self->NamespaceName)
             ->WithInventoryName(Self->InventoryName);
         const auto Future = Self->Client->DeleteInventoryModelMaster(
@@ -268,7 +268,7 @@ namespace Gs2::Inventory::Domain::Model
     )
     {
         Request
-            ->WithContextStack(Self->Gs2->DefaultContextStack)
+            ->WithContextStack((!Request->GetContextStack().IsSet() || Request->GetContextStack()->IsEmpty()) ? Self->Gs2->DefaultContextStack : Request->GetContextStack())
             ->WithNamespaceName(Self->NamespaceName)
             ->WithInventoryName(Self->InventoryName);
         const auto Future = Self->Client->CreateItemModelMaster(

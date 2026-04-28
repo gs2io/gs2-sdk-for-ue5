@@ -95,7 +95,7 @@ namespace Gs2::Chat::Domain::Model
     )
     {
         Request
-            ->WithContextStack(Self->Gs2->DefaultContextStack)
+            ->WithContextStack((!Request->GetContextStack().IsSet() || Request->GetContextStack()->IsEmpty()) ? Self->Gs2->DefaultContextStack : Request->GetContextStack())
             ->WithNamespaceName(Self->NamespaceName)
             ->WithCategory(Self->Category);
         const auto Future = Self->Client->CreateCategoryModelMaster(
@@ -152,7 +152,7 @@ namespace Gs2::Chat::Domain::Model
     )
     {
         Request
-            ->WithContextStack(Self->Gs2->DefaultContextStack)
+            ->WithContextStack((!Request->GetContextStack().IsSet() || Request->GetContextStack()->IsEmpty()) ? Self->Gs2->DefaultContextStack : Request->GetContextStack())
             ->WithNamespaceName(Self->NamespaceName)
             ->WithCategory(Self->Category);
         const auto Future = Self->Client->GetCategoryModelMaster(
@@ -194,7 +194,7 @@ namespace Gs2::Chat::Domain::Model
     )
     {
         Request
-            ->WithContextStack(Self->Gs2->DefaultContextStack)
+            ->WithContextStack((!Request->GetContextStack().IsSet() || Request->GetContextStack()->IsEmpty()) ? Self->Gs2->DefaultContextStack : Request->GetContextStack())
             ->WithNamespaceName(Self->NamespaceName)
             ->WithCategory(Self->Category);
         const auto Future = Self->Client->UpdateCategoryModelMaster(
@@ -251,7 +251,7 @@ namespace Gs2::Chat::Domain::Model
     )
     {
         Request
-            ->WithContextStack(Self->Gs2->DefaultContextStack)
+            ->WithContextStack((!Request->GetContextStack().IsSet() || Request->GetContextStack()->IsEmpty()) ? Self->Gs2->DefaultContextStack : Request->GetContextStack())
             ->WithNamespaceName(Self->NamespaceName)
             ->WithCategory(Self->Category);
         const auto Future = Self->Client->DeleteCategoryModelMaster(

@@ -85,7 +85,7 @@ namespace Gs2::Identifier::Domain::Model
     )
     {
         Request
-            ->WithContextStack(Self->Gs2->DefaultContextStack)
+            ->WithContextStack((!Request->GetContextStack().IsSet() || Request->GetContextStack()->IsEmpty()) ? Self->Gs2->DefaultContextStack : Request->GetContextStack())
             ->WithUserName(Self->UserName);
         const auto Future = Self->Client->CreatePassword(
             Request
@@ -140,7 +140,7 @@ namespace Gs2::Identifier::Domain::Model
     )
     {
         Request
-            ->WithContextStack(Self->Gs2->DefaultContextStack)
+            ->WithContextStack((!Request->GetContextStack().IsSet() || Request->GetContextStack()->IsEmpty()) ? Self->Gs2->DefaultContextStack : Request->GetContextStack())
             ->WithUserName(Self->UserName);
         const auto Future = Self->Client->GetPassword(
             Request
@@ -181,7 +181,7 @@ namespace Gs2::Identifier::Domain::Model
     )
     {
         Request
-            ->WithContextStack(Self->Gs2->DefaultContextStack)
+            ->WithContextStack((!Request->GetContextStack().IsSet() || Request->GetContextStack()->IsEmpty()) ? Self->Gs2->DefaultContextStack : Request->GetContextStack())
             ->WithUserName(Self->UserName);
         const auto Future = Self->Client->EnableMfa(
             Request
@@ -243,7 +243,7 @@ namespace Gs2::Identifier::Domain::Model
     )
     {
         Request
-            ->WithContextStack(Self->Gs2->DefaultContextStack)
+            ->WithContextStack((!Request->GetContextStack().IsSet() || Request->GetContextStack()->IsEmpty()) ? Self->Gs2->DefaultContextStack : Request->GetContextStack())
             ->WithUserName(Self->UserName);
         const auto Future = Self->Client->ChallengeMfa(
             Request
@@ -298,7 +298,7 @@ namespace Gs2::Identifier::Domain::Model
     )
     {
         Request
-            ->WithContextStack(Self->Gs2->DefaultContextStack)
+            ->WithContextStack((!Request->GetContextStack().IsSet() || Request->GetContextStack()->IsEmpty()) ? Self->Gs2->DefaultContextStack : Request->GetContextStack())
             ->WithUserName(Self->UserName);
         const auto Future = Self->Client->DisableMfa(
             Request
@@ -353,7 +353,7 @@ namespace Gs2::Identifier::Domain::Model
     )
     {
         Request
-            ->WithContextStack(Self->Gs2->DefaultContextStack)
+            ->WithContextStack((!Request->GetContextStack().IsSet() || Request->GetContextStack()->IsEmpty()) ? Self->Gs2->DefaultContextStack : Request->GetContextStack())
             ->WithUserName(Self->UserName);
         const auto Future = Self->Client->DeletePassword(
             Request

@@ -144,6 +144,8 @@ namespace Gs2::Auth::Domain::Model
         TSharedPtr<TSharedPtr<Gs2::Auth::Domain::Model::FAccessTokenDomain>> Result
     )
     {
+        Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack);
         const auto Future = Self->Client->LoginBySignature(
             Request
         );
@@ -212,6 +214,8 @@ namespace Gs2::Auth::Domain::Model
         TSharedPtr<TSharedPtr<Gs2::Auth::Domain::Model::FAccessTokenDomain>> Result
     )
     {
+        Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack);
         const auto Future = Self->Client->Federation(
             Request
         );
@@ -270,6 +274,8 @@ namespace Gs2::Auth::Domain::Model
         TSharedPtr<TSharedPtr<Gs2::Auth::Domain::Model::FAccessTokenDomain>> Result
     )
     {
+        Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack);
         const auto Future = Self->Client->IssueTimeOffsetTokenByUserId(
             Request
         );

@@ -90,6 +90,7 @@ namespace Gs2::Idle::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithCategoryName(Self->CategoryName);
         const auto Future = Self->Client->GetCategoryModelMaster(
@@ -152,6 +153,7 @@ namespace Gs2::Idle::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithCategoryName(Self->CategoryName);
         const auto Future = Self->Client->UpdateCategoryModelMaster(
@@ -216,6 +218,7 @@ namespace Gs2::Idle::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithCategoryName(Self->CategoryName);
         const auto Future = Self->Client->DeleteCategoryModelMaster(

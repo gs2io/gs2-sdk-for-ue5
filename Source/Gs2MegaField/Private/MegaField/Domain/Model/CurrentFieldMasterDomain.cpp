@@ -90,7 +90,7 @@ namespace Gs2::MegaField::Domain::Model
     )
     {
         Request
-            ->WithContextStack(Self->Gs2->DefaultContextStack)
+            ->WithContextStack((!Request->GetContextStack().IsSet() || Request->GetContextStack()->IsEmpty()) ? Self->Gs2->DefaultContextStack : Request->GetContextStack())
             ->WithNamespaceName(Self->NamespaceName);
         const auto Future = Self->Client->ExportMaster(
             Request
@@ -145,7 +145,7 @@ namespace Gs2::MegaField::Domain::Model
     )
     {
         Request
-            ->WithContextStack(Self->Gs2->DefaultContextStack)
+            ->WithContextStack((!Request->GetContextStack().IsSet() || Request->GetContextStack()->IsEmpty()) ? Self->Gs2->DefaultContextStack : Request->GetContextStack())
             ->WithNamespaceName(Self->NamespaceName);
         const auto Future = Self->Client->GetCurrentFieldMaster(
             Request
@@ -186,7 +186,7 @@ namespace Gs2::MegaField::Domain::Model
     )
     {
         Request
-            ->WithContextStack(Self->Gs2->DefaultContextStack)
+            ->WithContextStack((!Request->GetContextStack().IsSet() || Request->GetContextStack()->IsEmpty()) ? Self->Gs2->DefaultContextStack : Request->GetContextStack())
             ->WithNamespaceName(Self->NamespaceName);
         const auto Future = Self->Client->PreUpdateCurrentFieldMaster(
             Request
@@ -239,7 +239,7 @@ namespace Gs2::MegaField::Domain::Model
     )
     {
         Request
-            ->WithContextStack(Self->Gs2->DefaultContextStack)
+            ->WithContextStack((!Request->GetContextStack().IsSet() || Request->GetContextStack()->IsEmpty()) ? Self->Gs2->DefaultContextStack : Request->GetContextStack())
             ->WithNamespaceName(Self->NamespaceName);
         const auto Future = Self->Client->UpdateCurrentFieldMaster(
             Request
@@ -294,7 +294,7 @@ namespace Gs2::MegaField::Domain::Model
     )
     {
         Request
-            ->WithContextStack(Self->Gs2->DefaultContextStack)
+            ->WithContextStack((!Request->GetContextStack().IsSet() || Request->GetContextStack()->IsEmpty()) ? Self->Gs2->DefaultContextStack : Request->GetContextStack())
             ->WithNamespaceName(Self->NamespaceName);
         const auto Future = Self->Client->UpdateCurrentFieldMasterFromGitHub(
             Request

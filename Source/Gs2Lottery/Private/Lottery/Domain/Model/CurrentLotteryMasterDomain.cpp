@@ -95,7 +95,7 @@ namespace Gs2::Lottery::Domain::Model
     )
     {
         Request
-            ->WithContextStack(Self->Gs2->DefaultContextStack)
+            ->WithContextStack((!Request->GetContextStack().IsSet() || Request->GetContextStack()->IsEmpty()) ? Self->Gs2->DefaultContextStack : Request->GetContextStack())
             ->WithNamespaceName(Self->NamespaceName);
         const auto Future = Self->Client->ExportMaster(
             Request
@@ -150,7 +150,7 @@ namespace Gs2::Lottery::Domain::Model
     )
     {
         Request
-            ->WithContextStack(Self->Gs2->DefaultContextStack)
+            ->WithContextStack((!Request->GetContextStack().IsSet() || Request->GetContextStack()->IsEmpty()) ? Self->Gs2->DefaultContextStack : Request->GetContextStack())
             ->WithNamespaceName(Self->NamespaceName);
         const auto Future = Self->Client->GetCurrentLotteryMaster(
             Request
@@ -191,7 +191,7 @@ namespace Gs2::Lottery::Domain::Model
     )
     {
         Request
-            ->WithContextStack(Self->Gs2->DefaultContextStack)
+            ->WithContextStack((!Request->GetContextStack().IsSet() || Request->GetContextStack()->IsEmpty()) ? Self->Gs2->DefaultContextStack : Request->GetContextStack())
             ->WithNamespaceName(Self->NamespaceName);
         const auto Future = Self->Client->PreUpdateCurrentLotteryMaster(
             Request
@@ -244,7 +244,7 @@ namespace Gs2::Lottery::Domain::Model
     )
     {
         Request
-            ->WithContextStack(Self->Gs2->DefaultContextStack)
+            ->WithContextStack((!Request->GetContextStack().IsSet() || Request->GetContextStack()->IsEmpty()) ? Self->Gs2->DefaultContextStack : Request->GetContextStack())
             ->WithNamespaceName(Self->NamespaceName);
         const auto Future = Self->Client->UpdateCurrentLotteryMaster(
             Request
@@ -299,7 +299,7 @@ namespace Gs2::Lottery::Domain::Model
     )
     {
         Request
-            ->WithContextStack(Self->Gs2->DefaultContextStack)
+            ->WithContextStack((!Request->GetContextStack().IsSet() || Request->GetContextStack()->IsEmpty()) ? Self->Gs2->DefaultContextStack : Request->GetContextStack())
             ->WithNamespaceName(Self->NamespaceName);
         const auto Future = Self->Client->UpdateCurrentLotteryMasterFromGitHub(
             Request

@@ -91,7 +91,7 @@ namespace Gs2::Limit::Domain::Model
     )
     {
         Request
-            ->WithContextStack(Self->Gs2->DefaultContextStack)
+            ->WithContextStack((!Request->GetContextStack().IsSet() || Request->GetContextStack()->IsEmpty()) ? Self->Gs2->DefaultContextStack : Request->GetContextStack())
             ->WithNamespaceName(Self->NamespaceName)
             ->WithLimitName(Self->LimitName);
         const auto Future = Self->Client->GetLimitModelMaster(
@@ -133,7 +133,7 @@ namespace Gs2::Limit::Domain::Model
     )
     {
         Request
-            ->WithContextStack(Self->Gs2->DefaultContextStack)
+            ->WithContextStack((!Request->GetContextStack().IsSet() || Request->GetContextStack()->IsEmpty()) ? Self->Gs2->DefaultContextStack : Request->GetContextStack())
             ->WithNamespaceName(Self->NamespaceName)
             ->WithLimitName(Self->LimitName);
         const auto Future = Self->Client->UpdateLimitModelMaster(
@@ -190,7 +190,7 @@ namespace Gs2::Limit::Domain::Model
     )
     {
         Request
-            ->WithContextStack(Self->Gs2->DefaultContextStack)
+            ->WithContextStack((!Request->GetContextStack().IsSet() || Request->GetContextStack()->IsEmpty()) ? Self->Gs2->DefaultContextStack : Request->GetContextStack())
             ->WithNamespaceName(Self->NamespaceName)
             ->WithLimitName(Self->LimitName);
         const auto Future = Self->Client->DeleteLimitModelMaster(

@@ -12,6 +12,8 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
+ *
+ * deny overwrite
  */
 
 #pragma once
@@ -55,6 +57,29 @@ namespace Gs2::UE5::Account::Domain::Model
             Gs2::Account::Domain::Model::FAccountAccessTokenDomainPtr Domain,
             Gs2::UE5::Util::IGameSessionPtr GameSession,
             Gs2::UE5::Util::FGs2ConnectionPtr Connection
+        );
+
+        class EZGS2_API FGetAuthorizationUrlTask :
+            public Gs2::Core::Util::TGs2Future<Gs2::UE5::Account::Domain::Model::FEzAccountGameSessionDomain>,
+            public TSharedFromThis<FGetAuthorizationUrlTask>
+        {
+            TSharedPtr<FEzAccountGameSessionDomain> Self;
+            int32 Type;
+
+        public:
+            explicit FGetAuthorizationUrlTask(
+                TSharedPtr<FEzAccountGameSessionDomain> Self,
+                int32 Type
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::UE5::Account::Domain::Model::FEzAccountGameSessionDomain>> Result
+            ) override;
+        };
+        friend FGetAuthorizationUrlTask;
+
+        TSharedPtr<FAsyncTask<FGetAuthorizationUrlTask>> GetAuthorizationUrl(
+            int32 Type
         );
 
         class EZGS2_API FDeleteTakeOverSettingTask :

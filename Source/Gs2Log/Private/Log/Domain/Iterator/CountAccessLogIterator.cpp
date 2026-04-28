@@ -115,6 +115,7 @@ namespace Gs2::Log::Domain::Iterator
 
             const auto Future = Self->Client->CountAccessLog(
                 MakeShared<Gs2::Log::Request::FCountAccessLogRequest>()
+                    ->WithContextStack(Self->Gs2->DefaultContextStack)
                     ->WithNamespaceName(Self->NamespaceName)
                     ->WithService(Self->Service)
                     ->WithMethod(Self->Method)

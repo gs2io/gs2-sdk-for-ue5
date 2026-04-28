@@ -131,6 +131,7 @@ namespace Gs2::Guild::Domain::Iterator
 
             const auto Future = Self->Client->SearchGuildsByUserId(
                 MakeShared<Gs2::Guild::Request::FSearchGuildsByUserIdRequest>()
+                    ->WithContextStack(Self->Gs2->DefaultContextStack)
                     ->WithNamespaceName(Self->NamespaceName)
                     ->WithGuildModelName(Self->GuildModelName)
                     ->WithUserId(Self->UserId)

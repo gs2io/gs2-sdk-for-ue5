@@ -12,6 +12,8 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
+ *
+ * deny overwrite
  */
 
 // ReSharper disable CppUnusedIncludeDirective
@@ -109,6 +111,32 @@ namespace Gs2::Account::Domain::Model
 
         FAccountAccessTokenDomain(
             const FAccountAccessTokenDomain& From
+        );
+
+        class GS2ACCOUNT_API FGetAuthorizationUrlTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Account::Domain::Model::FAccountAccessTokenDomain>,
+            public TSharedFromThis<FGetAuthorizationUrlTask>
+        {
+            const TSharedPtr<FAccountAccessTokenDomain> Self;
+            const Request::FGetAuthorizationUrlRequestPtr Request;
+        public:
+            explicit FGetAuthorizationUrlTask(
+                const TSharedPtr<FAccountAccessTokenDomain>& Self,
+                const Request::FGetAuthorizationUrlRequestPtr Request
+            );
+
+            FGetAuthorizationUrlTask(
+                const FGetAuthorizationUrlTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Account::Domain::Model::FAccountAccessTokenDomain>> Result
+            ) override;
+        };
+        friend FGetAuthorizationUrlTask;
+
+        TSharedPtr<FAsyncTask<FGetAuthorizationUrlTask>> GetAuthorizationUrl(
+            Request::FGetAuthorizationUrlRequestPtr Request
         );
 
         class GS2ACCOUNT_API FDeleteTakeOverTask final :

@@ -92,7 +92,7 @@ namespace Gs2::SerialKey::Domain::Model
     )
     {
         Request
-            ->WithContextStack(Self->Gs2->DefaultContextStack)
+            ->WithContextStack((!Request->GetContextStack().IsSet() || Request->GetContextStack()->IsEmpty()) ? Self->Gs2->DefaultContextStack : Request->GetContextStack())
             ->WithNamespaceName(Self->NamespaceName)
             ->WithCampaignModelName(Self->CampaignModelName);
         const auto Future = Self->Client->GetCampaignModelMaster(
@@ -134,7 +134,7 @@ namespace Gs2::SerialKey::Domain::Model
     )
     {
         Request
-            ->WithContextStack(Self->Gs2->DefaultContextStack)
+            ->WithContextStack((!Request->GetContextStack().IsSet() || Request->GetContextStack()->IsEmpty()) ? Self->Gs2->DefaultContextStack : Request->GetContextStack())
             ->WithNamespaceName(Self->NamespaceName)
             ->WithCampaignModelName(Self->CampaignModelName);
         const auto Future = Self->Client->UpdateCampaignModelMaster(
@@ -191,7 +191,7 @@ namespace Gs2::SerialKey::Domain::Model
     )
     {
         Request
-            ->WithContextStack(Self->Gs2->DefaultContextStack)
+            ->WithContextStack((!Request->GetContextStack().IsSet() || Request->GetContextStack()->IsEmpty()) ? Self->Gs2->DefaultContextStack : Request->GetContextStack())
             ->WithNamespaceName(Self->NamespaceName)
             ->WithCampaignModelName(Self->CampaignModelName);
         const auto Future = Self->Client->DeleteCampaignModelMaster(

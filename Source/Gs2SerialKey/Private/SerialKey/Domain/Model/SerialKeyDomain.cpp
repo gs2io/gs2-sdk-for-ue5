@@ -95,6 +95,7 @@ namespace Gs2::SerialKey::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithCode(Self->SerialKeyCode);
         const auto Future = Self->Client->GetSerialKey(
@@ -175,6 +176,7 @@ namespace Gs2::SerialKey::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithUserId(Self->UserId);
         const auto Future = Self->Client->UseByUserId(

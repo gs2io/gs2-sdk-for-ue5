@@ -101,7 +101,7 @@ namespace Gs2::Showcase::Domain::Model
     )
     {
         Request
-            ->WithContextStack(Self->Gs2->DefaultContextStack)
+            ->WithContextStack((!Request->GetContextStack().IsSet() || Request->GetContextStack()->IsEmpty()) ? Self->Gs2->DefaultContextStack : Request->GetContextStack())
             ->WithNamespaceName(Self->NamespaceName)
             ->WithSalesItemName(Self->SalesItemName);
         const auto Future = Self->Client->GetSalesItemMaster(
@@ -143,7 +143,7 @@ namespace Gs2::Showcase::Domain::Model
     )
     {
         Request
-            ->WithContextStack(Self->Gs2->DefaultContextStack)
+            ->WithContextStack((!Request->GetContextStack().IsSet() || Request->GetContextStack()->IsEmpty()) ? Self->Gs2->DefaultContextStack : Request->GetContextStack())
             ->WithNamespaceName(Self->NamespaceName)
             ->WithSalesItemName(Self->SalesItemName);
         const auto Future = Self->Client->UpdateSalesItemMaster(
@@ -200,7 +200,7 @@ namespace Gs2::Showcase::Domain::Model
     )
     {
         Request
-            ->WithContextStack(Self->Gs2->DefaultContextStack)
+            ->WithContextStack((!Request->GetContextStack().IsSet() || Request->GetContextStack()->IsEmpty()) ? Self->Gs2->DefaultContextStack : Request->GetContextStack())
             ->WithNamespaceName(Self->NamespaceName)
             ->WithSalesItemName(Self->SalesItemName);
         const auto Future = Self->Client->DeleteSalesItemMaster(

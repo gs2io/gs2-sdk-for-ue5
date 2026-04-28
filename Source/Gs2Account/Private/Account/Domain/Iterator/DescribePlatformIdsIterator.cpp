@@ -116,6 +116,7 @@ namespace Gs2::Account::Domain::Iterator
 
             const auto Future = Self->Client->DescribePlatformIds(
                 MakeShared<Gs2::Account::Request::FDescribePlatformIdsRequest>()
+                    ->WithContextStack(Self->Gs2->DefaultContextStack)
                     ->WithNamespaceName(Self->NamespaceName)
                     ->WithAccessToken(Self->AccessToken == nullptr ? TOptional<FString>() : Self->AccessToken->GetToken())
                     ->WithPageToken(PageToken)

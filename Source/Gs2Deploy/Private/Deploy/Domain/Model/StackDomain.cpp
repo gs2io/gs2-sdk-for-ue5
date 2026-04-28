@@ -80,6 +80,7 @@ namespace Gs2::Deploy::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithStackName(Self->StackName);
         const auto Future = Self->Client->GetStackStatus(
             Request
@@ -132,6 +133,7 @@ namespace Gs2::Deploy::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithStackName(Self->StackName);
         const auto Future = Self->Client->GetStack(
             Request
@@ -189,6 +191,7 @@ namespace Gs2::Deploy::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithStackName(Self->StackName);
         const auto Future = Self->Client->UpdateStack(
             Request
@@ -248,6 +251,7 @@ namespace Gs2::Deploy::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithStackName(Self->StackName);
         const auto Future = Self->Client->ChangeSet(
             Request
@@ -292,6 +296,7 @@ namespace Gs2::Deploy::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithStackName(Self->StackName);
         const auto Future = Self->Client->UpdateStackFromGitHub(
             Request
@@ -351,6 +356,7 @@ namespace Gs2::Deploy::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithStackName(Self->StackName);
         const auto Future = Self->Client->DeleteStack(
             Request
@@ -404,6 +410,7 @@ namespace Gs2::Deploy::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithStackName(Self->StackName);
         const auto Future = Self->Client->ForceDeleteStack(
             Request
@@ -463,6 +470,7 @@ namespace Gs2::Deploy::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithStackName(Self->StackName);
         const auto Future = Self->Client->DeleteStackResources(
             Request
@@ -516,6 +524,7 @@ namespace Gs2::Deploy::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithStackName(Self->StackName);
         const auto Future = Self->Client->DeleteStackEntity(
             Request

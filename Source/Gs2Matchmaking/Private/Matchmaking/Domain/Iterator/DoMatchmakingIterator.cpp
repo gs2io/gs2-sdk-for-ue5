@@ -89,6 +89,7 @@ namespace Gs2::Matchmaking::Domain::Iterator
 
             const auto Future = Self->Client->DoMatchmaking(
                 MakeShared<Gs2::Matchmaking::Request::FDoMatchmakingRequest>()
+                    ->WithContextStack(Self->Gs2->DefaultContextStack)
                     ->WithNamespaceName(Self->NamespaceName)
                     ->WithAccessToken(Self->AccessToken == nullptr ? TOptional<FString>() : Self->AccessToken->GetToken())
                     ->WithPlayer(Self->Player)

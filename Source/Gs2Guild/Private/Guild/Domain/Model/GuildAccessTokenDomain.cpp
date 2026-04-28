@@ -109,7 +109,7 @@ namespace Gs2::Guild::Domain::Model
     )
     {
         Request
-            ->WithContextStack(Self->Gs2->DefaultContextStack)
+            ->WithContextStack((!Request->GetContextStack().IsSet() || Request->GetContextStack()->IsEmpty()) ? Self->Gs2->DefaultContextStack : Request->GetContextStack())
             ->WithNamespaceName(Self->NamespaceName)
             ->WithGuildModelName(Self->GuildModelName)
             ->WithGuildName(Self->GuildName())
@@ -349,6 +349,71 @@ namespace Gs2::Guild::Domain::Model
         Request::FUpdateMemberRoleRequestPtr Request
     ) {
         return Gs2::Core::Util::New<FAsyncTask<FUpdateMemberRoleTask>>(this->AsShared(), Request);
+    }
+
+    FGuildAccessTokenDomain::FBatchUpdateMemberRoleTask::FBatchUpdateMemberRoleTask(
+        const TSharedPtr<FGuildAccessTokenDomain>& Self,
+        const Request::FBatchUpdateMemberRoleRequestPtr Request
+    ): Self(Self), Request(Request)
+    {
+
+    }
+
+    FGuildAccessTokenDomain::FBatchUpdateMemberRoleTask::FBatchUpdateMemberRoleTask(
+        const FBatchUpdateMemberRoleTask& From
+    ): TGs2Future(From), Self(From.Self), Request(From.Request)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FGuildAccessTokenDomain::FBatchUpdateMemberRoleTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::Guild::Domain::Model::FGuildAccessTokenDomain>> Result
+    )
+    {
+        Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
+            ->WithNamespaceName(Self->NamespaceName)
+            ->WithGuildModelName(Self->GuildModelName)
+            ->WithAccessToken(Self->AccessToken->GetToken());
+        const auto Future = Self->Client->BatchUpdateMemberRole(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
+        if (ResultModel != nullptr)
+        {
+            if (ResultModel->GetItem() != nullptr)
+            {
+                const auto ParentKey = Gs2::Guild::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                    Self->NamespaceName,
+                    "Guild"
+                );
+                const auto Key = Gs2::Guild::Domain::Model::FGuildDomain::CreateCacheKey(
+                    ResultModel->GetItem()->GetGuildModelName(),
+                    ResultModel->GetItem()->GetName()
+                );
+                Self->Gs2->Cache->Put(
+                    Gs2::Guild::Model::FGuild::TypeName,
+                    ParentKey,
+                    Key,
+                    ResultModel->GetItem(),
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+            }
+        }
+        auto Domain = Self;
+        *Result = Domain;
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FGuildAccessTokenDomain::FBatchUpdateMemberRoleTask>> FGuildAccessTokenDomain::BatchUpdateMemberRole(
+        Request::FBatchUpdateMemberRoleRequestPtr Request
+    ) {
+        return Gs2::Core::Util::New<FAsyncTask<FBatchUpdateMemberRoleTask>>(this->AsShared(), Request);
     }
 
     FGuildAccessTokenDomain::FDeleteTask::FDeleteTask(

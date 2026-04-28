@@ -97,6 +97,7 @@ namespace Gs2::JobQueue::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithUserId(Self->UserId)
             ->WithJobName(Self->JobName)

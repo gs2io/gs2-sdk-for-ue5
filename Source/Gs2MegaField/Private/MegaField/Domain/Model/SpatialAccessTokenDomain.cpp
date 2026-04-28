@@ -100,6 +100,7 @@ namespace Gs2::MegaField::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithAccessToken(Self->AccessToken->GetToken())
             ->WithAreaModelName(Self->AreaModelName)
@@ -168,6 +169,7 @@ namespace Gs2::MegaField::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithAccessToken(Self->AccessToken->GetToken())
             ->WithAreaModelName(Self->AreaModelName)
@@ -265,6 +267,7 @@ namespace Gs2::MegaField::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithAccessToken(Self->AccessToken->GetToken())
             ->WithAreaModelName(Self->AreaModelName)
@@ -326,6 +329,7 @@ namespace Gs2::MegaField::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithAccessToken(Self->AccessToken->GetToken())
             ->WithAreaModelName(Self->AreaModelName)

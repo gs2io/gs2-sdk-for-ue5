@@ -127,6 +127,7 @@ namespace Gs2::Guild::Domain::Iterator
             );
             const auto Future = Self->Client->SearchGuilds(
                 MakeShared<Gs2::Guild::Request::FSearchGuildsRequest>()
+                    ->WithContextStack(Self->Gs2->DefaultContextStack)
                     ->WithNamespaceName(Self->NamespaceName)
                     ->WithGuildModelName(Self->GuildModelName)
                     ->WithAccessToken(Self->AccessToken == nullptr ? TOptional<FString>() : Self->AccessToken->GetToken())

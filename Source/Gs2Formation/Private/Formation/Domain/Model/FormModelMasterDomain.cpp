@@ -99,7 +99,7 @@ namespace Gs2::Formation::Domain::Model
     )
     {
         Request
-            ->WithContextStack(Self->Gs2->DefaultContextStack)
+            ->WithContextStack((!Request->GetContextStack().IsSet() || Request->GetContextStack()->IsEmpty()) ? Self->Gs2->DefaultContextStack : Request->GetContextStack())
             ->WithNamespaceName(Self->NamespaceName)
             ->WithFormModelName(Self->FormModelName);
         const auto Future = Self->Client->GetFormModelMaster(
@@ -141,7 +141,7 @@ namespace Gs2::Formation::Domain::Model
     )
     {
         Request
-            ->WithContextStack(Self->Gs2->DefaultContextStack)
+            ->WithContextStack((!Request->GetContextStack().IsSet() || Request->GetContextStack()->IsEmpty()) ? Self->Gs2->DefaultContextStack : Request->GetContextStack())
             ->WithNamespaceName(Self->NamespaceName)
             ->WithFormModelName(Self->FormModelName);
         const auto Future = Self->Client->UpdateFormModelMaster(
@@ -198,7 +198,7 @@ namespace Gs2::Formation::Domain::Model
     )
     {
         Request
-            ->WithContextStack(Self->Gs2->DefaultContextStack)
+            ->WithContextStack((!Request->GetContextStack().IsSet() || Request->GetContextStack()->IsEmpty()) ? Self->Gs2->DefaultContextStack : Request->GetContextStack())
             ->WithNamespaceName(Self->NamespaceName)
             ->WithFormModelName(Self->FormModelName);
         const auto Future = Self->Client->DeleteFormModelMaster(

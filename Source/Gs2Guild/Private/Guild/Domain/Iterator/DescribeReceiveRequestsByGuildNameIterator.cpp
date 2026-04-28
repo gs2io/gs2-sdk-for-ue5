@@ -120,6 +120,7 @@ namespace Gs2::Guild::Domain::Iterator
 
             const auto Future = Self->Client->DescribeReceiveRequestsByGuildName(
                 MakeShared<Gs2::Guild::Request::FDescribeReceiveRequestsByGuildNameRequest>()
+                    ->WithContextStack(Self->Gs2->DefaultContextStack)
                     ->WithNamespaceName(Self->NamespaceName)
                     ->WithGuildModelName(Self->GuildModelName)
                     ->WithGuildName(Self->GuildName)

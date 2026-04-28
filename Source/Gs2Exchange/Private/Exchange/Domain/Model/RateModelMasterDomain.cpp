@@ -95,7 +95,7 @@ namespace Gs2::Exchange::Domain::Model
     )
     {
         Request
-            ->WithContextStack(Self->Gs2->DefaultContextStack)
+            ->WithContextStack((!Request->GetContextStack().IsSet() || Request->GetContextStack()->IsEmpty()) ? Self->Gs2->DefaultContextStack : Request->GetContextStack())
             ->WithNamespaceName(Self->NamespaceName)
             ->WithRateName(Self->RateName);
         const auto Future = Self->Client->GetRateModelMaster(
@@ -137,7 +137,7 @@ namespace Gs2::Exchange::Domain::Model
     )
     {
         Request
-            ->WithContextStack(Self->Gs2->DefaultContextStack)
+            ->WithContextStack((!Request->GetContextStack().IsSet() || Request->GetContextStack()->IsEmpty()) ? Self->Gs2->DefaultContextStack : Request->GetContextStack())
             ->WithNamespaceName(Self->NamespaceName)
             ->WithRateName(Self->RateName);
         const auto Future = Self->Client->UpdateRateModelMaster(
@@ -194,7 +194,7 @@ namespace Gs2::Exchange::Domain::Model
     )
     {
         Request
-            ->WithContextStack(Self->Gs2->DefaultContextStack)
+            ->WithContextStack((!Request->GetContextStack().IsSet() || Request->GetContextStack()->IsEmpty()) ? Self->Gs2->DefaultContextStack : Request->GetContextStack())
             ->WithNamespaceName(Self->NamespaceName)
             ->WithRateName(Self->RateName);
         const auto Future = Self->Client->DeleteRateModelMaster(

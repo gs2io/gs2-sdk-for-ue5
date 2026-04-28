@@ -116,6 +116,7 @@ namespace Gs2::Log::Domain::Iterator
 
             const auto Future = Self->Client->DescribeLabelValues(
                 MakeShared<Gs2::Log::Request::FDescribeLabelValuesRequest>()
+                    ->WithContextStack(Self->Gs2->DefaultContextStack)
                     ->WithNamespaceName(Self->NamespaceName)
                     ->WithMetricName(Self->MetricName)
                     ->WithPageToken(PageToken)

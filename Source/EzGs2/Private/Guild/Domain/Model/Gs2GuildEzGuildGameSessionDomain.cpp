@@ -12,6 +12,8 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
+ *
+ * deny overwrite
  */
 
 #include "Guild/Domain/Model/Gs2GuildEzGuildGameSessionDomain.h"
@@ -254,6 +256,66 @@ namespace Gs2::UE5::Guild::Domain::Model
             this->AsShared(),
             TargetUserId,
             RoleName
+        );
+    }
+
+    FEzGuildGameSessionDomain::FBatchUpdateGuildMemberRoleTask::FBatchUpdateGuildMemberRoleTask(
+        TSharedPtr<FEzGuildGameSessionDomain> Self,
+        TArray<TSharedPtr<Gs2::UE5::Guild::Model::FEzMember>> Members
+    ): Self(Self), Members(Members)
+    {
+
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FEzGuildGameSessionDomain::FBatchUpdateGuildMemberRoleTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::UE5::Guild::Domain::Model::FEzGuildGameSessionDomain>> Result
+    )
+    {
+        const auto Future = Self->ConnectionValue->Run(
+            [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
+                const auto Task = Self->Domain->BatchUpdateMemberRole(
+                    MakeShared<Gs2::Guild::Request::FBatchUpdateMemberRoleRequest>()
+                        ->WithMembers([&]{
+                            auto Arr = MakeShared<TArray<TSharedPtr<Gs2::Guild::Model::FMember>>>();
+                            for (auto Value : Members) {
+                                Arr->Add(Value->ToModel());
+                            }
+                            return Arr;
+                        }())
+                );
+                Task->StartSynchronousTask();
+                if (Task->GetTask().IsError())
+                {
+                    Task->EnsureCompletion();
+                    return Task->GetTask().Error();
+                }
+                *Result = MakeShared<Gs2::UE5::Guild::Domain::Model::FEzGuildGameSessionDomain>(
+                    Task->GetTask().Result(),
+                    Self->GameSession,
+                    Self->ConnectionValue
+                );
+                Task->EnsureCompletion();
+                return nullptr;
+            },
+            nullptr
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            Future->EnsureCompletion();
+            return Future->GetTask().Error();
+        }
+        Future->EnsureCompletion();
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FEzGuildGameSessionDomain::FBatchUpdateGuildMemberRoleTask>> FEzGuildGameSessionDomain::BatchUpdateGuildMemberRole(
+        TArray<TSharedPtr<Gs2::UE5::Guild::Model::FEzMember>> Members
+    )
+    {
+        return Gs2::Core::Util::New<FAsyncTask<FBatchUpdateGuildMemberRoleTask>>(
+            this->AsShared(),
+            Members
         );
     }
 

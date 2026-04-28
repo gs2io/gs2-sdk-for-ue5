@@ -109,7 +109,7 @@ namespace Gs2::Guild::Domain::Model
     )
     {
         Request
-            ->WithContextStack(Self->Gs2->DefaultContextStack)
+            ->WithContextStack((!Request->GetContextStack().IsSet() || Request->GetContextStack()->IsEmpty()) ? Self->Gs2->DefaultContextStack : Request->GetContextStack())
             ->WithNamespaceName(Self->NamespaceName)
             ->WithGuildModelName(Self->GuildModelName)
             ->WithAccessToken(Self->AccessToken->GetToken())
@@ -153,7 +153,7 @@ namespace Gs2::Guild::Domain::Model
     )
     {
         Request
-            ->WithContextStack(Self->Gs2->DefaultContextStack)
+            ->WithContextStack((!Request->GetContextStack().IsSet() || Request->GetContextStack()->IsEmpty()) ? Self->Gs2->DefaultContextStack : Request->GetContextStack())
             ->WithNamespaceName(Self->NamespaceName)
             ->WithGuildModelName(Self->GuildModelName)
             ->WithAccessToken(Self->AccessToken->GetToken())
@@ -210,7 +210,7 @@ namespace Gs2::Guild::Domain::Model
     )
     {
         Request
-            ->WithContextStack(Self->Gs2->DefaultContextStack)
+            ->WithContextStack((!Request->GetContextStack().IsSet() || Request->GetContextStack()->IsEmpty()) ? Self->Gs2->DefaultContextStack : Request->GetContextStack())
             ->WithNamespaceName(Self->NamespaceName)
             ->WithGuildModelName(Self->GuildModelName)
             ->WithAccessToken(Self->AccessToken->GetToken())

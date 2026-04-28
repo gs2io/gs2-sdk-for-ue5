@@ -98,7 +98,7 @@ namespace Gs2::LoginReward::Domain::Model
     )
     {
         Request
-            ->WithContextStack(Self->Gs2->DefaultContextStack)
+            ->WithContextStack((!Request->GetContextStack().IsSet() || Request->GetContextStack()->IsEmpty()) ? Self->Gs2->DefaultContextStack : Request->GetContextStack())
             ->WithNamespaceName(Self->NamespaceName)
             ->WithBonusModelName(Self->BonusModelName)
             ->WithAccessToken(Self->AccessToken->GetToken());
@@ -141,7 +141,7 @@ namespace Gs2::LoginReward::Domain::Model
     )
     {
         Request
-            ->WithContextStack(Self->Gs2->DefaultContextStack)
+            ->WithContextStack((!Request->GetContextStack().IsSet() || Request->GetContextStack()->IsEmpty()) ? Self->Gs2->DefaultContextStack : Request->GetContextStack())
             ->WithNamespaceName(Self->NamespaceName)
             ->WithBonusModelName(Self->BonusModelName)
             ->WithAccessToken(Self->AccessToken->GetToken());

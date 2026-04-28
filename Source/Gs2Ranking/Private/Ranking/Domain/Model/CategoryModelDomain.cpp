@@ -101,6 +101,7 @@ namespace Gs2::Ranking::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithCategoryName(Self->CategoryName);
         const auto Future = Self->Client->GetCategoryModel(

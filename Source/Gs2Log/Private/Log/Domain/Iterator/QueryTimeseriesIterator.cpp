@@ -131,6 +131,7 @@ namespace Gs2::Log::Domain::Iterator
 
             const auto Future = Self->Client->QueryTimeseries(
                 MakeShared<Gs2::Log::Request::FQueryTimeseriesRequest>()
+                    ->WithContextStack(Self->Gs2->DefaultContextStack)
                     ->WithNamespaceName(Self->NamespaceName)
                     ->WithBegin(Self->Begin)
                     ->WithEnd(Self->End)

@@ -87,7 +87,7 @@ namespace Gs2::Deploy::Domain::Model
     )
     {
         Request
-            ->WithContextStack(Self->Gs2->DefaultContextStack)
+            ->WithContextStack((!Request->GetContextStack().IsSet() || Request->GetContextStack()->IsEmpty()) ? Self->Gs2->DefaultContextStack : Request->GetContextStack())
             ->WithStackName(Self->StackName)
             ->WithEventName(Self->EventName);
         const auto Future = Self->Client->GetEvent(

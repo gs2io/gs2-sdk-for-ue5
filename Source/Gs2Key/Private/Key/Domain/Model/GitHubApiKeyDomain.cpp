@@ -86,7 +86,7 @@ namespace Gs2::Key::Domain::Model
     )
     {
         Request
-            ->WithContextStack(Self->Gs2->DefaultContextStack)
+            ->WithContextStack((!Request->GetContextStack().IsSet() || Request->GetContextStack()->IsEmpty()) ? Self->Gs2->DefaultContextStack : Request->GetContextStack())
             ->WithNamespaceName(Self->NamespaceName)
             ->WithApiKeyName(Self->ApiKeyName);
         const auto Future = Self->Client->UpdateGitHubApiKey(
@@ -143,7 +143,7 @@ namespace Gs2::Key::Domain::Model
     )
     {
         Request
-            ->WithContextStack(Self->Gs2->DefaultContextStack)
+            ->WithContextStack((!Request->GetContextStack().IsSet() || Request->GetContextStack()->IsEmpty()) ? Self->Gs2->DefaultContextStack : Request->GetContextStack())
             ->WithNamespaceName(Self->NamespaceName)
             ->WithApiKeyName(Self->ApiKeyName);
         const auto Future = Self->Client->GetGitHubApiKey(
@@ -185,7 +185,7 @@ namespace Gs2::Key::Domain::Model
     )
     {
         Request
-            ->WithContextStack(Self->Gs2->DefaultContextStack)
+            ->WithContextStack((!Request->GetContextStack().IsSet() || Request->GetContextStack()->IsEmpty()) ? Self->Gs2->DefaultContextStack : Request->GetContextStack())
             ->WithNamespaceName(Self->NamespaceName)
             ->WithApiKeyName(Self->ApiKeyName);
         const auto Future = Self->Client->DeleteGitHubApiKey(

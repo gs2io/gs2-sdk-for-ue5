@@ -98,7 +98,7 @@ namespace Gs2::Lottery::Domain::Model
     )
     {
         Request
-            ->WithContextStack(Self->Gs2->DefaultContextStack)
+            ->WithContextStack((!Request->GetContextStack().IsSet() || Request->GetContextStack()->IsEmpty()) ? Self->Gs2->DefaultContextStack : Request->GetContextStack())
             ->WithNamespaceName(Self->NamespaceName)
             ->WithLotteryName(Self->LotteryName);
         const auto Future = Self->Client->GetLotteryModelMaster(
@@ -140,7 +140,7 @@ namespace Gs2::Lottery::Domain::Model
     )
     {
         Request
-            ->WithContextStack(Self->Gs2->DefaultContextStack)
+            ->WithContextStack((!Request->GetContextStack().IsSet() || Request->GetContextStack()->IsEmpty()) ? Self->Gs2->DefaultContextStack : Request->GetContextStack())
             ->WithNamespaceName(Self->NamespaceName)
             ->WithLotteryName(Self->LotteryName);
         const auto Future = Self->Client->UpdateLotteryModelMaster(
@@ -197,7 +197,7 @@ namespace Gs2::Lottery::Domain::Model
     )
     {
         Request
-            ->WithContextStack(Self->Gs2->DefaultContextStack)
+            ->WithContextStack((!Request->GetContextStack().IsSet() || Request->GetContextStack()->IsEmpty()) ? Self->Gs2->DefaultContextStack : Request->GetContextStack())
             ->WithNamespaceName(Self->NamespaceName)
             ->WithLotteryName(Self->LotteryName);
         const auto Future = Self->Client->DeleteLotteryModelMaster(

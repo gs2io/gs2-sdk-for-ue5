@@ -97,6 +97,7 @@ namespace Gs2::Distributor::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithAccessToken(Self->AccessToken->GetToken())
             ->WithTransactionId(Self->TransactionId);

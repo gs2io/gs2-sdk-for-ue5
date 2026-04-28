@@ -131,6 +131,7 @@ namespace Gs2::Money2::Domain::Iterator
 
             const auto Future = Self->Client->DescribeEventsByUserId(
                 MakeShared<Gs2::Money2::Request::FDescribeEventsByUserIdRequest>()
+                    ->WithContextStack(Self->Gs2->DefaultContextStack)
                     ->WithNamespaceName(Self->NamespaceName)
                     ->WithUserId(Self->UserId)
                     ->WithBegin(Self->Begin)

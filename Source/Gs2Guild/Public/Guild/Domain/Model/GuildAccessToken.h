@@ -208,6 +208,32 @@ namespace Gs2::Guild::Domain::Model
             Request::FUpdateMemberRoleRequestPtr Request
         );
 
+        class GS2GUILD_API FBatchUpdateMemberRoleTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Guild::Domain::Model::FGuildAccessTokenDomain>,
+            public TSharedFromThis<FBatchUpdateMemberRoleTask>
+        {
+            const TSharedPtr<FGuildAccessTokenDomain> Self;
+            const Request::FBatchUpdateMemberRoleRequestPtr Request;
+        public:
+            explicit FBatchUpdateMemberRoleTask(
+                const TSharedPtr<FGuildAccessTokenDomain>& Self,
+                const Request::FBatchUpdateMemberRoleRequestPtr Request
+            );
+
+            FBatchUpdateMemberRoleTask(
+                const FBatchUpdateMemberRoleTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Guild::Domain::Model::FGuildAccessTokenDomain>> Result
+            ) override;
+        };
+        friend FBatchUpdateMemberRoleTask;
+
+        TSharedPtr<FAsyncTask<FBatchUpdateMemberRoleTask>> BatchUpdateMemberRole(
+            Request::FBatchUpdateMemberRoleRequestPtr Request
+        );
+
         class GS2GUILD_API FDeleteTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Guild::Domain::Model::FGuildAccessTokenDomain>,
             public TSharedFromThis<FDeleteTask>

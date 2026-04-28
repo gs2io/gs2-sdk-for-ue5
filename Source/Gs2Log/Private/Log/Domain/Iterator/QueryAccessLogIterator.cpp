@@ -138,6 +138,7 @@ namespace Gs2::Log::Domain::Iterator
 
             const auto Future = Self->Client->QueryAccessLog(
                 MakeShared<Gs2::Log::Request::FQueryAccessLogRequest>()
+                    ->WithContextStack(Self->Gs2->DefaultContextStack)
                     ->WithNamespaceName(Self->NamespaceName)
                     ->WithService(Self->Service)
                     ->WithMethod(Self->Method)

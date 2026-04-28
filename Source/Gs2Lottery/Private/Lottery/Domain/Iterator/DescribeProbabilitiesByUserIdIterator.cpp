@@ -109,6 +109,7 @@ namespace Gs2::Lottery::Domain::Iterator
 
             const auto Future = Self->Client->DescribeProbabilitiesByUserId(
                 MakeShared<Gs2::Lottery::Request::FDescribeProbabilitiesByUserIdRequest>()
+                    ->WithContextStack(Self->Gs2->DefaultContextStack)
                     ->WithNamespaceName(Self->NamespaceName)
                     ->WithLotteryName(Self->LotteryName)
                     ->WithUserId(Self->UserId)

@@ -104,7 +104,7 @@ namespace Gs2::Matchmaking::Domain::Model
     )
     {
         Request
-            ->WithContextStack(Self->Gs2->DefaultContextStack)
+            ->WithContextStack((!Request->GetContextStack().IsSet() || Request->GetContextStack()->IsEmpty()) ? Self->Gs2->DefaultContextStack : Request->GetContextStack())
             ->WithNamespaceName(Self->NamespaceName)
             ->WithSeasonName(Self->SeasonName);
         const auto Future = Self->Client->GetSeasonModelMaster(
@@ -146,7 +146,7 @@ namespace Gs2::Matchmaking::Domain::Model
     )
     {
         Request
-            ->WithContextStack(Self->Gs2->DefaultContextStack)
+            ->WithContextStack((!Request->GetContextStack().IsSet() || Request->GetContextStack()->IsEmpty()) ? Self->Gs2->DefaultContextStack : Request->GetContextStack())
             ->WithNamespaceName(Self->NamespaceName)
             ->WithSeasonName(Self->SeasonName);
         const auto Future = Self->Client->UpdateSeasonModelMaster(
@@ -203,7 +203,7 @@ namespace Gs2::Matchmaking::Domain::Model
     )
     {
         Request
-            ->WithContextStack(Self->Gs2->DefaultContextStack)
+            ->WithContextStack((!Request->GetContextStack().IsSet() || Request->GetContextStack()->IsEmpty()) ? Self->Gs2->DefaultContextStack : Request->GetContextStack())
             ->WithNamespaceName(Self->NamespaceName)
             ->WithSeasonName(Self->SeasonName);
         const auto Future = Self->Client->DeleteSeasonModelMaster(

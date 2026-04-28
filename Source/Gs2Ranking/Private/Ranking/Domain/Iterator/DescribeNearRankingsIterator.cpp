@@ -123,6 +123,7 @@ namespace Gs2::Ranking::Domain::Iterator
 
             const auto Future = Self->Client->DescribeNearRankings(
                 MakeShared<Gs2::Ranking::Request::FDescribeNearRankingsRequest>()
+                    ->WithContextStack(Self->Gs2->DefaultContextStack)
                     ->WithNamespaceName(Self->NamespaceName)
                     ->WithCategoryName(Self->CategoryName)
                     ->WithAdditionalScopeName(Self->AdditionalScopeName)

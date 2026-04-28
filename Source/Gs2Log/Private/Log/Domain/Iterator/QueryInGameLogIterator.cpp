@@ -155,6 +155,7 @@ namespace Gs2::Log::Domain::Iterator
 
             const auto Future = Self->Client->QueryInGameLog(
                 MakeShared<Gs2::Log::Request::FQueryInGameLogRequest>()
+                    ->WithContextStack(Self->Gs2->DefaultContextStack)
                     ->WithNamespaceName(Self->NamespaceName)
                     ->WithUserId(Self->UserId)
                     ->WithTags(Self->Tags)

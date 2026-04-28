@@ -142,6 +142,7 @@ namespace Gs2::Log::Domain::Iterator
 
             const auto Future = Self->Client->QueryExecuteStampTaskLog(
                 MakeShared<Gs2::Log::Request::FQueryExecuteStampTaskLogRequest>()
+                    ->WithContextStack(Self->Gs2->DefaultContextStack)
                     ->WithNamespaceName(Self->NamespaceName)
                     ->WithService(Self->Service)
                     ->WithMethod(Self->Method)

@@ -12,6 +12,8 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
+ *
+ * deny overwrite
  */
 
 #pragma once
@@ -160,6 +162,29 @@ namespace Gs2::UE5::Guild::Domain::Model
         TSharedPtr<FAsyncTask<FUpdateGuildMemberRoleTask>> UpdateGuildMemberRole(
             FString TargetUserId,
             FString RoleName
+        );
+
+        class EZGS2_API FBatchUpdateGuildMemberRoleTask :
+            public Gs2::Core::Util::TGs2Future<Gs2::UE5::Guild::Domain::Model::FEzGuildGameSessionDomain>,
+            public TSharedFromThis<FBatchUpdateGuildMemberRoleTask>
+        {
+            TSharedPtr<FEzGuildGameSessionDomain> Self;
+            TArray<TSharedPtr<Gs2::UE5::Guild::Model::FEzMember>> Members;
+
+        public:
+            explicit FBatchUpdateGuildMemberRoleTask(
+                TSharedPtr<FEzGuildGameSessionDomain> Self,
+                TArray<TSharedPtr<Gs2::UE5::Guild::Model::FEzMember>> Members
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::UE5::Guild::Domain::Model::FEzGuildGameSessionDomain>> Result
+            ) override;
+        };
+        friend FBatchUpdateGuildMemberRoleTask;
+
+        TSharedPtr<FAsyncTask<FBatchUpdateGuildMemberRoleTask>> BatchUpdateGuildMemberRole(
+            TArray<TSharedPtr<Gs2::UE5::Guild::Model::FEzMember>> Members
         );
 
         class EZGS2_API FDeleteGuildTask :

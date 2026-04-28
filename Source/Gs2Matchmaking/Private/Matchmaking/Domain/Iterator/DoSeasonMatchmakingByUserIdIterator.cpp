@@ -110,6 +110,7 @@ namespace Gs2::Matchmaking::Domain::Iterator
 
             const auto Future = Self->Client->DoSeasonMatchmakingByUserId(
                 MakeShared<Gs2::Matchmaking::Request::FDoSeasonMatchmakingByUserIdRequest>()
+                    ->WithContextStack(Self->Gs2->DefaultContextStack)
                     ->WithNamespaceName(Self->NamespaceName)
                     ->WithSeasonName(Self->SeasonName)
                     ->WithUserId(Self->UserId)

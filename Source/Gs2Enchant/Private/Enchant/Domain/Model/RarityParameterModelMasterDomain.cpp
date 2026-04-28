@@ -95,7 +95,7 @@ namespace Gs2::Enchant::Domain::Model
     )
     {
         Request
-            ->WithContextStack(Self->Gs2->DefaultContextStack)
+            ->WithContextStack((!Request->GetContextStack().IsSet() || Request->GetContextStack()->IsEmpty()) ? Self->Gs2->DefaultContextStack : Request->GetContextStack())
             ->WithNamespaceName(Self->NamespaceName)
             ->WithParameterName(Self->ParameterName);
         const auto Future = Self->Client->GetRarityParameterModelMaster(
@@ -137,7 +137,7 @@ namespace Gs2::Enchant::Domain::Model
     )
     {
         Request
-            ->WithContextStack(Self->Gs2->DefaultContextStack)
+            ->WithContextStack((!Request->GetContextStack().IsSet() || Request->GetContextStack()->IsEmpty()) ? Self->Gs2->DefaultContextStack : Request->GetContextStack())
             ->WithNamespaceName(Self->NamespaceName)
             ->WithParameterName(Self->ParameterName);
         const auto Future = Self->Client->UpdateRarityParameterModelMaster(
@@ -194,7 +194,7 @@ namespace Gs2::Enchant::Domain::Model
     )
     {
         Request
-            ->WithContextStack(Self->Gs2->DefaultContextStack)
+            ->WithContextStack((!Request->GetContextStack().IsSet() || Request->GetContextStack()->IsEmpty()) ? Self->Gs2->DefaultContextStack : Request->GetContextStack())
             ->WithNamespaceName(Self->NamespaceName)
             ->WithParameterName(Self->ParameterName);
         const auto Future = Self->Client->DeleteRarityParameterModelMaster(

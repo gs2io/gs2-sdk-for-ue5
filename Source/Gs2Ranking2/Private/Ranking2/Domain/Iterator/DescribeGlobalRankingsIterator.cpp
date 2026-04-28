@@ -124,6 +124,7 @@ namespace Gs2::Ranking2::Domain::Iterator
 
             const auto Future = Self->Client->DescribeGlobalRankings(
                 MakeShared<Gs2::Ranking2::Request::FDescribeGlobalRankingsRequest>()
+                    ->WithContextStack(Self->Gs2->DefaultContextStack)
                     ->WithNamespaceName(Self->NamespaceName)
                     ->WithAccessToken(Self->AccessToken == nullptr ? TOptional<FString>() : Self->AccessToken->GetToken())
                     ->WithRankingName(Self->RankingName)

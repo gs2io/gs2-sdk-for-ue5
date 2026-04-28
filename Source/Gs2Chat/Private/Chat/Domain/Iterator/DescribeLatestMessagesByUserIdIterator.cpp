@@ -140,6 +140,7 @@ namespace Gs2::Chat::Domain::Iterator
 
             const auto Future = Self->Client->DescribeLatestMessagesByUserId(
                 MakeShared<Gs2::Chat::Request::FDescribeLatestMessagesByUserIdRequest>()
+                    ->WithContextStack(Self->Gs2->DefaultContextStack)
                     ->WithNamespaceName(Self->NamespaceName)
                     ->WithRoomName(Self->RoomName)
                     ->WithPassword(Self->Password)

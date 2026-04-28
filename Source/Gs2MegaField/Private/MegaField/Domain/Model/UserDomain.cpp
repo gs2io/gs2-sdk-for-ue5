@@ -92,6 +92,7 @@ namespace Gs2::MegaField::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName);
         const auto Future = Self->Client->FetchPositionFromSystem(
             Request
@@ -186,6 +187,7 @@ namespace Gs2::MegaField::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName);
         const auto Future = Self->Client->NearUserIdsFromSystem(
             Request

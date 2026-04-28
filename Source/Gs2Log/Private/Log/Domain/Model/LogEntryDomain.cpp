@@ -91,6 +91,8 @@ namespace Gs2::Log::Domain::Model
         TSharedPtr<TSharedPtr<Gs2::Log::Domain::Model::FLogEntryDomain>> Result
     )
     {
+        Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack);
         const auto Future = Self->Client->GetLog(
             Request
         );
@@ -143,6 +145,8 @@ namespace Gs2::Log::Domain::Model
         TSharedPtr<TSharedPtr<TArray<TSharedPtr<Gs2::Log::Domain::Model::FFacetDomain>>>> Result
     )
     {
+        Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack);
         const auto Future = Self->Client->QueryFacets(
             Request
         );
@@ -201,6 +205,8 @@ namespace Gs2::Log::Domain::Model
         TSharedPtr<TSharedPtr<Gs2::Log::Domain::Model::FLogEntryDomain>> Result
     )
     {
+        Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack);
         const auto Future = Self->Client->GetTrace(
             Request
         );

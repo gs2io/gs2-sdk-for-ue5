@@ -127,6 +127,7 @@ namespace Gs2::Ranking::Domain::Iterator
 
             const auto Future = Self->Client->DescribeRankingssByUserId(
                 MakeShared<Gs2::Ranking::Request::FDescribeRankingssByUserIdRequest>()
+                    ->WithContextStack(Self->Gs2->DefaultContextStack)
                     ->WithNamespaceName(Self->NamespaceName)
                     ->WithCategoryName(Self->CategoryName)
                     ->WithUserId(Self->UserId)

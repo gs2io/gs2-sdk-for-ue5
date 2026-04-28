@@ -99,7 +99,7 @@ namespace Gs2::Formation::Domain::Model
     )
     {
         Request
-            ->WithContextStack(Self->Gs2->DefaultContextStack)
+            ->WithContextStack((!Request->GetContextStack().IsSet() || Request->GetContextStack()->IsEmpty()) ? Self->Gs2->DefaultContextStack : Request->GetContextStack())
             ->WithNamespaceName(Self->NamespaceName)
             ->WithPropertyFormModelName(Self->PropertyFormModelName);
         const auto Future = Self->Client->GetPropertyFormModelMaster(
@@ -141,7 +141,7 @@ namespace Gs2::Formation::Domain::Model
     )
     {
         Request
-            ->WithContextStack(Self->Gs2->DefaultContextStack)
+            ->WithContextStack((!Request->GetContextStack().IsSet() || Request->GetContextStack()->IsEmpty()) ? Self->Gs2->DefaultContextStack : Request->GetContextStack())
             ->WithNamespaceName(Self->NamespaceName)
             ->WithPropertyFormModelName(Self->PropertyFormModelName);
         const auto Future = Self->Client->UpdatePropertyFormModelMaster(
@@ -198,7 +198,7 @@ namespace Gs2::Formation::Domain::Model
     )
     {
         Request
-            ->WithContextStack(Self->Gs2->DefaultContextStack)
+            ->WithContextStack((!Request->GetContextStack().IsSet() || Request->GetContextStack()->IsEmpty()) ? Self->Gs2->DefaultContextStack : Request->GetContextStack())
             ->WithNamespaceName(Self->NamespaceName)
             ->WithPropertyFormModelName(Self->PropertyFormModelName);
         const auto Future = Self->Client->DeletePropertyFormModelMaster(
