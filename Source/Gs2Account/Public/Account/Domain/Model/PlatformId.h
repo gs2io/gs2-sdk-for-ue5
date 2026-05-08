@@ -64,7 +64,6 @@ namespace Gs2::Account::Domain::Model
         TOptional<FString> NamespaceName;
         TOptional<FString> UserId;
         TOptional<int32> Type;
-        TOptional<FString> UserIdentifier;
     private:
 
         FString ParentKey;
@@ -76,8 +75,7 @@ namespace Gs2::Account::Domain::Model
             const Account::Domain::FGs2AccountDomainPtr& Service,
             const TOptional<FString> NamespaceName,
             const TOptional<FString> UserId,
-            const TOptional<int32> Type,
-            const TOptional<FString> UserIdentifier
+            const TOptional<int32> Type
             // ReSharper disable once CppMemberInitializersOrder
         );
 

@@ -872,8 +872,7 @@ namespace Gs2::Account::Domain::Model
             Self->Service,
             Request->GetNamespaceName(),
             ResultModel != nullptr && ResultModel->GetItem() != nullptr ? ResultModel->GetItem()->GetUserId() : TOptional<FString>(),
-            ResultModel != nullptr && ResultModel->GetItem() != nullptr ? ResultModel->GetItem()->GetType() : TOptional<int32>(),
-            ResultModel != nullptr && ResultModel->GetItem() != nullptr ? ResultModel->GetItem()->GetUserIdentifier() : TOptional<FString>()
+            ResultModel != nullptr && ResultModel->GetItem() != nullptr ? ResultModel->GetItem()->GetType() : TOptional<int32>()
         );
 
         *Result = Domain;
@@ -997,8 +996,7 @@ namespace Gs2::Account::Domain::Model
     }
 
     TSharedPtr<Gs2::Account::Domain::Model::FPlatformIdDomain> FAccountDomain::PlatformId(
-        const int32 Type,
-        const FString UserIdentifier
+        const int32 Type
     )
     {
         return MakeShared<Gs2::Account::Domain::Model::FPlatformIdDomain>(
@@ -1006,8 +1004,7 @@ namespace Gs2::Account::Domain::Model
             Service,
             NamespaceName,
             UserId,
-            Type,
-            UserIdentifier == TEXT("") ? TOptional<FString>() : TOptional<FString>(UserIdentifier)
+            Type
         );
     }
 

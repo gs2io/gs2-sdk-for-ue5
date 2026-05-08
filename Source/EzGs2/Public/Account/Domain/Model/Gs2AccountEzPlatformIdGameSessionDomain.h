@@ -70,6 +70,7 @@ namespace Gs2::UE5::Account::Domain::Model
         friend FAddPlatformIdSettingTask;
 
         TSharedPtr<FAsyncTask<FAddPlatformIdSettingTask>> AddPlatformIdSetting(
+            FString UserIdentifier
         );
 
         class EZGS2_API FFindPlatformUserTask :
@@ -90,6 +91,7 @@ namespace Gs2::UE5::Account::Domain::Model
         friend FFindPlatformUserTask;
 
         TSharedPtr<FAsyncTask<FFindPlatformUserTask>> FindPlatformUser(
+            FString UserIdentifier
         );
 
         class EZGS2_API FDeletePlatformIdSettingTask :

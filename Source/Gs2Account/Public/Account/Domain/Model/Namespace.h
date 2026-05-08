@@ -70,6 +70,7 @@ namespace Gs2::Account::Domain::Model
         TOptional<FString> Url;
         TOptional<FString> UploadToken;
         TOptional<FString> UploadUrl;
+        TOptional<FString> AuthorizationUrl;
         TOptional<FString> NextPageToken;
         TOptional<FString> GetStatus() const
         {
@@ -86,6 +87,10 @@ namespace Gs2::Account::Domain::Model
         TOptional<FString> GetUploadUrl() const
         {
             return UploadUrl;
+        }
+        TOptional<FString> GetAuthorizationUrl() const
+        {
+            return AuthorizationUrl;
         }
         TOptional<FString> GetNextPageToken() const
         {
@@ -107,6 +112,32 @@ namespace Gs2::Account::Domain::Model
 
         FNamespaceDomain(
             const FNamespaceDomain& From
+        );
+
+        class GS2ACCOUNT_API FGetAuthorizationUrlTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Account::Domain::Model::FNamespaceDomain>,
+            public TSharedFromThis<FGetAuthorizationUrlTask>
+        {
+            const TSharedPtr<FNamespaceDomain> Self;
+            const Request::FGetAuthorizationUrlRequestPtr Request;
+        public:
+            explicit FGetAuthorizationUrlTask(
+                const TSharedPtr<FNamespaceDomain>& Self,
+                const Request::FGetAuthorizationUrlRequestPtr Request
+            );
+
+            FGetAuthorizationUrlTask(
+                const FGetAuthorizationUrlTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Account::Domain::Model::FNamespaceDomain>> Result
+            ) override;
+        };
+        friend FGetAuthorizationUrlTask;
+
+        TSharedPtr<FAsyncTask<FGetAuthorizationUrlTask>> GetAuthorizationUrl(
+            Request::FGetAuthorizationUrlRequestPtr Request
         );
 
         class GS2ACCOUNT_API FGetStatusTask final :

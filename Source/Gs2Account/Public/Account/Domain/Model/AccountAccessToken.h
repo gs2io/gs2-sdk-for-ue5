@@ -70,7 +70,6 @@ namespace Gs2::Account::Domain::Model
         TSharedPtr<TArray<TSharedPtr<Gs2::Account::Model::FBanStatus>>> BanStatuses;
         TOptional<FString> Body;
         TOptional<FString> Signature;
-        TOptional<FString> AuthorizationUrl;
         TOptional<FString> NextPageToken;
         TSharedPtr<TArray<TSharedPtr<Gs2::Account::Model::FBanStatus>>> GetBanStatuses() const
         {
@@ -83,10 +82,6 @@ namespace Gs2::Account::Domain::Model
         TOptional<FString> GetSignature() const
         {
             return Signature;
-        }
-        TOptional<FString> GetAuthorizationUrl() const
-        {
-            return AuthorizationUrl;
         }
         TOptional<FString> GetNextPageToken() const
         {
@@ -111,32 +106,6 @@ namespace Gs2::Account::Domain::Model
 
         FAccountAccessTokenDomain(
             const FAccountAccessTokenDomain& From
-        );
-
-        class GS2ACCOUNT_API FGetAuthorizationUrlTask final :
-            public Gs2::Core::Util::TGs2Future<Gs2::Account::Domain::Model::FAccountAccessTokenDomain>,
-            public TSharedFromThis<FGetAuthorizationUrlTask>
-        {
-            const TSharedPtr<FAccountAccessTokenDomain> Self;
-            const Request::FGetAuthorizationUrlRequestPtr Request;
-        public:
-            explicit FGetAuthorizationUrlTask(
-                const TSharedPtr<FAccountAccessTokenDomain>& Self,
-                const Request::FGetAuthorizationUrlRequestPtr Request
-            );
-
-            FGetAuthorizationUrlTask(
-                const FGetAuthorizationUrlTask& From
-            );
-
-            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-                TSharedPtr<TSharedPtr<Gs2::Account::Domain::Model::FAccountAccessTokenDomain>> Result
-            ) override;
-        };
-        friend FGetAuthorizationUrlTask;
-
-        TSharedPtr<FAsyncTask<FGetAuthorizationUrlTask>> GetAuthorizationUrl(
-            Request::FGetAuthorizationUrlRequestPtr Request
         );
 
         class GS2ACCOUNT_API FDeleteTakeOverTask final :
@@ -195,8 +164,7 @@ namespace Gs2::Account::Domain::Model
         );
 
         TSharedPtr<Gs2::Account::Domain::Model::FPlatformIdAccessTokenDomain> PlatformId(
-            const int32 Type,
-            const FString UserIdentifier
+            const int32 Type
         );
 
         static FString CreateCacheParentKey(

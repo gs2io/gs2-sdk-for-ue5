@@ -108,8 +108,7 @@ namespace Gs2::UE5::Account::Domain::Model
         ) const;
 
         Gs2::UE5::Account::Domain::Model::FEzPlatformIdDomainPtr PlatformId(
-            const int32 Type,
-            const FString UserIdentifier
+            const int32 Type
         ) const;
 
         class EZGS2_API FModelTask :

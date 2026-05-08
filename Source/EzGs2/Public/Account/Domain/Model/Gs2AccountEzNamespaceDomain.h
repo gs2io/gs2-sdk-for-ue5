@@ -45,6 +45,7 @@ namespace Gs2::UE5::Account::Domain::Model
         TOptional<FString> Url() const;
         TOptional<FString> UploadToken() const;
         TOptional<FString> UploadUrl() const;
+        TOptional<FString> AuthorizationUrl() const;
         TOptional<FString> NextPageToken() const;
         TOptional<FString> NamespaceName() const;
 
@@ -53,6 +54,29 @@ namespace Gs2::UE5::Account::Domain::Model
             Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
 
+        class EZGS2_API FGetAuthorizationUrlTask :
+            public Gs2::Core::Util::TGs2Future<Gs2::UE5::Account::Domain::Model::FEzNamespaceDomain>,
+            public TSharedFromThis<FGetAuthorizationUrlTask>
+        {
+            TSharedPtr<FEzNamespaceDomain> Self;
+            int32 Type;
+
+        public:
+            explicit FGetAuthorizationUrlTask(
+                TSharedPtr<FEzNamespaceDomain> Self,
+                int32 Type
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::UE5::Account::Domain::Model::FEzNamespaceDomain>> Result
+            ) override;
+        };
+        friend FGetAuthorizationUrlTask;
+
+        TSharedPtr<FAsyncTask<FGetAuthorizationUrlTask>> GetAuthorizationUrl(
+            int32 Type
+        );
+        
         class EZGS2_API FCreateTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::Account::Domain::Model::FEzAccountDomain>,
             public TSharedFromThis<FCreateTask>

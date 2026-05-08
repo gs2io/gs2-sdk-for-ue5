@@ -35,6 +35,8 @@ class BPGS2_API UGs2AccountFindPlatformUserAsyncFunction : public UBlueprintAsyn
     GENERATED_BODY()
 
     FGs2AccountOwnPlatformId PlatformId;
+    int32 Type;
+    FString UserIdentifier;
 
 public:
 

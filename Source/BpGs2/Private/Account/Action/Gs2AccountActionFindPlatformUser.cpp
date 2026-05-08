@@ -47,6 +47,7 @@ void UGs2AccountFindPlatformUserAsyncFunction::Activate()
     }
 
     auto Future = PlatformId.Value->FindPlatformUser(
+        UserIdentifier
     );
     Future->GetTask().OnSuccessDelegate().BindLambda([&](auto Result)
     {

@@ -39,6 +39,11 @@ namespace Gs2::UE5::Account::Domain::Model
         return Domain->UploadUrl;
     }
 
+    TOptional<FString> FEzNamespaceDomain::AuthorizationUrl() const
+    {
+        return Domain->AuthorizationUrl;
+    }
+
     TOptional<FString> FEzNamespaceDomain::NextPageToken() const
     {
         return Domain->NextPageToken;
@@ -57,6 +62,59 @@ namespace Gs2::UE5::Account::Domain::Model
         ConnectionValue(Connection)
     {
 
+    }
+
+    FEzNamespaceDomain::FGetAuthorizationUrlTask::FGetAuthorizationUrlTask(
+        TSharedPtr<FEzNamespaceDomain> Self,
+        int32 Type
+    ): Self(Self), Type(Type)
+    {
+
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FEzNamespaceDomain::FGetAuthorizationUrlTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::UE5::Account::Domain::Model::FEzNamespaceDomain>> Result
+    )
+    {
+        const auto Future = Self->ConnectionValue->Run(
+            [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
+                const auto Task = Self->Domain->GetAuthorizationUrl(
+                    MakeShared<Gs2::Account::Request::FGetAuthorizationUrlRequest>()
+                        ->WithType(Type)
+                );
+                Task->StartSynchronousTask();
+                if (Task->GetTask().IsError())
+                {
+                    Task->EnsureCompletion();
+                    return Task->GetTask().Error();
+                }
+                *Result = MakeShared<Gs2::UE5::Account::Domain::Model::FEzNamespaceDomain>(
+                    Task->GetTask().Result(),
+                    Self->ConnectionValue
+                );
+                Task->EnsureCompletion();
+                return nullptr;
+            },
+            nullptr
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            Future->EnsureCompletion();
+            return Future->GetTask().Error();
+        }
+        Future->EnsureCompletion();
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FEzNamespaceDomain::FGetAuthorizationUrlTask>> FEzNamespaceDomain::GetAuthorizationUrl(
+        int32 Type
+    )
+    {
+        return Gs2::Core::Util::New<FAsyncTask<FGetAuthorizationUrlTask>>(
+            this->AsShared(),
+            Type
+        );
     }
 
     FEzNamespaceDomain::FCreateTask::FCreateTask(

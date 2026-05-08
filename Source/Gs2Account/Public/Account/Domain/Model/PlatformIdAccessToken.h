@@ -78,8 +78,7 @@ namespace Gs2::Account::Domain::Model
             const Account::Domain::FGs2AccountDomainPtr& Service,
             const TOptional<FString> NamespaceName,
             const Gs2::Auth::Model::FAccessTokenPtr& AccessToken,
-            const TOptional<int32> Type,
-            const TOptional<FString> UserIdentifier
+            const TOptional<int32> Type
             // ReSharper disable once CppMemberInitializersOrder
         );
 

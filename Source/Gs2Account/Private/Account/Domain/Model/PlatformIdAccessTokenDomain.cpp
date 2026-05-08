@@ -49,8 +49,7 @@ namespace Gs2::Account::Domain::Model
         const Account::Domain::FGs2AccountDomainPtr& Service,
         const TOptional<FString> NamespaceName,
         const Gs2::Auth::Model::FAccessTokenPtr& AccessToken,
-        const TOptional<int32> Type,
-        const TOptional<FString> UserIdentifier
+        const TOptional<int32> Type
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
@@ -59,7 +58,6 @@ namespace Gs2::Account::Domain::Model
         NamespaceName(NamespaceName),
         AccessToken(AccessToken),
         Type(Type),
-        UserIdentifier(UserIdentifier),
         ParentKey(Gs2::Account::Domain::Model::FAccountDomain::CreateCacheParentKey(
             NamespaceName,
             UserId(),
@@ -77,7 +75,6 @@ namespace Gs2::Account::Domain::Model
         NamespaceName(From.NamespaceName),
         AccessToken(From.AccessToken),
         Type(From.Type),
-        UserIdentifier(From.UserIdentifier),
         ParentKey(From.ParentKey)
     {
 
@@ -151,8 +148,7 @@ namespace Gs2::Account::Domain::Model
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithAccessToken(Self->AccessToken->GetToken())
-            ->WithType(Self->Type)
-            ->WithUserIdentifier(Self->UserIdentifier);
+            ->WithType(Self->Type);
         const auto Future = Self->Client->CreatePlatformId(
             Request
         );
@@ -265,8 +261,7 @@ namespace Gs2::Account::Domain::Model
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithAccessToken(Self->AccessToken->GetToken())
-            ->WithType(Self->Type)
-            ->WithUserIdentifier(Self->UserIdentifier);
+            ->WithType(Self->Type);
         const auto Future = Self->Client->DeletePlatformId(
             Request
         );

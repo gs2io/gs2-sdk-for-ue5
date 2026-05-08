@@ -49,6 +49,7 @@ void UGs2AccountAddPlatformIdSettingAsyncFunction::Activate()
     }
 
     auto Future = PlatformId.Value->AddPlatformIdSetting(
+        UserIdentifier
     );
     Future->GetTask().OnSuccessDelegate().BindLambda([&](auto Result)
     {

@@ -34,11 +34,11 @@ class BPGS2_API UGs2AccountDoTakeOverAsyncFunction : public UBlueprintAsyncActio
     GENERATED_BODY()
 
     FGs2AccountNamespace Namespace;
-
-public:
     int32 Type;
     FString UserIdentifier;
     FString Password;
+
+public:
 
     UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2AccountDoTakeOverSuccessDelegate OnSuccess;

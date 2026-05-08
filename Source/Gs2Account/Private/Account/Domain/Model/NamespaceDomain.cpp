@@ -72,6 +72,55 @@ namespace Gs2::Account::Domain::Model
 
     }
 
+    FNamespaceDomain::FGetAuthorizationUrlTask::FGetAuthorizationUrlTask(
+        const TSharedPtr<FNamespaceDomain>& Self,
+        const Request::FGetAuthorizationUrlRequestPtr Request
+    ): Self(Self), Request(Request)
+    {
+
+    }
+
+    FNamespaceDomain::FGetAuthorizationUrlTask::FGetAuthorizationUrlTask(
+        const FGetAuthorizationUrlTask& From
+    ): TGs2Future(From), Self(From.Self), Request(From.Request)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FNamespaceDomain::FGetAuthorizationUrlTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::Account::Domain::Model::FNamespaceDomain>> Result
+    )
+    {
+        Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
+            ->WithNamespaceName(Self->NamespaceName);
+        const auto Future = Self->Client->GetAuthorizationUrl(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
+        const auto Domain = Self;
+        if (ResultModel != nullptr)
+        {
+            if (ResultModel->GetAuthorizationUrl().IsSet())
+            {
+                Self->AuthorizationUrl = Domain->AuthorizationUrl = ResultModel->GetAuthorizationUrl();
+            }
+        }
+        *Result = Domain;
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FNamespaceDomain::FGetAuthorizationUrlTask>> FNamespaceDomain::GetAuthorizationUrl(
+        Request::FGetAuthorizationUrlRequestPtr Request
+    ) {
+        return Gs2::Core::Util::New<FAsyncTask<FGetAuthorizationUrlTask>>(this->AsShared(), Request);
+    }
+
     FNamespaceDomain::FGetStatusTask::FGetStatusTask(
         const TSharedPtr<FNamespaceDomain>& Self,
         const Request::FGetNamespaceStatusRequestPtr Request
@@ -506,8 +555,7 @@ namespace Gs2::Account::Domain::Model
             Self->Service,
             Request->GetNamespaceName(),
             ResultModel->GetItem()->GetUserId(),
-            ResultModel->GetItem()->GetType(),
-            ResultModel->GetItem()->GetUserIdentifier()
+            ResultModel->GetItem()->GetType()
         );
 
         *Result = Domain;

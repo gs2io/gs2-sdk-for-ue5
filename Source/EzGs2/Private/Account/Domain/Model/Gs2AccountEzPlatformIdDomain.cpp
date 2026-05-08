@@ -34,11 +34,6 @@ namespace Gs2::UE5::Account::Domain::Model
         return Domain->Type;
     }
 
-    TOptional<FString> FEzPlatformIdDomain::UserIdentifier() const
-    {
-        return Domain->UserIdentifier;
-    }
-
     FEzPlatformIdDomain::FEzPlatformIdDomain(
         Gs2::Account::Domain::Model::FPlatformIdDomainPtr Domain,
         Gs2::UE5::Util::FGs2ConnectionPtr Connection

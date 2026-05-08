@@ -479,8 +479,7 @@ namespace Gs2::Account::Domain::Model
         );
 
         TSharedPtr<Gs2::Account::Domain::Model::FPlatformIdDomain> PlatformId(
-            const int32 Type,
-            const FString UserIdentifier
+            const int32 Type
         );
 
         static FString CreateCacheParentKey(

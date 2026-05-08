@@ -51,8 +51,7 @@ namespace Gs2::Account::Domain::Model
         const Account::Domain::FGs2AccountDomainPtr& Service,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> UserId,
-        const TOptional<int32> Type,
-        const TOptional<FString> UserIdentifier
+        const TOptional<int32> Type
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
@@ -61,7 +60,6 @@ namespace Gs2::Account::Domain::Model
         NamespaceName(NamespaceName),
         UserId(UserId),
         Type(Type),
-        UserIdentifier(UserIdentifier),
         ParentKey(Gs2::Account::Domain::Model::FAccountDomain::CreateCacheParentKey(
             NamespaceName,
             UserId,
@@ -79,7 +77,6 @@ namespace Gs2::Account::Domain::Model
         NamespaceName(From.NamespaceName),
         UserId(From.UserId),
         Type(From.Type),
-        UserIdentifier(From.UserIdentifier),
         ParentKey(From.ParentKey)
     {
 
@@ -107,8 +104,7 @@ namespace Gs2::Account::Domain::Model
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithUserId(Self->UserId)
-            ->WithType(Self->Type)
-            ->WithUserIdentifier(Self->UserIdentifier);
+            ->WithType(Self->Type);
         const auto Future = Self->Client->CreatePlatformIdByUserId(
             Request
         );
@@ -209,8 +205,7 @@ namespace Gs2::Account::Domain::Model
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithUserId(Self->UserId)
-            ->WithType(Self->Type)
-            ->WithUserIdentifier(Self->UserIdentifier);
+            ->WithType(Self->Type);
         const auto Future = Self->Client->FindPlatformIdByUserId(
             Request
         );

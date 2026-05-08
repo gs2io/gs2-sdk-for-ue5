@@ -68,6 +68,7 @@ namespace Gs2::UE5::Account::Domain::Model
             [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
                 const auto Task = Self->Domain->Create(
                     MakeShared<Gs2::Account::Request::FCreatePlatformIdRequest>()
+                        ->WithUserIdentifier(Self->Domain->UserIdentifier)
                 );
                 Task->StartSynchronousTask();
                 if (Task->GetTask().IsError())
@@ -96,8 +97,10 @@ namespace Gs2::UE5::Account::Domain::Model
     }
 
     TSharedPtr<FAsyncTask<FEzPlatformIdGameSessionDomain::FAddPlatformIdSettingTask>> FEzPlatformIdGameSessionDomain::AddPlatformIdSetting(
+        FString UserIdentifier
     )
     {
+        Domain->UserIdentifier = UserIdentifier;
         return Gs2::Core::Util::New<FAsyncTask<FAddPlatformIdSettingTask>>(
             this->AsShared()
         );
@@ -118,6 +121,7 @@ namespace Gs2::UE5::Account::Domain::Model
             [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
                 const auto Task = Self->Domain->Find(
                     MakeShared<Gs2::Account::Request::FFindPlatformIdRequest>()
+                        ->WithUserIdentifier(Self->Domain->UserIdentifier)
                 );
                 Task->StartSynchronousTask();
                 if (Task->GetTask().IsError())
@@ -144,8 +148,10 @@ namespace Gs2::UE5::Account::Domain::Model
     }
 
     TSharedPtr<FAsyncTask<FEzPlatformIdGameSessionDomain::FFindPlatformUserTask>> FEzPlatformIdGameSessionDomain::FindPlatformUser(
+        FString UserIdentifier
     )
     {
+        Domain->UserIdentifier = UserIdentifier;
         return Gs2::Core::Util::New<FAsyncTask<FFindPlatformUserTask>>(
             this->AsShared()
         );
