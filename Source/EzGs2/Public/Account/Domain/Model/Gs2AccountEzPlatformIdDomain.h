@@ -41,7 +41,6 @@ namespace Gs2::UE5::Account::Domain::Model
         TOptional<FString> NamespaceName() const;
         TOptional<FString> UserId() const;
         TOptional<int32> Type() const;
-        TOptional<FString> UserIdentifier() const;
 
         FEzPlatformIdDomain(
             Gs2::Account::Domain::Model::FPlatformIdDomainPtr Domain,

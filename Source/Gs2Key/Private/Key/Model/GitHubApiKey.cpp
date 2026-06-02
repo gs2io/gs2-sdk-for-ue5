@@ -22,6 +22,7 @@ namespace Gs2::Key::Model
         ApiKeyIdValue(TOptional<FString>()),
         NameValue(TOptional<FString>()),
         DescriptionValue(TOptional<FString>()),
+        ApiKeyValue(TOptional<FString>()),
         EncryptionKeyNameValue(TOptional<FString>()),
         CreatedAtValue(TOptional<int64>()),
         UpdatedAtValue(TOptional<int64>()),
@@ -35,6 +36,7 @@ namespace Gs2::Key::Model
         ApiKeyIdValue(From.ApiKeyIdValue),
         NameValue(From.NameValue),
         DescriptionValue(From.DescriptionValue),
+        ApiKeyValue(From.ApiKeyValue),
         EncryptionKeyNameValue(From.EncryptionKeyNameValue),
         CreatedAtValue(From.CreatedAtValue),
         UpdatedAtValue(From.UpdatedAtValue),
@@ -63,6 +65,14 @@ namespace Gs2::Key::Model
     )
     {
         this->DescriptionValue = Description;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FGitHubApiKey> FGitHubApiKey::WithApiKey(
+        const TOptional<FString> ApiKey
+    )
+    {
+        this->ApiKeyValue = ApiKey;
         return SharedThis(this);
     }
 
@@ -108,6 +118,10 @@ namespace Gs2::Key::Model
     TOptional<FString> FGitHubApiKey::GetDescription() const
     {
         return DescriptionValue;
+    }
+    TOptional<FString> FGitHubApiKey::GetApiKey() const
+    {
+        return ApiKeyValue;
     }
     TOptional<FString> FGitHubApiKey::GetEncryptionKeyName() const
     {
@@ -230,6 +244,15 @@ namespace Gs2::Key::Model
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
+            ->WithApiKey(Data->HasField(ANSI_TO_TCHAR("apiKey")) ? [Data]() -> TOptional<FString>
+                {
+                    FString v("");
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("apiKey"), v))
+                    {
+                        return TOptional(v);
+                    }
+                    return TOptional<FString>();
+                }() : TOptional<FString>())
             ->WithEncryptionKeyName(Data->HasField(ANSI_TO_TCHAR("encryptionKeyName")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
@@ -282,6 +305,10 @@ namespace Gs2::Key::Model
         if (DescriptionValue.IsSet())
         {
             JsonRootObject->SetStringField("description", DescriptionValue.GetValue());
+        }
+        if (ApiKeyValue.IsSet())
+        {
+            JsonRootObject->SetStringField("apiKey", ApiKeyValue.GetValue());
         }
         if (EncryptionKeyNameValue.IsSet())
         {
