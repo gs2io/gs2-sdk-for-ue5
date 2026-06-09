@@ -62,6 +62,29 @@ namespace Gs2::UE5::Mission::Domain::Model
             Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
 
+        class EZGS2_API FDecreaseCounterTask :
+            public Gs2::Core::Util::TGs2Future<Gs2::UE5::Mission::Domain::Model::FEzCounterGameSessionDomain>,
+            public TSharedFromThis<FDecreaseCounterTask>
+        {
+            TSharedPtr<FEzCounterGameSessionDomain> Self;
+            int64 Value;
+
+        public:
+            explicit FDecreaseCounterTask(
+                TSharedPtr<FEzCounterGameSessionDomain> Self,
+                int64 Value
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::UE5::Mission::Domain::Model::FEzCounterGameSessionDomain>> Result
+            ) override;
+        };
+        friend FDecreaseCounterTask;
+
+        TSharedPtr<FAsyncTask<FDecreaseCounterTask>> DecreaseCounter(
+            int64 Value
+        );
+
         class EZGS2_API FResetCounterTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::Mission::Domain::Model::FEzCounterGameSessionDomain>,
             public TSharedFromThis<FResetCounterTask>

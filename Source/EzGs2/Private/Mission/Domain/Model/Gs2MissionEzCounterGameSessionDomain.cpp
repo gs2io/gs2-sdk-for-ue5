@@ -61,6 +61,60 @@ namespace Gs2::UE5::Mission::Domain::Model
 
     }
 
+    FEzCounterGameSessionDomain::FDecreaseCounterTask::FDecreaseCounterTask(
+        TSharedPtr<FEzCounterGameSessionDomain> Self,
+        int64 Value
+    ): Self(Self), Value(Value)
+    {
+
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FEzCounterGameSessionDomain::FDecreaseCounterTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::UE5::Mission::Domain::Model::FEzCounterGameSessionDomain>> Result
+    )
+    {
+        const auto Future = Self->ConnectionValue->Run(
+            [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
+                const auto Task = Self->Domain->Decrease(
+                    MakeShared<Gs2::Mission::Request::FDecreaseCounterRequest>()
+                        ->WithValue(Value)
+                );
+                Task->StartSynchronousTask();
+                if (Task->GetTask().IsError())
+                {
+                    Task->EnsureCompletion();
+                    return Task->GetTask().Error();
+                }
+                *Result = MakeShared<Gs2::UE5::Mission::Domain::Model::FEzCounterGameSessionDomain>(
+                    Task->GetTask().Result(),
+                    Self->GameSession,
+                    Self->ConnectionValue
+                );
+                Task->EnsureCompletion();
+                return nullptr;
+            },
+            nullptr
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            Future->EnsureCompletion();
+            return Future->GetTask().Error();
+        }
+        Future->EnsureCompletion();
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FEzCounterGameSessionDomain::FDecreaseCounterTask>> FEzCounterGameSessionDomain::DecreaseCounter(
+        int64 Value
+    )
+    {
+        return Gs2::Core::Util::New<FAsyncTask<FDecreaseCounterTask>>(
+            this->AsShared(),
+            Value
+        );
+    }
+
     FEzCounterGameSessionDomain::FResetCounterTask::FResetCounterTask(
         TSharedPtr<FEzCounterGameSessionDomain> Self,
         TArray<TSharedPtr<Gs2::UE5::Mission::Model::FEzScopedValue>> Scopes
