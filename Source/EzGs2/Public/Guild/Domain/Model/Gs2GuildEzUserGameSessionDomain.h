@@ -31,6 +31,7 @@
 #include "Guild/Model/Gs2GuildEzRoleModel.h"
 #include "Gs2GuildEzSendMemberRequestGameSessionDomain.h"
 #include "Guild/Domain/Iterator/Gs2GuildEzDescribeSendRequestsIterator.h"
+#include "Guild/Domain/Iterator/Gs2GuildEzSearchGuildsIterator.h" /* diff +++ */
 #include "Gs2GuildEzJoinedGuildGameSessionDomain.h"
 #include "Guild/Domain/Iterator/Gs2GuildEzDescribeJoinedGuildsIterator.h"
 #include "Gs2GuildEzUserGameSessionDomain.h"
@@ -160,6 +161,20 @@ namespace Gs2::UE5::Guild::Domain::Model
             FString GuildModelName,
             FString TargetGuildName
         );
+
+        /* diff +++ start */
+        Gs2::UE5::Guild::Domain::Iterator::FEzSearchGuildsIteratorPtr SearchGuilds(
+            const FString GuildModelName,
+            const TOptional<FString> DisplayName = TOptional<FString>(),
+            TSharedPtr<TArray<int32>> Attributes1 = nullptr,
+            TSharedPtr<TArray<int32>> Attributes2 = nullptr,
+            TSharedPtr<TArray<int32>> Attributes3 = nullptr,
+            TSharedPtr<TArray<int32>> Attributes4 = nullptr,
+            TSharedPtr<TArray<int32>> Attributes5 = nullptr,
+            TSharedPtr<TArray<FString>> JoinPolicies = nullptr,
+            const TOptional<bool> IncludeFullMembersGuild = TOptional<bool>()
+        ) const;
+        /* diff +++ end */
 
         Gs2::UE5::Guild::Domain::Iterator::FEzDescribeSendRequestsIteratorPtr SendRequests(
             const FString GuildModelName

@@ -262,6 +262,36 @@ namespace Gs2::UE5::Guild::Domain::Model
         );
     }
 
+    /* diff +++ start */
+    Gs2::UE5::Guild::Domain::Iterator::FEzSearchGuildsIteratorPtr FEzUserGameSessionDomain::SearchGuilds(
+        const FString GuildModelName,
+        const TOptional<FString> DisplayName,
+        TSharedPtr<TArray<int32>> Attributes1,
+        TSharedPtr<TArray<int32>> Attributes2,
+        TSharedPtr<TArray<int32>> Attributes3,
+        TSharedPtr<TArray<int32>> Attributes4,
+        TSharedPtr<TArray<int32>> Attributes5,
+        TSharedPtr<TArray<FString>> JoinPolicies,
+        const TOptional<bool> IncludeFullMembersGuild
+    ) const
+    {
+        return MakeShared<Gs2::UE5::Guild::Domain::Iterator::FEzSearchGuildsIterator>(
+            Domain,
+            GameSession,
+            ConnectionValue,
+            GuildModelName,
+            DisplayName,
+            Attributes1,
+            Attributes2,
+            Attributes3,
+            Attributes4,
+            Attributes5,
+            JoinPolicies,
+            IncludeFullMembersGuild
+        );
+    }
+    /* diff +++ end */
+
     Gs2::UE5::Guild::Domain::Iterator::FEzDescribeSendRequestsIteratorPtr FEzUserGameSessionDomain::SendRequests(
           const FString GuildModelName
     ) const
