@@ -39,7 +39,7 @@ struct FGs2ScheduleTriggerValue
     UPROPERTY(Category = Gs2, BlueprintReadOnly)
     FString Name = "";
     UPROPERTY(Category = Gs2, BlueprintReadOnly)
-    int64 CreatedAt = 0;
+    int64 TriggeredAt = 0;
     UPROPERTY(Category = Gs2, BlueprintReadOnly)
     int64 ExpiresAt = 0;
 };
@@ -55,7 +55,7 @@ inline FGs2ScheduleTriggerValue EzTriggerToFGs2ScheduleTriggerValue(
     }
     Value.TriggerId = Model->GetTriggerId() ? *Model->GetTriggerId() : "";
     Value.Name = Model->GetName() ? *Model->GetName() : "";
-    Value.CreatedAt = Model->GetCreatedAt() ? *Model->GetCreatedAt() : 0;
+    Value.TriggeredAt = Model->GetTriggeredAt() ? *Model->GetTriggeredAt() : 0;
     Value.ExpiresAt = Model->GetExpiresAt() ? *Model->GetExpiresAt() : 0;
     return Value;
 }
@@ -67,7 +67,7 @@ inline Gs2::UE5::Schedule::Model::FEzTriggerPtr FGs2ScheduleTriggerValueToEzTrig
     return MakeShared<Gs2::UE5::Schedule::Model::FEzTrigger>()
         ->WithTriggerId(Model.TriggerId)
         ->WithName(Model.Name)
-        ->WithCreatedAt(Model.CreatedAt)
+        ->WithTriggeredAt(Model.TriggeredAt)
         ->WithExpiresAt(Model.ExpiresAt);
 }
 

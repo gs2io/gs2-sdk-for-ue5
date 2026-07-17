@@ -35,11 +35,11 @@ namespace Gs2::UE5::Schedule::Model
         return SharedThis(this);
     }
 
-    TSharedPtr<FEzTrigger> FEzTrigger::WithCreatedAt(
-        const TOptional<int64> CreatedAt
+    TSharedPtr<FEzTrigger> FEzTrigger::WithTriggeredAt(
+        const TOptional<int64> TriggeredAt
     )
     {
-        this->CreatedAtValue = CreatedAt;
+        this->TriggeredAtValue = TriggeredAt;
         return SharedThis(this);
     }
 
@@ -58,18 +58,18 @@ namespace Gs2::UE5::Schedule::Model
     {
         return NameValue;
     }
-    TOptional<int64> FEzTrigger::GetCreatedAt() const
+    TOptional<int64> FEzTrigger::GetTriggeredAt() const
     {
-        return CreatedAtValue;
+        return TriggeredAtValue;
     }
 
-    FString FEzTrigger::GetCreatedAtString() const
+    FString FEzTrigger::GetTriggeredAtString() const
     {
-        if (!CreatedAtValue.IsSet())
+        if (!TriggeredAtValue.IsSet())
         {
             return FString("null");
         }
-        return FString::Printf(TEXT("%lld"), CreatedAtValue.GetValue());
+        return FString::Printf(TEXT("%lld"), TriggeredAtValue.GetValue());
     }
     TOptional<int64> FEzTrigger::GetExpiresAt() const
     {
@@ -90,7 +90,7 @@ namespace Gs2::UE5::Schedule::Model
         return MakeShared<Gs2::Schedule::Model::FTrigger>()
             ->WithTriggerId(TriggerIdValue)
             ->WithName(NameValue)
-            ->WithCreatedAt(CreatedAtValue)
+            ->WithTriggeredAt(TriggeredAtValue)
             ->WithExpiresAt(ExpiresAtValue);
     }
 
@@ -103,7 +103,7 @@ namespace Gs2::UE5::Schedule::Model
         return MakeShared<FEzTrigger>()
             ->WithTriggerId(Model->GetTriggerId())
             ->WithName(Model->GetName())
-            ->WithCreatedAt(Model->GetCreatedAt())
+            ->WithTriggeredAt(Model->GetTriggeredAt())
             ->WithExpiresAt(Model->GetExpiresAt());
     }
 }
