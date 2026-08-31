@@ -28,6 +28,7 @@ namespace Gs2::Guild::Model
         TOptional<FString> GuildNameValue;
         TOptional<FString> UserIdValue;
         TOptional<int64> CreatedAtValue;
+        TOptional<int64> RevisionValue;
 
     public:
         FJoinedGuild();
@@ -41,6 +42,7 @@ namespace Gs2::Guild::Model
         TSharedPtr<FJoinedGuild> WithGuildName(const TOptional<FString> GuildName);
         TSharedPtr<FJoinedGuild> WithUserId(const TOptional<FString> UserId);
         TSharedPtr<FJoinedGuild> WithCreatedAt(const TOptional<int64> CreatedAt);
+        TSharedPtr<FJoinedGuild> WithRevision(const TOptional<int64> Revision);
 
         TOptional<FString> GetJoinedGuildId() const;
         TOptional<FString> GetGuildModelName() const;
@@ -48,6 +50,8 @@ namespace Gs2::Guild::Model
         TOptional<FString> GetUserId() const;
         TOptional<int64> GetCreatedAt() const;
         FString GetCreatedAtString() const;
+        TOptional<int64> GetRevision() const;
+        FString GetRevisionString() const;
 
         static TOptional<FString> GetRegionFromGrn(const FString Grn);
         static TOptional<FString> GetOwnerIdFromGrn(const FString Grn);

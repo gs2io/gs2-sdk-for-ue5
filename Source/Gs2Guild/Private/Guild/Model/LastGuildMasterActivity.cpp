@@ -20,7 +20,8 @@ namespace Gs2::Guild::Model
 {
     FLastGuildMasterActivity::FLastGuildMasterActivity():
         UserIdValue(TOptional<FString>()),
-        UpdatedAtValue(TOptional<int64>())
+        UpdatedAtValue(TOptional<int64>()),
+        RevisionValue(TOptional<int64>())
     {
     }
 
@@ -28,7 +29,8 @@ namespace Gs2::Guild::Model
         const FLastGuildMasterActivity& From
     ):
         UserIdValue(From.UserIdValue),
-        UpdatedAtValue(From.UpdatedAtValue)
+        UpdatedAtValue(From.UpdatedAtValue),
+        RevisionValue(From.RevisionValue)
     {
     }
 
@@ -47,6 +49,14 @@ namespace Gs2::Guild::Model
         this->UpdatedAtValue = UpdatedAt;
         return SharedThis(this);
     }
+
+    TSharedPtr<FLastGuildMasterActivity> FLastGuildMasterActivity::WithRevision(
+        const TOptional<int64> Revision
+    )
+    {
+        this->RevisionValue = Revision;
+        return SharedThis(this);
+    }
     TOptional<FString> FLastGuildMasterActivity::GetUserId() const
     {
         return UserIdValue;
@@ -63,6 +73,19 @@ namespace Gs2::Guild::Model
             return FString("null");
         }
         return FString::Printf(TEXT("%lld"), UpdatedAtValue.GetValue());
+    }
+    TOptional<int64> FLastGuildMasterActivity::GetRevision() const
+    {
+        return RevisionValue;
+    }
+
+    FString FLastGuildMasterActivity::GetRevisionString() const
+    {
+        if (!RevisionValue.IsSet())
+        {
+            return FString("null");
+        }
+        return FString::Printf(TEXT("%lld"), RevisionValue.GetValue());
     }
 
     TOptional<FString> FLastGuildMasterActivity::GetRegionFromGrn(const FString Grn)
@@ -143,6 +166,15 @@ namespace Gs2::Guild::Model
                         return TOptional(v);
                     }
                     return TOptional<int64>();
+                }() : TOptional<int64>())
+            ->WithRevision(Data->HasField(ANSI_TO_TCHAR("revision")) ? [Data]() -> TOptional<int64>
+                {
+                    int64 v;
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("revision"), v))
+                    {
+                        return TOptional(v);
+                    }
+                    return TOptional<int64>();
                 }() : TOptional<int64>());
     }
 
@@ -156,6 +188,10 @@ namespace Gs2::Guild::Model
         if (UpdatedAtValue.IsSet())
         {
             JsonRootObject->SetStringField("updatedAt", FString::Printf(TEXT("%lld"), UpdatedAtValue.GetValue()));
+        }
+        if (RevisionValue.IsSet())
+        {
+            JsonRootObject->SetStringField("revision", FString::Printf(TEXT("%lld"), RevisionValue.GetValue()));
         }
         return JsonRootObject;
     }
