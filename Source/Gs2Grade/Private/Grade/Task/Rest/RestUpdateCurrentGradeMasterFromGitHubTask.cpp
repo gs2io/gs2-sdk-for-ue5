@@ -86,11 +86,11 @@ namespace Gs2::Grade::Task::Rest
             const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
             if (this->Request->GetCheckoutSetting() != nullptr && this->Request->GetCheckoutSetting().IsValid())
             {
-                JsonRootObject->SetObjectField("checkoutSetting", this->Request->GetCheckoutSetting()->ToJson());
+                JsonRootObject->SetObjectField(TEXT("checkoutSetting"), this->Request->GetCheckoutSetting()->ToJson());
             }
             if (this->Request->GetContextStack().IsSet())
             {
-                JsonRootObject->SetStringField("contextStack", this->Request->GetContextStack().GetValue());
+                JsonRootObject->SetStringField(TEXT("contextStack"), this->Request->GetContextStack().GetValue());
             }
             FJsonSerializer::Serialize(JsonRootObject.ToSharedRef(), Writer);
             request->SetContentAsString(Body);

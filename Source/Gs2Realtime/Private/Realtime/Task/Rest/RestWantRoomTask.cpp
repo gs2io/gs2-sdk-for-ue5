@@ -86,7 +86,7 @@ namespace Gs2::Realtime::Task::Rest
             const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
             if (this->Request->GetName().IsSet())
             {
-                JsonRootObject->SetStringField("name", this->Request->GetName().GetValue());
+                JsonRootObject->SetStringField(TEXT("name"), this->Request->GetName().GetValue());
             }
             if (this->Request->GetNotificationUserIds() != nullptr && this->Request->GetNotificationUserIds().IsValid())
             {
@@ -95,11 +95,11 @@ namespace Gs2::Realtime::Task::Rest
                 {
                     v.Add(MakeShared<FJsonValueString>(JsonObjectValue));
                 }
-                JsonRootObject->SetArrayField("notificationUserIds", v);
+                JsonRootObject->SetArrayField(TEXT("notificationUserIds"), v);
             }
             if (this->Request->GetContextStack().IsSet())
             {
-                JsonRootObject->SetStringField("contextStack", this->Request->GetContextStack().GetValue());
+                JsonRootObject->SetStringField(TEXT("contextStack"), this->Request->GetContextStack().GetValue());
             }
             FJsonSerializer::Serialize(JsonRootObject.ToSharedRef(), Writer);
             request->SetContentAsString(Body);

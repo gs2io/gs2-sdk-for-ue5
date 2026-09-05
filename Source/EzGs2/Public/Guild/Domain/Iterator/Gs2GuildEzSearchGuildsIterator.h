@@ -31,7 +31,7 @@ namespace Gs2::UE5::Guild::Domain::Iterator
     {
         Gs2::Guild::Domain::Iterator::FSearchGuildsIteratorPtr It;
         Gs2::Guild::Domain::Model::FUserAccessTokenDomainPtr Domain;
-        Gs2::UE5::Util::FGameSessionPtr GameSession;
+        Gs2::UE5::Util::IGameSessionPtr GameSession;
         Gs2::UE5::Util::FGs2ConnectionPtr Connection;
         FString GuildModelName;
         TOptional<FString> DisplayName;
@@ -47,7 +47,7 @@ namespace Gs2::UE5::Guild::Domain::Iterator
 
         explicit FEzSearchGuildsIterator(
             Gs2::Guild::Domain::Model::FUserAccessTokenDomainPtr Domain,
-            Gs2::UE5::Util::FGameSessionPtr GameSession,
+            Gs2::UE5::Util::IGameSessionPtr GameSession,
             Gs2::UE5::Util::FGs2ConnectionPtr Connection,
             FString GuildModelName,
             TOptional<FString> DisplayName = TOptional<FString>(),

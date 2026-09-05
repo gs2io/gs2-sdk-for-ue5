@@ -505,27 +505,27 @@ namespace Gs2::Mission::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (MissionTaskIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("missionTaskId", MissionTaskIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("missionTaskId"), MissionTaskIdValue.GetValue());
         }
         if (NameValue.IsSet())
         {
-            JsonRootObject->SetStringField("name", NameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("name"), NameValue.GetValue());
         }
         if (MetadataValue.IsSet())
         {
-            JsonRootObject->SetStringField("metadata", MetadataValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("metadata"), MetadataValue.GetValue());
         }
         if (DescriptionValue.IsSet())
         {
-            JsonRootObject->SetStringField("description", DescriptionValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("description"), DescriptionValue.GetValue());
         }
         if (VerifyCompleteTypeValue.IsSet())
         {
-            JsonRootObject->SetStringField("verifyCompleteType", VerifyCompleteTypeValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("verifyCompleteType"), VerifyCompleteTypeValue.GetValue());
         }
         if (TargetCounterValue != nullptr && TargetCounterValue.IsValid())
         {
-            JsonRootObject->SetObjectField("targetCounter", TargetCounterValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("targetCounter"), TargetCounterValue->ToJson());
         }
         if (VerifyCompleteConsumeActionsValue != nullptr && VerifyCompleteConsumeActionsValue.IsValid())
         {
@@ -534,7 +534,7 @@ namespace Gs2::Mission::Model
             {
                 v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
             }
-            JsonRootObject->SetArrayField("verifyCompleteConsumeActions", v);
+            JsonRootObject->SetArrayField(TEXT("verifyCompleteConsumeActions"), v);
         }
         if (CompleteAcquireActionsValue != nullptr && CompleteAcquireActionsValue.IsValid())
         {
@@ -543,39 +543,39 @@ namespace Gs2::Mission::Model
             {
                 v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
             }
-            JsonRootObject->SetArrayField("completeAcquireActions", v);
+            JsonRootObject->SetArrayField(TEXT("completeAcquireActions"), v);
         }
         if (ChallengePeriodEventIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("challengePeriodEventId", ChallengePeriodEventIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("challengePeriodEventId"), ChallengePeriodEventIdValue.GetValue());
         }
         if (PremiseMissionTaskNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("premiseMissionTaskName", PremiseMissionTaskNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("premiseMissionTaskName"), PremiseMissionTaskNameValue.GetValue());
         }
         if (CreatedAtValue.IsSet())
         {
-            JsonRootObject->SetStringField("createdAt", FString::Printf(TEXT("%lld"), CreatedAtValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("createdAt"), FString::Printf(TEXT("%lld"), CreatedAtValue.GetValue()));
         }
         if (UpdatedAtValue.IsSet())
         {
-            JsonRootObject->SetStringField("updatedAt", FString::Printf(TEXT("%lld"), UpdatedAtValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("updatedAt"), FString::Printf(TEXT("%lld"), UpdatedAtValue.GetValue()));
         }
         if (RevisionValue.IsSet())
         {
-            JsonRootObject->SetStringField("revision", FString::Printf(TEXT("%lld"), RevisionValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("revision"), FString::Printf(TEXT("%lld"), RevisionValue.GetValue()));
         }
         if (CounterNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("counterName", CounterNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("counterName"), CounterNameValue.GetValue());
         }
         if (TargetResetTypeValue.IsSet())
         {
-            JsonRootObject->SetStringField("targetResetType", TargetResetTypeValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("targetResetType"), TargetResetTypeValue.GetValue());
         }
         if (TargetValueValue.IsSet())
         {
-            JsonRootObject->SetStringField("targetValue", FString::Printf(TEXT("%lld"), TargetValueValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("targetValue"), FString::Printf(TEXT("%lld"), TargetValueValue.GetValue()));
         }
         return JsonRootObject;
     }

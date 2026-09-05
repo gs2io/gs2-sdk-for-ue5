@@ -205,23 +205,23 @@ namespace Gs2::Formation::Request
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (ContextStackValue.IsSet())
         {
-            JsonRootObject->SetStringField("contextStack", ContextStackValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("contextStack"), ContextStackValue.GetValue());
         }
         if (NamespaceNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("namespaceName", NamespaceNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("namespaceName"), NamespaceNameValue.GetValue());
         }
         if (AccessTokenValue.IsSet())
         {
-            JsonRootObject->SetStringField("xGs2AccessToken", AccessTokenValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("xGs2AccessToken"), AccessTokenValue.GetValue());
         }
         if (MoldModelNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("moldModelName", MoldModelNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("moldModelName"), MoldModelNameValue.GetValue());
         }
         if (IndexValue.IsSet())
         {
-            JsonRootObject->SetNumberField("index", IndexValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("index"), IndexValue.GetValue());
         }
         if (SlotsValue != nullptr && SlotsValue.IsValid())
         {
@@ -230,11 +230,11 @@ namespace Gs2::Formation::Request
             {
                 v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
             }
-            JsonRootObject->SetArrayField("slots", v);
+            JsonRootObject->SetArrayField(TEXT("slots"), v);
         }
         if (DuplicationAvoiderValue.IsSet())
         {
-            JsonRootObject->SetStringField("duplicationAvoider", DuplicationAvoiderValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("duplicationAvoider"), DuplicationAvoiderValue.GetValue());
         }
         return JsonRootObject;
     }

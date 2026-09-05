@@ -334,43 +334,43 @@ namespace Gs2::Schedule::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (RepeatTypeValue.IsSet())
         {
-            JsonRootObject->SetStringField("repeatType", RepeatTypeValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("repeatType"), RepeatTypeValue.GetValue());
         }
         if (BeginDayOfMonthValue.IsSet())
         {
-            JsonRootObject->SetNumberField("beginDayOfMonth", BeginDayOfMonthValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("beginDayOfMonth"), BeginDayOfMonthValue.GetValue());
         }
         if (EndDayOfMonthValue.IsSet())
         {
-            JsonRootObject->SetNumberField("endDayOfMonth", EndDayOfMonthValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("endDayOfMonth"), EndDayOfMonthValue.GetValue());
         }
         if (BeginDayOfWeekValue.IsSet())
         {
-            JsonRootObject->SetStringField("beginDayOfWeek", BeginDayOfWeekValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("beginDayOfWeek"), BeginDayOfWeekValue.GetValue());
         }
         if (EndDayOfWeekValue.IsSet())
         {
-            JsonRootObject->SetStringField("endDayOfWeek", EndDayOfWeekValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("endDayOfWeek"), EndDayOfWeekValue.GetValue());
         }
         if (BeginHourValue.IsSet())
         {
-            JsonRootObject->SetNumberField("beginHour", BeginHourValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("beginHour"), BeginHourValue.GetValue());
         }
         if (EndHourValue.IsSet())
         {
-            JsonRootObject->SetNumberField("endHour", EndHourValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("endHour"), EndHourValue.GetValue());
         }
         if (AnchorTimestampValue.IsSet())
         {
-            JsonRootObject->SetStringField("anchorTimestamp", FString::Printf(TEXT("%lld"), AnchorTimestampValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("anchorTimestamp"), FString::Printf(TEXT("%lld"), AnchorTimestampValue.GetValue()));
         }
         if (ActiveDaysValue.IsSet())
         {
-            JsonRootObject->SetNumberField("activeDays", ActiveDaysValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("activeDays"), ActiveDaysValue.GetValue());
         }
         if (InactiveDaysValue.IsSet())
         {
-            JsonRootObject->SetNumberField("inactiveDays", InactiveDaysValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("inactiveDays"), InactiveDaysValue.GetValue());
         }
         return JsonRootObject;
     }

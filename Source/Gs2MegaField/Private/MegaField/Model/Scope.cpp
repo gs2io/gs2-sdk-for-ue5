@@ -128,15 +128,15 @@ namespace Gs2::MegaField::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (LayerNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("layerName", LayerNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("layerName"), LayerNameValue.GetValue());
         }
         if (RValue.IsSet())
         {
-            JsonRootObject->SetNumberField("r", RValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("r"), RValue.GetValue());
         }
         if (LimitValue.IsSet())
         {
-            JsonRootObject->SetNumberField("limit", LimitValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("limit"), LimitValue.GetValue());
         }
         return JsonRootObject;
     }

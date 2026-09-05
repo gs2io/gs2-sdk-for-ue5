@@ -156,23 +156,23 @@ namespace Gs2::Formation::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (NameValue.IsSet())
         {
-            JsonRootObject->SetStringField("name", NameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("name"), NameValue.GetValue());
         }
         if (PropertyTypeValue.IsSet())
         {
-            JsonRootObject->SetStringField("propertyType", PropertyTypeValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("propertyType"), PropertyTypeValue.GetValue());
         }
         if (BodyValue.IsSet())
         {
-            JsonRootObject->SetStringField("body", BodyValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("body"), BodyValue.GetValue());
         }
         if (SignatureValue.IsSet())
         {
-            JsonRootObject->SetStringField("signature", SignatureValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("signature"), SignatureValue.GetValue());
         }
         if (MetadataValue.IsSet())
         {
-            JsonRootObject->SetStringField("metadata", MetadataValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("metadata"), MetadataValue.GetValue());
         }
         return JsonRootObject;
     }

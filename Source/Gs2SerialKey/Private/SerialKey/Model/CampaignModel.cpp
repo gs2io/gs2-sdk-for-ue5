@@ -186,19 +186,19 @@ namespace Gs2::SerialKey::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (CampaignIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("campaignId", CampaignIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("campaignId"), CampaignIdValue.GetValue());
         }
         if (NameValue.IsSet())
         {
-            JsonRootObject->SetStringField("name", NameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("name"), NameValue.GetValue());
         }
         if (MetadataValue.IsSet())
         {
-            JsonRootObject->SetStringField("metadata", MetadataValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("metadata"), MetadataValue.GetValue());
         }
         if (EnableCampaignCodeValue.IsSet())
         {
-            JsonRootObject->SetBoolField("enableCampaignCode", EnableCampaignCodeValue.GetValue());
+            JsonRootObject->SetBoolField(TEXT("enableCampaignCode"), EnableCampaignCodeValue.GetValue());
         }
         return JsonRootObject;
     }

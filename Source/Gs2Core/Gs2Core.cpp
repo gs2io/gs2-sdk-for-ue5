@@ -60,4 +60,4 @@ void FGs2Ticker::Tick(float DeltaTime)
 FCriticalSection FGs2Ticker::Mutex;
 TArray<TFunction<void()>> FGs2Ticker::InvokeFromGameThreads;
 
-IMPLEMENT_MODULE( FGs2Module, Gs2 );
+IMPLEMENT_MODULE( FGs2Module, Gs2Core );

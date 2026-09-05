@@ -257,15 +257,15 @@ namespace Gs2::Inbox::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (GlobalMessageIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("globalMessageId", GlobalMessageIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("globalMessageId"), GlobalMessageIdValue.GetValue());
         }
         if (NameValue.IsSet())
         {
-            JsonRootObject->SetStringField("name", NameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("name"), NameValue.GetValue());
         }
         if (MetadataValue.IsSet())
         {
-            JsonRootObject->SetStringField("metadata", MetadataValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("metadata"), MetadataValue.GetValue());
         }
         if (ReadAcquireActionsValue != nullptr && ReadAcquireActionsValue.IsValid())
         {
@@ -274,19 +274,19 @@ namespace Gs2::Inbox::Model
             {
                 v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
             }
-            JsonRootObject->SetArrayField("readAcquireActions", v);
+            JsonRootObject->SetArrayField(TEXT("readAcquireActions"), v);
         }
         if (ExpiresTimeSpanValue != nullptr && ExpiresTimeSpanValue.IsValid())
         {
-            JsonRootObject->SetObjectField("expiresTimeSpan", ExpiresTimeSpanValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("expiresTimeSpan"), ExpiresTimeSpanValue->ToJson());
         }
         if (ExpiresAtValue.IsSet())
         {
-            JsonRootObject->SetStringField("expiresAt", FString::Printf(TEXT("%lld"), ExpiresAtValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("expiresAt"), FString::Printf(TEXT("%lld"), ExpiresAtValue.GetValue()));
         }
         if (MessageReceptionPeriodEventIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("messageReceptionPeriodEventId", MessageReceptionPeriodEventIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("messageReceptionPeriodEventId"), MessageReceptionPeriodEventIdValue.GetValue());
         }
         return JsonRootObject;
     }

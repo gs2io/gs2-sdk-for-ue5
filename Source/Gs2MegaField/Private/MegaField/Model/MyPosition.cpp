@@ -117,15 +117,15 @@ namespace Gs2::MegaField::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (PositionValue != nullptr && PositionValue.IsValid())
         {
-            JsonRootObject->SetObjectField("position", PositionValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("position"), PositionValue->ToJson());
         }
         if (VectorValue != nullptr && VectorValue.IsValid())
         {
-            JsonRootObject->SetObjectField("vector", VectorValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("vector"), VectorValue->ToJson());
         }
         if (RValue.IsSet())
         {
-            JsonRootObject->SetNumberField("r", RValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("r"), RValue.GetValue());
         }
         return JsonRootObject;
     }

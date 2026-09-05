@@ -226,31 +226,31 @@ namespace Gs2::Log::Request
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (ContextStackValue.IsSet())
         {
-            JsonRootObject->SetStringField("contextStack", ContextStackValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("contextStack"), ContextStackValue.GetValue());
         }
         if (NamespaceNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("namespaceName", NamespaceNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("namespaceName"), NamespaceNameValue.GetValue());
         }
         if (BeginValue.IsSet())
         {
-            JsonRootObject->SetStringField("begin", FString::Printf(TEXT("%lld"), BeginValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("begin"), FString::Printf(TEXT("%lld"), BeginValue.GetValue()));
         }
         if (EndValue.IsSet())
         {
-            JsonRootObject->SetStringField("end", FString::Printf(TEXT("%lld"), EndValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("end"), FString::Printf(TEXT("%lld"), EndValue.GetValue()));
         }
         if (QueryValue.IsSet())
         {
-            JsonRootObject->SetStringField("query", QueryValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("query"), QueryValue.GetValue());
         }
         if (PageTokenValue.IsSet())
         {
-            JsonRootObject->SetStringField("pageToken", PageTokenValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("pageToken"), PageTokenValue.GetValue());
         }
         if (LimitValue.IsSet())
         {
-            JsonRootObject->SetNumberField("limit", LimitValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("limit"), LimitValue.GetValue());
         }
         return JsonRootObject;
     }

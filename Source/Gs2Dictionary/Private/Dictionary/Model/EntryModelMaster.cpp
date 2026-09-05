@@ -273,31 +273,31 @@ namespace Gs2::Dictionary::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (EntryModelIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("entryModelId", EntryModelIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("entryModelId"), EntryModelIdValue.GetValue());
         }
         if (NameValue.IsSet())
         {
-            JsonRootObject->SetStringField("name", NameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("name"), NameValue.GetValue());
         }
         if (DescriptionValue.IsSet())
         {
-            JsonRootObject->SetStringField("description", DescriptionValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("description"), DescriptionValue.GetValue());
         }
         if (MetadataValue.IsSet())
         {
-            JsonRootObject->SetStringField("metadata", MetadataValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("metadata"), MetadataValue.GetValue());
         }
         if (CreatedAtValue.IsSet())
         {
-            JsonRootObject->SetStringField("createdAt", FString::Printf(TEXT("%lld"), CreatedAtValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("createdAt"), FString::Printf(TEXT("%lld"), CreatedAtValue.GetValue()));
         }
         if (UpdatedAtValue.IsSet())
         {
-            JsonRootObject->SetStringField("updatedAt", FString::Printf(TEXT("%lld"), UpdatedAtValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("updatedAt"), FString::Printf(TEXT("%lld"), UpdatedAtValue.GetValue()));
         }
         if (RevisionValue.IsSet())
         {
-            JsonRootObject->SetStringField("revision", FString::Printf(TEXT("%lld"), RevisionValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("revision"), FString::Printf(TEXT("%lld"), RevisionValue.GetValue()));
         }
         return JsonRootObject;
     }

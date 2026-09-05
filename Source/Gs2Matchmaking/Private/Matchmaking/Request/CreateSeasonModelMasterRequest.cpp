@@ -232,35 +232,35 @@ namespace Gs2::Matchmaking::Request
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (ContextStackValue.IsSet())
         {
-            JsonRootObject->SetStringField("contextStack", ContextStackValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("contextStack"), ContextStackValue.GetValue());
         }
         if (NamespaceNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("namespaceName", NamespaceNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("namespaceName"), NamespaceNameValue.GetValue());
         }
         if (NameValue.IsSet())
         {
-            JsonRootObject->SetStringField("name", NameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("name"), NameValue.GetValue());
         }
         if (DescriptionValue.IsSet())
         {
-            JsonRootObject->SetStringField("description", DescriptionValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("description"), DescriptionValue.GetValue());
         }
         if (MetadataValue.IsSet())
         {
-            JsonRootObject->SetStringField("metadata", MetadataValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("metadata"), MetadataValue.GetValue());
         }
         if (MaximumParticipantsValue.IsSet())
         {
-            JsonRootObject->SetNumberField("maximumParticipants", MaximumParticipantsValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("maximumParticipants"), MaximumParticipantsValue.GetValue());
         }
         if (ExperienceModelIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("experienceModelId", ExperienceModelIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("experienceModelId"), ExperienceModelIdValue.GetValue());
         }
         if (ChallengePeriodEventIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("challengePeriodEventId", ChallengePeriodEventIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("challengePeriodEventId"), ChallengePeriodEventIdValue.GetValue());
         }
         return JsonRootObject;
     }

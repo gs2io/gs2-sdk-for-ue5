@@ -127,19 +127,19 @@ namespace Gs2::Lottery::Request
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (ContextStackValue.IsSet())
         {
-            JsonRootObject->SetStringField("contextStack", ContextStackValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("contextStack"), ContextStackValue.GetValue());
         }
         if (NamespaceNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("namespaceName", NamespaceNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("namespaceName"), NamespaceNameValue.GetValue());
         }
         if (PrizeTableNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("prizeTableName", PrizeTableNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("prizeTableName"), PrizeTableNameValue.GetValue());
         }
         if (PrizeIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("prizeId", PrizeIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("prizeId"), PrizeIdValue.GetValue());
         }
         return JsonRootObject;
     }

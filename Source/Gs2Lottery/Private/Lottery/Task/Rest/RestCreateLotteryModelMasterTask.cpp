@@ -86,35 +86,35 @@ namespace Gs2::Lottery::Task::Rest
             const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
             if (this->Request->GetName().IsSet())
             {
-                JsonRootObject->SetStringField("name", this->Request->GetName().GetValue());
+                JsonRootObject->SetStringField(TEXT("name"), this->Request->GetName().GetValue());
             }
             if (this->Request->GetDescription().IsSet())
             {
-                JsonRootObject->SetStringField("description", this->Request->GetDescription().GetValue());
+                JsonRootObject->SetStringField(TEXT("description"), this->Request->GetDescription().GetValue());
             }
             if (this->Request->GetMetadata().IsSet())
             {
-                JsonRootObject->SetStringField("metadata", this->Request->GetMetadata().GetValue());
+                JsonRootObject->SetStringField(TEXT("metadata"), this->Request->GetMetadata().GetValue());
             }
             if (this->Request->GetMode().IsSet())
             {
-                JsonRootObject->SetStringField("mode", this->Request->GetMode().GetValue());
+                JsonRootObject->SetStringField(TEXT("mode"), this->Request->GetMode().GetValue());
             }
             if (this->Request->GetMethod().IsSet())
             {
-                JsonRootObject->SetStringField("method", this->Request->GetMethod().GetValue());
+                JsonRootObject->SetStringField(TEXT("method"), this->Request->GetMethod().GetValue());
             }
             if (this->Request->GetPrizeTableName().IsSet())
             {
-                JsonRootObject->SetStringField("prizeTableName", this->Request->GetPrizeTableName().GetValue());
+                JsonRootObject->SetStringField(TEXT("prizeTableName"), this->Request->GetPrizeTableName().GetValue());
             }
             if (this->Request->GetChoicePrizeTableScriptId().IsSet())
             {
-                JsonRootObject->SetStringField("choicePrizeTableScriptId", this->Request->GetChoicePrizeTableScriptId().GetValue());
+                JsonRootObject->SetStringField(TEXT("choicePrizeTableScriptId"), this->Request->GetChoicePrizeTableScriptId().GetValue());
             }
             if (this->Request->GetContextStack().IsSet())
             {
-                JsonRootObject->SetStringField("contextStack", this->Request->GetContextStack().GetValue());
+                JsonRootObject->SetStringField(TEXT("contextStack"), this->Request->GetContextStack().GetValue());
             }
             FJsonSerializer::Serialize(JsonRootObject.ToSharedRef(), Writer);
             request->SetContentAsString(Body);

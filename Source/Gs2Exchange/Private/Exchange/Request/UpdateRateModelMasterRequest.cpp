@@ -301,31 +301,31 @@ namespace Gs2::Exchange::Request
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (ContextStackValue.IsSet())
         {
-            JsonRootObject->SetStringField("contextStack", ContextStackValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("contextStack"), ContextStackValue.GetValue());
         }
         if (NamespaceNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("namespaceName", NamespaceNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("namespaceName"), NamespaceNameValue.GetValue());
         }
         if (RateNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("rateName", RateNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("rateName"), RateNameValue.GetValue());
         }
         if (DescriptionValue.IsSet())
         {
-            JsonRootObject->SetStringField("description", DescriptionValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("description"), DescriptionValue.GetValue());
         }
         if (MetadataValue.IsSet())
         {
-            JsonRootObject->SetStringField("metadata", MetadataValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("metadata"), MetadataValue.GetValue());
         }
         if (TimingTypeValue.IsSet())
         {
-            JsonRootObject->SetStringField("timingType", TimingTypeValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("timingType"), TimingTypeValue.GetValue());
         }
         if (LockTimeValue.IsSet())
         {
-            JsonRootObject->SetNumberField("lockTime", LockTimeValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("lockTime"), LockTimeValue.GetValue());
         }
         if (AcquireActionsValue != nullptr && AcquireActionsValue.IsValid())
         {
@@ -334,7 +334,7 @@ namespace Gs2::Exchange::Request
             {
                 v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
             }
-            JsonRootObject->SetArrayField("acquireActions", v);
+            JsonRootObject->SetArrayField(TEXT("acquireActions"), v);
         }
         if (VerifyActionsValue != nullptr && VerifyActionsValue.IsValid())
         {
@@ -343,7 +343,7 @@ namespace Gs2::Exchange::Request
             {
                 v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
             }
-            JsonRootObject->SetArrayField("verifyActions", v);
+            JsonRootObject->SetArrayField(TEXT("verifyActions"), v);
         }
         if (ConsumeActionsValue != nullptr && ConsumeActionsValue.IsValid())
         {
@@ -352,7 +352,7 @@ namespace Gs2::Exchange::Request
             {
                 v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
             }
-            JsonRootObject->SetArrayField("consumeActions", v);
+            JsonRootObject->SetArrayField(TEXT("consumeActions"), v);
         }
         return JsonRootObject;
     }

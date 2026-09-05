@@ -239,31 +239,31 @@ namespace Gs2::Enchant::Request
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (ContextStackValue.IsSet())
         {
-            JsonRootObject->SetStringField("contextStack", ContextStackValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("contextStack"), ContextStackValue.GetValue());
         }
         if (NamespaceNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("namespaceName", NamespaceNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("namespaceName"), NamespaceNameValue.GetValue());
         }
         if (NameValue.IsSet())
         {
-            JsonRootObject->SetStringField("name", NameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("name"), NameValue.GetValue());
         }
         if (DescriptionValue.IsSet())
         {
-            JsonRootObject->SetStringField("description", DescriptionValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("description"), DescriptionValue.GetValue());
         }
         if (MetadataValue.IsSet())
         {
-            JsonRootObject->SetStringField("metadata", MetadataValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("metadata"), MetadataValue.GetValue());
         }
         if (TotalValueValue.IsSet())
         {
-            JsonRootObject->SetStringField("totalValue", FString::Printf(TEXT("%lld"), TotalValueValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("totalValue"), FString::Printf(TEXT("%lld"), TotalValueValue.GetValue()));
         }
         if (InitialValueStrategyValue.IsSet())
         {
-            JsonRootObject->SetStringField("initialValueStrategy", InitialValueStrategyValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("initialValueStrategy"), InitialValueStrategyValue.GetValue());
         }
         if (ParametersValue != nullptr && ParametersValue.IsValid())
         {
@@ -272,7 +272,7 @@ namespace Gs2::Enchant::Request
             {
                 v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
             }
-            JsonRootObject->SetArrayField("parameters", v);
+            JsonRootObject->SetArrayField(TEXT("parameters"), v);
         }
         return JsonRootObject;
     }

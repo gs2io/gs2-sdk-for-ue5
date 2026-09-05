@@ -174,27 +174,27 @@ namespace Gs2::Guild::Request
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (ContextStackValue.IsSet())
         {
-            JsonRootObject->SetStringField("contextStack", ContextStackValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("contextStack"), ContextStackValue.GetValue());
         }
         if (NamespaceNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("namespaceName", NamespaceNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("namespaceName"), NamespaceNameValue.GetValue());
         }
         if (GuildNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("guildName", GuildNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("guildName"), GuildNameValue.GetValue());
         }
         if (GuildModelNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("guildModelName", GuildModelNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("guildModelName"), GuildModelNameValue.GetValue());
         }
         if (ValueValue.IsSet())
         {
-            JsonRootObject->SetNumberField("value", ValueValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("value"), ValueValue.GetValue());
         }
         if (DuplicationAvoiderValue.IsSet())
         {
-            JsonRootObject->SetStringField("duplicationAvoider", DuplicationAvoiderValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("duplicationAvoider"), DuplicationAvoiderValue.GetValue());
         }
         return JsonRootObject;
     }

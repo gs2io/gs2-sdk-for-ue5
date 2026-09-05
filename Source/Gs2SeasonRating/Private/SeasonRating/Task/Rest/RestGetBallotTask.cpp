@@ -96,15 +96,15 @@ namespace Gs2::SeasonRating::Task::Rest
             const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
             if (this->Request->GetNumberOfPlayer().IsSet())
             {
-                JsonRootObject->SetNumberField("numberOfPlayer", this->Request->GetNumberOfPlayer().GetValue());
+                JsonRootObject->SetNumberField(TEXT("numberOfPlayer"), this->Request->GetNumberOfPlayer().GetValue());
             }
             if (this->Request->GetKeyId().IsSet())
             {
-                JsonRootObject->SetStringField("keyId", this->Request->GetKeyId().GetValue());
+                JsonRootObject->SetStringField(TEXT("keyId"), this->Request->GetKeyId().GetValue());
             }
             if (this->Request->GetContextStack().IsSet())
             {
-                JsonRootObject->SetStringField("contextStack", this->Request->GetContextStack().GetValue());
+                JsonRootObject->SetStringField(TEXT("contextStack"), this->Request->GetContextStack().GetValue());
             }
             FJsonSerializer::Serialize(JsonRootObject.ToSharedRef(), Writer);
             request->SetContentAsString(Body);

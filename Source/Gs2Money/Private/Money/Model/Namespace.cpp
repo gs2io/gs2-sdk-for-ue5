@@ -537,75 +537,75 @@ namespace Gs2::Money::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (NamespaceIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("namespaceId", NamespaceIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("namespaceId"), NamespaceIdValue.GetValue());
         }
         if (NameValue.IsSet())
         {
-            JsonRootObject->SetStringField("name", NameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("name"), NameValue.GetValue());
         }
         if (DescriptionValue.IsSet())
         {
-            JsonRootObject->SetStringField("description", DescriptionValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("description"), DescriptionValue.GetValue());
         }
         if (TransactionSettingValue != nullptr && TransactionSettingValue.IsValid())
         {
-            JsonRootObject->SetObjectField("transactionSetting", TransactionSettingValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("transactionSetting"), TransactionSettingValue->ToJson());
         }
         if (PriorityValue.IsSet())
         {
-            JsonRootObject->SetStringField("priority", PriorityValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("priority"), PriorityValue.GetValue());
         }
         if (ShareFreeValue.IsSet())
         {
-            JsonRootObject->SetBoolField("shareFree", ShareFreeValue.GetValue());
+            JsonRootObject->SetBoolField(TEXT("shareFree"), ShareFreeValue.GetValue());
         }
         if (CurrencyValue.IsSet())
         {
-            JsonRootObject->SetStringField("currency", CurrencyValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("currency"), CurrencyValue.GetValue());
         }
         if (AppleKeyValue.IsSet())
         {
-            JsonRootObject->SetStringField("appleKey", AppleKeyValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("appleKey"), AppleKeyValue.GetValue());
         }
         if (GoogleKeyValue.IsSet())
         {
-            JsonRootObject->SetStringField("googleKey", GoogleKeyValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("googleKey"), GoogleKeyValue.GetValue());
         }
         if (EnableFakeReceiptValue.IsSet())
         {
-            JsonRootObject->SetBoolField("enableFakeReceipt", EnableFakeReceiptValue.GetValue());
+            JsonRootObject->SetBoolField(TEXT("enableFakeReceipt"), EnableFakeReceiptValue.GetValue());
         }
         if (CreateWalletScriptValue != nullptr && CreateWalletScriptValue.IsValid())
         {
-            JsonRootObject->SetObjectField("createWalletScript", CreateWalletScriptValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("createWalletScript"), CreateWalletScriptValue->ToJson());
         }
         if (DepositScriptValue != nullptr && DepositScriptValue.IsValid())
         {
-            JsonRootObject->SetObjectField("depositScript", DepositScriptValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("depositScript"), DepositScriptValue->ToJson());
         }
         if (WithdrawScriptValue != nullptr && WithdrawScriptValue.IsValid())
         {
-            JsonRootObject->SetObjectField("withdrawScript", WithdrawScriptValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("withdrawScript"), WithdrawScriptValue->ToJson());
         }
         if (BalanceValue.IsSet())
         {
-            JsonRootObject->SetNumberField("balance", BalanceValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("balance"), BalanceValue.GetValue());
         }
         if (LogSettingValue != nullptr && LogSettingValue.IsValid())
         {
-            JsonRootObject->SetObjectField("logSetting", LogSettingValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("logSetting"), LogSettingValue->ToJson());
         }
         if (CreatedAtValue.IsSet())
         {
-            JsonRootObject->SetStringField("createdAt", FString::Printf(TEXT("%lld"), CreatedAtValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("createdAt"), FString::Printf(TEXT("%lld"), CreatedAtValue.GetValue()));
         }
         if (UpdatedAtValue.IsSet())
         {
-            JsonRootObject->SetStringField("updatedAt", FString::Printf(TEXT("%lld"), UpdatedAtValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("updatedAt"), FString::Printf(TEXT("%lld"), UpdatedAtValue.GetValue()));
         }
         if (RevisionValue.IsSet())
         {
-            JsonRootObject->SetStringField("revision", FString::Printf(TEXT("%lld"), RevisionValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("revision"), FString::Printf(TEXT("%lld"), RevisionValue.GetValue()));
         }
         return JsonRootObject;
     }

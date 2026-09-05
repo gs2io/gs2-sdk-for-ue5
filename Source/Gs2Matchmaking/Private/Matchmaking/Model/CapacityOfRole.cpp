@@ -148,7 +148,7 @@ namespace Gs2::Matchmaking::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (RoleNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("roleName", RoleNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("roleName"), RoleNameValue.GetValue());
         }
         if (RoleAliasesValue != nullptr && RoleAliasesValue.IsValid())
         {
@@ -157,11 +157,11 @@ namespace Gs2::Matchmaking::Model
             {
                 v.Add(MakeShared<FJsonValueString>(JsonObjectValue));
             }
-            JsonRootObject->SetArrayField("roleAliases", v);
+            JsonRootObject->SetArrayField(TEXT("roleAliases"), v);
         }
         if (CapacityValue.IsSet())
         {
-            JsonRootObject->SetNumberField("capacity", CapacityValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("capacity"), CapacityValue.GetValue());
         }
         if (ParticipantsValue != nullptr && ParticipantsValue.IsValid())
         {
@@ -170,7 +170,7 @@ namespace Gs2::Matchmaking::Model
             {
                 v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
             }
-            JsonRootObject->SetArrayField("participants", v);
+            JsonRootObject->SetArrayField(TEXT("participants"), v);
         }
         return JsonRootObject;
     }

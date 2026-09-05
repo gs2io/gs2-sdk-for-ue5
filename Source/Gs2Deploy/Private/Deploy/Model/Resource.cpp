@@ -353,31 +353,31 @@ namespace Gs2::Deploy::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (ResourceIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("resourceId", ResourceIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("resourceId"), ResourceIdValue.GetValue());
         }
         if (TypeValue.IsSet())
         {
-            JsonRootObject->SetStringField("type", TypeValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("type"), TypeValue.GetValue());
         }
         if (NameValue.IsSet())
         {
-            JsonRootObject->SetStringField("name", NameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("name"), NameValue.GetValue());
         }
         if (RequestValue.IsSet())
         {
-            JsonRootObject->SetStringField("request", RequestValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("request"), RequestValue.GetValue());
         }
         if (ResponseValue.IsSet())
         {
-            JsonRootObject->SetStringField("response", ResponseValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("response"), ResponseValue.GetValue());
         }
         if (RollbackContextValue.IsSet())
         {
-            JsonRootObject->SetStringField("rollbackContext", RollbackContextValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("rollbackContext"), RollbackContextValue.GetValue());
         }
         if (RollbackRequestValue.IsSet())
         {
-            JsonRootObject->SetStringField("rollbackRequest", RollbackRequestValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("rollbackRequest"), RollbackRequestValue.GetValue());
         }
         if (RollbackAfterValue != nullptr && RollbackAfterValue.IsValid())
         {
@@ -386,7 +386,7 @@ namespace Gs2::Deploy::Model
             {
                 v.Add(MakeShared<FJsonValueString>(JsonObjectValue));
             }
-            JsonRootObject->SetArrayField("rollbackAfter", v);
+            JsonRootObject->SetArrayField(TEXT("rollbackAfter"), v);
         }
         if (OutputFieldsValue != nullptr && OutputFieldsValue.IsValid())
         {
@@ -395,15 +395,15 @@ namespace Gs2::Deploy::Model
             {
                 v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
             }
-            JsonRootObject->SetArrayField("outputFields", v);
+            JsonRootObject->SetArrayField(TEXT("outputFields"), v);
         }
         if (WorkIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("workId", WorkIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("workId"), WorkIdValue.GetValue());
         }
         if (CreatedAtValue.IsSet())
         {
-            JsonRootObject->SetStringField("createdAt", FString::Printf(TEXT("%lld"), CreatedAtValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("createdAt"), FString::Printf(TEXT("%lld"), CreatedAtValue.GetValue()));
         }
         return JsonRootObject;
     }

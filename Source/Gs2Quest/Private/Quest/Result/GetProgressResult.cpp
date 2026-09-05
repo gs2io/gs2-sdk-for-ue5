@@ -122,15 +122,15 @@ namespace Gs2::Quest::Result
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (ItemValue != nullptr && ItemValue.IsValid())
         {
-            JsonRootObject->SetObjectField("item", ItemValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("item"), ItemValue->ToJson());
         }
         if (QuestGroupValue != nullptr && QuestGroupValue.IsValid())
         {
-            JsonRootObject->SetObjectField("questGroup", QuestGroupValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("questGroup"), QuestGroupValue->ToJson());
         }
         if (QuestValue != nullptr && QuestValue.IsValid())
         {
-            JsonRootObject->SetObjectField("quest", QuestValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("quest"), QuestValue->ToJson());
         }
         return JsonRootObject;
     }

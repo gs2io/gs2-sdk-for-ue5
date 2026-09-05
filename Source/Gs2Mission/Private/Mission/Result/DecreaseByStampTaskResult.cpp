@@ -123,7 +123,7 @@ namespace Gs2::Mission::Result
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (ItemValue != nullptr && ItemValue.IsValid())
         {
-            JsonRootObject->SetObjectField("item", ItemValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("item"), ItemValue->ToJson());
         }
         if (ChangedCompletesValue != nullptr && ChangedCompletesValue.IsValid())
         {
@@ -132,11 +132,11 @@ namespace Gs2::Mission::Result
             {
                 v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
             }
-            JsonRootObject->SetArrayField("changedCompletes", v);
+            JsonRootObject->SetArrayField(TEXT("changedCompletes"), v);
         }
         if (NewContextStackValue.IsSet())
         {
-            JsonRootObject->SetStringField("newContextStack", NewContextStackValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("newContextStack"), NewContextStackValue.GetValue());
         }
         return JsonRootObject;
     }

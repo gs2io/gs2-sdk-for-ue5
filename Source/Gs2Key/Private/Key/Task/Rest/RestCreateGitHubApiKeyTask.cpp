@@ -86,23 +86,23 @@ namespace Gs2::Key::Task::Rest
             const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
             if (this->Request->GetName().IsSet())
             {
-                JsonRootObject->SetStringField("name", this->Request->GetName().GetValue());
+                JsonRootObject->SetStringField(TEXT("name"), this->Request->GetName().GetValue());
             }
             if (this->Request->GetDescription().IsSet())
             {
-                JsonRootObject->SetStringField("description", this->Request->GetDescription().GetValue());
+                JsonRootObject->SetStringField(TEXT("description"), this->Request->GetDescription().GetValue());
             }
             if (this->Request->GetApiKey().IsSet())
             {
-                JsonRootObject->SetStringField("apiKey", this->Request->GetApiKey().GetValue());
+                JsonRootObject->SetStringField(TEXT("apiKey"), this->Request->GetApiKey().GetValue());
             }
             if (this->Request->GetEncryptionKeyName().IsSet())
             {
-                JsonRootObject->SetStringField("encryptionKeyName", this->Request->GetEncryptionKeyName().GetValue());
+                JsonRootObject->SetStringField(TEXT("encryptionKeyName"), this->Request->GetEncryptionKeyName().GetValue());
             }
             if (this->Request->GetContextStack().IsSet())
             {
-                JsonRootObject->SetStringField("contextStack", this->Request->GetContextStack().GetValue());
+                JsonRootObject->SetStringField(TEXT("contextStack"), this->Request->GetContextStack().GetValue());
             }
             FJsonSerializer::Serialize(JsonRootObject.ToSharedRef(), Writer);
             request->SetContentAsString(Body);

@@ -96,11 +96,11 @@ namespace Gs2::SeasonRating::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (RankValue.IsSet())
         {
-            JsonRootObject->SetNumberField("rank", RankValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("rank"), RankValue.GetValue());
         }
         if (UserIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("userId", UserIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("userId"), UserIdValue.GetValue());
         }
         return JsonRootObject;
     }

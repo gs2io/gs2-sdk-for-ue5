@@ -181,27 +181,27 @@ namespace Gs2::Gateway::Request
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (ContextStackValue.IsSet())
         {
-            JsonRootObject->SetStringField("contextStack", ContextStackValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("contextStack"), ContextStackValue.GetValue());
         }
         if (NameValue.IsSet())
         {
-            JsonRootObject->SetStringField("name", NameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("name"), NameValue.GetValue());
         }
         if (DescriptionValue.IsSet())
         {
-            JsonRootObject->SetStringField("description", DescriptionValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("description"), DescriptionValue.GetValue());
         }
         if (TransactionSettingValue != nullptr && TransactionSettingValue.IsValid())
         {
-            JsonRootObject->SetObjectField("transactionSetting", TransactionSettingValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("transactionSetting"), TransactionSettingValue->ToJson());
         }
         if (FirebaseSecretValue.IsSet())
         {
-            JsonRootObject->SetStringField("firebaseSecret", FirebaseSecretValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("firebaseSecret"), FirebaseSecretValue.GetValue());
         }
         if (LogSettingValue != nullptr && LogSettingValue.IsValid())
         {
-            JsonRootObject->SetObjectField("logSetting", LogSettingValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("logSetting"), LogSettingValue->ToJson());
         }
         return JsonRootObject;
     }

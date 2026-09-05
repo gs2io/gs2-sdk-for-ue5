@@ -229,23 +229,23 @@ namespace Gs2::News::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (OutputIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("outputId", OutputIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("outputId"), OutputIdValue.GetValue());
         }
         if (NameValue.IsSet())
         {
-            JsonRootObject->SetStringField("name", NameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("name"), NameValue.GetValue());
         }
         if (TextValue.IsSet())
         {
-            JsonRootObject->SetStringField("text", TextValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("text"), TextValue.GetValue());
         }
         if (CreatedAtValue.IsSet())
         {
-            JsonRootObject->SetStringField("createdAt", FString::Printf(TEXT("%lld"), CreatedAtValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("createdAt"), FString::Printf(TEXT("%lld"), CreatedAtValue.GetValue()));
         }
         if (RevisionValue.IsSet())
         {
-            JsonRootObject->SetStringField("revision", FString::Printf(TEXT("%lld"), RevisionValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("revision"), FString::Printf(TEXT("%lld"), RevisionValue.GetValue()));
         }
         return JsonRootObject;
     }

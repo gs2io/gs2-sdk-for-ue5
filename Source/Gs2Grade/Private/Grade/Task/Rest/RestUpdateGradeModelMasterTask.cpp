@@ -91,11 +91,11 @@ namespace Gs2::Grade::Task::Rest
             const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
             if (this->Request->GetDescription().IsSet())
             {
-                JsonRootObject->SetStringField("description", this->Request->GetDescription().GetValue());
+                JsonRootObject->SetStringField(TEXT("description"), this->Request->GetDescription().GetValue());
             }
             if (this->Request->GetMetadata().IsSet())
             {
-                JsonRootObject->SetStringField("metadata", this->Request->GetMetadata().GetValue());
+                JsonRootObject->SetStringField(TEXT("metadata"), this->Request->GetMetadata().GetValue());
             }
             if (this->Request->GetDefaultGrades() != nullptr && this->Request->GetDefaultGrades().IsValid())
             {
@@ -104,11 +104,11 @@ namespace Gs2::Grade::Task::Rest
                 {
                     v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
                 }
-                JsonRootObject->SetArrayField("defaultGrades", v);
+                JsonRootObject->SetArrayField(TEXT("defaultGrades"), v);
             }
             if (this->Request->GetExperienceModelId().IsSet())
             {
-                JsonRootObject->SetStringField("experienceModelId", this->Request->GetExperienceModelId().GetValue());
+                JsonRootObject->SetStringField(TEXT("experienceModelId"), this->Request->GetExperienceModelId().GetValue());
             }
             if (this->Request->GetGradeEntries() != nullptr && this->Request->GetGradeEntries().IsValid())
             {
@@ -117,7 +117,7 @@ namespace Gs2::Grade::Task::Rest
                 {
                     v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
                 }
-                JsonRootObject->SetArrayField("gradeEntries", v);
+                JsonRootObject->SetArrayField(TEXT("gradeEntries"), v);
             }
             if (this->Request->GetAcquireActionRates() != nullptr && this->Request->GetAcquireActionRates().IsValid())
             {
@@ -126,11 +126,11 @@ namespace Gs2::Grade::Task::Rest
                 {
                     v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
                 }
-                JsonRootObject->SetArrayField("acquireActionRates", v);
+                JsonRootObject->SetArrayField(TEXT("acquireActionRates"), v);
             }
             if (this->Request->GetContextStack().IsSet())
             {
-                JsonRootObject->SetStringField("contextStack", this->Request->GetContextStack().GetValue());
+                JsonRootObject->SetStringField(TEXT("contextStack"), this->Request->GetContextStack().GetValue());
             }
             FJsonSerializer::Serialize(JsonRootObject.ToSharedRef(), Writer);
             request->SetContentAsString(Body);

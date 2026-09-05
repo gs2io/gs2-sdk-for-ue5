@@ -392,43 +392,43 @@ namespace Gs2::Version::Request
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (ContextStackValue.IsSet())
         {
-            JsonRootObject->SetStringField("contextStack", ContextStackValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("contextStack"), ContextStackValue.GetValue());
         }
         if (NamespaceNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("namespaceName", NamespaceNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("namespaceName"), NamespaceNameValue.GetValue());
         }
         if (NameValue.IsSet())
         {
-            JsonRootObject->SetStringField("name", NameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("name"), NameValue.GetValue());
         }
         if (DescriptionValue.IsSet())
         {
-            JsonRootObject->SetStringField("description", DescriptionValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("description"), DescriptionValue.GetValue());
         }
         if (MetadataValue.IsSet())
         {
-            JsonRootObject->SetStringField("metadata", MetadataValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("metadata"), MetadataValue.GetValue());
         }
         if (ScopeValue.IsSet())
         {
-            JsonRootObject->SetStringField("scope", ScopeValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("scope"), ScopeValue.GetValue());
         }
         if (TypeValue.IsSet())
         {
-            JsonRootObject->SetStringField("type", TypeValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("type"), TypeValue.GetValue());
         }
         if (CurrentVersionValue != nullptr && CurrentVersionValue.IsValid())
         {
-            JsonRootObject->SetObjectField("currentVersion", CurrentVersionValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("currentVersion"), CurrentVersionValue->ToJson());
         }
         if (WarningVersionValue != nullptr && WarningVersionValue.IsValid())
         {
-            JsonRootObject->SetObjectField("warningVersion", WarningVersionValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("warningVersion"), WarningVersionValue->ToJson());
         }
         if (ErrorVersionValue != nullptr && ErrorVersionValue.IsValid())
         {
-            JsonRootObject->SetObjectField("errorVersion", ErrorVersionValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("errorVersion"), ErrorVersionValue->ToJson());
         }
         if (ScheduleVersionsValue != nullptr && ScheduleVersionsValue.IsValid())
         {
@@ -437,19 +437,19 @@ namespace Gs2::Version::Request
             {
                 v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
             }
-            JsonRootObject->SetArrayField("scheduleVersions", v);
+            JsonRootObject->SetArrayField(TEXT("scheduleVersions"), v);
         }
         if (NeedSignatureValue.IsSet())
         {
-            JsonRootObject->SetBoolField("needSignature", NeedSignatureValue.GetValue());
+            JsonRootObject->SetBoolField(TEXT("needSignature"), NeedSignatureValue.GetValue());
         }
         if (SignatureKeyIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("signatureKeyId", SignatureKeyIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("signatureKeyId"), SignatureKeyIdValue.GetValue());
         }
         if (ApproveRequirementValue.IsSet())
         {
-            JsonRootObject->SetStringField("approveRequirement", ApproveRequirementValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("approveRequirement"), ApproveRequirementValue.GetValue());
         }
         return JsonRootObject;
     }

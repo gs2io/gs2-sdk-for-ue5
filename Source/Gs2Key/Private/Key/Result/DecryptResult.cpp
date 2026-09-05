@@ -65,7 +65,7 @@ namespace Gs2::Key::Result
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (DataValue.IsSet())
         {
-            JsonRootObject->SetStringField("data", DataValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("data"), DataValue.GetValue());
         }
         return JsonRootObject;
     }

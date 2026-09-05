@@ -130,7 +130,7 @@ namespace Gs2::Freeze::Result
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (ItemValue != nullptr && ItemValue.IsValid())
         {
-            JsonRootObject->SetObjectField("item", ItemValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("item"), ItemValue->ToJson());
         }
         if (SourceValue != nullptr && SourceValue.IsValid())
         {
@@ -139,7 +139,7 @@ namespace Gs2::Freeze::Result
             {
                 v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
             }
-            JsonRootObject->SetArrayField("source", v);
+            JsonRootObject->SetArrayField(TEXT("source"), v);
         }
         if (CurrentValue != nullptr && CurrentValue.IsValid())
         {
@@ -148,7 +148,7 @@ namespace Gs2::Freeze::Result
             {
                 v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
             }
-            JsonRootObject->SetArrayField("current", v);
+            JsonRootObject->SetArrayField(TEXT("current"), v);
         }
         return JsonRootObject;
     }

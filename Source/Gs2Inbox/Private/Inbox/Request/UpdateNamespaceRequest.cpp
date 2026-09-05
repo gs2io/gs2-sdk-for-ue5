@@ -346,51 +346,51 @@ namespace Gs2::Inbox::Request
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (ContextStackValue.IsSet())
         {
-            JsonRootObject->SetStringField("contextStack", ContextStackValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("contextStack"), ContextStackValue.GetValue());
         }
         if (NamespaceNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("namespaceName", NamespaceNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("namespaceName"), NamespaceNameValue.GetValue());
         }
         if (DescriptionValue.IsSet())
         {
-            JsonRootObject->SetStringField("description", DescriptionValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("description"), DescriptionValue.GetValue());
         }
         if (IsAutomaticDeletingEnabledValue.IsSet())
         {
-            JsonRootObject->SetBoolField("isAutomaticDeletingEnabled", IsAutomaticDeletingEnabledValue.GetValue());
+            JsonRootObject->SetBoolField(TEXT("isAutomaticDeletingEnabled"), IsAutomaticDeletingEnabledValue.GetValue());
         }
         if (TransactionSettingValue != nullptr && TransactionSettingValue.IsValid())
         {
-            JsonRootObject->SetObjectField("transactionSetting", TransactionSettingValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("transactionSetting"), TransactionSettingValue->ToJson());
         }
         if (ReceiveMessageScriptValue != nullptr && ReceiveMessageScriptValue.IsValid())
         {
-            JsonRootObject->SetObjectField("receiveMessageScript", ReceiveMessageScriptValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("receiveMessageScript"), ReceiveMessageScriptValue->ToJson());
         }
         if (ReadMessageScriptValue != nullptr && ReadMessageScriptValue.IsValid())
         {
-            JsonRootObject->SetObjectField("readMessageScript", ReadMessageScriptValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("readMessageScript"), ReadMessageScriptValue->ToJson());
         }
         if (DeleteMessageScriptValue != nullptr && DeleteMessageScriptValue.IsValid())
         {
-            JsonRootObject->SetObjectField("deleteMessageScript", DeleteMessageScriptValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("deleteMessageScript"), DeleteMessageScriptValue->ToJson());
         }
         if (ReceiveNotificationValue != nullptr && ReceiveNotificationValue.IsValid())
         {
-            JsonRootObject->SetObjectField("receiveNotification", ReceiveNotificationValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("receiveNotification"), ReceiveNotificationValue->ToJson());
         }
         if (LogSettingValue != nullptr && LogSettingValue.IsValid())
         {
-            JsonRootObject->SetObjectField("logSetting", LogSettingValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("logSetting"), LogSettingValue->ToJson());
         }
         if (QueueNamespaceIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("queueNamespaceId", QueueNamespaceIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("queueNamespaceId"), QueueNamespaceIdValue.GetValue());
         }
         if (KeyIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("keyId", KeyIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("keyId"), KeyIdValue.GetValue());
         }
         return JsonRootObject;
     }

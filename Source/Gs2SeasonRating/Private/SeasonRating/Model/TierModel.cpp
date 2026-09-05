@@ -192,23 +192,23 @@ namespace Gs2::SeasonRating::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (MetadataValue.IsSet())
         {
-            JsonRootObject->SetStringField("metadata", MetadataValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("metadata"), MetadataValue.GetValue());
         }
         if (RaiseRankBonusValue.IsSet())
         {
-            JsonRootObject->SetNumberField("raiseRankBonus", RaiseRankBonusValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("raiseRankBonus"), RaiseRankBonusValue.GetValue());
         }
         if (EntryFeeValue.IsSet())
         {
-            JsonRootObject->SetNumberField("entryFee", EntryFeeValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("entryFee"), EntryFeeValue.GetValue());
         }
         if (MinimumChangePointValue.IsSet())
         {
-            JsonRootObject->SetNumberField("minimumChangePoint", MinimumChangePointValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("minimumChangePoint"), MinimumChangePointValue.GetValue());
         }
         if (MaximumChangePointValue.IsSet())
         {
-            JsonRootObject->SetNumberField("maximumChangePoint", MaximumChangePointValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("maximumChangePoint"), MaximumChangePointValue.GetValue());
         }
         return JsonRootObject;
     }

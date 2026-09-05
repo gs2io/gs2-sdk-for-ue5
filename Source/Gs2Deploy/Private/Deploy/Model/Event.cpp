@@ -264,31 +264,31 @@ namespace Gs2::Deploy::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (EventIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("eventId", EventIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("eventId"), EventIdValue.GetValue());
         }
         if (NameValue.IsSet())
         {
-            JsonRootObject->SetStringField("name", NameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("name"), NameValue.GetValue());
         }
         if (ResourceNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("resourceName", ResourceNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("resourceName"), ResourceNameValue.GetValue());
         }
         if (TypeValue.IsSet())
         {
-            JsonRootObject->SetStringField("type", TypeValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("type"), TypeValue.GetValue());
         }
         if (MessageValue.IsSet())
         {
-            JsonRootObject->SetStringField("message", MessageValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("message"), MessageValue.GetValue());
         }
         if (EventAtValue.IsSet())
         {
-            JsonRootObject->SetStringField("eventAt", FString::Printf(TEXT("%lld"), EventAtValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("eventAt"), FString::Printf(TEXT("%lld"), EventAtValue.GetValue()));
         }
         if (RevisionValue.IsSet())
         {
-            JsonRootObject->SetStringField("revision", FString::Printf(TEXT("%lld"), RevisionValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("revision"), FString::Printf(TEXT("%lld"), RevisionValue.GetValue()));
         }
         return JsonRootObject;
     }

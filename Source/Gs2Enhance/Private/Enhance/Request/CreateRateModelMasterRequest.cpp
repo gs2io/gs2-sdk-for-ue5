@@ -309,35 +309,35 @@ namespace Gs2::Enhance::Request
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (ContextStackValue.IsSet())
         {
-            JsonRootObject->SetStringField("contextStack", ContextStackValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("contextStack"), ContextStackValue.GetValue());
         }
         if (NamespaceNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("namespaceName", NamespaceNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("namespaceName"), NamespaceNameValue.GetValue());
         }
         if (NameValue.IsSet())
         {
-            JsonRootObject->SetStringField("name", NameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("name"), NameValue.GetValue());
         }
         if (DescriptionValue.IsSet())
         {
-            JsonRootObject->SetStringField("description", DescriptionValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("description"), DescriptionValue.GetValue());
         }
         if (MetadataValue.IsSet())
         {
-            JsonRootObject->SetStringField("metadata", MetadataValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("metadata"), MetadataValue.GetValue());
         }
         if (TargetInventoryModelIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("targetInventoryModelId", TargetInventoryModelIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("targetInventoryModelId"), TargetInventoryModelIdValue.GetValue());
         }
         if (AcquireExperienceSuffixValue.IsSet())
         {
-            JsonRootObject->SetStringField("acquireExperienceSuffix", AcquireExperienceSuffixValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("acquireExperienceSuffix"), AcquireExperienceSuffixValue.GetValue());
         }
         if (MaterialInventoryModelIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("materialInventoryModelId", MaterialInventoryModelIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("materialInventoryModelId"), MaterialInventoryModelIdValue.GetValue());
         }
         if (AcquireExperienceHierarchyValue != nullptr && AcquireExperienceHierarchyValue.IsValid())
         {
@@ -346,11 +346,11 @@ namespace Gs2::Enhance::Request
             {
                 v.Add(MakeShared<FJsonValueString>(JsonObjectValue));
             }
-            JsonRootObject->SetArrayField("acquireExperienceHierarchy", v);
+            JsonRootObject->SetArrayField(TEXT("acquireExperienceHierarchy"), v);
         }
         if (ExperienceModelIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("experienceModelId", ExperienceModelIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("experienceModelId"), ExperienceModelIdValue.GetValue());
         }
         if (BonusRatesValue != nullptr && BonusRatesValue.IsValid())
         {
@@ -359,7 +359,7 @@ namespace Gs2::Enhance::Request
             {
                 v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
             }
-            JsonRootObject->SetArrayField("bonusRates", v);
+            JsonRootObject->SetArrayField(TEXT("bonusRates"), v);
         }
         return JsonRootObject;
     }

@@ -325,35 +325,35 @@ namespace Gs2::Inventory::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (InventoryIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("inventoryId", InventoryIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("inventoryId"), InventoryIdValue.GetValue());
         }
         if (InventoryNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("inventoryName", InventoryNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("inventoryName"), InventoryNameValue.GetValue());
         }
         if (UserIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("userId", UserIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("userId"), UserIdValue.GetValue());
         }
         if (CurrentInventoryCapacityUsageValue.IsSet())
         {
-            JsonRootObject->SetNumberField("currentInventoryCapacityUsage", CurrentInventoryCapacityUsageValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("currentInventoryCapacityUsage"), CurrentInventoryCapacityUsageValue.GetValue());
         }
         if (CurrentInventoryMaxCapacityValue.IsSet())
         {
-            JsonRootObject->SetNumberField("currentInventoryMaxCapacity", CurrentInventoryMaxCapacityValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("currentInventoryMaxCapacity"), CurrentInventoryMaxCapacityValue.GetValue());
         }
         if (CreatedAtValue.IsSet())
         {
-            JsonRootObject->SetStringField("createdAt", FString::Printf(TEXT("%lld"), CreatedAtValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("createdAt"), FString::Printf(TEXT("%lld"), CreatedAtValue.GetValue()));
         }
         if (UpdatedAtValue.IsSet())
         {
-            JsonRootObject->SetStringField("updatedAt", FString::Printf(TEXT("%lld"), UpdatedAtValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("updatedAt"), FString::Printf(TEXT("%lld"), UpdatedAtValue.GetValue()));
         }
         if (RevisionValue.IsSet())
         {
-            JsonRootObject->SetStringField("revision", FString::Printf(TEXT("%lld"), RevisionValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("revision"), FString::Printf(TEXT("%lld"), RevisionValue.GetValue()));
         }
         return JsonRootObject;
     }

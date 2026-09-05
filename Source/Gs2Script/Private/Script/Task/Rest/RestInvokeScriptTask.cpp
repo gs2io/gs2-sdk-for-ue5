@@ -80,23 +80,23 @@ namespace Gs2::Script::Task::Rest
             const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
             if (this->Request->GetScriptId().IsSet())
             {
-                JsonRootObject->SetStringField("scriptId", this->Request->GetScriptId().GetValue());
+                JsonRootObject->SetStringField(TEXT("scriptId"), this->Request->GetScriptId().GetValue());
             }
             if (this->Request->GetUserId().IsSet())
             {
-                JsonRootObject->SetStringField("userId", this->Request->GetUserId().GetValue());
+                JsonRootObject->SetStringField(TEXT("userId"), this->Request->GetUserId().GetValue());
             }
             if (this->Request->GetArgs().IsSet())
             {
-                JsonRootObject->SetStringField("args", this->Request->GetArgs().GetValue());
+                JsonRootObject->SetStringField(TEXT("args"), this->Request->GetArgs().GetValue());
             }
             if (this->Request->GetRandomStatus() != nullptr && this->Request->GetRandomStatus().IsValid())
             {
-                JsonRootObject->SetObjectField("randomStatus", this->Request->GetRandomStatus()->ToJson());
+                JsonRootObject->SetObjectField(TEXT("randomStatus"), this->Request->GetRandomStatus()->ToJson());
             }
             if (this->Request->GetContextStack().IsSet())
             {
-                JsonRootObject->SetStringField("contextStack", this->Request->GetContextStack().GetValue());
+                JsonRootObject->SetStringField(TEXT("contextStack"), this->Request->GetContextStack().GetValue());
             }
             FJsonSerializer::Serialize(JsonRootObject.ToSharedRef(), Writer);
             request->SetContentAsString(Body);

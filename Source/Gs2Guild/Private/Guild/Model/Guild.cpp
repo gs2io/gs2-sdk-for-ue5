@@ -597,47 +597,47 @@ namespace Gs2::Guild::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (GuildIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("guildId", GuildIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("guildId"), GuildIdValue.GetValue());
         }
         if (GuildModelNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("guildModelName", GuildModelNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("guildModelName"), GuildModelNameValue.GetValue());
         }
         if (NameValue.IsSet())
         {
-            JsonRootObject->SetStringField("name", NameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("name"), NameValue.GetValue());
         }
         if (DisplayNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("displayName", DisplayNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("displayName"), DisplayNameValue.GetValue());
         }
         if (Attribute1Value.IsSet())
         {
-            JsonRootObject->SetNumberField("attribute1", Attribute1Value.GetValue());
+            JsonRootObject->SetNumberField(TEXT("attribute1"), Attribute1Value.GetValue());
         }
         if (Attribute2Value.IsSet())
         {
-            JsonRootObject->SetNumberField("attribute2", Attribute2Value.GetValue());
+            JsonRootObject->SetNumberField(TEXT("attribute2"), Attribute2Value.GetValue());
         }
         if (Attribute3Value.IsSet())
         {
-            JsonRootObject->SetNumberField("attribute3", Attribute3Value.GetValue());
+            JsonRootObject->SetNumberField(TEXT("attribute3"), Attribute3Value.GetValue());
         }
         if (Attribute4Value.IsSet())
         {
-            JsonRootObject->SetNumberField("attribute4", Attribute4Value.GetValue());
+            JsonRootObject->SetNumberField(TEXT("attribute4"), Attribute4Value.GetValue());
         }
         if (Attribute5Value.IsSet())
         {
-            JsonRootObject->SetNumberField("attribute5", Attribute5Value.GetValue());
+            JsonRootObject->SetNumberField(TEXT("attribute5"), Attribute5Value.GetValue());
         }
         if (MetadataValue.IsSet())
         {
-            JsonRootObject->SetStringField("metadata", MetadataValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("metadata"), MetadataValue.GetValue());
         }
         if (JoinPolicyValue.IsSet())
         {
-            JsonRootObject->SetStringField("joinPolicy", JoinPolicyValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("joinPolicy"), JoinPolicyValue.GetValue());
         }
         if (CustomRolesValue != nullptr && CustomRolesValue.IsValid())
         {
@@ -646,15 +646,15 @@ namespace Gs2::Guild::Model
             {
                 v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
             }
-            JsonRootObject->SetArrayField("customRoles", v);
+            JsonRootObject->SetArrayField(TEXT("customRoles"), v);
         }
         if (GuildMemberDefaultRoleValue.IsSet())
         {
-            JsonRootObject->SetStringField("guildMemberDefaultRole", GuildMemberDefaultRoleValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("guildMemberDefaultRole"), GuildMemberDefaultRoleValue.GetValue());
         }
         if (CurrentMaximumMemberCountValue.IsSet())
         {
-            JsonRootObject->SetNumberField("currentMaximumMemberCount", CurrentMaximumMemberCountValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("currentMaximumMemberCount"), CurrentMaximumMemberCountValue.GetValue());
         }
         if (MembersValue != nullptr && MembersValue.IsValid())
         {
@@ -663,19 +663,19 @@ namespace Gs2::Guild::Model
             {
                 v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
             }
-            JsonRootObject->SetArrayField("members", v);
+            JsonRootObject->SetArrayField(TEXT("members"), v);
         }
         if (CreatedAtValue.IsSet())
         {
-            JsonRootObject->SetStringField("createdAt", FString::Printf(TEXT("%lld"), CreatedAtValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("createdAt"), FString::Printf(TEXT("%lld"), CreatedAtValue.GetValue()));
         }
         if (UpdatedAtValue.IsSet())
         {
-            JsonRootObject->SetStringField("updatedAt", FString::Printf(TEXT("%lld"), UpdatedAtValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("updatedAt"), FString::Printf(TEXT("%lld"), UpdatedAtValue.GetValue()));
         }
         if (RevisionValue.IsSet())
         {
-            JsonRootObject->SetStringField("revision", FString::Printf(TEXT("%lld"), RevisionValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("revision"), FString::Printf(TEXT("%lld"), RevisionValue.GetValue()));
         }
         return JsonRootObject;
     }

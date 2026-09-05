@@ -127,19 +127,19 @@ namespace Gs2::Schedule::Request
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (ContextStackValue.IsSet())
         {
-            JsonRootObject->SetStringField("contextStack", ContextStackValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("contextStack"), ContextStackValue.GetValue());
         }
         if (NamespaceNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("namespaceName", NamespaceNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("namespaceName"), NamespaceNameValue.GetValue());
         }
         if (AccessTokenValue.IsSet())
         {
-            JsonRootObject->SetStringField("xGs2AccessToken", AccessTokenValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("xGs2AccessToken"), AccessTokenValue.GetValue());
         }
         if (TriggerNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("triggerName", TriggerNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("triggerName"), TriggerNameValue.GetValue());
         }
         return JsonRootObject;
     }

@@ -96,19 +96,19 @@ namespace Gs2::Exchange::Task::Rest
             const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
             if (this->Request->GetSkipType().IsSet())
             {
-                JsonRootObject->SetStringField("skipType", this->Request->GetSkipType().GetValue());
+                JsonRootObject->SetStringField(TEXT("skipType"), this->Request->GetSkipType().GetValue());
             }
             if (this->Request->GetMinutes().IsSet())
             {
-                JsonRootObject->SetNumberField("minutes", this->Request->GetMinutes().GetValue());
+                JsonRootObject->SetNumberField(TEXT("minutes"), this->Request->GetMinutes().GetValue());
             }
             if (this->Request->GetRate().IsSet())
             {
-                JsonRootObject->SetNumberField("rate", this->Request->GetRate().GetValue());
+                JsonRootObject->SetNumberField(TEXT("rate"), this->Request->GetRate().GetValue());
             }
             if (this->Request->GetContextStack().IsSet())
             {
-                JsonRootObject->SetStringField("contextStack", this->Request->GetContextStack().GetValue());
+                JsonRootObject->SetStringField(TEXT("contextStack"), this->Request->GetContextStack().GetValue());
             }
             FJsonSerializer::Serialize(JsonRootObject.ToSharedRef(), Writer);
             request->SetContentAsString(Body);

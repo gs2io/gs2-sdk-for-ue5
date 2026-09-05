@@ -80,79 +80,79 @@ namespace Gs2::Guild::Task::Rest
             const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
             if (this->Request->GetName().IsSet())
             {
-                JsonRootObject->SetStringField("name", this->Request->GetName().GetValue());
+                JsonRootObject->SetStringField(TEXT("name"), this->Request->GetName().GetValue());
             }
             if (this->Request->GetDescription().IsSet())
             {
-                JsonRootObject->SetStringField("description", this->Request->GetDescription().GetValue());
+                JsonRootObject->SetStringField(TEXT("description"), this->Request->GetDescription().GetValue());
             }
             if (this->Request->GetTransactionSetting() != nullptr && this->Request->GetTransactionSetting().IsValid())
             {
-                JsonRootObject->SetObjectField("transactionSetting", this->Request->GetTransactionSetting()->ToJson());
+                JsonRootObject->SetObjectField(TEXT("transactionSetting"), this->Request->GetTransactionSetting()->ToJson());
             }
             if (this->Request->GetChangeNotification() != nullptr && this->Request->GetChangeNotification().IsValid())
             {
-                JsonRootObject->SetObjectField("changeNotification", this->Request->GetChangeNotification()->ToJson());
+                JsonRootObject->SetObjectField(TEXT("changeNotification"), this->Request->GetChangeNotification()->ToJson());
             }
             if (this->Request->GetJoinNotification() != nullptr && this->Request->GetJoinNotification().IsValid())
             {
-                JsonRootObject->SetObjectField("joinNotification", this->Request->GetJoinNotification()->ToJson());
+                JsonRootObject->SetObjectField(TEXT("joinNotification"), this->Request->GetJoinNotification()->ToJson());
             }
             if (this->Request->GetLeaveNotification() != nullptr && this->Request->GetLeaveNotification().IsValid())
             {
-                JsonRootObject->SetObjectField("leaveNotification", this->Request->GetLeaveNotification()->ToJson());
+                JsonRootObject->SetObjectField(TEXT("leaveNotification"), this->Request->GetLeaveNotification()->ToJson());
             }
             if (this->Request->GetChangeMemberNotification() != nullptr && this->Request->GetChangeMemberNotification().IsValid())
             {
-                JsonRootObject->SetObjectField("changeMemberNotification", this->Request->GetChangeMemberNotification()->ToJson());
+                JsonRootObject->SetObjectField(TEXT("changeMemberNotification"), this->Request->GetChangeMemberNotification()->ToJson());
             }
             if (this->Request->GetChangeMemberNotificationIgnoreChangeMetadata().IsSet())
             {
-                JsonRootObject->SetBoolField("changeMemberNotificationIgnoreChangeMetadata", this->Request->GetChangeMemberNotificationIgnoreChangeMetadata().GetValue());
+                JsonRootObject->SetBoolField(TEXT("changeMemberNotificationIgnoreChangeMetadata"), this->Request->GetChangeMemberNotificationIgnoreChangeMetadata().GetValue());
             }
             if (this->Request->GetReceiveRequestNotification() != nullptr && this->Request->GetReceiveRequestNotification().IsValid())
             {
-                JsonRootObject->SetObjectField("receiveRequestNotification", this->Request->GetReceiveRequestNotification()->ToJson());
+                JsonRootObject->SetObjectField(TEXT("receiveRequestNotification"), this->Request->GetReceiveRequestNotification()->ToJson());
             }
             if (this->Request->GetRemoveRequestNotification() != nullptr && this->Request->GetRemoveRequestNotification().IsValid())
             {
-                JsonRootObject->SetObjectField("removeRequestNotification", this->Request->GetRemoveRequestNotification()->ToJson());
+                JsonRootObject->SetObjectField(TEXT("removeRequestNotification"), this->Request->GetRemoveRequestNotification()->ToJson());
             }
             if (this->Request->GetCreateGuildScript() != nullptr && this->Request->GetCreateGuildScript().IsValid())
             {
-                JsonRootObject->SetObjectField("createGuildScript", this->Request->GetCreateGuildScript()->ToJson());
+                JsonRootObject->SetObjectField(TEXT("createGuildScript"), this->Request->GetCreateGuildScript()->ToJson());
             }
             if (this->Request->GetUpdateGuildScript() != nullptr && this->Request->GetUpdateGuildScript().IsValid())
             {
-                JsonRootObject->SetObjectField("updateGuildScript", this->Request->GetUpdateGuildScript()->ToJson());
+                JsonRootObject->SetObjectField(TEXT("updateGuildScript"), this->Request->GetUpdateGuildScript()->ToJson());
             }
             if (this->Request->GetJoinGuildScript() != nullptr && this->Request->GetJoinGuildScript().IsValid())
             {
-                JsonRootObject->SetObjectField("joinGuildScript", this->Request->GetJoinGuildScript()->ToJson());
+                JsonRootObject->SetObjectField(TEXT("joinGuildScript"), this->Request->GetJoinGuildScript()->ToJson());
             }
             if (this->Request->GetReceiveJoinRequestScript() != nullptr && this->Request->GetReceiveJoinRequestScript().IsValid())
             {
-                JsonRootObject->SetObjectField("receiveJoinRequestScript", this->Request->GetReceiveJoinRequestScript()->ToJson());
+                JsonRootObject->SetObjectField(TEXT("receiveJoinRequestScript"), this->Request->GetReceiveJoinRequestScript()->ToJson());
             }
             if (this->Request->GetLeaveGuildScript() != nullptr && this->Request->GetLeaveGuildScript().IsValid())
             {
-                JsonRootObject->SetObjectField("leaveGuildScript", this->Request->GetLeaveGuildScript()->ToJson());
+                JsonRootObject->SetObjectField(TEXT("leaveGuildScript"), this->Request->GetLeaveGuildScript()->ToJson());
             }
             if (this->Request->GetChangeRoleScript() != nullptr && this->Request->GetChangeRoleScript().IsValid())
             {
-                JsonRootObject->SetObjectField("changeRoleScript", this->Request->GetChangeRoleScript()->ToJson());
+                JsonRootObject->SetObjectField(TEXT("changeRoleScript"), this->Request->GetChangeRoleScript()->ToJson());
             }
             if (this->Request->GetDeleteGuildScript() != nullptr && this->Request->GetDeleteGuildScript().IsValid())
             {
-                JsonRootObject->SetObjectField("deleteGuildScript", this->Request->GetDeleteGuildScript()->ToJson());
+                JsonRootObject->SetObjectField(TEXT("deleteGuildScript"), this->Request->GetDeleteGuildScript()->ToJson());
             }
             if (this->Request->GetLogSetting() != nullptr && this->Request->GetLogSetting().IsValid())
             {
-                JsonRootObject->SetObjectField("logSetting", this->Request->GetLogSetting()->ToJson());
+                JsonRootObject->SetObjectField(TEXT("logSetting"), this->Request->GetLogSetting()->ToJson());
             }
             if (this->Request->GetContextStack().IsSet())
             {
-                JsonRootObject->SetStringField("contextStack", this->Request->GetContextStack().GetValue());
+                JsonRootObject->SetStringField(TEXT("contextStack"), this->Request->GetContextStack().GetValue());
             }
             FJsonSerializer::Serialize(JsonRootObject.ToSharedRef(), Writer);
             request->SetContentAsString(Body);

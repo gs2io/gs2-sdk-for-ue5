@@ -80,91 +80,91 @@ namespace Gs2::Matchmaking::Task::Rest
             const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
             if (this->Request->GetName().IsSet())
             {
-                JsonRootObject->SetStringField("name", this->Request->GetName().GetValue());
+                JsonRootObject->SetStringField(TEXT("name"), this->Request->GetName().GetValue());
             }
             if (this->Request->GetDescription().IsSet())
             {
-                JsonRootObject->SetStringField("description", this->Request->GetDescription().GetValue());
+                JsonRootObject->SetStringField(TEXT("description"), this->Request->GetDescription().GetValue());
             }
             if (this->Request->GetTransactionSetting() != nullptr && this->Request->GetTransactionSetting().IsValid())
             {
-                JsonRootObject->SetObjectField("transactionSetting", this->Request->GetTransactionSetting()->ToJson());
+                JsonRootObject->SetObjectField(TEXT("transactionSetting"), this->Request->GetTransactionSetting()->ToJson());
             }
             if (this->Request->GetEnableRating().IsSet())
             {
-                JsonRootObject->SetBoolField("enableRating", this->Request->GetEnableRating().GetValue());
+                JsonRootObject->SetBoolField(TEXT("enableRating"), this->Request->GetEnableRating().GetValue());
             }
             if (this->Request->GetEnableDisconnectDetection().IsSet())
             {
-                JsonRootObject->SetStringField("enableDisconnectDetection", this->Request->GetEnableDisconnectDetection().GetValue());
+                JsonRootObject->SetStringField(TEXT("enableDisconnectDetection"), this->Request->GetEnableDisconnectDetection().GetValue());
             }
             if (this->Request->GetDisconnectDetectionTimeoutSeconds().IsSet())
             {
-                JsonRootObject->SetNumberField("disconnectDetectionTimeoutSeconds", this->Request->GetDisconnectDetectionTimeoutSeconds().GetValue());
+                JsonRootObject->SetNumberField(TEXT("disconnectDetectionTimeoutSeconds"), this->Request->GetDisconnectDetectionTimeoutSeconds().GetValue());
             }
             if (this->Request->GetCreateGatheringTriggerType().IsSet())
             {
-                JsonRootObject->SetStringField("createGatheringTriggerType", this->Request->GetCreateGatheringTriggerType().GetValue());
+                JsonRootObject->SetStringField(TEXT("createGatheringTriggerType"), this->Request->GetCreateGatheringTriggerType().GetValue());
             }
             if (this->Request->GetCreateGatheringTriggerRealtimeNamespaceId().IsSet())
             {
-                JsonRootObject->SetStringField("createGatheringTriggerRealtimeNamespaceId", this->Request->GetCreateGatheringTriggerRealtimeNamespaceId().GetValue());
+                JsonRootObject->SetStringField(TEXT("createGatheringTriggerRealtimeNamespaceId"), this->Request->GetCreateGatheringTriggerRealtimeNamespaceId().GetValue());
             }
             if (this->Request->GetCreateGatheringTriggerScriptId().IsSet())
             {
-                JsonRootObject->SetStringField("createGatheringTriggerScriptId", this->Request->GetCreateGatheringTriggerScriptId().GetValue());
+                JsonRootObject->SetStringField(TEXT("createGatheringTriggerScriptId"), this->Request->GetCreateGatheringTriggerScriptId().GetValue());
             }
             if (this->Request->GetCompleteMatchmakingTriggerType().IsSet())
             {
-                JsonRootObject->SetStringField("completeMatchmakingTriggerType", this->Request->GetCompleteMatchmakingTriggerType().GetValue());
+                JsonRootObject->SetStringField(TEXT("completeMatchmakingTriggerType"), this->Request->GetCompleteMatchmakingTriggerType().GetValue());
             }
             if (this->Request->GetCompleteMatchmakingTriggerRealtimeNamespaceId().IsSet())
             {
-                JsonRootObject->SetStringField("completeMatchmakingTriggerRealtimeNamespaceId", this->Request->GetCompleteMatchmakingTriggerRealtimeNamespaceId().GetValue());
+                JsonRootObject->SetStringField(TEXT("completeMatchmakingTriggerRealtimeNamespaceId"), this->Request->GetCompleteMatchmakingTriggerRealtimeNamespaceId().GetValue());
             }
             if (this->Request->GetCompleteMatchmakingTriggerScriptId().IsSet())
             {
-                JsonRootObject->SetStringField("completeMatchmakingTriggerScriptId", this->Request->GetCompleteMatchmakingTriggerScriptId().GetValue());
+                JsonRootObject->SetStringField(TEXT("completeMatchmakingTriggerScriptId"), this->Request->GetCompleteMatchmakingTriggerScriptId().GetValue());
             }
             if (this->Request->GetEnableCollaborateSeasonRating().IsSet())
             {
-                JsonRootObject->SetStringField("enableCollaborateSeasonRating", this->Request->GetEnableCollaborateSeasonRating().GetValue());
+                JsonRootObject->SetStringField(TEXT("enableCollaborateSeasonRating"), this->Request->GetEnableCollaborateSeasonRating().GetValue());
             }
             if (this->Request->GetCollaborateSeasonRatingNamespaceId().IsSet())
             {
-                JsonRootObject->SetStringField("collaborateSeasonRatingNamespaceId", this->Request->GetCollaborateSeasonRatingNamespaceId().GetValue());
+                JsonRootObject->SetStringField(TEXT("collaborateSeasonRatingNamespaceId"), this->Request->GetCollaborateSeasonRatingNamespaceId().GetValue());
             }
             if (this->Request->GetCollaborateSeasonRatingTtl().IsSet())
             {
-                JsonRootObject->SetNumberField("collaborateSeasonRatingTtl", this->Request->GetCollaborateSeasonRatingTtl().GetValue());
+                JsonRootObject->SetNumberField(TEXT("collaborateSeasonRatingTtl"), this->Request->GetCollaborateSeasonRatingTtl().GetValue());
             }
             if (this->Request->GetChangeRatingScript() != nullptr && this->Request->GetChangeRatingScript().IsValid())
             {
-                JsonRootObject->SetObjectField("changeRatingScript", this->Request->GetChangeRatingScript()->ToJson());
+                JsonRootObject->SetObjectField(TEXT("changeRatingScript"), this->Request->GetChangeRatingScript()->ToJson());
             }
             if (this->Request->GetJoinNotification() != nullptr && this->Request->GetJoinNotification().IsValid())
             {
-                JsonRootObject->SetObjectField("joinNotification", this->Request->GetJoinNotification()->ToJson());
+                JsonRootObject->SetObjectField(TEXT("joinNotification"), this->Request->GetJoinNotification()->ToJson());
             }
             if (this->Request->GetLeaveNotification() != nullptr && this->Request->GetLeaveNotification().IsValid())
             {
-                JsonRootObject->SetObjectField("leaveNotification", this->Request->GetLeaveNotification()->ToJson());
+                JsonRootObject->SetObjectField(TEXT("leaveNotification"), this->Request->GetLeaveNotification()->ToJson());
             }
             if (this->Request->GetCompleteNotification() != nullptr && this->Request->GetCompleteNotification().IsValid())
             {
-                JsonRootObject->SetObjectField("completeNotification", this->Request->GetCompleteNotification()->ToJson());
+                JsonRootObject->SetObjectField(TEXT("completeNotification"), this->Request->GetCompleteNotification()->ToJson());
             }
             if (this->Request->GetChangeRatingNotification() != nullptr && this->Request->GetChangeRatingNotification().IsValid())
             {
-                JsonRootObject->SetObjectField("changeRatingNotification", this->Request->GetChangeRatingNotification()->ToJson());
+                JsonRootObject->SetObjectField(TEXT("changeRatingNotification"), this->Request->GetChangeRatingNotification()->ToJson());
             }
             if (this->Request->GetLogSetting() != nullptr && this->Request->GetLogSetting().IsValid())
             {
-                JsonRootObject->SetObjectField("logSetting", this->Request->GetLogSetting()->ToJson());
+                JsonRootObject->SetObjectField(TEXT("logSetting"), this->Request->GetLogSetting()->ToJson());
             }
             if (this->Request->GetContextStack().IsSet())
             {
-                JsonRootObject->SetStringField("contextStack", this->Request->GetContextStack().GetValue());
+                JsonRootObject->SetStringField(TEXT("contextStack"), this->Request->GetContextStack().GetValue());
             }
             FJsonSerializer::Serialize(JsonRootObject.ToSharedRef(), Writer);
             request->SetContentAsString(Body);

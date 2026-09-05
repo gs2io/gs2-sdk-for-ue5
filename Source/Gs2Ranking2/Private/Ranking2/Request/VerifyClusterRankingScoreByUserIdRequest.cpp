@@ -312,47 +312,47 @@ namespace Gs2::Ranking2::Request
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (ContextStackValue.IsSet())
         {
-            JsonRootObject->SetStringField("contextStack", ContextStackValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("contextStack"), ContextStackValue.GetValue());
         }
         if (NamespaceNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("namespaceName", NamespaceNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("namespaceName"), NamespaceNameValue.GetValue());
         }
         if (UserIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("userId", UserIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("userId"), UserIdValue.GetValue());
         }
         if (RankingNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("rankingName", RankingNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("rankingName"), RankingNameValue.GetValue());
         }
         if (ClusterNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("clusterName", ClusterNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("clusterName"), ClusterNameValue.GetValue());
         }
         if (VerifyTypeValue.IsSet())
         {
-            JsonRootObject->SetStringField("verifyType", VerifyTypeValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("verifyType"), VerifyTypeValue.GetValue());
         }
         if (SeasonValue.IsSet())
         {
-            JsonRootObject->SetStringField("season", FString::Printf(TEXT("%lld"), SeasonValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("season"), FString::Printf(TEXT("%lld"), SeasonValue.GetValue()));
         }
         if (ScoreValue.IsSet())
         {
-            JsonRootObject->SetStringField("score", FString::Printf(TEXT("%lld"), ScoreValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("score"), FString::Printf(TEXT("%lld"), ScoreValue.GetValue()));
         }
         if (MultiplyValueSpecifyingQuantityValue.IsSet())
         {
-            JsonRootObject->SetBoolField("multiplyValueSpecifyingQuantity", MultiplyValueSpecifyingQuantityValue.GetValue());
+            JsonRootObject->SetBoolField(TEXT("multiplyValueSpecifyingQuantity"), MultiplyValueSpecifyingQuantityValue.GetValue());
         }
         if (TimeOffsetTokenValue.IsSet())
         {
-            JsonRootObject->SetStringField("timeOffsetToken", TimeOffsetTokenValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("timeOffsetToken"), TimeOffsetTokenValue.GetValue());
         }
         if (DuplicationAvoiderValue.IsSet())
         {
-            JsonRootObject->SetStringField("duplicationAvoider", DuplicationAvoiderValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("duplicationAvoider"), DuplicationAvoiderValue.GetValue());
         }
         return JsonRootObject;
     }

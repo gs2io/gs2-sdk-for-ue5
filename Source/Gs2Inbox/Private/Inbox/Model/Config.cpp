@@ -87,11 +87,11 @@ namespace Gs2::Inbox::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (KeyValue.IsSet())
         {
-            JsonRootObject->SetStringField("key", KeyValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("key"), KeyValue.GetValue());
         }
         if (ValueValue.IsSet())
         {
-            JsonRootObject->SetStringField("value", ValueValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("value"), ValueValue.GetValue());
         }
         return JsonRootObject;
     }

@@ -227,7 +227,7 @@ namespace Gs2::Distributor::Result
             {
                 v.Add(MakeShared<FJsonValueNumber>(JsonObjectValue));
             }
-            JsonRootObject->SetArrayField("verifyTaskResultCodes", v);
+            JsonRootObject->SetArrayField(TEXT("verifyTaskResultCodes"), v);
         }
         if (VerifyTaskResultsValue != nullptr && VerifyTaskResultsValue.IsValid())
         {
@@ -236,7 +236,7 @@ namespace Gs2::Distributor::Result
             {
                 v.Add(MakeShared<FJsonValueString>(JsonObjectValue));
             }
-            JsonRootObject->SetArrayField("verifyTaskResults", v);
+            JsonRootObject->SetArrayField(TEXT("verifyTaskResults"), v);
         }
         if (TaskResultCodesValue != nullptr && TaskResultCodesValue.IsValid())
         {
@@ -245,7 +245,7 @@ namespace Gs2::Distributor::Result
             {
                 v.Add(MakeShared<FJsonValueNumber>(JsonObjectValue));
             }
-            JsonRootObject->SetArrayField("taskResultCodes", v);
+            JsonRootObject->SetArrayField(TEXT("taskResultCodes"), v);
         }
         if (TaskResultsValue != nullptr && TaskResultsValue.IsValid())
         {
@@ -254,15 +254,15 @@ namespace Gs2::Distributor::Result
             {
                 v.Add(MakeShared<FJsonValueString>(JsonObjectValue));
             }
-            JsonRootObject->SetArrayField("taskResults", v);
+            JsonRootObject->SetArrayField(TEXT("taskResults"), v);
         }
         if (SheetResultCodeValue.IsSet())
         {
-            JsonRootObject->SetNumberField("sheetResultCode", SheetResultCodeValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("sheetResultCode"), SheetResultCodeValue.GetValue());
         }
         if (SheetResultValue.IsSet())
         {
-            JsonRootObject->SetStringField("sheetResult", SheetResultValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("sheetResult"), SheetResultValue.GetValue());
         }
         return JsonRootObject;
     }

@@ -185,19 +185,19 @@ namespace Gs2::Account::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (TakeOverTypeModelIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("takeOverTypeModelId", TakeOverTypeModelIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("takeOverTypeModelId"), TakeOverTypeModelIdValue.GetValue());
         }
         if (TypeValue.IsSet())
         {
-            JsonRootObject->SetNumberField("type", TypeValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("type"), TypeValue.GetValue());
         }
         if (MetadataValue.IsSet())
         {
-            JsonRootObject->SetStringField("metadata", MetadataValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("metadata"), MetadataValue.GetValue());
         }
         if (OpenIdConnectSettingValue != nullptr && OpenIdConnectSettingValue.IsValid())
         {
-            JsonRootObject->SetObjectField("openIdConnectSetting", OpenIdConnectSettingValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("openIdConnectSetting"), OpenIdConnectSettingValue->ToJson());
         }
         return JsonRootObject;
     }

@@ -89,7 +89,7 @@ namespace Gs2::Matchmaking::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (BallotValue != nullptr && BallotValue.IsValid())
         {
-            JsonRootObject->SetObjectField("ballot", BallotValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("ballot"), BallotValue->ToJson());
         }
         if (GameResultsValue != nullptr && GameResultsValue.IsValid())
         {
@@ -98,7 +98,7 @@ namespace Gs2::Matchmaking::Model
             {
                 v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
             }
-            JsonRootObject->SetArrayField("gameResults", v);
+            JsonRootObject->SetArrayField(TEXT("gameResults"), v);
         }
         return JsonRootObject;
     }

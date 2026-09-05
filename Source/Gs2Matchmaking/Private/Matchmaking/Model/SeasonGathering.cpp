@@ -341,23 +341,23 @@ namespace Gs2::Matchmaking::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (SeasonGatheringIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("seasonGatheringId", SeasonGatheringIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("seasonGatheringId"), SeasonGatheringIdValue.GetValue());
         }
         if (SeasonNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("seasonName", SeasonNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("seasonName"), SeasonNameValue.GetValue());
         }
         if (SeasonValue.IsSet())
         {
-            JsonRootObject->SetStringField("season", FString::Printf(TEXT("%lld"), SeasonValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("season"), FString::Printf(TEXT("%lld"), SeasonValue.GetValue()));
         }
         if (TierValue.IsSet())
         {
-            JsonRootObject->SetStringField("tier", FString::Printf(TEXT("%lld"), TierValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("tier"), FString::Printf(TEXT("%lld"), TierValue.GetValue()));
         }
         if (NameValue.IsSet())
         {
-            JsonRootObject->SetStringField("name", NameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("name"), NameValue.GetValue());
         }
         if (ParticipantsValue != nullptr && ParticipantsValue.IsValid())
         {
@@ -366,15 +366,15 @@ namespace Gs2::Matchmaking::Model
             {
                 v.Add(MakeShared<FJsonValueString>(JsonObjectValue));
             }
-            JsonRootObject->SetArrayField("participants", v);
+            JsonRootObject->SetArrayField(TEXT("participants"), v);
         }
         if (CreatedAtValue.IsSet())
         {
-            JsonRootObject->SetStringField("createdAt", FString::Printf(TEXT("%lld"), CreatedAtValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("createdAt"), FString::Printf(TEXT("%lld"), CreatedAtValue.GetValue()));
         }
         if (RevisionValue.IsSet())
         {
-            JsonRootObject->SetStringField("revision", FString::Printf(TEXT("%lld"), RevisionValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("revision"), FString::Printf(TEXT("%lld"), RevisionValue.GetValue()));
         }
         return JsonRootObject;
     }

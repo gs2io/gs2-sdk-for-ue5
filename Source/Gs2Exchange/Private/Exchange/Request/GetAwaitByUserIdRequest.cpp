@@ -151,23 +151,23 @@ namespace Gs2::Exchange::Request
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (ContextStackValue.IsSet())
         {
-            JsonRootObject->SetStringField("contextStack", ContextStackValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("contextStack"), ContextStackValue.GetValue());
         }
         if (NamespaceNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("namespaceName", NamespaceNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("namespaceName"), NamespaceNameValue.GetValue());
         }
         if (UserIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("userId", UserIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("userId"), UserIdValue.GetValue());
         }
         if (AwaitNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("awaitName", AwaitNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("awaitName"), AwaitNameValue.GetValue());
         }
         if (TimeOffsetTokenValue.IsSet())
         {
-            JsonRootObject->SetStringField("timeOffsetToken", TimeOffsetTokenValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("timeOffsetToken"), TimeOffsetTokenValue.GetValue());
         }
         return JsonRootObject;
     }

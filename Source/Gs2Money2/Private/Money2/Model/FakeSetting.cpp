@@ -64,7 +64,7 @@ namespace Gs2::Money2::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (AcceptFakeReceiptValue.IsSet())
         {
-            JsonRootObject->SetStringField("acceptFakeReceipt", AcceptFakeReceiptValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("acceptFakeReceipt"), AcceptFakeReceiptValue.GetValue());
         }
         return JsonRootObject;
     }

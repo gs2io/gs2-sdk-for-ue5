@@ -310,47 +310,47 @@ namespace Gs2::Buff::Request
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (ContextStackValue.IsSet())
         {
-            JsonRootObject->SetStringField("contextStack", ContextStackValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("contextStack"), ContextStackValue.GetValue());
         }
         if (NamespaceNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("namespaceName", NamespaceNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("namespaceName"), NamespaceNameValue.GetValue());
         }
         if (BuffEntryNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("buffEntryName", BuffEntryNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("buffEntryName"), BuffEntryNameValue.GetValue());
         }
         if (DescriptionValue.IsSet())
         {
-            JsonRootObject->SetStringField("description", DescriptionValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("description"), DescriptionValue.GetValue());
         }
         if (MetadataValue.IsSet())
         {
-            JsonRootObject->SetStringField("metadata", MetadataValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("metadata"), MetadataValue.GetValue());
         }
         if (ExpressionValue.IsSet())
         {
-            JsonRootObject->SetStringField("expression", ExpressionValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("expression"), ExpressionValue.GetValue());
         }
         if (TargetTypeValue.IsSet())
         {
-            JsonRootObject->SetStringField("targetType", TargetTypeValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("targetType"), TargetTypeValue.GetValue());
         }
         if (TargetModelValue != nullptr && TargetModelValue.IsValid())
         {
-            JsonRootObject->SetObjectField("targetModel", TargetModelValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("targetModel"), TargetModelValue->ToJson());
         }
         if (TargetActionValue != nullptr && TargetActionValue.IsValid())
         {
-            JsonRootObject->SetObjectField("targetAction", TargetActionValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("targetAction"), TargetActionValue->ToJson());
         }
         if (PriorityValue.IsSet())
         {
-            JsonRootObject->SetNumberField("priority", PriorityValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("priority"), PriorityValue.GetValue());
         }
         if (ApplyPeriodScheduleEventIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("applyPeriodScheduleEventId", ApplyPeriodScheduleEventIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("applyPeriodScheduleEventId"), ApplyPeriodScheduleEventIdValue.GetValue());
         }
         return JsonRootObject;
     }

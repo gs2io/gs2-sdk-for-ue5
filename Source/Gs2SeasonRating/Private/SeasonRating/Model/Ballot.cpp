@@ -142,19 +142,19 @@ namespace Gs2::SeasonRating::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (UserIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("userId", UserIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("userId"), UserIdValue.GetValue());
         }
         if (SeasonNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("seasonName", SeasonNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("seasonName"), SeasonNameValue.GetValue());
         }
         if (SessionNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("sessionName", SessionNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("sessionName"), SessionNameValue.GetValue());
         }
         if (NumberOfPlayerValue.IsSet())
         {
-            JsonRootObject->SetNumberField("numberOfPlayer", NumberOfPlayerValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("numberOfPlayer"), NumberOfPlayerValue.GetValue());
         }
         return JsonRootObject;
     }

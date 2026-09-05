@@ -251,31 +251,31 @@ namespace Gs2::Schedule::Result
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (ItemValue != nullptr && ItemValue.IsValid())
         {
-            JsonRootObject->SetObjectField("item", ItemValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("item"), ItemValue->ToJson());
         }
         if (InScheduleValue.IsSet())
         {
-            JsonRootObject->SetBoolField("inSchedule", InScheduleValue.GetValue());
+            JsonRootObject->SetBoolField(TEXT("inSchedule"), InScheduleValue.GetValue());
         }
         if (ScheduleStartAtValue.IsSet())
         {
-            JsonRootObject->SetStringField("scheduleStartAt", FString::Printf(TEXT("%lld"), ScheduleStartAtValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("scheduleStartAt"), FString::Printf(TEXT("%lld"), ScheduleStartAtValue.GetValue()));
         }
         if (ScheduleEndAtValue.IsSet())
         {
-            JsonRootObject->SetStringField("scheduleEndAt", FString::Printf(TEXT("%lld"), ScheduleEndAtValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("scheduleEndAt"), FString::Printf(TEXT("%lld"), ScheduleEndAtValue.GetValue()));
         }
         if (RepeatScheduleValue != nullptr && RepeatScheduleValue.IsValid())
         {
-            JsonRootObject->SetObjectField("repeatSchedule", RepeatScheduleValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("repeatSchedule"), RepeatScheduleValue->ToJson());
         }
         if (IsGlobalScheduleValue.IsSet())
         {
-            JsonRootObject->SetBoolField("isGlobalSchedule", IsGlobalScheduleValue.GetValue());
+            JsonRootObject->SetBoolField(TEXT("isGlobalSchedule"), IsGlobalScheduleValue.GetValue());
         }
         if (NewContextStackValue.IsSet())
         {
-            JsonRootObject->SetStringField("newContextStack", NewContextStackValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("newContextStack"), NewContextStackValue.GetValue());
         }
         return JsonRootObject;
     }

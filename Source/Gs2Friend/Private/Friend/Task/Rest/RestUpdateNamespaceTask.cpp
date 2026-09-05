@@ -86,75 +86,75 @@ namespace Gs2::Friend::Task::Rest
             const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
             if (this->Request->GetDescription().IsSet())
             {
-                JsonRootObject->SetStringField("description", this->Request->GetDescription().GetValue());
+                JsonRootObject->SetStringField(TEXT("description"), this->Request->GetDescription().GetValue());
             }
             if (this->Request->GetTransactionSetting() != nullptr && this->Request->GetTransactionSetting().IsValid())
             {
-                JsonRootObject->SetObjectField("transactionSetting", this->Request->GetTransactionSetting()->ToJson());
+                JsonRootObject->SetObjectField(TEXT("transactionSetting"), this->Request->GetTransactionSetting()->ToJson());
             }
             if (this->Request->GetFollowScript() != nullptr && this->Request->GetFollowScript().IsValid())
             {
-                JsonRootObject->SetObjectField("followScript", this->Request->GetFollowScript()->ToJson());
+                JsonRootObject->SetObjectField(TEXT("followScript"), this->Request->GetFollowScript()->ToJson());
             }
             if (this->Request->GetUnfollowScript() != nullptr && this->Request->GetUnfollowScript().IsValid())
             {
-                JsonRootObject->SetObjectField("unfollowScript", this->Request->GetUnfollowScript()->ToJson());
+                JsonRootObject->SetObjectField(TEXT("unfollowScript"), this->Request->GetUnfollowScript()->ToJson());
             }
             if (this->Request->GetSendRequestScript() != nullptr && this->Request->GetSendRequestScript().IsValid())
             {
-                JsonRootObject->SetObjectField("sendRequestScript", this->Request->GetSendRequestScript()->ToJson());
+                JsonRootObject->SetObjectField(TEXT("sendRequestScript"), this->Request->GetSendRequestScript()->ToJson());
             }
             if (this->Request->GetCancelRequestScript() != nullptr && this->Request->GetCancelRequestScript().IsValid())
             {
-                JsonRootObject->SetObjectField("cancelRequestScript", this->Request->GetCancelRequestScript()->ToJson());
+                JsonRootObject->SetObjectField(TEXT("cancelRequestScript"), this->Request->GetCancelRequestScript()->ToJson());
             }
             if (this->Request->GetAcceptRequestScript() != nullptr && this->Request->GetAcceptRequestScript().IsValid())
             {
-                JsonRootObject->SetObjectField("acceptRequestScript", this->Request->GetAcceptRequestScript()->ToJson());
+                JsonRootObject->SetObjectField(TEXT("acceptRequestScript"), this->Request->GetAcceptRequestScript()->ToJson());
             }
             if (this->Request->GetRejectRequestScript() != nullptr && this->Request->GetRejectRequestScript().IsValid())
             {
-                JsonRootObject->SetObjectField("rejectRequestScript", this->Request->GetRejectRequestScript()->ToJson());
+                JsonRootObject->SetObjectField(TEXT("rejectRequestScript"), this->Request->GetRejectRequestScript()->ToJson());
             }
             if (this->Request->GetDeleteFriendScript() != nullptr && this->Request->GetDeleteFriendScript().IsValid())
             {
-                JsonRootObject->SetObjectField("deleteFriendScript", this->Request->GetDeleteFriendScript()->ToJson());
+                JsonRootObject->SetObjectField(TEXT("deleteFriendScript"), this->Request->GetDeleteFriendScript()->ToJson());
             }
             if (this->Request->GetUpdateProfileScript() != nullptr && this->Request->GetUpdateProfileScript().IsValid())
             {
-                JsonRootObject->SetObjectField("updateProfileScript", this->Request->GetUpdateProfileScript()->ToJson());
+                JsonRootObject->SetObjectField(TEXT("updateProfileScript"), this->Request->GetUpdateProfileScript()->ToJson());
             }
             if (this->Request->GetFollowNotification() != nullptr && this->Request->GetFollowNotification().IsValid())
             {
-                JsonRootObject->SetObjectField("followNotification", this->Request->GetFollowNotification()->ToJson());
+                JsonRootObject->SetObjectField(TEXT("followNotification"), this->Request->GetFollowNotification()->ToJson());
             }
             if (this->Request->GetReceiveRequestNotification() != nullptr && this->Request->GetReceiveRequestNotification().IsValid())
             {
-                JsonRootObject->SetObjectField("receiveRequestNotification", this->Request->GetReceiveRequestNotification()->ToJson());
+                JsonRootObject->SetObjectField(TEXT("receiveRequestNotification"), this->Request->GetReceiveRequestNotification()->ToJson());
             }
             if (this->Request->GetCancelRequestNotification() != nullptr && this->Request->GetCancelRequestNotification().IsValid())
             {
-                JsonRootObject->SetObjectField("cancelRequestNotification", this->Request->GetCancelRequestNotification()->ToJson());
+                JsonRootObject->SetObjectField(TEXT("cancelRequestNotification"), this->Request->GetCancelRequestNotification()->ToJson());
             }
             if (this->Request->GetAcceptRequestNotification() != nullptr && this->Request->GetAcceptRequestNotification().IsValid())
             {
-                JsonRootObject->SetObjectField("acceptRequestNotification", this->Request->GetAcceptRequestNotification()->ToJson());
+                JsonRootObject->SetObjectField(TEXT("acceptRequestNotification"), this->Request->GetAcceptRequestNotification()->ToJson());
             }
             if (this->Request->GetRejectRequestNotification() != nullptr && this->Request->GetRejectRequestNotification().IsValid())
             {
-                JsonRootObject->SetObjectField("rejectRequestNotification", this->Request->GetRejectRequestNotification()->ToJson());
+                JsonRootObject->SetObjectField(TEXT("rejectRequestNotification"), this->Request->GetRejectRequestNotification()->ToJson());
             }
             if (this->Request->GetDeleteFriendNotification() != nullptr && this->Request->GetDeleteFriendNotification().IsValid())
             {
-                JsonRootObject->SetObjectField("deleteFriendNotification", this->Request->GetDeleteFriendNotification()->ToJson());
+                JsonRootObject->SetObjectField(TEXT("deleteFriendNotification"), this->Request->GetDeleteFriendNotification()->ToJson());
             }
             if (this->Request->GetLogSetting() != nullptr && this->Request->GetLogSetting().IsValid())
             {
-                JsonRootObject->SetObjectField("logSetting", this->Request->GetLogSetting()->ToJson());
+                JsonRootObject->SetObjectField(TEXT("logSetting"), this->Request->GetLogSetting()->ToJson());
             }
             if (this->Request->GetContextStack().IsSet())
             {
-                JsonRootObject->SetStringField("contextStack", this->Request->GetContextStack().GetValue());
+                JsonRootObject->SetStringField(TEXT("contextStack"), this->Request->GetContextStack().GetValue());
             }
             FJsonSerializer::Serialize(JsonRootObject.ToSharedRef(), Writer);
             request->SetContentAsString(Body);

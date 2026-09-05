@@ -96,11 +96,11 @@ namespace Gs2::Ranking::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (NameValue.IsSet())
         {
-            JsonRootObject->SetStringField("name", NameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("name"), NameValue.GetValue());
         }
         if (TargetDaysValue.IsSet())
         {
-            JsonRootObject->SetStringField("targetDays", FString::Printf(TEXT("%lld"), TargetDaysValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("targetDays"), FString::Printf(TEXT("%lld"), TargetDaysValue.GetValue()));
         }
         return JsonRootObject;
     }

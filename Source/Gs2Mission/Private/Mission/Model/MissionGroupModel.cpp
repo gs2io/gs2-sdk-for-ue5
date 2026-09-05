@@ -377,15 +377,15 @@ namespace Gs2::Mission::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (MissionGroupIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("missionGroupId", MissionGroupIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("missionGroupId"), MissionGroupIdValue.GetValue());
         }
         if (NameValue.IsSet())
         {
-            JsonRootObject->SetStringField("name", NameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("name"), NameValue.GetValue());
         }
         if (MetadataValue.IsSet())
         {
-            JsonRootObject->SetStringField("metadata", MetadataValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("metadata"), MetadataValue.GetValue());
         }
         if (TasksValue != nullptr && TasksValue.IsValid())
         {
@@ -394,35 +394,35 @@ namespace Gs2::Mission::Model
             {
                 v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
             }
-            JsonRootObject->SetArrayField("tasks", v);
+            JsonRootObject->SetArrayField(TEXT("tasks"), v);
         }
         if (ResetTypeValue.IsSet())
         {
-            JsonRootObject->SetStringField("resetType", ResetTypeValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("resetType"), ResetTypeValue.GetValue());
         }
         if (ResetDayOfMonthValue.IsSet())
         {
-            JsonRootObject->SetNumberField("resetDayOfMonth", ResetDayOfMonthValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("resetDayOfMonth"), ResetDayOfMonthValue.GetValue());
         }
         if (ResetDayOfWeekValue.IsSet())
         {
-            JsonRootObject->SetStringField("resetDayOfWeek", ResetDayOfWeekValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("resetDayOfWeek"), ResetDayOfWeekValue.GetValue());
         }
         if (ResetHourValue.IsSet())
         {
-            JsonRootObject->SetNumberField("resetHour", ResetHourValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("resetHour"), ResetHourValue.GetValue());
         }
         if (CompleteNotificationNamespaceIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("completeNotificationNamespaceId", CompleteNotificationNamespaceIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("completeNotificationNamespaceId"), CompleteNotificationNamespaceIdValue.GetValue());
         }
         if (AnchorTimestampValue.IsSet())
         {
-            JsonRootObject->SetStringField("anchorTimestamp", FString::Printf(TEXT("%lld"), AnchorTimestampValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("anchorTimestamp"), FString::Printf(TEXT("%lld"), AnchorTimestampValue.GetValue()));
         }
         if (DaysValue.IsSet())
         {
-            JsonRootObject->SetNumberField("days", DaysValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("days"), DaysValue.GetValue());
         }
         return JsonRootObject;
     }

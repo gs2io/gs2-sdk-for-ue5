@@ -90,7 +90,7 @@ namespace Gs2::Lottery::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (PrizeIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("prizeId", PrizeIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("prizeId"), PrizeIdValue.GetValue());
         }
         if (AcquireActionsValue != nullptr && AcquireActionsValue.IsValid())
         {
@@ -99,7 +99,7 @@ namespace Gs2::Lottery::Model
             {
                 v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
             }
-            JsonRootObject->SetArrayField("acquireActions", v);
+            JsonRootObject->SetArrayField(TEXT("acquireActions"), v);
         }
         return JsonRootObject;
     }

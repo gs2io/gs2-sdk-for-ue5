@@ -165,11 +165,11 @@ namespace Gs2::SeasonRating::Request
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (ContextStackValue.IsSet())
         {
-            JsonRootObject->SetStringField("contextStack", ContextStackValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("contextStack"), ContextStackValue.GetValue());
         }
         if (NamespaceNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("namespaceName", NamespaceNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("namespaceName"), NamespaceNameValue.GetValue());
         }
         if (SignedBallotsValue != nullptr && SignedBallotsValue.IsValid())
         {
@@ -178,7 +178,7 @@ namespace Gs2::SeasonRating::Request
             {
                 v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
             }
-            JsonRootObject->SetArrayField("signedBallots", v);
+            JsonRootObject->SetArrayField(TEXT("signedBallots"), v);
         }
         if (GameResultsValue != nullptr && GameResultsValue.IsValid())
         {
@@ -187,11 +187,11 @@ namespace Gs2::SeasonRating::Request
             {
                 v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
             }
-            JsonRootObject->SetArrayField("gameResults", v);
+            JsonRootObject->SetArrayField(TEXT("gameResults"), v);
         }
         if (KeyIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("keyId", KeyIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("keyId"), KeyIdValue.GetValue());
         }
         return JsonRootObject;
     }

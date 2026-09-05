@@ -217,31 +217,31 @@ namespace Gs2::Account::Request
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (ContextStackValue.IsSet())
         {
-            JsonRootObject->SetStringField("contextStack", ContextStackValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("contextStack"), ContextStackValue.GetValue());
         }
         if (NamespaceNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("namespaceName", NamespaceNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("namespaceName"), NamespaceNameValue.GetValue());
         }
         if (UserIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("userId", UserIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("userId"), UserIdValue.GetValue());
         }
         if (TypeValue.IsSet())
         {
-            JsonRootObject->SetNumberField("type", TypeValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("type"), TypeValue.GetValue());
         }
         if (UserIdentifierValue.IsSet())
         {
-            JsonRootObject->SetStringField("userIdentifier", UserIdentifierValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("userIdentifier"), UserIdentifierValue.GetValue());
         }
         if (DontResolveDataOwnerValue.IsSet())
         {
-            JsonRootObject->SetBoolField("dontResolveDataOwner", DontResolveDataOwnerValue.GetValue());
+            JsonRootObject->SetBoolField(TEXT("dontResolveDataOwner"), DontResolveDataOwnerValue.GetValue());
         }
         if (TimeOffsetTokenValue.IsSet())
         {
-            JsonRootObject->SetStringField("timeOffsetToken", TimeOffsetTokenValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("timeOffsetToken"), TimeOffsetTokenValue.GetValue());
         }
         return JsonRootObject;
     }

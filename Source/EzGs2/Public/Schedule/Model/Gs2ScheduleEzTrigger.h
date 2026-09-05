@@ -26,12 +26,14 @@ namespace Gs2::UE5::Schedule::Model
         TOptional<FString> TriggerIdValue;
         TOptional<FString> NameValue;
         TOptional<int64> TriggeredAtValue;
+        TOptional<int64> CreatedAtValue;
         TOptional<int64> ExpiresAtValue;
 
 	public:
         TSharedPtr<FEzTrigger> WithTriggerId(const TOptional<FString> TriggerId);
         TSharedPtr<FEzTrigger> WithName(const TOptional<FString> Name);
         TSharedPtr<FEzTrigger> WithTriggeredAt(const TOptional<int64> TriggeredAt);
+        TSharedPtr<FEzTrigger> WithCreatedAt(const TOptional<int64> CreatedAt);
         TSharedPtr<FEzTrigger> WithExpiresAt(const TOptional<int64> ExpiresAt);
 
         TOptional<FString> GetTriggerId() const;
@@ -40,6 +42,9 @@ namespace Gs2::UE5::Schedule::Model
 
         TOptional<int64> GetTriggeredAt() const;
         FString GetTriggeredAtString() const;
+
+        TOptional<int64> GetCreatedAt() const;
+        FString GetCreatedAtString() const;
 
         TOptional<int64> GetExpiresAt() const;
         FString GetExpiresAtString() const;

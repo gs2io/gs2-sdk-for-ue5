@@ -203,15 +203,15 @@ namespace Gs2::Mission::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (CounterIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("counterId", CounterIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("counterId"), CounterIdValue.GetValue());
         }
         if (NameValue.IsSet())
         {
-            JsonRootObject->SetStringField("name", NameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("name"), NameValue.GetValue());
         }
         if (MetadataValue.IsSet())
         {
-            JsonRootObject->SetStringField("metadata", MetadataValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("metadata"), MetadataValue.GetValue());
         }
         if (ScopesValue != nullptr && ScopesValue.IsValid())
         {
@@ -220,11 +220,11 @@ namespace Gs2::Mission::Model
             {
                 v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
             }
-            JsonRootObject->SetArrayField("scopes", v);
+            JsonRootObject->SetArrayField(TEXT("scopes"), v);
         }
         if (ChallengePeriodEventIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("challengePeriodEventId", ChallengePeriodEventIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("challengePeriodEventId"), ChallengePeriodEventIdValue.GetValue());
         }
         return JsonRootObject;
     }

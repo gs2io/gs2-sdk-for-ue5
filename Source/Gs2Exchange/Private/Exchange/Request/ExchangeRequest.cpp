@@ -205,23 +205,23 @@ namespace Gs2::Exchange::Request
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (ContextStackValue.IsSet())
         {
-            JsonRootObject->SetStringField("contextStack", ContextStackValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("contextStack"), ContextStackValue.GetValue());
         }
         if (NamespaceNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("namespaceName", NamespaceNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("namespaceName"), NamespaceNameValue.GetValue());
         }
         if (RateNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("rateName", RateNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("rateName"), RateNameValue.GetValue());
         }
         if (AccessTokenValue.IsSet())
         {
-            JsonRootObject->SetStringField("xGs2AccessToken", AccessTokenValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("xGs2AccessToken"), AccessTokenValue.GetValue());
         }
         if (CountValue.IsSet())
         {
-            JsonRootObject->SetNumberField("count", CountValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("count"), CountValue.GetValue());
         }
         if (ConfigValue != nullptr && ConfigValue.IsValid())
         {
@@ -230,11 +230,11 @@ namespace Gs2::Exchange::Request
             {
                 v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
             }
-            JsonRootObject->SetArrayField("config", v);
+            JsonRootObject->SetArrayField(TEXT("config"), v);
         }
         if (DuplicationAvoiderValue.IsSet())
         {
-            JsonRootObject->SetStringField("duplicationAvoider", DuplicationAvoiderValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("duplicationAvoider"), DuplicationAvoiderValue.GetValue());
         }
         return JsonRootObject;
     }

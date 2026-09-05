@@ -86,19 +86,19 @@ namespace Gs2::Chat::Task::Rest
             const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
             if (this->Request->GetCategory().IsSet())
             {
-                JsonRootObject->SetNumberField("category", this->Request->GetCategory().GetValue());
+                JsonRootObject->SetNumberField(TEXT("category"), this->Request->GetCategory().GetValue());
             }
             if (this->Request->GetDescription().IsSet())
             {
-                JsonRootObject->SetStringField("description", this->Request->GetDescription().GetValue());
+                JsonRootObject->SetStringField(TEXT("description"), this->Request->GetDescription().GetValue());
             }
             if (this->Request->GetRejectAccessTokenPost().IsSet())
             {
-                JsonRootObject->SetStringField("rejectAccessTokenPost", this->Request->GetRejectAccessTokenPost().GetValue());
+                JsonRootObject->SetStringField(TEXT("rejectAccessTokenPost"), this->Request->GetRejectAccessTokenPost().GetValue());
             }
             if (this->Request->GetContextStack().IsSet())
             {
-                JsonRootObject->SetStringField("contextStack", this->Request->GetContextStack().GetValue());
+                JsonRootObject->SetStringField(TEXT("contextStack"), this->Request->GetContextStack().GetValue());
             }
             FJsonSerializer::Serialize(JsonRootObject.ToSharedRef(), Writer);
             request->SetContentAsString(Body);

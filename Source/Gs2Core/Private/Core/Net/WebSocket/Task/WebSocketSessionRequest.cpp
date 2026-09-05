@@ -52,19 +52,19 @@ namespace Gs2::Core::Net::WebSocket::Task
         const FGs2Function Function
     ) const
     {
-        BodyValue->SetStringField("xGs2ClientId", ClientId);
+        BodyValue->SetStringField(TEXT("xGs2ClientId"), ClientId);
         if (ProjectToken != "")
         {
-            BodyValue->SetStringField("xGs2ProjectToken", ProjectToken);
+            BodyValue->SetStringField(TEXT("xGs2ProjectToken"), ProjectToken);
         }
-        BodyValue->SetObjectField("x_gs2", [Service, Component, Function, this]() -> TSharedPtr<FJsonObject>
+        BodyValue->SetObjectField(TEXT("x_gs2"), [Service, Component, Function, this]() -> TSharedPtr<FJsonObject>
         {
             const auto Header = TSharedPtr<FJsonObject>(new FJsonObject);
-            Header->SetStringField("service", Service);
-            Header->SetStringField("component", Component);
-            Header->SetStringField("function", Function);
-            Header->SetStringField("contentType", "application/json");
-            Header->SetStringField("requestId", TaskIdValue);
+            Header->SetStringField(TEXT("service"), Service);
+            Header->SetStringField(TEXT("component"), Component);
+            Header->SetStringField(TEXT("function"), Function);
+            Header->SetStringField(TEXT("contentType"), "application/json");
+            Header->SetStringField(TEXT("requestId"), TaskIdValue);
             return Header;
         }());
     }

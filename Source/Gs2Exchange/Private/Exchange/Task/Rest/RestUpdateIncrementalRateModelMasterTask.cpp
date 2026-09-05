@@ -91,39 +91,39 @@ namespace Gs2::Exchange::Task::Rest
             const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
             if (this->Request->GetDescription().IsSet())
             {
-                JsonRootObject->SetStringField("description", this->Request->GetDescription().GetValue());
+                JsonRootObject->SetStringField(TEXT("description"), this->Request->GetDescription().GetValue());
             }
             if (this->Request->GetMetadata().IsSet())
             {
-                JsonRootObject->SetStringField("metadata", this->Request->GetMetadata().GetValue());
+                JsonRootObject->SetStringField(TEXT("metadata"), this->Request->GetMetadata().GetValue());
             }
             if (this->Request->GetConsumeAction() != nullptr && this->Request->GetConsumeAction().IsValid())
             {
-                JsonRootObject->SetObjectField("consumeAction", this->Request->GetConsumeAction()->ToJson());
+                JsonRootObject->SetObjectField(TEXT("consumeAction"), this->Request->GetConsumeAction()->ToJson());
             }
             if (this->Request->GetCalculateType().IsSet())
             {
-                JsonRootObject->SetStringField("calculateType", this->Request->GetCalculateType().GetValue());
+                JsonRootObject->SetStringField(TEXT("calculateType"), this->Request->GetCalculateType().GetValue());
             }
             if (this->Request->GetBaseValue().IsSet())
             {
-                JsonRootObject->SetStringField("baseValue", FString::Printf(TEXT("%lld"), this->Request->GetBaseValue().GetValue()));
+                JsonRootObject->SetStringField(TEXT("baseValue"), FString::Printf(TEXT("%lld"), this->Request->GetBaseValue().GetValue()));
             }
             if (this->Request->GetCoefficientValue().IsSet())
             {
-                JsonRootObject->SetStringField("coefficientValue", FString::Printf(TEXT("%lld"), this->Request->GetCoefficientValue().GetValue()));
+                JsonRootObject->SetStringField(TEXT("coefficientValue"), FString::Printf(TEXT("%lld"), this->Request->GetCoefficientValue().GetValue()));
             }
             if (this->Request->GetCalculateScriptId().IsSet())
             {
-                JsonRootObject->SetStringField("calculateScriptId", this->Request->GetCalculateScriptId().GetValue());
+                JsonRootObject->SetStringField(TEXT("calculateScriptId"), this->Request->GetCalculateScriptId().GetValue());
             }
             if (this->Request->GetExchangeCountId().IsSet())
             {
-                JsonRootObject->SetStringField("exchangeCountId", this->Request->GetExchangeCountId().GetValue());
+                JsonRootObject->SetStringField(TEXT("exchangeCountId"), this->Request->GetExchangeCountId().GetValue());
             }
             if (this->Request->GetMaximumExchangeCount().IsSet())
             {
-                JsonRootObject->SetNumberField("maximumExchangeCount", this->Request->GetMaximumExchangeCount().GetValue());
+                JsonRootObject->SetNumberField(TEXT("maximumExchangeCount"), this->Request->GetMaximumExchangeCount().GetValue());
             }
             if (this->Request->GetAcquireActions() != nullptr && this->Request->GetAcquireActions().IsValid())
             {
@@ -132,11 +132,11 @@ namespace Gs2::Exchange::Task::Rest
                 {
                     v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
                 }
-                JsonRootObject->SetArrayField("acquireActions", v);
+                JsonRootObject->SetArrayField(TEXT("acquireActions"), v);
             }
             if (this->Request->GetContextStack().IsSet())
             {
-                JsonRootObject->SetStringField("contextStack", this->Request->GetContextStack().GetValue());
+                JsonRootObject->SetStringField(TEXT("contextStack"), this->Request->GetContextStack().GetValue());
             }
             FJsonSerializer::Serialize(JsonRootObject.ToSharedRef(), Writer);
             request->SetContentAsString(Body);

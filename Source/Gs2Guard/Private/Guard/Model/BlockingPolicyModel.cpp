@@ -377,15 +377,15 @@ namespace Gs2::Guard::Model
             {
                 v.Add(MakeShared<FJsonValueString>(JsonObjectValue));
             }
-            JsonRootObject->SetArrayField("passServices", v);
+            JsonRootObject->SetArrayField(TEXT("passServices"), v);
         }
         if (DefaultRestrictionValue.IsSet())
         {
-            JsonRootObject->SetStringField("defaultRestriction", DefaultRestrictionValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("defaultRestriction"), DefaultRestrictionValue.GetValue());
         }
         if (LocationDetectionValue.IsSet())
         {
-            JsonRootObject->SetStringField("locationDetection", LocationDetectionValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("locationDetection"), LocationDetectionValue.GetValue());
         }
         if (LocationsValue != nullptr && LocationsValue.IsValid())
         {
@@ -394,39 +394,39 @@ namespace Gs2::Guard::Model
             {
                 v.Add(MakeShared<FJsonValueString>(JsonObjectValue));
             }
-            JsonRootObject->SetArrayField("locations", v);
+            JsonRootObject->SetArrayField(TEXT("locations"), v);
         }
         if (LocationRestrictionValue.IsSet())
         {
-            JsonRootObject->SetStringField("locationRestriction", LocationRestrictionValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("locationRestriction"), LocationRestrictionValue.GetValue());
         }
         if (AnonymousIpDetectionValue.IsSet())
         {
-            JsonRootObject->SetStringField("anonymousIpDetection", AnonymousIpDetectionValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("anonymousIpDetection"), AnonymousIpDetectionValue.GetValue());
         }
         if (AnonymousIpRestrictionValue.IsSet())
         {
-            JsonRootObject->SetStringField("anonymousIpRestriction", AnonymousIpRestrictionValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("anonymousIpRestriction"), AnonymousIpRestrictionValue.GetValue());
         }
         if (HostingProviderIpDetectionValue.IsSet())
         {
-            JsonRootObject->SetStringField("hostingProviderIpDetection", HostingProviderIpDetectionValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("hostingProviderIpDetection"), HostingProviderIpDetectionValue.GetValue());
         }
         if (HostingProviderIpRestrictionValue.IsSet())
         {
-            JsonRootObject->SetStringField("hostingProviderIpRestriction", HostingProviderIpRestrictionValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("hostingProviderIpRestriction"), HostingProviderIpRestrictionValue.GetValue());
         }
         if (ReputationIpDetectionValue.IsSet())
         {
-            JsonRootObject->SetStringField("reputationIpDetection", ReputationIpDetectionValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("reputationIpDetection"), ReputationIpDetectionValue.GetValue());
         }
         if (ReputationIpRestrictionValue.IsSet())
         {
-            JsonRootObject->SetStringField("reputationIpRestriction", ReputationIpRestrictionValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("reputationIpRestriction"), ReputationIpRestrictionValue.GetValue());
         }
         if (IpAddressesDetectionValue.IsSet())
         {
-            JsonRootObject->SetStringField("ipAddressesDetection", IpAddressesDetectionValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("ipAddressesDetection"), IpAddressesDetectionValue.GetValue());
         }
         if (IpAddressesValue != nullptr && IpAddressesValue.IsValid())
         {
@@ -435,11 +435,11 @@ namespace Gs2::Guard::Model
             {
                 v.Add(MakeShared<FJsonValueString>(JsonObjectValue));
             }
-            JsonRootObject->SetArrayField("ipAddresses", v);
+            JsonRootObject->SetArrayField(TEXT("ipAddresses"), v);
         }
         if (IpAddressRestrictionValue.IsSet())
         {
-            JsonRootObject->SetStringField("ipAddressRestriction", IpAddressRestrictionValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("ipAddressRestriction"), IpAddressRestrictionValue.GetValue());
         }
         return JsonRootObject;
     }

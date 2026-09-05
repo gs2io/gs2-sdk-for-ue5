@@ -72,7 +72,7 @@ namespace Gs2::LoginReward::Model
             {
                 v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
             }
-            JsonRootObject->SetArrayField("acquireActions", v);
+            JsonRootObject->SetArrayField(TEXT("acquireActions"), v);
         }
         return JsonRootObject;
     }

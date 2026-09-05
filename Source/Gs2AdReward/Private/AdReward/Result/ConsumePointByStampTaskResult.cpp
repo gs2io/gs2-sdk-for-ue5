@@ -92,11 +92,11 @@ namespace Gs2::AdReward::Result
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (ItemValue != nullptr && ItemValue.IsValid())
         {
-            JsonRootObject->SetObjectField("item", ItemValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("item"), ItemValue->ToJson());
         }
         if (NewContextStackValue.IsSet())
         {
-            JsonRootObject->SetStringField("newContextStack", NewContextStackValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("newContextStack"), NewContextStackValue.GetValue());
         }
         return JsonRootObject;
     }

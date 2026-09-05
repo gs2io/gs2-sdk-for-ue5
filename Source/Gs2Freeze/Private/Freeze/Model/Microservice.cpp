@@ -87,11 +87,11 @@ namespace Gs2::Freeze::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (NameValue.IsSet())
         {
-            JsonRootObject->SetStringField("name", NameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("name"), NameValue.GetValue());
         }
         if (VersionValue.IsSet())
         {
-            JsonRootObject->SetStringField("version", VersionValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("version"), VersionValue.GetValue());
         }
         return JsonRootObject;
     }

@@ -92,11 +92,11 @@ namespace Gs2::Datastore::Result
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (ItemValue != nullptr && ItemValue.IsValid())
         {
-            JsonRootObject->SetObjectField("item", ItemValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("item"), ItemValue->ToJson());
         }
         if (UploadUrlValue.IsSet())
         {
-            JsonRootObject->SetStringField("uploadUrl", UploadUrlValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("uploadUrl"), UploadUrlValue.GetValue());
         }
         return JsonRootObject;
     }

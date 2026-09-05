@@ -105,11 +105,11 @@ namespace Gs2::Enchant::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (CountValue.IsSet())
         {
-            JsonRootObject->SetNumberField("count", CountValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("count"), CountValue.GetValue());
         }
         if (WeightValue.IsSet())
         {
-            JsonRootObject->SetNumberField("weight", WeightValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("weight"), WeightValue.GetValue());
         }
         return JsonRootObject;
     }

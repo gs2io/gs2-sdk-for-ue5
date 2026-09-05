@@ -80,51 +80,51 @@ namespace Gs2::Log::Task::Rest
             const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
             if (this->Request->GetName().IsSet())
             {
-                JsonRootObject->SetStringField("name", this->Request->GetName().GetValue());
+                JsonRootObject->SetStringField(TEXT("name"), this->Request->GetName().GetValue());
             }
             if (this->Request->GetDescription().IsSet())
             {
-                JsonRootObject->SetStringField("description", this->Request->GetDescription().GetValue());
+                JsonRootObject->SetStringField(TEXT("description"), this->Request->GetDescription().GetValue());
             }
             if (this->Request->GetType().IsSet())
             {
-                JsonRootObject->SetStringField("type", this->Request->GetType().GetValue());
+                JsonRootObject->SetStringField(TEXT("type"), this->Request->GetType().GetValue());
             }
             if (this->Request->GetGcpCredentialJson().IsSet())
             {
-                JsonRootObject->SetStringField("gcpCredentialJson", this->Request->GetGcpCredentialJson().GetValue());
+                JsonRootObject->SetStringField(TEXT("gcpCredentialJson"), this->Request->GetGcpCredentialJson().GetValue());
             }
             if (this->Request->GetBigQueryDatasetName().IsSet())
             {
-                JsonRootObject->SetStringField("bigQueryDatasetName", this->Request->GetBigQueryDatasetName().GetValue());
+                JsonRootObject->SetStringField(TEXT("bigQueryDatasetName"), this->Request->GetBigQueryDatasetName().GetValue());
             }
             if (this->Request->GetLogExpireDays().IsSet())
             {
-                JsonRootObject->SetNumberField("logExpireDays", this->Request->GetLogExpireDays().GetValue());
+                JsonRootObject->SetNumberField(TEXT("logExpireDays"), this->Request->GetLogExpireDays().GetValue());
             }
             if (this->Request->GetAwsRegion().IsSet())
             {
-                JsonRootObject->SetStringField("awsRegion", this->Request->GetAwsRegion().GetValue());
+                JsonRootObject->SetStringField(TEXT("awsRegion"), this->Request->GetAwsRegion().GetValue());
             }
             if (this->Request->GetAwsAccessKeyId().IsSet())
             {
-                JsonRootObject->SetStringField("awsAccessKeyId", this->Request->GetAwsAccessKeyId().GetValue());
+                JsonRootObject->SetStringField(TEXT("awsAccessKeyId"), this->Request->GetAwsAccessKeyId().GetValue());
             }
             if (this->Request->GetAwsSecretAccessKey().IsSet())
             {
-                JsonRootObject->SetStringField("awsSecretAccessKey", this->Request->GetAwsSecretAccessKey().GetValue());
+                JsonRootObject->SetStringField(TEXT("awsSecretAccessKey"), this->Request->GetAwsSecretAccessKey().GetValue());
             }
             if (this->Request->GetFirehoseStreamName().IsSet())
             {
-                JsonRootObject->SetStringField("firehoseStreamName", this->Request->GetFirehoseStreamName().GetValue());
+                JsonRootObject->SetStringField(TEXT("firehoseStreamName"), this->Request->GetFirehoseStreamName().GetValue());
             }
             if (this->Request->GetFirehoseCompressData().IsSet())
             {
-                JsonRootObject->SetStringField("firehoseCompressData", this->Request->GetFirehoseCompressData().GetValue());
+                JsonRootObject->SetStringField(TEXT("firehoseCompressData"), this->Request->GetFirehoseCompressData().GetValue());
             }
             if (this->Request->GetContextStack().IsSet())
             {
-                JsonRootObject->SetStringField("contextStack", this->Request->GetContextStack().GetValue());
+                JsonRootObject->SetStringField(TEXT("contextStack"), this->Request->GetContextStack().GetValue());
             }
             FJsonSerializer::Serialize(JsonRootObject.ToSharedRef(), Writer);
             request->SetContentAsString(Body);

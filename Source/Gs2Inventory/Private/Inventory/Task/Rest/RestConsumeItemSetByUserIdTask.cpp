@@ -103,15 +103,15 @@ namespace Gs2::Inventory::Task::Rest
             const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
             if (this->Request->GetConsumeCount().IsSet())
             {
-                JsonRootObject->SetStringField("consumeCount", FString::Printf(TEXT("%lld"), this->Request->GetConsumeCount().GetValue()));
+                JsonRootObject->SetStringField(TEXT("consumeCount"), FString::Printf(TEXT("%lld"), this->Request->GetConsumeCount().GetValue()));
             }
             if (this->Request->GetItemSetName().IsSet())
             {
-                JsonRootObject->SetStringField("itemSetName", this->Request->GetItemSetName().GetValue());
+                JsonRootObject->SetStringField(TEXT("itemSetName"), this->Request->GetItemSetName().GetValue());
             }
             if (this->Request->GetContextStack().IsSet())
             {
-                JsonRootObject->SetStringField("contextStack", this->Request->GetContextStack().GetValue());
+                JsonRootObject->SetStringField(TEXT("contextStack"), this->Request->GetContextStack().GetValue());
             }
             FJsonSerializer::Serialize(JsonRootObject.ToSharedRef(), Writer);
             request->SetContentAsString(Body);

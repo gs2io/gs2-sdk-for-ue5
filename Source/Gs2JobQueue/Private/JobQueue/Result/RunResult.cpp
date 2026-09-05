@@ -128,15 +128,15 @@ namespace Gs2::JobQueue::Result
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (ItemValue != nullptr && ItemValue.IsValid())
         {
-            JsonRootObject->SetObjectField("item", ItemValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("item"), ItemValue->ToJson());
         }
         if (ResultValue != nullptr && ResultValue.IsValid())
         {
-            JsonRootObject->SetObjectField("result", ResultValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("result"), ResultValue->ToJson());
         }
         if (IsLastJobValue.IsSet())
         {
-            JsonRootObject->SetBoolField("isLastJob", IsLastJobValue.GetValue());
+            JsonRootObject->SetBoolField(TEXT("isLastJob"), IsLastJobValue.GetValue());
         }
         return JsonRootObject;
     }

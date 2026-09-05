@@ -86,15 +86,15 @@ namespace Gs2::Log::Task::Rest
             const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
             if (this->Request->GetBegin().IsSet())
             {
-                JsonRootObject->SetStringField("begin", FString::Printf(TEXT("%lld"), this->Request->GetBegin().GetValue()));
+                JsonRootObject->SetStringField(TEXT("begin"), FString::Printf(TEXT("%lld"), this->Request->GetBegin().GetValue()));
             }
             if (this->Request->GetEnd().IsSet())
             {
-                JsonRootObject->SetStringField("end", FString::Printf(TEXT("%lld"), this->Request->GetEnd().GetValue()));
+                JsonRootObject->SetStringField(TEXT("end"), FString::Printf(TEXT("%lld"), this->Request->GetEnd().GetValue()));
             }
             if (this->Request->GetQuery().IsSet())
             {
-                JsonRootObject->SetStringField("query", this->Request->GetQuery().GetValue());
+                JsonRootObject->SetStringField(TEXT("query"), this->Request->GetQuery().GetValue());
             }
             if (this->Request->GetGroupBy() != nullptr && this->Request->GetGroupBy().IsValid())
             {
@@ -103,7 +103,7 @@ namespace Gs2::Log::Task::Rest
                 {
                     v.Add(MakeShared<FJsonValueString>(JsonObjectValue));
                 }
-                JsonRootObject->SetArrayField("groupBy", v);
+                JsonRootObject->SetArrayField(TEXT("groupBy"), v);
             }
             if (this->Request->GetAggregations() != nullptr && this->Request->GetAggregations().IsValid())
             {
@@ -112,27 +112,27 @@ namespace Gs2::Log::Task::Rest
                 {
                     v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
                 }
-                JsonRootObject->SetArrayField("aggregations", v);
+                JsonRootObject->SetArrayField(TEXT("aggregations"), v);
             }
             if (this->Request->GetInterval().IsSet())
             {
-                JsonRootObject->SetNumberField("interval", this->Request->GetInterval().GetValue());
+                JsonRootObject->SetNumberField(TEXT("interval"), this->Request->GetInterval().GetValue());
             }
             if (this->Request->GetSeriesLimit().IsSet())
             {
-                JsonRootObject->SetNumberField("seriesLimit", this->Request->GetSeriesLimit().GetValue());
+                JsonRootObject->SetNumberField(TEXT("seriesLimit"), this->Request->GetSeriesLimit().GetValue());
             }
             if (this->Request->GetOrderKey().IsSet())
             {
-                JsonRootObject->SetStringField("orderKey", this->Request->GetOrderKey().GetValue());
+                JsonRootObject->SetStringField(TEXT("orderKey"), this->Request->GetOrderKey().GetValue());
             }
             if (this->Request->GetOrderBy().IsSet())
             {
-                JsonRootObject->SetStringField("orderBy", this->Request->GetOrderBy().GetValue());
+                JsonRootObject->SetStringField(TEXT("orderBy"), this->Request->GetOrderBy().GetValue());
             }
             if (this->Request->GetContextStack().IsSet())
             {
-                JsonRootObject->SetStringField("contextStack", this->Request->GetContextStack().GetValue());
+                JsonRootObject->SetStringField(TEXT("contextStack"), this->Request->GetContextStack().GetValue());
             }
             FJsonSerializer::Serialize(JsonRootObject.ToSharedRef(), Writer);
             request->SetContentAsString(Body);

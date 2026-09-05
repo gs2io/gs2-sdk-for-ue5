@@ -130,19 +130,19 @@ namespace Gs2::Version::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (CurrentVersionValue != nullptr && CurrentVersionValue.IsValid())
         {
-            JsonRootObject->SetObjectField("currentVersion", CurrentVersionValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("currentVersion"), CurrentVersionValue->ToJson());
         }
         if (WarningVersionValue != nullptr && WarningVersionValue.IsValid())
         {
-            JsonRootObject->SetObjectField("warningVersion", WarningVersionValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("warningVersion"), WarningVersionValue->ToJson());
         }
         if (ErrorVersionValue != nullptr && ErrorVersionValue.IsValid())
         {
-            JsonRootObject->SetObjectField("errorVersion", ErrorVersionValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("errorVersion"), ErrorVersionValue->ToJson());
         }
         if (ScheduleEventIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("scheduleEventId", ScheduleEventIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("scheduleEventId"), ScheduleEventIdValue.GetValue());
         }
         return JsonRootObject;
     }

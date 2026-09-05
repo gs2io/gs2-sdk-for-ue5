@@ -271,11 +271,11 @@ namespace Gs2::SkillTree::Request
             {
                 v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
             }
-            JsonRootObject->SetArrayField("releaseConsumeActions", v);
+            JsonRootObject->SetArrayField(TEXT("releaseConsumeActions"), v);
         }
         if (RestrainReturnRateValue.IsSet())
         {
-            JsonRootObject->SetNumberField("restrainReturnRate", RestrainReturnRateValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("restrainReturnRate"), RestrainReturnRateValue.GetValue());
         }
         if (PremiseNodeNamesValue != nullptr && PremiseNodeNamesValue.IsValid())
         {
@@ -284,7 +284,7 @@ namespace Gs2::SkillTree::Request
             {
                 v.Add(MakeShared<FJsonValueString>(JsonObjectValue));
             }
-            JsonRootObject->SetArrayField("premiseNodeNames", v);
+            JsonRootObject->SetArrayField(TEXT("premiseNodeNames"), v);
         }
         return JsonRootObject;
     }

@@ -65,7 +65,7 @@ namespace Gs2::News::Result
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (UploadTokenValue.IsSet())
         {
-            JsonRootObject->SetStringField("uploadToken", UploadTokenValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("uploadToken"), UploadTokenValue.GetValue());
         }
         return JsonRootObject;
     }

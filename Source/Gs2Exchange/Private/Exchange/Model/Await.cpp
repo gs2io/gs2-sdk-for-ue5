@@ -406,27 +406,27 @@ namespace Gs2::Exchange::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (AwaitIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("awaitId", AwaitIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("awaitId"), AwaitIdValue.GetValue());
         }
         if (UserIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("userId", UserIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("userId"), UserIdValue.GetValue());
         }
         if (RateNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("rateName", RateNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("rateName"), RateNameValue.GetValue());
         }
         if (NameValue.IsSet())
         {
-            JsonRootObject->SetStringField("name", NameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("name"), NameValue.GetValue());
         }
         if (CountValue.IsSet())
         {
-            JsonRootObject->SetNumberField("count", CountValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("count"), CountValue.GetValue());
         }
         if (SkipSecondsValue.IsSet())
         {
-            JsonRootObject->SetNumberField("skipSeconds", SkipSecondsValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("skipSeconds"), SkipSecondsValue.GetValue());
         }
         if (ConfigValue != nullptr && ConfigValue.IsValid())
         {
@@ -435,23 +435,23 @@ namespace Gs2::Exchange::Model
             {
                 v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
             }
-            JsonRootObject->SetArrayField("config", v);
+            JsonRootObject->SetArrayField(TEXT("config"), v);
         }
         if (AcquirableAtValue.IsSet())
         {
-            JsonRootObject->SetStringField("acquirableAt", FString::Printf(TEXT("%lld"), AcquirableAtValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("acquirableAt"), FString::Printf(TEXT("%lld"), AcquirableAtValue.GetValue()));
         }
         if (ExchangedAtValue.IsSet())
         {
-            JsonRootObject->SetStringField("exchangedAt", FString::Printf(TEXT("%lld"), ExchangedAtValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("exchangedAt"), FString::Printf(TEXT("%lld"), ExchangedAtValue.GetValue()));
         }
         if (CreatedAtValue.IsSet())
         {
-            JsonRootObject->SetStringField("createdAt", FString::Printf(TEXT("%lld"), CreatedAtValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("createdAt"), FString::Printf(TEXT("%lld"), CreatedAtValue.GetValue()));
         }
         if (RevisionValue.IsSet())
         {
-            JsonRootObject->SetStringField("revision", FString::Printf(TEXT("%lld"), RevisionValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("revision"), FString::Printf(TEXT("%lld"), RevisionValue.GetValue()));
         }
         return JsonRootObject;
     }

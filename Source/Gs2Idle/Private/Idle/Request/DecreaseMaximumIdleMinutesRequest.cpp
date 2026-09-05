@@ -174,27 +174,27 @@ namespace Gs2::Idle::Request
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (ContextStackValue.IsSet())
         {
-            JsonRootObject->SetStringField("contextStack", ContextStackValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("contextStack"), ContextStackValue.GetValue());
         }
         if (NamespaceNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("namespaceName", NamespaceNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("namespaceName"), NamespaceNameValue.GetValue());
         }
         if (AccessTokenValue.IsSet())
         {
-            JsonRootObject->SetStringField("xGs2AccessToken", AccessTokenValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("xGs2AccessToken"), AccessTokenValue.GetValue());
         }
         if (CategoryNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("categoryName", CategoryNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("categoryName"), CategoryNameValue.GetValue());
         }
         if (DecreaseMinutesValue.IsSet())
         {
-            JsonRootObject->SetNumberField("decreaseMinutes", DecreaseMinutesValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("decreaseMinutes"), DecreaseMinutesValue.GetValue());
         }
         if (DuplicationAvoiderValue.IsSet())
         {
-            JsonRootObject->SetStringField("duplicationAvoider", DuplicationAvoiderValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("duplicationAvoider"), DuplicationAvoiderValue.GetValue());
         }
         return JsonRootObject;
     }

@@ -91,35 +91,35 @@ namespace Gs2::Guild::Task::Rest
             const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
             if (this->Request->GetDisplayName().IsSet())
             {
-                JsonRootObject->SetStringField("displayName", this->Request->GetDisplayName().GetValue());
+                JsonRootObject->SetStringField(TEXT("displayName"), this->Request->GetDisplayName().GetValue());
             }
             if (this->Request->GetAttribute1().IsSet())
             {
-                JsonRootObject->SetNumberField("attribute1", this->Request->GetAttribute1().GetValue());
+                JsonRootObject->SetNumberField(TEXT("attribute1"), this->Request->GetAttribute1().GetValue());
             }
             if (this->Request->GetAttribute2().IsSet())
             {
-                JsonRootObject->SetNumberField("attribute2", this->Request->GetAttribute2().GetValue());
+                JsonRootObject->SetNumberField(TEXT("attribute2"), this->Request->GetAttribute2().GetValue());
             }
             if (this->Request->GetAttribute3().IsSet())
             {
-                JsonRootObject->SetNumberField("attribute3", this->Request->GetAttribute3().GetValue());
+                JsonRootObject->SetNumberField(TEXT("attribute3"), this->Request->GetAttribute3().GetValue());
             }
             if (this->Request->GetAttribute4().IsSet())
             {
-                JsonRootObject->SetNumberField("attribute4", this->Request->GetAttribute4().GetValue());
+                JsonRootObject->SetNumberField(TEXT("attribute4"), this->Request->GetAttribute4().GetValue());
             }
             if (this->Request->GetAttribute5().IsSet())
             {
-                JsonRootObject->SetNumberField("attribute5", this->Request->GetAttribute5().GetValue());
+                JsonRootObject->SetNumberField(TEXT("attribute5"), this->Request->GetAttribute5().GetValue());
             }
             if (this->Request->GetMetadata().IsSet())
             {
-                JsonRootObject->SetStringField("metadata", this->Request->GetMetadata().GetValue());
+                JsonRootObject->SetStringField(TEXT("metadata"), this->Request->GetMetadata().GetValue());
             }
             if (this->Request->GetJoinPolicy().IsSet())
             {
-                JsonRootObject->SetStringField("joinPolicy", this->Request->GetJoinPolicy().GetValue());
+                JsonRootObject->SetStringField(TEXT("joinPolicy"), this->Request->GetJoinPolicy().GetValue());
             }
             if (this->Request->GetCustomRoles() != nullptr && this->Request->GetCustomRoles().IsValid())
             {
@@ -128,15 +128,15 @@ namespace Gs2::Guild::Task::Rest
                 {
                     v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
                 }
-                JsonRootObject->SetArrayField("customRoles", v);
+                JsonRootObject->SetArrayField(TEXT("customRoles"), v);
             }
             if (this->Request->GetGuildMemberDefaultRole().IsSet())
             {
-                JsonRootObject->SetStringField("guildMemberDefaultRole", this->Request->GetGuildMemberDefaultRole().GetValue());
+                JsonRootObject->SetStringField(TEXT("guildMemberDefaultRole"), this->Request->GetGuildMemberDefaultRole().GetValue());
             }
             if (this->Request->GetContextStack().IsSet())
             {
-                JsonRootObject->SetStringField("contextStack", this->Request->GetContextStack().GetValue());
+                JsonRootObject->SetStringField(TEXT("contextStack"), this->Request->GetContextStack().GetValue());
             }
             FJsonSerializer::Serialize(JsonRootObject.ToSharedRef(), Writer);
             request->SetContentAsString(Body);

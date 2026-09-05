@@ -165,15 +165,15 @@ namespace Gs2::MegaField::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (LayerModelIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("layerModelId", LayerModelIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("layerModelId"), LayerModelIdValue.GetValue());
         }
         if (NameValue.IsSet())
         {
-            JsonRootObject->SetStringField("name", NameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("name"), NameValue.GetValue());
         }
         if (MetadataValue.IsSet())
         {
-            JsonRootObject->SetStringField("metadata", MetadataValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("metadata"), MetadataValue.GetValue());
         }
         return JsonRootObject;
     }

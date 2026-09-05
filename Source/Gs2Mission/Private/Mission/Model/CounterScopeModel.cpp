@@ -283,39 +283,39 @@ namespace Gs2::Mission::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (ScopeTypeValue.IsSet())
         {
-            JsonRootObject->SetStringField("scopeType", ScopeTypeValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("scopeType"), ScopeTypeValue.GetValue());
         }
         if (ResetTypeValue.IsSet())
         {
-            JsonRootObject->SetStringField("resetType", ResetTypeValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("resetType"), ResetTypeValue.GetValue());
         }
         if (ResetDayOfMonthValue.IsSet())
         {
-            JsonRootObject->SetNumberField("resetDayOfMonth", ResetDayOfMonthValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("resetDayOfMonth"), ResetDayOfMonthValue.GetValue());
         }
         if (ResetDayOfWeekValue.IsSet())
         {
-            JsonRootObject->SetStringField("resetDayOfWeek", ResetDayOfWeekValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("resetDayOfWeek"), ResetDayOfWeekValue.GetValue());
         }
         if (ResetHourValue.IsSet())
         {
-            JsonRootObject->SetNumberField("resetHour", ResetHourValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("resetHour"), ResetHourValue.GetValue());
         }
         if (ConditionNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("conditionName", ConditionNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("conditionName"), ConditionNameValue.GetValue());
         }
         if (ConditionValue != nullptr && ConditionValue.IsValid())
         {
-            JsonRootObject->SetObjectField("condition", ConditionValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("condition"), ConditionValue->ToJson());
         }
         if (AnchorTimestampValue.IsSet())
         {
-            JsonRootObject->SetStringField("anchorTimestamp", FString::Printf(TEXT("%lld"), AnchorTimestampValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("anchorTimestamp"), FString::Printf(TEXT("%lld"), AnchorTimestampValue.GetValue()));
         }
         if (DaysValue.IsSet())
         {
-            JsonRootObject->SetNumberField("days", DaysValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("days"), DaysValue.GetValue());
         }
         return JsonRootObject;
     }

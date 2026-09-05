@@ -86,23 +86,23 @@ namespace Gs2::Enchant::Task::Rest
             const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
             if (this->Request->GetName().IsSet())
             {
-                JsonRootObject->SetStringField("name", this->Request->GetName().GetValue());
+                JsonRootObject->SetStringField(TEXT("name"), this->Request->GetName().GetValue());
             }
             if (this->Request->GetDescription().IsSet())
             {
-                JsonRootObject->SetStringField("description", this->Request->GetDescription().GetValue());
+                JsonRootObject->SetStringField(TEXT("description"), this->Request->GetDescription().GetValue());
             }
             if (this->Request->GetMetadata().IsSet())
             {
-                JsonRootObject->SetStringField("metadata", this->Request->GetMetadata().GetValue());
+                JsonRootObject->SetStringField(TEXT("metadata"), this->Request->GetMetadata().GetValue());
             }
             if (this->Request->GetTotalValue().IsSet())
             {
-                JsonRootObject->SetStringField("totalValue", FString::Printf(TEXT("%lld"), this->Request->GetTotalValue().GetValue()));
+                JsonRootObject->SetStringField(TEXT("totalValue"), FString::Printf(TEXT("%lld"), this->Request->GetTotalValue().GetValue()));
             }
             if (this->Request->GetInitialValueStrategy().IsSet())
             {
-                JsonRootObject->SetStringField("initialValueStrategy", this->Request->GetInitialValueStrategy().GetValue());
+                JsonRootObject->SetStringField(TEXT("initialValueStrategy"), this->Request->GetInitialValueStrategy().GetValue());
             }
             if (this->Request->GetParameters() != nullptr && this->Request->GetParameters().IsValid())
             {
@@ -111,11 +111,11 @@ namespace Gs2::Enchant::Task::Rest
                 {
                     v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
                 }
-                JsonRootObject->SetArrayField("parameters", v);
+                JsonRootObject->SetArrayField(TEXT("parameters"), v);
             }
             if (this->Request->GetContextStack().IsSet())
             {
-                JsonRootObject->SetStringField("contextStack", this->Request->GetContextStack().GetValue());
+                JsonRootObject->SetStringField(TEXT("contextStack"), this->Request->GetContextStack().GetValue());
             }
             FJsonSerializer::Serialize(JsonRootObject.ToSharedRef(), Writer);
             request->SetContentAsString(Body);

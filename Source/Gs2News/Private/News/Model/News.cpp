@@ -188,27 +188,27 @@ namespace Gs2::News::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (SectionValue.IsSet())
         {
-            JsonRootObject->SetStringField("section", SectionValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("section"), SectionValue.GetValue());
         }
         if (ContentValue.IsSet())
         {
-            JsonRootObject->SetStringField("content", ContentValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("content"), ContentValue.GetValue());
         }
         if (TitleValue.IsSet())
         {
-            JsonRootObject->SetStringField("title", TitleValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("title"), TitleValue.GetValue());
         }
         if (ScheduleEventIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("scheduleEventId", ScheduleEventIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("scheduleEventId"), ScheduleEventIdValue.GetValue());
         }
         if (TimestampValue.IsSet())
         {
-            JsonRootObject->SetStringField("timestamp", FString::Printf(TEXT("%lld"), TimestampValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("timestamp"), FString::Printf(TEXT("%lld"), TimestampValue.GetValue()));
         }
         if (FrontMatterValue.IsSet())
         {
-            JsonRootObject->SetStringField("frontMatter", FrontMatterValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("frontMatter"), FrontMatterValue.GetValue());
         }
         return JsonRootObject;
     }

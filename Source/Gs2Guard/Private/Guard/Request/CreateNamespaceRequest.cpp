@@ -130,19 +130,19 @@ namespace Gs2::Guard::Request
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (ContextStackValue.IsSet())
         {
-            JsonRootObject->SetStringField("contextStack", ContextStackValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("contextStack"), ContextStackValue.GetValue());
         }
         if (NameValue.IsSet())
         {
-            JsonRootObject->SetStringField("name", NameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("name"), NameValue.GetValue());
         }
         if (DescriptionValue.IsSet())
         {
-            JsonRootObject->SetStringField("description", DescriptionValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("description"), DescriptionValue.GetValue());
         }
         if (BlockingPolicyValue != nullptr && BlockingPolicyValue.IsValid())
         {
-            JsonRootObject->SetObjectField("blockingPolicy", BlockingPolicyValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("blockingPolicy"), BlockingPolicyValue->ToJson());
         }
         return JsonRootObject;
     }

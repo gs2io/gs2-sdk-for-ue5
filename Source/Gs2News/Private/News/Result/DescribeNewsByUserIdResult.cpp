@@ -125,15 +125,15 @@ namespace Gs2::News::Result
             {
                 v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
             }
-            JsonRootObject->SetArrayField("items", v);
+            JsonRootObject->SetArrayField(TEXT("items"), v);
         }
         if (ContentHashValue.IsSet())
         {
-            JsonRootObject->SetStringField("contentHash", ContentHashValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("contentHash"), ContentHashValue.GetValue());
         }
         if (TemplateHashValue.IsSet())
         {
-            JsonRootObject->SetStringField("templateHash", TemplateHashValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("templateHash"), TemplateHashValue.GetValue());
         }
         return JsonRootObject;
     }

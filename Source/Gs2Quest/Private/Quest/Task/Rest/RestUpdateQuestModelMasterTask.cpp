@@ -96,11 +96,11 @@ namespace Gs2::Quest::Task::Rest
             const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
             if (this->Request->GetDescription().IsSet())
             {
-                JsonRootObject->SetStringField("description", this->Request->GetDescription().GetValue());
+                JsonRootObject->SetStringField(TEXT("description"), this->Request->GetDescription().GetValue());
             }
             if (this->Request->GetMetadata().IsSet())
             {
-                JsonRootObject->SetStringField("metadata", this->Request->GetMetadata().GetValue());
+                JsonRootObject->SetStringField(TEXT("metadata"), this->Request->GetMetadata().GetValue());
             }
             if (this->Request->GetContents() != nullptr && this->Request->GetContents().IsValid())
             {
@@ -109,11 +109,11 @@ namespace Gs2::Quest::Task::Rest
                 {
                     v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
                 }
-                JsonRootObject->SetArrayField("contents", v);
+                JsonRootObject->SetArrayField(TEXT("contents"), v);
             }
             if (this->Request->GetChallengePeriodEventId().IsSet())
             {
-                JsonRootObject->SetStringField("challengePeriodEventId", this->Request->GetChallengePeriodEventId().GetValue());
+                JsonRootObject->SetStringField(TEXT("challengePeriodEventId"), this->Request->GetChallengePeriodEventId().GetValue());
             }
             if (this->Request->GetFirstCompleteAcquireActions() != nullptr && this->Request->GetFirstCompleteAcquireActions().IsValid())
             {
@@ -122,7 +122,7 @@ namespace Gs2::Quest::Task::Rest
                 {
                     v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
                 }
-                JsonRootObject->SetArrayField("firstCompleteAcquireActions", v);
+                JsonRootObject->SetArrayField(TEXT("firstCompleteAcquireActions"), v);
             }
             if (this->Request->GetVerifyActions() != nullptr && this->Request->GetVerifyActions().IsValid())
             {
@@ -131,7 +131,7 @@ namespace Gs2::Quest::Task::Rest
                 {
                     v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
                 }
-                JsonRootObject->SetArrayField("verifyActions", v);
+                JsonRootObject->SetArrayField(TEXT("verifyActions"), v);
             }
             if (this->Request->GetConsumeActions() != nullptr && this->Request->GetConsumeActions().IsValid())
             {
@@ -140,7 +140,7 @@ namespace Gs2::Quest::Task::Rest
                 {
                     v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
                 }
-                JsonRootObject->SetArrayField("consumeActions", v);
+                JsonRootObject->SetArrayField(TEXT("consumeActions"), v);
             }
             if (this->Request->GetFailedAcquireActions() != nullptr && this->Request->GetFailedAcquireActions().IsValid())
             {
@@ -149,7 +149,7 @@ namespace Gs2::Quest::Task::Rest
                 {
                     v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
                 }
-                JsonRootObject->SetArrayField("failedAcquireActions", v);
+                JsonRootObject->SetArrayField(TEXT("failedAcquireActions"), v);
             }
             if (this->Request->GetPremiseQuestNames() != nullptr && this->Request->GetPremiseQuestNames().IsValid())
             {
@@ -158,11 +158,11 @@ namespace Gs2::Quest::Task::Rest
                 {
                     v.Add(MakeShared<FJsonValueString>(JsonObjectValue));
                 }
-                JsonRootObject->SetArrayField("premiseQuestNames", v);
+                JsonRootObject->SetArrayField(TEXT("premiseQuestNames"), v);
             }
             if (this->Request->GetContextStack().IsSet())
             {
-                JsonRootObject->SetStringField("contextStack", this->Request->GetContextStack().GetValue());
+                JsonRootObject->SetStringField(TEXT("contextStack"), this->Request->GetContextStack().GetValue());
             }
             FJsonSerializer::Serialize(JsonRootObject.ToSharedRef(), Writer);
             request->SetContentAsString(Body);

@@ -91,31 +91,31 @@ namespace Gs2::Version::Task::Rest
             const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
             if (this->Request->GetDescription().IsSet())
             {
-                JsonRootObject->SetStringField("description", this->Request->GetDescription().GetValue());
+                JsonRootObject->SetStringField(TEXT("description"), this->Request->GetDescription().GetValue());
             }
             if (this->Request->GetMetadata().IsSet())
             {
-                JsonRootObject->SetStringField("metadata", this->Request->GetMetadata().GetValue());
+                JsonRootObject->SetStringField(TEXT("metadata"), this->Request->GetMetadata().GetValue());
             }
             if (this->Request->GetScope().IsSet())
             {
-                JsonRootObject->SetStringField("scope", this->Request->GetScope().GetValue());
+                JsonRootObject->SetStringField(TEXT("scope"), this->Request->GetScope().GetValue());
             }
             if (this->Request->GetType().IsSet())
             {
-                JsonRootObject->SetStringField("type", this->Request->GetType().GetValue());
+                JsonRootObject->SetStringField(TEXT("type"), this->Request->GetType().GetValue());
             }
             if (this->Request->GetCurrentVersion() != nullptr && this->Request->GetCurrentVersion().IsValid())
             {
-                JsonRootObject->SetObjectField("currentVersion", this->Request->GetCurrentVersion()->ToJson());
+                JsonRootObject->SetObjectField(TEXT("currentVersion"), this->Request->GetCurrentVersion()->ToJson());
             }
             if (this->Request->GetWarningVersion() != nullptr && this->Request->GetWarningVersion().IsValid())
             {
-                JsonRootObject->SetObjectField("warningVersion", this->Request->GetWarningVersion()->ToJson());
+                JsonRootObject->SetObjectField(TEXT("warningVersion"), this->Request->GetWarningVersion()->ToJson());
             }
             if (this->Request->GetErrorVersion() != nullptr && this->Request->GetErrorVersion().IsValid())
             {
-                JsonRootObject->SetObjectField("errorVersion", this->Request->GetErrorVersion()->ToJson());
+                JsonRootObject->SetObjectField(TEXT("errorVersion"), this->Request->GetErrorVersion()->ToJson());
             }
             if (this->Request->GetScheduleVersions() != nullptr && this->Request->GetScheduleVersions().IsValid())
             {
@@ -124,23 +124,23 @@ namespace Gs2::Version::Task::Rest
                 {
                     v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
                 }
-                JsonRootObject->SetArrayField("scheduleVersions", v);
+                JsonRootObject->SetArrayField(TEXT("scheduleVersions"), v);
             }
             if (this->Request->GetNeedSignature().IsSet())
             {
-                JsonRootObject->SetBoolField("needSignature", this->Request->GetNeedSignature().GetValue());
+                JsonRootObject->SetBoolField(TEXT("needSignature"), this->Request->GetNeedSignature().GetValue());
             }
             if (this->Request->GetSignatureKeyId().IsSet())
             {
-                JsonRootObject->SetStringField("signatureKeyId", this->Request->GetSignatureKeyId().GetValue());
+                JsonRootObject->SetStringField(TEXT("signatureKeyId"), this->Request->GetSignatureKeyId().GetValue());
             }
             if (this->Request->GetApproveRequirement().IsSet())
             {
-                JsonRootObject->SetStringField("approveRequirement", this->Request->GetApproveRequirement().GetValue());
+                JsonRootObject->SetStringField(TEXT("approveRequirement"), this->Request->GetApproveRequirement().GetValue());
             }
             if (this->Request->GetContextStack().IsSet())
             {
-                JsonRootObject->SetStringField("contextStack", this->Request->GetContextStack().GetValue());
+                JsonRootObject->SetStringField(TEXT("contextStack"), this->Request->GetContextStack().GetValue());
             }
             FJsonSerializer::Serialize(JsonRootObject.ToSharedRef(), Writer);
             request->SetContentAsString(Body);

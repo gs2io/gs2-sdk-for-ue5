@@ -142,19 +142,19 @@ namespace Gs2::SkillTree::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (ActionValue.IsSet())
         {
-            JsonRootObject->SetStringField("action", ActionValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("action"), ActionValue.GetValue());
         }
         if (ConsumeRequestValue.IsSet())
         {
-            JsonRootObject->SetStringField("consumeRequest", ConsumeRequestValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("consumeRequest"), ConsumeRequestValue.GetValue());
         }
         if (StatusCodeValue.IsSet())
         {
-            JsonRootObject->SetNumberField("statusCode", StatusCodeValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("statusCode"), StatusCodeValue.GetValue());
         }
         if (ConsumeResultValue.IsSet())
         {
-            JsonRootObject->SetStringField("consumeResult", ConsumeResultValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("consumeResult"), ConsumeResultValue.GetValue());
         }
         return JsonRootObject;
     }

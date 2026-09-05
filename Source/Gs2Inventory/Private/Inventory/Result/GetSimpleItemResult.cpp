@@ -95,11 +95,11 @@ namespace Gs2::Inventory::Result
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (ItemValue != nullptr && ItemValue.IsValid())
         {
-            JsonRootObject->SetObjectField("item", ItemValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("item"), ItemValue->ToJson());
         }
         if (ItemModelValue != nullptr && ItemModelValue.IsValid())
         {
-            JsonRootObject->SetObjectField("itemModel", ItemModelValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("itemModel"), ItemModelValue->ToJson());
         }
         return JsonRootObject;
     }

@@ -95,11 +95,11 @@ namespace Gs2::Guild::Result
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (ItemValue != nullptr && ItemValue.IsValid())
         {
-            JsonRootObject->SetObjectField("item", ItemValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("item"), ItemValue->ToJson());
         }
         if (SendMemberRequestValue != nullptr && SendMemberRequestValue.IsValid())
         {
-            JsonRootObject->SetObjectField("sendMemberRequest", SendMemberRequestValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("sendMemberRequest"), SendMemberRequestValue->ToJson());
         }
         return JsonRootObject;
     }

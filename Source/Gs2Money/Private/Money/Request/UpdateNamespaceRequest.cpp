@@ -343,51 +343,51 @@ namespace Gs2::Money::Request
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (ContextStackValue.IsSet())
         {
-            JsonRootObject->SetStringField("contextStack", ContextStackValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("contextStack"), ContextStackValue.GetValue());
         }
         if (NamespaceNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("namespaceName", NamespaceNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("namespaceName"), NamespaceNameValue.GetValue());
         }
         if (DescriptionValue.IsSet())
         {
-            JsonRootObject->SetStringField("description", DescriptionValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("description"), DescriptionValue.GetValue());
         }
         if (TransactionSettingValue != nullptr && TransactionSettingValue.IsValid())
         {
-            JsonRootObject->SetObjectField("transactionSetting", TransactionSettingValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("transactionSetting"), TransactionSettingValue->ToJson());
         }
         if (PriorityValue.IsSet())
         {
-            JsonRootObject->SetStringField("priority", PriorityValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("priority"), PriorityValue.GetValue());
         }
         if (AppleKeyValue.IsSet())
         {
-            JsonRootObject->SetStringField("appleKey", AppleKeyValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("appleKey"), AppleKeyValue.GetValue());
         }
         if (GoogleKeyValue.IsSet())
         {
-            JsonRootObject->SetStringField("googleKey", GoogleKeyValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("googleKey"), GoogleKeyValue.GetValue());
         }
         if (EnableFakeReceiptValue.IsSet())
         {
-            JsonRootObject->SetBoolField("enableFakeReceipt", EnableFakeReceiptValue.GetValue());
+            JsonRootObject->SetBoolField(TEXT("enableFakeReceipt"), EnableFakeReceiptValue.GetValue());
         }
         if (CreateWalletScriptValue != nullptr && CreateWalletScriptValue.IsValid())
         {
-            JsonRootObject->SetObjectField("createWalletScript", CreateWalletScriptValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("createWalletScript"), CreateWalletScriptValue->ToJson());
         }
         if (DepositScriptValue != nullptr && DepositScriptValue.IsValid())
         {
-            JsonRootObject->SetObjectField("depositScript", DepositScriptValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("depositScript"), DepositScriptValue->ToJson());
         }
         if (WithdrawScriptValue != nullptr && WithdrawScriptValue.IsValid())
         {
-            JsonRootObject->SetObjectField("withdrawScript", WithdrawScriptValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("withdrawScript"), WithdrawScriptValue->ToJson());
         }
         if (LogSettingValue != nullptr && LogSettingValue.IsValid())
         {
-            JsonRootObject->SetObjectField("logSetting", LogSettingValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("logSetting"), LogSettingValue->ToJson());
         }
         return JsonRootObject;
     }

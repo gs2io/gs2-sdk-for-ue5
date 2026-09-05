@@ -91,23 +91,23 @@ namespace Gs2::Gateway::Task::Rest
             const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
             if (this->Request->GetSubject().IsSet())
             {
-                JsonRootObject->SetStringField("subject", this->Request->GetSubject().GetValue());
+                JsonRootObject->SetStringField(TEXT("subject"), this->Request->GetSubject().GetValue());
             }
             if (this->Request->GetPayload().IsSet())
             {
-                JsonRootObject->SetStringField("payload", this->Request->GetPayload().GetValue());
+                JsonRootObject->SetStringField(TEXT("payload"), this->Request->GetPayload().GetValue());
             }
             if (this->Request->GetEnableTransferMobileNotification().IsSet())
             {
-                JsonRootObject->SetBoolField("enableTransferMobileNotification", this->Request->GetEnableTransferMobileNotification().GetValue());
+                JsonRootObject->SetBoolField(TEXT("enableTransferMobileNotification"), this->Request->GetEnableTransferMobileNotification().GetValue());
             }
             if (this->Request->GetSound().IsSet())
             {
-                JsonRootObject->SetStringField("sound", this->Request->GetSound().GetValue());
+                JsonRootObject->SetStringField(TEXT("sound"), this->Request->GetSound().GetValue());
             }
             if (this->Request->GetContextStack().IsSet())
             {
-                JsonRootObject->SetStringField("contextStack", this->Request->GetContextStack().GetValue());
+                JsonRootObject->SetStringField(TEXT("contextStack"), this->Request->GetContextStack().GetValue());
             }
             FJsonSerializer::Serialize(JsonRootObject.ToSharedRef(), Writer);
             request->SetContentAsString(Body);

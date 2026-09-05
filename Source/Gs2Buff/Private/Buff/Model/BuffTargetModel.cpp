@@ -145,11 +145,11 @@ namespace Gs2::Buff::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (TargetModelNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("targetModelName", TargetModelNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("targetModelName"), TargetModelNameValue.GetValue());
         }
         if (TargetFieldNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("targetFieldName", TargetFieldNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("targetFieldName"), TargetFieldNameValue.GetValue());
         }
         if (ConditionGrnsValue != nullptr && ConditionGrnsValue.IsValid())
         {
@@ -158,11 +158,11 @@ namespace Gs2::Buff::Model
             {
                 v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
             }
-            JsonRootObject->SetArrayField("conditionGrns", v);
+            JsonRootObject->SetArrayField(TEXT("conditionGrns"), v);
         }
         if (RateValue.IsSet())
         {
-            JsonRootObject->SetNumberField("rate", RateValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("rate"), RateValue.GetValue());
         }
         return JsonRootObject;
     }

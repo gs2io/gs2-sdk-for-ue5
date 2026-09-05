@@ -86,19 +86,19 @@ namespace Gs2::Gateway::Task::Rest
             const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
             if (this->Request->GetAllowConcurrentAccess().IsSet())
             {
-                JsonRootObject->SetBoolField("allowConcurrentAccess", this->Request->GetAllowConcurrentAccess().GetValue());
+                JsonRootObject->SetBoolField(TEXT("allowConcurrentAccess"), this->Request->GetAllowConcurrentAccess().GetValue());
             }
             if (this->Request->GetSessionId().IsSet())
             {
-                JsonRootObject->SetStringField("sessionId", this->Request->GetSessionId().GetValue());
+                JsonRootObject->SetStringField(TEXT("sessionId"), this->Request->GetSessionId().GetValue());
             }
             if (this->Request->GetForce().IsSet())
             {
-                JsonRootObject->SetBoolField("force", this->Request->GetForce().GetValue());
+                JsonRootObject->SetBoolField(TEXT("force"), this->Request->GetForce().GetValue());
             }
             if (this->Request->GetContextStack().IsSet())
             {
-                JsonRootObject->SetStringField("contextStack", this->Request->GetContextStack().GetValue());
+                JsonRootObject->SetStringField(TEXT("contextStack"), this->Request->GetContextStack().GetValue());
             }
             FJsonSerializer::Serialize(JsonRootObject.ToSharedRef(), Writer);
             request->SetContentAsString(Body);

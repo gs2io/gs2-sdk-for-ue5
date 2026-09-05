@@ -142,19 +142,19 @@ namespace Gs2::Matchmaking::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (UserIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("userId", UserIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("userId"), UserIdValue.GetValue());
         }
         if (RatingNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("ratingName", RatingNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("ratingName"), RatingNameValue.GetValue());
         }
         if (GatheringNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("gatheringName", GatheringNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("gatheringName"), GatheringNameValue.GetValue());
         }
         if (NumberOfPlayerValue.IsSet())
         {
-            JsonRootObject->SetNumberField("numberOfPlayer", NumberOfPlayerValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("numberOfPlayer"), NumberOfPlayerValue.GetValue());
         }
         return JsonRootObject;
     }

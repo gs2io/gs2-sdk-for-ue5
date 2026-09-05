@@ -95,11 +95,11 @@ namespace Gs2::Formation::Result
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (ItemValue != nullptr && ItemValue.IsValid())
         {
-            JsonRootObject->SetObjectField("item", ItemValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("item"), ItemValue->ToJson());
         }
         if (MoldModelValue != nullptr && MoldModelValue.IsValid())
         {
-            JsonRootObject->SetObjectField("moldModel", MoldModelValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("moldModel"), MoldModelValue->ToJson());
         }
         return JsonRootObject;
     }

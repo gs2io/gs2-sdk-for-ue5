@@ -96,19 +96,19 @@ namespace Gs2::MegaField::Task::Rest
             const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
             if (this->Request->GetPoint() != nullptr && this->Request->GetPoint().IsValid())
             {
-                JsonRootObject->SetObjectField("point", this->Request->GetPoint()->ToJson());
+                JsonRootObject->SetObjectField(TEXT("point"), this->Request->GetPoint()->ToJson());
             }
             if (this->Request->GetR().IsSet())
             {
-                JsonRootObject->SetNumberField("r", this->Request->GetR().GetValue());
+                JsonRootObject->SetNumberField(TEXT("r"), this->Request->GetR().GetValue());
             }
             if (this->Request->GetLimit().IsSet())
             {
-                JsonRootObject->SetNumberField("limit", this->Request->GetLimit().GetValue());
+                JsonRootObject->SetNumberField(TEXT("limit"), this->Request->GetLimit().GetValue());
             }
             if (this->Request->GetContextStack().IsSet())
             {
-                JsonRootObject->SetStringField("contextStack", this->Request->GetContextStack().GetValue());
+                JsonRootObject->SetStringField(TEXT("contextStack"), this->Request->GetContextStack().GetValue());
             }
             FJsonSerializer::Serialize(JsonRootObject.ToSharedRef(), Writer);
             request->SetContentAsString(Body);

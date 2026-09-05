@@ -105,15 +105,15 @@ namespace Gs2::Identifier::Request
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (ContextStackValue.IsSet())
         {
-            JsonRootObject->SetStringField("contextStack", ContextStackValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("contextStack"), ContextStackValue.GetValue());
         }
         if (ClientIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("client_id", ClientIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("client_id"), ClientIdValue.GetValue());
         }
         if (ClientSecretValue.IsSet())
         {
-            JsonRootObject->SetStringField("client_secret", ClientSecretValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("client_secret"), ClientSecretValue.GetValue());
         }
         return JsonRootObject;
     }

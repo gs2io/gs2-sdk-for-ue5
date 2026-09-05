@@ -64,7 +64,7 @@ namespace Gs2::Friend::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (LoggingNamespaceIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("loggingNamespaceId", LoggingNamespaceIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("loggingNamespaceId"), LoggingNamespaceIdValue.GetValue());
         }
         return JsonRootObject;
     }

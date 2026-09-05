@@ -339,15 +339,15 @@ namespace Gs2::Distributor::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (TransactionResultIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("transactionResultId", TransactionResultIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("transactionResultId"), TransactionResultIdValue.GetValue());
         }
         if (UserIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("userId", UserIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("userId"), UserIdValue.GetValue());
         }
         if (TransactionIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("transactionId", TransactionIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("transactionId"), TransactionIdValue.GetValue());
         }
         if (VerifyResultsValue != nullptr && VerifyResultsValue.IsValid())
         {
@@ -356,7 +356,7 @@ namespace Gs2::Distributor::Model
             {
                 v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
             }
-            JsonRootObject->SetArrayField("verifyResults", v);
+            JsonRootObject->SetArrayField(TEXT("verifyResults"), v);
         }
         if (ConsumeResultsValue != nullptr && ConsumeResultsValue.IsValid())
         {
@@ -365,7 +365,7 @@ namespace Gs2::Distributor::Model
             {
                 v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
             }
-            JsonRootObject->SetArrayField("consumeResults", v);
+            JsonRootObject->SetArrayField(TEXT("consumeResults"), v);
         }
         if (AcquireResultsValue != nullptr && AcquireResultsValue.IsValid())
         {
@@ -374,19 +374,19 @@ namespace Gs2::Distributor::Model
             {
                 v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
             }
-            JsonRootObject->SetArrayField("acquireResults", v);
+            JsonRootObject->SetArrayField(TEXT("acquireResults"), v);
         }
         if (HasErrorValue.IsSet())
         {
-            JsonRootObject->SetBoolField("hasError", HasErrorValue.GetValue());
+            JsonRootObject->SetBoolField(TEXT("hasError"), HasErrorValue.GetValue());
         }
         if (CreatedAtValue.IsSet())
         {
-            JsonRootObject->SetStringField("createdAt", FString::Printf(TEXT("%lld"), CreatedAtValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("createdAt"), FString::Printf(TEXT("%lld"), CreatedAtValue.GetValue()));
         }
         if (RevisionValue.IsSet())
         {
-            JsonRootObject->SetStringField("revision", FString::Printf(TEXT("%lld"), RevisionValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("revision"), FString::Printf(TEXT("%lld"), RevisionValue.GetValue()));
         }
         return JsonRootObject;
     }

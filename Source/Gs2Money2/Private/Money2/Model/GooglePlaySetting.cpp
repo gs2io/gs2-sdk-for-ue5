@@ -87,11 +87,11 @@ namespace Gs2::Money2::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (PackageNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("packageName", PackageNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("packageName"), PackageNameValue.GetValue());
         }
         if (PublicKeyValue.IsSet())
         {
-            JsonRootObject->SetStringField("publicKey", PublicKeyValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("publicKey"), PublicKeyValue.GetValue());
         }
         return JsonRootObject;
     }

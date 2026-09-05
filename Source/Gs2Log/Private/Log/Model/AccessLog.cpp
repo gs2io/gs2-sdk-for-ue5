@@ -211,31 +211,31 @@ namespace Gs2::Log::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (TimestampValue.IsSet())
         {
-            JsonRootObject->SetStringField("timestamp", FString::Printf(TEXT("%lld"), TimestampValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("timestamp"), FString::Printf(TEXT("%lld"), TimestampValue.GetValue()));
         }
         if (RequestIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("requestId", RequestIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("requestId"), RequestIdValue.GetValue());
         }
         if (ServiceValue.IsSet())
         {
-            JsonRootObject->SetStringField("service", ServiceValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("service"), ServiceValue.GetValue());
         }
         if (MethodValue.IsSet())
         {
-            JsonRootObject->SetStringField("method", MethodValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("method"), MethodValue.GetValue());
         }
         if (UserIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("userId", UserIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("userId"), UserIdValue.GetValue());
         }
         if (RequestValue.IsSet())
         {
-            JsonRootObject->SetStringField("request", RequestValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("request"), RequestValue.GetValue());
         }
         if (ResultValue.IsSet())
         {
-            JsonRootObject->SetStringField("result", ResultValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("result"), ResultValue.GetValue());
         }
         return JsonRootObject;
     }

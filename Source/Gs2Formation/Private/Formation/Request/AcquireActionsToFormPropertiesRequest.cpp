@@ -256,27 +256,27 @@ namespace Gs2::Formation::Request
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (ContextStackValue.IsSet())
         {
-            JsonRootObject->SetStringField("contextStack", ContextStackValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("contextStack"), ContextStackValue.GetValue());
         }
         if (NamespaceNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("namespaceName", NamespaceNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("namespaceName"), NamespaceNameValue.GetValue());
         }
         if (UserIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("userId", UserIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("userId"), UserIdValue.GetValue());
         }
         if (MoldModelNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("moldModelName", MoldModelNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("moldModelName"), MoldModelNameValue.GetValue());
         }
         if (IndexValue.IsSet())
         {
-            JsonRootObject->SetNumberField("index", IndexValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("index"), IndexValue.GetValue());
         }
         if (AcquireActionValue != nullptr && AcquireActionValue.IsValid())
         {
-            JsonRootObject->SetObjectField("acquireAction", AcquireActionValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("acquireAction"), AcquireActionValue->ToJson());
         }
         if (ConfigValue != nullptr && ConfigValue.IsValid())
         {
@@ -285,15 +285,15 @@ namespace Gs2::Formation::Request
             {
                 v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
             }
-            JsonRootObject->SetArrayField("config", v);
+            JsonRootObject->SetArrayField(TEXT("config"), v);
         }
         if (TimeOffsetTokenValue.IsSet())
         {
-            JsonRootObject->SetStringField("timeOffsetToken", TimeOffsetTokenValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("timeOffsetToken"), TimeOffsetTokenValue.GetValue());
         }
         if (DuplicationAvoiderValue.IsSet())
         {
-            JsonRootObject->SetStringField("duplicationAvoider", DuplicationAvoiderValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("duplicationAvoider"), DuplicationAvoiderValue.GetValue());
         }
         return JsonRootObject;
     }

@@ -160,23 +160,23 @@ namespace Gs2::Ranking::Request
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (ContextStackValue.IsSet())
         {
-            JsonRootObject->SetStringField("contextStack", ContextStackValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("contextStack"), ContextStackValue.GetValue());
         }
         if (NamespaceNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("namespaceName", NamespaceNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("namespaceName"), NamespaceNameValue.GetValue());
         }
         if (CategoryNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("categoryName", CategoryNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("categoryName"), CategoryNameValue.GetValue());
         }
         if (AdditionalScopeNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("additionalScopeName", AdditionalScopeNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("additionalScopeName"), AdditionalScopeNameValue.GetValue());
         }
         if (ScoreValue.IsSet())
         {
-            JsonRootObject->SetStringField("score", FString::Printf(TEXT("%lld"), ScoreValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("score"), FString::Printf(TEXT("%lld"), ScoreValue.GetValue()));
         }
         return JsonRootObject;
     }

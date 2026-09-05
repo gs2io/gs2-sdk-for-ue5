@@ -103,15 +103,15 @@ namespace Gs2::Version::Request
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (ContextStackValue.IsSet())
         {
-            JsonRootObject->SetStringField("contextStack", ContextStackValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("contextStack"), ContextStackValue.GetValue());
         }
         if (NamespaceNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("namespaceName", NamespaceNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("namespaceName"), NamespaceNameValue.GetValue());
         }
         if (VersionNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("versionName", VersionNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("versionName"), VersionNameValue.GetValue());
         }
         return JsonRootObject;
     }

@@ -128,15 +128,15 @@ namespace Gs2::Stamina::Result
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (ItemValue != nullptr && ItemValue.IsValid())
         {
-            JsonRootObject->SetObjectField("item", ItemValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("item"), ItemValue->ToJson());
         }
         if (StaminaModelValue != nullptr && StaminaModelValue.IsValid())
         {
-            JsonRootObject->SetObjectField("staminaModel", StaminaModelValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("staminaModel"), StaminaModelValue->ToJson());
         }
         if (OverflowValueValue.IsSet())
         {
-            JsonRootObject->SetNumberField("overflowValue", OverflowValueValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("overflowValue"), OverflowValueValue.GetValue());
         }
         return JsonRootObject;
     }

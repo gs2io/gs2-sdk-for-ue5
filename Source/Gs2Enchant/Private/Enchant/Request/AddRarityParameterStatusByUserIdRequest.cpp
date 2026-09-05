@@ -222,35 +222,35 @@ namespace Gs2::Enchant::Request
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (ContextStackValue.IsSet())
         {
-            JsonRootObject->SetStringField("contextStack", ContextStackValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("contextStack"), ContextStackValue.GetValue());
         }
         if (NamespaceNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("namespaceName", NamespaceNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("namespaceName"), NamespaceNameValue.GetValue());
         }
         if (UserIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("userId", UserIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("userId"), UserIdValue.GetValue());
         }
         if (ParameterNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("parameterName", ParameterNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("parameterName"), ParameterNameValue.GetValue());
         }
         if (PropertyIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("propertyId", PropertyIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("propertyId"), PropertyIdValue.GetValue());
         }
         if (CountValue.IsSet())
         {
-            JsonRootObject->SetNumberField("count", CountValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("count"), CountValue.GetValue());
         }
         if (TimeOffsetTokenValue.IsSet())
         {
-            JsonRootObject->SetStringField("timeOffsetToken", TimeOffsetTokenValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("timeOffsetToken"), TimeOffsetTokenValue.GetValue());
         }
         if (DuplicationAvoiderValue.IsSet())
         {
-            JsonRootObject->SetStringField("duplicationAvoider", DuplicationAvoiderValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("duplicationAvoider"), DuplicationAvoiderValue.GetValue());
         }
         return JsonRootObject;
     }

@@ -254,31 +254,31 @@ namespace Gs2::Account::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (ConfigurationPathValue.IsSet())
         {
-            JsonRootObject->SetStringField("configurationPath", ConfigurationPathValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("configurationPath"), ConfigurationPathValue.GetValue());
         }
         if (ClientIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("clientId", ClientIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("clientId"), ClientIdValue.GetValue());
         }
         if (ClientSecretValue.IsSet())
         {
-            JsonRootObject->SetStringField("clientSecret", ClientSecretValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("clientSecret"), ClientSecretValue.GetValue());
         }
         if (AppleTeamIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("appleTeamId", AppleTeamIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("appleTeamId"), AppleTeamIdValue.GetValue());
         }
         if (AppleKeyIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("appleKeyId", AppleKeyIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("appleKeyId"), AppleKeyIdValue.GetValue());
         }
         if (ApplePrivateKeyPemValue.IsSet())
         {
-            JsonRootObject->SetStringField("applePrivateKeyPem", ApplePrivateKeyPemValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("applePrivateKeyPem"), ApplePrivateKeyPemValue.GetValue());
         }
         if (DoneEndpointUrlValue.IsSet())
         {
-            JsonRootObject->SetStringField("doneEndpointUrl", DoneEndpointUrlValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("doneEndpointUrl"), DoneEndpointUrlValue.GetValue());
         }
         if (AdditionalScopeValuesValue != nullptr && AdditionalScopeValuesValue.IsValid())
         {
@@ -287,7 +287,7 @@ namespace Gs2::Account::Model
             {
                 v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
             }
-            JsonRootObject->SetArrayField("additionalScopeValues", v);
+            JsonRootObject->SetArrayField(TEXT("additionalScopeValues"), v);
         }
         if (AdditionalReturnValuesValue != nullptr && AdditionalReturnValuesValue.IsValid())
         {
@@ -296,7 +296,7 @@ namespace Gs2::Account::Model
             {
                 v.Add(MakeShared<FJsonValueString>(JsonObjectValue));
             }
-            JsonRootObject->SetArrayField("additionalReturnValues", v);
+            JsonRootObject->SetArrayField(TEXT("additionalReturnValues"), v);
         }
         return JsonRootObject;
     }

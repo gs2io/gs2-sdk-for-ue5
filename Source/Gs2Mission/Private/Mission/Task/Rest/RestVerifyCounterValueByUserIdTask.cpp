@@ -101,27 +101,27 @@ namespace Gs2::Mission::Task::Rest
             const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
             if (this->Request->GetScopeType().IsSet())
             {
-                JsonRootObject->SetStringField("scopeType", this->Request->GetScopeType().GetValue());
+                JsonRootObject->SetStringField(TEXT("scopeType"), this->Request->GetScopeType().GetValue());
             }
             if (this->Request->GetResetType().IsSet())
             {
-                JsonRootObject->SetStringField("resetType", this->Request->GetResetType().GetValue());
+                JsonRootObject->SetStringField(TEXT("resetType"), this->Request->GetResetType().GetValue());
             }
             if (this->Request->GetConditionName().IsSet())
             {
-                JsonRootObject->SetStringField("conditionName", this->Request->GetConditionName().GetValue());
+                JsonRootObject->SetStringField(TEXT("conditionName"), this->Request->GetConditionName().GetValue());
             }
             if (this->Request->GetValue().IsSet())
             {
-                JsonRootObject->SetStringField("value", FString::Printf(TEXT("%lld"), this->Request->GetValue().GetValue()));
+                JsonRootObject->SetStringField(TEXT("value"), FString::Printf(TEXT("%lld"), this->Request->GetValue().GetValue()));
             }
             if (this->Request->GetMultiplyValueSpecifyingQuantity().IsSet())
             {
-                JsonRootObject->SetBoolField("multiplyValueSpecifyingQuantity", this->Request->GetMultiplyValueSpecifyingQuantity().GetValue());
+                JsonRootObject->SetBoolField(TEXT("multiplyValueSpecifyingQuantity"), this->Request->GetMultiplyValueSpecifyingQuantity().GetValue());
             }
             if (this->Request->GetContextStack().IsSet())
             {
-                JsonRootObject->SetStringField("contextStack", this->Request->GetContextStack().GetValue());
+                JsonRootObject->SetStringField(TEXT("contextStack"), this->Request->GetContextStack().GetValue());
             }
             FJsonSerializer::Serialize(JsonRootObject.ToSharedRef(), Writer);
             request->SetContentAsString(Body);

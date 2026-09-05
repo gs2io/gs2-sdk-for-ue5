@@ -232,35 +232,35 @@ namespace Gs2::Realtime::Request
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (ContextStackValue.IsSet())
         {
-            JsonRootObject->SetStringField("contextStack", ContextStackValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("contextStack"), ContextStackValue.GetValue());
         }
         if (NameValue.IsSet())
         {
-            JsonRootObject->SetStringField("name", NameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("name"), NameValue.GetValue());
         }
         if (DescriptionValue.IsSet())
         {
-            JsonRootObject->SetStringField("description", DescriptionValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("description"), DescriptionValue.GetValue());
         }
         if (TransactionSettingValue != nullptr && TransactionSettingValue.IsValid())
         {
-            JsonRootObject->SetObjectField("transactionSetting", TransactionSettingValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("transactionSetting"), TransactionSettingValue->ToJson());
         }
         if (ServerTypeValue.IsSet())
         {
-            JsonRootObject->SetStringField("serverType", ServerTypeValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("serverType"), ServerTypeValue.GetValue());
         }
         if (ServerSpecValue.IsSet())
         {
-            JsonRootObject->SetStringField("serverSpec", ServerSpecValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("serverSpec"), ServerSpecValue.GetValue());
         }
         if (CreateNotificationValue != nullptr && CreateNotificationValue.IsValid())
         {
-            JsonRootObject->SetObjectField("createNotification", CreateNotificationValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("createNotification"), CreateNotificationValue->ToJson());
         }
         if (LogSettingValue != nullptr && LogSettingValue.IsValid())
         {
-            JsonRootObject->SetObjectField("logSetting", LogSettingValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("logSetting"), LogSettingValue->ToJson());
         }
         return JsonRootObject;
     }

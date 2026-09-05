@@ -119,15 +119,15 @@ namespace Gs2::SerialKey::Result
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (ItemValue != nullptr && ItemValue.IsValid())
         {
-            JsonRootObject->SetObjectField("item", ItemValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("item"), ItemValue->ToJson());
         }
         if (CampaignModelValue != nullptr && CampaignModelValue.IsValid())
         {
-            JsonRootObject->SetObjectField("campaignModel", CampaignModelValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("campaignModel"), CampaignModelValue->ToJson());
         }
         if (NewContextStackValue.IsSet())
         {
-            JsonRootObject->SetStringField("newContextStack", NewContextStackValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("newContextStack"), NewContextStackValue.GetValue());
         }
         return JsonRootObject;
     }

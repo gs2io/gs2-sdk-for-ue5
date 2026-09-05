@@ -241,35 +241,35 @@ namespace Gs2::Ranking::Request
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (ContextStackValue.IsSet())
         {
-            JsonRootObject->SetStringField("contextStack", ContextStackValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("contextStack"), ContextStackValue.GetValue());
         }
         if (NamespaceNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("namespaceName", NamespaceNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("namespaceName"), NamespaceNameValue.GetValue());
         }
         if (CategoryNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("categoryName", CategoryNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("categoryName"), CategoryNameValue.GetValue());
         }
         if (AccessTokenValue.IsSet())
         {
-            JsonRootObject->SetStringField("xGs2AccessToken", AccessTokenValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("xGs2AccessToken"), AccessTokenValue.GetValue());
         }
         if (AdditionalScopeNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("additionalScopeName", AdditionalScopeNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("additionalScopeName"), AdditionalScopeNameValue.GetValue());
         }
         if (StartIndexValue.IsSet())
         {
-            JsonRootObject->SetStringField("startIndex", FString::Printf(TEXT("%lld"), StartIndexValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("startIndex"), FString::Printf(TEXT("%lld"), StartIndexValue.GetValue()));
         }
         if (PageTokenValue.IsSet())
         {
-            JsonRootObject->SetStringField("pageToken", PageTokenValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("pageToken"), PageTokenValue.GetValue());
         }
         if (LimitValue.IsSet())
         {
-            JsonRootObject->SetNumberField("limit", LimitValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("limit"), LimitValue.GetValue());
         }
         return JsonRootObject;
     }

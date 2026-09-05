@@ -207,31 +207,31 @@ namespace Gs2::Lottery::Request
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (ContextStackValue.IsSet())
         {
-            JsonRootObject->SetStringField("contextStack", ContextStackValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("contextStack"), ContextStackValue.GetValue());
         }
         if (NamespaceNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("namespaceName", NamespaceNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("namespaceName"), NamespaceNameValue.GetValue());
         }
         if (LotteryNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("lotteryName", LotteryNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("lotteryName"), LotteryNameValue.GetValue());
         }
         if (AccessTokenValue.IsSet())
         {
-            JsonRootObject->SetStringField("xGs2AccessToken", AccessTokenValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("xGs2AccessToken"), AccessTokenValue.GetValue());
         }
         if (RandomSeedValue.IsSet())
         {
-            JsonRootObject->SetStringField("randomSeed", FString::Printf(TEXT("%lld"), RandomSeedValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("randomSeed"), FString::Printf(TEXT("%lld"), RandomSeedValue.GetValue()));
         }
         if (CountValue.IsSet())
         {
-            JsonRootObject->SetNumberField("count", CountValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("count"), CountValue.GetValue());
         }
         if (DuplicationAvoiderValue.IsSet())
         {
-            JsonRootObject->SetStringField("duplicationAvoider", DuplicationAvoiderValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("duplicationAvoider"), DuplicationAvoiderValue.GetValue());
         }
         return JsonRootObject;
     }

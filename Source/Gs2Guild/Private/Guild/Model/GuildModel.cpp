@@ -418,27 +418,27 @@ namespace Gs2::Guild::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (GuildModelIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("guildModelId", GuildModelIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("guildModelId"), GuildModelIdValue.GetValue());
         }
         if (NameValue.IsSet())
         {
-            JsonRootObject->SetStringField("name", NameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("name"), NameValue.GetValue());
         }
         if (MetadataValue.IsSet())
         {
-            JsonRootObject->SetStringField("metadata", MetadataValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("metadata"), MetadataValue.GetValue());
         }
         if (DefaultMaximumMemberCountValue.IsSet())
         {
-            JsonRootObject->SetNumberField("defaultMaximumMemberCount", DefaultMaximumMemberCountValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("defaultMaximumMemberCount"), DefaultMaximumMemberCountValue.GetValue());
         }
         if (MaximumMemberCountValue.IsSet())
         {
-            JsonRootObject->SetNumberField("maximumMemberCount", MaximumMemberCountValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("maximumMemberCount"), MaximumMemberCountValue.GetValue());
         }
         if (InactivityPeriodDaysValue.IsSet())
         {
-            JsonRootObject->SetNumberField("inactivityPeriodDays", InactivityPeriodDaysValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("inactivityPeriodDays"), InactivityPeriodDaysValue.GetValue());
         }
         if (RolesValue != nullptr && RolesValue.IsValid())
         {
@@ -447,27 +447,27 @@ namespace Gs2::Guild::Model
             {
                 v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
             }
-            JsonRootObject->SetArrayField("roles", v);
+            JsonRootObject->SetArrayField(TEXT("roles"), v);
         }
         if (GuildMasterRoleValue.IsSet())
         {
-            JsonRootObject->SetStringField("guildMasterRole", GuildMasterRoleValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("guildMasterRole"), GuildMasterRoleValue.GetValue());
         }
         if (GuildMemberDefaultRoleValue.IsSet())
         {
-            JsonRootObject->SetStringField("guildMemberDefaultRole", GuildMemberDefaultRoleValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("guildMemberDefaultRole"), GuildMemberDefaultRoleValue.GetValue());
         }
         if (RejoinCoolTimeMinutesValue.IsSet())
         {
-            JsonRootObject->SetNumberField("rejoinCoolTimeMinutes", RejoinCoolTimeMinutesValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("rejoinCoolTimeMinutes"), RejoinCoolTimeMinutesValue.GetValue());
         }
         if (MaxConcurrentJoinGuildsValue.IsSet())
         {
-            JsonRootObject->SetNumberField("maxConcurrentJoinGuilds", MaxConcurrentJoinGuildsValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("maxConcurrentJoinGuilds"), MaxConcurrentJoinGuildsValue.GetValue());
         }
         if (MaxConcurrentGuildMasterCountValue.IsSet())
         {
-            JsonRootObject->SetNumberField("maxConcurrentGuildMasterCount", MaxConcurrentGuildMasterCountValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("maxConcurrentGuildMasterCount"), MaxConcurrentGuildMasterCountValue.GetValue());
         }
         return JsonRootObject;
     }

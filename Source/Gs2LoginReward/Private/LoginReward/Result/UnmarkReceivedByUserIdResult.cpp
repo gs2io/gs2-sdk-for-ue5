@@ -95,11 +95,11 @@ namespace Gs2::LoginReward::Result
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (ItemValue != nullptr && ItemValue.IsValid())
         {
-            JsonRootObject->SetObjectField("item", ItemValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("item"), ItemValue->ToJson());
         }
         if (BonusModelValue != nullptr && BonusModelValue.IsValid())
         {
-            JsonRootObject->SetObjectField("bonusModel", BonusModelValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("bonusModel"), BonusModelValue->ToJson());
         }
         return JsonRootObject;
     }

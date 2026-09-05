@@ -184,27 +184,27 @@ namespace Gs2::Script::Request
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (ContextStackValue.IsSet())
         {
-            JsonRootObject->SetStringField("contextStack", ContextStackValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("contextStack"), ContextStackValue.GetValue());
         }
         if (NamespaceNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("namespaceName", NamespaceNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("namespaceName"), NamespaceNameValue.GetValue());
         }
         if (NameValue.IsSet())
         {
-            JsonRootObject->SetStringField("name", NameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("name"), NameValue.GetValue());
         }
         if (DescriptionValue.IsSet())
         {
-            JsonRootObject->SetStringField("description", DescriptionValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("description"), DescriptionValue.GetValue());
         }
         if (ScriptValue.IsSet())
         {
-            JsonRootObject->SetStringField("script", ScriptValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("script"), ScriptValue.GetValue());
         }
         if (DisableStringNumberToNumberValue.IsSet())
         {
-            JsonRootObject->SetBoolField("disableStringNumberToNumber", DisableStringNumberToNumberValue.GetValue());
+            JsonRootObject->SetBoolField(TEXT("disableStringNumberToNumber"), DisableStringNumberToNumberValue.GetValue());
         }
         return JsonRootObject;
     }

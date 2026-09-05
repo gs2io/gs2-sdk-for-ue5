@@ -234,35 +234,35 @@ namespace Gs2::MegaField::Request
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (ContextStackValue.IsSet())
         {
-            JsonRootObject->SetStringField("contextStack", ContextStackValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("contextStack"), ContextStackValue.GetValue());
         }
         if (NamespaceNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("namespaceName", NamespaceNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("namespaceName"), NamespaceNameValue.GetValue());
         }
         if (AreaModelNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("areaModelName", AreaModelNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("areaModelName"), AreaModelNameValue.GetValue());
         }
         if (LayerModelNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("layerModelName", LayerModelNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("layerModelName"), LayerModelNameValue.GetValue());
         }
         if (PointValue != nullptr && PointValue.IsValid())
         {
-            JsonRootObject->SetObjectField("point", PointValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("point"), PointValue->ToJson());
         }
         if (RValue.IsSet())
         {
-            JsonRootObject->SetNumberField("r", RValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("r"), RValue.GetValue());
         }
         if (LimitValue.IsSet())
         {
-            JsonRootObject->SetNumberField("limit", LimitValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("limit"), LimitValue.GetValue());
         }
         if (DuplicationAvoiderValue.IsSet())
         {
-            JsonRootObject->SetStringField("duplicationAvoider", DuplicationAvoiderValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("duplicationAvoider"), DuplicationAvoiderValue.GetValue());
         }
         return JsonRootObject;
     }

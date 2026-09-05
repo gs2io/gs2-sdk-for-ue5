@@ -86,51 +86,51 @@ namespace Gs2::Chat::Task::Rest
             const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
             if (this->Request->GetDescription().IsSet())
             {
-                JsonRootObject->SetStringField("description", this->Request->GetDescription().GetValue());
+                JsonRootObject->SetStringField(TEXT("description"), this->Request->GetDescription().GetValue());
             }
             if (this->Request->GetTransactionSetting() != nullptr && this->Request->GetTransactionSetting().IsValid())
             {
-                JsonRootObject->SetObjectField("transactionSetting", this->Request->GetTransactionSetting()->ToJson());
+                JsonRootObject->SetObjectField(TEXT("transactionSetting"), this->Request->GetTransactionSetting()->ToJson());
             }
             if (this->Request->GetAllowCreateRoom().IsSet())
             {
-                JsonRootObject->SetBoolField("allowCreateRoom", this->Request->GetAllowCreateRoom().GetValue());
+                JsonRootObject->SetBoolField(TEXT("allowCreateRoom"), this->Request->GetAllowCreateRoom().GetValue());
             }
             if (this->Request->GetMessageLifeTimeDays().IsSet())
             {
-                JsonRootObject->SetNumberField("messageLifeTimeDays", this->Request->GetMessageLifeTimeDays().GetValue());
+                JsonRootObject->SetNumberField(TEXT("messageLifeTimeDays"), this->Request->GetMessageLifeTimeDays().GetValue());
             }
             if (this->Request->GetPostMessageScript() != nullptr && this->Request->GetPostMessageScript().IsValid())
             {
-                JsonRootObject->SetObjectField("postMessageScript", this->Request->GetPostMessageScript()->ToJson());
+                JsonRootObject->SetObjectField(TEXT("postMessageScript"), this->Request->GetPostMessageScript()->ToJson());
             }
             if (this->Request->GetCreateRoomScript() != nullptr && this->Request->GetCreateRoomScript().IsValid())
             {
-                JsonRootObject->SetObjectField("createRoomScript", this->Request->GetCreateRoomScript()->ToJson());
+                JsonRootObject->SetObjectField(TEXT("createRoomScript"), this->Request->GetCreateRoomScript()->ToJson());
             }
             if (this->Request->GetDeleteRoomScript() != nullptr && this->Request->GetDeleteRoomScript().IsValid())
             {
-                JsonRootObject->SetObjectField("deleteRoomScript", this->Request->GetDeleteRoomScript()->ToJson());
+                JsonRootObject->SetObjectField(TEXT("deleteRoomScript"), this->Request->GetDeleteRoomScript()->ToJson());
             }
             if (this->Request->GetSubscribeRoomScript() != nullptr && this->Request->GetSubscribeRoomScript().IsValid())
             {
-                JsonRootObject->SetObjectField("subscribeRoomScript", this->Request->GetSubscribeRoomScript()->ToJson());
+                JsonRootObject->SetObjectField(TEXT("subscribeRoomScript"), this->Request->GetSubscribeRoomScript()->ToJson());
             }
             if (this->Request->GetUnsubscribeRoomScript() != nullptr && this->Request->GetUnsubscribeRoomScript().IsValid())
             {
-                JsonRootObject->SetObjectField("unsubscribeRoomScript", this->Request->GetUnsubscribeRoomScript()->ToJson());
+                JsonRootObject->SetObjectField(TEXT("unsubscribeRoomScript"), this->Request->GetUnsubscribeRoomScript()->ToJson());
             }
             if (this->Request->GetPostNotification() != nullptr && this->Request->GetPostNotification().IsValid())
             {
-                JsonRootObject->SetObjectField("postNotification", this->Request->GetPostNotification()->ToJson());
+                JsonRootObject->SetObjectField(TEXT("postNotification"), this->Request->GetPostNotification()->ToJson());
             }
             if (this->Request->GetLogSetting() != nullptr && this->Request->GetLogSetting().IsValid())
             {
-                JsonRootObject->SetObjectField("logSetting", this->Request->GetLogSetting()->ToJson());
+                JsonRootObject->SetObjectField(TEXT("logSetting"), this->Request->GetLogSetting()->ToJson());
             }
             if (this->Request->GetContextStack().IsSet())
             {
-                JsonRootObject->SetStringField("contextStack", this->Request->GetContextStack().GetValue());
+                JsonRootObject->SetStringField(TEXT("contextStack"), this->Request->GetContextStack().GetValue());
             }
             FJsonSerializer::Serialize(JsonRootObject.ToSharedRef(), Writer);
             request->SetContentAsString(Body);

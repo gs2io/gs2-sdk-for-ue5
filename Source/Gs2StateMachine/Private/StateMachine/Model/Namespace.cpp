@@ -404,55 +404,55 @@ namespace Gs2::StateMachine::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (NamespaceIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("namespaceId", NamespaceIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("namespaceId"), NamespaceIdValue.GetValue());
         }
         if (NameValue.IsSet())
         {
-            JsonRootObject->SetStringField("name", NameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("name"), NameValue.GetValue());
         }
         if (DescriptionValue.IsSet())
         {
-            JsonRootObject->SetStringField("description", DescriptionValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("description"), DescriptionValue.GetValue());
         }
         if (SupportSpeculativeExecutionValue.IsSet())
         {
-            JsonRootObject->SetStringField("supportSpeculativeExecution", SupportSpeculativeExecutionValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("supportSpeculativeExecution"), SupportSpeculativeExecutionValue.GetValue());
         }
         if (TransactionSettingValue != nullptr && TransactionSettingValue.IsValid())
         {
-            JsonRootObject->SetObjectField("transactionSetting", TransactionSettingValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("transactionSetting"), TransactionSettingValue->ToJson());
         }
         if (StartScriptValue != nullptr && StartScriptValue.IsValid())
         {
-            JsonRootObject->SetObjectField("startScript", StartScriptValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("startScript"), StartScriptValue->ToJson());
         }
         if (PassScriptValue != nullptr && PassScriptValue.IsValid())
         {
-            JsonRootObject->SetObjectField("passScript", PassScriptValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("passScript"), PassScriptValue->ToJson());
         }
         if (ErrorScriptValue != nullptr && ErrorScriptValue.IsValid())
         {
-            JsonRootObject->SetObjectField("errorScript", ErrorScriptValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("errorScript"), ErrorScriptValue->ToJson());
         }
         if (LowestStateMachineVersionValue.IsSet())
         {
-            JsonRootObject->SetStringField("lowestStateMachineVersion", FString::Printf(TEXT("%lld"), LowestStateMachineVersionValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("lowestStateMachineVersion"), FString::Printf(TEXT("%lld"), LowestStateMachineVersionValue.GetValue()));
         }
         if (LogSettingValue != nullptr && LogSettingValue.IsValid())
         {
-            JsonRootObject->SetObjectField("logSetting", LogSettingValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("logSetting"), LogSettingValue->ToJson());
         }
         if (CreatedAtValue.IsSet())
         {
-            JsonRootObject->SetStringField("createdAt", FString::Printf(TEXT("%lld"), CreatedAtValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("createdAt"), FString::Printf(TEXT("%lld"), CreatedAtValue.GetValue()));
         }
         if (UpdatedAtValue.IsSet())
         {
-            JsonRootObject->SetStringField("updatedAt", FString::Printf(TEXT("%lld"), UpdatedAtValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("updatedAt"), FString::Printf(TEXT("%lld"), UpdatedAtValue.GetValue()));
         }
         if (RevisionValue.IsSet())
         {
-            JsonRootObject->SetStringField("revision", FString::Printf(TEXT("%lld"), RevisionValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("revision"), FString::Printf(TEXT("%lld"), RevisionValue.GetValue()));
         }
         return JsonRootObject;
     }

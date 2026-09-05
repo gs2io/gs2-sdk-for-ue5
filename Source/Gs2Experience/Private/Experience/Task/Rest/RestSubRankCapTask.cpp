@@ -96,11 +96,11 @@ namespace Gs2::Experience::Task::Rest
             const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
             if (this->Request->GetRankCapValue().IsSet())
             {
-                JsonRootObject->SetStringField("rankCapValue", FString::Printf(TEXT("%lld"), this->Request->GetRankCapValue().GetValue()));
+                JsonRootObject->SetStringField(TEXT("rankCapValue"), FString::Printf(TEXT("%lld"), this->Request->GetRankCapValue().GetValue()));
             }
             if (this->Request->GetContextStack().IsSet())
             {
-                JsonRootObject->SetStringField("contextStack", this->Request->GetContextStack().GetValue());
+                JsonRootObject->SetStringField(TEXT("contextStack"), this->Request->GetContextStack().GetValue());
             }
             FJsonSerializer::Serialize(JsonRootObject.ToSharedRef(), Writer);
             request->SetContentAsString(Body);

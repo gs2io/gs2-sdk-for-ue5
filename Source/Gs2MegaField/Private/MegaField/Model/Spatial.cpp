@@ -339,39 +339,39 @@ namespace Gs2::MegaField::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (SpatialIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("spatialId", SpatialIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("spatialId"), SpatialIdValue.GetValue());
         }
         if (UserIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("userId", UserIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("userId"), UserIdValue.GetValue());
         }
         if (AreaModelNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("areaModelName", AreaModelNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("areaModelName"), AreaModelNameValue.GetValue());
         }
         if (LayerModelNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("layerModelName", LayerModelNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("layerModelName"), LayerModelNameValue.GetValue());
         }
         if (PositionValue != nullptr && PositionValue.IsValid())
         {
-            JsonRootObject->SetObjectField("position", PositionValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("position"), PositionValue->ToJson());
         }
         if (VectorValue != nullptr && VectorValue.IsValid())
         {
-            JsonRootObject->SetObjectField("vector", VectorValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("vector"), VectorValue->ToJson());
         }
         if (RValue.IsSet())
         {
-            JsonRootObject->SetNumberField("r", RValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("r"), RValue.GetValue());
         }
         if (LastSyncAtValue.IsSet())
         {
-            JsonRootObject->SetStringField("lastSyncAt", FString::Printf(TEXT("%lld"), LastSyncAtValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("lastSyncAt"), FString::Printf(TEXT("%lld"), LastSyncAtValue.GetValue()));
         }
         if (CreatedAtValue.IsSet())
         {
-            JsonRootObject->SetStringField("createdAt", FString::Printf(TEXT("%lld"), CreatedAtValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("createdAt"), FString::Printf(TEXT("%lld"), CreatedAtValue.GetValue()));
         }
         return JsonRootObject;
     }

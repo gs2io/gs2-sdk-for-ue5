@@ -176,7 +176,7 @@ namespace Gs2::Identifier::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (UserIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("userId", UserIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("userId"), UserIdValue.GetValue());
         }
         if (SecurityPolicyIdsValue != nullptr && SecurityPolicyIdsValue.IsValid())
         {
@@ -185,15 +185,15 @@ namespace Gs2::Identifier::Model
             {
                 v.Add(MakeShared<FJsonValueString>(JsonObjectValue));
             }
-            JsonRootObject->SetArrayField("securityPolicyIds", v);
+            JsonRootObject->SetArrayField(TEXT("securityPolicyIds"), v);
         }
         if (AttachedAtValue.IsSet())
         {
-            JsonRootObject->SetStringField("attachedAt", FString::Printf(TEXT("%lld"), AttachedAtValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("attachedAt"), FString::Printf(TEXT("%lld"), AttachedAtValue.GetValue()));
         }
         if (RevisionValue.IsSet())
         {
-            JsonRootObject->SetStringField("revision", FString::Printf(TEXT("%lld"), RevisionValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("revision"), FString::Printf(TEXT("%lld"), RevisionValue.GetValue()));
         }
         return JsonRootObject;
     }

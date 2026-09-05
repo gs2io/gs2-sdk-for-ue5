@@ -96,11 +96,11 @@ namespace Gs2::Exchange::Task::Rest
             const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
             if (this->Request->GetLockTransactionId().IsSet())
             {
-                JsonRootObject->SetStringField("lockTransactionId", this->Request->GetLockTransactionId().GetValue());
+                JsonRootObject->SetStringField(TEXT("lockTransactionId"), this->Request->GetLockTransactionId().GetValue());
             }
             if (this->Request->GetContextStack().IsSet())
             {
-                JsonRootObject->SetStringField("contextStack", this->Request->GetContextStack().GetValue());
+                JsonRootObject->SetStringField(TEXT("contextStack"), this->Request->GetContextStack().GetValue());
             }
             FJsonSerializer::Serialize(JsonRootObject.ToSharedRef(), Writer);
             request->SetContentAsString(Body);

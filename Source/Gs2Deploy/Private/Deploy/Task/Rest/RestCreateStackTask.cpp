@@ -80,27 +80,27 @@ namespace Gs2::Deploy::Task::Rest
             const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
             if (this->Request->GetName().IsSet())
             {
-                JsonRootObject->SetStringField("name", this->Request->GetName().GetValue());
+                JsonRootObject->SetStringField(TEXT("name"), this->Request->GetName().GetValue());
             }
             if (this->Request->GetDescription().IsSet())
             {
-                JsonRootObject->SetStringField("description", this->Request->GetDescription().GetValue());
+                JsonRootObject->SetStringField(TEXT("description"), this->Request->GetDescription().GetValue());
             }
             if (this->Request->GetMode().IsSet())
             {
-                JsonRootObject->SetStringField("mode", this->Request->GetMode().GetValue());
+                JsonRootObject->SetStringField(TEXT("mode"), this->Request->GetMode().GetValue());
             }
             if (this->Request->GetTemplate().IsSet())
             {
-                JsonRootObject->SetStringField("template", this->Request->GetTemplate().GetValue());
+                JsonRootObject->SetStringField(TEXT("template"), this->Request->GetTemplate().GetValue());
             }
             if (this->Request->GetUploadToken().IsSet())
             {
-                JsonRootObject->SetStringField("uploadToken", this->Request->GetUploadToken().GetValue());
+                JsonRootObject->SetStringField(TEXT("uploadToken"), this->Request->GetUploadToken().GetValue());
             }
             if (this->Request->GetContextStack().IsSet())
             {
-                JsonRootObject->SetStringField("contextStack", this->Request->GetContextStack().GetValue());
+                JsonRootObject->SetStringField(TEXT("contextStack"), this->Request->GetContextStack().GetValue());
             }
             FJsonSerializer::Serialize(JsonRootObject.ToSharedRef(), Writer);
             request->SetContentAsString(Body);

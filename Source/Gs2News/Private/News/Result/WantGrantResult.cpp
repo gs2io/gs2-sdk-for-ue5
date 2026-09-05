@@ -125,15 +125,15 @@ namespace Gs2::News::Result
             {
                 v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
             }
-            JsonRootObject->SetArrayField("items", v);
+            JsonRootObject->SetArrayField(TEXT("items"), v);
         }
         if (BrowserUrlValue.IsSet())
         {
-            JsonRootObject->SetStringField("browserUrl", BrowserUrlValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("browserUrl"), BrowserUrlValue.GetValue());
         }
         if (ZipUrlValue.IsSet())
         {
-            JsonRootObject->SetStringField("zipUrl", ZipUrlValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("zipUrl"), ZipUrlValue.GetValue());
         }
         return JsonRootObject;
     }

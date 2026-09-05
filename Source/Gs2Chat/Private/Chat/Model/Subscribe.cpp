@@ -255,15 +255,15 @@ namespace Gs2::Chat::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (SubscribeIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("subscribeId", SubscribeIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("subscribeId"), SubscribeIdValue.GetValue());
         }
         if (UserIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("userId", UserIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("userId"), UserIdValue.GetValue());
         }
         if (RoomNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("roomName", RoomNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("roomName"), RoomNameValue.GetValue());
         }
         if (NotificationTypesValue != nullptr && NotificationTypesValue.IsValid())
         {
@@ -272,15 +272,15 @@ namespace Gs2::Chat::Model
             {
                 v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
             }
-            JsonRootObject->SetArrayField("notificationTypes", v);
+            JsonRootObject->SetArrayField(TEXT("notificationTypes"), v);
         }
         if (CreatedAtValue.IsSet())
         {
-            JsonRootObject->SetStringField("createdAt", FString::Printf(TEXT("%lld"), CreatedAtValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("createdAt"), FString::Printf(TEXT("%lld"), CreatedAtValue.GetValue()));
         }
         if (RevisionValue.IsSet())
         {
-            JsonRootObject->SetStringField("revision", FString::Printf(TEXT("%lld"), RevisionValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("revision"), FString::Printf(TEXT("%lld"), RevisionValue.GetValue()));
         }
         return JsonRootObject;
     }

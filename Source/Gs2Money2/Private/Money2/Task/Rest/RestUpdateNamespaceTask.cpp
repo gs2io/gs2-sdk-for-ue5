@@ -86,59 +86,59 @@ namespace Gs2::Money2::Task::Rest
             const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
             if (this->Request->GetCurrencyUsagePriority().IsSet())
             {
-                JsonRootObject->SetStringField("currencyUsagePriority", this->Request->GetCurrencyUsagePriority().GetValue());
+                JsonRootObject->SetStringField(TEXT("currencyUsagePriority"), this->Request->GetCurrencyUsagePriority().GetValue());
             }
             if (this->Request->GetDescription().IsSet())
             {
-                JsonRootObject->SetStringField("description", this->Request->GetDescription().GetValue());
+                JsonRootObject->SetStringField(TEXT("description"), this->Request->GetDescription().GetValue());
             }
             if (this->Request->GetTransactionSetting() != nullptr && this->Request->GetTransactionSetting().IsValid())
             {
-                JsonRootObject->SetObjectField("transactionSetting", this->Request->GetTransactionSetting()->ToJson());
+                JsonRootObject->SetObjectField(TEXT("transactionSetting"), this->Request->GetTransactionSetting()->ToJson());
             }
             if (this->Request->GetPlatformSetting() != nullptr && this->Request->GetPlatformSetting().IsValid())
             {
-                JsonRootObject->SetObjectField("platformSetting", this->Request->GetPlatformSetting()->ToJson());
+                JsonRootObject->SetObjectField(TEXT("platformSetting"), this->Request->GetPlatformSetting()->ToJson());
             }
             if (this->Request->GetDepositBalanceScript() != nullptr && this->Request->GetDepositBalanceScript().IsValid())
             {
-                JsonRootObject->SetObjectField("depositBalanceScript", this->Request->GetDepositBalanceScript()->ToJson());
+                JsonRootObject->SetObjectField(TEXT("depositBalanceScript"), this->Request->GetDepositBalanceScript()->ToJson());
             }
             if (this->Request->GetWithdrawBalanceScript() != nullptr && this->Request->GetWithdrawBalanceScript().IsValid())
             {
-                JsonRootObject->SetObjectField("withdrawBalanceScript", this->Request->GetWithdrawBalanceScript()->ToJson());
+                JsonRootObject->SetObjectField(TEXT("withdrawBalanceScript"), this->Request->GetWithdrawBalanceScript()->ToJson());
             }
             if (this->Request->GetVerifyReceiptScript() != nullptr && this->Request->GetVerifyReceiptScript().IsValid())
             {
-                JsonRootObject->SetObjectField("verifyReceiptScript", this->Request->GetVerifyReceiptScript()->ToJson());
+                JsonRootObject->SetObjectField(TEXT("verifyReceiptScript"), this->Request->GetVerifyReceiptScript()->ToJson());
             }
             if (this->Request->GetSubscribeScript().IsSet())
             {
-                JsonRootObject->SetStringField("subscribeScript", this->Request->GetSubscribeScript().GetValue());
+                JsonRootObject->SetStringField(TEXT("subscribeScript"), this->Request->GetSubscribeScript().GetValue());
             }
             if (this->Request->GetRenewScript().IsSet())
             {
-                JsonRootObject->SetStringField("renewScript", this->Request->GetRenewScript().GetValue());
+                JsonRootObject->SetStringField(TEXT("renewScript"), this->Request->GetRenewScript().GetValue());
             }
             if (this->Request->GetUnsubscribeScript().IsSet())
             {
-                JsonRootObject->SetStringField("unsubscribeScript", this->Request->GetUnsubscribeScript().GetValue());
+                JsonRootObject->SetStringField(TEXT("unsubscribeScript"), this->Request->GetUnsubscribeScript().GetValue());
             }
             if (this->Request->GetTakeOverScript() != nullptr && this->Request->GetTakeOverScript().IsValid())
             {
-                JsonRootObject->SetObjectField("takeOverScript", this->Request->GetTakeOverScript()->ToJson());
+                JsonRootObject->SetObjectField(TEXT("takeOverScript"), this->Request->GetTakeOverScript()->ToJson());
             }
             if (this->Request->GetChangeSubscriptionStatusNotification() != nullptr && this->Request->GetChangeSubscriptionStatusNotification().IsValid())
             {
-                JsonRootObject->SetObjectField("changeSubscriptionStatusNotification", this->Request->GetChangeSubscriptionStatusNotification()->ToJson());
+                JsonRootObject->SetObjectField(TEXT("changeSubscriptionStatusNotification"), this->Request->GetChangeSubscriptionStatusNotification()->ToJson());
             }
             if (this->Request->GetLogSetting() != nullptr && this->Request->GetLogSetting().IsValid())
             {
-                JsonRootObject->SetObjectField("logSetting", this->Request->GetLogSetting()->ToJson());
+                JsonRootObject->SetObjectField(TEXT("logSetting"), this->Request->GetLogSetting()->ToJson());
             }
             if (this->Request->GetContextStack().IsSet())
             {
-                JsonRootObject->SetStringField("contextStack", this->Request->GetContextStack().GetValue());
+                JsonRootObject->SetStringField(TEXT("contextStack"), this->Request->GetContextStack().GetValue());
             }
             FJsonSerializer::Serialize(JsonRootObject.ToSharedRef(), Writer);
             request->SetContentAsString(Body);

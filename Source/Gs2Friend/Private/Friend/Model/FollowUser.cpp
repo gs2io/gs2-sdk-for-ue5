@@ -110,15 +110,15 @@ namespace Gs2::Friend::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (UserIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("userId", UserIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("userId"), UserIdValue.GetValue());
         }
         if (PublicProfileValue.IsSet())
         {
-            JsonRootObject->SetStringField("publicProfile", PublicProfileValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("publicProfile"), PublicProfileValue.GetValue());
         }
         if (FollowerProfileValue.IsSet())
         {
-            JsonRootObject->SetStringField("followerProfile", FollowerProfileValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("followerProfile"), FollowerProfileValue.GetValue());
         }
         return JsonRootObject;
     }

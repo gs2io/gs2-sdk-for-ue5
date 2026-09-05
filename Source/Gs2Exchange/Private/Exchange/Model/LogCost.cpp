@@ -125,7 +125,7 @@ namespace Gs2::Exchange::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (BaseValue.IsSet())
         {
-            JsonRootObject->SetNumberField("base", BaseValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("base"), BaseValue.GetValue());
         }
         if (AddsValue != nullptr && AddsValue.IsValid())
         {
@@ -134,7 +134,7 @@ namespace Gs2::Exchange::Model
             {
                 v.Add(MakeShared<FJsonValueNumber>(JsonObjectValue));
             }
-            JsonRootObject->SetArrayField("adds", v);
+            JsonRootObject->SetArrayField(TEXT("adds"), v);
         }
         if (SubsValue != nullptr && SubsValue.IsValid())
         {
@@ -143,7 +143,7 @@ namespace Gs2::Exchange::Model
             {
                 v.Add(MakeShared<FJsonValueNumber>(JsonObjectValue));
             }
-            JsonRootObject->SetArrayField("subs", v);
+            JsonRootObject->SetArrayField(TEXT("subs"), v);
         }
         return JsonRootObject;
     }

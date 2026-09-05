@@ -142,19 +142,19 @@ namespace Gs2::Exchange::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (ActionValue.IsSet())
         {
-            JsonRootObject->SetStringField("action", ActionValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("action"), ActionValue.GetValue());
         }
         if (VerifyRequestValue.IsSet())
         {
-            JsonRootObject->SetStringField("verifyRequest", VerifyRequestValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("verifyRequest"), VerifyRequestValue.GetValue());
         }
         if (StatusCodeValue.IsSet())
         {
-            JsonRootObject->SetNumberField("statusCode", StatusCodeValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("statusCode"), StatusCodeValue.GetValue());
         }
         if (VerifyResultValue.IsSet())
         {
-            JsonRootObject->SetStringField("verifyResult", VerifyResultValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("verifyResult"), VerifyResultValue.GetValue());
         }
         return JsonRootObject;
     }

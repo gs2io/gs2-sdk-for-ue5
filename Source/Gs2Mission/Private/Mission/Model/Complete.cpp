@@ -345,15 +345,15 @@ namespace Gs2::Mission::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (CompleteIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("completeId", CompleteIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("completeId"), CompleteIdValue.GetValue());
         }
         if (UserIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("userId", UserIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("userId"), UserIdValue.GetValue());
         }
         if (MissionGroupNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("missionGroupName", MissionGroupNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("missionGroupName"), MissionGroupNameValue.GetValue());
         }
         if (CompletedMissionTaskNamesValue != nullptr && CompletedMissionTaskNamesValue.IsValid())
         {
@@ -362,7 +362,7 @@ namespace Gs2::Mission::Model
             {
                 v.Add(MakeShared<FJsonValueString>(JsonObjectValue));
             }
-            JsonRootObject->SetArrayField("completedMissionTaskNames", v);
+            JsonRootObject->SetArrayField(TEXT("completedMissionTaskNames"), v);
         }
         if (ReceivedMissionTaskNamesValue != nullptr && ReceivedMissionTaskNamesValue.IsValid())
         {
@@ -371,23 +371,23 @@ namespace Gs2::Mission::Model
             {
                 v.Add(MakeShared<FJsonValueString>(JsonObjectValue));
             }
-            JsonRootObject->SetArrayField("receivedMissionTaskNames", v);
+            JsonRootObject->SetArrayField(TEXT("receivedMissionTaskNames"), v);
         }
         if (NextResetAtValue.IsSet())
         {
-            JsonRootObject->SetStringField("nextResetAt", FString::Printf(TEXT("%lld"), NextResetAtValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("nextResetAt"), FString::Printf(TEXT("%lld"), NextResetAtValue.GetValue()));
         }
         if (CreatedAtValue.IsSet())
         {
-            JsonRootObject->SetStringField("createdAt", FString::Printf(TEXT("%lld"), CreatedAtValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("createdAt"), FString::Printf(TEXT("%lld"), CreatedAtValue.GetValue()));
         }
         if (UpdatedAtValue.IsSet())
         {
-            JsonRootObject->SetStringField("updatedAt", FString::Printf(TEXT("%lld"), UpdatedAtValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("updatedAt"), FString::Printf(TEXT("%lld"), UpdatedAtValue.GetValue()));
         }
         if (RevisionValue.IsSet())
         {
-            JsonRootObject->SetStringField("revision", FString::Printf(TEXT("%lld"), RevisionValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("revision"), FString::Printf(TEXT("%lld"), RevisionValue.GetValue()));
         }
         return JsonRootObject;
     }

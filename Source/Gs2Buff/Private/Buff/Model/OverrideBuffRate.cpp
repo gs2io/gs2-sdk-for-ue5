@@ -96,11 +96,11 @@ namespace Gs2::Buff::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (NameValue.IsSet())
         {
-            JsonRootObject->SetStringField("name", NameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("name"), NameValue.GetValue());
         }
         if (RateValue.IsSet())
         {
-            JsonRootObject->SetNumberField("rate", RateValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("rate"), RateValue.GetValue());
         }
         return JsonRootObject;
     }

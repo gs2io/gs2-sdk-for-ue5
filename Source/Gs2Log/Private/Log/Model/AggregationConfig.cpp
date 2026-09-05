@@ -87,11 +87,11 @@ namespace Gs2::Log::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (TypeValue.IsSet())
         {
-            JsonRootObject->SetStringField("type", TypeValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("type"), TypeValue.GetValue());
         }
         if (FieldValue.IsSet())
         {
-            JsonRootObject->SetStringField("field", FieldValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("field"), FieldValue.GetValue());
         }
         return JsonRootObject;
     }

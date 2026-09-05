@@ -168,19 +168,19 @@ namespace Gs2::Money2::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (UserIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("userId", UserIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("userId"), UserIdValue.GetValue());
         }
         if (ContentNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("contentName", ContentNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("contentName"), ContentNameValue.GetValue());
         }
         if (StatusValue.IsSet())
         {
-            JsonRootObject->SetStringField("status", StatusValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("status"), StatusValue.GetValue());
         }
         if (ExpiresAtValue.IsSet())
         {
-            JsonRootObject->SetStringField("expiresAt", FString::Printf(TEXT("%lld"), ExpiresAtValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("expiresAt"), FString::Printf(TEXT("%lld"), ExpiresAtValue.GetValue()));
         }
         if (DetailValue != nullptr && DetailValue.IsValid())
         {
@@ -189,7 +189,7 @@ namespace Gs2::Money2::Model
             {
                 v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
             }
-            JsonRootObject->SetArrayField("detail", v);
+            JsonRootObject->SetArrayField(TEXT("detail"), v);
         }
         return JsonRootObject;
     }

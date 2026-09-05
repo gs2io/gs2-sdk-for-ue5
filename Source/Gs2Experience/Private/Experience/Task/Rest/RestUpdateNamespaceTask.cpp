@@ -86,39 +86,39 @@ namespace Gs2::Experience::Task::Rest
             const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
             if (this->Request->GetDescription().IsSet())
             {
-                JsonRootObject->SetStringField("description", this->Request->GetDescription().GetValue());
+                JsonRootObject->SetStringField(TEXT("description"), this->Request->GetDescription().GetValue());
             }
             if (this->Request->GetTransactionSetting() != nullptr && this->Request->GetTransactionSetting().IsValid())
             {
-                JsonRootObject->SetObjectField("transactionSetting", this->Request->GetTransactionSetting()->ToJson());
+                JsonRootObject->SetObjectField(TEXT("transactionSetting"), this->Request->GetTransactionSetting()->ToJson());
             }
             if (this->Request->GetRankCapScriptId().IsSet())
             {
-                JsonRootObject->SetStringField("rankCapScriptId", this->Request->GetRankCapScriptId().GetValue());
+                JsonRootObject->SetStringField(TEXT("rankCapScriptId"), this->Request->GetRankCapScriptId().GetValue());
             }
             if (this->Request->GetChangeExperienceScript() != nullptr && this->Request->GetChangeExperienceScript().IsValid())
             {
-                JsonRootObject->SetObjectField("changeExperienceScript", this->Request->GetChangeExperienceScript()->ToJson());
+                JsonRootObject->SetObjectField(TEXT("changeExperienceScript"), this->Request->GetChangeExperienceScript()->ToJson());
             }
             if (this->Request->GetChangeRankScript() != nullptr && this->Request->GetChangeRankScript().IsValid())
             {
-                JsonRootObject->SetObjectField("changeRankScript", this->Request->GetChangeRankScript()->ToJson());
+                JsonRootObject->SetObjectField(TEXT("changeRankScript"), this->Request->GetChangeRankScript()->ToJson());
             }
             if (this->Request->GetChangeRankCapScript() != nullptr && this->Request->GetChangeRankCapScript().IsValid())
             {
-                JsonRootObject->SetObjectField("changeRankCapScript", this->Request->GetChangeRankCapScript()->ToJson());
+                JsonRootObject->SetObjectField(TEXT("changeRankCapScript"), this->Request->GetChangeRankCapScript()->ToJson());
             }
             if (this->Request->GetOverflowExperienceScript().IsSet())
             {
-                JsonRootObject->SetStringField("overflowExperienceScript", this->Request->GetOverflowExperienceScript().GetValue());
+                JsonRootObject->SetStringField(TEXT("overflowExperienceScript"), this->Request->GetOverflowExperienceScript().GetValue());
             }
             if (this->Request->GetLogSetting() != nullptr && this->Request->GetLogSetting().IsValid())
             {
-                JsonRootObject->SetObjectField("logSetting", this->Request->GetLogSetting()->ToJson());
+                JsonRootObject->SetObjectField(TEXT("logSetting"), this->Request->GetLogSetting()->ToJson());
             }
             if (this->Request->GetContextStack().IsSet())
             {
-                JsonRootObject->SetStringField("contextStack", this->Request->GetContextStack().GetValue());
+                JsonRootObject->SetStringField(TEXT("contextStack"), this->Request->GetContextStack().GetValue());
             }
             FJsonSerializer::Serialize(JsonRootObject.ToSharedRef(), Writer);
             request->SetContentAsString(Body);

@@ -351,19 +351,19 @@ namespace Gs2::Showcase::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (SalesItemIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("salesItemId", SalesItemIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("salesItemId"), SalesItemIdValue.GetValue());
         }
         if (NameValue.IsSet())
         {
-            JsonRootObject->SetStringField("name", NameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("name"), NameValue.GetValue());
         }
         if (DescriptionValue.IsSet())
         {
-            JsonRootObject->SetStringField("description", DescriptionValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("description"), DescriptionValue.GetValue());
         }
         if (MetadataValue.IsSet())
         {
-            JsonRootObject->SetStringField("metadata", MetadataValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("metadata"), MetadataValue.GetValue());
         }
         if (VerifyActionsValue != nullptr && VerifyActionsValue.IsValid())
         {
@@ -372,7 +372,7 @@ namespace Gs2::Showcase::Model
             {
                 v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
             }
-            JsonRootObject->SetArrayField("verifyActions", v);
+            JsonRootObject->SetArrayField(TEXT("verifyActions"), v);
         }
         if (ConsumeActionsValue != nullptr && ConsumeActionsValue.IsValid())
         {
@@ -381,7 +381,7 @@ namespace Gs2::Showcase::Model
             {
                 v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
             }
-            JsonRootObject->SetArrayField("consumeActions", v);
+            JsonRootObject->SetArrayField(TEXT("consumeActions"), v);
         }
         if (AcquireActionsValue != nullptr && AcquireActionsValue.IsValid())
         {
@@ -390,19 +390,19 @@ namespace Gs2::Showcase::Model
             {
                 v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
             }
-            JsonRootObject->SetArrayField("acquireActions", v);
+            JsonRootObject->SetArrayField(TEXT("acquireActions"), v);
         }
         if (CreatedAtValue.IsSet())
         {
-            JsonRootObject->SetStringField("createdAt", FString::Printf(TEXT("%lld"), CreatedAtValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("createdAt"), FString::Printf(TEXT("%lld"), CreatedAtValue.GetValue()));
         }
         if (UpdatedAtValue.IsSet())
         {
-            JsonRootObject->SetStringField("updatedAt", FString::Printf(TEXT("%lld"), UpdatedAtValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("updatedAt"), FString::Printf(TEXT("%lld"), UpdatedAtValue.GetValue()));
         }
         if (RevisionValue.IsSet())
         {
-            JsonRootObject->SetStringField("revision", FString::Printf(TEXT("%lld"), RevisionValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("revision"), FString::Printf(TEXT("%lld"), RevisionValue.GetValue()));
         }
         return JsonRootObject;
     }

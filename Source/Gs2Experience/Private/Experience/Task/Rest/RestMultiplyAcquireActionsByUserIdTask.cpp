@@ -111,15 +111,15 @@ namespace Gs2::Experience::Task::Rest
                 {
                     v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
                 }
-                JsonRootObject->SetArrayField("acquireActions", v);
+                JsonRootObject->SetArrayField(TEXT("acquireActions"), v);
             }
             if (this->Request->GetBaseRate().IsSet())
             {
-                JsonRootObject->SetNumberField("baseRate", this->Request->GetBaseRate().GetValue());
+                JsonRootObject->SetNumberField(TEXT("baseRate"), this->Request->GetBaseRate().GetValue());
             }
             if (this->Request->GetContextStack().IsSet())
             {
-                JsonRootObject->SetStringField("contextStack", this->Request->GetContextStack().GetValue());
+                JsonRootObject->SetStringField(TEXT("contextStack"), this->Request->GetContextStack().GetValue());
             }
             FJsonSerializer::Serialize(JsonRootObject.ToSharedRef(), Writer);
             request->SetContentAsString(Body);

@@ -108,15 +108,15 @@ namespace Gs2::StateMachine::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (EventTypeValue.IsSet())
         {
-            JsonRootObject->SetStringField("eventType", EventTypeValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("eventType"), EventTypeValue.GetValue());
         }
         if (ChangeStateEventValue != nullptr && ChangeStateEventValue.IsValid())
         {
-            JsonRootObject->SetObjectField("changeStateEvent", ChangeStateEventValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("changeStateEvent"), ChangeStateEventValue->ToJson());
         }
         if (EmitEventValue != nullptr && EmitEventValue.IsValid())
         {
-            JsonRootObject->SetObjectField("emitEvent", EmitEventValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("emitEvent"), EmitEventValue->ToJson());
         }
         return JsonRootObject;
     }

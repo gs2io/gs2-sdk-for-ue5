@@ -130,19 +130,19 @@ namespace Gs2::Matchmaking::Request
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (ContextStackValue.IsSet())
         {
-            JsonRootObject->SetStringField("contextStack", ContextStackValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("contextStack"), ContextStackValue.GetValue());
         }
         if (NamespaceNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("namespaceName", NamespaceNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("namespaceName"), NamespaceNameValue.GetValue());
         }
         if (PlayerValue != nullptr && PlayerValue.IsValid())
         {
-            JsonRootObject->SetObjectField("player", PlayerValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("player"), PlayerValue->ToJson());
         }
         if (MatchmakingContextTokenValue.IsSet())
         {
-            JsonRootObject->SetStringField("matchmakingContextToken", MatchmakingContextTokenValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("matchmakingContextToken"), MatchmakingContextTokenValue.GetValue());
         }
         return JsonRootObject;
     }

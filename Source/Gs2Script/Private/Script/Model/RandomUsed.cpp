@@ -105,11 +105,11 @@ namespace Gs2::Script::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (CategoryValue.IsSet())
         {
-            JsonRootObject->SetStringField("category", FString::Printf(TEXT("%lld"), CategoryValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("category"), FString::Printf(TEXT("%lld"), CategoryValue.GetValue()));
         }
         if (UsedValue.IsSet())
         {
-            JsonRootObject->SetStringField("used", FString::Printf(TEXT("%lld"), UsedValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("used"), FString::Printf(TEXT("%lld"), UsedValue.GetValue()));
         }
         return JsonRootObject;
     }

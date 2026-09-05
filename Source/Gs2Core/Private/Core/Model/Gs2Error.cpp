@@ -110,9 +110,9 @@ namespace Gs2::Core::Model
     FString FGs2ErrorDetail::String() const
     {
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
-        JsonRootObject->SetStringField("component", ComponentValue);
-        JsonRootObject->SetStringField("message", MessageValue);
-        JsonRootObject->SetStringField("code", CodeValue);
+        JsonRootObject->SetStringField(TEXT("component"), ComponentValue);
+        JsonRootObject->SetStringField(TEXT("message"), MessageValue);
+        JsonRootObject->SetStringField(TEXT("code"), CodeValue);
         FString Body;
         const TSharedRef<TJsonWriter<TCHAR>> Writer = TJsonWriterFactory<TCHAR>::Create(&Body);
         FJsonSerializer::Serialize(JsonRootObject.ToSharedRef(), Writer);
@@ -173,7 +173,7 @@ namespace Gs2::Core::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (Details.IsValid())
         {
-            JsonRootObject->SetArrayField("errors", [&]
+            JsonRootObject->SetArrayField(TEXT("errors"), [&]
             {
                 TArray<TSharedPtr<FJsonValue>> Arr;
                 for (auto v : *Details)

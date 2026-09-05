@@ -86,11 +86,11 @@ namespace Gs2::Identifier::Task::Rest
             const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
             if (this->Request->GetSecurityPolicyId().IsSet())
             {
-                JsonRootObject->SetStringField("securityPolicyId", this->Request->GetSecurityPolicyId().GetValue());
+                JsonRootObject->SetStringField(TEXT("securityPolicyId"), this->Request->GetSecurityPolicyId().GetValue());
             }
             if (this->Request->GetContextStack().IsSet())
             {
-                JsonRootObject->SetStringField("contextStack", this->Request->GetContextStack().GetValue());
+                JsonRootObject->SetStringField(TEXT("contextStack"), this->Request->GetContextStack().GetValue());
             }
             FJsonSerializer::Serialize(JsonRootObject.ToSharedRef(), Writer);
             request->SetContentAsString(Body);

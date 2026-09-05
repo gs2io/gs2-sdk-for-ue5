@@ -96,23 +96,23 @@ namespace Gs2::Stamina::Task::Rest
             const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
             if (this->Request->GetValue().IsSet())
             {
-                JsonRootObject->SetNumberField("value", this->Request->GetValue().GetValue());
+                JsonRootObject->SetNumberField(TEXT("value"), this->Request->GetValue().GetValue());
             }
             if (this->Request->GetMaxValue().IsSet())
             {
-                JsonRootObject->SetNumberField("maxValue", this->Request->GetMaxValue().GetValue());
+                JsonRootObject->SetNumberField(TEXT("maxValue"), this->Request->GetMaxValue().GetValue());
             }
             if (this->Request->GetRecoverIntervalMinutes().IsSet())
             {
-                JsonRootObject->SetNumberField("recoverIntervalMinutes", this->Request->GetRecoverIntervalMinutes().GetValue());
+                JsonRootObject->SetNumberField(TEXT("recoverIntervalMinutes"), this->Request->GetRecoverIntervalMinutes().GetValue());
             }
             if (this->Request->GetRecoverValue().IsSet())
             {
-                JsonRootObject->SetNumberField("recoverValue", this->Request->GetRecoverValue().GetValue());
+                JsonRootObject->SetNumberField(TEXT("recoverValue"), this->Request->GetRecoverValue().GetValue());
             }
             if (this->Request->GetContextStack().IsSet())
             {
-                JsonRootObject->SetStringField("contextStack", this->Request->GetContextStack().GetValue());
+                JsonRootObject->SetStringField(TEXT("contextStack"), this->Request->GetContextStack().GetValue());
             }
             FJsonSerializer::Serialize(JsonRootObject.ToSharedRef(), Writer);
             request->SetContentAsString(Body);

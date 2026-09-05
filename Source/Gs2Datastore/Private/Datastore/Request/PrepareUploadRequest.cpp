@@ -253,27 +253,27 @@ namespace Gs2::Datastore::Request
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (ContextStackValue.IsSet())
         {
-            JsonRootObject->SetStringField("contextStack", ContextStackValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("contextStack"), ContextStackValue.GetValue());
         }
         if (NamespaceNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("namespaceName", NamespaceNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("namespaceName"), NamespaceNameValue.GetValue());
         }
         if (AccessTokenValue.IsSet())
         {
-            JsonRootObject->SetStringField("xGs2AccessToken", AccessTokenValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("xGs2AccessToken"), AccessTokenValue.GetValue());
         }
         if (NameValue.IsSet())
         {
-            JsonRootObject->SetStringField("name", NameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("name"), NameValue.GetValue());
         }
         if (ContentTypeValue.IsSet())
         {
-            JsonRootObject->SetStringField("contentType", ContentTypeValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("contentType"), ContentTypeValue.GetValue());
         }
         if (ScopeValue.IsSet())
         {
-            JsonRootObject->SetStringField("scope", ScopeValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("scope"), ScopeValue.GetValue());
         }
         if (AllowUserIdsValue != nullptr && AllowUserIdsValue.IsValid())
         {
@@ -282,15 +282,15 @@ namespace Gs2::Datastore::Request
             {
                 v.Add(MakeShared<FJsonValueString>(JsonObjectValue));
             }
-            JsonRootObject->SetArrayField("allowUserIds", v);
+            JsonRootObject->SetArrayField(TEXT("allowUserIds"), v);
         }
         if (UpdateIfExistsValue.IsSet())
         {
-            JsonRootObject->SetBoolField("updateIfExists", UpdateIfExistsValue.GetValue());
+            JsonRootObject->SetBoolField(TEXT("updateIfExists"), UpdateIfExistsValue.GetValue());
         }
         if (DuplicationAvoiderValue.IsSet())
         {
-            JsonRootObject->SetStringField("duplicationAvoider", DuplicationAvoiderValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("duplicationAvoider"), DuplicationAvoiderValue.GetValue());
         }
         return JsonRootObject;
     }

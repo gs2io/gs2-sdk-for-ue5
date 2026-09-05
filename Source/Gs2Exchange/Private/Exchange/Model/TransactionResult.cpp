@@ -174,7 +174,7 @@ namespace Gs2::Exchange::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (TransactionIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("transactionId", TransactionIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("transactionId"), TransactionIdValue.GetValue());
         }
         if (VerifyResultsValue != nullptr && VerifyResultsValue.IsValid())
         {
@@ -183,7 +183,7 @@ namespace Gs2::Exchange::Model
             {
                 v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
             }
-            JsonRootObject->SetArrayField("verifyResults", v);
+            JsonRootObject->SetArrayField(TEXT("verifyResults"), v);
         }
         if (ConsumeResultsValue != nullptr && ConsumeResultsValue.IsValid())
         {
@@ -192,7 +192,7 @@ namespace Gs2::Exchange::Model
             {
                 v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
             }
-            JsonRootObject->SetArrayField("consumeResults", v);
+            JsonRootObject->SetArrayField(TEXT("consumeResults"), v);
         }
         if (AcquireResultsValue != nullptr && AcquireResultsValue.IsValid())
         {
@@ -201,11 +201,11 @@ namespace Gs2::Exchange::Model
             {
                 v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
             }
-            JsonRootObject->SetArrayField("acquireResults", v);
+            JsonRootObject->SetArrayField(TEXT("acquireResults"), v);
         }
         if (HasErrorValue.IsSet())
         {
-            JsonRootObject->SetBoolField("hasError", HasErrorValue.GetValue());
+            JsonRootObject->SetBoolField(TEXT("hasError"), HasErrorValue.GetValue());
         }
         return JsonRootObject;
     }

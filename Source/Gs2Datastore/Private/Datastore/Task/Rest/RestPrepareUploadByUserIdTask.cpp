@@ -91,15 +91,15 @@ namespace Gs2::Datastore::Task::Rest
             const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
             if (this->Request->GetName().IsSet())
             {
-                JsonRootObject->SetStringField("name", this->Request->GetName().GetValue());
+                JsonRootObject->SetStringField(TEXT("name"), this->Request->GetName().GetValue());
             }
             if (this->Request->GetContentType().IsSet())
             {
-                JsonRootObject->SetStringField("contentType", this->Request->GetContentType().GetValue());
+                JsonRootObject->SetStringField(TEXT("contentType"), this->Request->GetContentType().GetValue());
             }
             if (this->Request->GetScope().IsSet())
             {
-                JsonRootObject->SetStringField("scope", this->Request->GetScope().GetValue());
+                JsonRootObject->SetStringField(TEXT("scope"), this->Request->GetScope().GetValue());
             }
             if (this->Request->GetAllowUserIds() != nullptr && this->Request->GetAllowUserIds().IsValid())
             {
@@ -108,15 +108,15 @@ namespace Gs2::Datastore::Task::Rest
                 {
                     v.Add(MakeShared<FJsonValueString>(JsonObjectValue));
                 }
-                JsonRootObject->SetArrayField("allowUserIds", v);
+                JsonRootObject->SetArrayField(TEXT("allowUserIds"), v);
             }
             if (this->Request->GetUpdateIfExists().IsSet())
             {
-                JsonRootObject->SetBoolField("updateIfExists", this->Request->GetUpdateIfExists().GetValue());
+                JsonRootObject->SetBoolField(TEXT("updateIfExists"), this->Request->GetUpdateIfExists().GetValue());
             }
             if (this->Request->GetContextStack().IsSet())
             {
-                JsonRootObject->SetStringField("contextStack", this->Request->GetContextStack().GetValue());
+                JsonRootObject->SetStringField(TEXT("contextStack"), this->Request->GetContextStack().GetValue());
             }
             FJsonSerializer::Serialize(JsonRootObject.ToSharedRef(), Writer);
             request->SetContentAsString(Body);

@@ -91,59 +91,59 @@ namespace Gs2::Ranking::Task::Rest
             const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
             if (this->Request->GetDescription().IsSet())
             {
-                JsonRootObject->SetStringField("description", this->Request->GetDescription().GetValue());
+                JsonRootObject->SetStringField(TEXT("description"), this->Request->GetDescription().GetValue());
             }
             if (this->Request->GetMetadata().IsSet())
             {
-                JsonRootObject->SetStringField("metadata", this->Request->GetMetadata().GetValue());
+                JsonRootObject->SetStringField(TEXT("metadata"), this->Request->GetMetadata().GetValue());
             }
             if (this->Request->GetMinimumValue().IsSet())
             {
-                JsonRootObject->SetStringField("minimumValue", FString::Printf(TEXT("%lld"), this->Request->GetMinimumValue().GetValue()));
+                JsonRootObject->SetStringField(TEXT("minimumValue"), FString::Printf(TEXT("%lld"), this->Request->GetMinimumValue().GetValue()));
             }
             if (this->Request->GetMaximumValue().IsSet())
             {
-                JsonRootObject->SetStringField("maximumValue", FString::Printf(TEXT("%lld"), this->Request->GetMaximumValue().GetValue()));
+                JsonRootObject->SetStringField(TEXT("maximumValue"), FString::Printf(TEXT("%lld"), this->Request->GetMaximumValue().GetValue()));
             }
             if (this->Request->GetOrderDirection().IsSet())
             {
-                JsonRootObject->SetStringField("orderDirection", this->Request->GetOrderDirection().GetValue());
+                JsonRootObject->SetStringField(TEXT("orderDirection"), this->Request->GetOrderDirection().GetValue());
             }
             if (this->Request->GetScope().IsSet())
             {
-                JsonRootObject->SetStringField("scope", this->Request->GetScope().GetValue());
+                JsonRootObject->SetStringField(TEXT("scope"), this->Request->GetScope().GetValue());
             }
             if (this->Request->GetGlobalRankingSetting() != nullptr && this->Request->GetGlobalRankingSetting().IsValid())
             {
-                JsonRootObject->SetObjectField("globalRankingSetting", this->Request->GetGlobalRankingSetting()->ToJson());
+                JsonRootObject->SetObjectField(TEXT("globalRankingSetting"), this->Request->GetGlobalRankingSetting()->ToJson());
             }
             if (this->Request->GetEntryPeriodEventId().IsSet())
             {
-                JsonRootObject->SetStringField("entryPeriodEventId", this->Request->GetEntryPeriodEventId().GetValue());
+                JsonRootObject->SetStringField(TEXT("entryPeriodEventId"), this->Request->GetEntryPeriodEventId().GetValue());
             }
             if (this->Request->GetAccessPeriodEventId().IsSet())
             {
-                JsonRootObject->SetStringField("accessPeriodEventId", this->Request->GetAccessPeriodEventId().GetValue());
+                JsonRootObject->SetStringField(TEXT("accessPeriodEventId"), this->Request->GetAccessPeriodEventId().GetValue());
             }
             if (this->Request->GetUniqueByUserId().IsSet())
             {
-                JsonRootObject->SetBoolField("uniqueByUserId", this->Request->GetUniqueByUserId().GetValue());
+                JsonRootObject->SetBoolField(TEXT("uniqueByUserId"), this->Request->GetUniqueByUserId().GetValue());
             }
             if (this->Request->GetSum().IsSet())
             {
-                JsonRootObject->SetBoolField("sum", this->Request->GetSum().GetValue());
+                JsonRootObject->SetBoolField(TEXT("sum"), this->Request->GetSum().GetValue());
             }
             if (this->Request->GetCalculateFixedTimingHour().IsSet())
             {
-                JsonRootObject->SetNumberField("calculateFixedTimingHour", this->Request->GetCalculateFixedTimingHour().GetValue());
+                JsonRootObject->SetNumberField(TEXT("calculateFixedTimingHour"), this->Request->GetCalculateFixedTimingHour().GetValue());
             }
             if (this->Request->GetCalculateFixedTimingMinute().IsSet())
             {
-                JsonRootObject->SetNumberField("calculateFixedTimingMinute", this->Request->GetCalculateFixedTimingMinute().GetValue());
+                JsonRootObject->SetNumberField(TEXT("calculateFixedTimingMinute"), this->Request->GetCalculateFixedTimingMinute().GetValue());
             }
             if (this->Request->GetCalculateIntervalMinutes().IsSet())
             {
-                JsonRootObject->SetNumberField("calculateIntervalMinutes", this->Request->GetCalculateIntervalMinutes().GetValue());
+                JsonRootObject->SetNumberField(TEXT("calculateIntervalMinutes"), this->Request->GetCalculateIntervalMinutes().GetValue());
             }
             if (this->Request->GetAdditionalScopes() != nullptr && this->Request->GetAdditionalScopes().IsValid())
             {
@@ -152,7 +152,7 @@ namespace Gs2::Ranking::Task::Rest
                 {
                     v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
                 }
-                JsonRootObject->SetArrayField("additionalScopes", v);
+                JsonRootObject->SetArrayField(TEXT("additionalScopes"), v);
             }
             if (this->Request->GetIgnoreUserIds() != nullptr && this->Request->GetIgnoreUserIds().IsValid())
             {
@@ -161,15 +161,15 @@ namespace Gs2::Ranking::Task::Rest
                 {
                     v.Add(MakeShared<FJsonValueString>(JsonObjectValue));
                 }
-                JsonRootObject->SetArrayField("ignoreUserIds", v);
+                JsonRootObject->SetArrayField(TEXT("ignoreUserIds"), v);
             }
             if (this->Request->GetGeneration().IsSet())
             {
-                JsonRootObject->SetStringField("generation", this->Request->GetGeneration().GetValue());
+                JsonRootObject->SetStringField(TEXT("generation"), this->Request->GetGeneration().GetValue());
             }
             if (this->Request->GetContextStack().IsSet())
             {
-                JsonRootObject->SetStringField("contextStack", this->Request->GetContextStack().GetValue());
+                JsonRootObject->SetStringField(TEXT("contextStack"), this->Request->GetContextStack().GetValue());
             }
             FJsonSerializer::Serialize(JsonRootObject.ToSharedRef(), Writer);
             request->SetContentAsString(Body);

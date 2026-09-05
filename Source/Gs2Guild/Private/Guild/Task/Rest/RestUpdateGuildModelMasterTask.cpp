@@ -91,23 +91,23 @@ namespace Gs2::Guild::Task::Rest
             const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
             if (this->Request->GetDescription().IsSet())
             {
-                JsonRootObject->SetStringField("description", this->Request->GetDescription().GetValue());
+                JsonRootObject->SetStringField(TEXT("description"), this->Request->GetDescription().GetValue());
             }
             if (this->Request->GetMetadata().IsSet())
             {
-                JsonRootObject->SetStringField("metadata", this->Request->GetMetadata().GetValue());
+                JsonRootObject->SetStringField(TEXT("metadata"), this->Request->GetMetadata().GetValue());
             }
             if (this->Request->GetDefaultMaximumMemberCount().IsSet())
             {
-                JsonRootObject->SetNumberField("defaultMaximumMemberCount", this->Request->GetDefaultMaximumMemberCount().GetValue());
+                JsonRootObject->SetNumberField(TEXT("defaultMaximumMemberCount"), this->Request->GetDefaultMaximumMemberCount().GetValue());
             }
             if (this->Request->GetMaximumMemberCount().IsSet())
             {
-                JsonRootObject->SetNumberField("maximumMemberCount", this->Request->GetMaximumMemberCount().GetValue());
+                JsonRootObject->SetNumberField(TEXT("maximumMemberCount"), this->Request->GetMaximumMemberCount().GetValue());
             }
             if (this->Request->GetInactivityPeriodDays().IsSet())
             {
-                JsonRootObject->SetNumberField("inactivityPeriodDays", this->Request->GetInactivityPeriodDays().GetValue());
+                JsonRootObject->SetNumberField(TEXT("inactivityPeriodDays"), this->Request->GetInactivityPeriodDays().GetValue());
             }
             if (this->Request->GetRoles() != nullptr && this->Request->GetRoles().IsValid())
             {
@@ -116,31 +116,31 @@ namespace Gs2::Guild::Task::Rest
                 {
                     v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
                 }
-                JsonRootObject->SetArrayField("roles", v);
+                JsonRootObject->SetArrayField(TEXT("roles"), v);
             }
             if (this->Request->GetGuildMasterRole().IsSet())
             {
-                JsonRootObject->SetStringField("guildMasterRole", this->Request->GetGuildMasterRole().GetValue());
+                JsonRootObject->SetStringField(TEXT("guildMasterRole"), this->Request->GetGuildMasterRole().GetValue());
             }
             if (this->Request->GetGuildMemberDefaultRole().IsSet())
             {
-                JsonRootObject->SetStringField("guildMemberDefaultRole", this->Request->GetGuildMemberDefaultRole().GetValue());
+                JsonRootObject->SetStringField(TEXT("guildMemberDefaultRole"), this->Request->GetGuildMemberDefaultRole().GetValue());
             }
             if (this->Request->GetRejoinCoolTimeMinutes().IsSet())
             {
-                JsonRootObject->SetNumberField("rejoinCoolTimeMinutes", this->Request->GetRejoinCoolTimeMinutes().GetValue());
+                JsonRootObject->SetNumberField(TEXT("rejoinCoolTimeMinutes"), this->Request->GetRejoinCoolTimeMinutes().GetValue());
             }
             if (this->Request->GetMaxConcurrentJoinGuilds().IsSet())
             {
-                JsonRootObject->SetNumberField("maxConcurrentJoinGuilds", this->Request->GetMaxConcurrentJoinGuilds().GetValue());
+                JsonRootObject->SetNumberField(TEXT("maxConcurrentJoinGuilds"), this->Request->GetMaxConcurrentJoinGuilds().GetValue());
             }
             if (this->Request->GetMaxConcurrentGuildMasterCount().IsSet())
             {
-                JsonRootObject->SetNumberField("maxConcurrentGuildMasterCount", this->Request->GetMaxConcurrentGuildMasterCount().GetValue());
+                JsonRootObject->SetNumberField(TEXT("maxConcurrentGuildMasterCount"), this->Request->GetMaxConcurrentGuildMasterCount().GetValue());
             }
             if (this->Request->GetContextStack().IsSet())
             {
-                JsonRootObject->SetStringField("contextStack", this->Request->GetContextStack().GetValue());
+                JsonRootObject->SetStringField(TEXT("contextStack"), this->Request->GetContextStack().GetValue());
             }
             FJsonSerializer::Serialize(JsonRootObject.ToSharedRef(), Writer);
             request->SetContentAsString(Body);

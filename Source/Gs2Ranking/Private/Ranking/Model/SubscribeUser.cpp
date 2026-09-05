@@ -199,19 +199,19 @@ namespace Gs2::Ranking::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (SubscribeUserIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("subscribeUserId", SubscribeUserIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("subscribeUserId"), SubscribeUserIdValue.GetValue());
         }
         if (CategoryNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("categoryName", CategoryNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("categoryName"), CategoryNameValue.GetValue());
         }
         if (UserIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("userId", UserIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("userId"), UserIdValue.GetValue());
         }
         if (TargetUserIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("targetUserId", TargetUserIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("targetUserId"), TargetUserIdValue.GetValue());
         }
         return JsonRootObject;
     }

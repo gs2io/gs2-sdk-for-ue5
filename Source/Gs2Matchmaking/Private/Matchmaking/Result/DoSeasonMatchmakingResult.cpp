@@ -92,11 +92,11 @@ namespace Gs2::Matchmaking::Result
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (ItemValue != nullptr && ItemValue.IsValid())
         {
-            JsonRootObject->SetObjectField("item", ItemValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("item"), ItemValue->ToJson());
         }
         if (MatchmakingContextTokenValue.IsSet())
         {
-            JsonRootObject->SetStringField("matchmakingContextToken", MatchmakingContextTokenValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("matchmakingContextToken"), MatchmakingContextTokenValue.GetValue());
         }
         return JsonRootObject;
     }

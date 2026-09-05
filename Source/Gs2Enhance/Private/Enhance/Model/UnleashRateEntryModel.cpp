@@ -105,11 +105,11 @@ namespace Gs2::Enhance::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (GradeValueValue.IsSet())
         {
-            JsonRootObject->SetStringField("gradeValue", FString::Printf(TEXT("%lld"), GradeValueValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("gradeValue"), FString::Printf(TEXT("%lld"), GradeValueValue.GetValue()));
         }
         if (NeedCountValue.IsSet())
         {
-            JsonRootObject->SetNumberField("needCount", NeedCountValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("needCount"), NeedCountValue.GetValue());
         }
         return JsonRootObject;
     }

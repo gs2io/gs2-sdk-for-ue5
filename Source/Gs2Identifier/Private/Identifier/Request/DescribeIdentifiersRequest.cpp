@@ -136,19 +136,19 @@ namespace Gs2::Identifier::Request
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (ContextStackValue.IsSet())
         {
-            JsonRootObject->SetStringField("contextStack", ContextStackValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("contextStack"), ContextStackValue.GetValue());
         }
         if (UserNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("userName", UserNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("userName"), UserNameValue.GetValue());
         }
         if (PageTokenValue.IsSet())
         {
-            JsonRootObject->SetStringField("pageToken", PageTokenValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("pageToken"), PageTokenValue.GetValue());
         }
         if (LimitValue.IsSet())
         {
-            JsonRootObject->SetNumberField("limit", LimitValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("limit"), LimitValue.GetValue());
         }
         return JsonRootObject;
     }

@@ -86,47 +86,47 @@ namespace Gs2::Inbox::Task::Rest
             const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
             if (this->Request->GetDescription().IsSet())
             {
-                JsonRootObject->SetStringField("description", this->Request->GetDescription().GetValue());
+                JsonRootObject->SetStringField(TEXT("description"), this->Request->GetDescription().GetValue());
             }
             if (this->Request->GetIsAutomaticDeletingEnabled().IsSet())
             {
-                JsonRootObject->SetBoolField("isAutomaticDeletingEnabled", this->Request->GetIsAutomaticDeletingEnabled().GetValue());
+                JsonRootObject->SetBoolField(TEXT("isAutomaticDeletingEnabled"), this->Request->GetIsAutomaticDeletingEnabled().GetValue());
             }
             if (this->Request->GetTransactionSetting() != nullptr && this->Request->GetTransactionSetting().IsValid())
             {
-                JsonRootObject->SetObjectField("transactionSetting", this->Request->GetTransactionSetting()->ToJson());
+                JsonRootObject->SetObjectField(TEXT("transactionSetting"), this->Request->GetTransactionSetting()->ToJson());
             }
             if (this->Request->GetReceiveMessageScript() != nullptr && this->Request->GetReceiveMessageScript().IsValid())
             {
-                JsonRootObject->SetObjectField("receiveMessageScript", this->Request->GetReceiveMessageScript()->ToJson());
+                JsonRootObject->SetObjectField(TEXT("receiveMessageScript"), this->Request->GetReceiveMessageScript()->ToJson());
             }
             if (this->Request->GetReadMessageScript() != nullptr && this->Request->GetReadMessageScript().IsValid())
             {
-                JsonRootObject->SetObjectField("readMessageScript", this->Request->GetReadMessageScript()->ToJson());
+                JsonRootObject->SetObjectField(TEXT("readMessageScript"), this->Request->GetReadMessageScript()->ToJson());
             }
             if (this->Request->GetDeleteMessageScript() != nullptr && this->Request->GetDeleteMessageScript().IsValid())
             {
-                JsonRootObject->SetObjectField("deleteMessageScript", this->Request->GetDeleteMessageScript()->ToJson());
+                JsonRootObject->SetObjectField(TEXT("deleteMessageScript"), this->Request->GetDeleteMessageScript()->ToJson());
             }
             if (this->Request->GetReceiveNotification() != nullptr && this->Request->GetReceiveNotification().IsValid())
             {
-                JsonRootObject->SetObjectField("receiveNotification", this->Request->GetReceiveNotification()->ToJson());
+                JsonRootObject->SetObjectField(TEXT("receiveNotification"), this->Request->GetReceiveNotification()->ToJson());
             }
             if (this->Request->GetLogSetting() != nullptr && this->Request->GetLogSetting().IsValid())
             {
-                JsonRootObject->SetObjectField("logSetting", this->Request->GetLogSetting()->ToJson());
+                JsonRootObject->SetObjectField(TEXT("logSetting"), this->Request->GetLogSetting()->ToJson());
             }
             if (this->Request->GetQueueNamespaceId().IsSet())
             {
-                JsonRootObject->SetStringField("queueNamespaceId", this->Request->GetQueueNamespaceId().GetValue());
+                JsonRootObject->SetStringField(TEXT("queueNamespaceId"), this->Request->GetQueueNamespaceId().GetValue());
             }
             if (this->Request->GetKeyId().IsSet())
             {
-                JsonRootObject->SetStringField("keyId", this->Request->GetKeyId().GetValue());
+                JsonRootObject->SetStringField(TEXT("keyId"), this->Request->GetKeyId().GetValue());
             }
             if (this->Request->GetContextStack().IsSet())
             {
-                JsonRootObject->SetStringField("contextStack", this->Request->GetContextStack().GetValue());
+                JsonRootObject->SetStringField(TEXT("contextStack"), this->Request->GetContextStack().GetValue());
             }
             FJsonSerializer::Serialize(JsonRootObject.ToSharedRef(), Writer);
             request->SetContentAsString(Body);

@@ -184,27 +184,27 @@ namespace Gs2::Ranking2::Request
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (ContextStackValue.IsSet())
         {
-            JsonRootObject->SetStringField("contextStack", ContextStackValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("contextStack"), ContextStackValue.GetValue());
         }
         if (NamespaceNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("namespaceName", NamespaceNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("namespaceName"), NamespaceNameValue.GetValue());
         }
         if (RankingNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("rankingName", RankingNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("rankingName"), RankingNameValue.GetValue());
         }
         if (AccessTokenValue.IsSet())
         {
-            JsonRootObject->SetStringField("xGs2AccessToken", AccessTokenValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("xGs2AccessToken"), AccessTokenValue.GetValue());
         }
         if (SeasonValue.IsSet())
         {
-            JsonRootObject->SetStringField("season", FString::Printf(TEXT("%lld"), SeasonValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("season"), FString::Printf(TEXT("%lld"), SeasonValue.GetValue()));
         }
         if (ScorerUserIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("scorerUserId", ScorerUserIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("scorerUserId"), ScorerUserIdValue.GetValue());
         }
         return JsonRootObject;
     }

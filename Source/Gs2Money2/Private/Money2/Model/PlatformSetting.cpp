@@ -107,15 +107,15 @@ namespace Gs2::Money2::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (AppleAppStoreValue != nullptr && AppleAppStoreValue.IsValid())
         {
-            JsonRootObject->SetObjectField("appleAppStore", AppleAppStoreValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("appleAppStore"), AppleAppStoreValue->ToJson());
         }
         if (GooglePlayValue != nullptr && GooglePlayValue.IsValid())
         {
-            JsonRootObject->SetObjectField("googlePlay", GooglePlayValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("googlePlay"), GooglePlayValue->ToJson());
         }
         if (FakeValue != nullptr && FakeValue.IsValid())
         {
-            JsonRootObject->SetObjectField("fake", FakeValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("fake"), FakeValue->ToJson());
         }
         return JsonRootObject;
     }

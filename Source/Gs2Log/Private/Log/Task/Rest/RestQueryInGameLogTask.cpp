@@ -86,7 +86,7 @@ namespace Gs2::Log::Task::Rest
             const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
             if (this->Request->GetUserId().IsSet())
             {
-                JsonRootObject->SetStringField("userId", this->Request->GetUserId().GetValue());
+                JsonRootObject->SetStringField(TEXT("userId"), this->Request->GetUserId().GetValue());
             }
             if (this->Request->GetTags() != nullptr && this->Request->GetTags().IsValid())
             {
@@ -95,31 +95,31 @@ namespace Gs2::Log::Task::Rest
                 {
                     v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
                 }
-                JsonRootObject->SetArrayField("tags", v);
+                JsonRootObject->SetArrayField(TEXT("tags"), v);
             }
             if (this->Request->GetBegin().IsSet())
             {
-                JsonRootObject->SetStringField("begin", FString::Printf(TEXT("%lld"), this->Request->GetBegin().GetValue()));
+                JsonRootObject->SetStringField(TEXT("begin"), FString::Printf(TEXT("%lld"), this->Request->GetBegin().GetValue()));
             }
             if (this->Request->GetEnd().IsSet())
             {
-                JsonRootObject->SetStringField("end", FString::Printf(TEXT("%lld"), this->Request->GetEnd().GetValue()));
+                JsonRootObject->SetStringField(TEXT("end"), FString::Printf(TEXT("%lld"), this->Request->GetEnd().GetValue()));
             }
             if (this->Request->GetLongTerm().IsSet())
             {
-                JsonRootObject->SetBoolField("longTerm", this->Request->GetLongTerm().GetValue());
+                JsonRootObject->SetBoolField(TEXT("longTerm"), this->Request->GetLongTerm().GetValue());
             }
             if (this->Request->GetPageToken().IsSet())
             {
-                JsonRootObject->SetStringField("pageToken", this->Request->GetPageToken().GetValue());
+                JsonRootObject->SetStringField(TEXT("pageToken"), this->Request->GetPageToken().GetValue());
             }
             if (this->Request->GetLimit().IsSet())
             {
-                JsonRootObject->SetNumberField("limit", this->Request->GetLimit().GetValue());
+                JsonRootObject->SetNumberField(TEXT("limit"), this->Request->GetLimit().GetValue());
             }
             if (this->Request->GetContextStack().IsSet())
             {
-                JsonRootObject->SetStringField("contextStack", this->Request->GetContextStack().GetValue());
+                JsonRootObject->SetStringField(TEXT("contextStack"), this->Request->GetContextStack().GetValue());
             }
             FJsonSerializer::Serialize(JsonRootObject.ToSharedRef(), Writer);
             request->SetContentAsString(Body);

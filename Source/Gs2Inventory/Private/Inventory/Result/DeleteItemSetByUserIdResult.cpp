@@ -131,15 +131,15 @@ namespace Gs2::Inventory::Result
             {
                 v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
             }
-            JsonRootObject->SetArrayField("items", v);
+            JsonRootObject->SetArrayField(TEXT("items"), v);
         }
         if (ItemModelValue != nullptr && ItemModelValue.IsValid())
         {
-            JsonRootObject->SetObjectField("itemModel", ItemModelValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("itemModel"), ItemModelValue->ToJson());
         }
         if (InventoryValue != nullptr && InventoryValue.IsValid())
         {
-            JsonRootObject->SetObjectField("inventory", InventoryValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("inventory"), InventoryValue->ToJson());
         }
         return JsonRootObject;
     }

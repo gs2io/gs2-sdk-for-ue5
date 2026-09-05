@@ -380,47 +380,47 @@ namespace Gs2::Stamina::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (StaminaModelIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("staminaModelId", StaminaModelIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("staminaModelId"), StaminaModelIdValue.GetValue());
         }
         if (NameValue.IsSet())
         {
-            JsonRootObject->SetStringField("name", NameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("name"), NameValue.GetValue());
         }
         if (MetadataValue.IsSet())
         {
-            JsonRootObject->SetStringField("metadata", MetadataValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("metadata"), MetadataValue.GetValue());
         }
         if (RecoverIntervalMinutesValue.IsSet())
         {
-            JsonRootObject->SetNumberField("recoverIntervalMinutes", RecoverIntervalMinutesValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("recoverIntervalMinutes"), RecoverIntervalMinutesValue.GetValue());
         }
         if (RecoverValueValue.IsSet())
         {
-            JsonRootObject->SetNumberField("recoverValue", RecoverValueValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("recoverValue"), RecoverValueValue.GetValue());
         }
         if (InitialCapacityValue.IsSet())
         {
-            JsonRootObject->SetNumberField("initialCapacity", InitialCapacityValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("initialCapacity"), InitialCapacityValue.GetValue());
         }
         if (IsOverflowValue.IsSet())
         {
-            JsonRootObject->SetBoolField("isOverflow", IsOverflowValue.GetValue());
+            JsonRootObject->SetBoolField(TEXT("isOverflow"), IsOverflowValue.GetValue());
         }
         if (MaxCapacityValue.IsSet())
         {
-            JsonRootObject->SetNumberField("maxCapacity", MaxCapacityValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("maxCapacity"), MaxCapacityValue.GetValue());
         }
         if (MaxStaminaTableValue != nullptr && MaxStaminaTableValue.IsValid())
         {
-            JsonRootObject->SetObjectField("maxStaminaTable", MaxStaminaTableValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("maxStaminaTable"), MaxStaminaTableValue->ToJson());
         }
         if (RecoverIntervalTableValue != nullptr && RecoverIntervalTableValue.IsValid())
         {
-            JsonRootObject->SetObjectField("recoverIntervalTable", RecoverIntervalTableValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("recoverIntervalTable"), RecoverIntervalTableValue->ToJson());
         }
         if (RecoverValueTableValue != nullptr && RecoverValueTableValue.IsValid())
         {
-            JsonRootObject->SetObjectField("recoverValueTable", RecoverValueTableValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("recoverValueTable"), RecoverValueTableValue->ToJson());
         }
         return JsonRootObject;
     }

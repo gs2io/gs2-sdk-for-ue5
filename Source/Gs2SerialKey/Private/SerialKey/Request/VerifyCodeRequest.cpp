@@ -189,31 +189,31 @@ namespace Gs2::SerialKey::Request
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (ContextStackValue.IsSet())
         {
-            JsonRootObject->SetStringField("contextStack", ContextStackValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("contextStack"), ContextStackValue.GetValue());
         }
         if (NamespaceNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("namespaceName", NamespaceNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("namespaceName"), NamespaceNameValue.GetValue());
         }
         if (AccessTokenValue.IsSet())
         {
-            JsonRootObject->SetStringField("xGs2AccessToken", AccessTokenValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("xGs2AccessToken"), AccessTokenValue.GetValue());
         }
         if (CodeValue.IsSet())
         {
-            JsonRootObject->SetStringField("code", CodeValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("code"), CodeValue.GetValue());
         }
         if (CampaignModelNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("campaignModelName", CampaignModelNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("campaignModelName"), CampaignModelNameValue.GetValue());
         }
         if (VerifyTypeValue.IsSet())
         {
-            JsonRootObject->SetStringField("verifyType", VerifyTypeValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("verifyType"), VerifyTypeValue.GetValue());
         }
         if (DuplicationAvoiderValue.IsSet())
         {
-            JsonRootObject->SetStringField("duplicationAvoider", DuplicationAvoiderValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("duplicationAvoider"), DuplicationAvoiderValue.GetValue());
         }
         return JsonRootObject;
     }

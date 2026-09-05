@@ -96,11 +96,11 @@ namespace Gs2::Enhance::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (MaterialItemSetIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("materialItemSetId", MaterialItemSetIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("materialItemSetId"), MaterialItemSetIdValue.GetValue());
         }
         if (CountValue.IsSet())
         {
-            JsonRootObject->SetNumberField("count", CountValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("count"), CountValue.GetValue());
         }
         return JsonRootObject;
     }

@@ -91,11 +91,11 @@ namespace Gs2::Enhance::Task::Rest
             const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
             if (this->Request->GetRateName().IsSet())
             {
-                JsonRootObject->SetStringField("rateName", this->Request->GetRateName().GetValue());
+                JsonRootObject->SetStringField(TEXT("rateName"), this->Request->GetRateName().GetValue());
             }
             if (this->Request->GetTargetItemSetId().IsSet())
             {
-                JsonRootObject->SetStringField("targetItemSetId", this->Request->GetTargetItemSetId().GetValue());
+                JsonRootObject->SetStringField(TEXT("targetItemSetId"), this->Request->GetTargetItemSetId().GetValue());
             }
             if (this->Request->GetMaterials() != nullptr && this->Request->GetMaterials().IsValid())
             {
@@ -104,15 +104,15 @@ namespace Gs2::Enhance::Task::Rest
                 {
                     v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
                 }
-                JsonRootObject->SetArrayField("materials", v);
+                JsonRootObject->SetArrayField(TEXT("materials"), v);
             }
             if (this->Request->GetForce().IsSet())
             {
-                JsonRootObject->SetBoolField("force", this->Request->GetForce().GetValue());
+                JsonRootObject->SetBoolField(TEXT("force"), this->Request->GetForce().GetValue());
             }
             if (this->Request->GetContextStack().IsSet())
             {
-                JsonRootObject->SetStringField("contextStack", this->Request->GetContextStack().GetValue());
+                JsonRootObject->SetStringField(TEXT("contextStack"), this->Request->GetContextStack().GetValue());
             }
             FJsonSerializer::Serialize(JsonRootObject.ToSharedRef(), Writer);
             request->SetContentAsString(Body);

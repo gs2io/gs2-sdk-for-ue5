@@ -91,7 +91,7 @@ namespace Gs2::Matchmaking::Task::Rest
             const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
             if (this->Request->GetPlayer() != nullptr && this->Request->GetPlayer().IsValid())
             {
-                JsonRootObject->SetObjectField("player", this->Request->GetPlayer()->ToJson());
+                JsonRootObject->SetObjectField(TEXT("player"), this->Request->GetPlayer()->ToJson());
             }
             if (this->Request->GetAttributeRanges() != nullptr && this->Request->GetAttributeRanges().IsValid())
             {
@@ -100,7 +100,7 @@ namespace Gs2::Matchmaking::Task::Rest
                 {
                     v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
                 }
-                JsonRootObject->SetArrayField("attributeRanges", v);
+                JsonRootObject->SetArrayField(TEXT("attributeRanges"), v);
             }
             if (this->Request->GetCapacityOfRoles() != nullptr && this->Request->GetCapacityOfRoles().IsValid())
             {
@@ -109,7 +109,7 @@ namespace Gs2::Matchmaking::Task::Rest
                 {
                     v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
                 }
-                JsonRootObject->SetArrayField("capacityOfRoles", v);
+                JsonRootObject->SetArrayField(TEXT("capacityOfRoles"), v);
             }
             if (this->Request->GetAllowUserIds() != nullptr && this->Request->GetAllowUserIds().IsValid())
             {
@@ -118,19 +118,19 @@ namespace Gs2::Matchmaking::Task::Rest
                 {
                     v.Add(MakeShared<FJsonValueString>(JsonObjectValue));
                 }
-                JsonRootObject->SetArrayField("allowUserIds", v);
+                JsonRootObject->SetArrayField(TEXT("allowUserIds"), v);
             }
             if (this->Request->GetExpiresAt().IsSet())
             {
-                JsonRootObject->SetStringField("expiresAt", FString::Printf(TEXT("%lld"), this->Request->GetExpiresAt().GetValue()));
+                JsonRootObject->SetStringField(TEXT("expiresAt"), FString::Printf(TEXT("%lld"), this->Request->GetExpiresAt().GetValue()));
             }
             if (this->Request->GetExpiresAtTimeSpan() != nullptr && this->Request->GetExpiresAtTimeSpan().IsValid())
             {
-                JsonRootObject->SetObjectField("expiresAtTimeSpan", this->Request->GetExpiresAtTimeSpan()->ToJson());
+                JsonRootObject->SetObjectField(TEXT("expiresAtTimeSpan"), this->Request->GetExpiresAtTimeSpan()->ToJson());
             }
             if (this->Request->GetContextStack().IsSet())
             {
-                JsonRootObject->SetStringField("contextStack", this->Request->GetContextStack().GetValue());
+                JsonRootObject->SetStringField(TEXT("contextStack"), this->Request->GetContextStack().GetValue());
             }
             FJsonSerializer::Serialize(JsonRootObject.ToSharedRef(), Writer);
             request->SetContentAsString(Body);

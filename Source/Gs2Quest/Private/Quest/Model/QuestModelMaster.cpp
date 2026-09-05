@@ -486,23 +486,23 @@ namespace Gs2::Quest::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (QuestModelIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("questModelId", QuestModelIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("questModelId"), QuestModelIdValue.GetValue());
         }
         if (QuestGroupNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("questGroupName", QuestGroupNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("questGroupName"), QuestGroupNameValue.GetValue());
         }
         if (NameValue.IsSet())
         {
-            JsonRootObject->SetStringField("name", NameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("name"), NameValue.GetValue());
         }
         if (DescriptionValue.IsSet())
         {
-            JsonRootObject->SetStringField("description", DescriptionValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("description"), DescriptionValue.GetValue());
         }
         if (MetadataValue.IsSet())
         {
-            JsonRootObject->SetStringField("metadata", MetadataValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("metadata"), MetadataValue.GetValue());
         }
         if (ContentsValue != nullptr && ContentsValue.IsValid())
         {
@@ -511,11 +511,11 @@ namespace Gs2::Quest::Model
             {
                 v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
             }
-            JsonRootObject->SetArrayField("contents", v);
+            JsonRootObject->SetArrayField(TEXT("contents"), v);
         }
         if (ChallengePeriodEventIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("challengePeriodEventId", ChallengePeriodEventIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("challengePeriodEventId"), ChallengePeriodEventIdValue.GetValue());
         }
         if (FirstCompleteAcquireActionsValue != nullptr && FirstCompleteAcquireActionsValue.IsValid())
         {
@@ -524,7 +524,7 @@ namespace Gs2::Quest::Model
             {
                 v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
             }
-            JsonRootObject->SetArrayField("firstCompleteAcquireActions", v);
+            JsonRootObject->SetArrayField(TEXT("firstCompleteAcquireActions"), v);
         }
         if (VerifyActionsValue != nullptr && VerifyActionsValue.IsValid())
         {
@@ -533,7 +533,7 @@ namespace Gs2::Quest::Model
             {
                 v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
             }
-            JsonRootObject->SetArrayField("verifyActions", v);
+            JsonRootObject->SetArrayField(TEXT("verifyActions"), v);
         }
         if (ConsumeActionsValue != nullptr && ConsumeActionsValue.IsValid())
         {
@@ -542,7 +542,7 @@ namespace Gs2::Quest::Model
             {
                 v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
             }
-            JsonRootObject->SetArrayField("consumeActions", v);
+            JsonRootObject->SetArrayField(TEXT("consumeActions"), v);
         }
         if (FailedAcquireActionsValue != nullptr && FailedAcquireActionsValue.IsValid())
         {
@@ -551,7 +551,7 @@ namespace Gs2::Quest::Model
             {
                 v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
             }
-            JsonRootObject->SetArrayField("failedAcquireActions", v);
+            JsonRootObject->SetArrayField(TEXT("failedAcquireActions"), v);
         }
         if (PremiseQuestNamesValue != nullptr && PremiseQuestNamesValue.IsValid())
         {
@@ -560,19 +560,19 @@ namespace Gs2::Quest::Model
             {
                 v.Add(MakeShared<FJsonValueString>(JsonObjectValue));
             }
-            JsonRootObject->SetArrayField("premiseQuestNames", v);
+            JsonRootObject->SetArrayField(TEXT("premiseQuestNames"), v);
         }
         if (CreatedAtValue.IsSet())
         {
-            JsonRootObject->SetStringField("createdAt", FString::Printf(TEXT("%lld"), CreatedAtValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("createdAt"), FString::Printf(TEXT("%lld"), CreatedAtValue.GetValue()));
         }
         if (UpdatedAtValue.IsSet())
         {
-            JsonRootObject->SetStringField("updatedAt", FString::Printf(TEXT("%lld"), UpdatedAtValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("updatedAt"), FString::Printf(TEXT("%lld"), UpdatedAtValue.GetValue()));
         }
         if (RevisionValue.IsSet())
         {
-            JsonRootObject->SetStringField("revision", FString::Printf(TEXT("%lld"), RevisionValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("revision"), FString::Printf(TEXT("%lld"), RevisionValue.GetValue()));
         }
         return JsonRootObject;
     }

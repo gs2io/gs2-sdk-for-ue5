@@ -151,23 +151,23 @@ namespace Gs2::Deploy::Request
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (ContextStackValue.IsSet())
         {
-            JsonRootObject->SetStringField("contextStack", ContextStackValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("contextStack"), ContextStackValue.GetValue());
         }
         if (StackNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("stackName", StackNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("stackName"), StackNameValue.GetValue());
         }
         if (ModeValue.IsSet())
         {
-            JsonRootObject->SetStringField("mode", ModeValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("mode"), ModeValue.GetValue());
         }
         if (TemplateValue.IsSet())
         {
-            JsonRootObject->SetStringField("template", TemplateValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("template"), TemplateValue.GetValue());
         }
         if (UploadTokenValue.IsSet())
         {
-            JsonRootObject->SetStringField("uploadToken", UploadTokenValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("uploadToken"), UploadTokenValue.GetValue());
         }
         return JsonRootObject;
     }

@@ -101,7 +101,7 @@ namespace Gs2::MegaField::Task::Rest
             const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
             if (this->Request->GetPosition() != nullptr && this->Request->GetPosition().IsValid())
             {
-                JsonRootObject->SetObjectField("position", this->Request->GetPosition()->ToJson());
+                JsonRootObject->SetObjectField(TEXT("position"), this->Request->GetPosition()->ToJson());
             }
             if (this->Request->GetScopes() != nullptr && this->Request->GetScopes().IsValid())
             {
@@ -110,11 +110,11 @@ namespace Gs2::MegaField::Task::Rest
                 {
                     v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
                 }
-                JsonRootObject->SetArrayField("scopes", v);
+                JsonRootObject->SetArrayField(TEXT("scopes"), v);
             }
             if (this->Request->GetContextStack().IsSet())
             {
-                JsonRootObject->SetStringField("contextStack", this->Request->GetContextStack().GetValue());
+                JsonRootObject->SetStringField(TEXT("contextStack"), this->Request->GetContextStack().GetValue());
             }
             FJsonSerializer::Serialize(JsonRootObject.ToSharedRef(), Writer);
             request->SetContentAsString(Body);

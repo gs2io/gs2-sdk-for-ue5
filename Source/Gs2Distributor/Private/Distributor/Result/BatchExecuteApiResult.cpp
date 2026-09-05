@@ -77,7 +77,7 @@ namespace Gs2::Distributor::Result
             {
                 v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
             }
-            JsonRootObject->SetArrayField("results", v);
+            JsonRootObject->SetArrayField(TEXT("results"), v);
         }
         return JsonRootObject;
     }

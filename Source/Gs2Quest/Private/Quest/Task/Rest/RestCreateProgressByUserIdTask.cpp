@@ -91,11 +91,11 @@ namespace Gs2::Quest::Task::Rest
             const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
             if (this->Request->GetQuestModelId().IsSet())
             {
-                JsonRootObject->SetStringField("questModelId", this->Request->GetQuestModelId().GetValue());
+                JsonRootObject->SetStringField(TEXT("questModelId"), this->Request->GetQuestModelId().GetValue());
             }
             if (this->Request->GetForce().IsSet())
             {
-                JsonRootObject->SetBoolField("force", this->Request->GetForce().GetValue());
+                JsonRootObject->SetBoolField(TEXT("force"), this->Request->GetForce().GetValue());
             }
             if (this->Request->GetConfig() != nullptr && this->Request->GetConfig().IsValid())
             {
@@ -104,11 +104,11 @@ namespace Gs2::Quest::Task::Rest
                 {
                     v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
                 }
-                JsonRootObject->SetArrayField("config", v);
+                JsonRootObject->SetArrayField(TEXT("config"), v);
             }
             if (this->Request->GetContextStack().IsSet())
             {
-                JsonRootObject->SetStringField("contextStack", this->Request->GetContextStack().GetValue());
+                JsonRootObject->SetStringField(TEXT("contextStack"), this->Request->GetContextStack().GetValue());
             }
             FJsonSerializer::Serialize(JsonRootObject.ToSharedRef(), Writer);
             request->SetContentAsString(Body);

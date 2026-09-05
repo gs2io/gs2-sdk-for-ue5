@@ -293,31 +293,31 @@ namespace Gs2::Schedule::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (TriggerIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("triggerId", TriggerIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("triggerId"), TriggerIdValue.GetValue());
         }
         if (NameValue.IsSet())
         {
-            JsonRootObject->SetStringField("name", NameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("name"), NameValue.GetValue());
         }
         if (UserIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("userId", UserIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("userId"), UserIdValue.GetValue());
         }
         if (TriggeredAtValue.IsSet())
         {
-            JsonRootObject->SetStringField("triggeredAt", FString::Printf(TEXT("%lld"), TriggeredAtValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("triggeredAt"), FString::Printf(TEXT("%lld"), TriggeredAtValue.GetValue()));
         }
         if (ExpiresAtValue.IsSet())
         {
-            JsonRootObject->SetStringField("expiresAt", FString::Printf(TEXT("%lld"), ExpiresAtValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("expiresAt"), FString::Printf(TEXT("%lld"), ExpiresAtValue.GetValue()));
         }
         if (CreatedAtValue.IsSet())
         {
-            JsonRootObject->SetStringField("createdAt", FString::Printf(TEXT("%lld"), CreatedAtValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("createdAt"), FString::Printf(TEXT("%lld"), CreatedAtValue.GetValue()));
         }
         if (RevisionValue.IsSet())
         {
-            JsonRootObject->SetStringField("revision", FString::Printf(TEXT("%lld"), RevisionValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("revision"), FString::Printf(TEXT("%lld"), RevisionValue.GetValue()));
         }
         return JsonRootObject;
     }

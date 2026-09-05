@@ -119,15 +119,15 @@ namespace Gs2::Distributor::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (RequestIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("requestId", RequestIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("requestId"), RequestIdValue.GetValue());
         }
         if (StatusCodeValue.IsSet())
         {
-            JsonRootObject->SetNumberField("statusCode", StatusCodeValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("statusCode"), StatusCodeValue.GetValue());
         }
         if (ResultPayloadValue.IsSet())
         {
-            JsonRootObject->SetStringField("resultPayload", ResultPayloadValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("resultPayload"), ResultPayloadValue.GetValue());
         }
         return JsonRootObject;
     }

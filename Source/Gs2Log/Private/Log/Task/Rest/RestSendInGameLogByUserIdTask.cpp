@@ -96,15 +96,15 @@ namespace Gs2::Log::Task::Rest
                 {
                     v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
                 }
-                JsonRootObject->SetArrayField("tags", v);
+                JsonRootObject->SetArrayField(TEXT("tags"), v);
             }
             if (this->Request->GetPayload().IsSet())
             {
-                JsonRootObject->SetStringField("payload", this->Request->GetPayload().GetValue());
+                JsonRootObject->SetStringField(TEXT("payload"), this->Request->GetPayload().GetValue());
             }
             if (this->Request->GetContextStack().IsSet())
             {
-                JsonRootObject->SetStringField("contextStack", this->Request->GetContextStack().GetValue());
+                JsonRootObject->SetStringField(TEXT("contextStack"), this->Request->GetContextStack().GetValue());
             }
             FJsonSerializer::Serialize(JsonRootObject.ToSharedRef(), Writer);
             request->SetContentAsString(Body);

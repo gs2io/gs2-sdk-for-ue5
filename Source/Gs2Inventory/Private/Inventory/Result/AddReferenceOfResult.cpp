@@ -146,19 +146,19 @@ namespace Gs2::Inventory::Result
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (ItemValue.IsSet())
         {
-            JsonRootObject->SetStringField("item", ItemValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("item"), ItemValue.GetValue());
         }
         if (ItemSetValue != nullptr && ItemSetValue.IsValid())
         {
-            JsonRootObject->SetObjectField("itemSet", ItemSetValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("itemSet"), ItemSetValue->ToJson());
         }
         if (ItemModelValue != nullptr && ItemModelValue.IsValid())
         {
-            JsonRootObject->SetObjectField("itemModel", ItemModelValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("itemModel"), ItemModelValue->ToJson());
         }
         if (InventoryValue != nullptr && InventoryValue.IsValid())
         {
-            JsonRootObject->SetObjectField("inventory", InventoryValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("inventory"), InventoryValue->ToJson());
         }
         return JsonRootObject;
     }

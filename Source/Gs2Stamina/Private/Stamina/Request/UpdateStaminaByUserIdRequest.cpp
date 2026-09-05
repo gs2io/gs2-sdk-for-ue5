@@ -297,43 +297,43 @@ namespace Gs2::Stamina::Request
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (ContextStackValue.IsSet())
         {
-            JsonRootObject->SetStringField("contextStack", ContextStackValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("contextStack"), ContextStackValue.GetValue());
         }
         if (NamespaceNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("namespaceName", NamespaceNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("namespaceName"), NamespaceNameValue.GetValue());
         }
         if (StaminaNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("staminaName", StaminaNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("staminaName"), StaminaNameValue.GetValue());
         }
         if (UserIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("userId", UserIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("userId"), UserIdValue.GetValue());
         }
         if (ValueValue.IsSet())
         {
-            JsonRootObject->SetNumberField("value", ValueValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("value"), ValueValue.GetValue());
         }
         if (MaxValueValue.IsSet())
         {
-            JsonRootObject->SetNumberField("maxValue", MaxValueValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("maxValue"), MaxValueValue.GetValue());
         }
         if (RecoverIntervalMinutesValue.IsSet())
         {
-            JsonRootObject->SetNumberField("recoverIntervalMinutes", RecoverIntervalMinutesValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("recoverIntervalMinutes"), RecoverIntervalMinutesValue.GetValue());
         }
         if (RecoverValueValue.IsSet())
         {
-            JsonRootObject->SetNumberField("recoverValue", RecoverValueValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("recoverValue"), RecoverValueValue.GetValue());
         }
         if (TimeOffsetTokenValue.IsSet())
         {
-            JsonRootObject->SetStringField("timeOffsetToken", TimeOffsetTokenValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("timeOffsetToken"), TimeOffsetTokenValue.GetValue());
         }
         if (DuplicationAvoiderValue.IsSet())
         {
-            JsonRootObject->SetStringField("duplicationAvoider", DuplicationAvoiderValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("duplicationAvoider"), DuplicationAvoiderValue.GetValue());
         }
         return JsonRootObject;
     }

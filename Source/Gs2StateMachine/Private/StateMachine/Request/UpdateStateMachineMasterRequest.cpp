@@ -127,19 +127,19 @@ namespace Gs2::StateMachine::Request
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (ContextStackValue.IsSet())
         {
-            JsonRootObject->SetStringField("contextStack", ContextStackValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("contextStack"), ContextStackValue.GetValue());
         }
         if (NamespaceNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("namespaceName", NamespaceNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("namespaceName"), NamespaceNameValue.GetValue());
         }
         if (MainStateMachineNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("mainStateMachineName", MainStateMachineNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("mainStateMachineName"), MainStateMachineNameValue.GetValue());
         }
         if (PayloadValue.IsSet())
         {
-            JsonRootObject->SetStringField("payload", PayloadValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("payload"), PayloadValue.GetValue());
         }
         return JsonRootObject;
     }

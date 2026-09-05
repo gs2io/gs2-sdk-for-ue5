@@ -591,91 +591,91 @@ namespace Gs2::Friend::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (NamespaceIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("namespaceId", NamespaceIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("namespaceId"), NamespaceIdValue.GetValue());
         }
         if (NameValue.IsSet())
         {
-            JsonRootObject->SetStringField("name", NameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("name"), NameValue.GetValue());
         }
         if (DescriptionValue.IsSet())
         {
-            JsonRootObject->SetStringField("description", DescriptionValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("description"), DescriptionValue.GetValue());
         }
         if (TransactionSettingValue != nullptr && TransactionSettingValue.IsValid())
         {
-            JsonRootObject->SetObjectField("transactionSetting", TransactionSettingValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("transactionSetting"), TransactionSettingValue->ToJson());
         }
         if (FollowScriptValue != nullptr && FollowScriptValue.IsValid())
         {
-            JsonRootObject->SetObjectField("followScript", FollowScriptValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("followScript"), FollowScriptValue->ToJson());
         }
         if (UnfollowScriptValue != nullptr && UnfollowScriptValue.IsValid())
         {
-            JsonRootObject->SetObjectField("unfollowScript", UnfollowScriptValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("unfollowScript"), UnfollowScriptValue->ToJson());
         }
         if (SendRequestScriptValue != nullptr && SendRequestScriptValue.IsValid())
         {
-            JsonRootObject->SetObjectField("sendRequestScript", SendRequestScriptValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("sendRequestScript"), SendRequestScriptValue->ToJson());
         }
         if (CancelRequestScriptValue != nullptr && CancelRequestScriptValue.IsValid())
         {
-            JsonRootObject->SetObjectField("cancelRequestScript", CancelRequestScriptValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("cancelRequestScript"), CancelRequestScriptValue->ToJson());
         }
         if (AcceptRequestScriptValue != nullptr && AcceptRequestScriptValue.IsValid())
         {
-            JsonRootObject->SetObjectField("acceptRequestScript", AcceptRequestScriptValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("acceptRequestScript"), AcceptRequestScriptValue->ToJson());
         }
         if (RejectRequestScriptValue != nullptr && RejectRequestScriptValue.IsValid())
         {
-            JsonRootObject->SetObjectField("rejectRequestScript", RejectRequestScriptValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("rejectRequestScript"), RejectRequestScriptValue->ToJson());
         }
         if (DeleteFriendScriptValue != nullptr && DeleteFriendScriptValue.IsValid())
         {
-            JsonRootObject->SetObjectField("deleteFriendScript", DeleteFriendScriptValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("deleteFriendScript"), DeleteFriendScriptValue->ToJson());
         }
         if (UpdateProfileScriptValue != nullptr && UpdateProfileScriptValue.IsValid())
         {
-            JsonRootObject->SetObjectField("updateProfileScript", UpdateProfileScriptValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("updateProfileScript"), UpdateProfileScriptValue->ToJson());
         }
         if (FollowNotificationValue != nullptr && FollowNotificationValue.IsValid())
         {
-            JsonRootObject->SetObjectField("followNotification", FollowNotificationValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("followNotification"), FollowNotificationValue->ToJson());
         }
         if (ReceiveRequestNotificationValue != nullptr && ReceiveRequestNotificationValue.IsValid())
         {
-            JsonRootObject->SetObjectField("receiveRequestNotification", ReceiveRequestNotificationValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("receiveRequestNotification"), ReceiveRequestNotificationValue->ToJson());
         }
         if (CancelRequestNotificationValue != nullptr && CancelRequestNotificationValue.IsValid())
         {
-            JsonRootObject->SetObjectField("cancelRequestNotification", CancelRequestNotificationValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("cancelRequestNotification"), CancelRequestNotificationValue->ToJson());
         }
         if (AcceptRequestNotificationValue != nullptr && AcceptRequestNotificationValue.IsValid())
         {
-            JsonRootObject->SetObjectField("acceptRequestNotification", AcceptRequestNotificationValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("acceptRequestNotification"), AcceptRequestNotificationValue->ToJson());
         }
         if (RejectRequestNotificationValue != nullptr && RejectRequestNotificationValue.IsValid())
         {
-            JsonRootObject->SetObjectField("rejectRequestNotification", RejectRequestNotificationValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("rejectRequestNotification"), RejectRequestNotificationValue->ToJson());
         }
         if (DeleteFriendNotificationValue != nullptr && DeleteFriendNotificationValue.IsValid())
         {
-            JsonRootObject->SetObjectField("deleteFriendNotification", DeleteFriendNotificationValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("deleteFriendNotification"), DeleteFriendNotificationValue->ToJson());
         }
         if (LogSettingValue != nullptr && LogSettingValue.IsValid())
         {
-            JsonRootObject->SetObjectField("logSetting", LogSettingValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("logSetting"), LogSettingValue->ToJson());
         }
         if (CreatedAtValue.IsSet())
         {
-            JsonRootObject->SetStringField("createdAt", FString::Printf(TEXT("%lld"), CreatedAtValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("createdAt"), FString::Printf(TEXT("%lld"), CreatedAtValue.GetValue()));
         }
         if (UpdatedAtValue.IsSet())
         {
-            JsonRootObject->SetStringField("updatedAt", FString::Printf(TEXT("%lld"), UpdatedAtValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("updatedAt"), FString::Printf(TEXT("%lld"), UpdatedAtValue.GetValue()));
         }
         if (RevisionValue.IsSet())
         {
-            JsonRootObject->SetStringField("revision", FString::Printf(TEXT("%lld"), RevisionValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("revision"), FString::Printf(TEXT("%lld"), RevisionValue.GetValue()));
         }
         return JsonRootObject;
     }

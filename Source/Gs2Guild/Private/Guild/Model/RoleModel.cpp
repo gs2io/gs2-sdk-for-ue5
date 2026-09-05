@@ -110,15 +110,15 @@ namespace Gs2::Guild::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (NameValue.IsSet())
         {
-            JsonRootObject->SetStringField("name", NameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("name"), NameValue.GetValue());
         }
         if (MetadataValue.IsSet())
         {
-            JsonRootObject->SetStringField("metadata", MetadataValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("metadata"), MetadataValue.GetValue());
         }
         if (PolicyDocumentValue.IsSet())
         {
-            JsonRootObject->SetStringField("policyDocument", PolicyDocumentValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("policyDocument"), PolicyDocumentValue.GetValue());
         }
         return JsonRootObject;
     }

@@ -86,27 +86,27 @@ namespace Gs2::SkillTree::Task::Rest
             const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
             if (this->Request->GetDescription().IsSet())
             {
-                JsonRootObject->SetStringField("description", this->Request->GetDescription().GetValue());
+                JsonRootObject->SetStringField(TEXT("description"), this->Request->GetDescription().GetValue());
             }
             if (this->Request->GetTransactionSetting() != nullptr && this->Request->GetTransactionSetting().IsValid())
             {
-                JsonRootObject->SetObjectField("transactionSetting", this->Request->GetTransactionSetting()->ToJson());
+                JsonRootObject->SetObjectField(TEXT("transactionSetting"), this->Request->GetTransactionSetting()->ToJson());
             }
             if (this->Request->GetReleaseScript() != nullptr && this->Request->GetReleaseScript().IsValid())
             {
-                JsonRootObject->SetObjectField("releaseScript", this->Request->GetReleaseScript()->ToJson());
+                JsonRootObject->SetObjectField(TEXT("releaseScript"), this->Request->GetReleaseScript()->ToJson());
             }
             if (this->Request->GetRestrainScript() != nullptr && this->Request->GetRestrainScript().IsValid())
             {
-                JsonRootObject->SetObjectField("restrainScript", this->Request->GetRestrainScript()->ToJson());
+                JsonRootObject->SetObjectField(TEXT("restrainScript"), this->Request->GetRestrainScript()->ToJson());
             }
             if (this->Request->GetLogSetting() != nullptr && this->Request->GetLogSetting().IsValid())
             {
-                JsonRootObject->SetObjectField("logSetting", this->Request->GetLogSetting()->ToJson());
+                JsonRootObject->SetObjectField(TEXT("logSetting"), this->Request->GetLogSetting()->ToJson());
             }
             if (this->Request->GetContextStack().IsSet())
             {
-                JsonRootObject->SetStringField("contextStack", this->Request->GetContextStack().GetValue());
+                JsonRootObject->SetStringField(TEXT("contextStack"), this->Request->GetContextStack().GetValue());
             }
             FJsonSerializer::Serialize(JsonRootObject.ToSharedRef(), Writer);
             request->SetContentAsString(Body);

@@ -119,15 +119,15 @@ namespace Gs2::StateMachine::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (TaskNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("taskName", TaskNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("taskName"), TaskNameValue.GetValue());
         }
         if (HashValue.IsSet())
         {
-            JsonRootObject->SetStringField("hash", HashValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("hash"), HashValue.GetValue());
         }
         if (TimestampValue.IsSet())
         {
-            JsonRootObject->SetStringField("timestamp", FString::Printf(TEXT("%lld"), TimestampValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("timestamp"), FString::Printf(TEXT("%lld"), TimestampValue.GetValue()));
         }
         return JsonRootObject;
     }

@@ -142,19 +142,19 @@ namespace Gs2::Guild::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (UserIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("userId", UserIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("userId"), UserIdValue.GetValue());
         }
         if (RoleNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("roleName", RoleNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("roleName"), RoleNameValue.GetValue());
         }
         if (MetadataValue.IsSet())
         {
-            JsonRootObject->SetStringField("metadata", MetadataValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("metadata"), MetadataValue.GetValue());
         }
         if (JoinedAtValue.IsSet())
         {
-            JsonRootObject->SetStringField("joinedAt", FString::Printf(TEXT("%lld"), JoinedAtValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("joinedAt"), FString::Printf(TEXT("%lld"), JoinedAtValue.GetValue()));
         }
         return JsonRootObject;
     }

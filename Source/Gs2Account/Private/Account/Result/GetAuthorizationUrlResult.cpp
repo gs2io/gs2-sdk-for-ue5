@@ -65,7 +65,7 @@ namespace Gs2::Account::Result
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (AuthorizationUrlValue.IsSet())
         {
-            JsonRootObject->SetStringField("authorizationUrl", AuthorizationUrlValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("authorizationUrl"), AuthorizationUrlValue.GetValue());
         }
         return JsonRootObject;
     }

@@ -136,19 +136,19 @@ namespace Gs2::Account::Request
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (ContextStackValue.IsSet())
         {
-            JsonRootObject->SetStringField("contextStack", ContextStackValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("contextStack"), ContextStackValue.GetValue());
         }
         if (NamePrefixValue.IsSet())
         {
-            JsonRootObject->SetStringField("namePrefix", NamePrefixValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("namePrefix"), NamePrefixValue.GetValue());
         }
         if (PageTokenValue.IsSet())
         {
-            JsonRootObject->SetStringField("pageToken", PageTokenValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("pageToken"), PageTokenValue.GetValue());
         }
         if (LimitValue.IsSet())
         {
-            JsonRootObject->SetNumberField("limit", LimitValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("limit"), LimitValue.GetValue());
         }
         return JsonRootObject;
     }

@@ -96,11 +96,11 @@ namespace Gs2::Matchmaking::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (NameValue.IsSet())
         {
-            JsonRootObject->SetStringField("name", NameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("name"), NameValue.GetValue());
         }
         if (ValueValue.IsSet())
         {
-            JsonRootObject->SetNumberField("value", ValueValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("value"), ValueValue.GetValue());
         }
         return JsonRootObject;
     }

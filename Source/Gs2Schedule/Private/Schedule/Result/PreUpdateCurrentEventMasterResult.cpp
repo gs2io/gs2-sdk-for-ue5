@@ -89,11 +89,11 @@ namespace Gs2::Schedule::Result
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (UploadTokenValue.IsSet())
         {
-            JsonRootObject->SetStringField("uploadToken", UploadTokenValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("uploadToken"), UploadTokenValue.GetValue());
         }
         if (UploadUrlValue.IsSet())
         {
-            JsonRootObject->SetStringField("uploadUrl", UploadUrlValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("uploadUrl"), UploadUrlValue.GetValue());
         }
         return JsonRootObject;
     }

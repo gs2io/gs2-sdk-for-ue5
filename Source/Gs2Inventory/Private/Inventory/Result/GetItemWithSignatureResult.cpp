@@ -179,23 +179,23 @@ namespace Gs2::Inventory::Result
             {
                 v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
             }
-            JsonRootObject->SetArrayField("items", v);
+            JsonRootObject->SetArrayField(TEXT("items"), v);
         }
         if (ItemModelValue != nullptr && ItemModelValue.IsValid())
         {
-            JsonRootObject->SetObjectField("itemModel", ItemModelValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("itemModel"), ItemModelValue->ToJson());
         }
         if (InventoryValue != nullptr && InventoryValue.IsValid())
         {
-            JsonRootObject->SetObjectField("inventory", InventoryValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("inventory"), InventoryValue->ToJson());
         }
         if (BodyValue.IsSet())
         {
-            JsonRootObject->SetStringField("body", BodyValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("body"), BodyValue.GetValue());
         }
         if (SignatureValue.IsSet())
         {
-            JsonRootObject->SetStringField("signature", SignatureValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("signature"), SignatureValue.GetValue());
         }
         return JsonRootObject;
     }

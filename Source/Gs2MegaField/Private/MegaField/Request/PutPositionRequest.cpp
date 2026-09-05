@@ -252,39 +252,39 @@ namespace Gs2::MegaField::Request
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (ContextStackValue.IsSet())
         {
-            JsonRootObject->SetStringField("contextStack", ContextStackValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("contextStack"), ContextStackValue.GetValue());
         }
         if (NamespaceNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("namespaceName", NamespaceNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("namespaceName"), NamespaceNameValue.GetValue());
         }
         if (AccessTokenValue.IsSet())
         {
-            JsonRootObject->SetStringField("xGs2AccessToken", AccessTokenValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("xGs2AccessToken"), AccessTokenValue.GetValue());
         }
         if (AreaModelNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("areaModelName", AreaModelNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("areaModelName"), AreaModelNameValue.GetValue());
         }
         if (LayerModelNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("layerModelName", LayerModelNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("layerModelName"), LayerModelNameValue.GetValue());
         }
         if (PositionValue != nullptr && PositionValue.IsValid())
         {
-            JsonRootObject->SetObjectField("position", PositionValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("position"), PositionValue->ToJson());
         }
         if (VectorValue != nullptr && VectorValue.IsValid())
         {
-            JsonRootObject->SetObjectField("vector", VectorValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("vector"), VectorValue->ToJson());
         }
         if (RValue.IsSet())
         {
-            JsonRootObject->SetNumberField("r", RValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("r"), RValue.GetValue());
         }
         if (DuplicationAvoiderValue.IsSet())
         {
-            JsonRootObject->SetStringField("duplicationAvoider", DuplicationAvoiderValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("duplicationAvoider"), DuplicationAvoiderValue.GetValue());
         }
         return JsonRootObject;
     }

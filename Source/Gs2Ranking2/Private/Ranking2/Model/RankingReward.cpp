@@ -122,11 +122,11 @@ namespace Gs2::Ranking2::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (ThresholdRankValue.IsSet())
         {
-            JsonRootObject->SetNumberField("thresholdRank", ThresholdRankValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("thresholdRank"), ThresholdRankValue.GetValue());
         }
         if (MetadataValue.IsSet())
         {
-            JsonRootObject->SetStringField("metadata", MetadataValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("metadata"), MetadataValue.GetValue());
         }
         if (AcquireActionsValue != nullptr && AcquireActionsValue.IsValid())
         {
@@ -135,7 +135,7 @@ namespace Gs2::Ranking2::Model
             {
                 v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
             }
-            JsonRootObject->SetArrayField("acquireActions", v);
+            JsonRootObject->SetArrayField(TEXT("acquireActions"), v);
         }
         return JsonRootObject;
     }

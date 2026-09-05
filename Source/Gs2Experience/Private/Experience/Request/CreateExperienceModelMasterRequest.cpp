@@ -305,39 +305,39 @@ namespace Gs2::Experience::Request
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (ContextStackValue.IsSet())
         {
-            JsonRootObject->SetStringField("contextStack", ContextStackValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("contextStack"), ContextStackValue.GetValue());
         }
         if (NamespaceNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("namespaceName", NamespaceNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("namespaceName"), NamespaceNameValue.GetValue());
         }
         if (NameValue.IsSet())
         {
-            JsonRootObject->SetStringField("name", NameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("name"), NameValue.GetValue());
         }
         if (DescriptionValue.IsSet())
         {
-            JsonRootObject->SetStringField("description", DescriptionValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("description"), DescriptionValue.GetValue());
         }
         if (MetadataValue.IsSet())
         {
-            JsonRootObject->SetStringField("metadata", MetadataValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("metadata"), MetadataValue.GetValue());
         }
         if (DefaultExperienceValue.IsSet())
         {
-            JsonRootObject->SetStringField("defaultExperience", FString::Printf(TEXT("%lld"), DefaultExperienceValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("defaultExperience"), FString::Printf(TEXT("%lld"), DefaultExperienceValue.GetValue()));
         }
         if (DefaultRankCapValue.IsSet())
         {
-            JsonRootObject->SetStringField("defaultRankCap", FString::Printf(TEXT("%lld"), DefaultRankCapValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("defaultRankCap"), FString::Printf(TEXT("%lld"), DefaultRankCapValue.GetValue()));
         }
         if (MaxRankCapValue.IsSet())
         {
-            JsonRootObject->SetStringField("maxRankCap", FString::Printf(TEXT("%lld"), MaxRankCapValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("maxRankCap"), FString::Printf(TEXT("%lld"), MaxRankCapValue.GetValue()));
         }
         if (RankThresholdNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("rankThresholdName", RankThresholdNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("rankThresholdName"), RankThresholdNameValue.GetValue());
         }
         if (AcquireActionRatesValue != nullptr && AcquireActionRatesValue.IsValid())
         {
@@ -346,7 +346,7 @@ namespace Gs2::Experience::Request
             {
                 v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
             }
-            JsonRootObject->SetArrayField("acquireActionRates", v);
+            JsonRootObject->SetArrayField(TEXT("acquireActionRates"), v);
         }
         return JsonRootObject;
     }

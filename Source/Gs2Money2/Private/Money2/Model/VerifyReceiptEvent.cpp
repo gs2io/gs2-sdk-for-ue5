@@ -131,19 +131,19 @@ namespace Gs2::Money2::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (ContentNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("contentName", ContentNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("contentName"), ContentNameValue.GetValue());
         }
         if (PlatformValue.IsSet())
         {
-            JsonRootObject->SetStringField("platform", PlatformValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("platform"), PlatformValue.GetValue());
         }
         if (AppleAppStoreVerifyReceiptEventValue != nullptr && AppleAppStoreVerifyReceiptEventValue.IsValid())
         {
-            JsonRootObject->SetObjectField("appleAppStoreVerifyReceiptEvent", AppleAppStoreVerifyReceiptEventValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("appleAppStoreVerifyReceiptEvent"), AppleAppStoreVerifyReceiptEventValue->ToJson());
         }
         if (GooglePlayVerifyReceiptEventValue != nullptr && GooglePlayVerifyReceiptEventValue.IsValid())
         {
-            JsonRootObject->SetObjectField("googlePlayVerifyReceiptEvent", GooglePlayVerifyReceiptEventValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("googlePlayVerifyReceiptEvent"), GooglePlayVerifyReceiptEventValue->ToJson());
         }
         return JsonRootObject;
     }

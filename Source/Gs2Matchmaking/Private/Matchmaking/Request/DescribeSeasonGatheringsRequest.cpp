@@ -226,31 +226,31 @@ namespace Gs2::Matchmaking::Request
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (ContextStackValue.IsSet())
         {
-            JsonRootObject->SetStringField("contextStack", ContextStackValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("contextStack"), ContextStackValue.GetValue());
         }
         if (NamespaceNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("namespaceName", NamespaceNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("namespaceName"), NamespaceNameValue.GetValue());
         }
         if (SeasonNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("seasonName", SeasonNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("seasonName"), SeasonNameValue.GetValue());
         }
         if (SeasonValue.IsSet())
         {
-            JsonRootObject->SetStringField("season", FString::Printf(TEXT("%lld"), SeasonValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("season"), FString::Printf(TEXT("%lld"), SeasonValue.GetValue()));
         }
         if (TierValue.IsSet())
         {
-            JsonRootObject->SetStringField("tier", FString::Printf(TEXT("%lld"), TierValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("tier"), FString::Printf(TEXT("%lld"), TierValue.GetValue()));
         }
         if (PageTokenValue.IsSet())
         {
-            JsonRootObject->SetStringField("pageToken", PageTokenValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("pageToken"), PageTokenValue.GetValue());
         }
         if (LimitValue.IsSet())
         {
-            JsonRootObject->SetNumberField("limit", LimitValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("limit"), LimitValue.GetValue());
         }
         return JsonRootObject;
     }

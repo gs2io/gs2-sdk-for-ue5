@@ -65,7 +65,7 @@ namespace Gs2::Distributor::Result
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (NewContextStackValue.IsSet())
         {
-            JsonRootObject->SetStringField("newContextStack", NewContextStackValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("newContextStack"), NewContextStackValue.GetValue());
         }
         return JsonRootObject;
     }

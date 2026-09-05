@@ -90,7 +90,7 @@ namespace Gs2::Formation::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (NameValue.IsSet())
         {
-            JsonRootObject->SetStringField("name", NameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("name"), NameValue.GetValue());
         }
         if (ConfigValue != nullptr && ConfigValue.IsValid())
         {
@@ -99,7 +99,7 @@ namespace Gs2::Formation::Model
             {
                 v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
             }
-            JsonRootObject->SetArrayField("config", v);
+            JsonRootObject->SetArrayField(TEXT("config"), v);
         }
         return JsonRootObject;
     }

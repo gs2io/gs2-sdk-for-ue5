@@ -175,27 +175,27 @@ namespace Gs2::Key::Request
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (ContextStackValue.IsSet())
         {
-            JsonRootObject->SetStringField("contextStack", ContextStackValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("contextStack"), ContextStackValue.GetValue());
         }
         if (NamespaceNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("namespaceName", NamespaceNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("namespaceName"), NamespaceNameValue.GetValue());
         }
         if (ApiKeyNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("apiKeyName", ApiKeyNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("apiKeyName"), ApiKeyNameValue.GetValue());
         }
         if (DescriptionValue.IsSet())
         {
-            JsonRootObject->SetStringField("description", DescriptionValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("description"), DescriptionValue.GetValue());
         }
         if (ApiKeyValue.IsSet())
         {
-            JsonRootObject->SetStringField("apiKey", ApiKeyValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("apiKey"), ApiKeyValue.GetValue());
         }
         if (EncryptionKeyNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("encryptionKeyName", EncryptionKeyNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("encryptionKeyName"), EncryptionKeyNameValue.GetValue());
         }
         return JsonRootObject;
     }

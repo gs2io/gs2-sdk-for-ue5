@@ -91,39 +91,39 @@ namespace Gs2::Ranking2::Task::Rest
             const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
             if (this->Request->GetDescription().IsSet())
             {
-                JsonRootObject->SetStringField("description", this->Request->GetDescription().GetValue());
+                JsonRootObject->SetStringField(TEXT("description"), this->Request->GetDescription().GetValue());
             }
             if (this->Request->GetMetadata().IsSet())
             {
-                JsonRootObject->SetStringField("metadata", this->Request->GetMetadata().GetValue());
+                JsonRootObject->SetStringField(TEXT("metadata"), this->Request->GetMetadata().GetValue());
             }
             if (this->Request->GetMinimumValue().IsSet())
             {
-                JsonRootObject->SetStringField("minimumValue", FString::Printf(TEXT("%lld"), this->Request->GetMinimumValue().GetValue()));
+                JsonRootObject->SetStringField(TEXT("minimumValue"), FString::Printf(TEXT("%lld"), this->Request->GetMinimumValue().GetValue()));
             }
             if (this->Request->GetMaximumValue().IsSet())
             {
-                JsonRootObject->SetStringField("maximumValue", FString::Printf(TEXT("%lld"), this->Request->GetMaximumValue().GetValue()));
+                JsonRootObject->SetStringField(TEXT("maximumValue"), FString::Printf(TEXT("%lld"), this->Request->GetMaximumValue().GetValue()));
             }
             if (this->Request->GetSum().IsSet())
             {
-                JsonRootObject->SetBoolField("sum", this->Request->GetSum().GetValue());
+                JsonRootObject->SetBoolField(TEXT("sum"), this->Request->GetSum().GetValue());
             }
             if (this->Request->GetOrderDirection().IsSet())
             {
-                JsonRootObject->SetStringField("orderDirection", this->Request->GetOrderDirection().GetValue());
+                JsonRootObject->SetStringField(TEXT("orderDirection"), this->Request->GetOrderDirection().GetValue());
             }
             if (this->Request->GetEntryPeriodEventId().IsSet())
             {
-                JsonRootObject->SetStringField("entryPeriodEventId", this->Request->GetEntryPeriodEventId().GetValue());
+                JsonRootObject->SetStringField(TEXT("entryPeriodEventId"), this->Request->GetEntryPeriodEventId().GetValue());
             }
             if (this->Request->GetAccessPeriodEventId().IsSet())
             {
-                JsonRootObject->SetStringField("accessPeriodEventId", this->Request->GetAccessPeriodEventId().GetValue());
+                JsonRootObject->SetStringField(TEXT("accessPeriodEventId"), this->Request->GetAccessPeriodEventId().GetValue());
             }
             if (this->Request->GetContextStack().IsSet())
             {
-                JsonRootObject->SetStringField("contextStack", this->Request->GetContextStack().GetValue());
+                JsonRootObject->SetStringField(TEXT("contextStack"), this->Request->GetContextStack().GetValue());
             }
             FJsonSerializer::Serialize(JsonRootObject.ToSharedRef(), Writer);
             request->SetContentAsString(Body);

@@ -298,31 +298,31 @@ namespace Gs2::Experience::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (ExperienceModelIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("experienceModelId", ExperienceModelIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("experienceModelId"), ExperienceModelIdValue.GetValue());
         }
         if (NameValue.IsSet())
         {
-            JsonRootObject->SetStringField("name", NameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("name"), NameValue.GetValue());
         }
         if (MetadataValue.IsSet())
         {
-            JsonRootObject->SetStringField("metadata", MetadataValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("metadata"), MetadataValue.GetValue());
         }
         if (DefaultExperienceValue.IsSet())
         {
-            JsonRootObject->SetStringField("defaultExperience", FString::Printf(TEXT("%lld"), DefaultExperienceValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("defaultExperience"), FString::Printf(TEXT("%lld"), DefaultExperienceValue.GetValue()));
         }
         if (DefaultRankCapValue.IsSet())
         {
-            JsonRootObject->SetStringField("defaultRankCap", FString::Printf(TEXT("%lld"), DefaultRankCapValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("defaultRankCap"), FString::Printf(TEXT("%lld"), DefaultRankCapValue.GetValue()));
         }
         if (MaxRankCapValue.IsSet())
         {
-            JsonRootObject->SetStringField("maxRankCap", FString::Printf(TEXT("%lld"), MaxRankCapValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("maxRankCap"), FString::Printf(TEXT("%lld"), MaxRankCapValue.GetValue()));
         }
         if (RankThresholdValue != nullptr && RankThresholdValue.IsValid())
         {
-            JsonRootObject->SetObjectField("rankThreshold", RankThresholdValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("rankThreshold"), RankThresholdValue->ToJson());
         }
         if (AcquireActionRatesValue != nullptr && AcquireActionRatesValue.IsValid())
         {
@@ -331,7 +331,7 @@ namespace Gs2::Experience::Model
             {
                 v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
             }
-            JsonRootObject->SetArrayField("acquireActionRates", v);
+            JsonRootObject->SetArrayField(TEXT("acquireActionRates"), v);
         }
         return JsonRootObject;
     }

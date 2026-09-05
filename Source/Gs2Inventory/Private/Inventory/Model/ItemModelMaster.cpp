@@ -403,47 +403,47 @@ namespace Gs2::Inventory::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (ItemModelIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("itemModelId", ItemModelIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("itemModelId"), ItemModelIdValue.GetValue());
         }
         if (InventoryNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("inventoryName", InventoryNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("inventoryName"), InventoryNameValue.GetValue());
         }
         if (NameValue.IsSet())
         {
-            JsonRootObject->SetStringField("name", NameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("name"), NameValue.GetValue());
         }
         if (DescriptionValue.IsSet())
         {
-            JsonRootObject->SetStringField("description", DescriptionValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("description"), DescriptionValue.GetValue());
         }
         if (MetadataValue.IsSet())
         {
-            JsonRootObject->SetStringField("metadata", MetadataValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("metadata"), MetadataValue.GetValue());
         }
         if (StackingLimitValue.IsSet())
         {
-            JsonRootObject->SetStringField("stackingLimit", FString::Printf(TEXT("%lld"), StackingLimitValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("stackingLimit"), FString::Printf(TEXT("%lld"), StackingLimitValue.GetValue()));
         }
         if (AllowMultipleStacksValue.IsSet())
         {
-            JsonRootObject->SetBoolField("allowMultipleStacks", AllowMultipleStacksValue.GetValue());
+            JsonRootObject->SetBoolField(TEXT("allowMultipleStacks"), AllowMultipleStacksValue.GetValue());
         }
         if (SortValueValue.IsSet())
         {
-            JsonRootObject->SetNumberField("sortValue", SortValueValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("sortValue"), SortValueValue.GetValue());
         }
         if (CreatedAtValue.IsSet())
         {
-            JsonRootObject->SetStringField("createdAt", FString::Printf(TEXT("%lld"), CreatedAtValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("createdAt"), FString::Printf(TEXT("%lld"), CreatedAtValue.GetValue()));
         }
         if (UpdatedAtValue.IsSet())
         {
-            JsonRootObject->SetStringField("updatedAt", FString::Printf(TEXT("%lld"), UpdatedAtValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("updatedAt"), FString::Printf(TEXT("%lld"), UpdatedAtValue.GetValue()));
         }
         if (RevisionValue.IsSet())
         {
-            JsonRootObject->SetStringField("revision", FString::Printf(TEXT("%lld"), RevisionValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("revision"), FString::Printf(TEXT("%lld"), RevisionValue.GetValue()));
         }
         return JsonRootObject;
     }

@@ -91,11 +91,11 @@ namespace Gs2::Key::Task::Rest
             const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
             if (this->Request->GetData().IsSet())
             {
-                JsonRootObject->SetStringField("data", this->Request->GetData().GetValue());
+                JsonRootObject->SetStringField(TEXT("data"), this->Request->GetData().GetValue());
             }
             if (this->Request->GetContextStack().IsSet())
             {
-                JsonRootObject->SetStringField("contextStack", this->Request->GetContextStack().GetValue());
+                JsonRootObject->SetStringField(TEXT("contextStack"), this->Request->GetContextStack().GetValue());
             }
             FJsonSerializer::Serialize(JsonRootObject.ToSharedRef(), Writer);
             request->SetContentAsString(Body);

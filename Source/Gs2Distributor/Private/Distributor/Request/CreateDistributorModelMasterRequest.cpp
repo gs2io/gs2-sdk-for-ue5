@@ -206,27 +206,27 @@ namespace Gs2::Distributor::Request
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (ContextStackValue.IsSet())
         {
-            JsonRootObject->SetStringField("contextStack", ContextStackValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("contextStack"), ContextStackValue.GetValue());
         }
         if (NamespaceNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("namespaceName", NamespaceNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("namespaceName"), NamespaceNameValue.GetValue());
         }
         if (NameValue.IsSet())
         {
-            JsonRootObject->SetStringField("name", NameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("name"), NameValue.GetValue());
         }
         if (DescriptionValue.IsSet())
         {
-            JsonRootObject->SetStringField("description", DescriptionValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("description"), DescriptionValue.GetValue());
         }
         if (MetadataValue.IsSet())
         {
-            JsonRootObject->SetStringField("metadata", MetadataValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("metadata"), MetadataValue.GetValue());
         }
         if (InboxNamespaceIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("inboxNamespaceId", InboxNamespaceIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("inboxNamespaceId"), InboxNamespaceIdValue.GetValue());
         }
         if (WhiteListTargetIdsValue != nullptr && WhiteListTargetIdsValue.IsValid())
         {
@@ -235,7 +235,7 @@ namespace Gs2::Distributor::Request
             {
                 v.Add(MakeShared<FJsonValueString>(JsonObjectValue));
             }
-            JsonRootObject->SetArrayField("whiteListTargetIds", v);
+            JsonRootObject->SetArrayField(TEXT("whiteListTargetIds"), v);
         }
         return JsonRootObject;
     }

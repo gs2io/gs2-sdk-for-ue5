@@ -110,15 +110,15 @@ namespace Gs2::Ranking2::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (RankingNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("rankingName", RankingNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("rankingName"), RankingNameValue.GetValue());
         }
         if (UserIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("userId", UserIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("userId"), UserIdValue.GetValue());
         }
         if (TargetUserIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("targetUserId", TargetUserIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("targetUserId"), TargetUserIdValue.GetValue());
         }
         return JsonRootObject;
     }

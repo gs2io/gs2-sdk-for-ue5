@@ -284,31 +284,31 @@ namespace Gs2::Lock::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (MutexIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("mutexId", MutexIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("mutexId"), MutexIdValue.GetValue());
         }
         if (UserIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("userId", UserIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("userId"), UserIdValue.GetValue());
         }
         if (PropertyIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("propertyId", PropertyIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("propertyId"), PropertyIdValue.GetValue());
         }
         if (TransactionIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("transactionId", TransactionIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("transactionId"), TransactionIdValue.GetValue());
         }
         if (CreatedAtValue.IsSet())
         {
-            JsonRootObject->SetStringField("createdAt", FString::Printf(TEXT("%lld"), CreatedAtValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("createdAt"), FString::Printf(TEXT("%lld"), CreatedAtValue.GetValue()));
         }
         if (TtlAtValue.IsSet())
         {
-            JsonRootObject->SetStringField("ttlAt", FString::Printf(TEXT("%lld"), TtlAtValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("ttlAt"), FString::Printf(TEXT("%lld"), TtlAtValue.GetValue()));
         }
         if (RevisionValue.IsSet())
         {
-            JsonRootObject->SetStringField("revision", FString::Printf(TEXT("%lld"), RevisionValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("revision"), FString::Printf(TEXT("%lld"), RevisionValue.GetValue()));
         }
         return JsonRootObject;
     }

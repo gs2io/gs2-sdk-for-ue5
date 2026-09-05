@@ -91,19 +91,19 @@ namespace Gs2::Friend::Task::Rest
             const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
             if (this->Request->GetPublicProfile().IsSet())
             {
-                JsonRootObject->SetStringField("publicProfile", this->Request->GetPublicProfile().GetValue());
+                JsonRootObject->SetStringField(TEXT("publicProfile"), this->Request->GetPublicProfile().GetValue());
             }
             if (this->Request->GetFollowerProfile().IsSet())
             {
-                JsonRootObject->SetStringField("followerProfile", this->Request->GetFollowerProfile().GetValue());
+                JsonRootObject->SetStringField(TEXT("followerProfile"), this->Request->GetFollowerProfile().GetValue());
             }
             if (this->Request->GetFriendProfile().IsSet())
             {
-                JsonRootObject->SetStringField("friendProfile", this->Request->GetFriendProfile().GetValue());
+                JsonRootObject->SetStringField(TEXT("friendProfile"), this->Request->GetFriendProfile().GetValue());
             }
             if (this->Request->GetContextStack().IsSet())
             {
-                JsonRootObject->SetStringField("contextStack", this->Request->GetContextStack().GetValue());
+                JsonRootObject->SetStringField(TEXT("contextStack"), this->Request->GetContextStack().GetValue());
             }
             FJsonSerializer::Serialize(JsonRootObject.ToSharedRef(), Writer);
             request->SetContentAsString(Body);

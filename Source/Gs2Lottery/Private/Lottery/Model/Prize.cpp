@@ -223,11 +223,11 @@ namespace Gs2::Lottery::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (PrizeIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("prizeId", PrizeIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("prizeId"), PrizeIdValue.GetValue());
         }
         if (TypeValue.IsSet())
         {
-            JsonRootObject->SetStringField("type", TypeValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("type"), TypeValue.GetValue());
         }
         if (AcquireActionsValue != nullptr && AcquireActionsValue.IsValid())
         {
@@ -236,23 +236,23 @@ namespace Gs2::Lottery::Model
             {
                 v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
             }
-            JsonRootObject->SetArrayField("acquireActions", v);
+            JsonRootObject->SetArrayField(TEXT("acquireActions"), v);
         }
         if (DrawnLimitValue.IsSet())
         {
-            JsonRootObject->SetNumberField("drawnLimit", DrawnLimitValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("drawnLimit"), DrawnLimitValue.GetValue());
         }
         if (LimitFailOverPrizeIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("limitFailOverPrizeId", LimitFailOverPrizeIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("limitFailOverPrizeId"), LimitFailOverPrizeIdValue.GetValue());
         }
         if (PrizeTableNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("prizeTableName", PrizeTableNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("prizeTableName"), PrizeTableNameValue.GetValue());
         }
         if (WeightValue.IsSet())
         {
-            JsonRootObject->SetNumberField("weight", WeightValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("weight"), WeightValue.GetValue());
         }
         return JsonRootObject;
     }

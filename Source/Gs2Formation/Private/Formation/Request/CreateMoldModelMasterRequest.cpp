@@ -241,35 +241,35 @@ namespace Gs2::Formation::Request
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (ContextStackValue.IsSet())
         {
-            JsonRootObject->SetStringField("contextStack", ContextStackValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("contextStack"), ContextStackValue.GetValue());
         }
         if (NamespaceNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("namespaceName", NamespaceNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("namespaceName"), NamespaceNameValue.GetValue());
         }
         if (NameValue.IsSet())
         {
-            JsonRootObject->SetStringField("name", NameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("name"), NameValue.GetValue());
         }
         if (DescriptionValue.IsSet())
         {
-            JsonRootObject->SetStringField("description", DescriptionValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("description"), DescriptionValue.GetValue());
         }
         if (MetadataValue.IsSet())
         {
-            JsonRootObject->SetStringField("metadata", MetadataValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("metadata"), MetadataValue.GetValue());
         }
         if (FormModelNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("formModelName", FormModelNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("formModelName"), FormModelNameValue.GetValue());
         }
         if (InitialMaxCapacityValue.IsSet())
         {
-            JsonRootObject->SetNumberField("initialMaxCapacity", InitialMaxCapacityValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("initialMaxCapacity"), InitialMaxCapacityValue.GetValue());
         }
         if (MaxCapacityValue.IsSet())
         {
-            JsonRootObject->SetNumberField("maxCapacity", MaxCapacityValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("maxCapacity"), MaxCapacityValue.GetValue());
         }
         return JsonRootObject;
     }

@@ -96,7 +96,7 @@ namespace Gs2::Datastore::Task::Rest
             const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
             if (this->Request->GetScope().IsSet())
             {
-                JsonRootObject->SetStringField("scope", this->Request->GetScope().GetValue());
+                JsonRootObject->SetStringField(TEXT("scope"), this->Request->GetScope().GetValue());
             }
             if (this->Request->GetAllowUserIds() != nullptr && this->Request->GetAllowUserIds().IsValid())
             {
@@ -105,11 +105,11 @@ namespace Gs2::Datastore::Task::Rest
                 {
                     v.Add(MakeShared<FJsonValueString>(JsonObjectValue));
                 }
-                JsonRootObject->SetArrayField("allowUserIds", v);
+                JsonRootObject->SetArrayField(TEXT("allowUserIds"), v);
             }
             if (this->Request->GetContextStack().IsSet())
             {
-                JsonRootObject->SetStringField("contextStack", this->Request->GetContextStack().GetValue());
+                JsonRootObject->SetStringField(TEXT("contextStack"), this->Request->GetContextStack().GetValue());
             }
             FJsonSerializer::Serialize(JsonRootObject.ToSharedRef(), Writer);
             request->SetContentAsString(Body);

@@ -142,19 +142,19 @@ namespace Gs2::Friend::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (GatewayNamespaceIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("gatewayNamespaceId", GatewayNamespaceIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("gatewayNamespaceId"), GatewayNamespaceIdValue.GetValue());
         }
         if (EnableTransferMobileNotificationValue.IsSet())
         {
-            JsonRootObject->SetBoolField("enableTransferMobileNotification", EnableTransferMobileNotificationValue.GetValue());
+            JsonRootObject->SetBoolField(TEXT("enableTransferMobileNotification"), EnableTransferMobileNotificationValue.GetValue());
         }
         if (SoundValue.IsSet())
         {
-            JsonRootObject->SetStringField("sound", SoundValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("sound"), SoundValue.GetValue());
         }
         if (EnableValue.IsSet())
         {
-            JsonRootObject->SetStringField("enable", EnableValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("enable"), EnableValue.GetValue());
         }
         return JsonRootObject;
     }

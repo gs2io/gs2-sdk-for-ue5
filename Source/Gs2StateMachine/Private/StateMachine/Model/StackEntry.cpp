@@ -87,11 +87,11 @@ namespace Gs2::StateMachine::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (StateMachineNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("stateMachineName", StateMachineNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("stateMachineName"), StateMachineNameValue.GetValue());
         }
         if (TaskNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("taskName", TaskNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("taskName"), TaskNameValue.GetValue());
         }
         return JsonRootObject;
     }

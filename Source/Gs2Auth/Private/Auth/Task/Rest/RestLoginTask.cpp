@@ -80,15 +80,15 @@ namespace Gs2::Auth::Task::Rest
             const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
             if (this->Request->GetUserId().IsSet())
             {
-                JsonRootObject->SetStringField("userId", this->Request->GetUserId().GetValue());
+                JsonRootObject->SetStringField(TEXT("userId"), this->Request->GetUserId().GetValue());
             }
             if (this->Request->GetTimeOffset().IsSet())
             {
-                JsonRootObject->SetNumberField("timeOffset", this->Request->GetTimeOffset().GetValue());
+                JsonRootObject->SetNumberField(TEXT("timeOffset"), this->Request->GetTimeOffset().GetValue());
             }
             if (this->Request->GetContextStack().IsSet())
             {
-                JsonRootObject->SetStringField("contextStack", this->Request->GetContextStack().GetValue());
+                JsonRootObject->SetStringField(TEXT("contextStack"), this->Request->GetContextStack().GetValue());
             }
             FJsonSerializer::Serialize(JsonRootObject.ToSharedRef(), Writer);
             request->SetContentAsString(Body);

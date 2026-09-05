@@ -209,23 +209,23 @@ namespace Gs2::Log::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (FacetModelIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("facetModelId", FacetModelIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("facetModelId"), FacetModelIdValue.GetValue());
         }
         if (FieldValue.IsSet())
         {
-            JsonRootObject->SetStringField("field", FieldValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("field"), FieldValue.GetValue());
         }
         if (TypeValue.IsSet())
         {
-            JsonRootObject->SetStringField("type", TypeValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("type"), TypeValue.GetValue());
         }
         if (DisplayNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("displayName", DisplayNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("displayName"), DisplayNameValue.GetValue());
         }
         if (OrderValue.IsSet())
         {
-            JsonRootObject->SetNumberField("order", OrderValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("order"), OrderValue.GetValue());
         }
         return JsonRootObject;
     }

@@ -356,31 +356,31 @@ namespace Gs2::LoginReward::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (BonusModelIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("bonusModelId", BonusModelIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("bonusModelId"), BonusModelIdValue.GetValue());
         }
         if (NameValue.IsSet())
         {
-            JsonRootObject->SetStringField("name", NameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("name"), NameValue.GetValue());
         }
         if (MetadataValue.IsSet())
         {
-            JsonRootObject->SetStringField("metadata", MetadataValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("metadata"), MetadataValue.GetValue());
         }
         if (ModeValue.IsSet())
         {
-            JsonRootObject->SetStringField("mode", ModeValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("mode"), ModeValue.GetValue());
         }
         if (PeriodEventIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("periodEventId", PeriodEventIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("periodEventId"), PeriodEventIdValue.GetValue());
         }
         if (ResetHourValue.IsSet())
         {
-            JsonRootObject->SetNumberField("resetHour", ResetHourValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("resetHour"), ResetHourValue.GetValue());
         }
         if (RepeatValue.IsSet())
         {
-            JsonRootObject->SetStringField("repeat", RepeatValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("repeat"), RepeatValue.GetValue());
         }
         if (RewardsValue != nullptr && RewardsValue.IsValid())
         {
@@ -389,11 +389,11 @@ namespace Gs2::LoginReward::Model
             {
                 v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
             }
-            JsonRootObject->SetArrayField("rewards", v);
+            JsonRootObject->SetArrayField(TEXT("rewards"), v);
         }
         if (MissedReceiveReliefValue.IsSet())
         {
-            JsonRootObject->SetStringField("missedReceiveRelief", MissedReceiveReliefValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("missedReceiveRelief"), MissedReceiveReliefValue.GetValue());
         }
         if (MissedReceiveReliefVerifyActionsValue != nullptr && MissedReceiveReliefVerifyActionsValue.IsValid())
         {
@@ -402,7 +402,7 @@ namespace Gs2::LoginReward::Model
             {
                 v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
             }
-            JsonRootObject->SetArrayField("missedReceiveReliefVerifyActions", v);
+            JsonRootObject->SetArrayField(TEXT("missedReceiveReliefVerifyActions"), v);
         }
         if (MissedReceiveReliefConsumeActionsValue != nullptr && MissedReceiveReliefConsumeActionsValue.IsValid())
         {
@@ -411,7 +411,7 @@ namespace Gs2::LoginReward::Model
             {
                 v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
             }
-            JsonRootObject->SetArrayField("missedReceiveReliefConsumeActions", v);
+            JsonRootObject->SetArrayField(TEXT("missedReceiveReliefConsumeActions"), v);
         }
         return JsonRootObject;
     }

@@ -86,31 +86,31 @@ namespace Gs2::Realtime::Task::Rest
             const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
             if (this->Request->GetDescription().IsSet())
             {
-                JsonRootObject->SetStringField("description", this->Request->GetDescription().GetValue());
+                JsonRootObject->SetStringField(TEXT("description"), this->Request->GetDescription().GetValue());
             }
             if (this->Request->GetTransactionSetting() != nullptr && this->Request->GetTransactionSetting().IsValid())
             {
-                JsonRootObject->SetObjectField("transactionSetting", this->Request->GetTransactionSetting()->ToJson());
+                JsonRootObject->SetObjectField(TEXT("transactionSetting"), this->Request->GetTransactionSetting()->ToJson());
             }
             if (this->Request->GetServerType().IsSet())
             {
-                JsonRootObject->SetStringField("serverType", this->Request->GetServerType().GetValue());
+                JsonRootObject->SetStringField(TEXT("serverType"), this->Request->GetServerType().GetValue());
             }
             if (this->Request->GetServerSpec().IsSet())
             {
-                JsonRootObject->SetStringField("serverSpec", this->Request->GetServerSpec().GetValue());
+                JsonRootObject->SetStringField(TEXT("serverSpec"), this->Request->GetServerSpec().GetValue());
             }
             if (this->Request->GetCreateNotification() != nullptr && this->Request->GetCreateNotification().IsValid())
             {
-                JsonRootObject->SetObjectField("createNotification", this->Request->GetCreateNotification()->ToJson());
+                JsonRootObject->SetObjectField(TEXT("createNotification"), this->Request->GetCreateNotification()->ToJson());
             }
             if (this->Request->GetLogSetting() != nullptr && this->Request->GetLogSetting().IsValid())
             {
-                JsonRootObject->SetObjectField("logSetting", this->Request->GetLogSetting()->ToJson());
+                JsonRootObject->SetObjectField(TEXT("logSetting"), this->Request->GetLogSetting()->ToJson());
             }
             if (this->Request->GetContextStack().IsSet())
             {
-                JsonRootObject->SetStringField("contextStack", this->Request->GetContextStack().GetValue());
+                JsonRootObject->SetStringField(TEXT("contextStack"), this->Request->GetContextStack().GetValue());
             }
             FJsonSerializer::Serialize(JsonRootObject.ToSharedRef(), Writer);
             request->SetContentAsString(Body);

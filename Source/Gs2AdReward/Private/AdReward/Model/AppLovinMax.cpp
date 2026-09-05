@@ -87,11 +87,11 @@ namespace Gs2::AdReward::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (AllowAdUnitIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("allowAdUnitId", AllowAdUnitIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("allowAdUnitId"), AllowAdUnitIdValue.GetValue());
         }
         if (EventKeyValue.IsSet())
         {
-            JsonRootObject->SetStringField("eventKey", EventKeyValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("eventKey"), EventKeyValue.GetValue());
         }
         return JsonRootObject;
     }

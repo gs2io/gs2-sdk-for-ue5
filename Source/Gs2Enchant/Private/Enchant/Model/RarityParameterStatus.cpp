@@ -321,19 +321,19 @@ namespace Gs2::Enchant::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (RarityParameterStatusIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("rarityParameterStatusId", RarityParameterStatusIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("rarityParameterStatusId"), RarityParameterStatusIdValue.GetValue());
         }
         if (UserIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("userId", UserIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("userId"), UserIdValue.GetValue());
         }
         if (ParameterNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("parameterName", ParameterNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("parameterName"), ParameterNameValue.GetValue());
         }
         if (PropertyIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("propertyId", PropertyIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("propertyId"), PropertyIdValue.GetValue());
         }
         if (ParameterValuesValue != nullptr && ParameterValuesValue.IsValid())
         {
@@ -342,19 +342,19 @@ namespace Gs2::Enchant::Model
             {
                 v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
             }
-            JsonRootObject->SetArrayField("parameterValues", v);
+            JsonRootObject->SetArrayField(TEXT("parameterValues"), v);
         }
         if (CreatedAtValue.IsSet())
         {
-            JsonRootObject->SetStringField("createdAt", FString::Printf(TEXT("%lld"), CreatedAtValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("createdAt"), FString::Printf(TEXT("%lld"), CreatedAtValue.GetValue()));
         }
         if (UpdatedAtValue.IsSet())
         {
-            JsonRootObject->SetStringField("updatedAt", FString::Printf(TEXT("%lld"), UpdatedAtValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("updatedAt"), FString::Printf(TEXT("%lld"), UpdatedAtValue.GetValue()));
         }
         if (RevisionValue.IsSet())
         {
-            JsonRootObject->SetStringField("revision", FString::Printf(TEXT("%lld"), RevisionValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("revision"), FString::Printf(TEXT("%lld"), RevisionValue.GetValue()));
         }
         return JsonRootObject;
     }

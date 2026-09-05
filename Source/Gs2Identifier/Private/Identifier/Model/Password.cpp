@@ -241,31 +241,31 @@ namespace Gs2::Identifier::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (PasswordIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("passwordId", PasswordIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("passwordId"), PasswordIdValue.GetValue());
         }
         if (UserIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("userId", UserIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("userId"), UserIdValue.GetValue());
         }
         if (UserNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("userName", UserNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("userName"), UserNameValue.GetValue());
         }
         if (EnableTwoFactorAuthenticationValue.IsSet())
         {
-            JsonRootObject->SetStringField("enableTwoFactorAuthentication", EnableTwoFactorAuthenticationValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("enableTwoFactorAuthentication"), EnableTwoFactorAuthenticationValue.GetValue());
         }
         if (TwoFactorAuthenticationSettingValue != nullptr && TwoFactorAuthenticationSettingValue.IsValid())
         {
-            JsonRootObject->SetObjectField("twoFactorAuthenticationSetting", TwoFactorAuthenticationSettingValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("twoFactorAuthenticationSetting"), TwoFactorAuthenticationSettingValue->ToJson());
         }
         if (CreatedAtValue.IsSet())
         {
-            JsonRootObject->SetStringField("createdAt", FString::Printf(TEXT("%lld"), CreatedAtValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("createdAt"), FString::Printf(TEXT("%lld"), CreatedAtValue.GetValue()));
         }
         if (RevisionValue.IsSet())
         {
-            JsonRootObject->SetStringField("revision", FString::Printf(TEXT("%lld"), RevisionValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("revision"), FString::Printf(TEXT("%lld"), RevisionValue.GetValue()));
         }
         return JsonRootObject;
     }

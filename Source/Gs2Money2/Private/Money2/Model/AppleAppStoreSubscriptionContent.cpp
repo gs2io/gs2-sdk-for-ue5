@@ -64,7 +64,7 @@ namespace Gs2::Money2::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (SubscriptionGroupIdentifierValue.IsSet())
         {
-            JsonRootObject->SetStringField("subscriptionGroupIdentifier", SubscriptionGroupIdentifierValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("subscriptionGroupIdentifier"), SubscriptionGroupIdentifierValue.GetValue());
         }
         return JsonRootObject;
     }

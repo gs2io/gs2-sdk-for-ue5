@@ -383,19 +383,19 @@ namespace Gs2::SkillTree::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (NodeModelIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("nodeModelId", NodeModelIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("nodeModelId"), NodeModelIdValue.GetValue());
         }
         if (NameValue.IsSet())
         {
-            JsonRootObject->SetStringField("name", NameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("name"), NameValue.GetValue());
         }
         if (DescriptionValue.IsSet())
         {
-            JsonRootObject->SetStringField("description", DescriptionValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("description"), DescriptionValue.GetValue());
         }
         if (MetadataValue.IsSet())
         {
-            JsonRootObject->SetStringField("metadata", MetadataValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("metadata"), MetadataValue.GetValue());
         }
         if (ReleaseVerifyActionsValue != nullptr && ReleaseVerifyActionsValue.IsValid())
         {
@@ -404,7 +404,7 @@ namespace Gs2::SkillTree::Model
             {
                 v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
             }
-            JsonRootObject->SetArrayField("releaseVerifyActions", v);
+            JsonRootObject->SetArrayField(TEXT("releaseVerifyActions"), v);
         }
         if (ReleaseConsumeActionsValue != nullptr && ReleaseConsumeActionsValue.IsValid())
         {
@@ -413,11 +413,11 @@ namespace Gs2::SkillTree::Model
             {
                 v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
             }
-            JsonRootObject->SetArrayField("releaseConsumeActions", v);
+            JsonRootObject->SetArrayField(TEXT("releaseConsumeActions"), v);
         }
         if (RestrainReturnRateValue.IsSet())
         {
-            JsonRootObject->SetNumberField("restrainReturnRate", RestrainReturnRateValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("restrainReturnRate"), RestrainReturnRateValue.GetValue());
         }
         if (PremiseNodeNamesValue != nullptr && PremiseNodeNamesValue.IsValid())
         {
@@ -426,19 +426,19 @@ namespace Gs2::SkillTree::Model
             {
                 v.Add(MakeShared<FJsonValueString>(JsonObjectValue));
             }
-            JsonRootObject->SetArrayField("premiseNodeNames", v);
+            JsonRootObject->SetArrayField(TEXT("premiseNodeNames"), v);
         }
         if (CreatedAtValue.IsSet())
         {
-            JsonRootObject->SetStringField("createdAt", FString::Printf(TEXT("%lld"), CreatedAtValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("createdAt"), FString::Printf(TEXT("%lld"), CreatedAtValue.GetValue()));
         }
         if (UpdatedAtValue.IsSet())
         {
-            JsonRootObject->SetStringField("updatedAt", FString::Printf(TEXT("%lld"), UpdatedAtValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("updatedAt"), FString::Printf(TEXT("%lld"), UpdatedAtValue.GetValue()));
         }
         if (RevisionValue.IsSet())
         {
-            JsonRootObject->SetStringField("revision", FString::Printf(TEXT("%lld"), RevisionValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("revision"), FString::Printf(TEXT("%lld"), RevisionValue.GetValue()));
         }
         return JsonRootObject;
     }

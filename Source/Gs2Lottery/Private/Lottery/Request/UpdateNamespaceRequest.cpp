@@ -229,35 +229,35 @@ namespace Gs2::Lottery::Request
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (ContextStackValue.IsSet())
         {
-            JsonRootObject->SetStringField("contextStack", ContextStackValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("contextStack"), ContextStackValue.GetValue());
         }
         if (NamespaceNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("namespaceName", NamespaceNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("namespaceName"), NamespaceNameValue.GetValue());
         }
         if (DescriptionValue.IsSet())
         {
-            JsonRootObject->SetStringField("description", DescriptionValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("description"), DescriptionValue.GetValue());
         }
         if (TransactionSettingValue != nullptr && TransactionSettingValue.IsValid())
         {
-            JsonRootObject->SetObjectField("transactionSetting", TransactionSettingValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("transactionSetting"), TransactionSettingValue->ToJson());
         }
         if (LotteryTriggerScriptIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("lotteryTriggerScriptId", LotteryTriggerScriptIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("lotteryTriggerScriptId"), LotteryTriggerScriptIdValue.GetValue());
         }
         if (LogSettingValue != nullptr && LogSettingValue.IsValid())
         {
-            JsonRootObject->SetObjectField("logSetting", LogSettingValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("logSetting"), LogSettingValue->ToJson());
         }
         if (QueueNamespaceIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("queueNamespaceId", QueueNamespaceIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("queueNamespaceId"), QueueNamespaceIdValue.GetValue());
         }
         if (KeyIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("keyId", KeyIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("keyId"), KeyIdValue.GetValue());
         }
         return JsonRootObject;
     }

@@ -96,11 +96,11 @@ namespace Gs2::Idle::Task::Rest
             const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
             if (this->Request->GetIncreaseMinutes().IsSet())
             {
-                JsonRootObject->SetNumberField("increaseMinutes", this->Request->GetIncreaseMinutes().GetValue());
+                JsonRootObject->SetNumberField(TEXT("increaseMinutes"), this->Request->GetIncreaseMinutes().GetValue());
             }
             if (this->Request->GetContextStack().IsSet())
             {
-                JsonRootObject->SetStringField("contextStack", this->Request->GetContextStack().GetValue());
+                JsonRootObject->SetStringField(TEXT("contextStack"), this->Request->GetContextStack().GetValue());
             }
             FJsonSerializer::Serialize(JsonRootObject.ToSharedRef(), Writer);
             request->SetContentAsString(Body);

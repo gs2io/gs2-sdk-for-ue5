@@ -154,23 +154,23 @@ namespace Gs2::Showcase::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (DisplayItemIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("displayItemId", DisplayItemIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("displayItemId"), DisplayItemIdValue.GetValue());
         }
         if (TypeValue.IsSet())
         {
-            JsonRootObject->SetStringField("type", TypeValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("type"), TypeValue.GetValue());
         }
         if (SalesItemValue != nullptr && SalesItemValue.IsValid())
         {
-            JsonRootObject->SetObjectField("salesItem", SalesItemValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("salesItem"), SalesItemValue->ToJson());
         }
         if (SalesItemGroupValue != nullptr && SalesItemGroupValue.IsValid())
         {
-            JsonRootObject->SetObjectField("salesItemGroup", SalesItemGroupValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("salesItemGroup"), SalesItemGroupValue->ToJson());
         }
         if (SalesPeriodEventIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("salesPeriodEventId", SalesPeriodEventIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("salesPeriodEventId"), SalesPeriodEventIdValue.GetValue());
         }
         return JsonRootObject;
     }

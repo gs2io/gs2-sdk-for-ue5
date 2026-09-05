@@ -313,27 +313,27 @@ namespace Gs2::Idle::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (CategoryModelIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("categoryModelId", CategoryModelIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("categoryModelId"), CategoryModelIdValue.GetValue());
         }
         if (NameValue.IsSet())
         {
-            JsonRootObject->SetStringField("name", NameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("name"), NameValue.GetValue());
         }
         if (MetadataValue.IsSet())
         {
-            JsonRootObject->SetStringField("metadata", MetadataValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("metadata"), MetadataValue.GetValue());
         }
         if (RewardIntervalMinutesValue.IsSet())
         {
-            JsonRootObject->SetNumberField("rewardIntervalMinutes", RewardIntervalMinutesValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("rewardIntervalMinutes"), RewardIntervalMinutesValue.GetValue());
         }
         if (DefaultMaximumIdleMinutesValue.IsSet())
         {
-            JsonRootObject->SetNumberField("defaultMaximumIdleMinutes", DefaultMaximumIdleMinutesValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("defaultMaximumIdleMinutes"), DefaultMaximumIdleMinutesValue.GetValue());
         }
         if (RewardResetModeValue.IsSet())
         {
-            JsonRootObject->SetStringField("rewardResetMode", RewardResetModeValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("rewardResetMode"), RewardResetModeValue.GetValue());
         }
         if (AcquireActionsValue != nullptr && AcquireActionsValue.IsValid())
         {
@@ -342,15 +342,15 @@ namespace Gs2::Idle::Model
             {
                 v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
             }
-            JsonRootObject->SetArrayField("acquireActions", v);
+            JsonRootObject->SetArrayField(TEXT("acquireActions"), v);
         }
         if (IdlePeriodScheduleIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("idlePeriodScheduleId", IdlePeriodScheduleIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("idlePeriodScheduleId"), IdlePeriodScheduleIdValue.GetValue());
         }
         if (ReceivePeriodScheduleIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("receivePeriodScheduleId", ReceivePeriodScheduleIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("receivePeriodScheduleId"), ReceivePeriodScheduleIdValue.GetValue());
         }
         return JsonRootObject;
     }

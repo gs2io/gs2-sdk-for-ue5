@@ -86,47 +86,47 @@ namespace Gs2::Mission::Task::Rest
             const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
             if (this->Request->GetName().IsSet())
             {
-                JsonRootObject->SetStringField("name", this->Request->GetName().GetValue());
+                JsonRootObject->SetStringField(TEXT("name"), this->Request->GetName().GetValue());
             }
             if (this->Request->GetMetadata().IsSet())
             {
-                JsonRootObject->SetStringField("metadata", this->Request->GetMetadata().GetValue());
+                JsonRootObject->SetStringField(TEXT("metadata"), this->Request->GetMetadata().GetValue());
             }
             if (this->Request->GetDescription().IsSet())
             {
-                JsonRootObject->SetStringField("description", this->Request->GetDescription().GetValue());
+                JsonRootObject->SetStringField(TEXT("description"), this->Request->GetDescription().GetValue());
             }
             if (this->Request->GetResetType().IsSet())
             {
-                JsonRootObject->SetStringField("resetType", this->Request->GetResetType().GetValue());
+                JsonRootObject->SetStringField(TEXT("resetType"), this->Request->GetResetType().GetValue());
             }
             if (this->Request->GetResetDayOfMonth().IsSet())
             {
-                JsonRootObject->SetNumberField("resetDayOfMonth", this->Request->GetResetDayOfMonth().GetValue());
+                JsonRootObject->SetNumberField(TEXT("resetDayOfMonth"), this->Request->GetResetDayOfMonth().GetValue());
             }
             if (this->Request->GetResetDayOfWeek().IsSet())
             {
-                JsonRootObject->SetStringField("resetDayOfWeek", this->Request->GetResetDayOfWeek().GetValue());
+                JsonRootObject->SetStringField(TEXT("resetDayOfWeek"), this->Request->GetResetDayOfWeek().GetValue());
             }
             if (this->Request->GetResetHour().IsSet())
             {
-                JsonRootObject->SetNumberField("resetHour", this->Request->GetResetHour().GetValue());
+                JsonRootObject->SetNumberField(TEXT("resetHour"), this->Request->GetResetHour().GetValue());
             }
             if (this->Request->GetAnchorTimestamp().IsSet())
             {
-                JsonRootObject->SetStringField("anchorTimestamp", FString::Printf(TEXT("%lld"), this->Request->GetAnchorTimestamp().GetValue()));
+                JsonRootObject->SetStringField(TEXT("anchorTimestamp"), FString::Printf(TEXT("%lld"), this->Request->GetAnchorTimestamp().GetValue()));
             }
             if (this->Request->GetDays().IsSet())
             {
-                JsonRootObject->SetNumberField("days", this->Request->GetDays().GetValue());
+                JsonRootObject->SetNumberField(TEXT("days"), this->Request->GetDays().GetValue());
             }
             if (this->Request->GetCompleteNotificationNamespaceId().IsSet())
             {
-                JsonRootObject->SetStringField("completeNotificationNamespaceId", this->Request->GetCompleteNotificationNamespaceId().GetValue());
+                JsonRootObject->SetStringField(TEXT("completeNotificationNamespaceId"), this->Request->GetCompleteNotificationNamespaceId().GetValue());
             }
             if (this->Request->GetContextStack().IsSet())
             {
-                JsonRootObject->SetStringField("contextStack", this->Request->GetContextStack().GetValue());
+                JsonRootObject->SetStringField(TEXT("contextStack"), this->Request->GetContextStack().GetValue());
             }
             FJsonSerializer::Serialize(JsonRootObject.ToSharedRef(), Writer);
             request->SetContentAsString(Body);

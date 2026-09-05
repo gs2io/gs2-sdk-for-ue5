@@ -175,11 +175,11 @@ namespace Gs2::Inventory::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (ReferenceOfIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("referenceOfId", ReferenceOfIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("referenceOfId"), ReferenceOfIdValue.GetValue());
         }
         if (NameValue.IsSet())
         {
-            JsonRootObject->SetStringField("name", NameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("name"), NameValue.GetValue());
         }
         return JsonRootObject;
     }

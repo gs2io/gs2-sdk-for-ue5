@@ -127,19 +127,19 @@ namespace Gs2::Quest::Request
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (ContextStackValue.IsSet())
         {
-            JsonRootObject->SetStringField("contextStack", ContextStackValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("contextStack"), ContextStackValue.GetValue());
         }
         if (NamespaceNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("namespaceName", NamespaceNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("namespaceName"), NamespaceNameValue.GetValue());
         }
         if (QuestGroupNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("questGroupName", QuestGroupNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("questGroupName"), QuestGroupNameValue.GetValue());
         }
         if (QuestNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("questName", QuestNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("questName"), QuestNameValue.GetValue());
         }
         return JsonRootObject;
     }

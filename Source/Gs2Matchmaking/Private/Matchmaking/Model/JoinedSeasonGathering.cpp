@@ -295,31 +295,31 @@ namespace Gs2::Matchmaking::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (JoinedSeasonGatheringIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("joinedSeasonGatheringId", JoinedSeasonGatheringIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("joinedSeasonGatheringId"), JoinedSeasonGatheringIdValue.GetValue());
         }
         if (UserIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("userId", UserIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("userId"), UserIdValue.GetValue());
         }
         if (SeasonNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("seasonName", SeasonNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("seasonName"), SeasonNameValue.GetValue());
         }
         if (SeasonValue.IsSet())
         {
-            JsonRootObject->SetStringField("season", FString::Printf(TEXT("%lld"), SeasonValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("season"), FString::Printf(TEXT("%lld"), SeasonValue.GetValue()));
         }
         if (TierValue.IsSet())
         {
-            JsonRootObject->SetStringField("tier", FString::Printf(TEXT("%lld"), TierValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("tier"), FString::Printf(TEXT("%lld"), TierValue.GetValue()));
         }
         if (SeasonGatheringNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("seasonGatheringName", SeasonGatheringNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("seasonGatheringName"), SeasonGatheringNameValue.GetValue());
         }
         if (CreatedAtValue.IsSet())
         {
-            JsonRootObject->SetStringField("createdAt", FString::Printf(TEXT("%lld"), CreatedAtValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("createdAt"), FString::Printf(TEXT("%lld"), CreatedAtValue.GetValue()));
         }
         return JsonRootObject;
     }

@@ -127,19 +127,19 @@ namespace Gs2::Identifier::Request
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (ContextStackValue.IsSet())
         {
-            JsonRootObject->SetStringField("contextStack", ContextStackValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("contextStack"), ContextStackValue.GetValue());
         }
         if (UserNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("userName", UserNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("userName"), UserNameValue.GetValue());
         }
         if (PasswordValue.IsSet())
         {
-            JsonRootObject->SetStringField("password", PasswordValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("password"), PasswordValue.GetValue());
         }
         if (OtpValue.IsSet())
         {
-            JsonRootObject->SetStringField("otp", OtpValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("otp"), OtpValue.GetValue());
         }
         return JsonRootObject;
     }

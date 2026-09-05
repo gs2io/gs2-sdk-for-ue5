@@ -85,11 +85,11 @@ namespace Gs2::Core::Net::WebSocket
             const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
             if (Credential()->ClientId() != "")
             {
-                JsonRootObject->SetStringField("client_id", Credential()->ClientId());
+                JsonRootObject->SetStringField(TEXT("client_id"), Credential()->ClientId());
             }
             if (Credential()->ClientSecret() != "")
             {
-                JsonRootObject->SetStringField("client_secret", Credential()->ClientSecret());
+                JsonRootObject->SetStringField(TEXT("client_secret"), Credential()->ClientSecret());
             }
             const auto Request = MakeShared<Task::FWebSocketSessionRequest>(JsonRootObject);
             LoginTaskId = Request->TaskId();

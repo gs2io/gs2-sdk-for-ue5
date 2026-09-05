@@ -232,35 +232,35 @@ namespace Gs2::Version::Request
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (ContextStackValue.IsSet())
         {
-            JsonRootObject->SetStringField("contextStack", ContextStackValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("contextStack"), ContextStackValue.GetValue());
         }
         if (NameValue.IsSet())
         {
-            JsonRootObject->SetStringField("name", NameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("name"), NameValue.GetValue());
         }
         if (DescriptionValue.IsSet())
         {
-            JsonRootObject->SetStringField("description", DescriptionValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("description"), DescriptionValue.GetValue());
         }
         if (TransactionSettingValue != nullptr && TransactionSettingValue.IsValid())
         {
-            JsonRootObject->SetObjectField("transactionSetting", TransactionSettingValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("transactionSetting"), TransactionSettingValue->ToJson());
         }
         if (AssumeUserIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("assumeUserId", AssumeUserIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("assumeUserId"), AssumeUserIdValue.GetValue());
         }
         if (AcceptVersionScriptValue != nullptr && AcceptVersionScriptValue.IsValid())
         {
-            JsonRootObject->SetObjectField("acceptVersionScript", AcceptVersionScriptValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("acceptVersionScript"), AcceptVersionScriptValue->ToJson());
         }
         if (CheckVersionTriggerScriptIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("checkVersionTriggerScriptId", CheckVersionTriggerScriptIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("checkVersionTriggerScriptId"), CheckVersionTriggerScriptIdValue.GetValue());
         }
         if (LogSettingValue != nullptr && LogSettingValue.IsValid())
         {
-            JsonRootObject->SetObjectField("logSetting", LogSettingValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("logSetting"), LogSettingValue->ToJson());
         }
         return JsonRootObject;
     }

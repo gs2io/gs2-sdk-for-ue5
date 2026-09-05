@@ -177,19 +177,19 @@ namespace Gs2::Log::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (TimestampValue.IsSet())
         {
-            JsonRootObject->SetStringField("timestamp", FString::Printf(TEXT("%lld"), TimestampValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("timestamp"), FString::Printf(TEXT("%lld"), TimestampValue.GetValue()));
         }
         if (StatusValue.IsSet())
         {
-            JsonRootObject->SetStringField("status", StatusValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("status"), StatusValue.GetValue());
         }
         if (DurationValue.IsSet())
         {
-            JsonRootObject->SetStringField("duration", FString::Printf(TEXT("%lld"), DurationValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("duration"), FString::Printf(TEXT("%lld"), DurationValue.GetValue()));
         }
         if (LineValue.IsSet())
         {
-            JsonRootObject->SetStringField("line", LineValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("line"), LineValue.GetValue());
         }
         if (LabelsValue != nullptr && LabelsValue.IsValid())
         {
@@ -198,7 +198,7 @@ namespace Gs2::Log::Model
             {
                 v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
             }
-            JsonRootObject->SetArrayField("labels", v);
+            JsonRootObject->SetArrayField(TEXT("labels"), v);
         }
         return JsonRootObject;
     }

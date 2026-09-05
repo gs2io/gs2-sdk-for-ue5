@@ -401,43 +401,43 @@ namespace Gs2::Ranking2::Request
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (ContextStackValue.IsSet())
         {
-            JsonRootObject->SetStringField("contextStack", ContextStackValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("contextStack"), ContextStackValue.GetValue());
         }
         if (NamespaceNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("namespaceName", NamespaceNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("namespaceName"), NamespaceNameValue.GetValue());
         }
         if (NameValue.IsSet())
         {
-            JsonRootObject->SetStringField("name", NameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("name"), NameValue.GetValue());
         }
         if (DescriptionValue.IsSet())
         {
-            JsonRootObject->SetStringField("description", DescriptionValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("description"), DescriptionValue.GetValue());
         }
         if (MetadataValue.IsSet())
         {
-            JsonRootObject->SetStringField("metadata", MetadataValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("metadata"), MetadataValue.GetValue());
         }
         if (ClusterTypeValue.IsSet())
         {
-            JsonRootObject->SetStringField("clusterType", ClusterTypeValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("clusterType"), ClusterTypeValue.GetValue());
         }
         if (MinimumValueValue.IsSet())
         {
-            JsonRootObject->SetStringField("minimumValue", FString::Printf(TEXT("%lld"), MinimumValueValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("minimumValue"), FString::Printf(TEXT("%lld"), MinimumValueValue.GetValue()));
         }
         if (MaximumValueValue.IsSet())
         {
-            JsonRootObject->SetStringField("maximumValue", FString::Printf(TEXT("%lld"), MaximumValueValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("maximumValue"), FString::Printf(TEXT("%lld"), MaximumValueValue.GetValue()));
         }
         if (SumValue.IsSet())
         {
-            JsonRootObject->SetBoolField("sum", SumValue.GetValue());
+            JsonRootObject->SetBoolField(TEXT("sum"), SumValue.GetValue());
         }
         if (OrderDirectionValue.IsSet())
         {
-            JsonRootObject->SetStringField("orderDirection", OrderDirectionValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("orderDirection"), OrderDirectionValue.GetValue());
         }
         if (RankingRewardsValue != nullptr && RankingRewardsValue.IsValid())
         {
@@ -446,19 +446,19 @@ namespace Gs2::Ranking2::Request
             {
                 v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
             }
-            JsonRootObject->SetArrayField("rankingRewards", v);
+            JsonRootObject->SetArrayField(TEXT("rankingRewards"), v);
         }
         if (RewardCalculationIndexValue.IsSet())
         {
-            JsonRootObject->SetStringField("rewardCalculationIndex", RewardCalculationIndexValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("rewardCalculationIndex"), RewardCalculationIndexValue.GetValue());
         }
         if (EntryPeriodEventIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("entryPeriodEventId", EntryPeriodEventIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("entryPeriodEventId"), EntryPeriodEventIdValue.GetValue());
         }
         if (AccessPeriodEventIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("accessPeriodEventId", AccessPeriodEventIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("accessPeriodEventId"), AccessPeriodEventIdValue.GetValue());
         }
         return JsonRootObject;
     }

@@ -206,27 +206,27 @@ namespace Gs2::Mission::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (ScopeTypeValue.IsSet())
         {
-            JsonRootObject->SetStringField("scopeType", ScopeTypeValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("scopeType"), ScopeTypeValue.GetValue());
         }
         if (ResetTypeValue.IsSet())
         {
-            JsonRootObject->SetStringField("resetType", ResetTypeValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("resetType"), ResetTypeValue.GetValue());
         }
         if (ConditionNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("conditionName", ConditionNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("conditionName"), ConditionNameValue.GetValue());
         }
         if (ValueValue.IsSet())
         {
-            JsonRootObject->SetStringField("value", FString::Printf(TEXT("%lld"), ValueValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("value"), FString::Printf(TEXT("%lld"), ValueValue.GetValue()));
         }
         if (NextResetAtValue.IsSet())
         {
-            JsonRootObject->SetStringField("nextResetAt", FString::Printf(TEXT("%lld"), NextResetAtValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("nextResetAt"), FString::Printf(TEXT("%lld"), NextResetAtValue.GetValue()));
         }
         if (UpdatedAtValue.IsSet())
         {
-            JsonRootObject->SetStringField("updatedAt", FString::Printf(TEXT("%lld"), UpdatedAtValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("updatedAt"), FString::Printf(TEXT("%lld"), UpdatedAtValue.GetValue()));
         }
         return JsonRootObject;
     }

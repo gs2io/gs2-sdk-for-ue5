@@ -127,19 +127,19 @@ namespace Gs2::Inventory::Request
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (ContextStackValue.IsSet())
         {
-            JsonRootObject->SetStringField("contextStack", ContextStackValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("contextStack"), ContextStackValue.GetValue());
         }
         if (NamespaceNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("namespaceName", NamespaceNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("namespaceName"), NamespaceNameValue.GetValue());
         }
         if (InventoryNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("inventoryName", InventoryNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("inventoryName"), InventoryNameValue.GetValue());
         }
         if (ItemNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("itemName", ItemNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("itemName"), ItemNameValue.GetValue());
         }
         return JsonRootObject;
     }

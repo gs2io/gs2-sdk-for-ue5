@@ -86,15 +86,15 @@ namespace Gs2::Account::Task::Rest
             const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
             if (this->Request->GetType().IsSet())
             {
-                JsonRootObject->SetNumberField("type", this->Request->GetType().GetValue());
+                JsonRootObject->SetNumberField(TEXT("type"), this->Request->GetType().GetValue());
             }
             if (this->Request->GetUserIdentifier().IsSet())
             {
-                JsonRootObject->SetStringField("userIdentifier", this->Request->GetUserIdentifier().GetValue());
+                JsonRootObject->SetStringField(TEXT("userIdentifier"), this->Request->GetUserIdentifier().GetValue());
             }
             if (this->Request->GetContextStack().IsSet())
             {
-                JsonRootObject->SetStringField("contextStack", this->Request->GetContextStack().GetValue());
+                JsonRootObject->SetStringField(TEXT("contextStack"), this->Request->GetContextStack().GetValue());
             }
             FJsonSerializer::Serialize(JsonRootObject.ToSharedRef(), Writer);
             request->SetContentAsString(Body);

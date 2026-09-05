@@ -188,27 +188,27 @@ namespace Gs2::Gateway::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (UserIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("userId", UserIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("userId"), UserIdValue.GetValue());
         }
         if (IssuerValue.IsSet())
         {
-            JsonRootObject->SetStringField("issuer", IssuerValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("issuer"), IssuerValue.GetValue());
         }
         if (SubjectValue.IsSet())
         {
-            JsonRootObject->SetStringField("subject", SubjectValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("subject"), SubjectValue.GetValue());
         }
         if (PayloadValue.IsSet())
         {
-            JsonRootObject->SetStringField("payload", PayloadValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("payload"), PayloadValue.GetValue());
         }
         if (EnableTransferMobileNotificationValue.IsSet())
         {
-            JsonRootObject->SetBoolField("enableTransferMobileNotification", EnableTransferMobileNotificationValue.GetValue());
+            JsonRootObject->SetBoolField(TEXT("enableTransferMobileNotification"), EnableTransferMobileNotificationValue.GetValue());
         }
         if (SoundValue.IsSet())
         {
-            JsonRootObject->SetStringField("sound", SoundValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("sound"), SoundValue.GetValue());
         }
         return JsonRootObject;
     }

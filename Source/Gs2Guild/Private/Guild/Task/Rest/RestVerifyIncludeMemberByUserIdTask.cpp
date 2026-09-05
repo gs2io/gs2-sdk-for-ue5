@@ -101,11 +101,11 @@ namespace Gs2::Guild::Task::Rest
             const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
             if (this->Request->GetVerifyType().IsSet())
             {
-                JsonRootObject->SetStringField("verifyType", this->Request->GetVerifyType().GetValue());
+                JsonRootObject->SetStringField(TEXT("verifyType"), this->Request->GetVerifyType().GetValue());
             }
             if (this->Request->GetContextStack().IsSet())
             {
-                JsonRootObject->SetStringField("contextStack", this->Request->GetContextStack().GetValue());
+                JsonRootObject->SetStringField(TEXT("contextStack"), this->Request->GetContextStack().GetValue());
             }
             FJsonSerializer::Serialize(JsonRootObject.ToSharedRef(), Writer);
             request->SetContentAsString(Body);

@@ -203,15 +203,15 @@ namespace Gs2::Quest::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (QuestGroupModelIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("questGroupModelId", QuestGroupModelIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("questGroupModelId"), QuestGroupModelIdValue.GetValue());
         }
         if (NameValue.IsSet())
         {
-            JsonRootObject->SetStringField("name", NameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("name"), NameValue.GetValue());
         }
         if (MetadataValue.IsSet())
         {
-            JsonRootObject->SetStringField("metadata", MetadataValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("metadata"), MetadataValue.GetValue());
         }
         if (QuestsValue != nullptr && QuestsValue.IsValid())
         {
@@ -220,11 +220,11 @@ namespace Gs2::Quest::Model
             {
                 v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
             }
-            JsonRootObject->SetArrayField("quests", v);
+            JsonRootObject->SetArrayField(TEXT("quests"), v);
         }
         if (ChallengePeriodEventIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("challengePeriodEventId", ChallengePeriodEventIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("challengePeriodEventId"), ChallengePeriodEventIdValue.GetValue());
         }
         return JsonRootObject;
     }

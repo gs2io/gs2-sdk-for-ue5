@@ -91,19 +91,19 @@ namespace Gs2::Stamina::Task::Rest
             const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
             if (this->Request->GetKeyId().IsSet())
             {
-                JsonRootObject->SetStringField("keyId", this->Request->GetKeyId().GetValue());
+                JsonRootObject->SetStringField(TEXT("keyId"), this->Request->GetKeyId().GetValue());
             }
             if (this->Request->GetSignedStatusBody().IsSet())
             {
-                JsonRootObject->SetStringField("signedStatusBody", this->Request->GetSignedStatusBody().GetValue());
+                JsonRootObject->SetStringField(TEXT("signedStatusBody"), this->Request->GetSignedStatusBody().GetValue());
             }
             if (this->Request->GetSignedStatusSignature().IsSet())
             {
-                JsonRootObject->SetStringField("signedStatusSignature", this->Request->GetSignedStatusSignature().GetValue());
+                JsonRootObject->SetStringField(TEXT("signedStatusSignature"), this->Request->GetSignedStatusSignature().GetValue());
             }
             if (this->Request->GetContextStack().IsSet())
             {
-                JsonRootObject->SetStringField("contextStack", this->Request->GetContextStack().GetValue());
+                JsonRootObject->SetStringField(TEXT("contextStack"), this->Request->GetContextStack().GetValue());
             }
             FJsonSerializer::Serialize(JsonRootObject.ToSharedRef(), Writer);
             request->SetContentAsString(Body);

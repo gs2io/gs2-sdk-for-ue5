@@ -98,7 +98,7 @@ namespace Gs2::News::Model
             {
                 v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
             }
-            JsonRootObject->SetArrayField("contents", v);
+            JsonRootObject->SetArrayField(TEXT("contents"), v);
         }
         if (RemoveContentsValue != nullptr && RemoveContentsValue.IsValid())
         {
@@ -107,7 +107,7 @@ namespace Gs2::News::Model
             {
                 v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
             }
-            JsonRootObject->SetArrayField("removeContents", v);
+            JsonRootObject->SetArrayField(TEXT("removeContents"), v);
         }
         return JsonRootObject;
     }

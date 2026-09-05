@@ -101,7 +101,7 @@ namespace Gs2::Showcase::Task::Rest
             const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
             if (this->Request->GetQuantity().IsSet())
             {
-                JsonRootObject->SetNumberField("quantity", this->Request->GetQuantity().GetValue());
+                JsonRootObject->SetNumberField(TEXT("quantity"), this->Request->GetQuantity().GetValue());
             }
             if (this->Request->GetConfig() != nullptr && this->Request->GetConfig().IsValid())
             {
@@ -110,11 +110,11 @@ namespace Gs2::Showcase::Task::Rest
                 {
                     v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
                 }
-                JsonRootObject->SetArrayField("config", v);
+                JsonRootObject->SetArrayField(TEXT("config"), v);
             }
             if (this->Request->GetContextStack().IsSet())
             {
-                JsonRootObject->SetStringField("contextStack", this->Request->GetContextStack().GetValue());
+                JsonRootObject->SetStringField(TEXT("contextStack"), this->Request->GetContextStack().GetValue());
             }
             FJsonSerializer::Serialize(JsonRootObject.ToSharedRef(), Writer);
             request->SetContentAsString(Body);

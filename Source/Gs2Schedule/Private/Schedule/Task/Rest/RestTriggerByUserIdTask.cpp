@@ -96,19 +96,19 @@ namespace Gs2::Schedule::Task::Rest
             const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
             if (this->Request->GetTriggerStrategy().IsSet())
             {
-                JsonRootObject->SetStringField("triggerStrategy", this->Request->GetTriggerStrategy().GetValue());
+                JsonRootObject->SetStringField(TEXT("triggerStrategy"), this->Request->GetTriggerStrategy().GetValue());
             }
             if (this->Request->GetTtl().IsSet())
             {
-                JsonRootObject->SetNumberField("ttl", this->Request->GetTtl().GetValue());
+                JsonRootObject->SetNumberField(TEXT("ttl"), this->Request->GetTtl().GetValue());
             }
             if (this->Request->GetEventId().IsSet())
             {
-                JsonRootObject->SetStringField("eventId", this->Request->GetEventId().GetValue());
+                JsonRootObject->SetStringField(TEXT("eventId"), this->Request->GetEventId().GetValue());
             }
             if (this->Request->GetContextStack().IsSet())
             {
-                JsonRootObject->SetStringField("contextStack", this->Request->GetContextStack().GetValue());
+                JsonRootObject->SetStringField(TEXT("contextStack"), this->Request->GetContextStack().GetValue());
             }
             FJsonSerializer::Serialize(JsonRootObject.ToSharedRef(), Writer);
             request->SetContentAsString(Body);

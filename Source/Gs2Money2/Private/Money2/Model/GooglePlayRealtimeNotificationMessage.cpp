@@ -110,15 +110,15 @@ namespace Gs2::Money2::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (DataValue.IsSet())
         {
-            JsonRootObject->SetStringField("data", DataValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("data"), DataValue.GetValue());
         }
         if (MessageIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("messageId", MessageIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("messageId"), MessageIdValue.GetValue());
         }
         if (PublishTimeValue.IsSet())
         {
-            JsonRootObject->SetStringField("publishTime", PublishTimeValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("publishTime"), PublishTimeValue.GetValue());
         }
         return JsonRootObject;
     }

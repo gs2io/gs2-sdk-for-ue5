@@ -80,59 +80,59 @@ namespace Gs2::Money::Task::Rest
             const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
             if (this->Request->GetName().IsSet())
             {
-                JsonRootObject->SetStringField("name", this->Request->GetName().GetValue());
+                JsonRootObject->SetStringField(TEXT("name"), this->Request->GetName().GetValue());
             }
             if (this->Request->GetDescription().IsSet())
             {
-                JsonRootObject->SetStringField("description", this->Request->GetDescription().GetValue());
+                JsonRootObject->SetStringField(TEXT("description"), this->Request->GetDescription().GetValue());
             }
             if (this->Request->GetTransactionSetting() != nullptr && this->Request->GetTransactionSetting().IsValid())
             {
-                JsonRootObject->SetObjectField("transactionSetting", this->Request->GetTransactionSetting()->ToJson());
+                JsonRootObject->SetObjectField(TEXT("transactionSetting"), this->Request->GetTransactionSetting()->ToJson());
             }
             if (this->Request->GetPriority().IsSet())
             {
-                JsonRootObject->SetStringField("priority", this->Request->GetPriority().GetValue());
+                JsonRootObject->SetStringField(TEXT("priority"), this->Request->GetPriority().GetValue());
             }
             if (this->Request->GetShareFree().IsSet())
             {
-                JsonRootObject->SetBoolField("shareFree", this->Request->GetShareFree().GetValue());
+                JsonRootObject->SetBoolField(TEXT("shareFree"), this->Request->GetShareFree().GetValue());
             }
             if (this->Request->GetCurrency().IsSet())
             {
-                JsonRootObject->SetStringField("currency", this->Request->GetCurrency().GetValue());
+                JsonRootObject->SetStringField(TEXT("currency"), this->Request->GetCurrency().GetValue());
             }
             if (this->Request->GetAppleKey().IsSet())
             {
-                JsonRootObject->SetStringField("appleKey", this->Request->GetAppleKey().GetValue());
+                JsonRootObject->SetStringField(TEXT("appleKey"), this->Request->GetAppleKey().GetValue());
             }
             if (this->Request->GetGoogleKey().IsSet())
             {
-                JsonRootObject->SetStringField("googleKey", this->Request->GetGoogleKey().GetValue());
+                JsonRootObject->SetStringField(TEXT("googleKey"), this->Request->GetGoogleKey().GetValue());
             }
             if (this->Request->GetEnableFakeReceipt().IsSet())
             {
-                JsonRootObject->SetBoolField("enableFakeReceipt", this->Request->GetEnableFakeReceipt().GetValue());
+                JsonRootObject->SetBoolField(TEXT("enableFakeReceipt"), this->Request->GetEnableFakeReceipt().GetValue());
             }
             if (this->Request->GetCreateWalletScript() != nullptr && this->Request->GetCreateWalletScript().IsValid())
             {
-                JsonRootObject->SetObjectField("createWalletScript", this->Request->GetCreateWalletScript()->ToJson());
+                JsonRootObject->SetObjectField(TEXT("createWalletScript"), this->Request->GetCreateWalletScript()->ToJson());
             }
             if (this->Request->GetDepositScript() != nullptr && this->Request->GetDepositScript().IsValid())
             {
-                JsonRootObject->SetObjectField("depositScript", this->Request->GetDepositScript()->ToJson());
+                JsonRootObject->SetObjectField(TEXT("depositScript"), this->Request->GetDepositScript()->ToJson());
             }
             if (this->Request->GetWithdrawScript() != nullptr && this->Request->GetWithdrawScript().IsValid())
             {
-                JsonRootObject->SetObjectField("withdrawScript", this->Request->GetWithdrawScript()->ToJson());
+                JsonRootObject->SetObjectField(TEXT("withdrawScript"), this->Request->GetWithdrawScript()->ToJson());
             }
             if (this->Request->GetLogSetting() != nullptr && this->Request->GetLogSetting().IsValid())
             {
-                JsonRootObject->SetObjectField("logSetting", this->Request->GetLogSetting()->ToJson());
+                JsonRootObject->SetObjectField(TEXT("logSetting"), this->Request->GetLogSetting()->ToJson());
             }
             if (this->Request->GetContextStack().IsSet())
             {
-                JsonRootObject->SetStringField("contextStack", this->Request->GetContextStack().GetValue());
+                JsonRootObject->SetStringField(TEXT("contextStack"), this->Request->GetContextStack().GetValue());
             }
             FJsonSerializer::Serialize(JsonRootObject.ToSharedRef(), Writer);
             request->SetContentAsString(Body);

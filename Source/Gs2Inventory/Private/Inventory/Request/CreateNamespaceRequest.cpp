@@ -346,51 +346,51 @@ namespace Gs2::Inventory::Request
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (ContextStackValue.IsSet())
         {
-            JsonRootObject->SetStringField("contextStack", ContextStackValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("contextStack"), ContextStackValue.GetValue());
         }
         if (NameValue.IsSet())
         {
-            JsonRootObject->SetStringField("name", NameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("name"), NameValue.GetValue());
         }
         if (DescriptionValue.IsSet())
         {
-            JsonRootObject->SetStringField("description", DescriptionValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("description"), DescriptionValue.GetValue());
         }
         if (TransactionSettingValue != nullptr && TransactionSettingValue.IsValid())
         {
-            JsonRootObject->SetObjectField("transactionSetting", TransactionSettingValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("transactionSetting"), TransactionSettingValue->ToJson());
         }
         if (AcquireScriptValue != nullptr && AcquireScriptValue.IsValid())
         {
-            JsonRootObject->SetObjectField("acquireScript", AcquireScriptValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("acquireScript"), AcquireScriptValue->ToJson());
         }
         if (OverflowScriptValue != nullptr && OverflowScriptValue.IsValid())
         {
-            JsonRootObject->SetObjectField("overflowScript", OverflowScriptValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("overflowScript"), OverflowScriptValue->ToJson());
         }
         if (ConsumeScriptValue != nullptr && ConsumeScriptValue.IsValid())
         {
-            JsonRootObject->SetObjectField("consumeScript", ConsumeScriptValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("consumeScript"), ConsumeScriptValue->ToJson());
         }
         if (SimpleItemAcquireScriptValue != nullptr && SimpleItemAcquireScriptValue.IsValid())
         {
-            JsonRootObject->SetObjectField("simpleItemAcquireScript", SimpleItemAcquireScriptValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("simpleItemAcquireScript"), SimpleItemAcquireScriptValue->ToJson());
         }
         if (SimpleItemConsumeScriptValue != nullptr && SimpleItemConsumeScriptValue.IsValid())
         {
-            JsonRootObject->SetObjectField("simpleItemConsumeScript", SimpleItemConsumeScriptValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("simpleItemConsumeScript"), SimpleItemConsumeScriptValue->ToJson());
         }
         if (BigItemAcquireScriptValue != nullptr && BigItemAcquireScriptValue.IsValid())
         {
-            JsonRootObject->SetObjectField("bigItemAcquireScript", BigItemAcquireScriptValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("bigItemAcquireScript"), BigItemAcquireScriptValue->ToJson());
         }
         if (BigItemConsumeScriptValue != nullptr && BigItemConsumeScriptValue.IsValid())
         {
-            JsonRootObject->SetObjectField("bigItemConsumeScript", BigItemConsumeScriptValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("bigItemConsumeScript"), BigItemConsumeScriptValue->ToJson());
         }
         if (LogSettingValue != nullptr && LogSettingValue.IsValid())
         {
-            JsonRootObject->SetObjectField("logSetting", LogSettingValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("logSetting"), LogSettingValue->ToJson());
         }
         return JsonRootObject;
     }

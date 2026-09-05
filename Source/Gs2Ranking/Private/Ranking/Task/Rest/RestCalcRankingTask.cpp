@@ -91,11 +91,11 @@ namespace Gs2::Ranking::Task::Rest
             const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
             if (this->Request->GetAdditionalScopeName().IsSet())
             {
-                JsonRootObject->SetStringField("additionalScopeName", this->Request->GetAdditionalScopeName().GetValue());
+                JsonRootObject->SetStringField(TEXT("additionalScopeName"), this->Request->GetAdditionalScopeName().GetValue());
             }
             if (this->Request->GetContextStack().IsSet())
             {
-                JsonRootObject->SetStringField("contextStack", this->Request->GetContextStack().GetValue());
+                JsonRootObject->SetStringField(TEXT("contextStack"), this->Request->GetContextStack().GetValue());
             }
             FJsonSerializer::Serialize(JsonRootObject.ToSharedRef(), Writer);
             request->SetContentAsString(Body);

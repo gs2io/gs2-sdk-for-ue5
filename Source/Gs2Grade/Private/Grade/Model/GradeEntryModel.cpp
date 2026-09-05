@@ -142,19 +142,19 @@ namespace Gs2::Grade::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (MetadataValue.IsSet())
         {
-            JsonRootObject->SetStringField("metadata", MetadataValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("metadata"), MetadataValue.GetValue());
         }
         if (RankCapValueValue.IsSet())
         {
-            JsonRootObject->SetStringField("rankCapValue", FString::Printf(TEXT("%lld"), RankCapValueValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("rankCapValue"), FString::Printf(TEXT("%lld"), RankCapValueValue.GetValue()));
         }
         if (PropertyIdRegexValue.IsSet())
         {
-            JsonRootObject->SetStringField("propertyIdRegex", PropertyIdRegexValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("propertyIdRegex"), PropertyIdRegexValue.GetValue());
         }
         if (GradeUpPropertyIdRegexValue.IsSet())
         {
-            JsonRootObject->SetStringField("gradeUpPropertyIdRegex", GradeUpPropertyIdRegexValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("gradeUpPropertyIdRegex"), GradeUpPropertyIdRegexValue.GetValue());
         }
         return JsonRootObject;
     }

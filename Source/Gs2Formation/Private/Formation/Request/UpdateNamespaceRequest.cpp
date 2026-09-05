@@ -238,35 +238,35 @@ namespace Gs2::Formation::Request
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (ContextStackValue.IsSet())
         {
-            JsonRootObject->SetStringField("contextStack", ContextStackValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("contextStack"), ContextStackValue.GetValue());
         }
         if (NamespaceNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("namespaceName", NamespaceNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("namespaceName"), NamespaceNameValue.GetValue());
         }
         if (DescriptionValue.IsSet())
         {
-            JsonRootObject->SetStringField("description", DescriptionValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("description"), DescriptionValue.GetValue());
         }
         if (TransactionSettingValue != nullptr && TransactionSettingValue.IsValid())
         {
-            JsonRootObject->SetObjectField("transactionSetting", TransactionSettingValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("transactionSetting"), TransactionSettingValue->ToJson());
         }
         if (UpdateMoldScriptValue != nullptr && UpdateMoldScriptValue.IsValid())
         {
-            JsonRootObject->SetObjectField("updateMoldScript", UpdateMoldScriptValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("updateMoldScript"), UpdateMoldScriptValue->ToJson());
         }
         if (UpdateFormScriptValue != nullptr && UpdateFormScriptValue.IsValid())
         {
-            JsonRootObject->SetObjectField("updateFormScript", UpdateFormScriptValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("updateFormScript"), UpdateFormScriptValue->ToJson());
         }
         if (UpdatePropertyFormScriptValue != nullptr && UpdatePropertyFormScriptValue.IsValid())
         {
-            JsonRootObject->SetObjectField("updatePropertyFormScript", UpdatePropertyFormScriptValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("updatePropertyFormScript"), UpdatePropertyFormScriptValue->ToJson());
         }
         if (LogSettingValue != nullptr && LogSettingValue.IsValid())
         {
-            JsonRootObject->SetObjectField("logSetting", LogSettingValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("logSetting"), LogSettingValue->ToJson());
         }
         return JsonRootObject;
     }

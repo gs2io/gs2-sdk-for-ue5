@@ -90,7 +90,7 @@ namespace Gs2::Experience::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (MetadataValue.IsSet())
         {
-            JsonRootObject->SetStringField("metadata", MetadataValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("metadata"), MetadataValue.GetValue());
         }
         if (ValuesValue != nullptr && ValuesValue.IsValid())
         {
@@ -99,7 +99,7 @@ namespace Gs2::Experience::Model
             {
                 v.Add(MakeShared<FJsonValueString>(FString::Printf(TEXT("%lld"), JsonObjectValue)));
             }
-            JsonRootObject->SetArrayField("values", v);
+            JsonRootObject->SetArrayField(TEXT("values"), v);
         }
         return JsonRootObject;
     }

@@ -77,7 +77,7 @@ namespace Gs2::MegaField::Result
             {
                 v.Add(MakeShared<FJsonValueString>(JsonObjectValue));
             }
-            JsonRootObject->SetArrayField("items", v);
+            JsonRootObject->SetArrayField(TEXT("items"), v);
         }
         return JsonRootObject;
     }

@@ -255,15 +255,15 @@ namespace Gs2::Matchmaking::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (VoteIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("voteId", VoteIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("voteId"), VoteIdValue.GetValue());
         }
         if (RatingNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("ratingName", RatingNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("ratingName"), RatingNameValue.GetValue());
         }
         if (GatheringNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("gatheringName", GatheringNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("gatheringName"), GatheringNameValue.GetValue());
         }
         if (WrittenBallotsValue != nullptr && WrittenBallotsValue.IsValid())
         {
@@ -272,15 +272,15 @@ namespace Gs2::Matchmaking::Model
             {
                 v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
             }
-            JsonRootObject->SetArrayField("writtenBallots", v);
+            JsonRootObject->SetArrayField(TEXT("writtenBallots"), v);
         }
         if (CreatedAtValue.IsSet())
         {
-            JsonRootObject->SetStringField("createdAt", FString::Printf(TEXT("%lld"), CreatedAtValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("createdAt"), FString::Printf(TEXT("%lld"), CreatedAtValue.GetValue()));
         }
         if (UpdatedAtValue.IsSet())
         {
-            JsonRootObject->SetStringField("updatedAt", FString::Printf(TEXT("%lld"), UpdatedAtValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("updatedAt"), FString::Printf(TEXT("%lld"), UpdatedAtValue.GetValue()));
         }
         return JsonRootObject;
     }

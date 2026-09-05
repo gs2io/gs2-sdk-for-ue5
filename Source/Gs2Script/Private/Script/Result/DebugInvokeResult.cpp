@@ -309,35 +309,35 @@ namespace Gs2::Script::Result
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (CodeValue.IsSet())
         {
-            JsonRootObject->SetNumberField("code", CodeValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("code"), CodeValue.GetValue());
         }
         if (ResultValue.IsSet())
         {
-            JsonRootObject->SetStringField("result", ResultValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("result"), ResultValue.GetValue());
         }
         if (TransactionValue != nullptr && TransactionValue.IsValid())
         {
-            JsonRootObject->SetObjectField("transaction", TransactionValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("transaction"), TransactionValue->ToJson());
         }
         if (RandomStatusValue != nullptr && RandomStatusValue.IsValid())
         {
-            JsonRootObject->SetObjectField("randomStatus", RandomStatusValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("randomStatus"), RandomStatusValue->ToJson());
         }
         if (AtomicCommitValue.IsSet())
         {
-            JsonRootObject->SetBoolField("atomicCommit", AtomicCommitValue.GetValue());
+            JsonRootObject->SetBoolField(TEXT("atomicCommit"), AtomicCommitValue.GetValue());
         }
         if (TransactionResultValue != nullptr && TransactionResultValue.IsValid())
         {
-            JsonRootObject->SetObjectField("transactionResult", TransactionResultValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("transactionResult"), TransactionResultValue->ToJson());
         }
         if (ExecuteTimeValue.IsSet())
         {
-            JsonRootObject->SetNumberField("executeTime", ExecuteTimeValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("executeTime"), ExecuteTimeValue.GetValue());
         }
         if (ChargedValue.IsSet())
         {
-            JsonRootObject->SetNumberField("charged", ChargedValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("charged"), ChargedValue.GetValue());
         }
         if (OutputValue != nullptr && OutputValue.IsValid())
         {
@@ -346,7 +346,7 @@ namespace Gs2::Script::Result
             {
                 v.Add(MakeShared<FJsonValueString>(JsonObjectValue));
             }
-            JsonRootObject->SetArrayField("output", v);
+            JsonRootObject->SetArrayField(TEXT("output"), v);
         }
         return JsonRootObject;
     }

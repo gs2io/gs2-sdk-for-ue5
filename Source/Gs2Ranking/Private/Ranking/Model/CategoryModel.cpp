@@ -567,63 +567,63 @@ namespace Gs2::Ranking::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (CategoryModelIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("categoryModelId", CategoryModelIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("categoryModelId"), CategoryModelIdValue.GetValue());
         }
         if (NameValue.IsSet())
         {
-            JsonRootObject->SetStringField("name", NameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("name"), NameValue.GetValue());
         }
         if (MetadataValue.IsSet())
         {
-            JsonRootObject->SetStringField("metadata", MetadataValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("metadata"), MetadataValue.GetValue());
         }
         if (MinimumValueValue.IsSet())
         {
-            JsonRootObject->SetStringField("minimumValue", FString::Printf(TEXT("%lld"), MinimumValueValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("minimumValue"), FString::Printf(TEXT("%lld"), MinimumValueValue.GetValue()));
         }
         if (MaximumValueValue.IsSet())
         {
-            JsonRootObject->SetStringField("maximumValue", FString::Printf(TEXT("%lld"), MaximumValueValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("maximumValue"), FString::Printf(TEXT("%lld"), MaximumValueValue.GetValue()));
         }
         if (SumValue.IsSet())
         {
-            JsonRootObject->SetBoolField("sum", SumValue.GetValue());
+            JsonRootObject->SetBoolField(TEXT("sum"), SumValue.GetValue());
         }
         if (OrderDirectionValue.IsSet())
         {
-            JsonRootObject->SetStringField("orderDirection", OrderDirectionValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("orderDirection"), OrderDirectionValue.GetValue());
         }
         if (ScopeValue.IsSet())
         {
-            JsonRootObject->SetStringField("scope", ScopeValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("scope"), ScopeValue.GetValue());
         }
         if (GlobalRankingSettingValue != nullptr && GlobalRankingSettingValue.IsValid())
         {
-            JsonRootObject->SetObjectField("globalRankingSetting", GlobalRankingSettingValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("globalRankingSetting"), GlobalRankingSettingValue->ToJson());
         }
         if (EntryPeriodEventIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("entryPeriodEventId", EntryPeriodEventIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("entryPeriodEventId"), EntryPeriodEventIdValue.GetValue());
         }
         if (AccessPeriodEventIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("accessPeriodEventId", AccessPeriodEventIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("accessPeriodEventId"), AccessPeriodEventIdValue.GetValue());
         }
         if (UniqueByUserIdValue.IsSet())
         {
-            JsonRootObject->SetBoolField("uniqueByUserId", UniqueByUserIdValue.GetValue());
+            JsonRootObject->SetBoolField(TEXT("uniqueByUserId"), UniqueByUserIdValue.GetValue());
         }
         if (CalculateFixedTimingHourValue.IsSet())
         {
-            JsonRootObject->SetNumberField("calculateFixedTimingHour", CalculateFixedTimingHourValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("calculateFixedTimingHour"), CalculateFixedTimingHourValue.GetValue());
         }
         if (CalculateFixedTimingMinuteValue.IsSet())
         {
-            JsonRootObject->SetNumberField("calculateFixedTimingMinute", CalculateFixedTimingMinuteValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("calculateFixedTimingMinute"), CalculateFixedTimingMinuteValue.GetValue());
         }
         if (CalculateIntervalMinutesValue.IsSet())
         {
-            JsonRootObject->SetNumberField("calculateIntervalMinutes", CalculateIntervalMinutesValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("calculateIntervalMinutes"), CalculateIntervalMinutesValue.GetValue());
         }
         if (AdditionalScopesValue != nullptr && AdditionalScopesValue.IsValid())
         {
@@ -632,7 +632,7 @@ namespace Gs2::Ranking::Model
             {
                 v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
             }
-            JsonRootObject->SetArrayField("additionalScopes", v);
+            JsonRootObject->SetArrayField(TEXT("additionalScopes"), v);
         }
         if (IgnoreUserIdsValue != nullptr && IgnoreUserIdsValue.IsValid())
         {
@@ -641,11 +641,11 @@ namespace Gs2::Ranking::Model
             {
                 v.Add(MakeShared<FJsonValueString>(JsonObjectValue));
             }
-            JsonRootObject->SetArrayField("ignoreUserIds", v);
+            JsonRootObject->SetArrayField(TEXT("ignoreUserIds"), v);
         }
         if (GenerationValue.IsSet())
         {
-            JsonRootObject->SetStringField("generation", GenerationValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("generation"), GenerationValue.GetValue());
         }
         return JsonRootObject;
     }

@@ -240,27 +240,27 @@ namespace Gs2::Formation::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (MoldModelIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("moldModelId", MoldModelIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("moldModelId"), MoldModelIdValue.GetValue());
         }
         if (NameValue.IsSet())
         {
-            JsonRootObject->SetStringField("name", NameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("name"), NameValue.GetValue());
         }
         if (MetadataValue.IsSet())
         {
-            JsonRootObject->SetStringField("metadata", MetadataValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("metadata"), MetadataValue.GetValue());
         }
         if (InitialMaxCapacityValue.IsSet())
         {
-            JsonRootObject->SetNumberField("initialMaxCapacity", InitialMaxCapacityValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("initialMaxCapacity"), InitialMaxCapacityValue.GetValue());
         }
         if (MaxCapacityValue.IsSet())
         {
-            JsonRootObject->SetNumberField("maxCapacity", MaxCapacityValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("maxCapacity"), MaxCapacityValue.GetValue());
         }
         if (FormModelValue != nullptr && FormModelValue.IsValid())
         {
-            JsonRootObject->SetObjectField("formModel", FormModelValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("formModel"), FormModelValue->ToJson());
         }
         return JsonRootObject;
     }

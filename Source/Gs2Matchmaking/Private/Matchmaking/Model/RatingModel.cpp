@@ -218,23 +218,23 @@ namespace Gs2::Matchmaking::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (RatingModelIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("ratingModelId", RatingModelIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("ratingModelId"), RatingModelIdValue.GetValue());
         }
         if (NameValue.IsSet())
         {
-            JsonRootObject->SetStringField("name", NameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("name"), NameValue.GetValue());
         }
         if (MetadataValue.IsSet())
         {
-            JsonRootObject->SetStringField("metadata", MetadataValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("metadata"), MetadataValue.GetValue());
         }
         if (InitialValueValue.IsSet())
         {
-            JsonRootObject->SetNumberField("initialValue", InitialValueValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("initialValue"), InitialValueValue.GetValue());
         }
         if (VolatilityValue.IsSet())
         {
-            JsonRootObject->SetNumberField("volatility", VolatilityValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("volatility"), VolatilityValue.GetValue());
         }
         return JsonRootObject;
     }

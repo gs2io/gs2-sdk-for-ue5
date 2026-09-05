@@ -122,7 +122,7 @@ namespace Gs2::Log::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (TraceIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("traceId", TraceIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("traceId"), TraceIdValue.GetValue());
         }
         if (SpansValue != nullptr && SpansValue.IsValid())
         {
@@ -131,11 +131,11 @@ namespace Gs2::Log::Model
             {
                 v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
             }
-            JsonRootObject->SetArrayField("spans", v);
+            JsonRootObject->SetArrayField(TEXT("spans"), v);
         }
         if (TruncatedValue.IsSet())
         {
-            JsonRootObject->SetBoolField("truncated", TruncatedValue.GetValue());
+            JsonRootObject->SetBoolField(TEXT("truncated"), TruncatedValue.GetValue());
         }
         return JsonRootObject;
     }

@@ -229,27 +229,27 @@ namespace Gs2::Quest::Request
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (ContextStackValue.IsSet())
         {
-            JsonRootObject->SetStringField("contextStack", ContextStackValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("contextStack"), ContextStackValue.GetValue());
         }
         if (NamespaceNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("namespaceName", NamespaceNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("namespaceName"), NamespaceNameValue.GetValue());
         }
         if (QuestGroupNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("questGroupName", QuestGroupNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("questGroupName"), QuestGroupNameValue.GetValue());
         }
         if (QuestNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("questName", QuestNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("questName"), QuestNameValue.GetValue());
         }
         if (AccessTokenValue.IsSet())
         {
-            JsonRootObject->SetStringField("xGs2AccessToken", AccessTokenValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("xGs2AccessToken"), AccessTokenValue.GetValue());
         }
         if (ForceValue.IsSet())
         {
-            JsonRootObject->SetBoolField("force", ForceValue.GetValue());
+            JsonRootObject->SetBoolField(TEXT("force"), ForceValue.GetValue());
         }
         if (ConfigValue != nullptr && ConfigValue.IsValid())
         {
@@ -258,11 +258,11 @@ namespace Gs2::Quest::Request
             {
                 v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
             }
-            JsonRootObject->SetArrayField("config", v);
+            JsonRootObject->SetArrayField(TEXT("config"), v);
         }
         if (DuplicationAvoiderValue.IsSet())
         {
-            JsonRootObject->SetStringField("duplicationAvoider", DuplicationAvoiderValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("duplicationAvoider"), DuplicationAvoiderValue.GetValue());
         }
         return JsonRootObject;
     }

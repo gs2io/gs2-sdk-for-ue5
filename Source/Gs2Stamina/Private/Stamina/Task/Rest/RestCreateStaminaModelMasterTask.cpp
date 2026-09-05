@@ -86,51 +86,51 @@ namespace Gs2::Stamina::Task::Rest
             const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
             if (this->Request->GetName().IsSet())
             {
-                JsonRootObject->SetStringField("name", this->Request->GetName().GetValue());
+                JsonRootObject->SetStringField(TEXT("name"), this->Request->GetName().GetValue());
             }
             if (this->Request->GetDescription().IsSet())
             {
-                JsonRootObject->SetStringField("description", this->Request->GetDescription().GetValue());
+                JsonRootObject->SetStringField(TEXT("description"), this->Request->GetDescription().GetValue());
             }
             if (this->Request->GetMetadata().IsSet())
             {
-                JsonRootObject->SetStringField("metadata", this->Request->GetMetadata().GetValue());
+                JsonRootObject->SetStringField(TEXT("metadata"), this->Request->GetMetadata().GetValue());
             }
             if (this->Request->GetRecoverIntervalMinutes().IsSet())
             {
-                JsonRootObject->SetNumberField("recoverIntervalMinutes", this->Request->GetRecoverIntervalMinutes().GetValue());
+                JsonRootObject->SetNumberField(TEXT("recoverIntervalMinutes"), this->Request->GetRecoverIntervalMinutes().GetValue());
             }
             if (this->Request->GetRecoverValue().IsSet())
             {
-                JsonRootObject->SetNumberField("recoverValue", this->Request->GetRecoverValue().GetValue());
+                JsonRootObject->SetNumberField(TEXT("recoverValue"), this->Request->GetRecoverValue().GetValue());
             }
             if (this->Request->GetInitialCapacity().IsSet())
             {
-                JsonRootObject->SetNumberField("initialCapacity", this->Request->GetInitialCapacity().GetValue());
+                JsonRootObject->SetNumberField(TEXT("initialCapacity"), this->Request->GetInitialCapacity().GetValue());
             }
             if (this->Request->GetIsOverflow().IsSet())
             {
-                JsonRootObject->SetBoolField("isOverflow", this->Request->GetIsOverflow().GetValue());
+                JsonRootObject->SetBoolField(TEXT("isOverflow"), this->Request->GetIsOverflow().GetValue());
             }
             if (this->Request->GetMaxCapacity().IsSet())
             {
-                JsonRootObject->SetNumberField("maxCapacity", this->Request->GetMaxCapacity().GetValue());
+                JsonRootObject->SetNumberField(TEXT("maxCapacity"), this->Request->GetMaxCapacity().GetValue());
             }
             if (this->Request->GetMaxStaminaTableName().IsSet())
             {
-                JsonRootObject->SetStringField("maxStaminaTableName", this->Request->GetMaxStaminaTableName().GetValue());
+                JsonRootObject->SetStringField(TEXT("maxStaminaTableName"), this->Request->GetMaxStaminaTableName().GetValue());
             }
             if (this->Request->GetRecoverIntervalTableName().IsSet())
             {
-                JsonRootObject->SetStringField("recoverIntervalTableName", this->Request->GetRecoverIntervalTableName().GetValue());
+                JsonRootObject->SetStringField(TEXT("recoverIntervalTableName"), this->Request->GetRecoverIntervalTableName().GetValue());
             }
             if (this->Request->GetRecoverValueTableName().IsSet())
             {
-                JsonRootObject->SetStringField("recoverValueTableName", this->Request->GetRecoverValueTableName().GetValue());
+                JsonRootObject->SetStringField(TEXT("recoverValueTableName"), this->Request->GetRecoverValueTableName().GetValue());
             }
             if (this->Request->GetContextStack().IsSet())
             {
-                JsonRootObject->SetStringField("contextStack", this->Request->GetContextStack().GetValue());
+                JsonRootObject->SetStringField(TEXT("contextStack"), this->Request->GetContextStack().GetValue());
             }
             FJsonSerializer::Serialize(JsonRootObject.ToSharedRef(), Writer);
             request->SetContentAsString(Body);

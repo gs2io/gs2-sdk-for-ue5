@@ -247,39 +247,39 @@ namespace Gs2::Lottery::Request
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (ContextStackValue.IsSet())
         {
-            JsonRootObject->SetStringField("contextStack", ContextStackValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("contextStack"), ContextStackValue.GetValue());
         }
         if (NamespaceNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("namespaceName", NamespaceNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("namespaceName"), NamespaceNameValue.GetValue());
         }
         if (LotteryNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("lotteryName", LotteryNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("lotteryName"), LotteryNameValue.GetValue());
         }
         if (DescriptionValue.IsSet())
         {
-            JsonRootObject->SetStringField("description", DescriptionValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("description"), DescriptionValue.GetValue());
         }
         if (MetadataValue.IsSet())
         {
-            JsonRootObject->SetStringField("metadata", MetadataValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("metadata"), MetadataValue.GetValue());
         }
         if (ModeValue.IsSet())
         {
-            JsonRootObject->SetStringField("mode", ModeValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("mode"), ModeValue.GetValue());
         }
         if (MethodValue.IsSet())
         {
-            JsonRootObject->SetStringField("method", MethodValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("method"), MethodValue.GetValue());
         }
         if (PrizeTableNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("prizeTableName", PrizeTableNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("prizeTableName"), PrizeTableNameValue.GetValue());
         }
         if (ChoicePrizeTableScriptIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("choicePrizeTableScriptId", ChoicePrizeTableScriptIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("choicePrizeTableScriptId"), ChoicePrizeTableScriptIdValue.GetValue());
         }
         return JsonRootObject;
     }

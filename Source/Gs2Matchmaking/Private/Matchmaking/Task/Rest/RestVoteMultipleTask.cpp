@@ -91,7 +91,7 @@ namespace Gs2::Matchmaking::Task::Rest
                 {
                     v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
                 }
-                JsonRootObject->SetArrayField("signedBallots", v);
+                JsonRootObject->SetArrayField(TEXT("signedBallots"), v);
             }
             if (this->Request->GetGameResults() != nullptr && this->Request->GetGameResults().IsValid())
             {
@@ -100,15 +100,15 @@ namespace Gs2::Matchmaking::Task::Rest
                 {
                     v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
                 }
-                JsonRootObject->SetArrayField("gameResults", v);
+                JsonRootObject->SetArrayField(TEXT("gameResults"), v);
             }
             if (this->Request->GetKeyId().IsSet())
             {
-                JsonRootObject->SetStringField("keyId", this->Request->GetKeyId().GetValue());
+                JsonRootObject->SetStringField(TEXT("keyId"), this->Request->GetKeyId().GetValue());
             }
             if (this->Request->GetContextStack().IsSet())
             {
-                JsonRootObject->SetStringField("contextStack", this->Request->GetContextStack().GetValue());
+                JsonRootObject->SetStringField(TEXT("contextStack"), this->Request->GetContextStack().GetValue());
             }
             FJsonSerializer::Serialize(JsonRootObject.ToSharedRef(), Writer);
             request->SetContentAsString(Body);

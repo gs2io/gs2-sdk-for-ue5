@@ -167,19 +167,19 @@ namespace Gs2::Log::Result
             {
                 v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
             }
-            JsonRootObject->SetArrayField("items", v);
+            JsonRootObject->SetArrayField(TEXT("items"), v);
         }
         if (NextPageTokenValue.IsSet())
         {
-            JsonRootObject->SetStringField("nextPageToken", NextPageTokenValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("nextPageToken"), NextPageTokenValue.GetValue());
         }
         if (TotalCountValue.IsSet())
         {
-            JsonRootObject->SetStringField("totalCount", FString::Printf(TEXT("%lld"), TotalCountValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("totalCount"), FString::Printf(TEXT("%lld"), TotalCountValue.GetValue()));
         }
         if (ScanSizeValue.IsSet())
         {
-            JsonRootObject->SetStringField("scanSize", FString::Printf(TEXT("%lld"), ScanSizeValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("scanSize"), FString::Printf(TEXT("%lld"), ScanSizeValue.GetValue()));
         }
         return JsonRootObject;
     }

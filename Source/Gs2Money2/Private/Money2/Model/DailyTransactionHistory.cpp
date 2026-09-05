@@ -452,47 +452,47 @@ namespace Gs2::Money2::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (DailyTransactionHistoryIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("dailyTransactionHistoryId", DailyTransactionHistoryIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("dailyTransactionHistoryId"), DailyTransactionHistoryIdValue.GetValue());
         }
         if (YearValue.IsSet())
         {
-            JsonRootObject->SetNumberField("year", YearValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("year"), YearValue.GetValue());
         }
         if (MonthValue.IsSet())
         {
-            JsonRootObject->SetNumberField("month", MonthValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("month"), MonthValue.GetValue());
         }
         if (DayValue.IsSet())
         {
-            JsonRootObject->SetNumberField("day", DayValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("day"), DayValue.GetValue());
         }
         if (CurrencyValue.IsSet())
         {
-            JsonRootObject->SetStringField("currency", CurrencyValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("currency"), CurrencyValue.GetValue());
         }
         if (DepositAmountValue.IsSet())
         {
-            JsonRootObject->SetNumberField("depositAmount", DepositAmountValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("depositAmount"), DepositAmountValue.GetValue());
         }
         if (WithdrawAmountValue.IsSet())
         {
-            JsonRootObject->SetNumberField("withdrawAmount", WithdrawAmountValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("withdrawAmount"), WithdrawAmountValue.GetValue());
         }
         if (IssueCountValue.IsSet())
         {
-            JsonRootObject->SetStringField("issueCount", FString::Printf(TEXT("%lld"), IssueCountValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("issueCount"), FString::Printf(TEXT("%lld"), IssueCountValue.GetValue()));
         }
         if (ConsumeCountValue.IsSet())
         {
-            JsonRootObject->SetStringField("consumeCount", FString::Printf(TEXT("%lld"), ConsumeCountValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("consumeCount"), FString::Printf(TEXT("%lld"), ConsumeCountValue.GetValue()));
         }
         if (UpdatedAtValue.IsSet())
         {
-            JsonRootObject->SetStringField("updatedAt", FString::Printf(TEXT("%lld"), UpdatedAtValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("updatedAt"), FString::Printf(TEXT("%lld"), UpdatedAtValue.GetValue()));
         }
         if (RevisionValue.IsSet())
         {
-            JsonRootObject->SetStringField("revision", FString::Printf(TEXT("%lld"), RevisionValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("revision"), FString::Printf(TEXT("%lld"), RevisionValue.GetValue()));
         }
         return JsonRootObject;
     }

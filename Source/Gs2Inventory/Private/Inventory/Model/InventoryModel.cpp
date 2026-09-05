@@ -276,27 +276,27 @@ namespace Gs2::Inventory::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (InventoryModelIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("inventoryModelId", InventoryModelIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("inventoryModelId"), InventoryModelIdValue.GetValue());
         }
         if (NameValue.IsSet())
         {
-            JsonRootObject->SetStringField("name", NameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("name"), NameValue.GetValue());
         }
         if (MetadataValue.IsSet())
         {
-            JsonRootObject->SetStringField("metadata", MetadataValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("metadata"), MetadataValue.GetValue());
         }
         if (InitialCapacityValue.IsSet())
         {
-            JsonRootObject->SetNumberField("initialCapacity", InitialCapacityValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("initialCapacity"), InitialCapacityValue.GetValue());
         }
         if (MaxCapacityValue.IsSet())
         {
-            JsonRootObject->SetNumberField("maxCapacity", MaxCapacityValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("maxCapacity"), MaxCapacityValue.GetValue());
         }
         if (ProtectReferencedItemValue.IsSet())
         {
-            JsonRootObject->SetBoolField("protectReferencedItem", ProtectReferencedItemValue.GetValue());
+            JsonRootObject->SetBoolField(TEXT("protectReferencedItem"), ProtectReferencedItemValue.GetValue());
         }
         if (ItemModelsValue != nullptr && ItemModelsValue.IsValid())
         {
@@ -305,7 +305,7 @@ namespace Gs2::Inventory::Model
             {
                 v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
             }
-            JsonRootObject->SetArrayField("itemModels", v);
+            JsonRootObject->SetArrayField(TEXT("itemModels"), v);
         }
         return JsonRootObject;
     }

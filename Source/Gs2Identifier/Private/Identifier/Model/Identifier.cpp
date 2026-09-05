@@ -174,23 +174,23 @@ namespace Gs2::Identifier::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (ClientIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("clientId", ClientIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("clientId"), ClientIdValue.GetValue());
         }
         if (UserNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("userName", UserNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("userName"), UserNameValue.GetValue());
         }
         if (ClientSecretValue.IsSet())
         {
-            JsonRootObject->SetStringField("clientSecret", ClientSecretValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("clientSecret"), ClientSecretValue.GetValue());
         }
         if (CreatedAtValue.IsSet())
         {
-            JsonRootObject->SetStringField("createdAt", FString::Printf(TEXT("%lld"), CreatedAtValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("createdAt"), FString::Printf(TEXT("%lld"), CreatedAtValue.GetValue()));
         }
         if (RevisionValue.IsSet())
         {
-            JsonRootObject->SetStringField("revision", FString::Printf(TEXT("%lld"), RevisionValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("revision"), FString::Printf(TEXT("%lld"), RevisionValue.GetValue()));
         }
         return JsonRootObject;
     }

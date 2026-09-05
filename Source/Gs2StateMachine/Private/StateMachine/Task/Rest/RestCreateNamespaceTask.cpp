@@ -80,43 +80,43 @@ namespace Gs2::StateMachine::Task::Rest
             const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
             if (this->Request->GetName().IsSet())
             {
-                JsonRootObject->SetStringField("name", this->Request->GetName().GetValue());
+                JsonRootObject->SetStringField(TEXT("name"), this->Request->GetName().GetValue());
             }
             if (this->Request->GetDescription().IsSet())
             {
-                JsonRootObject->SetStringField("description", this->Request->GetDescription().GetValue());
+                JsonRootObject->SetStringField(TEXT("description"), this->Request->GetDescription().GetValue());
             }
             if (this->Request->GetSupportSpeculativeExecution().IsSet())
             {
-                JsonRootObject->SetStringField("supportSpeculativeExecution", this->Request->GetSupportSpeculativeExecution().GetValue());
+                JsonRootObject->SetStringField(TEXT("supportSpeculativeExecution"), this->Request->GetSupportSpeculativeExecution().GetValue());
             }
             if (this->Request->GetTransactionSetting() != nullptr && this->Request->GetTransactionSetting().IsValid())
             {
-                JsonRootObject->SetObjectField("transactionSetting", this->Request->GetTransactionSetting()->ToJson());
+                JsonRootObject->SetObjectField(TEXT("transactionSetting"), this->Request->GetTransactionSetting()->ToJson());
             }
             if (this->Request->GetStartScript() != nullptr && this->Request->GetStartScript().IsValid())
             {
-                JsonRootObject->SetObjectField("startScript", this->Request->GetStartScript()->ToJson());
+                JsonRootObject->SetObjectField(TEXT("startScript"), this->Request->GetStartScript()->ToJson());
             }
             if (this->Request->GetPassScript() != nullptr && this->Request->GetPassScript().IsValid())
             {
-                JsonRootObject->SetObjectField("passScript", this->Request->GetPassScript()->ToJson());
+                JsonRootObject->SetObjectField(TEXT("passScript"), this->Request->GetPassScript()->ToJson());
             }
             if (this->Request->GetErrorScript() != nullptr && this->Request->GetErrorScript().IsValid())
             {
-                JsonRootObject->SetObjectField("errorScript", this->Request->GetErrorScript()->ToJson());
+                JsonRootObject->SetObjectField(TEXT("errorScript"), this->Request->GetErrorScript()->ToJson());
             }
             if (this->Request->GetLowestStateMachineVersion().IsSet())
             {
-                JsonRootObject->SetStringField("lowestStateMachineVersion", FString::Printf(TEXT("%lld"), this->Request->GetLowestStateMachineVersion().GetValue()));
+                JsonRootObject->SetStringField(TEXT("lowestStateMachineVersion"), FString::Printf(TEXT("%lld"), this->Request->GetLowestStateMachineVersion().GetValue()));
             }
             if (this->Request->GetLogSetting() != nullptr && this->Request->GetLogSetting().IsValid())
             {
-                JsonRootObject->SetObjectField("logSetting", this->Request->GetLogSetting()->ToJson());
+                JsonRootObject->SetObjectField(TEXT("logSetting"), this->Request->GetLogSetting()->ToJson());
             }
             if (this->Request->GetContextStack().IsSet())
             {
-                JsonRootObject->SetStringField("contextStack", this->Request->GetContextStack().GetValue());
+                JsonRootObject->SetStringField(TEXT("contextStack"), this->Request->GetContextStack().GetValue());
             }
             FJsonSerializer::Serialize(JsonRootObject.ToSharedRef(), Writer);
             request->SetContentAsString(Body);

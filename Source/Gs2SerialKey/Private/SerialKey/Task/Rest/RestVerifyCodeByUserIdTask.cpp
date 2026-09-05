@@ -91,19 +91,19 @@ namespace Gs2::SerialKey::Task::Rest
             const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
             if (this->Request->GetCode().IsSet())
             {
-                JsonRootObject->SetStringField("code", this->Request->GetCode().GetValue());
+                JsonRootObject->SetStringField(TEXT("code"), this->Request->GetCode().GetValue());
             }
             if (this->Request->GetCampaignModelName().IsSet())
             {
-                JsonRootObject->SetStringField("campaignModelName", this->Request->GetCampaignModelName().GetValue());
+                JsonRootObject->SetStringField(TEXT("campaignModelName"), this->Request->GetCampaignModelName().GetValue());
             }
             if (this->Request->GetVerifyType().IsSet())
             {
-                JsonRootObject->SetStringField("verifyType", this->Request->GetVerifyType().GetValue());
+                JsonRootObject->SetStringField(TEXT("verifyType"), this->Request->GetVerifyType().GetValue());
             }
             if (this->Request->GetContextStack().IsSet())
             {
-                JsonRootObject->SetStringField("contextStack", this->Request->GetContextStack().GetValue());
+                JsonRootObject->SetStringField(TEXT("contextStack"), this->Request->GetContextStack().GetValue());
             }
             FJsonSerializer::Serialize(JsonRootObject.ToSharedRef(), Writer);
             request->SetContentAsString(Body);

@@ -264,31 +264,31 @@ namespace Gs2::Log::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (DashboardIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("dashboardId", DashboardIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("dashboardId"), DashboardIdValue.GetValue());
         }
         if (NameValue.IsSet())
         {
-            JsonRootObject->SetStringField("name", NameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("name"), NameValue.GetValue());
         }
         if (DisplayNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("displayName", DisplayNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("displayName"), DisplayNameValue.GetValue());
         }
         if (DescriptionValue.IsSet())
         {
-            JsonRootObject->SetStringField("description", DescriptionValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("description"), DescriptionValue.GetValue());
         }
         if (PayloadValue.IsSet())
         {
-            JsonRootObject->SetStringField("payload", PayloadValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("payload"), PayloadValue.GetValue());
         }
         if (CreatedAtValue.IsSet())
         {
-            JsonRootObject->SetStringField("createdAt", FString::Printf(TEXT("%lld"), CreatedAtValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("createdAt"), FString::Printf(TEXT("%lld"), CreatedAtValue.GetValue()));
         }
         if (UpdatedAtValue.IsSet())
         {
-            JsonRootObject->SetStringField("updatedAt", FString::Printf(TEXT("%lld"), UpdatedAtValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("updatedAt"), FString::Printf(TEXT("%lld"), UpdatedAtValue.GetValue()));
         }
         return JsonRootObject;
     }

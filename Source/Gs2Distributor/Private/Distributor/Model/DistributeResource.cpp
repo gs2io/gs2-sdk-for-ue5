@@ -87,11 +87,11 @@ namespace Gs2::Distributor::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (ActionValue.IsSet())
         {
-            JsonRootObject->SetStringField("action", ActionValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("action"), ActionValue.GetValue());
         }
         if (RequestValue.IsSet())
         {
-            JsonRootObject->SetStringField("request", RequestValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("request"), RequestValue.GetValue());
         }
         return JsonRootObject;
     }

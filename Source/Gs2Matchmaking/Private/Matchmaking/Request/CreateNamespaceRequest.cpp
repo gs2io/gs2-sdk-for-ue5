@@ -607,91 +607,91 @@ namespace Gs2::Matchmaking::Request
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (ContextStackValue.IsSet())
         {
-            JsonRootObject->SetStringField("contextStack", ContextStackValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("contextStack"), ContextStackValue.GetValue());
         }
         if (NameValue.IsSet())
         {
-            JsonRootObject->SetStringField("name", NameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("name"), NameValue.GetValue());
         }
         if (DescriptionValue.IsSet())
         {
-            JsonRootObject->SetStringField("description", DescriptionValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("description"), DescriptionValue.GetValue());
         }
         if (TransactionSettingValue != nullptr && TransactionSettingValue.IsValid())
         {
-            JsonRootObject->SetObjectField("transactionSetting", TransactionSettingValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("transactionSetting"), TransactionSettingValue->ToJson());
         }
         if (EnableRatingValue.IsSet())
         {
-            JsonRootObject->SetBoolField("enableRating", EnableRatingValue.GetValue());
+            JsonRootObject->SetBoolField(TEXT("enableRating"), EnableRatingValue.GetValue());
         }
         if (EnableDisconnectDetectionValue.IsSet())
         {
-            JsonRootObject->SetStringField("enableDisconnectDetection", EnableDisconnectDetectionValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("enableDisconnectDetection"), EnableDisconnectDetectionValue.GetValue());
         }
         if (DisconnectDetectionTimeoutSecondsValue.IsSet())
         {
-            JsonRootObject->SetNumberField("disconnectDetectionTimeoutSeconds", DisconnectDetectionTimeoutSecondsValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("disconnectDetectionTimeoutSeconds"), DisconnectDetectionTimeoutSecondsValue.GetValue());
         }
         if (CreateGatheringTriggerTypeValue.IsSet())
         {
-            JsonRootObject->SetStringField("createGatheringTriggerType", CreateGatheringTriggerTypeValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("createGatheringTriggerType"), CreateGatheringTriggerTypeValue.GetValue());
         }
         if (CreateGatheringTriggerRealtimeNamespaceIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("createGatheringTriggerRealtimeNamespaceId", CreateGatheringTriggerRealtimeNamespaceIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("createGatheringTriggerRealtimeNamespaceId"), CreateGatheringTriggerRealtimeNamespaceIdValue.GetValue());
         }
         if (CreateGatheringTriggerScriptIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("createGatheringTriggerScriptId", CreateGatheringTriggerScriptIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("createGatheringTriggerScriptId"), CreateGatheringTriggerScriptIdValue.GetValue());
         }
         if (CompleteMatchmakingTriggerTypeValue.IsSet())
         {
-            JsonRootObject->SetStringField("completeMatchmakingTriggerType", CompleteMatchmakingTriggerTypeValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("completeMatchmakingTriggerType"), CompleteMatchmakingTriggerTypeValue.GetValue());
         }
         if (CompleteMatchmakingTriggerRealtimeNamespaceIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("completeMatchmakingTriggerRealtimeNamespaceId", CompleteMatchmakingTriggerRealtimeNamespaceIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("completeMatchmakingTriggerRealtimeNamespaceId"), CompleteMatchmakingTriggerRealtimeNamespaceIdValue.GetValue());
         }
         if (CompleteMatchmakingTriggerScriptIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("completeMatchmakingTriggerScriptId", CompleteMatchmakingTriggerScriptIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("completeMatchmakingTriggerScriptId"), CompleteMatchmakingTriggerScriptIdValue.GetValue());
         }
         if (EnableCollaborateSeasonRatingValue.IsSet())
         {
-            JsonRootObject->SetStringField("enableCollaborateSeasonRating", EnableCollaborateSeasonRatingValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("enableCollaborateSeasonRating"), EnableCollaborateSeasonRatingValue.GetValue());
         }
         if (CollaborateSeasonRatingNamespaceIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("collaborateSeasonRatingNamespaceId", CollaborateSeasonRatingNamespaceIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("collaborateSeasonRatingNamespaceId"), CollaborateSeasonRatingNamespaceIdValue.GetValue());
         }
         if (CollaborateSeasonRatingTtlValue.IsSet())
         {
-            JsonRootObject->SetNumberField("collaborateSeasonRatingTtl", CollaborateSeasonRatingTtlValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("collaborateSeasonRatingTtl"), CollaborateSeasonRatingTtlValue.GetValue());
         }
         if (ChangeRatingScriptValue != nullptr && ChangeRatingScriptValue.IsValid())
         {
-            JsonRootObject->SetObjectField("changeRatingScript", ChangeRatingScriptValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("changeRatingScript"), ChangeRatingScriptValue->ToJson());
         }
         if (JoinNotificationValue != nullptr && JoinNotificationValue.IsValid())
         {
-            JsonRootObject->SetObjectField("joinNotification", JoinNotificationValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("joinNotification"), JoinNotificationValue->ToJson());
         }
         if (LeaveNotificationValue != nullptr && LeaveNotificationValue.IsValid())
         {
-            JsonRootObject->SetObjectField("leaveNotification", LeaveNotificationValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("leaveNotification"), LeaveNotificationValue->ToJson());
         }
         if (CompleteNotificationValue != nullptr && CompleteNotificationValue.IsValid())
         {
-            JsonRootObject->SetObjectField("completeNotification", CompleteNotificationValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("completeNotification"), CompleteNotificationValue->ToJson());
         }
         if (ChangeRatingNotificationValue != nullptr && ChangeRatingNotificationValue.IsValid())
         {
-            JsonRootObject->SetObjectField("changeRatingNotification", ChangeRatingNotificationValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("changeRatingNotification"), ChangeRatingNotificationValue->ToJson());
         }
         if (LogSettingValue != nullptr && LogSettingValue.IsValid())
         {
-            JsonRootObject->SetObjectField("logSetting", LogSettingValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("logSetting"), LogSettingValue->ToJson());
         }
         return JsonRootObject;
     }

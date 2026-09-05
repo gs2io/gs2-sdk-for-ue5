@@ -197,27 +197,27 @@ namespace Gs2::Formation::Result
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (ItemValue != nullptr && ItemValue.IsValid())
         {
-            JsonRootObject->SetObjectField("item", ItemValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("item"), ItemValue->ToJson());
         }
         if (BodyValue.IsSet())
         {
-            JsonRootObject->SetStringField("body", BodyValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("body"), BodyValue.GetValue());
         }
         if (SignatureValue.IsSet())
         {
-            JsonRootObject->SetStringField("signature", SignatureValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("signature"), SignatureValue.GetValue());
         }
         if (MoldValue != nullptr && MoldValue.IsValid())
         {
-            JsonRootObject->SetObjectField("mold", MoldValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("mold"), MoldValue->ToJson());
         }
         if (MoldModelValue != nullptr && MoldModelValue.IsValid())
         {
-            JsonRootObject->SetObjectField("moldModel", MoldModelValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("moldModel"), MoldModelValue->ToJson());
         }
         if (FormModelValue != nullptr && FormModelValue.IsValid())
         {
-            JsonRootObject->SetObjectField("formModel", FormModelValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("formModel"), FormModelValue->ToJson());
         }
         return JsonRootObject;
     }

@@ -261,27 +261,27 @@ namespace Gs2::Inventory::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (ItemModelIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("itemModelId", ItemModelIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("itemModelId"), ItemModelIdValue.GetValue());
         }
         if (NameValue.IsSet())
         {
-            JsonRootObject->SetStringField("name", NameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("name"), NameValue.GetValue());
         }
         if (MetadataValue.IsSet())
         {
-            JsonRootObject->SetStringField("metadata", MetadataValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("metadata"), MetadataValue.GetValue());
         }
         if (StackingLimitValue.IsSet())
         {
-            JsonRootObject->SetStringField("stackingLimit", FString::Printf(TEXT("%lld"), StackingLimitValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("stackingLimit"), FString::Printf(TEXT("%lld"), StackingLimitValue.GetValue()));
         }
         if (AllowMultipleStacksValue.IsSet())
         {
-            JsonRootObject->SetBoolField("allowMultipleStacks", AllowMultipleStacksValue.GetValue());
+            JsonRootObject->SetBoolField(TEXT("allowMultipleStacks"), AllowMultipleStacksValue.GetValue());
         }
         if (SortValueValue.IsSet())
         {
-            JsonRootObject->SetNumberField("sortValue", SortValueValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("sortValue"), SortValueValue.GetValue());
         }
         return JsonRootObject;
     }

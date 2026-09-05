@@ -184,27 +184,27 @@ namespace Gs2::SerialKey::Request
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (ContextStackValue.IsSet())
         {
-            JsonRootObject->SetStringField("contextStack", ContextStackValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("contextStack"), ContextStackValue.GetValue());
         }
         if (NamespaceNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("namespaceName", NamespaceNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("namespaceName"), NamespaceNameValue.GetValue());
         }
         if (CampaignModelNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("campaignModelName", CampaignModelNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("campaignModelName"), CampaignModelNameValue.GetValue());
         }
         if (IssueJobNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("issueJobName", IssueJobNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("issueJobName"), IssueJobNameValue.GetValue());
         }
         if (PageTokenValue.IsSet())
         {
-            JsonRootObject->SetStringField("pageToken", PageTokenValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("pageToken"), PageTokenValue.GetValue());
         }
         if (LimitValue.IsSet())
         {
-            JsonRootObject->SetNumberField("limit", LimitValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("limit"), LimitValue.GetValue());
         }
         return JsonRootObject;
     }

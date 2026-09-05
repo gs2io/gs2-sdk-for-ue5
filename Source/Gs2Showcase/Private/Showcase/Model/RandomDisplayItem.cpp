@@ -252,15 +252,15 @@ namespace Gs2::Showcase::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (ShowcaseNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("showcaseName", ShowcaseNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("showcaseName"), ShowcaseNameValue.GetValue());
         }
         if (NameValue.IsSet())
         {
-            JsonRootObject->SetStringField("name", NameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("name"), NameValue.GetValue());
         }
         if (MetadataValue.IsSet())
         {
-            JsonRootObject->SetStringField("metadata", MetadataValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("metadata"), MetadataValue.GetValue());
         }
         if (VerifyActionsValue != nullptr && VerifyActionsValue.IsValid())
         {
@@ -269,7 +269,7 @@ namespace Gs2::Showcase::Model
             {
                 v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
             }
-            JsonRootObject->SetArrayField("verifyActions", v);
+            JsonRootObject->SetArrayField(TEXT("verifyActions"), v);
         }
         if (ConsumeActionsValue != nullptr && ConsumeActionsValue.IsValid())
         {
@@ -278,7 +278,7 @@ namespace Gs2::Showcase::Model
             {
                 v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
             }
-            JsonRootObject->SetArrayField("consumeActions", v);
+            JsonRootObject->SetArrayField(TEXT("consumeActions"), v);
         }
         if (AcquireActionsValue != nullptr && AcquireActionsValue.IsValid())
         {
@@ -287,15 +287,15 @@ namespace Gs2::Showcase::Model
             {
                 v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
             }
-            JsonRootObject->SetArrayField("acquireActions", v);
+            JsonRootObject->SetArrayField(TEXT("acquireActions"), v);
         }
         if (CurrentPurchaseCountValue.IsSet())
         {
-            JsonRootObject->SetNumberField("currentPurchaseCount", CurrentPurchaseCountValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("currentPurchaseCount"), CurrentPurchaseCountValue.GetValue());
         }
         if (MaximumPurchaseCountValue.IsSet())
         {
-            JsonRootObject->SetNumberField("maximumPurchaseCount", MaximumPurchaseCountValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("maximumPurchaseCount"), MaximumPurchaseCountValue.GetValue());
         }
         return JsonRootObject;
     }

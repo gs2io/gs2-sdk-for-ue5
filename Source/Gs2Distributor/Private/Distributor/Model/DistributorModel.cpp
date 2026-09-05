@@ -203,19 +203,19 @@ namespace Gs2::Distributor::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (DistributorModelIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("distributorModelId", DistributorModelIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("distributorModelId"), DistributorModelIdValue.GetValue());
         }
         if (NameValue.IsSet())
         {
-            JsonRootObject->SetStringField("name", NameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("name"), NameValue.GetValue());
         }
         if (MetadataValue.IsSet())
         {
-            JsonRootObject->SetStringField("metadata", MetadataValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("metadata"), MetadataValue.GetValue());
         }
         if (InboxNamespaceIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("inboxNamespaceId", InboxNamespaceIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("inboxNamespaceId"), InboxNamespaceIdValue.GetValue());
         }
         if (WhiteListTargetIdsValue != nullptr && WhiteListTargetIdsValue.IsValid())
         {
@@ -224,7 +224,7 @@ namespace Gs2::Distributor::Model
             {
                 v.Add(MakeShared<FJsonValueString>(JsonObjectValue));
             }
-            JsonRootObject->SetArrayField("whiteListTargetIds", v);
+            JsonRootObject->SetArrayField(TEXT("whiteListTargetIds"), v);
         }
         return JsonRootObject;
     }

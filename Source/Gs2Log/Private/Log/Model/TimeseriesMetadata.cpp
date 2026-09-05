@@ -98,7 +98,7 @@ namespace Gs2::Log::Model
             {
                 v.Add(MakeShared<FJsonValueString>(JsonObjectValue));
             }
-            JsonRootObject->SetArrayField("keys", v);
+            JsonRootObject->SetArrayField(TEXT("keys"), v);
         }
         if (GroupByValue != nullptr && GroupByValue.IsValid())
         {
@@ -107,7 +107,7 @@ namespace Gs2::Log::Model
             {
                 v.Add(MakeShared<FJsonValueString>(JsonObjectValue));
             }
-            JsonRootObject->SetArrayField("groupBy", v);
+            JsonRootObject->SetArrayField(TEXT("groupBy"), v);
         }
         return JsonRootObject;
     }

@@ -266,35 +266,35 @@ namespace Gs2::Grade::Result
             {
                 v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
             }
-            JsonRootObject->SetArrayField("items", v);
+            JsonRootObject->SetArrayField(TEXT("items"), v);
         }
         if (TransactionIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("transactionId", TransactionIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("transactionId"), TransactionIdValue.GetValue());
         }
         if (StampSheetValue.IsSet())
         {
-            JsonRootObject->SetStringField("stampSheet", StampSheetValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("stampSheet"), StampSheetValue.GetValue());
         }
         if (StampSheetEncryptionKeyIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("stampSheetEncryptionKeyId", StampSheetEncryptionKeyIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("stampSheetEncryptionKeyId"), StampSheetEncryptionKeyIdValue.GetValue());
         }
         if (AutoRunStampSheetValue.IsSet())
         {
-            JsonRootObject->SetBoolField("autoRunStampSheet", AutoRunStampSheetValue.GetValue());
+            JsonRootObject->SetBoolField(TEXT("autoRunStampSheet"), AutoRunStampSheetValue.GetValue());
         }
         if (AtomicCommitValue.IsSet())
         {
-            JsonRootObject->SetBoolField("atomicCommit", AtomicCommitValue.GetValue());
+            JsonRootObject->SetBoolField(TEXT("atomicCommit"), AtomicCommitValue.GetValue());
         }
         if (TransactionValue.IsSet())
         {
-            JsonRootObject->SetStringField("transaction", TransactionValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("transaction"), TransactionValue.GetValue());
         }
         if (TransactionResultValue != nullptr && TransactionResultValue.IsValid())
         {
-            JsonRootObject->SetObjectField("transactionResult", TransactionResultValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("transactionResult"), TransactionResultValue->ToJson());
         }
         return JsonRootObject;
     }

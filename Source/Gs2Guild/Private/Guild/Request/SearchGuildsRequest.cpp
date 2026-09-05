@@ -465,23 +465,23 @@ namespace Gs2::Guild::Request
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (ContextStackValue.IsSet())
         {
-            JsonRootObject->SetStringField("contextStack", ContextStackValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("contextStack"), ContextStackValue.GetValue());
         }
         if (NamespaceNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("namespaceName", NamespaceNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("namespaceName"), NamespaceNameValue.GetValue());
         }
         if (GuildModelNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("guildModelName", GuildModelNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("guildModelName"), GuildModelNameValue.GetValue());
         }
         if (AccessTokenValue.IsSet())
         {
-            JsonRootObject->SetStringField("xGs2AccessToken", AccessTokenValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("xGs2AccessToken"), AccessTokenValue.GetValue());
         }
         if (DisplayNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("displayName", DisplayNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("displayName"), DisplayNameValue.GetValue());
         }
         if (Attributes1Value != nullptr && Attributes1Value.IsValid())
         {
@@ -490,7 +490,7 @@ namespace Gs2::Guild::Request
             {
                 v.Add(MakeShared<FJsonValueNumber>(JsonObjectValue));
             }
-            JsonRootObject->SetArrayField("attributes1", v);
+            JsonRootObject->SetArrayField(TEXT("attributes1"), v);
         }
         if (Attributes2Value != nullptr && Attributes2Value.IsValid())
         {
@@ -499,7 +499,7 @@ namespace Gs2::Guild::Request
             {
                 v.Add(MakeShared<FJsonValueNumber>(JsonObjectValue));
             }
-            JsonRootObject->SetArrayField("attributes2", v);
+            JsonRootObject->SetArrayField(TEXT("attributes2"), v);
         }
         if (Attributes3Value != nullptr && Attributes3Value.IsValid())
         {
@@ -508,7 +508,7 @@ namespace Gs2::Guild::Request
             {
                 v.Add(MakeShared<FJsonValueNumber>(JsonObjectValue));
             }
-            JsonRootObject->SetArrayField("attributes3", v);
+            JsonRootObject->SetArrayField(TEXT("attributes3"), v);
         }
         if (Attributes4Value != nullptr && Attributes4Value.IsValid())
         {
@@ -517,7 +517,7 @@ namespace Gs2::Guild::Request
             {
                 v.Add(MakeShared<FJsonValueNumber>(JsonObjectValue));
             }
-            JsonRootObject->SetArrayField("attributes4", v);
+            JsonRootObject->SetArrayField(TEXT("attributes4"), v);
         }
         if (Attributes5Value != nullptr && Attributes5Value.IsValid())
         {
@@ -526,7 +526,7 @@ namespace Gs2::Guild::Request
             {
                 v.Add(MakeShared<FJsonValueNumber>(JsonObjectValue));
             }
-            JsonRootObject->SetArrayField("attributes5", v);
+            JsonRootObject->SetArrayField(TEXT("attributes5"), v);
         }
         if (JoinPoliciesValue != nullptr && JoinPoliciesValue.IsValid())
         {
@@ -535,27 +535,27 @@ namespace Gs2::Guild::Request
             {
                 v.Add(MakeShared<FJsonValueString>(JsonObjectValue));
             }
-            JsonRootObject->SetArrayField("joinPolicies", v);
+            JsonRootObject->SetArrayField(TEXT("joinPolicies"), v);
         }
         if (IncludeFullMembersGuildValue.IsSet())
         {
-            JsonRootObject->SetBoolField("includeFullMembersGuild", IncludeFullMembersGuildValue.GetValue());
+            JsonRootObject->SetBoolField(TEXT("includeFullMembersGuild"), IncludeFullMembersGuildValue.GetValue());
         }
         if (OrderByValue.IsSet())
         {
-            JsonRootObject->SetStringField("orderBy", OrderByValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("orderBy"), OrderByValue.GetValue());
         }
         if (PageTokenValue.IsSet())
         {
-            JsonRootObject->SetStringField("pageToken", PageTokenValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("pageToken"), PageTokenValue.GetValue());
         }
         if (LimitValue.IsSet())
         {
-            JsonRootObject->SetNumberField("limit", LimitValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("limit"), LimitValue.GetValue());
         }
         if (DuplicationAvoiderValue.IsSet())
         {
-            JsonRootObject->SetStringField("duplicationAvoider", DuplicationAvoiderValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("duplicationAvoider"), DuplicationAvoiderValue.GetValue());
         }
         return JsonRootObject;
     }

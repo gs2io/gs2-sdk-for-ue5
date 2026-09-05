@@ -112,15 +112,15 @@ namespace Gs2::StateMachine::Request
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (ContextStackValue.IsSet())
         {
-            JsonRootObject->SetStringField("contextStack", ContextStackValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("contextStack"), ContextStackValue.GetValue());
         }
         if (NamespaceNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("namespaceName", NamespaceNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("namespaceName"), NamespaceNameValue.GetValue());
         }
         if (VersionValue.IsSet())
         {
-            JsonRootObject->SetStringField("version", FString::Printf(TEXT("%lld"), VersionValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("version"), FString::Printf(TEXT("%lld"), VersionValue.GetValue()));
         }
         return JsonRootObject;
     }

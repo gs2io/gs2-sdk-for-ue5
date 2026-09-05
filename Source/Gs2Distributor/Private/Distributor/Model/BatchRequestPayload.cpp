@@ -133,19 +133,19 @@ namespace Gs2::Distributor::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (RequestIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("requestId", RequestIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("requestId"), RequestIdValue.GetValue());
         }
         if (ServiceValue.IsSet())
         {
-            JsonRootObject->SetStringField("service", ServiceValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("service"), ServiceValue.GetValue());
         }
         if (MethodNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("methodName", MethodNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("methodName"), MethodNameValue.GetValue());
         }
         if (ParameterValue.IsSet())
         {
-            JsonRootObject->SetStringField("parameter", ParameterValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("parameter"), ParameterValue.GetValue());
         }
         return JsonRootObject;
     }

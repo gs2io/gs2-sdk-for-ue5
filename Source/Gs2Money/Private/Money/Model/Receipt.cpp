@@ -458,55 +458,55 @@ namespace Gs2::Money::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (ReceiptIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("receiptId", ReceiptIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("receiptId"), ReceiptIdValue.GetValue());
         }
         if (TransactionIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("transactionId", TransactionIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("transactionId"), TransactionIdValue.GetValue());
         }
         if (PurchaseTokenValue.IsSet())
         {
-            JsonRootObject->SetStringField("purchaseToken", PurchaseTokenValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("purchaseToken"), PurchaseTokenValue.GetValue());
         }
         if (UserIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("userId", UserIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("userId"), UserIdValue.GetValue());
         }
         if (TypeValue.IsSet())
         {
-            JsonRootObject->SetStringField("type", TypeValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("type"), TypeValue.GetValue());
         }
         if (SlotValue.IsSet())
         {
-            JsonRootObject->SetNumberField("slot", SlotValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("slot"), SlotValue.GetValue());
         }
         if (PriceValue.IsSet())
         {
-            JsonRootObject->SetNumberField("price", PriceValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("price"), PriceValue.GetValue());
         }
         if (PaidValue.IsSet())
         {
-            JsonRootObject->SetNumberField("paid", PaidValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("paid"), PaidValue.GetValue());
         }
         if (FreeValue.IsSet())
         {
-            JsonRootObject->SetNumberField("free", FreeValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("free"), FreeValue.GetValue());
         }
         if (TotalValue.IsSet())
         {
-            JsonRootObject->SetNumberField("total", TotalValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("total"), TotalValue.GetValue());
         }
         if (ContentsIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("contentsId", ContentsIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("contentsId"), ContentsIdValue.GetValue());
         }
         if (CreatedAtValue.IsSet())
         {
-            JsonRootObject->SetStringField("createdAt", FString::Printf(TEXT("%lld"), CreatedAtValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("createdAt"), FString::Printf(TEXT("%lld"), CreatedAtValue.GetValue()));
         }
         if (RevisionValue.IsSet())
         {
-            JsonRootObject->SetStringField("revision", FString::Printf(TEXT("%lld"), RevisionValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("revision"), FString::Printf(TEXT("%lld"), RevisionValue.GetValue()));
         }
         return JsonRootObject;
     }

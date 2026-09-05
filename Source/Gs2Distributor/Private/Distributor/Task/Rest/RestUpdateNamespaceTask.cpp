@@ -86,31 +86,31 @@ namespace Gs2::Distributor::Task::Rest
             const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
             if (this->Request->GetDescription().IsSet())
             {
-                JsonRootObject->SetStringField("description", this->Request->GetDescription().GetValue());
+                JsonRootObject->SetStringField(TEXT("description"), this->Request->GetDescription().GetValue());
             }
             if (this->Request->GetTransactionSetting() != nullptr && this->Request->GetTransactionSetting().IsValid())
             {
-                JsonRootObject->SetObjectField("transactionSetting", this->Request->GetTransactionSetting()->ToJson());
+                JsonRootObject->SetObjectField(TEXT("transactionSetting"), this->Request->GetTransactionSetting()->ToJson());
             }
             if (this->Request->GetAssumeUserId().IsSet())
             {
-                JsonRootObject->SetStringField("assumeUserId", this->Request->GetAssumeUserId().GetValue());
+                JsonRootObject->SetStringField(TEXT("assumeUserId"), this->Request->GetAssumeUserId().GetValue());
             }
             if (this->Request->GetAutoRunStampSheetNotification() != nullptr && this->Request->GetAutoRunStampSheetNotification().IsValid())
             {
-                JsonRootObject->SetObjectField("autoRunStampSheetNotification", this->Request->GetAutoRunStampSheetNotification()->ToJson());
+                JsonRootObject->SetObjectField(TEXT("autoRunStampSheetNotification"), this->Request->GetAutoRunStampSheetNotification()->ToJson());
             }
             if (this->Request->GetAutoRunTransactionNotification() != nullptr && this->Request->GetAutoRunTransactionNotification().IsValid())
             {
-                JsonRootObject->SetObjectField("autoRunTransactionNotification", this->Request->GetAutoRunTransactionNotification()->ToJson());
+                JsonRootObject->SetObjectField(TEXT("autoRunTransactionNotification"), this->Request->GetAutoRunTransactionNotification()->ToJson());
             }
             if (this->Request->GetLogSetting() != nullptr && this->Request->GetLogSetting().IsValid())
             {
-                JsonRootObject->SetObjectField("logSetting", this->Request->GetLogSetting()->ToJson());
+                JsonRootObject->SetObjectField(TEXT("logSetting"), this->Request->GetLogSetting()->ToJson());
             }
             if (this->Request->GetContextStack().IsSet())
             {
-                JsonRootObject->SetStringField("contextStack", this->Request->GetContextStack().GetValue());
+                JsonRootObject->SetStringField(TEXT("contextStack"), this->Request->GetContextStack().GetValue());
             }
             FJsonSerializer::Serialize(JsonRootObject.ToSharedRef(), Writer);
             request->SetContentAsString(Body);

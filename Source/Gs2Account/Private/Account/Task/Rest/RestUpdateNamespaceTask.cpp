@@ -86,47 +86,47 @@ namespace Gs2::Account::Task::Rest
             const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
             if (this->Request->GetDescription().IsSet())
             {
-                JsonRootObject->SetStringField("description", this->Request->GetDescription().GetValue());
+                JsonRootObject->SetStringField(TEXT("description"), this->Request->GetDescription().GetValue());
             }
             if (this->Request->GetTransactionSetting() != nullptr && this->Request->GetTransactionSetting().IsValid())
             {
-                JsonRootObject->SetObjectField("transactionSetting", this->Request->GetTransactionSetting()->ToJson());
+                JsonRootObject->SetObjectField(TEXT("transactionSetting"), this->Request->GetTransactionSetting()->ToJson());
             }
             if (this->Request->GetChangePasswordIfTakeOver().IsSet())
             {
-                JsonRootObject->SetBoolField("changePasswordIfTakeOver", this->Request->GetChangePasswordIfTakeOver().GetValue());
+                JsonRootObject->SetBoolField(TEXT("changePasswordIfTakeOver"), this->Request->GetChangePasswordIfTakeOver().GetValue());
             }
             if (this->Request->GetCreateAccountScript() != nullptr && this->Request->GetCreateAccountScript().IsValid())
             {
-                JsonRootObject->SetObjectField("createAccountScript", this->Request->GetCreateAccountScript()->ToJson());
+                JsonRootObject->SetObjectField(TEXT("createAccountScript"), this->Request->GetCreateAccountScript()->ToJson());
             }
             if (this->Request->GetAuthenticationScript() != nullptr && this->Request->GetAuthenticationScript().IsValid())
             {
-                JsonRootObject->SetObjectField("authenticationScript", this->Request->GetAuthenticationScript()->ToJson());
+                JsonRootObject->SetObjectField(TEXT("authenticationScript"), this->Request->GetAuthenticationScript()->ToJson());
             }
             if (this->Request->GetCreateTakeOverScript() != nullptr && this->Request->GetCreateTakeOverScript().IsValid())
             {
-                JsonRootObject->SetObjectField("createTakeOverScript", this->Request->GetCreateTakeOverScript()->ToJson());
+                JsonRootObject->SetObjectField(TEXT("createTakeOverScript"), this->Request->GetCreateTakeOverScript()->ToJson());
             }
             if (this->Request->GetDoTakeOverScript() != nullptr && this->Request->GetDoTakeOverScript().IsValid())
             {
-                JsonRootObject->SetObjectField("doTakeOverScript", this->Request->GetDoTakeOverScript()->ToJson());
+                JsonRootObject->SetObjectField(TEXT("doTakeOverScript"), this->Request->GetDoTakeOverScript()->ToJson());
             }
             if (this->Request->GetBanScript() != nullptr && this->Request->GetBanScript().IsValid())
             {
-                JsonRootObject->SetObjectField("banScript", this->Request->GetBanScript()->ToJson());
+                JsonRootObject->SetObjectField(TEXT("banScript"), this->Request->GetBanScript()->ToJson());
             }
             if (this->Request->GetUnBanScript() != nullptr && this->Request->GetUnBanScript().IsValid())
             {
-                JsonRootObject->SetObjectField("unBanScript", this->Request->GetUnBanScript()->ToJson());
+                JsonRootObject->SetObjectField(TEXT("unBanScript"), this->Request->GetUnBanScript()->ToJson());
             }
             if (this->Request->GetLogSetting() != nullptr && this->Request->GetLogSetting().IsValid())
             {
-                JsonRootObject->SetObjectField("logSetting", this->Request->GetLogSetting()->ToJson());
+                JsonRootObject->SetObjectField(TEXT("logSetting"), this->Request->GetLogSetting()->ToJson());
             }
             if (this->Request->GetContextStack().IsSet())
             {
-                JsonRootObject->SetStringField("contextStack", this->Request->GetContextStack().GetValue());
+                JsonRootObject->SetStringField(TEXT("contextStack"), this->Request->GetContextStack().GetValue());
             }
             FJsonSerializer::Serialize(JsonRootObject.ToSharedRef(), Writer);
             request->SetContentAsString(Body);

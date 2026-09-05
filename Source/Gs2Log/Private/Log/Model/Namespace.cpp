@@ -478,67 +478,67 @@ namespace Gs2::Log::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (NamespaceIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("namespaceId", NamespaceIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("namespaceId"), NamespaceIdValue.GetValue());
         }
         if (NameValue.IsSet())
         {
-            JsonRootObject->SetStringField("name", NameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("name"), NameValue.GetValue());
         }
         if (DescriptionValue.IsSet())
         {
-            JsonRootObject->SetStringField("description", DescriptionValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("description"), DescriptionValue.GetValue());
         }
         if (TypeValue.IsSet())
         {
-            JsonRootObject->SetStringField("type", TypeValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("type"), TypeValue.GetValue());
         }
         if (GcpCredentialJsonValue.IsSet())
         {
-            JsonRootObject->SetStringField("gcpCredentialJson", GcpCredentialJsonValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("gcpCredentialJson"), GcpCredentialJsonValue.GetValue());
         }
         if (BigQueryDatasetNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("bigQueryDatasetName", BigQueryDatasetNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("bigQueryDatasetName"), BigQueryDatasetNameValue.GetValue());
         }
         if (LogExpireDaysValue.IsSet())
         {
-            JsonRootObject->SetNumberField("logExpireDays", LogExpireDaysValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("logExpireDays"), LogExpireDaysValue.GetValue());
         }
         if (AwsRegionValue.IsSet())
         {
-            JsonRootObject->SetStringField("awsRegion", AwsRegionValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("awsRegion"), AwsRegionValue.GetValue());
         }
         if (AwsAccessKeyIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("awsAccessKeyId", AwsAccessKeyIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("awsAccessKeyId"), AwsAccessKeyIdValue.GetValue());
         }
         if (AwsSecretAccessKeyValue.IsSet())
         {
-            JsonRootObject->SetStringField("awsSecretAccessKey", AwsSecretAccessKeyValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("awsSecretAccessKey"), AwsSecretAccessKeyValue.GetValue());
         }
         if (FirehoseStreamNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("firehoseStreamName", FirehoseStreamNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("firehoseStreamName"), FirehoseStreamNameValue.GetValue());
         }
         if (FirehoseCompressDataValue.IsSet())
         {
-            JsonRootObject->SetStringField("firehoseCompressData", FirehoseCompressDataValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("firehoseCompressData"), FirehoseCompressDataValue.GetValue());
         }
         if (StatusValue.IsSet())
         {
-            JsonRootObject->SetStringField("status", StatusValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("status"), StatusValue.GetValue());
         }
         if (CreatedAtValue.IsSet())
         {
-            JsonRootObject->SetStringField("createdAt", FString::Printf(TEXT("%lld"), CreatedAtValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("createdAt"), FString::Printf(TEXT("%lld"), CreatedAtValue.GetValue()));
         }
         if (UpdatedAtValue.IsSet())
         {
-            JsonRootObject->SetStringField("updatedAt", FString::Printf(TEXT("%lld"), UpdatedAtValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("updatedAt"), FString::Printf(TEXT("%lld"), UpdatedAtValue.GetValue()));
         }
         if (RevisionValue.IsSet())
         {
-            JsonRootObject->SetStringField("revision", FString::Printf(TEXT("%lld"), RevisionValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("revision"), FString::Printf(TEXT("%lld"), RevisionValue.GetValue()));
         }
         return JsonRootObject;
     }

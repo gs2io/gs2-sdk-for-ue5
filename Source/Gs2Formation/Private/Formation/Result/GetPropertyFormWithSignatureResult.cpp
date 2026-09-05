@@ -143,19 +143,19 @@ namespace Gs2::Formation::Result
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (ItemValue != nullptr && ItemValue.IsValid())
         {
-            JsonRootObject->SetObjectField("item", ItemValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("item"), ItemValue->ToJson());
         }
         if (BodyValue.IsSet())
         {
-            JsonRootObject->SetStringField("body", BodyValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("body"), BodyValue.GetValue());
         }
         if (SignatureValue.IsSet())
         {
-            JsonRootObject->SetStringField("signature", SignatureValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("signature"), SignatureValue.GetValue());
         }
         if (PropertyFormModelValue != nullptr && PropertyFormModelValue.IsValid())
         {
-            JsonRootObject->SetObjectField("propertyFormModel", PropertyFormModelValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("propertyFormModel"), PropertyFormModelValue->ToJson());
         }
         return JsonRootObject;
     }

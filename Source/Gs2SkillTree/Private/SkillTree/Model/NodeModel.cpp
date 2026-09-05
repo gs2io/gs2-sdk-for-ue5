@@ -290,15 +290,15 @@ namespace Gs2::SkillTree::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (NodeModelIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("nodeModelId", NodeModelIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("nodeModelId"), NodeModelIdValue.GetValue());
         }
         if (NameValue.IsSet())
         {
-            JsonRootObject->SetStringField("name", NameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("name"), NameValue.GetValue());
         }
         if (MetadataValue.IsSet())
         {
-            JsonRootObject->SetStringField("metadata", MetadataValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("metadata"), MetadataValue.GetValue());
         }
         if (ReleaseVerifyActionsValue != nullptr && ReleaseVerifyActionsValue.IsValid())
         {
@@ -307,7 +307,7 @@ namespace Gs2::SkillTree::Model
             {
                 v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
             }
-            JsonRootObject->SetArrayField("releaseVerifyActions", v);
+            JsonRootObject->SetArrayField(TEXT("releaseVerifyActions"), v);
         }
         if (ReleaseConsumeActionsValue != nullptr && ReleaseConsumeActionsValue.IsValid())
         {
@@ -316,7 +316,7 @@ namespace Gs2::SkillTree::Model
             {
                 v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
             }
-            JsonRootObject->SetArrayField("releaseConsumeActions", v);
+            JsonRootObject->SetArrayField(TEXT("releaseConsumeActions"), v);
         }
         if (ReturnAcquireActionsValue != nullptr && ReturnAcquireActionsValue.IsValid())
         {
@@ -325,11 +325,11 @@ namespace Gs2::SkillTree::Model
             {
                 v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
             }
-            JsonRootObject->SetArrayField("returnAcquireActions", v);
+            JsonRootObject->SetArrayField(TEXT("returnAcquireActions"), v);
         }
         if (RestrainReturnRateValue.IsSet())
         {
-            JsonRootObject->SetNumberField("restrainReturnRate", RestrainReturnRateValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("restrainReturnRate"), RestrainReturnRateValue.GetValue());
         }
         if (PremiseNodeNamesValue != nullptr && PremiseNodeNamesValue.IsValid())
         {
@@ -338,7 +338,7 @@ namespace Gs2::SkillTree::Model
             {
                 v.Add(MakeShared<FJsonValueString>(JsonObjectValue));
             }
-            JsonRootObject->SetArrayField("premiseNodeNames", v);
+            JsonRootObject->SetArrayField(TEXT("premiseNodeNames"), v);
         }
         return JsonRootObject;
     }

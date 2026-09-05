@@ -208,31 +208,31 @@ namespace Gs2::SeasonRating::Request
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (ContextStackValue.IsSet())
         {
-            JsonRootObject->SetStringField("contextStack", ContextStackValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("contextStack"), ContextStackValue.GetValue());
         }
         if (NamespaceNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("namespaceName", NamespaceNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("namespaceName"), NamespaceNameValue.GetValue());
         }
         if (SeasonNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("seasonName", SeasonNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("seasonName"), SeasonNameValue.GetValue());
         }
         if (SessionNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("sessionName", SessionNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("sessionName"), SessionNameValue.GetValue());
         }
         if (AccessTokenValue.IsSet())
         {
-            JsonRootObject->SetStringField("xGs2AccessToken", AccessTokenValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("xGs2AccessToken"), AccessTokenValue.GetValue());
         }
         if (NumberOfPlayerValue.IsSet())
         {
-            JsonRootObject->SetNumberField("numberOfPlayer", NumberOfPlayerValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("numberOfPlayer"), NumberOfPlayerValue.GetValue());
         }
         if (KeyIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("keyId", KeyIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("keyId"), KeyIdValue.GetValue());
         }
         return JsonRootObject;
     }

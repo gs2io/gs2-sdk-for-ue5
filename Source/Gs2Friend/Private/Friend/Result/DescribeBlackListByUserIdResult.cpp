@@ -101,11 +101,11 @@ namespace Gs2::Friend::Result
             {
                 v.Add(MakeShared<FJsonValueString>(JsonObjectValue));
             }
-            JsonRootObject->SetArrayField("items", v);
+            JsonRootObject->SetArrayField(TEXT("items"), v);
         }
         if (NextPageTokenValue.IsSet())
         {
-            JsonRootObject->SetStringField("nextPageToken", NextPageTokenValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("nextPageToken"), NextPageTokenValue.GetValue());
         }
         return JsonRootObject;
     }

@@ -331,23 +331,23 @@ namespace Gs2::Realtime::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (RoomIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("roomId", RoomIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("roomId"), RoomIdValue.GetValue());
         }
         if (NameValue.IsSet())
         {
-            JsonRootObject->SetStringField("name", NameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("name"), NameValue.GetValue());
         }
         if (IpAddressValue.IsSet())
         {
-            JsonRootObject->SetStringField("ipAddress", IpAddressValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("ipAddress"), IpAddressValue.GetValue());
         }
         if (PortValue.IsSet())
         {
-            JsonRootObject->SetNumberField("port", PortValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("port"), PortValue.GetValue());
         }
         if (EncryptionKeyValue.IsSet())
         {
-            JsonRootObject->SetStringField("encryptionKey", EncryptionKeyValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("encryptionKey"), EncryptionKeyValue.GetValue());
         }
         if (NotificationUserIdsValue != nullptr && NotificationUserIdsValue.IsValid())
         {
@@ -356,19 +356,19 @@ namespace Gs2::Realtime::Model
             {
                 v.Add(MakeShared<FJsonValueString>(JsonObjectValue));
             }
-            JsonRootObject->SetArrayField("notificationUserIds", v);
+            JsonRootObject->SetArrayField(TEXT("notificationUserIds"), v);
         }
         if (CreatedAtValue.IsSet())
         {
-            JsonRootObject->SetStringField("createdAt", FString::Printf(TEXT("%lld"), CreatedAtValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("createdAt"), FString::Printf(TEXT("%lld"), CreatedAtValue.GetValue()));
         }
         if (UpdatedAtValue.IsSet())
         {
-            JsonRootObject->SetStringField("updatedAt", FString::Printf(TEXT("%lld"), UpdatedAtValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("updatedAt"), FString::Printf(TEXT("%lld"), UpdatedAtValue.GetValue()));
         }
         if (RevisionValue.IsSet())
         {
-            JsonRootObject->SetStringField("revision", FString::Printf(TEXT("%lld"), RevisionValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("revision"), FString::Printf(TEXT("%lld"), RevisionValue.GetValue()));
         }
         return JsonRootObject;
     }

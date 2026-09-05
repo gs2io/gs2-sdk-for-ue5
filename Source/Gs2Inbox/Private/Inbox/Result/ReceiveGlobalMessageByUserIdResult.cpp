@@ -77,7 +77,7 @@ namespace Gs2::Inbox::Result
             {
                 v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
             }
-            JsonRootObject->SetArrayField("item", v);
+            JsonRootObject->SetArrayField(TEXT("item"), v);
         }
         return JsonRootObject;
     }

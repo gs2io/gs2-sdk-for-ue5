@@ -137,15 +137,15 @@ namespace Gs2::Matchmaking::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (DaysValue.IsSet())
         {
-            JsonRootObject->SetNumberField("days", DaysValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("days"), DaysValue.GetValue());
         }
         if (HoursValue.IsSet())
         {
-            JsonRootObject->SetNumberField("hours", HoursValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("hours"), HoursValue.GetValue());
         }
         if (MinutesValue.IsSet())
         {
-            JsonRootObject->SetNumberField("minutes", MinutesValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("minutes"), MinutesValue.GetValue());
         }
         return JsonRootObject;
     }

@@ -226,15 +226,15 @@ namespace Gs2::SeasonRating::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (SeasonModelIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("seasonModelId", SeasonModelIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("seasonModelId"), SeasonModelIdValue.GetValue());
         }
         if (NameValue.IsSet())
         {
-            JsonRootObject->SetStringField("name", NameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("name"), NameValue.GetValue());
         }
         if (MetadataValue.IsSet())
         {
-            JsonRootObject->SetStringField("metadata", MetadataValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("metadata"), MetadataValue.GetValue());
         }
         if (TiersValue != nullptr && TiersValue.IsValid())
         {
@@ -243,15 +243,15 @@ namespace Gs2::SeasonRating::Model
             {
                 v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
             }
-            JsonRootObject->SetArrayField("tiers", v);
+            JsonRootObject->SetArrayField(TEXT("tiers"), v);
         }
         if (ExperienceModelIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("experienceModelId", ExperienceModelIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("experienceModelId"), ExperienceModelIdValue.GetValue());
         }
         if (ChallengePeriodEventIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("challengePeriodEventId", ChallengePeriodEventIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("challengePeriodEventId"), ChallengePeriodEventIdValue.GetValue());
         }
         return JsonRootObject;
     }

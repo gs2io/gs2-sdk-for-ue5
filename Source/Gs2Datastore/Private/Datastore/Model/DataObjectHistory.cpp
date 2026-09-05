@@ -272,27 +272,27 @@ namespace Gs2::Datastore::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (DataObjectHistoryIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("dataObjectHistoryId", DataObjectHistoryIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("dataObjectHistoryId"), DataObjectHistoryIdValue.GetValue());
         }
         if (DataObjectNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("dataObjectName", DataObjectNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("dataObjectName"), DataObjectNameValue.GetValue());
         }
         if (GenerationValue.IsSet())
         {
-            JsonRootObject->SetStringField("generation", GenerationValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("generation"), GenerationValue.GetValue());
         }
         if (ContentLengthValue.IsSet())
         {
-            JsonRootObject->SetStringField("contentLength", FString::Printf(TEXT("%lld"), ContentLengthValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("contentLength"), FString::Printf(TEXT("%lld"), ContentLengthValue.GetValue()));
         }
         if (CreatedAtValue.IsSet())
         {
-            JsonRootObject->SetStringField("createdAt", FString::Printf(TEXT("%lld"), CreatedAtValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("createdAt"), FString::Printf(TEXT("%lld"), CreatedAtValue.GetValue()));
         }
         if (RevisionValue.IsSet())
         {
-            JsonRootObject->SetStringField("revision", FString::Printf(TEXT("%lld"), RevisionValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("revision"), FString::Printf(TEXT("%lld"), RevisionValue.GetValue()));
         }
         return JsonRootObject;
     }

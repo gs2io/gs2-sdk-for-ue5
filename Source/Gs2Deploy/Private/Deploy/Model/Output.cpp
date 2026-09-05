@@ -186,19 +186,19 @@ namespace Gs2::Deploy::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (OutputIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("outputId", OutputIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("outputId"), OutputIdValue.GetValue());
         }
         if (NameValue.IsSet())
         {
-            JsonRootObject->SetStringField("name", NameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("name"), NameValue.GetValue());
         }
         if (ValueValue.IsSet())
         {
-            JsonRootObject->SetStringField("value", ValueValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("value"), ValueValue.GetValue());
         }
         if (CreatedAtValue.IsSet())
         {
-            JsonRootObject->SetStringField("createdAt", FString::Printf(TEXT("%lld"), CreatedAtValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("createdAt"), FString::Printf(TEXT("%lld"), CreatedAtValue.GetValue()));
         }
         return JsonRootObject;
     }

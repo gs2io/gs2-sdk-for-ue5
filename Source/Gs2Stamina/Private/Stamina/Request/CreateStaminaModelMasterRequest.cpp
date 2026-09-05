@@ -388,55 +388,55 @@ namespace Gs2::Stamina::Request
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (ContextStackValue.IsSet())
         {
-            JsonRootObject->SetStringField("contextStack", ContextStackValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("contextStack"), ContextStackValue.GetValue());
         }
         if (NamespaceNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("namespaceName", NamespaceNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("namespaceName"), NamespaceNameValue.GetValue());
         }
         if (NameValue.IsSet())
         {
-            JsonRootObject->SetStringField("name", NameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("name"), NameValue.GetValue());
         }
         if (DescriptionValue.IsSet())
         {
-            JsonRootObject->SetStringField("description", DescriptionValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("description"), DescriptionValue.GetValue());
         }
         if (MetadataValue.IsSet())
         {
-            JsonRootObject->SetStringField("metadata", MetadataValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("metadata"), MetadataValue.GetValue());
         }
         if (RecoverIntervalMinutesValue.IsSet())
         {
-            JsonRootObject->SetNumberField("recoverIntervalMinutes", RecoverIntervalMinutesValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("recoverIntervalMinutes"), RecoverIntervalMinutesValue.GetValue());
         }
         if (RecoverValueValue.IsSet())
         {
-            JsonRootObject->SetNumberField("recoverValue", RecoverValueValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("recoverValue"), RecoverValueValue.GetValue());
         }
         if (InitialCapacityValue.IsSet())
         {
-            JsonRootObject->SetNumberField("initialCapacity", InitialCapacityValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("initialCapacity"), InitialCapacityValue.GetValue());
         }
         if (IsOverflowValue.IsSet())
         {
-            JsonRootObject->SetBoolField("isOverflow", IsOverflowValue.GetValue());
+            JsonRootObject->SetBoolField(TEXT("isOverflow"), IsOverflowValue.GetValue());
         }
         if (MaxCapacityValue.IsSet())
         {
-            JsonRootObject->SetNumberField("maxCapacity", MaxCapacityValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("maxCapacity"), MaxCapacityValue.GetValue());
         }
         if (MaxStaminaTableNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("maxStaminaTableName", MaxStaminaTableNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("maxStaminaTableName"), MaxStaminaTableNameValue.GetValue());
         }
         if (RecoverIntervalTableNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("recoverIntervalTableName", RecoverIntervalTableNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("recoverIntervalTableName"), RecoverIntervalTableNameValue.GetValue());
         }
         if (RecoverValueTableNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("recoverValueTableName", RecoverValueTableNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("recoverValueTableName"), RecoverValueTableNameValue.GetValue());
         }
         return JsonRootObject;
     }

@@ -286,43 +286,43 @@ namespace Gs2::Experience::Request
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (ContextStackValue.IsSet())
         {
-            JsonRootObject->SetStringField("contextStack", ContextStackValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("contextStack"), ContextStackValue.GetValue());
         }
         if (NamespaceNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("namespaceName", NamespaceNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("namespaceName"), NamespaceNameValue.GetValue());
         }
         if (DescriptionValue.IsSet())
         {
-            JsonRootObject->SetStringField("description", DescriptionValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("description"), DescriptionValue.GetValue());
         }
         if (TransactionSettingValue != nullptr && TransactionSettingValue.IsValid())
         {
-            JsonRootObject->SetObjectField("transactionSetting", TransactionSettingValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("transactionSetting"), TransactionSettingValue->ToJson());
         }
         if (RankCapScriptIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("rankCapScriptId", RankCapScriptIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("rankCapScriptId"), RankCapScriptIdValue.GetValue());
         }
         if (ChangeExperienceScriptValue != nullptr && ChangeExperienceScriptValue.IsValid())
         {
-            JsonRootObject->SetObjectField("changeExperienceScript", ChangeExperienceScriptValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("changeExperienceScript"), ChangeExperienceScriptValue->ToJson());
         }
         if (ChangeRankScriptValue != nullptr && ChangeRankScriptValue.IsValid())
         {
-            JsonRootObject->SetObjectField("changeRankScript", ChangeRankScriptValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("changeRankScript"), ChangeRankScriptValue->ToJson());
         }
         if (ChangeRankCapScriptValue != nullptr && ChangeRankCapScriptValue.IsValid())
         {
-            JsonRootObject->SetObjectField("changeRankCapScript", ChangeRankCapScriptValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("changeRankCapScript"), ChangeRankCapScriptValue->ToJson());
         }
         if (OverflowExperienceScriptValue.IsSet())
         {
-            JsonRootObject->SetStringField("overflowExperienceScript", OverflowExperienceScriptValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("overflowExperienceScript"), OverflowExperienceScriptValue.GetValue());
         }
         if (LogSettingValue != nullptr && LogSettingValue.IsValid())
         {
-            JsonRootObject->SetObjectField("logSetting", LogSettingValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("logSetting"), LogSettingValue->ToJson());
         }
         return JsonRootObject;
     }

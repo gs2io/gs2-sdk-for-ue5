@@ -96,7 +96,7 @@ namespace Gs2::Enhance::Task::Rest
             const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
             if (this->Request->GetTargetItemSetId().IsSet())
             {
-                JsonRootObject->SetStringField("targetItemSetId", this->Request->GetTargetItemSetId().GetValue());
+                JsonRootObject->SetStringField(TEXT("targetItemSetId"), this->Request->GetTargetItemSetId().GetValue());
             }
             if (this->Request->GetMaterials() != nullptr && this->Request->GetMaterials().IsValid())
             {
@@ -105,7 +105,7 @@ namespace Gs2::Enhance::Task::Rest
                 {
                     v.Add(MakeShared<FJsonValueString>(JsonObjectValue));
                 }
-                JsonRootObject->SetArrayField("materials", v);
+                JsonRootObject->SetArrayField(TEXT("materials"), v);
             }
             if (this->Request->GetConfig() != nullptr && this->Request->GetConfig().IsValid())
             {
@@ -114,11 +114,11 @@ namespace Gs2::Enhance::Task::Rest
                 {
                     v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
                 }
-                JsonRootObject->SetArrayField("config", v);
+                JsonRootObject->SetArrayField(TEXT("config"), v);
             }
             if (this->Request->GetContextStack().IsSet())
             {
-                JsonRootObject->SetStringField("contextStack", this->Request->GetContextStack().GetValue());
+                JsonRootObject->SetStringField(TEXT("contextStack"), this->Request->GetContextStack().GetValue());
             }
             FJsonSerializer::Serialize(JsonRootObject.ToSharedRef(), Writer);
             request->SetContentAsString(Body);

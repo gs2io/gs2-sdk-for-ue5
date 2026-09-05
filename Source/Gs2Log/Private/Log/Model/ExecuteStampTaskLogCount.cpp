@@ -165,23 +165,23 @@ namespace Gs2::Log::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (ServiceValue.IsSet())
         {
-            JsonRootObject->SetStringField("service", ServiceValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("service"), ServiceValue.GetValue());
         }
         if (MethodValue.IsSet())
         {
-            JsonRootObject->SetStringField("method", MethodValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("method"), MethodValue.GetValue());
         }
         if (UserIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("userId", UserIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("userId"), UserIdValue.GetValue());
         }
         if (ActionValue.IsSet())
         {
-            JsonRootObject->SetStringField("action", ActionValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("action"), ActionValue.GetValue());
         }
         if (CountValue.IsSet())
         {
-            JsonRootObject->SetStringField("count", FString::Printf(TEXT("%lld"), CountValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("count"), FString::Printf(TEXT("%lld"), CountValue.GetValue()));
         }
         return JsonRootObject;
     }

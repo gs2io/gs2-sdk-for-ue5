@@ -132,19 +132,19 @@ namespace Gs2::Version::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (VersionNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("versionName", VersionNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("versionName"), VersionNameValue.GetValue());
         }
         if (BodyValue.IsSet())
         {
-            JsonRootObject->SetStringField("body", BodyValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("body"), BodyValue.GetValue());
         }
         if (SignatureValue.IsSet())
         {
-            JsonRootObject->SetStringField("signature", SignatureValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("signature"), SignatureValue.GetValue());
         }
         if (VersionValue != nullptr && VersionValue.IsValid())
         {
-            JsonRootObject->SetObjectField("version", VersionValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("version"), VersionValue->ToJson());
         }
         return JsonRootObject;
     }

@@ -316,35 +316,35 @@ namespace Gs2::SerialKey::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (IssueJobIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("issueJobId", IssueJobIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("issueJobId"), IssueJobIdValue.GetValue());
         }
         if (NameValue.IsSet())
         {
-            JsonRootObject->SetStringField("name", NameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("name"), NameValue.GetValue());
         }
         if (MetadataValue.IsSet())
         {
-            JsonRootObject->SetStringField("metadata", MetadataValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("metadata"), MetadataValue.GetValue());
         }
         if (IssuedCountValue.IsSet())
         {
-            JsonRootObject->SetNumberField("issuedCount", IssuedCountValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("issuedCount"), IssuedCountValue.GetValue());
         }
         if (IssueRequestCountValue.IsSet())
         {
-            JsonRootObject->SetNumberField("issueRequestCount", IssueRequestCountValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("issueRequestCount"), IssueRequestCountValue.GetValue());
         }
         if (StatusValue.IsSet())
         {
-            JsonRootObject->SetStringField("status", StatusValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("status"), StatusValue.GetValue());
         }
         if (CreatedAtValue.IsSet())
         {
-            JsonRootObject->SetStringField("createdAt", FString::Printf(TEXT("%lld"), CreatedAtValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("createdAt"), FString::Printf(TEXT("%lld"), CreatedAtValue.GetValue()));
         }
         if (RevisionValue.IsSet())
         {
-            JsonRootObject->SetStringField("revision", FString::Printf(TEXT("%lld"), RevisionValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("revision"), FString::Printf(TEXT("%lld"), RevisionValue.GetValue()));
         }
         return JsonRootObject;
     }

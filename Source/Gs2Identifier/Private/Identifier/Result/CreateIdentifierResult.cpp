@@ -92,11 +92,11 @@ namespace Gs2::Identifier::Result
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (ItemValue != nullptr && ItemValue.IsValid())
         {
-            JsonRootObject->SetObjectField("item", ItemValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("item"), ItemValue->ToJson());
         }
         if (ClientSecretValue.IsSet())
         {
-            JsonRootObject->SetStringField("clientSecret", ClientSecretValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("clientSecret"), ClientSecretValue.GetValue());
         }
         return JsonRootObject;
     }

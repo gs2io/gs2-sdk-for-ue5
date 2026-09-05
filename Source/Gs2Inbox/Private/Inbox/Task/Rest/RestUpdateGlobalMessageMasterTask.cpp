@@ -91,7 +91,7 @@ namespace Gs2::Inbox::Task::Rest
             const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
             if (this->Request->GetMetadata().IsSet())
             {
-                JsonRootObject->SetStringField("metadata", this->Request->GetMetadata().GetValue());
+                JsonRootObject->SetStringField(TEXT("metadata"), this->Request->GetMetadata().GetValue());
             }
             if (this->Request->GetReadAcquireActions() != nullptr && this->Request->GetReadAcquireActions().IsValid())
             {
@@ -100,23 +100,23 @@ namespace Gs2::Inbox::Task::Rest
                 {
                     v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
                 }
-                JsonRootObject->SetArrayField("readAcquireActions", v);
+                JsonRootObject->SetArrayField(TEXT("readAcquireActions"), v);
             }
             if (this->Request->GetExpiresTimeSpan() != nullptr && this->Request->GetExpiresTimeSpan().IsValid())
             {
-                JsonRootObject->SetObjectField("expiresTimeSpan", this->Request->GetExpiresTimeSpan()->ToJson());
+                JsonRootObject->SetObjectField(TEXT("expiresTimeSpan"), this->Request->GetExpiresTimeSpan()->ToJson());
             }
             if (this->Request->GetExpiresAt().IsSet())
             {
-                JsonRootObject->SetStringField("expiresAt", FString::Printf(TEXT("%lld"), this->Request->GetExpiresAt().GetValue()));
+                JsonRootObject->SetStringField(TEXT("expiresAt"), FString::Printf(TEXT("%lld"), this->Request->GetExpiresAt().GetValue()));
             }
             if (this->Request->GetMessageReceptionPeriodEventId().IsSet())
             {
-                JsonRootObject->SetStringField("messageReceptionPeriodEventId", this->Request->GetMessageReceptionPeriodEventId().GetValue());
+                JsonRootObject->SetStringField(TEXT("messageReceptionPeriodEventId"), this->Request->GetMessageReceptionPeriodEventId().GetValue());
             }
             if (this->Request->GetContextStack().IsSet())
             {
-                JsonRootObject->SetStringField("contextStack", this->Request->GetContextStack().GetValue());
+                JsonRootObject->SetStringField(TEXT("contextStack"), this->Request->GetContextStack().GetValue());
             }
             FJsonSerializer::Serialize(JsonRootObject.ToSharedRef(), Writer);
             request->SetContentAsString(Body);

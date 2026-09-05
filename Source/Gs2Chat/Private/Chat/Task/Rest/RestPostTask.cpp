@@ -94,19 +94,19 @@ namespace Gs2::Chat::Task::Rest
             const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
             if (this->Request->GetCategory().IsSet())
             {
-                JsonRootObject->SetNumberField("category", this->Request->GetCategory().GetValue());
+                JsonRootObject->SetNumberField(TEXT("category"), this->Request->GetCategory().GetValue());
             }
             if (this->Request->GetMetadata().IsSet())
             {
-                JsonRootObject->SetStringField("metadata", this->Request->GetMetadata().GetValue());
+                JsonRootObject->SetStringField(TEXT("metadata"), this->Request->GetMetadata().GetValue());
             }
             if (this->Request->GetPassword().IsSet())
             {
-                JsonRootObject->SetStringField("password", this->Request->GetPassword().GetValue());
+                JsonRootObject->SetStringField(TEXT("password"), this->Request->GetPassword().GetValue());
             }
             if (this->Request->GetContextStack().IsSet())
             {
-                JsonRootObject->SetStringField("contextStack", this->Request->GetContextStack().GetValue());
+                JsonRootObject->SetStringField(TEXT("contextStack"), this->Request->GetContextStack().GetValue());
             }
             FJsonSerializer::Serialize(JsonRootObject.ToSharedRef(), Writer);
             request->SetContentAsString(Body);

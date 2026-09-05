@@ -91,43 +91,43 @@ namespace Gs2::Money2::Task::Rest
             const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
             if (this->Request->GetDescription().IsSet())
             {
-                JsonRootObject->SetStringField("description", this->Request->GetDescription().GetValue());
+                JsonRootObject->SetStringField(TEXT("description"), this->Request->GetDescription().GetValue());
             }
             if (this->Request->GetMetadata().IsSet())
             {
-                JsonRootObject->SetStringField("metadata", this->Request->GetMetadata().GetValue());
+                JsonRootObject->SetStringField(TEXT("metadata"), this->Request->GetMetadata().GetValue());
             }
             if (this->Request->GetScheduleNamespaceId().IsSet())
             {
-                JsonRootObject->SetStringField("scheduleNamespaceId", this->Request->GetScheduleNamespaceId().GetValue());
+                JsonRootObject->SetStringField(TEXT("scheduleNamespaceId"), this->Request->GetScheduleNamespaceId().GetValue());
             }
             if (this->Request->GetTriggerName().IsSet())
             {
-                JsonRootObject->SetStringField("triggerName", this->Request->GetTriggerName().GetValue());
+                JsonRootObject->SetStringField(TEXT("triggerName"), this->Request->GetTriggerName().GetValue());
             }
             if (this->Request->GetTriggerExtendMode().IsSet())
             {
-                JsonRootObject->SetStringField("triggerExtendMode", this->Request->GetTriggerExtendMode().GetValue());
+                JsonRootObject->SetStringField(TEXT("triggerExtendMode"), this->Request->GetTriggerExtendMode().GetValue());
             }
             if (this->Request->GetRollupHour().IsSet())
             {
-                JsonRootObject->SetNumberField("rollupHour", this->Request->GetRollupHour().GetValue());
+                JsonRootObject->SetNumberField(TEXT("rollupHour"), this->Request->GetRollupHour().GetValue());
             }
             if (this->Request->GetReallocateSpanDays().IsSet())
             {
-                JsonRootObject->SetNumberField("reallocateSpanDays", this->Request->GetReallocateSpanDays().GetValue());
+                JsonRootObject->SetNumberField(TEXT("reallocateSpanDays"), this->Request->GetReallocateSpanDays().GetValue());
             }
             if (this->Request->GetAppleAppStore() != nullptr && this->Request->GetAppleAppStore().IsValid())
             {
-                JsonRootObject->SetObjectField("appleAppStore", this->Request->GetAppleAppStore()->ToJson());
+                JsonRootObject->SetObjectField(TEXT("appleAppStore"), this->Request->GetAppleAppStore()->ToJson());
             }
             if (this->Request->GetGooglePlay() != nullptr && this->Request->GetGooglePlay().IsValid())
             {
-                JsonRootObject->SetObjectField("googlePlay", this->Request->GetGooglePlay()->ToJson());
+                JsonRootObject->SetObjectField(TEXT("googlePlay"), this->Request->GetGooglePlay()->ToJson());
             }
             if (this->Request->GetContextStack().IsSet())
             {
-                JsonRootObject->SetStringField("contextStack", this->Request->GetContextStack().GetValue());
+                JsonRootObject->SetStringField(TEXT("contextStack"), this->Request->GetContextStack().GetValue());
             }
             FJsonSerializer::Serialize(JsonRootObject.ToSharedRef(), Writer);
             request->SetContentAsString(Body);

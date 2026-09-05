@@ -91,63 +91,63 @@ namespace Gs2::Schedule::Task::Rest
             const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
             if (this->Request->GetDescription().IsSet())
             {
-                JsonRootObject->SetStringField("description", this->Request->GetDescription().GetValue());
+                JsonRootObject->SetStringField(TEXT("description"), this->Request->GetDescription().GetValue());
             }
             if (this->Request->GetMetadata().IsSet())
             {
-                JsonRootObject->SetStringField("metadata", this->Request->GetMetadata().GetValue());
+                JsonRootObject->SetStringField(TEXT("metadata"), this->Request->GetMetadata().GetValue());
             }
             if (this->Request->GetScheduleType().IsSet())
             {
-                JsonRootObject->SetStringField("scheduleType", this->Request->GetScheduleType().GetValue());
+                JsonRootObject->SetStringField(TEXT("scheduleType"), this->Request->GetScheduleType().GetValue());
             }
             if (this->Request->GetAbsoluteBegin().IsSet())
             {
-                JsonRootObject->SetStringField("absoluteBegin", FString::Printf(TEXT("%lld"), this->Request->GetAbsoluteBegin().GetValue()));
+                JsonRootObject->SetStringField(TEXT("absoluteBegin"), FString::Printf(TEXT("%lld"), this->Request->GetAbsoluteBegin().GetValue()));
             }
             if (this->Request->GetAbsoluteEnd().IsSet())
             {
-                JsonRootObject->SetStringField("absoluteEnd", FString::Printf(TEXT("%lld"), this->Request->GetAbsoluteEnd().GetValue()));
+                JsonRootObject->SetStringField(TEXT("absoluteEnd"), FString::Printf(TEXT("%lld"), this->Request->GetAbsoluteEnd().GetValue()));
             }
             if (this->Request->GetRepeatType().IsSet())
             {
-                JsonRootObject->SetStringField("repeatType", this->Request->GetRepeatType().GetValue());
+                JsonRootObject->SetStringField(TEXT("repeatType"), this->Request->GetRepeatType().GetValue());
             }
             if (this->Request->GetRepeatBeginDayOfMonth().IsSet())
             {
-                JsonRootObject->SetNumberField("repeatBeginDayOfMonth", this->Request->GetRepeatBeginDayOfMonth().GetValue());
+                JsonRootObject->SetNumberField(TEXT("repeatBeginDayOfMonth"), this->Request->GetRepeatBeginDayOfMonth().GetValue());
             }
             if (this->Request->GetRepeatEndDayOfMonth().IsSet())
             {
-                JsonRootObject->SetNumberField("repeatEndDayOfMonth", this->Request->GetRepeatEndDayOfMonth().GetValue());
+                JsonRootObject->SetNumberField(TEXT("repeatEndDayOfMonth"), this->Request->GetRepeatEndDayOfMonth().GetValue());
             }
             if (this->Request->GetRepeatBeginDayOfWeek().IsSet())
             {
-                JsonRootObject->SetStringField("repeatBeginDayOfWeek", this->Request->GetRepeatBeginDayOfWeek().GetValue());
+                JsonRootObject->SetStringField(TEXT("repeatBeginDayOfWeek"), this->Request->GetRepeatBeginDayOfWeek().GetValue());
             }
             if (this->Request->GetRepeatEndDayOfWeek().IsSet())
             {
-                JsonRootObject->SetStringField("repeatEndDayOfWeek", this->Request->GetRepeatEndDayOfWeek().GetValue());
+                JsonRootObject->SetStringField(TEXT("repeatEndDayOfWeek"), this->Request->GetRepeatEndDayOfWeek().GetValue());
             }
             if (this->Request->GetRepeatBeginHour().IsSet())
             {
-                JsonRootObject->SetNumberField("repeatBeginHour", this->Request->GetRepeatBeginHour().GetValue());
+                JsonRootObject->SetNumberField(TEXT("repeatBeginHour"), this->Request->GetRepeatBeginHour().GetValue());
             }
             if (this->Request->GetRepeatEndHour().IsSet())
             {
-                JsonRootObject->SetNumberField("repeatEndHour", this->Request->GetRepeatEndHour().GetValue());
+                JsonRootObject->SetNumberField(TEXT("repeatEndHour"), this->Request->GetRepeatEndHour().GetValue());
             }
             if (this->Request->GetRelativeTriggerName().IsSet())
             {
-                JsonRootObject->SetStringField("relativeTriggerName", this->Request->GetRelativeTriggerName().GetValue());
+                JsonRootObject->SetStringField(TEXT("relativeTriggerName"), this->Request->GetRelativeTriggerName().GetValue());
             }
             if (this->Request->GetRepeatSetting() != nullptr && this->Request->GetRepeatSetting().IsValid())
             {
-                JsonRootObject->SetObjectField("repeatSetting", this->Request->GetRepeatSetting()->ToJson());
+                JsonRootObject->SetObjectField(TEXT("repeatSetting"), this->Request->GetRepeatSetting()->ToJson());
             }
             if (this->Request->GetContextStack().IsSet())
             {
-                JsonRootObject->SetStringField("contextStack", this->Request->GetContextStack().GetValue());
+                JsonRootObject->SetStringField(TEXT("contextStack"), this->Request->GetContextStack().GetValue());
             }
             FJsonSerializer::Serialize(JsonRootObject.ToSharedRef(), Writer);
             request->SetContentAsString(Body);

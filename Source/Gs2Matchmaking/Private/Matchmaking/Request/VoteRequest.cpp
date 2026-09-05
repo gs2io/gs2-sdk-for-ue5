@@ -182,19 +182,19 @@ namespace Gs2::Matchmaking::Request
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (ContextStackValue.IsSet())
         {
-            JsonRootObject->SetStringField("contextStack", ContextStackValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("contextStack"), ContextStackValue.GetValue());
         }
         if (NamespaceNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("namespaceName", NamespaceNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("namespaceName"), NamespaceNameValue.GetValue());
         }
         if (BallotBodyValue.IsSet())
         {
-            JsonRootObject->SetStringField("ballotBody", BallotBodyValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("ballotBody"), BallotBodyValue.GetValue());
         }
         if (BallotSignatureValue.IsSet())
         {
-            JsonRootObject->SetStringField("ballotSignature", BallotSignatureValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("ballotSignature"), BallotSignatureValue.GetValue());
         }
         if (GameResultsValue != nullptr && GameResultsValue.IsValid())
         {
@@ -203,11 +203,11 @@ namespace Gs2::Matchmaking::Request
             {
                 v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
             }
-            JsonRootObject->SetArrayField("gameResults", v);
+            JsonRootObject->SetArrayField(TEXT("gameResults"), v);
         }
         if (KeyIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("keyId", KeyIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("keyId"), KeyIdValue.GetValue());
         }
         return JsonRootObject;
     }

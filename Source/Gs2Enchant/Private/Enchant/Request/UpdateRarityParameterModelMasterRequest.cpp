@@ -246,27 +246,27 @@ namespace Gs2::Enchant::Request
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (ContextStackValue.IsSet())
         {
-            JsonRootObject->SetStringField("contextStack", ContextStackValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("contextStack"), ContextStackValue.GetValue());
         }
         if (NamespaceNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("namespaceName", NamespaceNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("namespaceName"), NamespaceNameValue.GetValue());
         }
         if (ParameterNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("parameterName", ParameterNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("parameterName"), ParameterNameValue.GetValue());
         }
         if (DescriptionValue.IsSet())
         {
-            JsonRootObject->SetStringField("description", DescriptionValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("description"), DescriptionValue.GetValue());
         }
         if (MetadataValue.IsSet())
         {
-            JsonRootObject->SetStringField("metadata", MetadataValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("metadata"), MetadataValue.GetValue());
         }
         if (MaximumParameterCountValue.IsSet())
         {
-            JsonRootObject->SetNumberField("maximumParameterCount", MaximumParameterCountValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("maximumParameterCount"), MaximumParameterCountValue.GetValue());
         }
         if (ParameterCountsValue != nullptr && ParameterCountsValue.IsValid())
         {
@@ -275,7 +275,7 @@ namespace Gs2::Enchant::Request
             {
                 v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
             }
-            JsonRootObject->SetArrayField("parameterCounts", v);
+            JsonRootObject->SetArrayField(TEXT("parameterCounts"), v);
         }
         if (ParametersValue != nullptr && ParametersValue.IsValid())
         {
@@ -284,7 +284,7 @@ namespace Gs2::Enchant::Request
             {
                 v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
             }
-            JsonRootObject->SetArrayField("parameters", v);
+            JsonRootObject->SetArrayField(TEXT("parameters"), v);
         }
         return JsonRootObject;
     }

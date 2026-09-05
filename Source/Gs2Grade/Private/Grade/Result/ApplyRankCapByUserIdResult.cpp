@@ -119,15 +119,15 @@ namespace Gs2::Grade::Result
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (ItemValue != nullptr && ItemValue.IsValid())
         {
-            JsonRootObject->SetObjectField("item", ItemValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("item"), ItemValue->ToJson());
         }
         if (ExperienceNamespaceNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("experienceNamespaceName", ExperienceNamespaceNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("experienceNamespaceName"), ExperienceNamespaceNameValue.GetValue());
         }
         if (ExperienceStatusValue != nullptr && ExperienceStatusValue.IsValid())
         {
-            JsonRootObject->SetObjectField("experienceStatus", ExperienceStatusValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("experienceStatus"), ExperienceStatusValue->ToJson());
         }
         return JsonRootObject;
     }

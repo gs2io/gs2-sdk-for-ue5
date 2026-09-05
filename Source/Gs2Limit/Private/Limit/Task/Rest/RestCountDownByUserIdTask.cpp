@@ -101,11 +101,11 @@ namespace Gs2::Limit::Task::Rest
             const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
             if (this->Request->GetCountDownValue().IsSet())
             {
-                JsonRootObject->SetNumberField("countDownValue", this->Request->GetCountDownValue().GetValue());
+                JsonRootObject->SetNumberField(TEXT("countDownValue"), this->Request->GetCountDownValue().GetValue());
             }
             if (this->Request->GetContextStack().IsSet())
             {
-                JsonRootObject->SetStringField("contextStack", this->Request->GetContextStack().GetValue());
+                JsonRootObject->SetStringField(TEXT("contextStack"), this->Request->GetContextStack().GetValue());
             }
             FJsonSerializer::Serialize(JsonRootObject.ToSharedRef(), Writer);
             request->SetContentAsString(Body);

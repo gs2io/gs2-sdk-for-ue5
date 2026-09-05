@@ -602,79 +602,79 @@ namespace Gs2::Schedule::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (EventIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("eventId", EventIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("eventId"), EventIdValue.GetValue());
         }
         if (NameValue.IsSet())
         {
-            JsonRootObject->SetStringField("name", NameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("name"), NameValue.GetValue());
         }
         if (DescriptionValue.IsSet())
         {
-            JsonRootObject->SetStringField("description", DescriptionValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("description"), DescriptionValue.GetValue());
         }
         if (MetadataValue.IsSet())
         {
-            JsonRootObject->SetStringField("metadata", MetadataValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("metadata"), MetadataValue.GetValue());
         }
         if (ScheduleTypeValue.IsSet())
         {
-            JsonRootObject->SetStringField("scheduleType", ScheduleTypeValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("scheduleType"), ScheduleTypeValue.GetValue());
         }
         if (AbsoluteBeginValue.IsSet())
         {
-            JsonRootObject->SetStringField("absoluteBegin", FString::Printf(TEXT("%lld"), AbsoluteBeginValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("absoluteBegin"), FString::Printf(TEXT("%lld"), AbsoluteBeginValue.GetValue()));
         }
         if (AbsoluteEndValue.IsSet())
         {
-            JsonRootObject->SetStringField("absoluteEnd", FString::Printf(TEXT("%lld"), AbsoluteEndValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("absoluteEnd"), FString::Printf(TEXT("%lld"), AbsoluteEndValue.GetValue()));
         }
         if (RelativeTriggerNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("relativeTriggerName", RelativeTriggerNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("relativeTriggerName"), RelativeTriggerNameValue.GetValue());
         }
         if (RepeatSettingValue != nullptr && RepeatSettingValue.IsValid())
         {
-            JsonRootObject->SetObjectField("repeatSetting", RepeatSettingValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("repeatSetting"), RepeatSettingValue->ToJson());
         }
         if (CreatedAtValue.IsSet())
         {
-            JsonRootObject->SetStringField("createdAt", FString::Printf(TEXT("%lld"), CreatedAtValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("createdAt"), FString::Printf(TEXT("%lld"), CreatedAtValue.GetValue()));
         }
         if (UpdatedAtValue.IsSet())
         {
-            JsonRootObject->SetStringField("updatedAt", FString::Printf(TEXT("%lld"), UpdatedAtValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("updatedAt"), FString::Printf(TEXT("%lld"), UpdatedAtValue.GetValue()));
         }
         if (RevisionValue.IsSet())
         {
-            JsonRootObject->SetStringField("revision", FString::Printf(TEXT("%lld"), RevisionValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("revision"), FString::Printf(TEXT("%lld"), RevisionValue.GetValue()));
         }
         if (RepeatTypeValue.IsSet())
         {
-            JsonRootObject->SetStringField("repeatType", RepeatTypeValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("repeatType"), RepeatTypeValue.GetValue());
         }
         if (RepeatBeginDayOfMonthValue.IsSet())
         {
-            JsonRootObject->SetNumberField("repeatBeginDayOfMonth", RepeatBeginDayOfMonthValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("repeatBeginDayOfMonth"), RepeatBeginDayOfMonthValue.GetValue());
         }
         if (RepeatEndDayOfMonthValue.IsSet())
         {
-            JsonRootObject->SetNumberField("repeatEndDayOfMonth", RepeatEndDayOfMonthValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("repeatEndDayOfMonth"), RepeatEndDayOfMonthValue.GetValue());
         }
         if (RepeatBeginDayOfWeekValue.IsSet())
         {
-            JsonRootObject->SetStringField("repeatBeginDayOfWeek", RepeatBeginDayOfWeekValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("repeatBeginDayOfWeek"), RepeatBeginDayOfWeekValue.GetValue());
         }
         if (RepeatEndDayOfWeekValue.IsSet())
         {
-            JsonRootObject->SetStringField("repeatEndDayOfWeek", RepeatEndDayOfWeekValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("repeatEndDayOfWeek"), RepeatEndDayOfWeekValue.GetValue());
         }
         if (RepeatBeginHourValue.IsSet())
         {
-            JsonRootObject->SetNumberField("repeatBeginHour", RepeatBeginHourValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("repeatBeginHour"), RepeatBeginHourValue.GetValue());
         }
         if (RepeatEndHourValue.IsSet())
         {
-            JsonRootObject->SetNumberField("repeatEndHour", RepeatEndHourValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("repeatEndHour"), RepeatEndHourValue.GetValue());
         }
         return JsonRootObject;
     }

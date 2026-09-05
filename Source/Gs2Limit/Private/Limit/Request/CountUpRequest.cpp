@@ -231,35 +231,35 @@ namespace Gs2::Limit::Request
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (ContextStackValue.IsSet())
         {
-            JsonRootObject->SetStringField("contextStack", ContextStackValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("contextStack"), ContextStackValue.GetValue());
         }
         if (NamespaceNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("namespaceName", NamespaceNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("namespaceName"), NamespaceNameValue.GetValue());
         }
         if (LimitNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("limitName", LimitNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("limitName"), LimitNameValue.GetValue());
         }
         if (CounterNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("counterName", CounterNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("counterName"), CounterNameValue.GetValue());
         }
         if (AccessTokenValue.IsSet())
         {
-            JsonRootObject->SetStringField("xGs2AccessToken", AccessTokenValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("xGs2AccessToken"), AccessTokenValue.GetValue());
         }
         if (CountUpValueValue.IsSet())
         {
-            JsonRootObject->SetNumberField("countUpValue", CountUpValueValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("countUpValue"), CountUpValueValue.GetValue());
         }
         if (MaxValueValue.IsSet())
         {
-            JsonRootObject->SetNumberField("maxValue", MaxValueValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("maxValue"), MaxValueValue.GetValue());
         }
         if (DuplicationAvoiderValue.IsSet())
         {
-            JsonRootObject->SetStringField("duplicationAvoider", DuplicationAvoiderValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("duplicationAvoider"), DuplicationAvoiderValue.GetValue());
         }
         return JsonRootObject;
     }

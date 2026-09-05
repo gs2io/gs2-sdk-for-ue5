@@ -104,11 +104,11 @@ namespace Gs2::Idle::Result
             {
                 v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
             }
-            JsonRootObject->SetArrayField("items", v);
+            JsonRootObject->SetArrayField(TEXT("items"), v);
         }
         if (StatusValue != nullptr && StatusValue.IsValid())
         {
-            JsonRootObject->SetObjectField("status", StatusValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("status"), StatusValue->ToJson());
         }
         return JsonRootObject;
     }

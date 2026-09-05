@@ -385,55 +385,55 @@ namespace Gs2::Chat::Request
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (ContextStackValue.IsSet())
         {
-            JsonRootObject->SetStringField("contextStack", ContextStackValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("contextStack"), ContextStackValue.GetValue());
         }
         if (NameValue.IsSet())
         {
-            JsonRootObject->SetStringField("name", NameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("name"), NameValue.GetValue());
         }
         if (DescriptionValue.IsSet())
         {
-            JsonRootObject->SetStringField("description", DescriptionValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("description"), DescriptionValue.GetValue());
         }
         if (TransactionSettingValue != nullptr && TransactionSettingValue.IsValid())
         {
-            JsonRootObject->SetObjectField("transactionSetting", TransactionSettingValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("transactionSetting"), TransactionSettingValue->ToJson());
         }
         if (AllowCreateRoomValue.IsSet())
         {
-            JsonRootObject->SetBoolField("allowCreateRoom", AllowCreateRoomValue.GetValue());
+            JsonRootObject->SetBoolField(TEXT("allowCreateRoom"), AllowCreateRoomValue.GetValue());
         }
         if (MessageLifeTimeDaysValue.IsSet())
         {
-            JsonRootObject->SetNumberField("messageLifeTimeDays", MessageLifeTimeDaysValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("messageLifeTimeDays"), MessageLifeTimeDaysValue.GetValue());
         }
         if (PostMessageScriptValue != nullptr && PostMessageScriptValue.IsValid())
         {
-            JsonRootObject->SetObjectField("postMessageScript", PostMessageScriptValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("postMessageScript"), PostMessageScriptValue->ToJson());
         }
         if (CreateRoomScriptValue != nullptr && CreateRoomScriptValue.IsValid())
         {
-            JsonRootObject->SetObjectField("createRoomScript", CreateRoomScriptValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("createRoomScript"), CreateRoomScriptValue->ToJson());
         }
         if (DeleteRoomScriptValue != nullptr && DeleteRoomScriptValue.IsValid())
         {
-            JsonRootObject->SetObjectField("deleteRoomScript", DeleteRoomScriptValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("deleteRoomScript"), DeleteRoomScriptValue->ToJson());
         }
         if (SubscribeRoomScriptValue != nullptr && SubscribeRoomScriptValue.IsValid())
         {
-            JsonRootObject->SetObjectField("subscribeRoomScript", SubscribeRoomScriptValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("subscribeRoomScript"), SubscribeRoomScriptValue->ToJson());
         }
         if (UnsubscribeRoomScriptValue != nullptr && UnsubscribeRoomScriptValue.IsValid())
         {
-            JsonRootObject->SetObjectField("unsubscribeRoomScript", UnsubscribeRoomScriptValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("unsubscribeRoomScript"), UnsubscribeRoomScriptValue->ToJson());
         }
         if (PostNotificationValue != nullptr && PostNotificationValue.IsValid())
         {
-            JsonRootObject->SetObjectField("postNotification", PostNotificationValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("postNotification"), PostNotificationValue->ToJson());
         }
         if (LogSettingValue != nullptr && LogSettingValue.IsValid())
         {
-            JsonRootObject->SetObjectField("logSetting", LogSettingValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("logSetting"), LogSettingValue->ToJson());
         }
         return JsonRootObject;
     }

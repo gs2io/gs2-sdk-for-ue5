@@ -128,15 +128,15 @@ namespace Gs2::Matchmaking::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (NameValue.IsSet())
         {
-            JsonRootObject->SetStringField("name", NameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("name"), NameValue.GetValue());
         }
         if (MinValue.IsSet())
         {
-            JsonRootObject->SetNumberField("min", MinValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("min"), MinValue.GetValue());
         }
         if (MaxValue.IsSet())
         {
-            JsonRootObject->SetNumberField("max", MaxValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("max"), MaxValue.GetValue());
         }
         return JsonRootObject;
     }

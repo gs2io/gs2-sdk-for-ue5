@@ -65,7 +65,7 @@ namespace Gs2::Money::Result
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (UrlValue.IsSet())
         {
-            JsonRootObject->SetStringField("url", UrlValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("url"), UrlValue.GetValue());
         }
         return JsonRootObject;
     }

@@ -91,11 +91,11 @@ namespace Gs2::Identifier::Task::Rest
             const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
             if (this->Request->GetGuardNamespaceId().IsSet())
             {
-                JsonRootObject->SetStringField("guardNamespaceId", this->Request->GetGuardNamespaceId().GetValue());
+                JsonRootObject->SetStringField(TEXT("guardNamespaceId"), this->Request->GetGuardNamespaceId().GetValue());
             }
             if (this->Request->GetContextStack().IsSet())
             {
-                JsonRootObject->SetStringField("contextStack", this->Request->GetContextStack().GetValue());
+                JsonRootObject->SetStringField(TEXT("contextStack"), this->Request->GetContextStack().GetValue());
             }
             FJsonSerializer::Serialize(JsonRootObject.ToSharedRef(), Writer);
             request->SetContentAsString(Body);

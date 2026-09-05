@@ -274,39 +274,39 @@ namespace Gs2::Inventory::Request
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (ContextStackValue.IsSet())
         {
-            JsonRootObject->SetStringField("contextStack", ContextStackValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("contextStack"), ContextStackValue.GetValue());
         }
         if (NamespaceNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("namespaceName", NamespaceNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("namespaceName"), NamespaceNameValue.GetValue());
         }
         if (InventoryNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("inventoryName", InventoryNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("inventoryName"), InventoryNameValue.GetValue());
         }
         if (NameValue.IsSet())
         {
-            JsonRootObject->SetStringField("name", NameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("name"), NameValue.GetValue());
         }
         if (DescriptionValue.IsSet())
         {
-            JsonRootObject->SetStringField("description", DescriptionValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("description"), DescriptionValue.GetValue());
         }
         if (MetadataValue.IsSet())
         {
-            JsonRootObject->SetStringField("metadata", MetadataValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("metadata"), MetadataValue.GetValue());
         }
         if (StackingLimitValue.IsSet())
         {
-            JsonRootObject->SetStringField("stackingLimit", FString::Printf(TEXT("%lld"), StackingLimitValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("stackingLimit"), FString::Printf(TEXT("%lld"), StackingLimitValue.GetValue()));
         }
         if (AllowMultipleStacksValue.IsSet())
         {
-            JsonRootObject->SetBoolField("allowMultipleStacks", AllowMultipleStacksValue.GetValue());
+            JsonRootObject->SetBoolField(TEXT("allowMultipleStacks"), AllowMultipleStacksValue.GetValue());
         }
         if (SortValueValue.IsSet())
         {
-            JsonRootObject->SetNumberField("sortValue", SortValueValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("sortValue"), SortValueValue.GetValue());
         }
         return JsonRootObject;
     }

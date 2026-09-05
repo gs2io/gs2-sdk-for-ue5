@@ -101,11 +101,11 @@ namespace Gs2::Distributor::Result
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (ItemValue != nullptr && ItemValue.IsValid())
         {
-            JsonRootObject->SetObjectField("item", ItemValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("item"), ItemValue->ToJson());
         }
         if (ExpressionResultValue.IsSet())
         {
-            JsonRootObject->SetBoolField("expressionResult", ExpressionResultValue.GetValue());
+            JsonRootObject->SetBoolField(TEXT("expressionResult"), ExpressionResultValue.GetValue());
         }
         return JsonRootObject;
     }

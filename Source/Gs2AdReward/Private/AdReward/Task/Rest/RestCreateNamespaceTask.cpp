@@ -80,23 +80,23 @@ namespace Gs2::AdReward::Task::Rest
             const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
             if (this->Request->GetName().IsSet())
             {
-                JsonRootObject->SetStringField("name", this->Request->GetName().GetValue());
+                JsonRootObject->SetStringField(TEXT("name"), this->Request->GetName().GetValue());
             }
             if (this->Request->GetDescription().IsSet())
             {
-                JsonRootObject->SetStringField("description", this->Request->GetDescription().GetValue());
+                JsonRootObject->SetStringField(TEXT("description"), this->Request->GetDescription().GetValue());
             }
             if (this->Request->GetTransactionSetting() != nullptr && this->Request->GetTransactionSetting().IsValid())
             {
-                JsonRootObject->SetObjectField("transactionSetting", this->Request->GetTransactionSetting()->ToJson());
+                JsonRootObject->SetObjectField(TEXT("transactionSetting"), this->Request->GetTransactionSetting()->ToJson());
             }
             if (this->Request->GetAdmob() != nullptr && this->Request->GetAdmob().IsValid())
             {
-                JsonRootObject->SetObjectField("admob", this->Request->GetAdmob()->ToJson());
+                JsonRootObject->SetObjectField(TEXT("admob"), this->Request->GetAdmob()->ToJson());
             }
             if (this->Request->GetUnityAd() != nullptr && this->Request->GetUnityAd().IsValid())
             {
-                JsonRootObject->SetObjectField("unityAd", this->Request->GetUnityAd()->ToJson());
+                JsonRootObject->SetObjectField(TEXT("unityAd"), this->Request->GetUnityAd()->ToJson());
             }
             if (this->Request->GetAppLovinMaxes() != nullptr && this->Request->GetAppLovinMaxes().IsValid())
             {
@@ -105,27 +105,27 @@ namespace Gs2::AdReward::Task::Rest
                 {
                     v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
                 }
-                JsonRootObject->SetArrayField("appLovinMaxes", v);
+                JsonRootObject->SetArrayField(TEXT("appLovinMaxes"), v);
             }
             if (this->Request->GetAcquirePointScript() != nullptr && this->Request->GetAcquirePointScript().IsValid())
             {
-                JsonRootObject->SetObjectField("acquirePointScript", this->Request->GetAcquirePointScript()->ToJson());
+                JsonRootObject->SetObjectField(TEXT("acquirePointScript"), this->Request->GetAcquirePointScript()->ToJson());
             }
             if (this->Request->GetConsumePointScript() != nullptr && this->Request->GetConsumePointScript().IsValid())
             {
-                JsonRootObject->SetObjectField("consumePointScript", this->Request->GetConsumePointScript()->ToJson());
+                JsonRootObject->SetObjectField(TEXT("consumePointScript"), this->Request->GetConsumePointScript()->ToJson());
             }
             if (this->Request->GetChangePointNotification() != nullptr && this->Request->GetChangePointNotification().IsValid())
             {
-                JsonRootObject->SetObjectField("changePointNotification", this->Request->GetChangePointNotification()->ToJson());
+                JsonRootObject->SetObjectField(TEXT("changePointNotification"), this->Request->GetChangePointNotification()->ToJson());
             }
             if (this->Request->GetLogSetting() != nullptr && this->Request->GetLogSetting().IsValid())
             {
-                JsonRootObject->SetObjectField("logSetting", this->Request->GetLogSetting()->ToJson());
+                JsonRootObject->SetObjectField(TEXT("logSetting"), this->Request->GetLogSetting()->ToJson());
             }
             if (this->Request->GetContextStack().IsSet())
             {
-                JsonRootObject->SetStringField("contextStack", this->Request->GetContextStack().GetValue());
+                JsonRootObject->SetStringField(TEXT("contextStack"), this->Request->GetContextStack().GetValue());
             }
             FJsonSerializer::Serialize(JsonRootObject.ToSharedRef(), Writer);
             request->SetContentAsString(Body);

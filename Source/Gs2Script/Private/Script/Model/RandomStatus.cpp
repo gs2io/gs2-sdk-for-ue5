@@ -99,7 +99,7 @@ namespace Gs2::Script::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (SeedValue.IsSet())
         {
-            JsonRootObject->SetStringField("seed", FString::Printf(TEXT("%lld"), SeedValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("seed"), FString::Printf(TEXT("%lld"), SeedValue.GetValue()));
         }
         if (UsedValue != nullptr && UsedValue.IsValid())
         {
@@ -108,7 +108,7 @@ namespace Gs2::Script::Model
             {
                 v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
             }
-            JsonRootObject->SetArrayField("used", v);
+            JsonRootObject->SetArrayField(TEXT("used"), v);
         }
         return JsonRootObject;
     }

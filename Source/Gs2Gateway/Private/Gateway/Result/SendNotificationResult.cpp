@@ -96,7 +96,7 @@ namespace Gs2::Gateway::Result
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (ProtocolValue.IsSet())
         {
-            JsonRootObject->SetStringField("protocol", ProtocolValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("protocol"), ProtocolValue.GetValue());
         }
         if (SendConnectionIdsValue != nullptr && SendConnectionIdsValue.IsValid())
         {
@@ -105,7 +105,7 @@ namespace Gs2::Gateway::Result
             {
                 v.Add(MakeShared<FJsonValueString>(JsonObjectValue));
             }
-            JsonRootObject->SetArrayField("sendConnectionIds", v);
+            JsonRootObject->SetArrayField(TEXT("sendConnectionIds"), v);
         }
         return JsonRootObject;
     }

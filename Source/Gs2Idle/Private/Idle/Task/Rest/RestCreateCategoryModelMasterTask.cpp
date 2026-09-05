@@ -86,27 +86,27 @@ namespace Gs2::Idle::Task::Rest
             const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
             if (this->Request->GetName().IsSet())
             {
-                JsonRootObject->SetStringField("name", this->Request->GetName().GetValue());
+                JsonRootObject->SetStringField(TEXT("name"), this->Request->GetName().GetValue());
             }
             if (this->Request->GetDescription().IsSet())
             {
-                JsonRootObject->SetStringField("description", this->Request->GetDescription().GetValue());
+                JsonRootObject->SetStringField(TEXT("description"), this->Request->GetDescription().GetValue());
             }
             if (this->Request->GetMetadata().IsSet())
             {
-                JsonRootObject->SetStringField("metadata", this->Request->GetMetadata().GetValue());
+                JsonRootObject->SetStringField(TEXT("metadata"), this->Request->GetMetadata().GetValue());
             }
             if (this->Request->GetRewardIntervalMinutes().IsSet())
             {
-                JsonRootObject->SetNumberField("rewardIntervalMinutes", this->Request->GetRewardIntervalMinutes().GetValue());
+                JsonRootObject->SetNumberField(TEXT("rewardIntervalMinutes"), this->Request->GetRewardIntervalMinutes().GetValue());
             }
             if (this->Request->GetDefaultMaximumIdleMinutes().IsSet())
             {
-                JsonRootObject->SetNumberField("defaultMaximumIdleMinutes", this->Request->GetDefaultMaximumIdleMinutes().GetValue());
+                JsonRootObject->SetNumberField(TEXT("defaultMaximumIdleMinutes"), this->Request->GetDefaultMaximumIdleMinutes().GetValue());
             }
             if (this->Request->GetRewardResetMode().IsSet())
             {
-                JsonRootObject->SetStringField("rewardResetMode", this->Request->GetRewardResetMode().GetValue());
+                JsonRootObject->SetStringField(TEXT("rewardResetMode"), this->Request->GetRewardResetMode().GetValue());
             }
             if (this->Request->GetAcquireActions() != nullptr && this->Request->GetAcquireActions().IsValid())
             {
@@ -115,19 +115,19 @@ namespace Gs2::Idle::Task::Rest
                 {
                     v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
                 }
-                JsonRootObject->SetArrayField("acquireActions", v);
+                JsonRootObject->SetArrayField(TEXT("acquireActions"), v);
             }
             if (this->Request->GetIdlePeriodScheduleId().IsSet())
             {
-                JsonRootObject->SetStringField("idlePeriodScheduleId", this->Request->GetIdlePeriodScheduleId().GetValue());
+                JsonRootObject->SetStringField(TEXT("idlePeriodScheduleId"), this->Request->GetIdlePeriodScheduleId().GetValue());
             }
             if (this->Request->GetReceivePeriodScheduleId().IsSet())
             {
-                JsonRootObject->SetStringField("receivePeriodScheduleId", this->Request->GetReceivePeriodScheduleId().GetValue());
+                JsonRootObject->SetStringField(TEXT("receivePeriodScheduleId"), this->Request->GetReceivePeriodScheduleId().GetValue());
             }
             if (this->Request->GetContextStack().IsSet())
             {
-                JsonRootObject->SetStringField("contextStack", this->Request->GetContextStack().GetValue());
+                JsonRootObject->SetStringField(TEXT("contextStack"), this->Request->GetContextStack().GetValue());
             }
             FJsonSerializer::Serialize(JsonRootObject.ToSharedRef(), Writer);
             request->SetContentAsString(Body);

@@ -91,15 +91,15 @@ namespace Gs2::Distributor::Task::Rest
             const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
             if (this->Request->GetDescription().IsSet())
             {
-                JsonRootObject->SetStringField("description", this->Request->GetDescription().GetValue());
+                JsonRootObject->SetStringField(TEXT("description"), this->Request->GetDescription().GetValue());
             }
             if (this->Request->GetMetadata().IsSet())
             {
-                JsonRootObject->SetStringField("metadata", this->Request->GetMetadata().GetValue());
+                JsonRootObject->SetStringField(TEXT("metadata"), this->Request->GetMetadata().GetValue());
             }
             if (this->Request->GetInboxNamespaceId().IsSet())
             {
-                JsonRootObject->SetStringField("inboxNamespaceId", this->Request->GetInboxNamespaceId().GetValue());
+                JsonRootObject->SetStringField(TEXT("inboxNamespaceId"), this->Request->GetInboxNamespaceId().GetValue());
             }
             if (this->Request->GetWhiteListTargetIds() != nullptr && this->Request->GetWhiteListTargetIds().IsValid())
             {
@@ -108,11 +108,11 @@ namespace Gs2::Distributor::Task::Rest
                 {
                     v.Add(MakeShared<FJsonValueString>(JsonObjectValue));
                 }
-                JsonRootObject->SetArrayField("whiteListTargetIds", v);
+                JsonRootObject->SetArrayField(TEXT("whiteListTargetIds"), v);
             }
             if (this->Request->GetContextStack().IsSet())
             {
-                JsonRootObject->SetStringField("contextStack", this->Request->GetContextStack().GetValue());
+                JsonRootObject->SetStringField(TEXT("contextStack"), this->Request->GetContextStack().GetValue());
             }
             FJsonSerializer::Serialize(JsonRootObject.ToSharedRef(), Writer);
             request->SetContentAsString(Body);

@@ -96,19 +96,19 @@ namespace Gs2::Experience::Task::Rest
             const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
             if (this->Request->GetPropertyId().IsSet())
             {
-                JsonRootObject->SetStringField("propertyId", this->Request->GetPropertyId().GetValue());
+                JsonRootObject->SetStringField(TEXT("propertyId"), this->Request->GetPropertyId().GetValue());
             }
             if (this->Request->GetRankCapValue().IsSet())
             {
-                JsonRootObject->SetStringField("rankCapValue", FString::Printf(TEXT("%lld"), this->Request->GetRankCapValue().GetValue()));
+                JsonRootObject->SetStringField(TEXT("rankCapValue"), FString::Printf(TEXT("%lld"), this->Request->GetRankCapValue().GetValue()));
             }
             if (this->Request->GetMultiplyValueSpecifyingQuantity().IsSet())
             {
-                JsonRootObject->SetBoolField("multiplyValueSpecifyingQuantity", this->Request->GetMultiplyValueSpecifyingQuantity().GetValue());
+                JsonRootObject->SetBoolField(TEXT("multiplyValueSpecifyingQuantity"), this->Request->GetMultiplyValueSpecifyingQuantity().GetValue());
             }
             if (this->Request->GetContextStack().IsSet())
             {
-                JsonRootObject->SetStringField("contextStack", this->Request->GetContextStack().GetValue());
+                JsonRootObject->SetStringField(TEXT("contextStack"), this->Request->GetContextStack().GetValue());
             }
             FJsonSerializer::Serialize(JsonRootObject.ToSharedRef(), Writer);
             request->SetContentAsString(Body);

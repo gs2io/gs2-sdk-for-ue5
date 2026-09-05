@@ -207,31 +207,31 @@ namespace Gs2::Gateway::Request
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (ContextStackValue.IsSet())
         {
-            JsonRootObject->SetStringField("contextStack", ContextStackValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("contextStack"), ContextStackValue.GetValue());
         }
         if (NamespaceNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("namespaceName", NamespaceNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("namespaceName"), NamespaceNameValue.GetValue());
         }
         if (AccessTokenValue.IsSet())
         {
-            JsonRootObject->SetStringField("xGs2AccessToken", AccessTokenValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("xGs2AccessToken"), AccessTokenValue.GetValue());
         }
         if (AllowConcurrentAccessValue.IsSet())
         {
-            JsonRootObject->SetBoolField("allowConcurrentAccess", AllowConcurrentAccessValue.GetValue());
+            JsonRootObject->SetBoolField(TEXT("allowConcurrentAccess"), AllowConcurrentAccessValue.GetValue());
         }
         if (SessionIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("sessionId", SessionIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("sessionId"), SessionIdValue.GetValue());
         }
         if (ForceValue.IsSet())
         {
-            JsonRootObject->SetBoolField("force", ForceValue.GetValue());
+            JsonRootObject->SetBoolField(TEXT("force"), ForceValue.GetValue());
         }
         if (DuplicationAvoiderValue.IsSet())
         {
-            JsonRootObject->SetStringField("duplicationAvoider", DuplicationAvoiderValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("duplicationAvoider"), DuplicationAvoiderValue.GetValue());
         }
         return JsonRootObject;
     }

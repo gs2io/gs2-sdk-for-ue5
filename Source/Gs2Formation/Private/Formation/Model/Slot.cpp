@@ -110,15 +110,15 @@ namespace Gs2::Formation::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (NameValue.IsSet())
         {
-            JsonRootObject->SetStringField("name", NameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("name"), NameValue.GetValue());
         }
         if (PropertyIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("propertyId", PropertyIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("propertyId"), PropertyIdValue.GetValue());
         }
         if (MetadataValue.IsSet())
         {
-            JsonRootObject->SetStringField("metadata", MetadataValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("metadata"), MetadataValue.GetValue());
         }
         return JsonRootObject;
     }

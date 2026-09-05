@@ -101,7 +101,7 @@ namespace Gs2::Mission::Task::Rest
                 {
                     v.Add(MakeShared<FJsonValueString>(JsonObjectValue));
                 }
-                JsonRootObject->SetArrayField("missionTaskNames", v);
+                JsonRootObject->SetArrayField(TEXT("missionTaskNames"), v);
             }
             if (this->Request->GetConfig() != nullptr && this->Request->GetConfig().IsValid())
             {
@@ -110,11 +110,11 @@ namespace Gs2::Mission::Task::Rest
                 {
                     v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
                 }
-                JsonRootObject->SetArrayField("config", v);
+                JsonRootObject->SetArrayField(TEXT("config"), v);
             }
             if (this->Request->GetContextStack().IsSet())
             {
-                JsonRootObject->SetStringField("contextStack", this->Request->GetContextStack().GetValue());
+                JsonRootObject->SetStringField(TEXT("contextStack"), this->Request->GetContextStack().GetValue());
             }
             FJsonSerializer::Serialize(JsonRootObject.ToSharedRef(), Writer);
             request->SetContentAsString(Body);

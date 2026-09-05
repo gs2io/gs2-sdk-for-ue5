@@ -360,11 +360,11 @@ namespace Gs2::Matchmaking::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (GatheringIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("gatheringId", GatheringIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("gatheringId"), GatheringIdValue.GetValue());
         }
         if (NameValue.IsSet())
         {
-            JsonRootObject->SetStringField("name", NameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("name"), NameValue.GetValue());
         }
         if (AttributeRangesValue != nullptr && AttributeRangesValue.IsValid())
         {
@@ -373,7 +373,7 @@ namespace Gs2::Matchmaking::Model
             {
                 v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
             }
-            JsonRootObject->SetArrayField("attributeRanges", v);
+            JsonRootObject->SetArrayField(TEXT("attributeRanges"), v);
         }
         if (CapacityOfRolesValue != nullptr && CapacityOfRolesValue.IsValid())
         {
@@ -382,7 +382,7 @@ namespace Gs2::Matchmaking::Model
             {
                 v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
             }
-            JsonRootObject->SetArrayField("capacityOfRoles", v);
+            JsonRootObject->SetArrayField(TEXT("capacityOfRoles"), v);
         }
         if (AllowUserIdsValue != nullptr && AllowUserIdsValue.IsValid())
         {
@@ -391,27 +391,27 @@ namespace Gs2::Matchmaking::Model
             {
                 v.Add(MakeShared<FJsonValueString>(JsonObjectValue));
             }
-            JsonRootObject->SetArrayField("allowUserIds", v);
+            JsonRootObject->SetArrayField(TEXT("allowUserIds"), v);
         }
         if (MetadataValue.IsSet())
         {
-            JsonRootObject->SetStringField("metadata", MetadataValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("metadata"), MetadataValue.GetValue());
         }
         if (ExpiresAtValue.IsSet())
         {
-            JsonRootObject->SetStringField("expiresAt", FString::Printf(TEXT("%lld"), ExpiresAtValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("expiresAt"), FString::Printf(TEXT("%lld"), ExpiresAtValue.GetValue()));
         }
         if (CreatedAtValue.IsSet())
         {
-            JsonRootObject->SetStringField("createdAt", FString::Printf(TEXT("%lld"), CreatedAtValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("createdAt"), FString::Printf(TEXT("%lld"), CreatedAtValue.GetValue()));
         }
         if (UpdatedAtValue.IsSet())
         {
-            JsonRootObject->SetStringField("updatedAt", FString::Printf(TEXT("%lld"), UpdatedAtValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("updatedAt"), FString::Printf(TEXT("%lld"), UpdatedAtValue.GetValue()));
         }
         if (RevisionValue.IsSet())
         {
-            JsonRootObject->SetStringField("revision", FString::Printf(TEXT("%lld"), RevisionValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("revision"), FString::Printf(TEXT("%lld"), RevisionValue.GetValue()));
         }
         return JsonRootObject;
     }

@@ -249,27 +249,27 @@ namespace Gs2::Enhance::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (UnleashRateModelIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("unleashRateModelId", UnleashRateModelIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("unleashRateModelId"), UnleashRateModelIdValue.GetValue());
         }
         if (NameValue.IsSet())
         {
-            JsonRootObject->SetStringField("name", NameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("name"), NameValue.GetValue());
         }
         if (DescriptionValue.IsSet())
         {
-            JsonRootObject->SetStringField("description", DescriptionValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("description"), DescriptionValue.GetValue());
         }
         if (MetadataValue.IsSet())
         {
-            JsonRootObject->SetStringField("metadata", MetadataValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("metadata"), MetadataValue.GetValue());
         }
         if (TargetInventoryModelIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("targetInventoryModelId", TargetInventoryModelIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("targetInventoryModelId"), TargetInventoryModelIdValue.GetValue());
         }
         if (GradeModelIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("gradeModelId", GradeModelIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("gradeModelId"), GradeModelIdValue.GetValue());
         }
         if (GradeEntriesValue != nullptr && GradeEntriesValue.IsValid())
         {
@@ -278,7 +278,7 @@ namespace Gs2::Enhance::Model
             {
                 v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
             }
-            JsonRootObject->SetArrayField("gradeEntries", v);
+            JsonRootObject->SetArrayField(TEXT("gradeEntries"), v);
         }
         return JsonRootObject;
     }

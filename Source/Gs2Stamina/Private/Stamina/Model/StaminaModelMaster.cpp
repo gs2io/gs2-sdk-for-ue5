@@ -502,63 +502,63 @@ namespace Gs2::Stamina::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (StaminaModelIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("staminaModelId", StaminaModelIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("staminaModelId"), StaminaModelIdValue.GetValue());
         }
         if (NameValue.IsSet())
         {
-            JsonRootObject->SetStringField("name", NameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("name"), NameValue.GetValue());
         }
         if (MetadataValue.IsSet())
         {
-            JsonRootObject->SetStringField("metadata", MetadataValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("metadata"), MetadataValue.GetValue());
         }
         if (DescriptionValue.IsSet())
         {
-            JsonRootObject->SetStringField("description", DescriptionValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("description"), DescriptionValue.GetValue());
         }
         if (RecoverIntervalMinutesValue.IsSet())
         {
-            JsonRootObject->SetNumberField("recoverIntervalMinutes", RecoverIntervalMinutesValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("recoverIntervalMinutes"), RecoverIntervalMinutesValue.GetValue());
         }
         if (RecoverValueValue.IsSet())
         {
-            JsonRootObject->SetNumberField("recoverValue", RecoverValueValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("recoverValue"), RecoverValueValue.GetValue());
         }
         if (InitialCapacityValue.IsSet())
         {
-            JsonRootObject->SetNumberField("initialCapacity", InitialCapacityValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("initialCapacity"), InitialCapacityValue.GetValue());
         }
         if (IsOverflowValue.IsSet())
         {
-            JsonRootObject->SetBoolField("isOverflow", IsOverflowValue.GetValue());
+            JsonRootObject->SetBoolField(TEXT("isOverflow"), IsOverflowValue.GetValue());
         }
         if (MaxCapacityValue.IsSet())
         {
-            JsonRootObject->SetNumberField("maxCapacity", MaxCapacityValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("maxCapacity"), MaxCapacityValue.GetValue());
         }
         if (MaxStaminaTableNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("maxStaminaTableName", MaxStaminaTableNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("maxStaminaTableName"), MaxStaminaTableNameValue.GetValue());
         }
         if (RecoverIntervalTableNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("recoverIntervalTableName", RecoverIntervalTableNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("recoverIntervalTableName"), RecoverIntervalTableNameValue.GetValue());
         }
         if (RecoverValueTableNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("recoverValueTableName", RecoverValueTableNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("recoverValueTableName"), RecoverValueTableNameValue.GetValue());
         }
         if (CreatedAtValue.IsSet())
         {
-            JsonRootObject->SetStringField("createdAt", FString::Printf(TEXT("%lld"), CreatedAtValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("createdAt"), FString::Printf(TEXT("%lld"), CreatedAtValue.GetValue()));
         }
         if (UpdatedAtValue.IsSet())
         {
-            JsonRootObject->SetStringField("updatedAt", FString::Printf(TEXT("%lld"), UpdatedAtValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("updatedAt"), FString::Printf(TEXT("%lld"), UpdatedAtValue.GetValue()));
         }
         if (RevisionValue.IsSet())
         {
-            JsonRootObject->SetStringField("revision", FString::Printf(TEXT("%lld"), RevisionValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("revision"), FString::Printf(TEXT("%lld"), RevisionValue.GetValue()));
         }
         return JsonRootObject;
     }

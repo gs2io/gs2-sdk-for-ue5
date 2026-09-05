@@ -192,31 +192,31 @@ namespace Gs2::Script::Request
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (ContextStackValue.IsSet())
         {
-            JsonRootObject->SetStringField("contextStack", ContextStackValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("contextStack"), ContextStackValue.GetValue());
         }
         if (ScriptIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("scriptId", ScriptIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("scriptId"), ScriptIdValue.GetValue());
         }
         if (UserIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("userId", UserIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("userId"), UserIdValue.GetValue());
         }
         if (ArgsValue.IsSet())
         {
-            JsonRootObject->SetStringField("args", ArgsValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("args"), ArgsValue.GetValue());
         }
         if (RandomStatusValue != nullptr && RandomStatusValue.IsValid())
         {
-            JsonRootObject->SetObjectField("randomStatus", RandomStatusValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("randomStatus"), RandomStatusValue->ToJson());
         }
         if (TimeOffsetTokenValue.IsSet())
         {
-            JsonRootObject->SetStringField("timeOffsetToken", TimeOffsetTokenValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("timeOffsetToken"), TimeOffsetTokenValue.GetValue());
         }
         if (DuplicationAvoiderValue.IsSet())
         {
-            JsonRootObject->SetStringField("duplicationAvoider", DuplicationAvoiderValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("duplicationAvoider"), DuplicationAvoiderValue.GetValue());
         }
         return JsonRootObject;
     }

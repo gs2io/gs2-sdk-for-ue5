@@ -86,31 +86,31 @@ namespace Gs2::LoginReward::Task::Rest
             const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
             if (this->Request->GetName().IsSet())
             {
-                JsonRootObject->SetStringField("name", this->Request->GetName().GetValue());
+                JsonRootObject->SetStringField(TEXT("name"), this->Request->GetName().GetValue());
             }
             if (this->Request->GetDescription().IsSet())
             {
-                JsonRootObject->SetStringField("description", this->Request->GetDescription().GetValue());
+                JsonRootObject->SetStringField(TEXT("description"), this->Request->GetDescription().GetValue());
             }
             if (this->Request->GetMetadata().IsSet())
             {
-                JsonRootObject->SetStringField("metadata", this->Request->GetMetadata().GetValue());
+                JsonRootObject->SetStringField(TEXT("metadata"), this->Request->GetMetadata().GetValue());
             }
             if (this->Request->GetMode().IsSet())
             {
-                JsonRootObject->SetStringField("mode", this->Request->GetMode().GetValue());
+                JsonRootObject->SetStringField(TEXT("mode"), this->Request->GetMode().GetValue());
             }
             if (this->Request->GetPeriodEventId().IsSet())
             {
-                JsonRootObject->SetStringField("periodEventId", this->Request->GetPeriodEventId().GetValue());
+                JsonRootObject->SetStringField(TEXT("periodEventId"), this->Request->GetPeriodEventId().GetValue());
             }
             if (this->Request->GetResetHour().IsSet())
             {
-                JsonRootObject->SetNumberField("resetHour", this->Request->GetResetHour().GetValue());
+                JsonRootObject->SetNumberField(TEXT("resetHour"), this->Request->GetResetHour().GetValue());
             }
             if (this->Request->GetRepeat().IsSet())
             {
-                JsonRootObject->SetStringField("repeat", this->Request->GetRepeat().GetValue());
+                JsonRootObject->SetStringField(TEXT("repeat"), this->Request->GetRepeat().GetValue());
             }
             if (this->Request->GetRewards() != nullptr && this->Request->GetRewards().IsValid())
             {
@@ -119,11 +119,11 @@ namespace Gs2::LoginReward::Task::Rest
                 {
                     v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
                 }
-                JsonRootObject->SetArrayField("rewards", v);
+                JsonRootObject->SetArrayField(TEXT("rewards"), v);
             }
             if (this->Request->GetMissedReceiveRelief().IsSet())
             {
-                JsonRootObject->SetStringField("missedReceiveRelief", this->Request->GetMissedReceiveRelief().GetValue());
+                JsonRootObject->SetStringField(TEXT("missedReceiveRelief"), this->Request->GetMissedReceiveRelief().GetValue());
             }
             if (this->Request->GetMissedReceiveReliefVerifyActions() != nullptr && this->Request->GetMissedReceiveReliefVerifyActions().IsValid())
             {
@@ -132,7 +132,7 @@ namespace Gs2::LoginReward::Task::Rest
                 {
                     v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
                 }
-                JsonRootObject->SetArrayField("missedReceiveReliefVerifyActions", v);
+                JsonRootObject->SetArrayField(TEXT("missedReceiveReliefVerifyActions"), v);
             }
             if (this->Request->GetMissedReceiveReliefConsumeActions() != nullptr && this->Request->GetMissedReceiveReliefConsumeActions().IsValid())
             {
@@ -141,11 +141,11 @@ namespace Gs2::LoginReward::Task::Rest
                 {
                     v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
                 }
-                JsonRootObject->SetArrayField("missedReceiveReliefConsumeActions", v);
+                JsonRootObject->SetArrayField(TEXT("missedReceiveReliefConsumeActions"), v);
             }
             if (this->Request->GetContextStack().IsSet())
             {
-                JsonRootObject->SetStringField("contextStack", this->Request->GetContextStack().GetValue());
+                JsonRootObject->SetStringField(TEXT("contextStack"), this->Request->GetContextStack().GetValue());
             }
             FJsonSerializer::Serialize(JsonRootObject.ToSharedRef(), Writer);
             request->SetContentAsString(Body);

@@ -485,15 +485,15 @@ namespace Gs2::Distributor::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (StampSheetResultIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("stampSheetResultId", StampSheetResultIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("stampSheetResultId"), StampSheetResultIdValue.GetValue());
         }
         if (UserIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("userId", UserIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("userId"), UserIdValue.GetValue());
         }
         if (TransactionIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("transactionId", TransactionIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("transactionId"), TransactionIdValue.GetValue());
         }
         if (VerifyTaskRequestsValue != nullptr && VerifyTaskRequestsValue.IsValid())
         {
@@ -502,7 +502,7 @@ namespace Gs2::Distributor::Model
             {
                 v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
             }
-            JsonRootObject->SetArrayField("verifyTaskRequests", v);
+            JsonRootObject->SetArrayField(TEXT("verifyTaskRequests"), v);
         }
         if (TaskRequestsValue != nullptr && TaskRequestsValue.IsValid())
         {
@@ -511,11 +511,11 @@ namespace Gs2::Distributor::Model
             {
                 v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
             }
-            JsonRootObject->SetArrayField("taskRequests", v);
+            JsonRootObject->SetArrayField(TEXT("taskRequests"), v);
         }
         if (SheetRequestValue != nullptr && SheetRequestValue.IsValid())
         {
-            JsonRootObject->SetObjectField("sheetRequest", SheetRequestValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("sheetRequest"), SheetRequestValue->ToJson());
         }
         if (VerifyTaskResultCodesValue != nullptr && VerifyTaskResultCodesValue.IsValid())
         {
@@ -524,7 +524,7 @@ namespace Gs2::Distributor::Model
             {
                 v.Add(MakeShared<FJsonValueNumber>(JsonObjectValue));
             }
-            JsonRootObject->SetArrayField("verifyTaskResultCodes", v);
+            JsonRootObject->SetArrayField(TEXT("verifyTaskResultCodes"), v);
         }
         if (VerifyTaskResultsValue != nullptr && VerifyTaskResultsValue.IsValid())
         {
@@ -533,7 +533,7 @@ namespace Gs2::Distributor::Model
             {
                 v.Add(MakeShared<FJsonValueString>(JsonObjectValue));
             }
-            JsonRootObject->SetArrayField("verifyTaskResults", v);
+            JsonRootObject->SetArrayField(TEXT("verifyTaskResults"), v);
         }
         if (TaskResultCodesValue != nullptr && TaskResultCodesValue.IsValid())
         {
@@ -542,7 +542,7 @@ namespace Gs2::Distributor::Model
             {
                 v.Add(MakeShared<FJsonValueNumber>(JsonObjectValue));
             }
-            JsonRootObject->SetArrayField("taskResultCodes", v);
+            JsonRootObject->SetArrayField(TEXT("taskResultCodes"), v);
         }
         if (TaskResultsValue != nullptr && TaskResultsValue.IsValid())
         {
@@ -551,27 +551,27 @@ namespace Gs2::Distributor::Model
             {
                 v.Add(MakeShared<FJsonValueString>(JsonObjectValue));
             }
-            JsonRootObject->SetArrayField("taskResults", v);
+            JsonRootObject->SetArrayField(TEXT("taskResults"), v);
         }
         if (SheetResultCodeValue.IsSet())
         {
-            JsonRootObject->SetNumberField("sheetResultCode", SheetResultCodeValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("sheetResultCode"), SheetResultCodeValue.GetValue());
         }
         if (SheetResultValue.IsSet())
         {
-            JsonRootObject->SetStringField("sheetResult", SheetResultValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("sheetResult"), SheetResultValue.GetValue());
         }
         if (NextTransactionIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("nextTransactionId", NextTransactionIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("nextTransactionId"), NextTransactionIdValue.GetValue());
         }
         if (CreatedAtValue.IsSet())
         {
-            JsonRootObject->SetStringField("createdAt", FString::Printf(TEXT("%lld"), CreatedAtValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("createdAt"), FString::Printf(TEXT("%lld"), CreatedAtValue.GetValue()));
         }
         if (RevisionValue.IsSet())
         {
-            JsonRootObject->SetStringField("revision", FString::Printf(TEXT("%lld"), RevisionValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("revision"), FString::Printf(TEXT("%lld"), RevisionValue.GetValue()));
         }
         return JsonRootObject;
     }

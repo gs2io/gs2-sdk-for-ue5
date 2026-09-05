@@ -80,47 +80,47 @@ namespace Gs2::Mission::Task::Rest
             const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
             if (this->Request->GetName().IsSet())
             {
-                JsonRootObject->SetStringField("name", this->Request->GetName().GetValue());
+                JsonRootObject->SetStringField(TEXT("name"), this->Request->GetName().GetValue());
             }
             if (this->Request->GetDescription().IsSet())
             {
-                JsonRootObject->SetStringField("description", this->Request->GetDescription().GetValue());
+                JsonRootObject->SetStringField(TEXT("description"), this->Request->GetDescription().GetValue());
             }
             if (this->Request->GetTransactionSetting() != nullptr && this->Request->GetTransactionSetting().IsValid())
             {
-                JsonRootObject->SetObjectField("transactionSetting", this->Request->GetTransactionSetting()->ToJson());
+                JsonRootObject->SetObjectField(TEXT("transactionSetting"), this->Request->GetTransactionSetting()->ToJson());
             }
             if (this->Request->GetMissionCompleteScript() != nullptr && this->Request->GetMissionCompleteScript().IsValid())
             {
-                JsonRootObject->SetObjectField("missionCompleteScript", this->Request->GetMissionCompleteScript()->ToJson());
+                JsonRootObject->SetObjectField(TEXT("missionCompleteScript"), this->Request->GetMissionCompleteScript()->ToJson());
             }
             if (this->Request->GetCounterIncrementScript() != nullptr && this->Request->GetCounterIncrementScript().IsValid())
             {
-                JsonRootObject->SetObjectField("counterIncrementScript", this->Request->GetCounterIncrementScript()->ToJson());
+                JsonRootObject->SetObjectField(TEXT("counterIncrementScript"), this->Request->GetCounterIncrementScript()->ToJson());
             }
             if (this->Request->GetReceiveRewardsScript() != nullptr && this->Request->GetReceiveRewardsScript().IsValid())
             {
-                JsonRootObject->SetObjectField("receiveRewardsScript", this->Request->GetReceiveRewardsScript()->ToJson());
+                JsonRootObject->SetObjectField(TEXT("receiveRewardsScript"), this->Request->GetReceiveRewardsScript()->ToJson());
             }
             if (this->Request->GetCompleteNotification() != nullptr && this->Request->GetCompleteNotification().IsValid())
             {
-                JsonRootObject->SetObjectField("completeNotification", this->Request->GetCompleteNotification()->ToJson());
+                JsonRootObject->SetObjectField(TEXT("completeNotification"), this->Request->GetCompleteNotification()->ToJson());
             }
             if (this->Request->GetLogSetting() != nullptr && this->Request->GetLogSetting().IsValid())
             {
-                JsonRootObject->SetObjectField("logSetting", this->Request->GetLogSetting()->ToJson());
+                JsonRootObject->SetObjectField(TEXT("logSetting"), this->Request->GetLogSetting()->ToJson());
             }
             if (this->Request->GetQueueNamespaceId().IsSet())
             {
-                JsonRootObject->SetStringField("queueNamespaceId", this->Request->GetQueueNamespaceId().GetValue());
+                JsonRootObject->SetStringField(TEXT("queueNamespaceId"), this->Request->GetQueueNamespaceId().GetValue());
             }
             if (this->Request->GetKeyId().IsSet())
             {
-                JsonRootObject->SetStringField("keyId", this->Request->GetKeyId().GetValue());
+                JsonRootObject->SetStringField(TEXT("keyId"), this->Request->GetKeyId().GetValue());
             }
             if (this->Request->GetContextStack().IsSet())
             {
-                JsonRootObject->SetStringField("contextStack", this->Request->GetContextStack().GetValue());
+                JsonRootObject->SetStringField(TEXT("contextStack"), this->Request->GetContextStack().GetValue());
             }
             FJsonSerializer::Serialize(JsonRootObject.ToSharedRef(), Writer);
             request->SetContentAsString(Body);

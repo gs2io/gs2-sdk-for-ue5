@@ -391,51 +391,51 @@ namespace Gs2::Log::Request
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (ContextStackValue.IsSet())
         {
-            JsonRootObject->SetStringField("contextStack", ContextStackValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("contextStack"), ContextStackValue.GetValue());
         }
         if (NamespaceNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("namespaceName", NamespaceNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("namespaceName"), NamespaceNameValue.GetValue());
         }
         if (ServiceValue.IsSet())
         {
-            JsonRootObject->SetBoolField("service", ServiceValue.GetValue());
+            JsonRootObject->SetBoolField(TEXT("service"), ServiceValue.GetValue());
         }
         if (MethodValue.IsSet())
         {
-            JsonRootObject->SetBoolField("method", MethodValue.GetValue());
+            JsonRootObject->SetBoolField(TEXT("method"), MethodValue.GetValue());
         }
         if (UserIdValue.IsSet())
         {
-            JsonRootObject->SetBoolField("userId", UserIdValue.GetValue());
+            JsonRootObject->SetBoolField(TEXT("userId"), UserIdValue.GetValue());
         }
         if (ActionValue.IsSet())
         {
-            JsonRootObject->SetBoolField("action", ActionValue.GetValue());
+            JsonRootObject->SetBoolField(TEXT("action"), ActionValue.GetValue());
         }
         if (BeginValue.IsSet())
         {
-            JsonRootObject->SetStringField("begin", FString::Printf(TEXT("%lld"), BeginValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("begin"), FString::Printf(TEXT("%lld"), BeginValue.GetValue()));
         }
         if (EndValue.IsSet())
         {
-            JsonRootObject->SetStringField("end", FString::Printf(TEXT("%lld"), EndValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("end"), FString::Printf(TEXT("%lld"), EndValue.GetValue()));
         }
         if (LongTermValue.IsSet())
         {
-            JsonRootObject->SetBoolField("longTerm", LongTermValue.GetValue());
+            JsonRootObject->SetBoolField(TEXT("longTerm"), LongTermValue.GetValue());
         }
         if (PageTokenValue.IsSet())
         {
-            JsonRootObject->SetStringField("pageToken", PageTokenValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("pageToken"), PageTokenValue.GetValue());
         }
         if (LimitValue.IsSet())
         {
-            JsonRootObject->SetNumberField("limit", LimitValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("limit"), LimitValue.GetValue());
         }
         if (TimeOffsetTokenValue.IsSet())
         {
-            JsonRootObject->SetStringField("timeOffsetToken", TimeOffsetTokenValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("timeOffsetToken"), TimeOffsetTokenValue.GetValue());
         }
         return JsonRootObject;
     }

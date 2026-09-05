@@ -168,15 +168,15 @@ namespace Gs2::Log::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (TimestampValue.IsSet())
         {
-            JsonRootObject->SetStringField("timestamp", FString::Printf(TEXT("%lld"), TimestampValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("timestamp"), FString::Printf(TEXT("%lld"), TimestampValue.GetValue()));
         }
         if (RequestIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("requestId", RequestIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("requestId"), RequestIdValue.GetValue());
         }
         if (UserIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("userId", UserIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("userId"), UserIdValue.GetValue());
         }
         if (TagsValue != nullptr && TagsValue.IsValid())
         {
@@ -185,11 +185,11 @@ namespace Gs2::Log::Model
             {
                 v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
             }
-            JsonRootObject->SetArrayField("tags", v);
+            JsonRootObject->SetArrayField(TEXT("tags"), v);
         }
         if (PayloadValue.IsSet())
         {
-            JsonRootObject->SetStringField("payload", PayloadValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("payload"), PayloadValue.GetValue());
         }
         return JsonRootObject;
     }

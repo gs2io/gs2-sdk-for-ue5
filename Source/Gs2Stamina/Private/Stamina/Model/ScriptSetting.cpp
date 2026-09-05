@@ -133,19 +133,19 @@ namespace Gs2::Stamina::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (TriggerScriptIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("triggerScriptId", TriggerScriptIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("triggerScriptId"), TriggerScriptIdValue.GetValue());
         }
         if (DoneTriggerTargetTypeValue.IsSet())
         {
-            JsonRootObject->SetStringField("doneTriggerTargetType", DoneTriggerTargetTypeValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("doneTriggerTargetType"), DoneTriggerTargetTypeValue.GetValue());
         }
         if (DoneTriggerScriptIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("doneTriggerScriptId", DoneTriggerScriptIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("doneTriggerScriptId"), DoneTriggerScriptIdValue.GetValue());
         }
         if (DoneTriggerQueueNamespaceIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("doneTriggerQueueNamespaceId", DoneTriggerQueueNamespaceIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("doneTriggerQueueNamespaceId"), DoneTriggerQueueNamespaceIdValue.GetValue());
         }
         return JsonRootObject;
     }

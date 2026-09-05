@@ -125,15 +125,15 @@ namespace Gs2::Datastore::Result
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (ItemValue != nullptr && ItemValue.IsValid())
         {
-            JsonRootObject->SetObjectField("item", ItemValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("item"), ItemValue->ToJson());
         }
         if (FileUrlValue.IsSet())
         {
-            JsonRootObject->SetStringField("fileUrl", FileUrlValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("fileUrl"), FileUrlValue.GetValue());
         }
         if (ContentLengthValue.IsSet())
         {
-            JsonRootObject->SetStringField("contentLength", FString::Printf(TEXT("%lld"), ContentLengthValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("contentLength"), FString::Printf(TEXT("%lld"), ContentLengthValue.GetValue()));
         }
         return JsonRootObject;
     }

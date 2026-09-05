@@ -142,19 +142,19 @@ namespace Gs2::Quest::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (ActionValue.IsSet())
         {
-            JsonRootObject->SetStringField("action", ActionValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("action"), ActionValue.GetValue());
         }
         if (RequestValue.IsSet())
         {
-            JsonRootObject->SetStringField("request", RequestValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("request"), RequestValue.GetValue());
         }
         if (ItemIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("itemId", ItemIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("itemId"), ItemIdValue.GetValue());
         }
         if (ValueValue.IsSet())
         {
-            JsonRootObject->SetNumberField("value", ValueValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("value"), ValueValue.GetValue());
         }
         return JsonRootObject;
     }

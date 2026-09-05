@@ -202,31 +202,31 @@ namespace Gs2::Account::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (ApiKeyIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("apiKeyId", ApiKeyIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("apiKeyId"), ApiKeyIdValue.GetValue());
         }
         if (RepositoryNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("repositoryName", RepositoryNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("repositoryName"), RepositoryNameValue.GetValue());
         }
         if (SourcePathValue.IsSet())
         {
-            JsonRootObject->SetStringField("sourcePath", SourcePathValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("sourcePath"), SourcePathValue.GetValue());
         }
         if (ReferenceTypeValue.IsSet())
         {
-            JsonRootObject->SetStringField("referenceType", ReferenceTypeValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("referenceType"), ReferenceTypeValue.GetValue());
         }
         if (CommitHashValue.IsSet())
         {
-            JsonRootObject->SetStringField("commitHash", CommitHashValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("commitHash"), CommitHashValue.GetValue());
         }
         if (BranchNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("branchName", BranchNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("branchName"), BranchNameValue.GetValue());
         }
         if (TagNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("tagName", TagNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("tagName"), TagNameValue.GetValue());
         }
         return JsonRootObject;
     }

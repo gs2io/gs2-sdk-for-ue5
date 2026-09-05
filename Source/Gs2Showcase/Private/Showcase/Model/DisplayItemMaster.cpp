@@ -188,27 +188,27 @@ namespace Gs2::Showcase::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (DisplayItemIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("displayItemId", DisplayItemIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("displayItemId"), DisplayItemIdValue.GetValue());
         }
         if (TypeValue.IsSet())
         {
-            JsonRootObject->SetStringField("type", TypeValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("type"), TypeValue.GetValue());
         }
         if (SalesItemNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("salesItemName", SalesItemNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("salesItemName"), SalesItemNameValue.GetValue());
         }
         if (SalesItemGroupNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("salesItemGroupName", SalesItemGroupNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("salesItemGroupName"), SalesItemGroupNameValue.GetValue());
         }
         if (SalesPeriodEventIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("salesPeriodEventId", SalesPeriodEventIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("salesPeriodEventId"), SalesPeriodEventIdValue.GetValue());
         }
         if (RevisionValue.IsSet())
         {
-            JsonRootObject->SetStringField("revision", FString::Printf(TEXT("%lld"), RevisionValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("revision"), FString::Printf(TEXT("%lld"), RevisionValue.GetValue()));
         }
         return JsonRootObject;
     }

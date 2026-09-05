@@ -97,11 +97,11 @@ namespace Gs2::Money2::Task::Rest
             const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
             if (this->Request->GetReceipt() != nullptr && this->Request->GetReceipt().IsValid())
             {
-                JsonRootObject->SetObjectField("receipt", this->Request->GetReceipt()->ToJson());
+                JsonRootObject->SetObjectField(TEXT("receipt"), this->Request->GetReceipt()->ToJson());
             }
             if (this->Request->GetContextStack().IsSet())
             {
-                JsonRootObject->SetStringField("contextStack", this->Request->GetContextStack().GetValue());
+                JsonRootObject->SetStringField(TEXT("contextStack"), this->Request->GetContextStack().GetValue());
             }
             FJsonSerializer::Serialize(JsonRootObject.ToSharedRef(), Writer);
             request->SetContentAsString(Body);

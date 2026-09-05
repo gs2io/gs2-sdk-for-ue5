@@ -103,15 +103,15 @@ namespace Gs2::Deploy::Request
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (ContextStackValue.IsSet())
         {
-            JsonRootObject->SetStringField("contextStack", ContextStackValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("contextStack"), ContextStackValue.GetValue());
         }
         if (StackNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("stackName", StackNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("stackName"), StackNameValue.GetValue());
         }
         if (OutputNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("outputName", OutputNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("outputName"), OutputNameValue.GetValue());
         }
         return JsonRootObject;
     }

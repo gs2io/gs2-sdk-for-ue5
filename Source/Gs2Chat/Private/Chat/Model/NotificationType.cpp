@@ -105,11 +105,11 @@ namespace Gs2::Chat::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (CategoryValue.IsSet())
         {
-            JsonRootObject->SetNumberField("category", CategoryValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("category"), CategoryValue.GetValue());
         }
         if (EnableTransferMobilePushNotificationValue.IsSet())
         {
-            JsonRootObject->SetBoolField("enableTransferMobilePushNotification", EnableTransferMobilePushNotificationValue.GetValue());
+            JsonRootObject->SetBoolField(TEXT("enableTransferMobilePushNotification"), EnableTransferMobilePushNotificationValue.GetValue());
         }
         return JsonRootObject;
     }

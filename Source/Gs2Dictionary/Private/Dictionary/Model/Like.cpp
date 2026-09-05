@@ -165,15 +165,15 @@ namespace Gs2::Dictionary::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (LikeIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("likeId", LikeIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("likeId"), LikeIdValue.GetValue());
         }
         if (UserIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("userId", UserIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("userId"), UserIdValue.GetValue());
         }
         if (NameValue.IsSet())
         {
-            JsonRootObject->SetStringField("name", NameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("name"), NameValue.GetValue());
         }
         return JsonRootObject;
     }

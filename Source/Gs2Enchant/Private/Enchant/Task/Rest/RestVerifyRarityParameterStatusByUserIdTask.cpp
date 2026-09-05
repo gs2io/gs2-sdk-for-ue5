@@ -106,19 +106,19 @@ namespace Gs2::Enchant::Task::Rest
             const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
             if (this->Request->GetParameterValueName().IsSet())
             {
-                JsonRootObject->SetStringField("parameterValueName", this->Request->GetParameterValueName().GetValue());
+                JsonRootObject->SetStringField(TEXT("parameterValueName"), this->Request->GetParameterValueName().GetValue());
             }
             if (this->Request->GetParameterCount().IsSet())
             {
-                JsonRootObject->SetNumberField("parameterCount", this->Request->GetParameterCount().GetValue());
+                JsonRootObject->SetNumberField(TEXT("parameterCount"), this->Request->GetParameterCount().GetValue());
             }
             if (this->Request->GetMultiplyValueSpecifyingQuantity().IsSet())
             {
-                JsonRootObject->SetBoolField("multiplyValueSpecifyingQuantity", this->Request->GetMultiplyValueSpecifyingQuantity().GetValue());
+                JsonRootObject->SetBoolField(TEXT("multiplyValueSpecifyingQuantity"), this->Request->GetMultiplyValueSpecifyingQuantity().GetValue());
             }
             if (this->Request->GetContextStack().IsSet())
             {
-                JsonRootObject->SetStringField("contextStack", this->Request->GetContextStack().GetValue());
+                JsonRootObject->SetStringField(TEXT("contextStack"), this->Request->GetContextStack().GetValue());
             }
             FJsonSerializer::Serialize(JsonRootObject.ToSharedRef(), Writer);
             request->SetContentAsString(Body);

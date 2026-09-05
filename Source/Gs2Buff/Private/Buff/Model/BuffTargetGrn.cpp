@@ -87,11 +87,11 @@ namespace Gs2::Buff::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (TargetModelNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("targetModelName", TargetModelNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("targetModelName"), TargetModelNameValue.GetValue());
         }
         if (TargetGrnValue.IsSet())
         {
-            JsonRootObject->SetStringField("targetGrn", TargetGrnValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("targetGrn"), TargetGrnValue.GetValue());
         }
         return JsonRootObject;
     }

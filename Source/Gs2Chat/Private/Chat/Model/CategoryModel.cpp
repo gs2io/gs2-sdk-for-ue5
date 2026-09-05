@@ -163,15 +163,15 @@ namespace Gs2::Chat::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (CategoryModelIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("categoryModelId", CategoryModelIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("categoryModelId"), CategoryModelIdValue.GetValue());
         }
         if (CategoryValue.IsSet())
         {
-            JsonRootObject->SetNumberField("category", CategoryValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("category"), CategoryValue.GetValue());
         }
         if (RejectAccessTokenPostValue.IsSet())
         {
-            JsonRootObject->SetStringField("rejectAccessTokenPost", RejectAccessTokenPostValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("rejectAccessTokenPost"), RejectAccessTokenPostValue.GetValue());
         }
         return JsonRootObject;
     }

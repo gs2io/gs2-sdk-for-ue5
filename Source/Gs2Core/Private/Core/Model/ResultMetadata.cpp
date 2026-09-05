@@ -65,7 +65,7 @@ namespace Gs2::Core::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (UncommittedValue.IsEmpty())
         {
-            JsonRootObject->SetStringField("uncommitted", UncommittedValue);
+            JsonRootObject->SetStringField(TEXT("uncommitted"), UncommittedValue);
         }
         return JsonRootObject;
     }

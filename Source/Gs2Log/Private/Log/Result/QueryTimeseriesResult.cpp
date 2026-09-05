@@ -128,15 +128,15 @@ namespace Gs2::Log::Result
             {
                 v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
             }
-            JsonRootObject->SetArrayField("items", v);
+            JsonRootObject->SetArrayField(TEXT("items"), v);
         }
         if (TimeseriesMetadataValue != nullptr && TimeseriesMetadataValue.IsValid())
         {
-            JsonRootObject->SetObjectField("timeseriesMetadata", TimeseriesMetadataValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("timeseriesMetadata"), TimeseriesMetadataValue->ToJson());
         }
         if (NextPageTokenValue.IsSet())
         {
-            JsonRootObject->SetStringField("nextPageToken", NextPageTokenValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("nextPageToken"), NextPageTokenValue.GetValue());
         }
         return JsonRootObject;
     }

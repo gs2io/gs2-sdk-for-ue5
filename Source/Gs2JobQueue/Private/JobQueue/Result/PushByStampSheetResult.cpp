@@ -110,11 +110,11 @@ namespace Gs2::JobQueue::Result
             {
                 v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
             }
-            JsonRootObject->SetArrayField("items", v);
+            JsonRootObject->SetArrayField(TEXT("items"), v);
         }
         if (AutoRunValue.IsSet())
         {
-            JsonRootObject->SetBoolField("autoRun", AutoRunValue.GetValue());
+            JsonRootObject->SetBoolField(TEXT("autoRun"), AutoRunValue.GetValue());
         }
         return JsonRootObject;
     }

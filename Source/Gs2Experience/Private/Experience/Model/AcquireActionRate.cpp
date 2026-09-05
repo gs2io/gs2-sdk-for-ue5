@@ -139,11 +139,11 @@ namespace Gs2::Experience::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (NameValue.IsSet())
         {
-            JsonRootObject->SetStringField("name", NameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("name"), NameValue.GetValue());
         }
         if (ModeValue.IsSet())
         {
-            JsonRootObject->SetStringField("mode", ModeValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("mode"), ModeValue.GetValue());
         }
         if (RatesValue != nullptr && RatesValue.IsValid())
         {
@@ -152,7 +152,7 @@ namespace Gs2::Experience::Model
             {
                 v.Add(MakeShared<FJsonValueNumber>(JsonObjectValue));
             }
-            JsonRootObject->SetArrayField("rates", v);
+            JsonRootObject->SetArrayField(TEXT("rates"), v);
         }
         if (BigRatesValue != nullptr && BigRatesValue.IsValid())
         {
@@ -161,7 +161,7 @@ namespace Gs2::Experience::Model
             {
                 v.Add(MakeShared<FJsonValueString>(JsonObjectValue));
             }
-            JsonRootObject->SetArrayField("bigRates", v);
+            JsonRootObject->SetArrayField(TEXT("bigRates"), v);
         }
         return JsonRootObject;
     }

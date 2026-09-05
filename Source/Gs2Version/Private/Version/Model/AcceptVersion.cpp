@@ -306,35 +306,35 @@ namespace Gs2::Version::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (AcceptVersionIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("acceptVersionId", AcceptVersionIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("acceptVersionId"), AcceptVersionIdValue.GetValue());
         }
         if (VersionNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("versionName", VersionNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("versionName"), VersionNameValue.GetValue());
         }
         if (UserIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("userId", UserIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("userId"), UserIdValue.GetValue());
         }
         if (VersionValue != nullptr && VersionValue.IsValid())
         {
-            JsonRootObject->SetObjectField("version", VersionValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("version"), VersionValue->ToJson());
         }
         if (StatusValue.IsSet())
         {
-            JsonRootObject->SetStringField("status", StatusValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("status"), StatusValue.GetValue());
         }
         if (CreatedAtValue.IsSet())
         {
-            JsonRootObject->SetStringField("createdAt", FString::Printf(TEXT("%lld"), CreatedAtValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("createdAt"), FString::Printf(TEXT("%lld"), CreatedAtValue.GetValue()));
         }
         if (UpdatedAtValue.IsSet())
         {
-            JsonRootObject->SetStringField("updatedAt", FString::Printf(TEXT("%lld"), UpdatedAtValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("updatedAt"), FString::Printf(TEXT("%lld"), UpdatedAtValue.GetValue()));
         }
         if (RevisionValue.IsSet())
         {
-            JsonRootObject->SetStringField("revision", FString::Printf(TEXT("%lld"), RevisionValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("revision"), FString::Printf(TEXT("%lld"), RevisionValue.GetValue()));
         }
         return JsonRootObject;
     }

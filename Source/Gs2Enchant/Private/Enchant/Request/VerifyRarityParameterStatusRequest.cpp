@@ -279,43 +279,43 @@ namespace Gs2::Enchant::Request
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (ContextStackValue.IsSet())
         {
-            JsonRootObject->SetStringField("contextStack", ContextStackValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("contextStack"), ContextStackValue.GetValue());
         }
         if (NamespaceNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("namespaceName", NamespaceNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("namespaceName"), NamespaceNameValue.GetValue());
         }
         if (ParameterNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("parameterName", ParameterNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("parameterName"), ParameterNameValue.GetValue());
         }
         if (AccessTokenValue.IsSet())
         {
-            JsonRootObject->SetStringField("xGs2AccessToken", AccessTokenValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("xGs2AccessToken"), AccessTokenValue.GetValue());
         }
         if (PropertyIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("propertyId", PropertyIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("propertyId"), PropertyIdValue.GetValue());
         }
         if (VerifyTypeValue.IsSet())
         {
-            JsonRootObject->SetStringField("verifyType", VerifyTypeValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("verifyType"), VerifyTypeValue.GetValue());
         }
         if (ParameterValueNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("parameterValueName", ParameterValueNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("parameterValueName"), ParameterValueNameValue.GetValue());
         }
         if (ParameterCountValue.IsSet())
         {
-            JsonRootObject->SetNumberField("parameterCount", ParameterCountValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("parameterCount"), ParameterCountValue.GetValue());
         }
         if (MultiplyValueSpecifyingQuantityValue.IsSet())
         {
-            JsonRootObject->SetBoolField("multiplyValueSpecifyingQuantity", MultiplyValueSpecifyingQuantityValue.GetValue());
+            JsonRootObject->SetBoolField(TEXT("multiplyValueSpecifyingQuantity"), MultiplyValueSpecifyingQuantityValue.GetValue());
         }
         if (DuplicationAvoiderValue.IsSet())
         {
-            JsonRootObject->SetStringField("duplicationAvoider", DuplicationAvoiderValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("duplicationAvoider"), DuplicationAvoiderValue.GetValue());
         }
         return JsonRootObject;
     }

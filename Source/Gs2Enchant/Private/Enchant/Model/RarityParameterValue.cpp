@@ -119,15 +119,15 @@ namespace Gs2::Enchant::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (NameValue.IsSet())
         {
-            JsonRootObject->SetStringField("name", NameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("name"), NameValue.GetValue());
         }
         if (ResourceNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("resourceName", ResourceNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("resourceName"), ResourceNameValue.GetValue());
         }
         if (ResourceValueValue.IsSet())
         {
-            JsonRootObject->SetStringField("resourceValue", FString::Printf(TEXT("%lld"), ResourceValueValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("resourceValue"), FString::Printf(TEXT("%lld"), ResourceValueValue.GetValue()));
         }
         return JsonRootObject;
     }

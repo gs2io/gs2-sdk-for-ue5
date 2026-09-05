@@ -270,35 +270,35 @@ namespace Gs2::StateMachine::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (EnableAutoRunValue.IsSet())
         {
-            JsonRootObject->SetBoolField("enableAutoRun", EnableAutoRunValue.GetValue());
+            JsonRootObject->SetBoolField(TEXT("enableAutoRun"), EnableAutoRunValue.GetValue());
         }
         if (EnableAtomicCommitValue.IsSet())
         {
-            JsonRootObject->SetBoolField("enableAtomicCommit", EnableAtomicCommitValue.GetValue());
+            JsonRootObject->SetBoolField(TEXT("enableAtomicCommit"), EnableAtomicCommitValue.GetValue());
         }
         if (TransactionUseDistributorValue.IsSet())
         {
-            JsonRootObject->SetBoolField("transactionUseDistributor", TransactionUseDistributorValue.GetValue());
+            JsonRootObject->SetBoolField(TEXT("transactionUseDistributor"), TransactionUseDistributorValue.GetValue());
         }
         if (CommitScriptResultInUseDistributorValue.IsSet())
         {
-            JsonRootObject->SetBoolField("commitScriptResultInUseDistributor", CommitScriptResultInUseDistributorValue.GetValue());
+            JsonRootObject->SetBoolField(TEXT("commitScriptResultInUseDistributor"), CommitScriptResultInUseDistributorValue.GetValue());
         }
         if (AcquireActionUseJobQueueValue.IsSet())
         {
-            JsonRootObject->SetBoolField("acquireActionUseJobQueue", AcquireActionUseJobQueueValue.GetValue());
+            JsonRootObject->SetBoolField(TEXT("acquireActionUseJobQueue"), AcquireActionUseJobQueueValue.GetValue());
         }
         if (DistributorNamespaceIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("distributorNamespaceId", DistributorNamespaceIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("distributorNamespaceId"), DistributorNamespaceIdValue.GetValue());
         }
         if (KeyIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("keyId", KeyIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("keyId"), KeyIdValue.GetValue());
         }
         if (QueueNamespaceIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("queueNamespaceId", QueueNamespaceIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("queueNamespaceId"), QueueNamespaceIdValue.GetValue());
         }
         return JsonRootObject;
     }

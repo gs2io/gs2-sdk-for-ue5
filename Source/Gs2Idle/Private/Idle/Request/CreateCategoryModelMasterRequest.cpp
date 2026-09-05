@@ -320,35 +320,35 @@ namespace Gs2::Idle::Request
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (ContextStackValue.IsSet())
         {
-            JsonRootObject->SetStringField("contextStack", ContextStackValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("contextStack"), ContextStackValue.GetValue());
         }
         if (NamespaceNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("namespaceName", NamespaceNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("namespaceName"), NamespaceNameValue.GetValue());
         }
         if (NameValue.IsSet())
         {
-            JsonRootObject->SetStringField("name", NameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("name"), NameValue.GetValue());
         }
         if (DescriptionValue.IsSet())
         {
-            JsonRootObject->SetStringField("description", DescriptionValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("description"), DescriptionValue.GetValue());
         }
         if (MetadataValue.IsSet())
         {
-            JsonRootObject->SetStringField("metadata", MetadataValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("metadata"), MetadataValue.GetValue());
         }
         if (RewardIntervalMinutesValue.IsSet())
         {
-            JsonRootObject->SetNumberField("rewardIntervalMinutes", RewardIntervalMinutesValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("rewardIntervalMinutes"), RewardIntervalMinutesValue.GetValue());
         }
         if (DefaultMaximumIdleMinutesValue.IsSet())
         {
-            JsonRootObject->SetNumberField("defaultMaximumIdleMinutes", DefaultMaximumIdleMinutesValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("defaultMaximumIdleMinutes"), DefaultMaximumIdleMinutesValue.GetValue());
         }
         if (RewardResetModeValue.IsSet())
         {
-            JsonRootObject->SetStringField("rewardResetMode", RewardResetModeValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("rewardResetMode"), RewardResetModeValue.GetValue());
         }
         if (AcquireActionsValue != nullptr && AcquireActionsValue.IsValid())
         {
@@ -357,15 +357,15 @@ namespace Gs2::Idle::Request
             {
                 v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
             }
-            JsonRootObject->SetArrayField("acquireActions", v);
+            JsonRootObject->SetArrayField(TEXT("acquireActions"), v);
         }
         if (IdlePeriodScheduleIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("idlePeriodScheduleId", IdlePeriodScheduleIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("idlePeriodScheduleId"), IdlePeriodScheduleIdValue.GetValue());
         }
         if (ReceivePeriodScheduleIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("receivePeriodScheduleId", ReceivePeriodScheduleIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("receivePeriodScheduleId"), ReceivePeriodScheduleIdValue.GetValue());
         }
         return JsonRootObject;
     }

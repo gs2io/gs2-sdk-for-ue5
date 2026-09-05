@@ -134,15 +134,15 @@ namespace Gs2::Log::Result
             {
                 v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
             }
-            JsonRootObject->SetArrayField("items", v);
+            JsonRootObject->SetArrayField(TEXT("items"), v);
         }
         if (TotalEntryCountValue.IsSet())
         {
-            JsonRootObject->SetNumberField("totalEntryCount", TotalEntryCountValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("totalEntryCount"), TotalEntryCountValue.GetValue());
         }
         if (NextPageTokenValue.IsSet())
         {
-            JsonRootObject->SetStringField("nextPageToken", NextPageTokenValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("nextPageToken"), NextPageTokenValue.GetValue());
         }
         return JsonRootObject;
     }

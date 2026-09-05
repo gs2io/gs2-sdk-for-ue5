@@ -174,23 +174,23 @@ namespace Gs2::Auth::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (TokenValue.IsSet())
         {
-            JsonRootObject->SetStringField("token", TokenValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("token"), TokenValue.GetValue());
         }
         if (UserIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("userId", UserIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("userId"), UserIdValue.GetValue());
         }
         if (FederationFromUserIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("federationFromUserId", FederationFromUserIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("federationFromUserId"), FederationFromUserIdValue.GetValue());
         }
         if (ExpireValue.IsSet())
         {
-            JsonRootObject->SetStringField("expire", FString::Printf(TEXT("%lld"), ExpireValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("expire"), FString::Printf(TEXT("%lld"), ExpireValue.GetValue()));
         }
         if (TimeOffsetValue.IsSet())
         {
-            JsonRootObject->SetNumberField("timeOffset", TimeOffsetValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("timeOffset"), TimeOffsetValue.GetValue());
         }
         return JsonRootObject;
     }

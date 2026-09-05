@@ -235,35 +235,35 @@ namespace Gs2::Distributor::Request
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (ContextStackValue.IsSet())
         {
-            JsonRootObject->SetStringField("contextStack", ContextStackValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("contextStack"), ContextStackValue.GetValue());
         }
         if (NamespaceNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("namespaceName", NamespaceNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("namespaceName"), NamespaceNameValue.GetValue());
         }
         if (DescriptionValue.IsSet())
         {
-            JsonRootObject->SetStringField("description", DescriptionValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("description"), DescriptionValue.GetValue());
         }
         if (TransactionSettingValue != nullptr && TransactionSettingValue.IsValid())
         {
-            JsonRootObject->SetObjectField("transactionSetting", TransactionSettingValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("transactionSetting"), TransactionSettingValue->ToJson());
         }
         if (AssumeUserIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("assumeUserId", AssumeUserIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("assumeUserId"), AssumeUserIdValue.GetValue());
         }
         if (AutoRunStampSheetNotificationValue != nullptr && AutoRunStampSheetNotificationValue.IsValid())
         {
-            JsonRootObject->SetObjectField("autoRunStampSheetNotification", AutoRunStampSheetNotificationValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("autoRunStampSheetNotification"), AutoRunStampSheetNotificationValue->ToJson());
         }
         if (AutoRunTransactionNotificationValue != nullptr && AutoRunTransactionNotificationValue.IsValid())
         {
-            JsonRootObject->SetObjectField("autoRunTransactionNotification", AutoRunTransactionNotificationValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("autoRunTransactionNotification"), AutoRunTransactionNotificationValue->ToJson());
         }
         if (LogSettingValue != nullptr && LogSettingValue.IsValid())
         {
-            JsonRootObject->SetObjectField("logSetting", LogSettingValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("logSetting"), LogSettingValue->ToJson());
         }
         return JsonRootObject;
     }

@@ -91,7 +91,7 @@ namespace Gs2::Guild::Task::Rest
             const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
             if (this->Request->GetDisplayName().IsSet())
             {
-                JsonRootObject->SetStringField("displayName", this->Request->GetDisplayName().GetValue());
+                JsonRootObject->SetStringField(TEXT("displayName"), this->Request->GetDisplayName().GetValue());
             }
             if (this->Request->GetAttributes1() != nullptr && this->Request->GetAttributes1().IsValid())
             {
@@ -100,7 +100,7 @@ namespace Gs2::Guild::Task::Rest
                 {
                     v.Add(MakeShared<FJsonValueNumber>(JsonObjectValue));
                 }
-                JsonRootObject->SetArrayField("attributes1", v);
+                JsonRootObject->SetArrayField(TEXT("attributes1"), v);
             }
             if (this->Request->GetAttributes2() != nullptr && this->Request->GetAttributes2().IsValid())
             {
@@ -109,7 +109,7 @@ namespace Gs2::Guild::Task::Rest
                 {
                     v.Add(MakeShared<FJsonValueNumber>(JsonObjectValue));
                 }
-                JsonRootObject->SetArrayField("attributes2", v);
+                JsonRootObject->SetArrayField(TEXT("attributes2"), v);
             }
             if (this->Request->GetAttributes3() != nullptr && this->Request->GetAttributes3().IsValid())
             {
@@ -118,7 +118,7 @@ namespace Gs2::Guild::Task::Rest
                 {
                     v.Add(MakeShared<FJsonValueNumber>(JsonObjectValue));
                 }
-                JsonRootObject->SetArrayField("attributes3", v);
+                JsonRootObject->SetArrayField(TEXT("attributes3"), v);
             }
             if (this->Request->GetAttributes4() != nullptr && this->Request->GetAttributes4().IsValid())
             {
@@ -127,7 +127,7 @@ namespace Gs2::Guild::Task::Rest
                 {
                     v.Add(MakeShared<FJsonValueNumber>(JsonObjectValue));
                 }
-                JsonRootObject->SetArrayField("attributes4", v);
+                JsonRootObject->SetArrayField(TEXT("attributes4"), v);
             }
             if (this->Request->GetAttributes5() != nullptr && this->Request->GetAttributes5().IsValid())
             {
@@ -136,7 +136,7 @@ namespace Gs2::Guild::Task::Rest
                 {
                     v.Add(MakeShared<FJsonValueNumber>(JsonObjectValue));
                 }
-                JsonRootObject->SetArrayField("attributes5", v);
+                JsonRootObject->SetArrayField(TEXT("attributes5"), v);
             }
             if (this->Request->GetJoinPolicies() != nullptr && this->Request->GetJoinPolicies().IsValid())
             {
@@ -145,27 +145,27 @@ namespace Gs2::Guild::Task::Rest
                 {
                     v.Add(MakeShared<FJsonValueString>(JsonObjectValue));
                 }
-                JsonRootObject->SetArrayField("joinPolicies", v);
+                JsonRootObject->SetArrayField(TEXT("joinPolicies"), v);
             }
             if (this->Request->GetIncludeFullMembersGuild().IsSet())
             {
-                JsonRootObject->SetBoolField("includeFullMembersGuild", this->Request->GetIncludeFullMembersGuild().GetValue());
+                JsonRootObject->SetBoolField(TEXT("includeFullMembersGuild"), this->Request->GetIncludeFullMembersGuild().GetValue());
             }
             if (this->Request->GetOrderBy().IsSet())
             {
-                JsonRootObject->SetStringField("orderBy", this->Request->GetOrderBy().GetValue());
+                JsonRootObject->SetStringField(TEXT("orderBy"), this->Request->GetOrderBy().GetValue());
             }
             if (this->Request->GetPageToken().IsSet())
             {
-                JsonRootObject->SetStringField("pageToken", this->Request->GetPageToken().GetValue());
+                JsonRootObject->SetStringField(TEXT("pageToken"), this->Request->GetPageToken().GetValue());
             }
             if (this->Request->GetLimit().IsSet())
             {
-                JsonRootObject->SetNumberField("limit", this->Request->GetLimit().GetValue());
+                JsonRootObject->SetNumberField(TEXT("limit"), this->Request->GetLimit().GetValue());
             }
             if (this->Request->GetContextStack().IsSet())
             {
-                JsonRootObject->SetStringField("contextStack", this->Request->GetContextStack().GetValue());
+                JsonRootObject->SetStringField(TEXT("contextStack"), this->Request->GetContextStack().GetValue());
             }
             FJsonSerializer::Serialize(JsonRootObject.ToSharedRef(), Writer);
             request->SetContentAsString(Body);

@@ -74,7 +74,7 @@ namespace Gs2::Ranking::Result
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (ProcessingValue.IsSet())
         {
-            JsonRootObject->SetBoolField("processing", ProcessingValue.GetValue());
+            JsonRootObject->SetBoolField(TEXT("processing"), ProcessingValue.GetValue());
         }
         return JsonRootObject;
     }

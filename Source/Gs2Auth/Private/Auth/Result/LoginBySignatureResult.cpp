@@ -122,15 +122,15 @@ namespace Gs2::Auth::Result
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (TokenValue.IsSet())
         {
-            JsonRootObject->SetStringField("token", TokenValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("token"), TokenValue.GetValue());
         }
         if (UserIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("userId", UserIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("userId"), UserIdValue.GetValue());
         }
         if (ExpireValue.IsSet())
         {
-            JsonRootObject->SetStringField("expire", FString::Printf(TEXT("%lld"), ExpireValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("expire"), FString::Printf(TEXT("%lld"), ExpireValue.GetValue()));
         }
         return JsonRootObject;
     }

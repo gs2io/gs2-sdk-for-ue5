@@ -295,43 +295,43 @@ namespace Gs2::StateMachine::Request
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (ContextStackValue.IsSet())
         {
-            JsonRootObject->SetStringField("contextStack", ContextStackValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("contextStack"), ContextStackValue.GetValue());
         }
         if (NamespaceNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("namespaceName", NamespaceNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("namespaceName"), NamespaceNameValue.GetValue());
         }
         if (DescriptionValue.IsSet())
         {
-            JsonRootObject->SetStringField("description", DescriptionValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("description"), DescriptionValue.GetValue());
         }
         if (SupportSpeculativeExecutionValue.IsSet())
         {
-            JsonRootObject->SetStringField("supportSpeculativeExecution", SupportSpeculativeExecutionValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("supportSpeculativeExecution"), SupportSpeculativeExecutionValue.GetValue());
         }
         if (TransactionSettingValue != nullptr && TransactionSettingValue.IsValid())
         {
-            JsonRootObject->SetObjectField("transactionSetting", TransactionSettingValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("transactionSetting"), TransactionSettingValue->ToJson());
         }
         if (StartScriptValue != nullptr && StartScriptValue.IsValid())
         {
-            JsonRootObject->SetObjectField("startScript", StartScriptValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("startScript"), StartScriptValue->ToJson());
         }
         if (PassScriptValue != nullptr && PassScriptValue.IsValid())
         {
-            JsonRootObject->SetObjectField("passScript", PassScriptValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("passScript"), PassScriptValue->ToJson());
         }
         if (ErrorScriptValue != nullptr && ErrorScriptValue.IsValid())
         {
-            JsonRootObject->SetObjectField("errorScript", ErrorScriptValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("errorScript"), ErrorScriptValue->ToJson());
         }
         if (LowestStateMachineVersionValue.IsSet())
         {
-            JsonRootObject->SetStringField("lowestStateMachineVersion", FString::Printf(TEXT("%lld"), LowestStateMachineVersionValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("lowestStateMachineVersion"), FString::Printf(TEXT("%lld"), LowestStateMachineVersionValue.GetValue()));
         }
         if (LogSettingValue != nullptr && LogSettingValue.IsValid())
         {
-            JsonRootObject->SetObjectField("logSetting", LogSettingValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("logSetting"), LogSettingValue->ToJson());
         }
         return JsonRootObject;
     }

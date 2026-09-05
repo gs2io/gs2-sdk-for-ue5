@@ -112,15 +112,15 @@ namespace Gs2::Chat::Request
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (ContextStackValue.IsSet())
         {
-            JsonRootObject->SetStringField("contextStack", ContextStackValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("contextStack"), ContextStackValue.GetValue());
         }
         if (NamespaceNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("namespaceName", NamespaceNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("namespaceName"), NamespaceNameValue.GetValue());
         }
         if (CategoryValue.IsSet())
         {
-            JsonRootObject->SetNumberField("category", CategoryValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("category"), CategoryValue.GetValue());
         }
         return JsonRootObject;
     }

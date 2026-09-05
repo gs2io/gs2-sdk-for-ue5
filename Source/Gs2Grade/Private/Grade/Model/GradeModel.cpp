@@ -255,15 +255,15 @@ namespace Gs2::Grade::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (GradeModelIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("gradeModelId", GradeModelIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("gradeModelId"), GradeModelIdValue.GetValue());
         }
         if (NameValue.IsSet())
         {
-            JsonRootObject->SetStringField("name", NameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("name"), NameValue.GetValue());
         }
         if (MetadataValue.IsSet())
         {
-            JsonRootObject->SetStringField("metadata", MetadataValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("metadata"), MetadataValue.GetValue());
         }
         if (DefaultGradesValue != nullptr && DefaultGradesValue.IsValid())
         {
@@ -272,11 +272,11 @@ namespace Gs2::Grade::Model
             {
                 v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
             }
-            JsonRootObject->SetArrayField("defaultGrades", v);
+            JsonRootObject->SetArrayField(TEXT("defaultGrades"), v);
         }
         if (ExperienceModelIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("experienceModelId", ExperienceModelIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("experienceModelId"), ExperienceModelIdValue.GetValue());
         }
         if (GradeEntriesValue != nullptr && GradeEntriesValue.IsValid())
         {
@@ -285,7 +285,7 @@ namespace Gs2::Grade::Model
             {
                 v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
             }
-            JsonRootObject->SetArrayField("gradeEntries", v);
+            JsonRootObject->SetArrayField(TEXT("gradeEntries"), v);
         }
         if (AcquireActionRatesValue != nullptr && AcquireActionRatesValue.IsValid())
         {
@@ -294,7 +294,7 @@ namespace Gs2::Grade::Model
             {
                 v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
             }
-            JsonRootObject->SetArrayField("acquireActionRates", v);
+            JsonRootObject->SetArrayField(TEXT("acquireActionRates"), v);
         }
         return JsonRootObject;
     }

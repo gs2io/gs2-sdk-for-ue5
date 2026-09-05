@@ -86,23 +86,23 @@ namespace Gs2::Script::Task::Rest
             const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
             if (this->Request->GetName().IsSet())
             {
-                JsonRootObject->SetStringField("name", this->Request->GetName().GetValue());
+                JsonRootObject->SetStringField(TEXT("name"), this->Request->GetName().GetValue());
             }
             if (this->Request->GetDescription().IsSet())
             {
-                JsonRootObject->SetStringField("description", this->Request->GetDescription().GetValue());
+                JsonRootObject->SetStringField(TEXT("description"), this->Request->GetDescription().GetValue());
             }
             if (this->Request->GetScript().IsSet())
             {
-                JsonRootObject->SetStringField("script", this->Request->GetScript().GetValue());
+                JsonRootObject->SetStringField(TEXT("script"), this->Request->GetScript().GetValue());
             }
             if (this->Request->GetDisableStringNumberToNumber().IsSet())
             {
-                JsonRootObject->SetBoolField("disableStringNumberToNumber", this->Request->GetDisableStringNumberToNumber().GetValue());
+                JsonRootObject->SetBoolField(TEXT("disableStringNumberToNumber"), this->Request->GetDisableStringNumberToNumber().GetValue());
             }
             if (this->Request->GetContextStack().IsSet())
             {
-                JsonRootObject->SetStringField("contextStack", this->Request->GetContextStack().GetValue());
+                JsonRootObject->SetStringField(TEXT("contextStack"), this->Request->GetContextStack().GetValue());
             }
             FJsonSerializer::Serialize(JsonRootObject.ToSharedRef(), Writer);
             request->SetContentAsString(Body);

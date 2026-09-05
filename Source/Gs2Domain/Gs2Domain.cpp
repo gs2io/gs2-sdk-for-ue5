@@ -4,4 +4,4 @@
 #include "Modules/ModuleManager.h"
 #include "Core/Gs2Constant.h"
 
-IMPLEMENT_MODULE( FDefaultGameModuleImpl, Gs2Doamin );
+IMPLEMENT_MODULE( FDefaultGameModuleImpl, Gs2Domain );

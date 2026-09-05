@@ -95,11 +95,11 @@ namespace Gs2::Experience::Result
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (ItemValue != nullptr && ItemValue.IsValid())
         {
-            JsonRootObject->SetObjectField("item", ItemValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("item"), ItemValue->ToJson());
         }
         if (OldValue != nullptr && OldValue.IsValid())
         {
-            JsonRootObject->SetObjectField("old", OldValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("old"), OldValue->ToJson());
         }
         return JsonRootObject;
     }

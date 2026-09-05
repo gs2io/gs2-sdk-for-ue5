@@ -261,27 +261,27 @@ namespace Gs2::MegaField::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (LayerIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("layerId", LayerIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("layerId"), LayerIdValue.GetValue());
         }
         if (AreaModelNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("areaModelName", AreaModelNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("areaModelName"), AreaModelNameValue.GetValue());
         }
         if (LayerModelNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("layerModelName", LayerModelNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("layerModelName"), LayerModelNameValue.GetValue());
         }
         if (NumberOfMinEntriesValue.IsSet())
         {
-            JsonRootObject->SetNumberField("numberOfMinEntries", NumberOfMinEntriesValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("numberOfMinEntries"), NumberOfMinEntriesValue.GetValue());
         }
         if (NumberOfMaxEntriesValue.IsSet())
         {
-            JsonRootObject->SetNumberField("numberOfMaxEntries", NumberOfMaxEntriesValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("numberOfMaxEntries"), NumberOfMaxEntriesValue.GetValue());
         }
         if (CreatedAtValue.IsSet())
         {
-            JsonRootObject->SetStringField("createdAt", FString::Printf(TEXT("%lld"), CreatedAtValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("createdAt"), FString::Printf(TEXT("%lld"), CreatedAtValue.GetValue()));
         }
         return JsonRootObject;
     }

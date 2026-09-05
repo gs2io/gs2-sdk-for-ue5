@@ -96,15 +96,15 @@ namespace Gs2::Lottery::Task::Rest
             const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
             if (this->Request->GetRandomSeed().IsSet())
             {
-                JsonRootObject->SetStringField("randomSeed", FString::Printf(TEXT("%lld"), this->Request->GetRandomSeed().GetValue()));
+                JsonRootObject->SetStringField(TEXT("randomSeed"), FString::Printf(TEXT("%lld"), this->Request->GetRandomSeed().GetValue()));
             }
             if (this->Request->GetCount().IsSet())
             {
-                JsonRootObject->SetNumberField("count", this->Request->GetCount().GetValue());
+                JsonRootObject->SetNumberField(TEXT("count"), this->Request->GetCount().GetValue());
             }
             if (this->Request->GetContextStack().IsSet())
             {
-                JsonRootObject->SetStringField("contextStack", this->Request->GetContextStack().GetValue());
+                JsonRootObject->SetStringField(TEXT("contextStack"), this->Request->GetContextStack().GetValue());
             }
             FJsonSerializer::Serialize(JsonRootObject.ToSharedRef(), Writer);
             request->SetContentAsString(Body);

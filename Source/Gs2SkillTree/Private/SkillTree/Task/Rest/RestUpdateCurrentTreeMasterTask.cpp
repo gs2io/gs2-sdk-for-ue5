@@ -86,19 +86,19 @@ namespace Gs2::SkillTree::Task::Rest
             const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
             if (this->Request->GetMode().IsSet())
             {
-                JsonRootObject->SetStringField("mode", this->Request->GetMode().GetValue());
+                JsonRootObject->SetStringField(TEXT("mode"), this->Request->GetMode().GetValue());
             }
             if (this->Request->GetSettings().IsSet())
             {
-                JsonRootObject->SetStringField("settings", this->Request->GetSettings().GetValue());
+                JsonRootObject->SetStringField(TEXT("settings"), this->Request->GetSettings().GetValue());
             }
             if (this->Request->GetUploadToken().IsSet())
             {
-                JsonRootObject->SetStringField("uploadToken", this->Request->GetUploadToken().GetValue());
+                JsonRootObject->SetStringField(TEXT("uploadToken"), this->Request->GetUploadToken().GetValue());
             }
             if (this->Request->GetContextStack().IsSet())
             {
-                JsonRootObject->SetStringField("contextStack", this->Request->GetContextStack().GetValue());
+                JsonRootObject->SetStringField(TEXT("contextStack"), this->Request->GetContextStack().GetValue());
             }
             FJsonSerializer::Serialize(JsonRootObject.ToSharedRef(), Writer);
             request->SetContentAsString(Body);

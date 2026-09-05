@@ -485,55 +485,55 @@ namespace Gs2::Stamina::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (StaminaIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("staminaId", StaminaIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("staminaId"), StaminaIdValue.GetValue());
         }
         if (StaminaNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("staminaName", StaminaNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("staminaName"), StaminaNameValue.GetValue());
         }
         if (UserIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("userId", UserIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("userId"), UserIdValue.GetValue());
         }
         if (ValueValue.IsSet())
         {
-            JsonRootObject->SetNumberField("value", ValueValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("value"), ValueValue.GetValue());
         }
         if (MaxValueValue.IsSet())
         {
-            JsonRootObject->SetNumberField("maxValue", MaxValueValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("maxValue"), MaxValueValue.GetValue());
         }
         if (RecoverIntervalMinutesValue.IsSet())
         {
-            JsonRootObject->SetNumberField("recoverIntervalMinutes", RecoverIntervalMinutesValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("recoverIntervalMinutes"), RecoverIntervalMinutesValue.GetValue());
         }
         if (RecoverValueValue.IsSet())
         {
-            JsonRootObject->SetNumberField("recoverValue", RecoverValueValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("recoverValue"), RecoverValueValue.GetValue());
         }
         if (OverflowValueValue.IsSet())
         {
-            JsonRootObject->SetNumberField("overflowValue", OverflowValueValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("overflowValue"), OverflowValueValue.GetValue());
         }
         if (NextRecoverAtValue.IsSet())
         {
-            JsonRootObject->SetStringField("nextRecoverAt", FString::Printf(TEXT("%lld"), NextRecoverAtValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("nextRecoverAt"), FString::Printf(TEXT("%lld"), NextRecoverAtValue.GetValue()));
         }
         if (LastRecoveredAtValue.IsSet())
         {
-            JsonRootObject->SetStringField("lastRecoveredAt", FString::Printf(TEXT("%lld"), LastRecoveredAtValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("lastRecoveredAt"), FString::Printf(TEXT("%lld"), LastRecoveredAtValue.GetValue()));
         }
         if (CreatedAtValue.IsSet())
         {
-            JsonRootObject->SetStringField("createdAt", FString::Printf(TEXT("%lld"), CreatedAtValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("createdAt"), FString::Printf(TEXT("%lld"), CreatedAtValue.GetValue()));
         }
         if (UpdatedAtValue.IsSet())
         {
-            JsonRootObject->SetStringField("updatedAt", FString::Printf(TEXT("%lld"), UpdatedAtValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("updatedAt"), FString::Printf(TEXT("%lld"), UpdatedAtValue.GetValue()));
         }
         if (RevisionValue.IsSet())
         {
-            JsonRootObject->SetStringField("revision", FString::Printf(TEXT("%lld"), RevisionValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("revision"), FString::Printf(TEXT("%lld"), RevisionValue.GetValue()));
         }
         return JsonRootObject;
     }

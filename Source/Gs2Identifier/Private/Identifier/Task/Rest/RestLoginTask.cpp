@@ -80,11 +80,11 @@ namespace Gs2::Identifier::Task::Rest
             const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
             if (this->Request->GetClientId().IsSet())
             {
-                JsonRootObject->SetStringField("client_id", this->Request->GetClientId().GetValue());
+                JsonRootObject->SetStringField(TEXT("client_id"), this->Request->GetClientId().GetValue());
             }
             if (this->Request->GetClientSecret().IsSet())
             {
-                JsonRootObject->SetStringField("client_secret", this->Request->GetClientSecret().GetValue());
+                JsonRootObject->SetStringField(TEXT("client_secret"), this->Request->GetClientSecret().GetValue());
             }
             FJsonSerializer::Serialize(JsonRootObject.ToSharedRef(), Writer);
             request->SetContentAsString(Body);

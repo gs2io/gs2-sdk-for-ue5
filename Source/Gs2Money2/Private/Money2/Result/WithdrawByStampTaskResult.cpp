@@ -123,7 +123,7 @@ namespace Gs2::Money2::Result
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (ItemValue != nullptr && ItemValue.IsValid())
         {
-            JsonRootObject->SetObjectField("item", ItemValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("item"), ItemValue->ToJson());
         }
         if (WithdrawTransactionsValue != nullptr && WithdrawTransactionsValue.IsValid())
         {
@@ -132,11 +132,11 @@ namespace Gs2::Money2::Result
             {
                 v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
             }
-            JsonRootObject->SetArrayField("withdrawTransactions", v);
+            JsonRootObject->SetArrayField(TEXT("withdrawTransactions"), v);
         }
         if (NewContextStackValue.IsSet())
         {
-            JsonRootObject->SetStringField("newContextStack", NewContextStackValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("newContextStack"), NewContextStackValue.GetValue());
         }
         return JsonRootObject;
     }

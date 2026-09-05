@@ -541,79 +541,79 @@ namespace Gs2::Guild::Request
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (ContextStackValue.IsSet())
         {
-            JsonRootObject->SetStringField("contextStack", ContextStackValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("contextStack"), ContextStackValue.GetValue());
         }
         if (NamespaceNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("namespaceName", NamespaceNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("namespaceName"), NamespaceNameValue.GetValue());
         }
         if (DescriptionValue.IsSet())
         {
-            JsonRootObject->SetStringField("description", DescriptionValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("description"), DescriptionValue.GetValue());
         }
         if (TransactionSettingValue != nullptr && TransactionSettingValue.IsValid())
         {
-            JsonRootObject->SetObjectField("transactionSetting", TransactionSettingValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("transactionSetting"), TransactionSettingValue->ToJson());
         }
         if (ChangeNotificationValue != nullptr && ChangeNotificationValue.IsValid())
         {
-            JsonRootObject->SetObjectField("changeNotification", ChangeNotificationValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("changeNotification"), ChangeNotificationValue->ToJson());
         }
         if (JoinNotificationValue != nullptr && JoinNotificationValue.IsValid())
         {
-            JsonRootObject->SetObjectField("joinNotification", JoinNotificationValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("joinNotification"), JoinNotificationValue->ToJson());
         }
         if (LeaveNotificationValue != nullptr && LeaveNotificationValue.IsValid())
         {
-            JsonRootObject->SetObjectField("leaveNotification", LeaveNotificationValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("leaveNotification"), LeaveNotificationValue->ToJson());
         }
         if (ChangeMemberNotificationValue != nullptr && ChangeMemberNotificationValue.IsValid())
         {
-            JsonRootObject->SetObjectField("changeMemberNotification", ChangeMemberNotificationValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("changeMemberNotification"), ChangeMemberNotificationValue->ToJson());
         }
         if (ChangeMemberNotificationIgnoreChangeMetadataValue.IsSet())
         {
-            JsonRootObject->SetBoolField("changeMemberNotificationIgnoreChangeMetadata", ChangeMemberNotificationIgnoreChangeMetadataValue.GetValue());
+            JsonRootObject->SetBoolField(TEXT("changeMemberNotificationIgnoreChangeMetadata"), ChangeMemberNotificationIgnoreChangeMetadataValue.GetValue());
         }
         if (ReceiveRequestNotificationValue != nullptr && ReceiveRequestNotificationValue.IsValid())
         {
-            JsonRootObject->SetObjectField("receiveRequestNotification", ReceiveRequestNotificationValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("receiveRequestNotification"), ReceiveRequestNotificationValue->ToJson());
         }
         if (RemoveRequestNotificationValue != nullptr && RemoveRequestNotificationValue.IsValid())
         {
-            JsonRootObject->SetObjectField("removeRequestNotification", RemoveRequestNotificationValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("removeRequestNotification"), RemoveRequestNotificationValue->ToJson());
         }
         if (CreateGuildScriptValue != nullptr && CreateGuildScriptValue.IsValid())
         {
-            JsonRootObject->SetObjectField("createGuildScript", CreateGuildScriptValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("createGuildScript"), CreateGuildScriptValue->ToJson());
         }
         if (UpdateGuildScriptValue != nullptr && UpdateGuildScriptValue.IsValid())
         {
-            JsonRootObject->SetObjectField("updateGuildScript", UpdateGuildScriptValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("updateGuildScript"), UpdateGuildScriptValue->ToJson());
         }
         if (JoinGuildScriptValue != nullptr && JoinGuildScriptValue.IsValid())
         {
-            JsonRootObject->SetObjectField("joinGuildScript", JoinGuildScriptValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("joinGuildScript"), JoinGuildScriptValue->ToJson());
         }
         if (ReceiveJoinRequestScriptValue != nullptr && ReceiveJoinRequestScriptValue.IsValid())
         {
-            JsonRootObject->SetObjectField("receiveJoinRequestScript", ReceiveJoinRequestScriptValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("receiveJoinRequestScript"), ReceiveJoinRequestScriptValue->ToJson());
         }
         if (LeaveGuildScriptValue != nullptr && LeaveGuildScriptValue.IsValid())
         {
-            JsonRootObject->SetObjectField("leaveGuildScript", LeaveGuildScriptValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("leaveGuildScript"), LeaveGuildScriptValue->ToJson());
         }
         if (ChangeRoleScriptValue != nullptr && ChangeRoleScriptValue.IsValid())
         {
-            JsonRootObject->SetObjectField("changeRoleScript", ChangeRoleScriptValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("changeRoleScript"), ChangeRoleScriptValue->ToJson());
         }
         if (DeleteGuildScriptValue != nullptr && DeleteGuildScriptValue.IsValid())
         {
-            JsonRootObject->SetObjectField("deleteGuildScript", DeleteGuildScriptValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("deleteGuildScript"), DeleteGuildScriptValue->ToJson());
         }
         if (LogSettingValue != nullptr && LogSettingValue.IsValid())
         {
-            JsonRootObject->SetObjectField("logSetting", LogSettingValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("logSetting"), LogSettingValue->ToJson());
         }
         return JsonRootObject;
     }

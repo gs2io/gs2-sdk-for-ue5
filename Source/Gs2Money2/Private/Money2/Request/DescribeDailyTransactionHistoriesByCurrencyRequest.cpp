@@ -226,31 +226,31 @@ namespace Gs2::Money2::Request
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (ContextStackValue.IsSet())
         {
-            JsonRootObject->SetStringField("contextStack", ContextStackValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("contextStack"), ContextStackValue.GetValue());
         }
         if (NamespaceNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("namespaceName", NamespaceNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("namespaceName"), NamespaceNameValue.GetValue());
         }
         if (CurrencyValue.IsSet())
         {
-            JsonRootObject->SetStringField("currency", CurrencyValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("currency"), CurrencyValue.GetValue());
         }
         if (YearValue.IsSet())
         {
-            JsonRootObject->SetNumberField("year", YearValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("year"), YearValue.GetValue());
         }
         if (MonthValue.IsSet())
         {
-            JsonRootObject->SetNumberField("month", MonthValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("month"), MonthValue.GetValue());
         }
         if (PageTokenValue.IsSet())
         {
-            JsonRootObject->SetStringField("pageToken", PageTokenValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("pageToken"), PageTokenValue.GetValue());
         }
         if (LimitValue.IsSet())
         {
-            JsonRootObject->SetNumberField("limit", LimitValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("limit"), LimitValue.GetValue());
         }
         return JsonRootObject;
     }

@@ -182,23 +182,23 @@ namespace Gs2::Inventory::Result
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (ItemValue != nullptr && ItemValue.IsValid())
         {
-            JsonRootObject->SetObjectField("item", ItemValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("item"), ItemValue->ToJson());
         }
         if (StatusValue != nullptr && StatusValue.IsValid())
         {
-            JsonRootObject->SetObjectField("status", StatusValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("status"), StatusValue->ToJson());
         }
         if (ItemModelValue != nullptr && ItemModelValue.IsValid())
         {
-            JsonRootObject->SetObjectField("itemModel", ItemModelValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("itemModel"), ItemModelValue->ToJson());
         }
         if (InventoryValue != nullptr && InventoryValue.IsValid())
         {
-            JsonRootObject->SetObjectField("inventory", InventoryValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("inventory"), InventoryValue->ToJson());
         }
         if (OverflowCountValue.IsSet())
         {
-            JsonRootObject->SetStringField("overflowCount", FString::Printf(TEXT("%lld"), OverflowCountValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("overflowCount"), FString::Printf(TEXT("%lld"), OverflowCountValue.GetValue()));
         }
         return JsonRootObject;
     }

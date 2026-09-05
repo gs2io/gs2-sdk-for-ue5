@@ -175,27 +175,27 @@ namespace Gs2::Showcase::Request
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (ContextStackValue.IsSet())
         {
-            JsonRootObject->SetStringField("contextStack", ContextStackValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("contextStack"), ContextStackValue.GetValue());
         }
         if (NamespaceNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("namespaceName", NamespaceNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("namespaceName"), NamespaceNameValue.GetValue());
         }
         if (ShowcaseNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("showcaseName", ShowcaseNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("showcaseName"), ShowcaseNameValue.GetValue());
         }
         if (DisplayItemNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("displayItemName", DisplayItemNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("displayItemName"), DisplayItemNameValue.GetValue());
         }
         if (UserIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("userId", UserIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("userId"), UserIdValue.GetValue());
         }
         if (TimeOffsetTokenValue.IsSet())
         {
-            JsonRootObject->SetStringField("timeOffsetToken", TimeOffsetTokenValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("timeOffsetToken"), TimeOffsetTokenValue.GetValue());
         }
         return JsonRootObject;
     }

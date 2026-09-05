@@ -85,11 +85,11 @@ namespace Gs2::Version::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (VersionModelValue != nullptr && VersionModelValue.IsValid())
         {
-            JsonRootObject->SetObjectField("versionModel", VersionModelValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("versionModel"), VersionModelValue->ToJson());
         }
         if (CurrentVersionValue != nullptr && CurrentVersionValue.IsValid())
         {
-            JsonRootObject->SetObjectField("currentVersion", CurrentVersionValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("currentVersion"), CurrentVersionValue->ToJson());
         }
         return JsonRootObject;
     }

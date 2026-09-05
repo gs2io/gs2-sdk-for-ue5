@@ -91,39 +91,39 @@ namespace Gs2::Buff::Task::Rest
             const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
             if (this->Request->GetDescription().IsSet())
             {
-                JsonRootObject->SetStringField("description", this->Request->GetDescription().GetValue());
+                JsonRootObject->SetStringField(TEXT("description"), this->Request->GetDescription().GetValue());
             }
             if (this->Request->GetMetadata().IsSet())
             {
-                JsonRootObject->SetStringField("metadata", this->Request->GetMetadata().GetValue());
+                JsonRootObject->SetStringField(TEXT("metadata"), this->Request->GetMetadata().GetValue());
             }
             if (this->Request->GetExpression().IsSet())
             {
-                JsonRootObject->SetStringField("expression", this->Request->GetExpression().GetValue());
+                JsonRootObject->SetStringField(TEXT("expression"), this->Request->GetExpression().GetValue());
             }
             if (this->Request->GetTargetType().IsSet())
             {
-                JsonRootObject->SetStringField("targetType", this->Request->GetTargetType().GetValue());
+                JsonRootObject->SetStringField(TEXT("targetType"), this->Request->GetTargetType().GetValue());
             }
             if (this->Request->GetTargetModel() != nullptr && this->Request->GetTargetModel().IsValid())
             {
-                JsonRootObject->SetObjectField("targetModel", this->Request->GetTargetModel()->ToJson());
+                JsonRootObject->SetObjectField(TEXT("targetModel"), this->Request->GetTargetModel()->ToJson());
             }
             if (this->Request->GetTargetAction() != nullptr && this->Request->GetTargetAction().IsValid())
             {
-                JsonRootObject->SetObjectField("targetAction", this->Request->GetTargetAction()->ToJson());
+                JsonRootObject->SetObjectField(TEXT("targetAction"), this->Request->GetTargetAction()->ToJson());
             }
             if (this->Request->GetPriority().IsSet())
             {
-                JsonRootObject->SetNumberField("priority", this->Request->GetPriority().GetValue());
+                JsonRootObject->SetNumberField(TEXT("priority"), this->Request->GetPriority().GetValue());
             }
             if (this->Request->GetApplyPeriodScheduleEventId().IsSet())
             {
-                JsonRootObject->SetStringField("applyPeriodScheduleEventId", this->Request->GetApplyPeriodScheduleEventId().GetValue());
+                JsonRootObject->SetStringField(TEXT("applyPeriodScheduleEventId"), this->Request->GetApplyPeriodScheduleEventId().GetValue());
             }
             if (this->Request->GetContextStack().IsSet())
             {
-                JsonRootObject->SetStringField("contextStack", this->Request->GetContextStack().GetValue());
+                JsonRootObject->SetStringField(TEXT("contextStack"), this->Request->GetContextStack().GetValue());
             }
             FJsonSerializer::Serialize(JsonRootObject.ToSharedRef(), Writer);
             request->SetContentAsString(Body);

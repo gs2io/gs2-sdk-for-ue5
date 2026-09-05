@@ -323,27 +323,27 @@ namespace Gs2::AdReward::Request
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (ContextStackValue.IsSet())
         {
-            JsonRootObject->SetStringField("contextStack", ContextStackValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("contextStack"), ContextStackValue.GetValue());
         }
         if (NamespaceNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("namespaceName", NamespaceNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("namespaceName"), NamespaceNameValue.GetValue());
         }
         if (DescriptionValue.IsSet())
         {
-            JsonRootObject->SetStringField("description", DescriptionValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("description"), DescriptionValue.GetValue());
         }
         if (TransactionSettingValue != nullptr && TransactionSettingValue.IsValid())
         {
-            JsonRootObject->SetObjectField("transactionSetting", TransactionSettingValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("transactionSetting"), TransactionSettingValue->ToJson());
         }
         if (AdmobValue != nullptr && AdmobValue.IsValid())
         {
-            JsonRootObject->SetObjectField("admob", AdmobValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("admob"), AdmobValue->ToJson());
         }
         if (UnityAdValue != nullptr && UnityAdValue.IsValid())
         {
-            JsonRootObject->SetObjectField("unityAd", UnityAdValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("unityAd"), UnityAdValue->ToJson());
         }
         if (AppLovinMaxesValue != nullptr && AppLovinMaxesValue.IsValid())
         {
@@ -352,23 +352,23 @@ namespace Gs2::AdReward::Request
             {
                 v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
             }
-            JsonRootObject->SetArrayField("appLovinMaxes", v);
+            JsonRootObject->SetArrayField(TEXT("appLovinMaxes"), v);
         }
         if (AcquirePointScriptValue != nullptr && AcquirePointScriptValue.IsValid())
         {
-            JsonRootObject->SetObjectField("acquirePointScript", AcquirePointScriptValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("acquirePointScript"), AcquirePointScriptValue->ToJson());
         }
         if (ConsumePointScriptValue != nullptr && ConsumePointScriptValue.IsValid())
         {
-            JsonRootObject->SetObjectField("consumePointScript", ConsumePointScriptValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("consumePointScript"), ConsumePointScriptValue->ToJson());
         }
         if (ChangePointNotificationValue != nullptr && ChangePointNotificationValue.IsValid())
         {
-            JsonRootObject->SetObjectField("changePointNotification", ChangePointNotificationValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("changePointNotification"), ChangePointNotificationValue->ToJson());
         }
         if (LogSettingValue != nullptr && LogSettingValue.IsValid())
         {
-            JsonRootObject->SetObjectField("logSetting", LogSettingValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("logSetting"), LogSettingValue->ToJson());
         }
         return JsonRootObject;
     }

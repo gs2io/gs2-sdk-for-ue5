@@ -89,11 +89,11 @@ namespace Gs2::News::Result
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (UploadTokenValue.IsSet())
         {
-            JsonRootObject->SetStringField("uploadToken", UploadTokenValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("uploadToken"), UploadTokenValue.GetValue());
         }
         if (TemplateUploadUrlValue.IsSet())
         {
-            JsonRootObject->SetStringField("templateUploadUrl", TemplateUploadUrlValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("templateUploadUrl"), TemplateUploadUrlValue.GetValue());
         }
         return JsonRootObject;
     }

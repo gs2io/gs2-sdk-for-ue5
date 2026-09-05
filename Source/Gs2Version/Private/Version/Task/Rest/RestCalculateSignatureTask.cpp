@@ -91,11 +91,11 @@ namespace Gs2::Version::Task::Rest
             const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
             if (this->Request->GetVersion() != nullptr && this->Request->GetVersion().IsValid())
             {
-                JsonRootObject->SetObjectField("version", this->Request->GetVersion()->ToJson());
+                JsonRootObject->SetObjectField(TEXT("version"), this->Request->GetVersion()->ToJson());
             }
             if (this->Request->GetContextStack().IsSet())
             {
-                JsonRootObject->SetStringField("contextStack", this->Request->GetContextStack().GetValue());
+                JsonRootObject->SetStringField(TEXT("contextStack"), this->Request->GetContextStack().GetValue());
             }
             FJsonSerializer::Serialize(JsonRootObject.ToSharedRef(), Writer);
             request->SetContentAsString(Body);

@@ -323,43 +323,43 @@ namespace Gs2::Enhance::Result
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (ItemValue != nullptr && ItemValue.IsValid())
         {
-            JsonRootObject->SetObjectField("item", ItemValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("item"), ItemValue->ToJson());
         }
         if (TransactionIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("transactionId", TransactionIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("transactionId"), TransactionIdValue.GetValue());
         }
         if (StampSheetValue.IsSet())
         {
-            JsonRootObject->SetStringField("stampSheet", StampSheetValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("stampSheet"), StampSheetValue.GetValue());
         }
         if (StampSheetEncryptionKeyIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("stampSheetEncryptionKeyId", StampSheetEncryptionKeyIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("stampSheetEncryptionKeyId"), StampSheetEncryptionKeyIdValue.GetValue());
         }
         if (AutoRunStampSheetValue.IsSet())
         {
-            JsonRootObject->SetBoolField("autoRunStampSheet", AutoRunStampSheetValue.GetValue());
+            JsonRootObject->SetBoolField(TEXT("autoRunStampSheet"), AutoRunStampSheetValue.GetValue());
         }
         if (AtomicCommitValue.IsSet())
         {
-            JsonRootObject->SetBoolField("atomicCommit", AtomicCommitValue.GetValue());
+            JsonRootObject->SetBoolField(TEXT("atomicCommit"), AtomicCommitValue.GetValue());
         }
         if (TransactionValue.IsSet())
         {
-            JsonRootObject->SetStringField("transaction", TransactionValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("transaction"), TransactionValue.GetValue());
         }
         if (TransactionResultValue != nullptr && TransactionResultValue.IsValid())
         {
-            JsonRootObject->SetObjectField("transactionResult", TransactionResultValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("transactionResult"), TransactionResultValue->ToJson());
         }
         if (AcquireExperienceValue.IsSet())
         {
-            JsonRootObject->SetStringField("acquireExperience", FString::Printf(TEXT("%lld"), AcquireExperienceValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("acquireExperience"), FString::Printf(TEXT("%lld"), AcquireExperienceValue.GetValue()));
         }
         if (BonusRateValue.IsSet())
         {
-            JsonRootObject->SetNumberField("bonusRate", BonusRateValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("bonusRate"), BonusRateValue.GetValue());
         }
         return JsonRootObject;
     }

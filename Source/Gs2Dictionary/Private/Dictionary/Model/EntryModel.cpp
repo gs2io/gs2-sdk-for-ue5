@@ -154,15 +154,15 @@ namespace Gs2::Dictionary::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (EntryModelIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("entryModelId", EntryModelIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("entryModelId"), EntryModelIdValue.GetValue());
         }
         if (NameValue.IsSet())
         {
-            JsonRootObject->SetStringField("name", NameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("name"), NameValue.GetValue());
         }
         if (MetadataValue.IsSet())
         {
-            JsonRootObject->SetStringField("metadata", MetadataValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("metadata"), MetadataValue.GetValue());
         }
         return JsonRootObject;
     }

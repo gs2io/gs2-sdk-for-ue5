@@ -80,51 +80,51 @@ namespace Gs2::Inventory::Task::Rest
             const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
             if (this->Request->GetName().IsSet())
             {
-                JsonRootObject->SetStringField("name", this->Request->GetName().GetValue());
+                JsonRootObject->SetStringField(TEXT("name"), this->Request->GetName().GetValue());
             }
             if (this->Request->GetDescription().IsSet())
             {
-                JsonRootObject->SetStringField("description", this->Request->GetDescription().GetValue());
+                JsonRootObject->SetStringField(TEXT("description"), this->Request->GetDescription().GetValue());
             }
             if (this->Request->GetTransactionSetting() != nullptr && this->Request->GetTransactionSetting().IsValid())
             {
-                JsonRootObject->SetObjectField("transactionSetting", this->Request->GetTransactionSetting()->ToJson());
+                JsonRootObject->SetObjectField(TEXT("transactionSetting"), this->Request->GetTransactionSetting()->ToJson());
             }
             if (this->Request->GetAcquireScript() != nullptr && this->Request->GetAcquireScript().IsValid())
             {
-                JsonRootObject->SetObjectField("acquireScript", this->Request->GetAcquireScript()->ToJson());
+                JsonRootObject->SetObjectField(TEXT("acquireScript"), this->Request->GetAcquireScript()->ToJson());
             }
             if (this->Request->GetOverflowScript() != nullptr && this->Request->GetOverflowScript().IsValid())
             {
-                JsonRootObject->SetObjectField("overflowScript", this->Request->GetOverflowScript()->ToJson());
+                JsonRootObject->SetObjectField(TEXT("overflowScript"), this->Request->GetOverflowScript()->ToJson());
             }
             if (this->Request->GetConsumeScript() != nullptr && this->Request->GetConsumeScript().IsValid())
             {
-                JsonRootObject->SetObjectField("consumeScript", this->Request->GetConsumeScript()->ToJson());
+                JsonRootObject->SetObjectField(TEXT("consumeScript"), this->Request->GetConsumeScript()->ToJson());
             }
             if (this->Request->GetSimpleItemAcquireScript() != nullptr && this->Request->GetSimpleItemAcquireScript().IsValid())
             {
-                JsonRootObject->SetObjectField("simpleItemAcquireScript", this->Request->GetSimpleItemAcquireScript()->ToJson());
+                JsonRootObject->SetObjectField(TEXT("simpleItemAcquireScript"), this->Request->GetSimpleItemAcquireScript()->ToJson());
             }
             if (this->Request->GetSimpleItemConsumeScript() != nullptr && this->Request->GetSimpleItemConsumeScript().IsValid())
             {
-                JsonRootObject->SetObjectField("simpleItemConsumeScript", this->Request->GetSimpleItemConsumeScript()->ToJson());
+                JsonRootObject->SetObjectField(TEXT("simpleItemConsumeScript"), this->Request->GetSimpleItemConsumeScript()->ToJson());
             }
             if (this->Request->GetBigItemAcquireScript() != nullptr && this->Request->GetBigItemAcquireScript().IsValid())
             {
-                JsonRootObject->SetObjectField("bigItemAcquireScript", this->Request->GetBigItemAcquireScript()->ToJson());
+                JsonRootObject->SetObjectField(TEXT("bigItemAcquireScript"), this->Request->GetBigItemAcquireScript()->ToJson());
             }
             if (this->Request->GetBigItemConsumeScript() != nullptr && this->Request->GetBigItemConsumeScript().IsValid())
             {
-                JsonRootObject->SetObjectField("bigItemConsumeScript", this->Request->GetBigItemConsumeScript()->ToJson());
+                JsonRootObject->SetObjectField(TEXT("bigItemConsumeScript"), this->Request->GetBigItemConsumeScript()->ToJson());
             }
             if (this->Request->GetLogSetting() != nullptr && this->Request->GetLogSetting().IsValid())
             {
-                JsonRootObject->SetObjectField("logSetting", this->Request->GetLogSetting()->ToJson());
+                JsonRootObject->SetObjectField(TEXT("logSetting"), this->Request->GetLogSetting()->ToJson());
             }
             if (this->Request->GetContextStack().IsSet())
             {
-                JsonRootObject->SetStringField("contextStack", this->Request->GetContextStack().GetValue());
+                JsonRootObject->SetStringField(TEXT("contextStack"), this->Request->GetContextStack().GetValue());
             }
             FJsonSerializer::Serialize(JsonRootObject.ToSharedRef(), Writer);
             request->SetContentAsString(Body);

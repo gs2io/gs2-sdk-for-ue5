@@ -380,51 +380,51 @@ namespace Gs2::Exchange::Request
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (ContextStackValue.IsSet())
         {
-            JsonRootObject->SetStringField("contextStack", ContextStackValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("contextStack"), ContextStackValue.GetValue());
         }
         if (NamespaceNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("namespaceName", NamespaceNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("namespaceName"), NamespaceNameValue.GetValue());
         }
         if (RateNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("rateName", RateNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("rateName"), RateNameValue.GetValue());
         }
         if (DescriptionValue.IsSet())
         {
-            JsonRootObject->SetStringField("description", DescriptionValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("description"), DescriptionValue.GetValue());
         }
         if (MetadataValue.IsSet())
         {
-            JsonRootObject->SetStringField("metadata", MetadataValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("metadata"), MetadataValue.GetValue());
         }
         if (ConsumeActionValue != nullptr && ConsumeActionValue.IsValid())
         {
-            JsonRootObject->SetObjectField("consumeAction", ConsumeActionValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("consumeAction"), ConsumeActionValue->ToJson());
         }
         if (CalculateTypeValue.IsSet())
         {
-            JsonRootObject->SetStringField("calculateType", CalculateTypeValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("calculateType"), CalculateTypeValue.GetValue());
         }
         if (BaseValueValue.IsSet())
         {
-            JsonRootObject->SetStringField("baseValue", FString::Printf(TEXT("%lld"), BaseValueValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("baseValue"), FString::Printf(TEXT("%lld"), BaseValueValue.GetValue()));
         }
         if (CoefficientValueValue.IsSet())
         {
-            JsonRootObject->SetStringField("coefficientValue", FString::Printf(TEXT("%lld"), CoefficientValueValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("coefficientValue"), FString::Printf(TEXT("%lld"), CoefficientValueValue.GetValue()));
         }
         if (CalculateScriptIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("calculateScriptId", CalculateScriptIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("calculateScriptId"), CalculateScriptIdValue.GetValue());
         }
         if (ExchangeCountIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("exchangeCountId", ExchangeCountIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("exchangeCountId"), ExchangeCountIdValue.GetValue());
         }
         if (MaximumExchangeCountValue.IsSet())
         {
-            JsonRootObject->SetNumberField("maximumExchangeCount", MaximumExchangeCountValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("maximumExchangeCount"), MaximumExchangeCountValue.GetValue());
         }
         if (AcquireActionsValue != nullptr && AcquireActionsValue.IsValid())
         {
@@ -433,7 +433,7 @@ namespace Gs2::Exchange::Request
             {
                 v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
             }
-            JsonRootObject->SetArrayField("acquireActions", v);
+            JsonRootObject->SetArrayField(TEXT("acquireActions"), v);
         }
         return JsonRootObject;
     }

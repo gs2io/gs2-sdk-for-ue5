@@ -202,15 +202,15 @@ namespace Gs2::Ranking::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (UniqueByUserIdValue.IsSet())
         {
-            JsonRootObject->SetBoolField("uniqueByUserId", UniqueByUserIdValue.GetValue());
+            JsonRootObject->SetBoolField(TEXT("uniqueByUserId"), UniqueByUserIdValue.GetValue());
         }
         if (CalculateIntervalMinutesValue.IsSet())
         {
-            JsonRootObject->SetNumberField("calculateIntervalMinutes", CalculateIntervalMinutesValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("calculateIntervalMinutes"), CalculateIntervalMinutesValue.GetValue());
         }
         if (CalculateFixedTimingValue != nullptr && CalculateFixedTimingValue.IsValid())
         {
-            JsonRootObject->SetObjectField("calculateFixedTiming", CalculateFixedTimingValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("calculateFixedTiming"), CalculateFixedTimingValue->ToJson());
         }
         if (AdditionalScopesValue != nullptr && AdditionalScopesValue.IsValid())
         {
@@ -219,7 +219,7 @@ namespace Gs2::Ranking::Model
             {
                 v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
             }
-            JsonRootObject->SetArrayField("additionalScopes", v);
+            JsonRootObject->SetArrayField(TEXT("additionalScopes"), v);
         }
         if (IgnoreUserIdsValue != nullptr && IgnoreUserIdsValue.IsValid())
         {
@@ -228,11 +228,11 @@ namespace Gs2::Ranking::Model
             {
                 v.Add(MakeShared<FJsonValueString>(JsonObjectValue));
             }
-            JsonRootObject->SetArrayField("ignoreUserIds", v);
+            JsonRootObject->SetArrayField(TEXT("ignoreUserIds"), v);
         }
         if (GenerationValue.IsSet())
         {
-            JsonRootObject->SetStringField("generation", GenerationValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("generation"), GenerationValue.GetValue());
         }
         return JsonRootObject;
     }

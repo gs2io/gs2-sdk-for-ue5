@@ -96,11 +96,11 @@ namespace Gs2::Enchant::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (NameValue.IsSet())
         {
-            JsonRootObject->SetStringField("name", NameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("name"), NameValue.GetValue());
         }
         if (ValueValue.IsSet())
         {
-            JsonRootObject->SetStringField("value", FString::Printf(TEXT("%lld"), ValueValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("value"), FString::Printf(TEXT("%lld"), ValueValue.GetValue()));
         }
         return JsonRootObject;
     }

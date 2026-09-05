@@ -122,15 +122,15 @@ namespace Gs2::Distributor::Result
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (ContextStackValue.IsSet())
         {
-            JsonRootObject->SetStringField("contextStack", ContextStackValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("contextStack"), ContextStackValue.GetValue());
         }
         if (StatusCodeValue.IsSet())
         {
-            JsonRootObject->SetNumberField("statusCode", StatusCodeValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("statusCode"), StatusCodeValue.GetValue());
         }
         if (ResultValue.IsSet())
         {
-            JsonRootObject->SetStringField("result", ResultValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("result"), ResultValue.GetValue());
         }
         return JsonRootObject;
     }

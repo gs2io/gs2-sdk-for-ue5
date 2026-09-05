@@ -392,23 +392,23 @@ namespace Gs2::Money::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (WalletIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("walletId", WalletIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("walletId"), WalletIdValue.GetValue());
         }
         if (UserIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("userId", UserIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("userId"), UserIdValue.GetValue());
         }
         if (SlotValue.IsSet())
         {
-            JsonRootObject->SetNumberField("slot", SlotValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("slot"), SlotValue.GetValue());
         }
         if (PaidValue.IsSet())
         {
-            JsonRootObject->SetNumberField("paid", PaidValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("paid"), PaidValue.GetValue());
         }
         if (FreeValue.IsSet())
         {
-            JsonRootObject->SetNumberField("free", FreeValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("free"), FreeValue.GetValue());
         }
         if (DetailValue != nullptr && DetailValue.IsValid())
         {
@@ -417,23 +417,23 @@ namespace Gs2::Money::Model
             {
                 v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
             }
-            JsonRootObject->SetArrayField("detail", v);
+            JsonRootObject->SetArrayField(TEXT("detail"), v);
         }
         if (ShareFreeValue.IsSet())
         {
-            JsonRootObject->SetBoolField("shareFree", ShareFreeValue.GetValue());
+            JsonRootObject->SetBoolField(TEXT("shareFree"), ShareFreeValue.GetValue());
         }
         if (CreatedAtValue.IsSet())
         {
-            JsonRootObject->SetStringField("createdAt", FString::Printf(TEXT("%lld"), CreatedAtValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("createdAt"), FString::Printf(TEXT("%lld"), CreatedAtValue.GetValue()));
         }
         if (UpdatedAtValue.IsSet())
         {
-            JsonRootObject->SetStringField("updatedAt", FString::Printf(TEXT("%lld"), UpdatedAtValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("updatedAt"), FString::Printf(TEXT("%lld"), UpdatedAtValue.GetValue()));
         }
         if (RevisionValue.IsSet())
         {
-            JsonRootObject->SetStringField("revision", FString::Printf(TEXT("%lld"), RevisionValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("revision"), FString::Printf(TEXT("%lld"), RevisionValue.GetValue()));
         }
         return JsonRootObject;
     }

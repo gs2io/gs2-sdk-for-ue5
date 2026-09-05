@@ -122,7 +122,7 @@ namespace Gs2::Quest::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (MetadataValue.IsSet())
         {
-            JsonRootObject->SetStringField("metadata", MetadataValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("metadata"), MetadataValue.GetValue());
         }
         if (CompleteAcquireActionsValue != nullptr && CompleteAcquireActionsValue.IsValid())
         {
@@ -131,11 +131,11 @@ namespace Gs2::Quest::Model
             {
                 v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
             }
-            JsonRootObject->SetArrayField("completeAcquireActions", v);
+            JsonRootObject->SetArrayField(TEXT("completeAcquireActions"), v);
         }
         if (WeightValue.IsSet())
         {
-            JsonRootObject->SetNumberField("weight", WeightValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("weight"), WeightValue.GetValue());
         }
         return JsonRootObject;
     }

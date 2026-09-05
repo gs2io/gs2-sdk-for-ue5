@@ -329,43 +329,43 @@ namespace Gs2::Money2::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (EventIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("eventId", EventIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("eventId"), EventIdValue.GetValue());
         }
         if (TransactionIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("transactionId", TransactionIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("transactionId"), TransactionIdValue.GetValue());
         }
         if (UserIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("userId", UserIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("userId"), UserIdValue.GetValue());
         }
         if (EventTypeValue.IsSet())
         {
-            JsonRootObject->SetStringField("eventType", EventTypeValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("eventType"), EventTypeValue.GetValue());
         }
         if (VerifyReceiptEventValue != nullptr && VerifyReceiptEventValue.IsValid())
         {
-            JsonRootObject->SetObjectField("verifyReceiptEvent", VerifyReceiptEventValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("verifyReceiptEvent"), VerifyReceiptEventValue->ToJson());
         }
         if (DepositEventValue != nullptr && DepositEventValue.IsValid())
         {
-            JsonRootObject->SetObjectField("depositEvent", DepositEventValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("depositEvent"), DepositEventValue->ToJson());
         }
         if (WithdrawEventValue != nullptr && WithdrawEventValue.IsValid())
         {
-            JsonRootObject->SetObjectField("withdrawEvent", WithdrawEventValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("withdrawEvent"), WithdrawEventValue->ToJson());
         }
         if (RefundEventValue != nullptr && RefundEventValue.IsValid())
         {
-            JsonRootObject->SetObjectField("refundEvent", RefundEventValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("refundEvent"), RefundEventValue->ToJson());
         }
         if (CreatedAtValue.IsSet())
         {
-            JsonRootObject->SetStringField("createdAt", FString::Printf(TEXT("%lld"), CreatedAtValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("createdAt"), FString::Printf(TEXT("%lld"), CreatedAtValue.GetValue()));
         }
         if (RevisionValue.IsSet())
         {
-            JsonRootObject->SetStringField("revision", FString::Printf(TEXT("%lld"), RevisionValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("revision"), FString::Printf(TEXT("%lld"), RevisionValue.GetValue()));
         }
         return JsonRootObject;
     }

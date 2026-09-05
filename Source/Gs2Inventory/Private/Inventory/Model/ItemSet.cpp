@@ -419,27 +419,27 @@ namespace Gs2::Inventory::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (ItemSetIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("itemSetId", ItemSetIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("itemSetId"), ItemSetIdValue.GetValue());
         }
         if (NameValue.IsSet())
         {
-            JsonRootObject->SetStringField("name", NameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("name"), NameValue.GetValue());
         }
         if (InventoryNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("inventoryName", InventoryNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("inventoryName"), InventoryNameValue.GetValue());
         }
         if (UserIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("userId", UserIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("userId"), UserIdValue.GetValue());
         }
         if (ItemNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("itemName", ItemNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("itemName"), ItemNameValue.GetValue());
         }
         if (CountValue.IsSet())
         {
-            JsonRootObject->SetStringField("count", FString::Printf(TEXT("%lld"), CountValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("count"), FString::Printf(TEXT("%lld"), CountValue.GetValue()));
         }
         if (ReferenceOfValue != nullptr && ReferenceOfValue.IsValid())
         {
@@ -448,23 +448,23 @@ namespace Gs2::Inventory::Model
             {
                 v.Add(MakeShared<FJsonValueString>(JsonObjectValue));
             }
-            JsonRootObject->SetArrayField("referenceOf", v);
+            JsonRootObject->SetArrayField(TEXT("referenceOf"), v);
         }
         if (SortValueValue.IsSet())
         {
-            JsonRootObject->SetNumberField("sortValue", SortValueValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("sortValue"), SortValueValue.GetValue());
         }
         if (ExpiresAtValue.IsSet())
         {
-            JsonRootObject->SetStringField("expiresAt", FString::Printf(TEXT("%lld"), ExpiresAtValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("expiresAt"), FString::Printf(TEXT("%lld"), ExpiresAtValue.GetValue()));
         }
         if (CreatedAtValue.IsSet())
         {
-            JsonRootObject->SetStringField("createdAt", FString::Printf(TEXT("%lld"), CreatedAtValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("createdAt"), FString::Printf(TEXT("%lld"), CreatedAtValue.GetValue()));
         }
         if (UpdatedAtValue.IsSet())
         {
-            JsonRootObject->SetStringField("updatedAt", FString::Printf(TEXT("%lld"), UpdatedAtValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("updatedAt"), FString::Printf(TEXT("%lld"), UpdatedAtValue.GetValue()));
         }
         return JsonRootObject;
     }

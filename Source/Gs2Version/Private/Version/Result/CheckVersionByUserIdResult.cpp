@@ -127,7 +127,7 @@ namespace Gs2::Version::Result
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (ProjectTokenValue.IsSet())
         {
-            JsonRootObject->SetStringField("projectToken", ProjectTokenValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("projectToken"), ProjectTokenValue.GetValue());
         }
         if (WarningsValue != nullptr && WarningsValue.IsValid())
         {
@@ -136,7 +136,7 @@ namespace Gs2::Version::Result
             {
                 v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
             }
-            JsonRootObject->SetArrayField("warnings", v);
+            JsonRootObject->SetArrayField(TEXT("warnings"), v);
         }
         if (ErrorsValue != nullptr && ErrorsValue.IsValid())
         {
@@ -145,7 +145,7 @@ namespace Gs2::Version::Result
             {
                 v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
             }
-            JsonRootObject->SetArrayField("errors", v);
+            JsonRootObject->SetArrayField(TEXT("errors"), v);
         }
         return JsonRootObject;
     }

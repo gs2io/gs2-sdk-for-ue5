@@ -102,23 +102,23 @@ namespace Gs2::Inventory::Task::Rest
             const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
             if (this->Request->GetAcquireCount().IsSet())
             {
-                JsonRootObject->SetStringField("acquireCount", FString::Printf(TEXT("%lld"), this->Request->GetAcquireCount().GetValue()));
+                JsonRootObject->SetStringField(TEXT("acquireCount"), FString::Printf(TEXT("%lld"), this->Request->GetAcquireCount().GetValue()));
             }
             if (this->Request->GetExpiresAt().IsSet())
             {
-                JsonRootObject->SetStringField("expiresAt", FString::Printf(TEXT("%lld"), this->Request->GetExpiresAt().GetValue()));
+                JsonRootObject->SetStringField(TEXT("expiresAt"), FString::Printf(TEXT("%lld"), this->Request->GetExpiresAt().GetValue()));
             }
             if (this->Request->GetCreateNewItemSet().IsSet())
             {
-                JsonRootObject->SetBoolField("createNewItemSet", this->Request->GetCreateNewItemSet().GetValue());
+                JsonRootObject->SetBoolField(TEXT("createNewItemSet"), this->Request->GetCreateNewItemSet().GetValue());
             }
             if (this->Request->GetItemSetName().IsSet())
             {
-                JsonRootObject->SetStringField("itemSetName", this->Request->GetItemSetName().GetValue());
+                JsonRootObject->SetStringField(TEXT("itemSetName"), this->Request->GetItemSetName().GetValue());
             }
             if (this->Request->GetContextStack().IsSet())
             {
-                JsonRootObject->SetStringField("contextStack", this->Request->GetContextStack().GetValue());
+                JsonRootObject->SetStringField(TEXT("contextStack"), this->Request->GetContextStack().GetValue());
             }
             FJsonSerializer::Serialize(JsonRootObject.ToSharedRef(), Writer);
             request->SetContentAsString(Body);

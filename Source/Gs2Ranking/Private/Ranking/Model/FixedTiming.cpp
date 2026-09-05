@@ -105,11 +105,11 @@ namespace Gs2::Ranking::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (HourValue.IsSet())
         {
-            JsonRootObject->SetNumberField("hour", HourValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("hour"), HourValue.GetValue());
         }
         if (MinuteValue.IsSet())
         {
-            JsonRootObject->SetNumberField("minute", MinuteValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("minute"), MinuteValue.GetValue());
         }
         return JsonRootObject;
     }

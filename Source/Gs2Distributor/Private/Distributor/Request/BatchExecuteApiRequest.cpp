@@ -86,7 +86,7 @@ namespace Gs2::Distributor::Request
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (ContextStackValue.IsSet())
         {
-            JsonRootObject->SetStringField("contextStack", ContextStackValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("contextStack"), ContextStackValue.GetValue());
         }
         if (RequestPayloadsValue != nullptr && RequestPayloadsValue.IsValid())
         {
@@ -95,7 +95,7 @@ namespace Gs2::Distributor::Request
             {
                 v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
             }
-            JsonRootObject->SetArrayField("requestPayloads", v);
+            JsonRootObject->SetArrayField(TEXT("requestPayloads"), v);
         }
         return JsonRootObject;
     }

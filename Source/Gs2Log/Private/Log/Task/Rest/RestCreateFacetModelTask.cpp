@@ -86,23 +86,23 @@ namespace Gs2::Log::Task::Rest
             const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
             if (this->Request->GetField().IsSet())
             {
-                JsonRootObject->SetStringField("field", this->Request->GetField().GetValue());
+                JsonRootObject->SetStringField(TEXT("field"), this->Request->GetField().GetValue());
             }
             if (this->Request->GetType().IsSet())
             {
-                JsonRootObject->SetStringField("type", this->Request->GetType().GetValue());
+                JsonRootObject->SetStringField(TEXT("type"), this->Request->GetType().GetValue());
             }
             if (this->Request->GetDisplayName().IsSet())
             {
-                JsonRootObject->SetStringField("displayName", this->Request->GetDisplayName().GetValue());
+                JsonRootObject->SetStringField(TEXT("displayName"), this->Request->GetDisplayName().GetValue());
             }
             if (this->Request->GetOrder().IsSet())
             {
-                JsonRootObject->SetNumberField("order", this->Request->GetOrder().GetValue());
+                JsonRootObject->SetNumberField(TEXT("order"), this->Request->GetOrder().GetValue());
             }
             if (this->Request->GetContextStack().IsSet())
             {
-                JsonRootObject->SetStringField("contextStack", this->Request->GetContextStack().GetValue());
+                JsonRootObject->SetStringField(TEXT("contextStack"), this->Request->GetContextStack().GetValue());
             }
             FJsonSerializer::Serialize(JsonRootObject.ToSharedRef(), Writer);
             request->SetContentAsString(Body);

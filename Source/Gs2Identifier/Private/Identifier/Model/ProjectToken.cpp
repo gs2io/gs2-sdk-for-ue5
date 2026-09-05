@@ -64,7 +64,7 @@ namespace Gs2::Identifier::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (TokenValue.IsSet())
         {
-            JsonRootObject->SetStringField("token", TokenValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("token"), TokenValue.GetValue());
         }
         return JsonRootObject;
     }

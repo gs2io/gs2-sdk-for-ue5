@@ -318,35 +318,35 @@ namespace Gs2::JobQueue::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (JobResultIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("jobResultId", JobResultIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("jobResultId"), JobResultIdValue.GetValue());
         }
         if (JobIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("jobId", JobIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("jobId"), JobIdValue.GetValue());
         }
         if (ScriptIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("scriptId", ScriptIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("scriptId"), ScriptIdValue.GetValue());
         }
         if (ArgsValue.IsSet())
         {
-            JsonRootObject->SetStringField("args", ArgsValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("args"), ArgsValue.GetValue());
         }
         if (TryNumberValue.IsSet())
         {
-            JsonRootObject->SetNumberField("tryNumber", TryNumberValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("tryNumber"), TryNumberValue.GetValue());
         }
         if (StatusCodeValue.IsSet())
         {
-            JsonRootObject->SetNumberField("statusCode", StatusCodeValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("statusCode"), StatusCodeValue.GetValue());
         }
         if (ResultValue.IsSet())
         {
-            JsonRootObject->SetStringField("result", ResultValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("result"), ResultValue.GetValue());
         }
         if (TryAtValue.IsSet())
         {
-            JsonRootObject->SetStringField("tryAt", FString::Printf(TEXT("%lld"), TryAtValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("tryAt"), FString::Printf(TEXT("%lld"), TryAtValue.GetValue()));
         }
         return JsonRootObject;
     }

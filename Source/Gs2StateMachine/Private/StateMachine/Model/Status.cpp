@@ -459,31 +459,31 @@ namespace Gs2::StateMachine::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (StatusIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("statusId", StatusIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("statusId"), StatusIdValue.GetValue());
         }
         if (UserIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("userId", UserIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("userId"), UserIdValue.GetValue());
         }
         if (NameValue.IsSet())
         {
-            JsonRootObject->SetStringField("name", NameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("name"), NameValue.GetValue());
         }
         if (StateMachineVersionValue.IsSet())
         {
-            JsonRootObject->SetStringField("stateMachineVersion", FString::Printf(TEXT("%lld"), StateMachineVersionValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("stateMachineVersion"), FString::Printf(TEXT("%lld"), StateMachineVersionValue.GetValue()));
         }
         if (EnableSpeculativeExecutionValue.IsSet())
         {
-            JsonRootObject->SetStringField("enableSpeculativeExecution", EnableSpeculativeExecutionValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("enableSpeculativeExecution"), EnableSpeculativeExecutionValue.GetValue());
         }
         if (StateMachineDefinitionValue.IsSet())
         {
-            JsonRootObject->SetStringField("stateMachineDefinition", StateMachineDefinitionValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("stateMachineDefinition"), StateMachineDefinitionValue.GetValue());
         }
         if (RandomStatusValue != nullptr && RandomStatusValue.IsValid())
         {
-            JsonRootObject->SetObjectField("randomStatus", RandomStatusValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("randomStatus"), RandomStatusValue->ToJson());
         }
         if (StacksValue != nullptr && StacksValue.IsValid())
         {
@@ -492,7 +492,7 @@ namespace Gs2::StateMachine::Model
             {
                 v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
             }
-            JsonRootObject->SetArrayField("stacks", v);
+            JsonRootObject->SetArrayField(TEXT("stacks"), v);
         }
         if (VariablesValue != nullptr && VariablesValue.IsValid())
         {
@@ -501,27 +501,27 @@ namespace Gs2::StateMachine::Model
             {
                 v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
             }
-            JsonRootObject->SetArrayField("variables", v);
+            JsonRootObject->SetArrayField(TEXT("variables"), v);
         }
         if (StatusValue.IsSet())
         {
-            JsonRootObject->SetStringField("status", StatusValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("status"), StatusValue.GetValue());
         }
         if (LastErrorValue.IsSet())
         {
-            JsonRootObject->SetStringField("lastError", LastErrorValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("lastError"), LastErrorValue.GetValue());
         }
         if (TransitionCountValue.IsSet())
         {
-            JsonRootObject->SetNumberField("transitionCount", TransitionCountValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("transitionCount"), TransitionCountValue.GetValue());
         }
         if (CreatedAtValue.IsSet())
         {
-            JsonRootObject->SetStringField("createdAt", FString::Printf(TEXT("%lld"), CreatedAtValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("createdAt"), FString::Printf(TEXT("%lld"), CreatedAtValue.GetValue()));
         }
         if (UpdatedAtValue.IsSet())
         {
-            JsonRootObject->SetStringField("updatedAt", FString::Printf(TEXT("%lld"), UpdatedAtValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("updatedAt"), FString::Printf(TEXT("%lld"), UpdatedAtValue.GetValue()));
         }
         return JsonRootObject;
     }

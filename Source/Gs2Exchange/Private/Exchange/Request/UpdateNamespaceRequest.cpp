@@ -352,51 +352,51 @@ namespace Gs2::Exchange::Request
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (ContextStackValue.IsSet())
         {
-            JsonRootObject->SetStringField("contextStack", ContextStackValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("contextStack"), ContextStackValue.GetValue());
         }
         if (NamespaceNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("namespaceName", NamespaceNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("namespaceName"), NamespaceNameValue.GetValue());
         }
         if (DescriptionValue.IsSet())
         {
-            JsonRootObject->SetStringField("description", DescriptionValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("description"), DescriptionValue.GetValue());
         }
         if (EnableAwaitExchangeValue.IsSet())
         {
-            JsonRootObject->SetBoolField("enableAwaitExchange", EnableAwaitExchangeValue.GetValue());
+            JsonRootObject->SetBoolField(TEXT("enableAwaitExchange"), EnableAwaitExchangeValue.GetValue());
         }
         if (EnableDirectExchangeValue.IsSet())
         {
-            JsonRootObject->SetBoolField("enableDirectExchange", EnableDirectExchangeValue.GetValue());
+            JsonRootObject->SetBoolField(TEXT("enableDirectExchange"), EnableDirectExchangeValue.GetValue());
         }
         if (TransactionSettingValue != nullptr && TransactionSettingValue.IsValid())
         {
-            JsonRootObject->SetObjectField("transactionSetting", TransactionSettingValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("transactionSetting"), TransactionSettingValue->ToJson());
         }
         if (ExchangeScriptValue != nullptr && ExchangeScriptValue.IsValid())
         {
-            JsonRootObject->SetObjectField("exchangeScript", ExchangeScriptValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("exchangeScript"), ExchangeScriptValue->ToJson());
         }
         if (IncrementalExchangeScriptValue != nullptr && IncrementalExchangeScriptValue.IsValid())
         {
-            JsonRootObject->SetObjectField("incrementalExchangeScript", IncrementalExchangeScriptValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("incrementalExchangeScript"), IncrementalExchangeScriptValue->ToJson());
         }
         if (AcquireAwaitScriptValue != nullptr && AcquireAwaitScriptValue.IsValid())
         {
-            JsonRootObject->SetObjectField("acquireAwaitScript", AcquireAwaitScriptValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("acquireAwaitScript"), AcquireAwaitScriptValue->ToJson());
         }
         if (LogSettingValue != nullptr && LogSettingValue.IsValid())
         {
-            JsonRootObject->SetObjectField("logSetting", LogSettingValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("logSetting"), LogSettingValue->ToJson());
         }
         if (QueueNamespaceIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("queueNamespaceId", QueueNamespaceIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("queueNamespaceId"), QueueNamespaceIdValue.GetValue());
         }
         if (KeyIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("keyId", KeyIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("keyId"), KeyIdValue.GetValue());
         }
         return JsonRootObject;
     }

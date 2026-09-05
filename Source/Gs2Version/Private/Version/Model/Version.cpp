@@ -137,15 +137,15 @@ namespace Gs2::Version::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (MajorValue.IsSet())
         {
-            JsonRootObject->SetNumberField("major", MajorValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("major"), MajorValue.GetValue());
         }
         if (MinorValue.IsSet())
         {
-            JsonRootObject->SetNumberField("minor", MinorValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("minor"), MinorValue.GetValue());
         }
         if (MicroValue.IsSet())
         {
-            JsonRootObject->SetNumberField("micro", MicroValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("micro"), MicroValue.GetValue());
         }
         return JsonRootObject;
     }

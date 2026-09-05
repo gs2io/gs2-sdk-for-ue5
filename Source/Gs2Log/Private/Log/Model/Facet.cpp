@@ -134,7 +134,7 @@ namespace Gs2::Log::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (FieldValue.IsSet())
         {
-            JsonRootObject->SetStringField("field", FieldValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("field"), FieldValue.GetValue());
         }
         if (ValuesValue != nullptr && ValuesValue.IsValid())
         {
@@ -143,15 +143,15 @@ namespace Gs2::Log::Model
             {
                 v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
             }
-            JsonRootObject->SetArrayField("values", v);
+            JsonRootObject->SetArrayField(TEXT("values"), v);
         }
         if (RangeValue != nullptr && RangeValue.IsValid())
         {
-            JsonRootObject->SetObjectField("range", RangeValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("range"), RangeValue->ToJson());
         }
         if (GlobalRangeValue != nullptr && GlobalRangeValue.IsValid())
         {
-            JsonRootObject->SetObjectField("globalRange", GlobalRangeValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("globalRange"), GlobalRangeValue->ToJson());
         }
         return JsonRootObject;
     }

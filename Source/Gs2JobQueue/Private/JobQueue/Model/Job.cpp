@@ -339,39 +339,39 @@ namespace Gs2::JobQueue::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (JobIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("jobId", JobIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("jobId"), JobIdValue.GetValue());
         }
         if (NameValue.IsSet())
         {
-            JsonRootObject->SetStringField("name", NameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("name"), NameValue.GetValue());
         }
         if (UserIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("userId", UserIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("userId"), UserIdValue.GetValue());
         }
         if (ScriptIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("scriptId", ScriptIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("scriptId"), ScriptIdValue.GetValue());
         }
         if (ArgsValue.IsSet())
         {
-            JsonRootObject->SetStringField("args", ArgsValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("args"), ArgsValue.GetValue());
         }
         if (CurrentRetryCountValue.IsSet())
         {
-            JsonRootObject->SetNumberField("currentRetryCount", CurrentRetryCountValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("currentRetryCount"), CurrentRetryCountValue.GetValue());
         }
         if (MaxTryCountValue.IsSet())
         {
-            JsonRootObject->SetNumberField("maxTryCount", MaxTryCountValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("maxTryCount"), MaxTryCountValue.GetValue());
         }
         if (CreatedAtValue.IsSet())
         {
-            JsonRootObject->SetStringField("createdAt", FString::Printf(TEXT("%lld"), CreatedAtValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("createdAt"), FString::Printf(TEXT("%lld"), CreatedAtValue.GetValue()));
         }
         if (UpdatedAtValue.IsSet())
         {
-            JsonRootObject->SetStringField("updatedAt", FString::Printf(TEXT("%lld"), UpdatedAtValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("updatedAt"), FString::Printf(TEXT("%lld"), UpdatedAtValue.GetValue()));
         }
         return JsonRootObject;
     }

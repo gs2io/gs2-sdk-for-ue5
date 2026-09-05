@@ -148,19 +148,19 @@ namespace Gs2::Identifier::Result
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (AccessTokenValue.IsSet())
         {
-            JsonRootObject->SetStringField("access_token", AccessTokenValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("access_token"), AccessTokenValue.GetValue());
         }
         if (TokenTypeValue.IsSet())
         {
-            JsonRootObject->SetStringField("token_type", TokenTypeValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("token_type"), TokenTypeValue.GetValue());
         }
         if (ExpiresInValue.IsSet())
         {
-            JsonRootObject->SetNumberField("expires_in", ExpiresInValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("expires_in"), ExpiresInValue.GetValue());
         }
         if (OwnerIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("owner_id", OwnerIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("owner_id"), OwnerIdValue.GetValue());
         }
         return JsonRootObject;
     }

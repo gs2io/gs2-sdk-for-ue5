@@ -196,23 +196,23 @@ namespace Gs2::Datastore::Request
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (ContextStackValue.IsSet())
         {
-            JsonRootObject->SetStringField("contextStack", ContextStackValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("contextStack"), ContextStackValue.GetValue());
         }
         if (NamespaceNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("namespaceName", NamespaceNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("namespaceName"), NamespaceNameValue.GetValue());
         }
         if (DataObjectNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("dataObjectName", DataObjectNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("dataObjectName"), DataObjectNameValue.GetValue());
         }
         if (AccessTokenValue.IsSet())
         {
-            JsonRootObject->SetStringField("xGs2AccessToken", AccessTokenValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("xGs2AccessToken"), AccessTokenValue.GetValue());
         }
         if (ScopeValue.IsSet())
         {
-            JsonRootObject->SetStringField("scope", ScopeValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("scope"), ScopeValue.GetValue());
         }
         if (AllowUserIdsValue != nullptr && AllowUserIdsValue.IsValid())
         {
@@ -221,11 +221,11 @@ namespace Gs2::Datastore::Request
             {
                 v.Add(MakeShared<FJsonValueString>(JsonObjectValue));
             }
-            JsonRootObject->SetArrayField("allowUserIds", v);
+            JsonRootObject->SetArrayField(TEXT("allowUserIds"), v);
         }
         if (DuplicationAvoiderValue.IsSet())
         {
-            JsonRootObject->SetStringField("duplicationAvoider", DuplicationAvoiderValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("duplicationAvoider"), DuplicationAvoiderValue.GetValue());
         }
         return JsonRootObject;
     }

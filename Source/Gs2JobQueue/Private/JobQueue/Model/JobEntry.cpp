@@ -119,15 +119,15 @@ namespace Gs2::JobQueue::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (ScriptIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("scriptId", ScriptIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("scriptId"), ScriptIdValue.GetValue());
         }
         if (ArgsValue.IsSet())
         {
-            JsonRootObject->SetStringField("args", ArgsValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("args"), ArgsValue.GetValue());
         }
         if (MaxTryCountValue.IsSet())
         {
-            JsonRootObject->SetNumberField("maxTryCount", MaxTryCountValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("maxTryCount"), MaxTryCountValue.GetValue());
         }
         return JsonRootObject;
     }

@@ -110,15 +110,15 @@ namespace Gs2::Deploy::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (ResourceNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("resourceName", ResourceNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("resourceName"), ResourceNameValue.GetValue());
         }
         if (ResourceTypeValue.IsSet())
         {
-            JsonRootObject->SetStringField("resourceType", ResourceTypeValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("resourceType"), ResourceTypeValue.GetValue());
         }
         if (OperationValue.IsSet())
         {
-            JsonRootObject->SetStringField("operation", OperationValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("operation"), OperationValue.GetValue());
         }
         return JsonRootObject;
     }

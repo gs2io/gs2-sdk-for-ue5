@@ -86,19 +86,19 @@ namespace Gs2::Showcase::Task::Rest
             const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
             if (this->Request->GetName().IsSet())
             {
-                JsonRootObject->SetStringField("name", this->Request->GetName().GetValue());
+                JsonRootObject->SetStringField(TEXT("name"), this->Request->GetName().GetValue());
             }
             if (this->Request->GetDescription().IsSet())
             {
-                JsonRootObject->SetStringField("description", this->Request->GetDescription().GetValue());
+                JsonRootObject->SetStringField(TEXT("description"), this->Request->GetDescription().GetValue());
             }
             if (this->Request->GetMetadata().IsSet())
             {
-                JsonRootObject->SetStringField("metadata", this->Request->GetMetadata().GetValue());
+                JsonRootObject->SetStringField(TEXT("metadata"), this->Request->GetMetadata().GetValue());
             }
             if (this->Request->GetMaximumNumberOfChoice().IsSet())
             {
-                JsonRootObject->SetNumberField("maximumNumberOfChoice", this->Request->GetMaximumNumberOfChoice().GetValue());
+                JsonRootObject->SetNumberField(TEXT("maximumNumberOfChoice"), this->Request->GetMaximumNumberOfChoice().GetValue());
             }
             if (this->Request->GetDisplayItems() != nullptr && this->Request->GetDisplayItems().IsValid())
             {
@@ -107,23 +107,23 @@ namespace Gs2::Showcase::Task::Rest
                 {
                     v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
                 }
-                JsonRootObject->SetArrayField("displayItems", v);
+                JsonRootObject->SetArrayField(TEXT("displayItems"), v);
             }
             if (this->Request->GetBaseTimestamp().IsSet())
             {
-                JsonRootObject->SetStringField("baseTimestamp", FString::Printf(TEXT("%lld"), this->Request->GetBaseTimestamp().GetValue()));
+                JsonRootObject->SetStringField(TEXT("baseTimestamp"), FString::Printf(TEXT("%lld"), this->Request->GetBaseTimestamp().GetValue()));
             }
             if (this->Request->GetResetIntervalHours().IsSet())
             {
-                JsonRootObject->SetNumberField("resetIntervalHours", this->Request->GetResetIntervalHours().GetValue());
+                JsonRootObject->SetNumberField(TEXT("resetIntervalHours"), this->Request->GetResetIntervalHours().GetValue());
             }
             if (this->Request->GetSalesPeriodEventId().IsSet())
             {
-                JsonRootObject->SetStringField("salesPeriodEventId", this->Request->GetSalesPeriodEventId().GetValue());
+                JsonRootObject->SetStringField(TEXT("salesPeriodEventId"), this->Request->GetSalesPeriodEventId().GetValue());
             }
             if (this->Request->GetContextStack().IsSet())
             {
-                JsonRootObject->SetStringField("contextStack", this->Request->GetContextStack().GetValue());
+                JsonRootObject->SetStringField(TEXT("contextStack"), this->Request->GetContextStack().GetValue());
             }
             FJsonSerializer::Serialize(JsonRootObject.ToSharedRef(), Writer);
             request->SetContentAsString(Body);

@@ -222,35 +222,35 @@ namespace Gs2::Schedule::Request
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (ContextStackValue.IsSet())
         {
-            JsonRootObject->SetStringField("contextStack", ContextStackValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("contextStack"), ContextStackValue.GetValue());
         }
         if (NamespaceNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("namespaceName", NamespaceNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("namespaceName"), NamespaceNameValue.GetValue());
         }
         if (UserIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("userId", UserIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("userId"), UserIdValue.GetValue());
         }
         if (TriggerNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("triggerName", TriggerNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("triggerName"), TriggerNameValue.GetValue());
         }
         if (VerifyTypeValue.IsSet())
         {
-            JsonRootObject->SetStringField("verifyType", VerifyTypeValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("verifyType"), VerifyTypeValue.GetValue());
         }
         if (ElapsedMinutesValue.IsSet())
         {
-            JsonRootObject->SetNumberField("elapsedMinutes", ElapsedMinutesValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("elapsedMinutes"), ElapsedMinutesValue.GetValue());
         }
         if (TimeOffsetTokenValue.IsSet())
         {
-            JsonRootObject->SetStringField("timeOffsetToken", TimeOffsetTokenValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("timeOffsetToken"), TimeOffsetTokenValue.GetValue());
         }
         if (DuplicationAvoiderValue.IsSet())
         {
-            JsonRootObject->SetStringField("duplicationAvoider", DuplicationAvoiderValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("duplicationAvoider"), DuplicationAvoiderValue.GetValue());
         }
         return JsonRootObject;
     }

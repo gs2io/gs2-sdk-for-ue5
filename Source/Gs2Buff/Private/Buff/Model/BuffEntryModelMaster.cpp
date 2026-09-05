@@ -418,55 +418,55 @@ namespace Gs2::Buff::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (BuffEntryModelIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("buffEntryModelId", BuffEntryModelIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("buffEntryModelId"), BuffEntryModelIdValue.GetValue());
         }
         if (NameValue.IsSet())
         {
-            JsonRootObject->SetStringField("name", NameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("name"), NameValue.GetValue());
         }
         if (DescriptionValue.IsSet())
         {
-            JsonRootObject->SetStringField("description", DescriptionValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("description"), DescriptionValue.GetValue());
         }
         if (MetadataValue.IsSet())
         {
-            JsonRootObject->SetStringField("metadata", MetadataValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("metadata"), MetadataValue.GetValue());
         }
         if (ExpressionValue.IsSet())
         {
-            JsonRootObject->SetStringField("expression", ExpressionValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("expression"), ExpressionValue.GetValue());
         }
         if (TargetTypeValue.IsSet())
         {
-            JsonRootObject->SetStringField("targetType", TargetTypeValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("targetType"), TargetTypeValue.GetValue());
         }
         if (TargetModelValue != nullptr && TargetModelValue.IsValid())
         {
-            JsonRootObject->SetObjectField("targetModel", TargetModelValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("targetModel"), TargetModelValue->ToJson());
         }
         if (TargetActionValue != nullptr && TargetActionValue.IsValid())
         {
-            JsonRootObject->SetObjectField("targetAction", TargetActionValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("targetAction"), TargetActionValue->ToJson());
         }
         if (PriorityValue.IsSet())
         {
-            JsonRootObject->SetNumberField("priority", PriorityValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("priority"), PriorityValue.GetValue());
         }
         if (ApplyPeriodScheduleEventIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("applyPeriodScheduleEventId", ApplyPeriodScheduleEventIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("applyPeriodScheduleEventId"), ApplyPeriodScheduleEventIdValue.GetValue());
         }
         if (CreatedAtValue.IsSet())
         {
-            JsonRootObject->SetStringField("createdAt", FString::Printf(TEXT("%lld"), CreatedAtValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("createdAt"), FString::Printf(TEXT("%lld"), CreatedAtValue.GetValue()));
         }
         if (UpdatedAtValue.IsSet())
         {
-            JsonRootObject->SetStringField("updatedAt", FString::Printf(TEXT("%lld"), UpdatedAtValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("updatedAt"), FString::Printf(TEXT("%lld"), UpdatedAtValue.GetValue()));
         }
         if (RevisionValue.IsSet())
         {
-            JsonRootObject->SetStringField("revision", FString::Printf(TEXT("%lld"), RevisionValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("revision"), FString::Printf(TEXT("%lld"), RevisionValue.GetValue()));
         }
         return JsonRootObject;
     }

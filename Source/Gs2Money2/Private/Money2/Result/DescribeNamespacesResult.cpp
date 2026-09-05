@@ -101,11 +101,11 @@ namespace Gs2::Money2::Result
             {
                 v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
             }
-            JsonRootObject->SetArrayField("items", v);
+            JsonRootObject->SetArrayField(TEXT("items"), v);
         }
         if (NextPageTokenValue.IsSet())
         {
-            JsonRootObject->SetStringField("nextPageToken", NextPageTokenValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("nextPageToken"), NextPageTokenValue.GetValue());
         }
         return JsonRootObject;
     }

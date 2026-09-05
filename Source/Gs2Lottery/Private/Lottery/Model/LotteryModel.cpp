@@ -246,31 +246,31 @@ namespace Gs2::Lottery::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (LotteryModelIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("lotteryModelId", LotteryModelIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("lotteryModelId"), LotteryModelIdValue.GetValue());
         }
         if (NameValue.IsSet())
         {
-            JsonRootObject->SetStringField("name", NameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("name"), NameValue.GetValue());
         }
         if (MetadataValue.IsSet())
         {
-            JsonRootObject->SetStringField("metadata", MetadataValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("metadata"), MetadataValue.GetValue());
         }
         if (ModeValue.IsSet())
         {
-            JsonRootObject->SetStringField("mode", ModeValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("mode"), ModeValue.GetValue());
         }
         if (MethodValue.IsSet())
         {
-            JsonRootObject->SetStringField("method", MethodValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("method"), MethodValue.GetValue());
         }
         if (PrizeTableNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("prizeTableName", PrizeTableNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("prizeTableName"), PrizeTableNameValue.GetValue());
         }
         if (ChoicePrizeTableScriptIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("choicePrizeTableScriptId", ChoicePrizeTableScriptIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("choicePrizeTableScriptId"), ChoicePrizeTableScriptIdValue.GetValue());
         }
         return JsonRootObject;
     }

@@ -240,23 +240,23 @@ namespace Gs2::Inventory::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (ItemIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("itemId", ItemIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("itemId"), ItemIdValue.GetValue());
         }
         if (UserIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("userId", UserIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("userId"), UserIdValue.GetValue());
         }
         if (ItemNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("itemName", ItemNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("itemName"), ItemNameValue.GetValue());
         }
         if (CountValue.IsSet())
         {
-            JsonRootObject->SetStringField("count", FString::Printf(TEXT("%lld"), CountValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("count"), FString::Printf(TEXT("%lld"), CountValue.GetValue()));
         }
         if (RevisionValue.IsSet())
         {
-            JsonRootObject->SetStringField("revision", FString::Printf(TEXT("%lld"), RevisionValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("revision"), FString::Printf(TEXT("%lld"), RevisionValue.GetValue()));
         }
         return JsonRootObject;
     }

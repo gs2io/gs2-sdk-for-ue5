@@ -237,31 +237,31 @@ namespace Gs2::Log::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (TimestampValue.IsSet())
         {
-            JsonRootObject->SetStringField("timestamp", FString::Printf(TEXT("%lld"), TimestampValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("timestamp"), FString::Printf(TEXT("%lld"), TimestampValue.GetValue()));
         }
         if (TransactionIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("transactionId", TransactionIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("transactionId"), TransactionIdValue.GetValue());
         }
         if (ServiceValue.IsSet())
         {
-            JsonRootObject->SetStringField("service", ServiceValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("service"), ServiceValue.GetValue());
         }
         if (MethodValue.IsSet())
         {
-            JsonRootObject->SetStringField("method", MethodValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("method"), MethodValue.GetValue());
         }
         if (UserIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("userId", UserIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("userId"), UserIdValue.GetValue());
         }
         if (ActionValue.IsSet())
         {
-            JsonRootObject->SetStringField("action", ActionValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("action"), ActionValue.GetValue());
         }
         if (ArgsValue.IsSet())
         {
-            JsonRootObject->SetStringField("args", ArgsValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("args"), ArgsValue.GetValue());
         }
         if (TasksValue != nullptr && TasksValue.IsValid())
         {
@@ -270,7 +270,7 @@ namespace Gs2::Log::Model
             {
                 v.Add(MakeShared<FJsonValueString>(JsonObjectValue));
             }
-            JsonRootObject->SetArrayField("tasks", v);
+            JsonRootObject->SetArrayField(TEXT("tasks"), v);
         }
         return JsonRootObject;
     }

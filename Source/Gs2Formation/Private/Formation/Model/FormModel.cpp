@@ -180,15 +180,15 @@ namespace Gs2::Formation::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (FormModelIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("formModelId", FormModelIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("formModelId"), FormModelIdValue.GetValue());
         }
         if (NameValue.IsSet())
         {
-            JsonRootObject->SetStringField("name", NameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("name"), NameValue.GetValue());
         }
         if (MetadataValue.IsSet())
         {
-            JsonRootObject->SetStringField("metadata", MetadataValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("metadata"), MetadataValue.GetValue());
         }
         if (SlotsValue != nullptr && SlotsValue.IsValid())
         {
@@ -197,7 +197,7 @@ namespace Gs2::Formation::Model
             {
                 v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
             }
-            JsonRootObject->SetArrayField("slots", v);
+            JsonRootObject->SetArrayField(TEXT("slots"), v);
         }
         return JsonRootObject;
     }

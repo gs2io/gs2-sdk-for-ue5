@@ -91,11 +91,11 @@ namespace Gs2::Account::Task::Rest
             const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
             if (this->Request->GetBanned().IsSet())
             {
-                JsonRootObject->SetBoolField("banned", this->Request->GetBanned().GetValue());
+                JsonRootObject->SetBoolField(TEXT("banned"), this->Request->GetBanned().GetValue());
             }
             if (this->Request->GetContextStack().IsSet())
             {
-                JsonRootObject->SetStringField("contextStack", this->Request->GetContextStack().GetValue());
+                JsonRootObject->SetStringField(TEXT("contextStack"), this->Request->GetContextStack().GetValue());
             }
             FJsonSerializer::Serialize(JsonRootObject.ToSharedRef(), Writer);
             request->SetContentAsString(Body);

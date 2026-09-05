@@ -238,19 +238,19 @@ namespace Gs2::Enchant::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (RarityParameterModelIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("rarityParameterModelId", RarityParameterModelIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("rarityParameterModelId"), RarityParameterModelIdValue.GetValue());
         }
         if (NameValue.IsSet())
         {
-            JsonRootObject->SetStringField("name", NameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("name"), NameValue.GetValue());
         }
         if (MetadataValue.IsSet())
         {
-            JsonRootObject->SetStringField("metadata", MetadataValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("metadata"), MetadataValue.GetValue());
         }
         if (MaximumParameterCountValue.IsSet())
         {
-            JsonRootObject->SetNumberField("maximumParameterCount", MaximumParameterCountValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("maximumParameterCount"), MaximumParameterCountValue.GetValue());
         }
         if (ParameterCountsValue != nullptr && ParameterCountsValue.IsValid())
         {
@@ -259,7 +259,7 @@ namespace Gs2::Enchant::Model
             {
                 v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
             }
-            JsonRootObject->SetArrayField("parameterCounts", v);
+            JsonRootObject->SetArrayField(TEXT("parameterCounts"), v);
         }
         if (ParametersValue != nullptr && ParametersValue.IsValid())
         {
@@ -268,7 +268,7 @@ namespace Gs2::Enchant::Model
             {
                 v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
             }
-            JsonRootObject->SetArrayField("parameters", v);
+            JsonRootObject->SetArrayField(TEXT("parameters"), v);
         }
         return JsonRootObject;
     }

@@ -197,19 +197,19 @@ namespace Gs2::Dictionary::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (EntryIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("entryId", EntryIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("entryId"), EntryIdValue.GetValue());
         }
         if (UserIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("userId", UserIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("userId"), UserIdValue.GetValue());
         }
         if (NameValue.IsSet())
         {
-            JsonRootObject->SetStringField("name", NameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("name"), NameValue.GetValue());
         }
         if (AcquiredAtValue.IsSet())
         {
-            JsonRootObject->SetStringField("acquiredAt", FString::Printf(TEXT("%lld"), AcquiredAtValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("acquiredAt"), FString::Printf(TEXT("%lld"), AcquiredAtValue.GetValue()));
         }
         return JsonRootObject;
     }

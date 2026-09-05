@@ -86,15 +86,15 @@ namespace Gs2::Matchmaking::Task::Rest
             const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
             if (this->Request->GetPlayer() != nullptr && this->Request->GetPlayer().IsValid())
             {
-                JsonRootObject->SetObjectField("player", this->Request->GetPlayer()->ToJson());
+                JsonRootObject->SetObjectField(TEXT("player"), this->Request->GetPlayer()->ToJson());
             }
             if (this->Request->GetMatchmakingContextToken().IsSet())
             {
-                JsonRootObject->SetStringField("matchmakingContextToken", this->Request->GetMatchmakingContextToken().GetValue());
+                JsonRootObject->SetStringField(TEXT("matchmakingContextToken"), this->Request->GetMatchmakingContextToken().GetValue());
             }
             if (this->Request->GetContextStack().IsSet())
             {
-                JsonRootObject->SetStringField("contextStack", this->Request->GetContextStack().GetValue());
+                JsonRootObject->SetStringField(TEXT("contextStack"), this->Request->GetContextStack().GetValue());
             }
             FJsonSerializer::Serialize(JsonRootObject.ToSharedRef(), Writer);
             request->SetContentAsString(Body);

@@ -105,11 +105,11 @@ namespace Gs2::Log::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (MinValue.IsSet())
         {
-            JsonRootObject->SetNumberField("min", MinValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("min"), MinValue.GetValue());
         }
         if (MaxValue.IsSet())
         {
-            JsonRootObject->SetNumberField("max", MaxValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("max"), MaxValue.GetValue());
         }
         return JsonRootObject;
     }

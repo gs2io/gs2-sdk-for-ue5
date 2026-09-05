@@ -282,31 +282,31 @@ namespace Gs2::StateMachine::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (StateMachineIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("stateMachineId", StateMachineIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("stateMachineId"), StateMachineIdValue.GetValue());
         }
         if (MainStateMachineNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("mainStateMachineName", MainStateMachineNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("mainStateMachineName"), MainStateMachineNameValue.GetValue());
         }
         if (PayloadValue.IsSet())
         {
-            JsonRootObject->SetStringField("payload", PayloadValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("payload"), PayloadValue.GetValue());
         }
         if (VersionValue.IsSet())
         {
-            JsonRootObject->SetStringField("version", FString::Printf(TEXT("%lld"), VersionValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("version"), FString::Printf(TEXT("%lld"), VersionValue.GetValue()));
         }
         if (CreatedAtValue.IsSet())
         {
-            JsonRootObject->SetStringField("createdAt", FString::Printf(TEXT("%lld"), CreatedAtValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("createdAt"), FString::Printf(TEXT("%lld"), CreatedAtValue.GetValue()));
         }
         if (UpdatedAtValue.IsSet())
         {
-            JsonRootObject->SetStringField("updatedAt", FString::Printf(TEXT("%lld"), UpdatedAtValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("updatedAt"), FString::Printf(TEXT("%lld"), UpdatedAtValue.GetValue()));
         }
         if (RevisionValue.IsSet())
         {
-            JsonRootObject->SetStringField("revision", FString::Printf(TEXT("%lld"), RevisionValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("revision"), FString::Printf(TEXT("%lld"), RevisionValue.GetValue()));
         }
         return JsonRootObject;
     }

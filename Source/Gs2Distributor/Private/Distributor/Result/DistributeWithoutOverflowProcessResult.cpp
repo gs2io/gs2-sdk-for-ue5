@@ -92,11 +92,11 @@ namespace Gs2::Distributor::Result
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (DistributeResourceValue != nullptr && DistributeResourceValue.IsValid())
         {
-            JsonRootObject->SetObjectField("distributeResource", DistributeResourceValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("distributeResource"), DistributeResourceValue->ToJson());
         }
         if (ResultValue.IsSet())
         {
-            JsonRootObject->SetStringField("result", ResultValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("result"), ResultValue.GetValue());
         }
         return JsonRootObject;
     }

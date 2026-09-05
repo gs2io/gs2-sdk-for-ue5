@@ -80,35 +80,35 @@ namespace Gs2::Version::Task::Rest
             const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
             if (this->Request->GetName().IsSet())
             {
-                JsonRootObject->SetStringField("name", this->Request->GetName().GetValue());
+                JsonRootObject->SetStringField(TEXT("name"), this->Request->GetName().GetValue());
             }
             if (this->Request->GetDescription().IsSet())
             {
-                JsonRootObject->SetStringField("description", this->Request->GetDescription().GetValue());
+                JsonRootObject->SetStringField(TEXT("description"), this->Request->GetDescription().GetValue());
             }
             if (this->Request->GetTransactionSetting() != nullptr && this->Request->GetTransactionSetting().IsValid())
             {
-                JsonRootObject->SetObjectField("transactionSetting", this->Request->GetTransactionSetting()->ToJson());
+                JsonRootObject->SetObjectField(TEXT("transactionSetting"), this->Request->GetTransactionSetting()->ToJson());
             }
             if (this->Request->GetAssumeUserId().IsSet())
             {
-                JsonRootObject->SetStringField("assumeUserId", this->Request->GetAssumeUserId().GetValue());
+                JsonRootObject->SetStringField(TEXT("assumeUserId"), this->Request->GetAssumeUserId().GetValue());
             }
             if (this->Request->GetAcceptVersionScript() != nullptr && this->Request->GetAcceptVersionScript().IsValid())
             {
-                JsonRootObject->SetObjectField("acceptVersionScript", this->Request->GetAcceptVersionScript()->ToJson());
+                JsonRootObject->SetObjectField(TEXT("acceptVersionScript"), this->Request->GetAcceptVersionScript()->ToJson());
             }
             if (this->Request->GetCheckVersionTriggerScriptId().IsSet())
             {
-                JsonRootObject->SetStringField("checkVersionTriggerScriptId", this->Request->GetCheckVersionTriggerScriptId().GetValue());
+                JsonRootObject->SetStringField(TEXT("checkVersionTriggerScriptId"), this->Request->GetCheckVersionTriggerScriptId().GetValue());
             }
             if (this->Request->GetLogSetting() != nullptr && this->Request->GetLogSetting().IsValid())
             {
-                JsonRootObject->SetObjectField("logSetting", this->Request->GetLogSetting()->ToJson());
+                JsonRootObject->SetObjectField(TEXT("logSetting"), this->Request->GetLogSetting()->ToJson());
             }
             if (this->Request->GetContextStack().IsSet())
             {
-                JsonRootObject->SetStringField("contextStack", this->Request->GetContextStack().GetValue());
+                JsonRootObject->SetStringField(TEXT("contextStack"), this->Request->GetContextStack().GetValue());
             }
             FJsonSerializer::Serialize(JsonRootObject.ToSharedRef(), Writer);
             request->SetContentAsString(Body);

@@ -201,23 +201,23 @@ namespace Gs2::Schedule::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (RepeatCountValue.IsSet())
         {
-            JsonRootObject->SetNumberField("repeatCount", RepeatCountValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("repeatCount"), RepeatCountValue.GetValue());
         }
         if (CurrentRepeatStartAtValue.IsSet())
         {
-            JsonRootObject->SetStringField("currentRepeatStartAt", FString::Printf(TEXT("%lld"), CurrentRepeatStartAtValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("currentRepeatStartAt"), FString::Printf(TEXT("%lld"), CurrentRepeatStartAtValue.GetValue()));
         }
         if (CurrentRepeatEndAtValue.IsSet())
         {
-            JsonRootObject->SetStringField("currentRepeatEndAt", FString::Printf(TEXT("%lld"), CurrentRepeatEndAtValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("currentRepeatEndAt"), FString::Printf(TEXT("%lld"), CurrentRepeatEndAtValue.GetValue()));
         }
         if (LastRepeatEndAtValue.IsSet())
         {
-            JsonRootObject->SetStringField("lastRepeatEndAt", FString::Printf(TEXT("%lld"), LastRepeatEndAtValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("lastRepeatEndAt"), FString::Printf(TEXT("%lld"), LastRepeatEndAtValue.GetValue()));
         }
         if (NextRepeatStartAtValue.IsSet())
         {
-            JsonRootObject->SetStringField("nextRepeatStartAt", FString::Printf(TEXT("%lld"), NextRepeatStartAtValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("nextRepeatStartAt"), FString::Printf(TEXT("%lld"), NextRepeatStartAtValue.GetValue()));
         }
         return JsonRootObject;
     }

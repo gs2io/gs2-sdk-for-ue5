@@ -263,27 +263,27 @@ namespace Gs2::Guild::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (JoinedGuildIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("joinedGuildId", JoinedGuildIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("joinedGuildId"), JoinedGuildIdValue.GetValue());
         }
         if (GuildModelNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("guildModelName", GuildModelNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("guildModelName"), GuildModelNameValue.GetValue());
         }
         if (GuildNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("guildName", GuildNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("guildName"), GuildNameValue.GetValue());
         }
         if (UserIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("userId", UserIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("userId"), UserIdValue.GetValue());
         }
         if (CreatedAtValue.IsSet())
         {
-            JsonRootObject->SetStringField("createdAt", FString::Printf(TEXT("%lld"), CreatedAtValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("createdAt"), FString::Printf(TEXT("%lld"), CreatedAtValue.GetValue()));
         }
         if (RevisionValue.IsSet())
         {
-            JsonRootObject->SetStringField("revision", FString::Printf(TEXT("%lld"), RevisionValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("revision"), FString::Printf(TEXT("%lld"), RevisionValue.GetValue()));
         }
         return JsonRootObject;
     }

@@ -180,15 +180,15 @@ namespace Gs2::Inventory::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (InventoryModelIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("inventoryModelId", InventoryModelIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("inventoryModelId"), InventoryModelIdValue.GetValue());
         }
         if (NameValue.IsSet())
         {
-            JsonRootObject->SetStringField("name", NameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("name"), NameValue.GetValue());
         }
         if (MetadataValue.IsSet())
         {
-            JsonRootObject->SetStringField("metadata", MetadataValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("metadata"), MetadataValue.GetValue());
         }
         if (SimpleItemModelsValue != nullptr && SimpleItemModelsValue.IsValid())
         {
@@ -197,7 +197,7 @@ namespace Gs2::Inventory::Model
             {
                 v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
             }
-            JsonRootObject->SetArrayField("simpleItemModels", v);
+            JsonRootObject->SetArrayField(TEXT("simpleItemModels"), v);
         }
         return JsonRootObject;
     }

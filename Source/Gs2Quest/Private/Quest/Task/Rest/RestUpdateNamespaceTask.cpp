@@ -86,39 +86,39 @@ namespace Gs2::Quest::Task::Rest
             const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
             if (this->Request->GetDescription().IsSet())
             {
-                JsonRootObject->SetStringField("description", this->Request->GetDescription().GetValue());
+                JsonRootObject->SetStringField(TEXT("description"), this->Request->GetDescription().GetValue());
             }
             if (this->Request->GetTransactionSetting() != nullptr && this->Request->GetTransactionSetting().IsValid())
             {
-                JsonRootObject->SetObjectField("transactionSetting", this->Request->GetTransactionSetting()->ToJson());
+                JsonRootObject->SetObjectField(TEXT("transactionSetting"), this->Request->GetTransactionSetting()->ToJson());
             }
             if (this->Request->GetStartQuestScript() != nullptr && this->Request->GetStartQuestScript().IsValid())
             {
-                JsonRootObject->SetObjectField("startQuestScript", this->Request->GetStartQuestScript()->ToJson());
+                JsonRootObject->SetObjectField(TEXT("startQuestScript"), this->Request->GetStartQuestScript()->ToJson());
             }
             if (this->Request->GetCompleteQuestScript() != nullptr && this->Request->GetCompleteQuestScript().IsValid())
             {
-                JsonRootObject->SetObjectField("completeQuestScript", this->Request->GetCompleteQuestScript()->ToJson());
+                JsonRootObject->SetObjectField(TEXT("completeQuestScript"), this->Request->GetCompleteQuestScript()->ToJson());
             }
             if (this->Request->GetFailedQuestScript() != nullptr && this->Request->GetFailedQuestScript().IsValid())
             {
-                JsonRootObject->SetObjectField("failedQuestScript", this->Request->GetFailedQuestScript()->ToJson());
+                JsonRootObject->SetObjectField(TEXT("failedQuestScript"), this->Request->GetFailedQuestScript()->ToJson());
             }
             if (this->Request->GetLogSetting() != nullptr && this->Request->GetLogSetting().IsValid())
             {
-                JsonRootObject->SetObjectField("logSetting", this->Request->GetLogSetting()->ToJson());
+                JsonRootObject->SetObjectField(TEXT("logSetting"), this->Request->GetLogSetting()->ToJson());
             }
             if (this->Request->GetQueueNamespaceId().IsSet())
             {
-                JsonRootObject->SetStringField("queueNamespaceId", this->Request->GetQueueNamespaceId().GetValue());
+                JsonRootObject->SetStringField(TEXT("queueNamespaceId"), this->Request->GetQueueNamespaceId().GetValue());
             }
             if (this->Request->GetKeyId().IsSet())
             {
-                JsonRootObject->SetStringField("keyId", this->Request->GetKeyId().GetValue());
+                JsonRootObject->SetStringField(TEXT("keyId"), this->Request->GetKeyId().GetValue());
             }
             if (this->Request->GetContextStack().IsSet())
             {
-                JsonRootObject->SetStringField("contextStack", this->Request->GetContextStack().GetValue());
+                JsonRootObject->SetStringField(TEXT("contextStack"), this->Request->GetContextStack().GetValue());
             }
             FJsonSerializer::Serialize(JsonRootObject.ToSharedRef(), Writer);
             request->SetContentAsString(Body);

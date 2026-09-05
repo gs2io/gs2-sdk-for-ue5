@@ -120,11 +120,11 @@ namespace Gs2::Distributor::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (NamespaceIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("namespaceId", NamespaceIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("namespaceId"), NamespaceIdValue.GetValue());
         }
         if (SettingsValue.IsSet())
         {
-            JsonRootObject->SetStringField("settings", SettingsValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("settings"), SettingsValue.GetValue());
         }
         return JsonRootObject;
     }

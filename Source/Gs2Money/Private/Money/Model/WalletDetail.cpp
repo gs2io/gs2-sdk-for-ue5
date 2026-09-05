@@ -105,11 +105,11 @@ namespace Gs2::Money::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (PriceValue.IsSet())
         {
-            JsonRootObject->SetNumberField("price", PriceValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("price"), PriceValue.GetValue());
         }
         if (CountValue.IsSet())
         {
-            JsonRootObject->SetNumberField("count", CountValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("count"), CountValue.GetValue());
         }
         return JsonRootObject;
     }

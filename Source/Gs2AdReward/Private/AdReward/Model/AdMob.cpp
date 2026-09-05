@@ -72,7 +72,7 @@ namespace Gs2::AdReward::Model
             {
                 v.Add(MakeShared<FJsonValueString>(JsonObjectValue));
             }
-            JsonRootObject->SetArrayField("allowAdUnitIds", v);
+            JsonRootObject->SetArrayField(TEXT("allowAdUnitIds"), v);
         }
         return JsonRootObject;
     }

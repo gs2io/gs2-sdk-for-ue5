@@ -160,19 +160,19 @@ namespace Gs2::Money2::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (PriceValue.IsSet())
         {
-            JsonRootObject->SetNumberField("price", PriceValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("price"), PriceValue.GetValue());
         }
         if (CurrencyValue.IsSet())
         {
-            JsonRootObject->SetStringField("currency", CurrencyValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("currency"), CurrencyValue.GetValue());
         }
         if (CountValue.IsSet())
         {
-            JsonRootObject->SetNumberField("count", CountValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("count"), CountValue.GetValue());
         }
         if (DepositedAtValue.IsSet())
         {
-            JsonRootObject->SetStringField("depositedAt", FString::Printf(TEXT("%lld"), DepositedAtValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("depositedAt"), FString::Printf(TEXT("%lld"), DepositedAtValue.GetValue()));
         }
         return JsonRootObject;
     }

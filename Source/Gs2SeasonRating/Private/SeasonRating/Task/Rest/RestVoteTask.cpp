@@ -86,11 +86,11 @@ namespace Gs2::SeasonRating::Task::Rest
             const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
             if (this->Request->GetBallotBody().IsSet())
             {
-                JsonRootObject->SetStringField("ballotBody", this->Request->GetBallotBody().GetValue());
+                JsonRootObject->SetStringField(TEXT("ballotBody"), this->Request->GetBallotBody().GetValue());
             }
             if (this->Request->GetBallotSignature().IsSet())
             {
-                JsonRootObject->SetStringField("ballotSignature", this->Request->GetBallotSignature().GetValue());
+                JsonRootObject->SetStringField(TEXT("ballotSignature"), this->Request->GetBallotSignature().GetValue());
             }
             if (this->Request->GetGameResults() != nullptr && this->Request->GetGameResults().IsValid())
             {
@@ -99,15 +99,15 @@ namespace Gs2::SeasonRating::Task::Rest
                 {
                     v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
                 }
-                JsonRootObject->SetArrayField("gameResults", v);
+                JsonRootObject->SetArrayField(TEXT("gameResults"), v);
             }
             if (this->Request->GetKeyId().IsSet())
             {
-                JsonRootObject->SetStringField("keyId", this->Request->GetKeyId().GetValue());
+                JsonRootObject->SetStringField(TEXT("keyId"), this->Request->GetKeyId().GetValue());
             }
             if (this->Request->GetContextStack().IsSet())
             {
-                JsonRootObject->SetStringField("contextStack", this->Request->GetContextStack().GetValue());
+                JsonRootObject->SetStringField(TEXT("contextStack"), this->Request->GetContextStack().GetValue());
             }
             FJsonSerializer::Serialize(JsonRootObject.ToSharedRef(), Writer);
             request->SetContentAsString(Body);

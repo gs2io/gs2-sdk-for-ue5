@@ -227,23 +227,23 @@ namespace Gs2::Money2::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (UnusedBalanceIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("unusedBalanceId", UnusedBalanceIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("unusedBalanceId"), UnusedBalanceIdValue.GetValue());
         }
         if (CurrencyValue.IsSet())
         {
-            JsonRootObject->SetStringField("currency", CurrencyValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("currency"), CurrencyValue.GetValue());
         }
         if (BalanceValue.IsSet())
         {
-            JsonRootObject->SetNumberField("balance", BalanceValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("balance"), BalanceValue.GetValue());
         }
         if (UpdatedAtValue.IsSet())
         {
-            JsonRootObject->SetStringField("updatedAt", FString::Printf(TEXT("%lld"), UpdatedAtValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("updatedAt"), FString::Printf(TEXT("%lld"), UpdatedAtValue.GetValue()));
         }
         if (RevisionValue.IsSet())
         {
-            JsonRootObject->SetStringField("revision", FString::Printf(TEXT("%lld"), RevisionValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("revision"), FString::Printf(TEXT("%lld"), RevisionValue.GetValue()));
         }
         return JsonRootObject;
     }

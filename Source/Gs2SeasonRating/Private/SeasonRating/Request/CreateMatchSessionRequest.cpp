@@ -136,19 +136,19 @@ namespace Gs2::SeasonRating::Request
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (ContextStackValue.IsSet())
         {
-            JsonRootObject->SetStringField("contextStack", ContextStackValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("contextStack"), ContextStackValue.GetValue());
         }
         if (NamespaceNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("namespaceName", NamespaceNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("namespaceName"), NamespaceNameValue.GetValue());
         }
         if (SessionNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("sessionName", SessionNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("sessionName"), SessionNameValue.GetValue());
         }
         if (TtlSecondsValue.IsSet())
         {
-            JsonRootObject->SetNumberField("ttlSeconds", TtlSecondsValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("ttlSeconds"), TtlSecondsValue.GetValue());
         }
         return JsonRootObject;
     }

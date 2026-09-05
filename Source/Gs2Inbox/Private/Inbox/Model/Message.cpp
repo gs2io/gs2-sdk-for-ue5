@@ -374,23 +374,23 @@ namespace Gs2::Inbox::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (MessageIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("messageId", MessageIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("messageId"), MessageIdValue.GetValue());
         }
         if (NameValue.IsSet())
         {
-            JsonRootObject->SetStringField("name", NameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("name"), NameValue.GetValue());
         }
         if (UserIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("userId", UserIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("userId"), UserIdValue.GetValue());
         }
         if (MetadataValue.IsSet())
         {
-            JsonRootObject->SetStringField("metadata", MetadataValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("metadata"), MetadataValue.GetValue());
         }
         if (IsReadValue.IsSet())
         {
-            JsonRootObject->SetBoolField("isRead", IsReadValue.GetValue());
+            JsonRootObject->SetBoolField(TEXT("isRead"), IsReadValue.GetValue());
         }
         if (ReadAcquireActionsValue != nullptr && ReadAcquireActionsValue.IsValid())
         {
@@ -399,23 +399,23 @@ namespace Gs2::Inbox::Model
             {
                 v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
             }
-            JsonRootObject->SetArrayField("readAcquireActions", v);
+            JsonRootObject->SetArrayField(TEXT("readAcquireActions"), v);
         }
         if (ReceivedAtValue.IsSet())
         {
-            JsonRootObject->SetStringField("receivedAt", FString::Printf(TEXT("%lld"), ReceivedAtValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("receivedAt"), FString::Printf(TEXT("%lld"), ReceivedAtValue.GetValue()));
         }
         if (ReadAtValue.IsSet())
         {
-            JsonRootObject->SetStringField("readAt", FString::Printf(TEXT("%lld"), ReadAtValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("readAt"), FString::Printf(TEXT("%lld"), ReadAtValue.GetValue()));
         }
         if (ExpiresAtValue.IsSet())
         {
-            JsonRootObject->SetStringField("expiresAt", FString::Printf(TEXT("%lld"), ExpiresAtValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("expiresAt"), FString::Printf(TEXT("%lld"), ExpiresAtValue.GetValue()));
         }
         if (RevisionValue.IsSet())
         {
-            JsonRootObject->SetStringField("revision", FString::Printf(TEXT("%lld"), RevisionValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("revision"), FString::Printf(TEXT("%lld"), RevisionValue.GetValue()));
         }
         return JsonRootObject;
     }

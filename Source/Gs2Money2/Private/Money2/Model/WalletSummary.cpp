@@ -137,15 +137,15 @@ namespace Gs2::Money2::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (PaidValue.IsSet())
         {
-            JsonRootObject->SetNumberField("paid", PaidValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("paid"), PaidValue.GetValue());
         }
         if (FreeValue.IsSet())
         {
-            JsonRootObject->SetNumberField("free", FreeValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("free"), FreeValue.GetValue());
         }
         if (TotalValue.IsSet())
         {
-            JsonRootObject->SetNumberField("total", TotalValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("total"), TotalValue.GetValue());
         }
         return JsonRootObject;
     }

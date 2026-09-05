@@ -184,27 +184,27 @@ namespace Gs2::Log::Request
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (ContextStackValue.IsSet())
         {
-            JsonRootObject->SetStringField("contextStack", ContextStackValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("contextStack"), ContextStackValue.GetValue());
         }
         if (NamespaceNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("namespaceName", NamespaceNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("namespaceName"), NamespaceNameValue.GetValue());
         }
         if (FieldValue.IsSet())
         {
-            JsonRootObject->SetStringField("field", FieldValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("field"), FieldValue.GetValue());
         }
         if (TypeValue.IsSet())
         {
-            JsonRootObject->SetStringField("type", TypeValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("type"), TypeValue.GetValue());
         }
         if (DisplayNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("displayName", DisplayNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("displayName"), DisplayNameValue.GetValue());
         }
         if (OrderValue.IsSet())
         {
-            JsonRootObject->SetNumberField("order", OrderValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("order"), OrderValue.GetValue());
         }
         return JsonRootObject;
     }

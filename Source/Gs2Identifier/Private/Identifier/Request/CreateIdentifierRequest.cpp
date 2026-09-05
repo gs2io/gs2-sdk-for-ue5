@@ -79,11 +79,11 @@ namespace Gs2::Identifier::Request
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (ContextStackValue.IsSet())
         {
-            JsonRootObject->SetStringField("contextStack", ContextStackValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("contextStack"), ContextStackValue.GetValue());
         }
         if (UserNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("userName", UserNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("userName"), UserNameValue.GetValue());
         }
         return JsonRootObject;
     }

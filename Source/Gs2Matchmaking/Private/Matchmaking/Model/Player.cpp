@@ -171,7 +171,7 @@ namespace Gs2::Matchmaking::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (UserIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("userId", UserIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("userId"), UserIdValue.GetValue());
         }
         if (AttributesValue != nullptr && AttributesValue.IsValid())
         {
@@ -180,11 +180,11 @@ namespace Gs2::Matchmaking::Model
             {
                 v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
             }
-            JsonRootObject->SetArrayField("attributes", v);
+            JsonRootObject->SetArrayField(TEXT("attributes"), v);
         }
         if (RoleNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("roleName", RoleNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("roleName"), RoleNameValue.GetValue());
         }
         if (DenyUserIdsValue != nullptr && DenyUserIdsValue.IsValid())
         {
@@ -193,11 +193,11 @@ namespace Gs2::Matchmaking::Model
             {
                 v.Add(MakeShared<FJsonValueString>(JsonObjectValue));
             }
-            JsonRootObject->SetArrayField("denyUserIds", v);
+            JsonRootObject->SetArrayField(TEXT("denyUserIds"), v);
         }
         if (CreatedAtValue.IsSet())
         {
-            JsonRootObject->SetStringField("createdAt", FString::Printf(TEXT("%lld"), CreatedAtValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("createdAt"), FString::Printf(TEXT("%lld"), CreatedAtValue.GetValue()));
         }
         return JsonRootObject;
     }

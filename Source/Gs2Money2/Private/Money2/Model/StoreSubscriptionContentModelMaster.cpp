@@ -450,59 +450,59 @@ namespace Gs2::Money2::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (StoreSubscriptionContentModelIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("storeSubscriptionContentModelId", StoreSubscriptionContentModelIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("storeSubscriptionContentModelId"), StoreSubscriptionContentModelIdValue.GetValue());
         }
         if (NameValue.IsSet())
         {
-            JsonRootObject->SetStringField("name", NameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("name"), NameValue.GetValue());
         }
         if (DescriptionValue.IsSet())
         {
-            JsonRootObject->SetStringField("description", DescriptionValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("description"), DescriptionValue.GetValue());
         }
         if (MetadataValue.IsSet())
         {
-            JsonRootObject->SetStringField("metadata", MetadataValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("metadata"), MetadataValue.GetValue());
         }
         if (ScheduleNamespaceIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("scheduleNamespaceId", ScheduleNamespaceIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("scheduleNamespaceId"), ScheduleNamespaceIdValue.GetValue());
         }
         if (TriggerNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("triggerName", TriggerNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("triggerName"), TriggerNameValue.GetValue());
         }
         if (ReallocateSpanDaysValue.IsSet())
         {
-            JsonRootObject->SetNumberField("reallocateSpanDays", ReallocateSpanDaysValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("reallocateSpanDays"), ReallocateSpanDaysValue.GetValue());
         }
         if (TriggerExtendModeValue.IsSet())
         {
-            JsonRootObject->SetStringField("triggerExtendMode", TriggerExtendModeValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("triggerExtendMode"), TriggerExtendModeValue.GetValue());
         }
         if (RollupHourValue.IsSet())
         {
-            JsonRootObject->SetNumberField("rollupHour", RollupHourValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("rollupHour"), RollupHourValue.GetValue());
         }
         if (AppleAppStoreValue != nullptr && AppleAppStoreValue.IsValid())
         {
-            JsonRootObject->SetObjectField("appleAppStore", AppleAppStoreValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("appleAppStore"), AppleAppStoreValue->ToJson());
         }
         if (GooglePlayValue != nullptr && GooglePlayValue.IsValid())
         {
-            JsonRootObject->SetObjectField("googlePlay", GooglePlayValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("googlePlay"), GooglePlayValue->ToJson());
         }
         if (CreatedAtValue.IsSet())
         {
-            JsonRootObject->SetStringField("createdAt", FString::Printf(TEXT("%lld"), CreatedAtValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("createdAt"), FString::Printf(TEXT("%lld"), CreatedAtValue.GetValue()));
         }
         if (UpdatedAtValue.IsSet())
         {
-            JsonRootObject->SetStringField("updatedAt", FString::Printf(TEXT("%lld"), UpdatedAtValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("updatedAt"), FString::Printf(TEXT("%lld"), UpdatedAtValue.GetValue()));
         }
         if (RevisionValue.IsSet())
         {
-            JsonRootObject->SetStringField("revision", FString::Printf(TEXT("%lld"), RevisionValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("revision"), FString::Printf(TEXT("%lld"), RevisionValue.GetValue()));
         }
         return JsonRootObject;
     }

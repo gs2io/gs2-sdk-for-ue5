@@ -433,51 +433,51 @@ namespace Gs2::Guild::Request
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (ContextStackValue.IsSet())
         {
-            JsonRootObject->SetStringField("contextStack", ContextStackValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("contextStack"), ContextStackValue.GetValue());
         }
         if (NamespaceNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("namespaceName", NamespaceNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("namespaceName"), NamespaceNameValue.GetValue());
         }
         if (GuildNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("guildName", GuildNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("guildName"), GuildNameValue.GetValue());
         }
         if (GuildModelNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("guildModelName", GuildModelNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("guildModelName"), GuildModelNameValue.GetValue());
         }
         if (DisplayNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("displayName", DisplayNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("displayName"), DisplayNameValue.GetValue());
         }
         if (Attribute1Value.IsSet())
         {
-            JsonRootObject->SetNumberField("attribute1", Attribute1Value.GetValue());
+            JsonRootObject->SetNumberField(TEXT("attribute1"), Attribute1Value.GetValue());
         }
         if (Attribute2Value.IsSet())
         {
-            JsonRootObject->SetNumberField("attribute2", Attribute2Value.GetValue());
+            JsonRootObject->SetNumberField(TEXT("attribute2"), Attribute2Value.GetValue());
         }
         if (Attribute3Value.IsSet())
         {
-            JsonRootObject->SetNumberField("attribute3", Attribute3Value.GetValue());
+            JsonRootObject->SetNumberField(TEXT("attribute3"), Attribute3Value.GetValue());
         }
         if (Attribute4Value.IsSet())
         {
-            JsonRootObject->SetNumberField("attribute4", Attribute4Value.GetValue());
+            JsonRootObject->SetNumberField(TEXT("attribute4"), Attribute4Value.GetValue());
         }
         if (Attribute5Value.IsSet())
         {
-            JsonRootObject->SetNumberField("attribute5", Attribute5Value.GetValue());
+            JsonRootObject->SetNumberField(TEXT("attribute5"), Attribute5Value.GetValue());
         }
         if (MetadataValue.IsSet())
         {
-            JsonRootObject->SetStringField("metadata", MetadataValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("metadata"), MetadataValue.GetValue());
         }
         if (JoinPolicyValue.IsSet())
         {
-            JsonRootObject->SetStringField("joinPolicy", JoinPolicyValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("joinPolicy"), JoinPolicyValue.GetValue());
         }
         if (CustomRolesValue != nullptr && CustomRolesValue.IsValid())
         {
@@ -486,15 +486,15 @@ namespace Gs2::Guild::Request
             {
                 v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
             }
-            JsonRootObject->SetArrayField("customRoles", v);
+            JsonRootObject->SetArrayField(TEXT("customRoles"), v);
         }
         if (GuildMemberDefaultRoleValue.IsSet())
         {
-            JsonRootObject->SetStringField("guildMemberDefaultRole", GuildMemberDefaultRoleValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("guildMemberDefaultRole"), GuildMemberDefaultRoleValue.GetValue());
         }
         if (DuplicationAvoiderValue.IsSet())
         {
-            JsonRootObject->SetStringField("duplicationAvoider", DuplicationAvoiderValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("duplicationAvoider"), DuplicationAvoiderValue.GetValue());
         }
         return JsonRootObject;
     }

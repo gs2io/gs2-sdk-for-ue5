@@ -86,15 +86,15 @@ namespace Gs2::StateMachine::Task::Rest
             const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
             if (this->Request->GetMainStateMachineName().IsSet())
             {
-                JsonRootObject->SetStringField("mainStateMachineName", this->Request->GetMainStateMachineName().GetValue());
+                JsonRootObject->SetStringField(TEXT("mainStateMachineName"), this->Request->GetMainStateMachineName().GetValue());
             }
             if (this->Request->GetPayload().IsSet())
             {
-                JsonRootObject->SetStringField("payload", this->Request->GetPayload().GetValue());
+                JsonRootObject->SetStringField(TEXT("payload"), this->Request->GetPayload().GetValue());
             }
             if (this->Request->GetContextStack().IsSet())
             {
-                JsonRootObject->SetStringField("contextStack", this->Request->GetContextStack().GetValue());
+                JsonRootObject->SetStringField(TEXT("contextStack"), this->Request->GetContextStack().GetValue());
             }
             FJsonSerializer::Serialize(JsonRootObject.ToSharedRef(), Writer);
             request->SetContentAsString(Body);

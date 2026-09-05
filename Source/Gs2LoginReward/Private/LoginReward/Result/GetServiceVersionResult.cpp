@@ -65,7 +65,7 @@ namespace Gs2::LoginReward::Result
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (ItemValue.IsSet())
         {
-            JsonRootObject->SetStringField("item", ItemValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("item"), ItemValue.GetValue());
         }
         return JsonRootObject;
     }

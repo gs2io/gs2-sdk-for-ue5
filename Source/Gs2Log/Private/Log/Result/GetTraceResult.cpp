@@ -132,7 +132,7 @@ namespace Gs2::Log::Result
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (TraceValue != nullptr && TraceValue.IsValid())
         {
-            JsonRootObject->SetObjectField("trace", TraceValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("trace"), TraceValue->ToJson());
         }
         if (ParallelsValue != nullptr && ParallelsValue.IsValid())
         {
@@ -141,11 +141,11 @@ namespace Gs2::Log::Result
             {
                 v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
             }
-            JsonRootObject->SetArrayField("parallels", v);
+            JsonRootObject->SetArrayField(TEXT("parallels"), v);
         }
         if (ParallelTruncatedValue.IsSet())
         {
-            JsonRootObject->SetBoolField("parallelTruncated", ParallelTruncatedValue.GetValue());
+            JsonRootObject->SetBoolField(TEXT("parallelTruncated"), ParallelTruncatedValue.GetValue());
         }
         return JsonRootObject;
     }

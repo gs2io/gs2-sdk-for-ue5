@@ -130,19 +130,19 @@ namespace Gs2::Deploy::Request
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (ContextStackValue.IsSet())
         {
-            JsonRootObject->SetStringField("contextStack", ContextStackValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("contextStack"), ContextStackValue.GetValue());
         }
         if (NameValue.IsSet())
         {
-            JsonRootObject->SetStringField("name", NameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("name"), NameValue.GetValue());
         }
         if (DescriptionValue.IsSet())
         {
-            JsonRootObject->SetStringField("description", DescriptionValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("description"), DescriptionValue.GetValue());
         }
         if (CheckoutSettingValue != nullptr && CheckoutSettingValue.IsValid())
         {
-            JsonRootObject->SetObjectField("checkoutSetting", CheckoutSettingValue->ToJson());
+            JsonRootObject->SetObjectField(TEXT("checkoutSetting"), CheckoutSettingValue->ToJson());
         }
         return JsonRootObject;
     }

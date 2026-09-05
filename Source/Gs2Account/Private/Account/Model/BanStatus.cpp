@@ -119,15 +119,15 @@ namespace Gs2::Account::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (NameValue.IsSet())
         {
-            JsonRootObject->SetStringField("name", NameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("name"), NameValue.GetValue());
         }
         if (ReasonValue.IsSet())
         {
-            JsonRootObject->SetStringField("reason", ReasonValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("reason"), ReasonValue.GetValue());
         }
         if (ReleaseTimestampValue.IsSet())
         {
-            JsonRootObject->SetStringField("releaseTimestamp", FString::Printf(TEXT("%lld"), ReleaseTimestampValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("releaseTimestamp"), FString::Printf(TEXT("%lld"), ReleaseTimestampValue.GetValue()));
         }
         return JsonRootObject;
     }

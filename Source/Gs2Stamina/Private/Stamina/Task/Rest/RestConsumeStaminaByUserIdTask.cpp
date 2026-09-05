@@ -97,11 +97,11 @@ namespace Gs2::Stamina::Task::Rest
             const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
             if (this->Request->GetConsumeValue().IsSet())
             {
-                JsonRootObject->SetNumberField("consumeValue", this->Request->GetConsumeValue().GetValue());
+                JsonRootObject->SetNumberField(TEXT("consumeValue"), this->Request->GetConsumeValue().GetValue());
             }
             if (this->Request->GetContextStack().IsSet())
             {
-                JsonRootObject->SetStringField("contextStack", this->Request->GetContextStack().GetValue());
+                JsonRootObject->SetStringField(TEXT("contextStack"), this->Request->GetContextStack().GetValue());
             }
             FJsonSerializer::Serialize(JsonRootObject.ToSharedRef(), Writer);
             request->SetContentAsString(Body);

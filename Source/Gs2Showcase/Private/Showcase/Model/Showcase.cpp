@@ -203,19 +203,19 @@ namespace Gs2::Showcase::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (ShowcaseIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("showcaseId", ShowcaseIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("showcaseId"), ShowcaseIdValue.GetValue());
         }
         if (NameValue.IsSet())
         {
-            JsonRootObject->SetStringField("name", NameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("name"), NameValue.GetValue());
         }
         if (MetadataValue.IsSet())
         {
-            JsonRootObject->SetStringField("metadata", MetadataValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("metadata"), MetadataValue.GetValue());
         }
         if (SalesPeriodEventIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("salesPeriodEventId", SalesPeriodEventIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("salesPeriodEventId"), SalesPeriodEventIdValue.GetValue());
         }
         if (DisplayItemsValue != nullptr && DisplayItemsValue.IsValid())
         {
@@ -224,7 +224,7 @@ namespace Gs2::Showcase::Model
             {
                 v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
             }
-            JsonRootObject->SetArrayField("displayItems", v);
+            JsonRootObject->SetArrayField(TEXT("displayItems"), v);
         }
         return JsonRootObject;
     }

@@ -96,15 +96,15 @@ namespace Gs2::Grade::Task::Rest
             const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
             if (this->Request->GetPropertyId().IsSet())
             {
-                JsonRootObject->SetStringField("propertyId", this->Request->GetPropertyId().GetValue());
+                JsonRootObject->SetStringField(TEXT("propertyId"), this->Request->GetPropertyId().GetValue());
             }
             if (this->Request->GetMaterialPropertyId().IsSet())
             {
-                JsonRootObject->SetStringField("materialPropertyId", this->Request->GetMaterialPropertyId().GetValue());
+                JsonRootObject->SetStringField(TEXT("materialPropertyId"), this->Request->GetMaterialPropertyId().GetValue());
             }
             if (this->Request->GetContextStack().IsSet())
             {
-                JsonRootObject->SetStringField("contextStack", this->Request->GetContextStack().GetValue());
+                JsonRootObject->SetStringField(TEXT("contextStack"), this->Request->GetContextStack().GetValue());
             }
             FJsonSerializer::Serialize(JsonRootObject.ToSharedRef(), Writer);
             request->SetContentAsString(Body);

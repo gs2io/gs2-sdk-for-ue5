@@ -134,15 +134,15 @@ namespace Gs2::Matchmaking::Request
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (ContextStackValue.IsSet())
         {
-            JsonRootObject->SetStringField("contextStack", ContextStackValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("contextStack"), ContextStackValue.GetValue());
         }
         if (NamespaceNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("namespaceName", NamespaceNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("namespaceName"), NamespaceNameValue.GetValue());
         }
         if (RatingNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("ratingName", RatingNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("ratingName"), RatingNameValue.GetValue());
         }
         if (GameResultsValue != nullptr && GameResultsValue.IsValid())
         {
@@ -151,7 +151,7 @@ namespace Gs2::Matchmaking::Request
             {
                 v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
             }
-            JsonRootObject->SetArrayField("gameResults", v);
+            JsonRootObject->SetArrayField(TEXT("gameResults"), v);
         }
         return JsonRootObject;
     }

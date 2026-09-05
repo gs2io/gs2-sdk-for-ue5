@@ -96,11 +96,11 @@ namespace Gs2::Grade::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (PropertyIdRegexValue.IsSet())
         {
-            JsonRootObject->SetStringField("propertyIdRegex", PropertyIdRegexValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("propertyIdRegex"), PropertyIdRegexValue.GetValue());
         }
         if (DefaultGradeValueValue.IsSet())
         {
-            JsonRootObject->SetStringField("defaultGradeValue", FString::Printf(TEXT("%lld"), DefaultGradeValueValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("defaultGradeValue"), FString::Printf(TEXT("%lld"), DefaultGradeValueValue.GetValue()));
         }
         return JsonRootObject;
     }

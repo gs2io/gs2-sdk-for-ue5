@@ -127,19 +127,19 @@ namespace Gs2::Matchmaking::Request
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (ContextStackValue.IsSet())
         {
-            JsonRootObject->SetStringField("contextStack", ContextStackValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("contextStack"), ContextStackValue.GetValue());
         }
         if (NamespaceNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("namespaceName", NamespaceNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("namespaceName"), NamespaceNameValue.GetValue());
         }
         if (RatingNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("ratingName", RatingNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("ratingName"), RatingNameValue.GetValue());
         }
         if (GatheringNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("gatheringName", GatheringNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("gatheringName"), GatheringNameValue.GetValue());
         }
         return JsonRootObject;
     }

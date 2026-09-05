@@ -328,51 +328,51 @@ namespace Gs2::Log::Request
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (ContextStackValue.IsSet())
         {
-            JsonRootObject->SetStringField("contextStack", ContextStackValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("contextStack"), ContextStackValue.GetValue());
         }
         if (NamespaceNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("namespaceName", NamespaceNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("namespaceName"), NamespaceNameValue.GetValue());
         }
         if (DescriptionValue.IsSet())
         {
-            JsonRootObject->SetStringField("description", DescriptionValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("description"), DescriptionValue.GetValue());
         }
         if (TypeValue.IsSet())
         {
-            JsonRootObject->SetStringField("type", TypeValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("type"), TypeValue.GetValue());
         }
         if (GcpCredentialJsonValue.IsSet())
         {
-            JsonRootObject->SetStringField("gcpCredentialJson", GcpCredentialJsonValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("gcpCredentialJson"), GcpCredentialJsonValue.GetValue());
         }
         if (BigQueryDatasetNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("bigQueryDatasetName", BigQueryDatasetNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("bigQueryDatasetName"), BigQueryDatasetNameValue.GetValue());
         }
         if (LogExpireDaysValue.IsSet())
         {
-            JsonRootObject->SetNumberField("logExpireDays", LogExpireDaysValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("logExpireDays"), LogExpireDaysValue.GetValue());
         }
         if (AwsRegionValue.IsSet())
         {
-            JsonRootObject->SetStringField("awsRegion", AwsRegionValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("awsRegion"), AwsRegionValue.GetValue());
         }
         if (AwsAccessKeyIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("awsAccessKeyId", AwsAccessKeyIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("awsAccessKeyId"), AwsAccessKeyIdValue.GetValue());
         }
         if (AwsSecretAccessKeyValue.IsSet())
         {
-            JsonRootObject->SetStringField("awsSecretAccessKey", AwsSecretAccessKeyValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("awsSecretAccessKey"), AwsSecretAccessKeyValue.GetValue());
         }
         if (FirehoseStreamNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("firehoseStreamName", FirehoseStreamNameValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("firehoseStreamName"), FirehoseStreamNameValue.GetValue());
         }
         if (FirehoseCompressDataValue.IsSet())
         {
-            JsonRootObject->SetStringField("firehoseCompressData", FirehoseCompressDataValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("firehoseCompressData"), FirehoseCompressDataValue.GetValue());
         }
         return JsonRootObject;
     }

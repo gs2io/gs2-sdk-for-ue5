@@ -156,23 +156,23 @@ namespace Gs2::Money2::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (BundleIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("bundleId", BundleIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("bundleId"), BundleIdValue.GetValue());
         }
         if (SharedSecretKeyValue.IsSet())
         {
-            JsonRootObject->SetStringField("sharedSecretKey", SharedSecretKeyValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("sharedSecretKey"), SharedSecretKeyValue.GetValue());
         }
         if (IssuerIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("issuerId", IssuerIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("issuerId"), IssuerIdValue.GetValue());
         }
         if (KeyIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("keyId", KeyIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("keyId"), KeyIdValue.GetValue());
         }
         if (PrivateKeyPemValue.IsSet())
         {
-            JsonRootObject->SetStringField("privateKeyPem", PrivateKeyPemValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("privateKeyPem"), PrivateKeyPemValue.GetValue());
         }
         return JsonRootObject;
     }

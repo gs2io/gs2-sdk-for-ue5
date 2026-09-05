@@ -291,31 +291,31 @@ namespace Gs2::News::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (ProgressIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("progressId", ProgressIdValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("progressId"), ProgressIdValue.GetValue());
         }
         if (UploadTokenValue.IsSet())
         {
-            JsonRootObject->SetStringField("uploadToken", UploadTokenValue.GetValue());
+            JsonRootObject->SetStringField(TEXT("uploadToken"), UploadTokenValue.GetValue());
         }
         if (GeneratedValue.IsSet())
         {
-            JsonRootObject->SetNumberField("generated", GeneratedValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("generated"), GeneratedValue.GetValue());
         }
         if (PatternCountValue.IsSet())
         {
-            JsonRootObject->SetNumberField("patternCount", PatternCountValue.GetValue());
+            JsonRootObject->SetNumberField(TEXT("patternCount"), PatternCountValue.GetValue());
         }
         if (CreatedAtValue.IsSet())
         {
-            JsonRootObject->SetStringField("createdAt", FString::Printf(TEXT("%lld"), CreatedAtValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("createdAt"), FString::Printf(TEXT("%lld"), CreatedAtValue.GetValue()));
         }
         if (UpdatedAtValue.IsSet())
         {
-            JsonRootObject->SetStringField("updatedAt", FString::Printf(TEXT("%lld"), UpdatedAtValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("updatedAt"), FString::Printf(TEXT("%lld"), UpdatedAtValue.GetValue()));
         }
         if (RevisionValue.IsSet())
         {
-            JsonRootObject->SetStringField("revision", FString::Printf(TEXT("%lld"), RevisionValue.GetValue()));
+            JsonRootObject->SetStringField(TEXT("revision"), FString::Printf(TEXT("%lld"), RevisionValue.GetValue()));
         }
         return JsonRootObject;
     }
